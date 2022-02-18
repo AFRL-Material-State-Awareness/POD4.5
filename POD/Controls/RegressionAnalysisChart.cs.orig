@@ -1,0 +1,998 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
+
+namespace POD.Controls
+{
+    using System.Collections;
+
+    using POD.Data;
+
+    public enum ControlLine
+    {
+        AMax,
+        AMin,
+        LeftCensor,
+        RightCensor,
+        Threshold
+    }
+
+    public delegate void LinesChangedEventHandler(object sender, EventArgs e);
+
+    public partial class RegressionAnalysisChart : AHatVsAChart
+    {
+        bool isSelected = false;
+        bool mouseInside = false;
+        bool _selectable = true;
+        bool _canUnselect = false;
+        int HitTestDelta = 3;
+
+        private const double FLOATING_POINT_EQ_THRESHOLD = 0.01d;
+
+        private bool _isDrag;
+        private Point _startPoint;
+
+        private int oldMouseX;
+        private int oldMouseY;
+        private Point oldStartPoint;
+        private Point oldEndPoint;
+        private bool _movingLine;
+
+        private LineAnnotation _upperConfidenceLine;
+        private LineAnnotation _lowerConfidenceLine;
+        private LineAnnotation _scatterLineOne;
+        private LineAnnotation _scatterLineTwo;
+
+        private HorizontalLineAnnotation _leftCensorLine = null;
+        private HorizontalLineAnnotation _rightCensorLine = null;
+        private VerticalLineAnnotation _aMinLine = null;
+        private VerticalLineAnnotation _aMaxLine = null;
+        private HorizontalLineAnnotation _thresholdLine = null;
+
+        private Dictionary<string, Color> _colorMap = new Dictionary<string, Color>();
+
+        private List<SortPoint> sortByX = new List<SortPoint>();
+        private int prevAbove;
+        private int prevBelow;
+
+        private DataTable _flaws;
+        private DataTable _responses;
+        private DataTable _specimenIDs;
+        private DataTable _metadatas;
+
+        private bool _isSquare = false;
+        private AnalysisData _analysisData;
+
+        private bool painted = false;
+
+        public event LinesChangedEventHandler LinesChanged;
+
+        public double BestFitACoeff { get; set; }
+        public double BestFitBCoeff { get; set; }
+
+        public bool CanUnselect
+        {
+            get { return _canUnselect; }
+            set { _canUnselect = value; }
+        }
+
+        public bool Selectable
+        {
+            get { return _selectable; }
+            set { _selectable = value; }
+        }
+        
+        public bool IsSquare
+        {
+            get { return _isSquare; }
+            set { _isSquare = value; }
+        }
+
+        public bool IsSelected
+        {
+            get { return isSelected; }
+
+            set
+            {
+                if (Selectable)
+                {
+                    if (mouseInside == false)
+                    {
+                        isSelected = value;
+
+                        if (isSelected == false)
+                            this.BorderlineColor = Color.Transparent;
+                    }
+                }
+                else
+                {
+                    this.BorderlineColor = Color.FromKnownColor(KnownColor.ControlDark);
+                }
+            }
+        }
+
+        public RegressionAnalysisChart()
+        {
+            InitializeComponent();
+
+            PostPaint += RegressionAnalysisChart_PostPaint;
+            MouseClick += RegressionAnalysisChart_MouseClick;
+            Resize += this.RegressionAnalysisChart_Resize;
+
+            DoubleBuffered = true;
+            
+        }
+        
+        public virtual void OnLinesChanged(EventArgs e)
+        {
+            if (LinesChanged != null)
+            {
+                this.DeterminePointsInThreshold();
+                LinesChanged(this, e);
+            }
+        }
+
+        private void RegressionAnalysisChart_PostPaint(object sender, ChartPaintEventArgs e)
+        {
+            if (e.ChartElement is Series && ((Series)e.ChartElement).Name == _analysisData.ActivatedResponseNames.Last() && !painted)
+            {
+                this.DrawBestFitLine();
+                this.DrawAMinBoundLine();
+                this.DrawAMaxBoundLine();
+                this.DrawLeftCensorBoundLine();
+                this.DrawRightCensorBoundLine();
+                this.DrawThresholdBoundLine();
+
+                this.BuildColorMap();
+                //this.DeterminePointsInThreshold();
+
+                if (!sortByX.Any())
+                {
+                    foreach (var series in this.Series)
+                    {
+                        if (!series.Name.Equals("BestFitLine"))
+                        {
+                            this.FillLists(_analysisData.ActivatedFlaws, _analysisData.ActivatedResponses, series);
+                        }
+                    }
+                }
+                
+                this.OnLinesChanged(EventArgs.Empty);
+                this.painted = true;
+            }
+        }
+
+        public void SelectChart()
+        {
+            RegressionAnalysisChart_MouseClick(this, null);
+        }
+
+        public double GetControlLineValue(ControlLine line)
+        {
+            double value;
+            double anchorValue;
+            switch (line)
+            {
+                case ControlLine.LeftCensor:
+                    value = this._leftCensorLine.Y;
+                    anchorValue = this._leftCensorLine.AnchorY;
+                    break;
+                case ControlLine.RightCensor:
+                    value = this._rightCensorLine.Y;
+                    anchorValue = this._rightCensorLine.AnchorY;
+                    break;
+                case ControlLine.AMin:
+                    value = this._aMinLine.X;
+                    anchorValue = this._aMinLine.AnchorX;
+                    break;
+                case ControlLine.AMax:
+                    value = this._aMaxLine.X;
+                    anchorValue = this._aMaxLine.AnchorX;
+                    break;
+                case ControlLine.Threshold:
+                    value = this._thresholdLine.Y;
+                    anchorValue = this._thresholdLine.AnchorY;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("line");
+            }
+
+            return Double.IsNaN(value) ? anchorValue : value;
+        }
+
+        void RegressionAnalysisChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            var pos = e.Location;
+            var result = this.HitTest(pos.X, pos.Y);
+
+            if (result.ChartElementType == ChartElementType.PlottingArea)
+            {
+<<<<<<< HEAD
+                if (result.ChartElementType == ChartElementType.PlottingArea)
+                {
+                    var xVal = result.ChartArea.AxisX.PixelPositionToValue(pos.X);
+                    //xVal = Math.Pow(10, xVal);
+                    var yVal = result.ChartArea.AxisY.PixelPositionToValue(pos.Y);
+                    
+                    var dp = new DataPoint(xVal, yVal);
+                    var pointMenu = this.CreatePointMenu(dp.XValue, dp.YValues.First());
+
+                    pointMenu.Show(this, pos);
+                }
+=======
+                var xVal = result.ChartArea.AxisX.PixelPositionToValue(pos.X);
+                xVal = Math.Pow(10, xVal);
+                var yVal = result.ChartArea.AxisY.PixelPositionToValue(pos.Y);
+
+                var dp = new DataPoint(xVal, yVal);
+                var pointMenu = this.CreatePointMenu(dp.XValue, dp.YValues.First());
+
+                pointMenu.Show(this, pos);
+            } 
+            else if (result.ChartElementType == ChartElementType.DataPoint)
+            {
+                var dp = result.Object as DataPoint;
+                var pointMenu = this.CreatePointMenu(dp.XValue, dp.YValues.First(), true);
+                pointMenu.Show(this, pos);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            }
+        }
+
+        private ContextMenu CreatePointMenu(double x, double y, bool isDataPoint = false)
+        {
+            var flaw = new MenuItem(String.Format("Flaw Size={0:0.000}", x));
+            var response = new MenuItem(String.Format("Response Value={0:0.000}", y));
+
+            var responseToggle = new MenuItem(
+                "Toggle response On/Off",
+                (sender, e) => this.ToggleResponse(sender, e, new DataPoint(x, y)));
+            var allResponsesToggle = new MenuItem(
+                "Toggle all responses at this flaw size On/Off",
+                (sender, e) => this.ToggleAllResponses(sender, e, new DataPoint(x, y)));
+            
+            var setDecisionThreshold = new MenuItem("Set decision threshold");
+            var setBoundaryThresholds = new MenuItem(
+                "Set boundary threshold",
+                (sender, e) => this.SetThresholdBoundary(sender, e, new DataPoint(x, y)));
+            var setLeftCensor = new MenuItem(
+                "Set Left Censor threshold here",
+                (sender, e) => this.SetLeftCensorBoundary(sender, e, new DataPoint(x, y)));
+            var setRightCensor = new MenuItem(
+                "Set Right Censor threshold here",
+                (sender, e) => this.SetRightCensorBoundary(sender, e, new DataPoint(x, y)));
+            var setAMax = new MenuItem(
+                "Set aMax threshold here",
+                (sender, e) => this.SetAMaxBoundary(sender, e, new DataPoint(x, y)));
+            var setAMin = new MenuItem(
+                "Set aMin threshold here",
+                (sender, e) => this.SetAMinBoundary(sender, e, new DataPoint(x, y)));
+            
+            var menuItems = new List<MenuItem>
+                                       {
+                                           flaw,
+                                           response,
+                                           new MenuItem("-"),
+                                           setDecisionThreshold,
+                                           setBoundaryThresholds,
+                                           setLeftCensor,
+                                           setRightCensor,
+                                           setAMax,
+                                           setAMin,
+                                           new MenuItem("-"),
+                                           responseToggle,
+                                           allResponsesToggle
+                                       };
+
+            if (isDataPoint)
+            {
+                var dataPointLabel = new MenuItem("Data Point Selected");
+                menuItems.Insert(0, dataPointLabel);    
+            }
+            
+            var itemArray = menuItems.ToArray();
+
+            var menu = new ContextMenu(itemArray);
+            return menu;
+        }
+        
+        private void ToggleAllResponses(object sender, EventArgs e, DataPoint dataPoint)
+        {
+            var foundPoints = sortByX.Where(p => p.XValue == dataPoint.XValue).ToList();
+
+            var rowIndex = foundPoints.Select(p => p.RowIndex).Distinct().ToList();
+
+            if (!rowIndex.Any())
+            {
+                return;
+            }
+
+            bool turnedOff = _analysisData.TurnedOffPoints.Where(p => rowIndex.Contains(p.RowIndex)).ToList().Any();
+
+            foreach (var index in rowIndex)
+            {
+                if (turnedOff)
+                {
+                    _analysisData.TurnOnPoints(index);
+                }
+                else
+                {
+                    _analysisData.TurnOffPoints(index);
+                }
+            }
+
+            var state = turnedOff ? Flag.InBounds : Flag.OutBounds;
+
+            foreach (var point in foundPoints)
+            {
+                this.FixColor(point.SeriesIndex, point.SeriesPtIndex, state);
+            }
+            
+            this.DeterminePointsInThreshold();
+            this.Invalidate();
+        }
+
+        private void ToggleResponse(object sender, EventArgs e, DataPoint dataPoint)
+        {
+            var index =
+                sortByX.BinarySearch(new SortPoint { XValue = dataPoint.XValue, YValue = dataPoint.YValues.First() });
+
+            if (index < 0)
+            {
+                index = ~index;
+                if (index > sortByX.Count)
+                {
+                    return;
+                }
+            }
+
+            SortPoint foundPoint = this.sortByX[index];
+            
+            var dpIndex = new DataPointIndex(foundPoint.SeriesIndex, foundPoint.RowIndex);
+
+            if (_analysisData.TurnedOffPoints.Contains(dpIndex))
+            {
+                this.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.InBounds);
+                this.FixColor(foundPoint.SeriesIndex, foundPoint.SeriesPtIndex, Flag.InBounds);
+            }
+            else
+            {
+                this.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.OutBounds);
+                this.FixColor(foundPoint.SeriesIndex, foundPoint.SeriesPtIndex, Flag.OutBounds);
+            }
+        }
+<<<<<<< HEAD
+
+        private void TogglePointColor(DataPointIndex dpIndex, Color color)
+        {
+            if (dpIndex.ColumnName != "")
+            {
+                // Find point in series based on DataPointIndex
+                // Swap color for new color if different
+                double flawSize = Convert.ToDouble(_analysisData.ActivatedFlaws.Rows[dpIndex.RowIndex].ItemArray.First());
+                double response =
+                    Convert.ToDouble(
+                        _analysisData.ActivatedResponses.Rows[dpIndex.RowIndex].ItemArray[
+                            _analysisData.ActivatedResponseNames.IndexOf(dpIndex.ColumnName)]);
+
+                var roundedFlawSize = Math.Round(flawSize, 1, MidpointRounding.AwayFromZero);
+                var roundedResponse = Math.Round(response, 1, MidpointRounding.AwayFromZero);
+
+                // These values set the tolerance for picking the point. With the chart points as doubles it is almost impossible to 
+                // click the exact point with the mouse. These may need to be adjusted in the future.
+                var xTolerance = Math.Abs(flawSize * FLOATING_POINT_EQ_THRESHOLD);
+                var yTolerance = Math.Abs(response * FLOATING_POINT_EQ_THRESHOLD);
+
+                foreach (var point in this.Series[dpIndex.ColumnName].Points)
+                {
+                    if ((Math.Abs(point.XValue - roundedFlawSize) <= xTolerance) && (Math.Abs(point.YValues.First() - roundedResponse) <= yTolerance))
+                    {
+                        point.Color = color;
+                    }
+                }
+            }
+        }
+
+=======
+        
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+        public void SetAMinBoundary(Object sender, System.EventArgs e, DataPoint dataPoint)
+        {
+            this.MoveBoundaryLine(this._aMinLine, dataPoint);
+        }
+
+        public void SetAMaxBoundary(Object sender, System.EventArgs e, DataPoint dataPoint)
+        {
+            this.MoveBoundaryLine(this._aMaxLine, dataPoint);
+        }
+
+        public void SetLeftCensorBoundary(Object sender, System.EventArgs e, DataPoint dataPoint)
+        {
+            this.MoveBoundaryLine(this._leftCensorLine, dataPoint);
+        }
+
+        public void SetRightCensorBoundary(Object sender, System.EventArgs e, DataPoint dataPoint)
+        {
+            this.MoveBoundaryLine(this._rightCensorLine, dataPoint);
+        }
+
+        public void SetThresholdBoundary(Object sender, System.EventArgs e, DataPoint dataPoint)
+        {
+            this.MoveBoundaryLine(this._thresholdLine, dataPoint);
+        }
+
+        private void MoveBoundaryLine<T>(T line, DataPoint dataPoint)
+        {
+            var newLine = line as LineAnnotation;
+
+            newLine.AnchorX = dataPoint.XValue;
+            newLine.AnchorY = dataPoint.YValues.First();
+
+            this.DeterminePointsInThreshold();
+            this.OnLinesChanged(EventArgs.Empty);
+        }
+
+        public void UpdateChartData(AnalysisData data)
+        {
+            _responses = data.ActivatedResponses;
+
+            ReloadChartData(_flaws.Rows, _responses);
+
+            BuildColorMap();
+            DeterminePointsInThreshold();
+            CleanUpDataSeries();
+
+            this.ChartAreas[0].AxisX.Maximum = 3;
+            this.ChartAreas[0].AxisX.Minimum = -2;
+
+            this.ChartAreas[0].AxisY.Maximum = 7;
+            this.ChartAreas[0].AxisY.Minimum = 2;
+        }
+
+        public void LoadChartData(AnalysisData data)
+        {
+            _flaws = data.ActivatedFlaws;
+            _responses = data.ActivatedResponses;
+            _analysisData = data;
+
+            this.Series.Clear();
+            foreach (var name in data.ActivatedResponseNames)
+            {
+                this.Series.Add(name);
+                this.Series[name].ChartType = SeriesChartType.Point;
+            }
+
+            this.ChartAreas[0].AxisX.IsLogarithmic = false;
+            this.ChartAreas[0].AxisX.MinorTickMark.Interval = 1;
+            this.ChartAreas[0].AxisX.MinorTickMark.Enabled = true;
+            this.ChartAreas[0].AxisX.LabelStyle.Interval = 1;
+            this.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            this.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+            this.ChartAreas[0].AxisY.IsLogarithmic = false;
+
+            this.ReloadChartData(_flaws.Rows, _responses);
+           
+            this.CleanUpDataSeries();
+        }
+        
+        private void BuildColorMap()
+        {
+            foreach (var series in this.Series)
+            {
+                if (_colorMap.ContainsKey(series.Name))
+                {
+                    continue;
+                }
+
+                var color = this.Series[series.Name].Points.First().Color;
+                this._colorMap.Add(series.Name, color);
+            }
+        }
+
+        private void DeterminePointsInThreshold()
+        {
+<<<<<<< HEAD
+            if (_aMinLine != null && _aMaxLine != null)
+            {
+                var aMin = this.PointToDataPoint(this._aMinLine.StartPoint).XValue;
+                var aMax = this.PointToDataPoint(this._aMaxLine.StartPoint).XValue;
+
+                string flawName = _analysisData.ActivatedFlawNames[0];
+
+                for (var i = 0; i < this.Series.Count - 1; i++)
+                {
+                    var series = this.Series[i];
+
+                    string responseName = _analysisData.ActivatedResponseNames[i];
+
+                    for (int rowIndex = 0; rowIndex < series.Points.Count; rowIndex++)
+                    {
+                        var currentPoint = series.Points[rowIndex];
+
+                        if ((currentPoint.XValue < aMin) || (currentPoint.XValue > aMax))
+                        {
+                            _analysisData.TurnOffPoint(responseName, rowIndex);
+                            currentPoint.Color = Color.Gray;
+                        }
+                        else if (currentPoint.Color == Color.Gray &&
+                            !_deactivatedFlaws.Contains(rowIndex) &&
+                            !_deactivatedResponses.Contains(new DataPointIndex(responseName, rowIndex)))
+                        {
+                            _analysisData.TurnOnPoint(responseName, rowIndex);
+                            currentPoint.Color = _colorMap[series.Name];
+                        }
+                    }
+                }
+
+                this.Invalidate();
+            }
+        }       
+
+=======
+            this.MoveLine(_aMaxLine, _aMinLine);
+            this.Invalidate();
+        }
+        
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+        public void DrawBestFitLine()
+        {
+            // TODO: Temp. Remove and hook up to python back end and draw as a series
+            // TODO: Determine cause of "Collection modified, enumoeration cannot continue" when this is added back in.
+            //this.BestFitACoeff = 100.0;
+            //this.BestFitBCoeff = 0.0;
+            
+            //this.Series.Add("BestFitLine");
+            //this.Series["BestFitLine"].ChartType = SeriesChartType.Line;
+
+            //var xAxis = this.ChartAreas[0].AxisX;
+            //var yAxis = this.ChartAreas[0].AxisY;
+
+            //var x1 = xAxis.Minimum;
+            //var y1 = (BestFitACoeff * x1) + BestFitBCoeff;
+
+            //var x2 = xAxis.Maximum;
+            //var y2 = (BestFitACoeff * x2) + BestFitBCoeff;
+
+            //this.Series["BestFitLine"].Points.AddXY(x1, y1);
+            //this.Series["BestFitLine"].Points.AddXY(x2, y2);
+        }
+
+        public void DrawAMinBoundLine()
+        {
+            if (this._aMinLine == null)
+            {
+                _aMinLine = new VerticalLineAnnotation();
+                
+                var xAxis = this.ChartAreas[0].AxisX;
+                var yAxis = this.ChartAreas[0].AxisY;
+
+                var minimums = (from DataRow row in this._analysisData.ActivatedFlaws.Rows select Convert.ToDouble(row.ItemArray.First())).ToList();
+                minimums.RemoveAll(double.IsNaN);
+
+                var x = minimums.Min();
+
+                _aMinLine.AxisX = xAxis;
+                _aMinLine.AxisY = yAxis;
+                _aMinLine.IsSizeAlwaysRelative = false;
+                _aMinLine.AllowMoving = true;
+                _aMinLine.AnchorX = x;
+                _aMinLine.IsInfinitive = true;
+                _aMinLine.ClipToChartArea = this.ChartAreas[0].Name;
+                _aMinLine.LineColor = Color.Blue;
+                _aMinLine.LineDashStyle = ChartDashStyle.Dash;
+                _aMinLine.LineWidth = 2;
+                
+                this.Annotations.Add(_aMinLine);
+            }
+        }
+
+        public void DrawAMaxBoundLine()
+        {
+            if (this._aMaxLine == null)
+            {
+                _aMaxLine = new VerticalLineAnnotation();
+               
+                var xAxis = this.ChartAreas[0].AxisX;
+                var yAxis = this.ChartAreas[0].AxisY;
+
+                var x = xAxis.Maximum;
+
+                _aMaxLine.AxisX = xAxis;
+                _aMaxLine.AxisY = yAxis;
+                _aMaxLine.IsSizeAlwaysRelative = false;
+                _aMaxLine.AllowMoving = true;
+                _aMaxLine.AnchorX = x;
+                _aMaxLine.IsInfinitive = true;
+                _aMaxLine.ClipToChartArea = this.ChartAreas[0].Name;
+                _aMaxLine.LineColor = Color.Blue;
+                _aMaxLine.LineDashStyle = ChartDashStyle.Dash;
+                _aMaxLine.LineWidth = 2;
+
+                this.Annotations.Add(_aMaxLine);
+            }
+        }
+
+        public void DrawLeftCensorBoundLine()
+        {
+            if (this._leftCensorLine == null)
+            {
+                _leftCensorLine = new HorizontalLineAnnotation();
+               
+                var xAxis = this.ChartAreas[0].AxisX;
+                var yAxis = this.ChartAreas[0].AxisY;
+
+                var maximums =
+                    (from DataRow row in this._analysisData.ActivatedResponses.Rows
+                        from obj in row.ItemArray
+                        select Convert.ToDouble(obj)).ToList();
+                var y = maximums.Max();
+
+                var x = xAxis.Maximum;
+                //x = Math.Pow(10, Math.Ceiling(Math.Log10(x)));
+<<<<<<< HEAD
+
+                var dp1 = new DataPoint(x, y);
+                var dp2 = new DataPoint(xAxis.Minimum, y);
+
+                theLine.StartDataPoint = dp1;
+                theLine.EndDataPoint = dp2;
+
+                theLine.StartPoint = this.DataPointToPoint(dp1);
+                theLine.EndPoint = this.DataPointToPoint(dp2);
+
+                theLine.MouseEnter += this.Line_MouseEnter;
+                theLine.MouseLeave += this.Line_MouseLeave;
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+
+                _leftCensorLine.AxisX = xAxis;
+                _leftCensorLine.AxisY = yAxis;
+                _leftCensorLine.IsSizeAlwaysRelative = false;
+                _leftCensorLine.AllowMoving = true;
+                _leftCensorLine.AnchorY = y;
+                _leftCensorLine.IsInfinitive = true;
+                _leftCensorLine.ClipToChartArea = this.ChartAreas[0].Name;
+                _leftCensorLine.LineColor = Color.Red;
+                _leftCensorLine.LineDashStyle = ChartDashStyle.Dash;
+                _leftCensorLine.LineWidth = 2;
+
+                this.Annotations.Add(_leftCensorLine);
+            }
+        }
+
+        public void DrawRightCensorBoundLine()
+        {
+            if (this._rightCensorLine == null)
+            {
+                _rightCensorLine = new HorizontalLineAnnotation();
+                
+                var xAxis = this.ChartAreas[0].AxisX;
+                var yAxis = this.ChartAreas[0].AxisY;
+                
+                var minimums =
+                   (from DataRow row in this._analysisData.ActivatedResponses.Rows
+                    from obj in row.ItemArray
+                    select Convert.ToDouble(obj)).ToList();
+                var y = minimums.Min();
+
+                var x = xAxis.Maximum;
+                //x = Math.Pow(10, Math.Ceiling(Math.Log10(x)));
+<<<<<<< HEAD
+
+                var dp1 = new DataPoint(x, y);
+                var dp2 = new DataPoint(xAxis.Minimum, y);
+
+                theLine.StartDataPoint = dp1;
+                theLine.EndDataPoint = dp2;
+
+                theLine.StartPoint = this.DataPointToPoint(dp1);
+                theLine.EndPoint = this.DataPointToPoint(dp2);
+
+                theLine.MouseEnter += this.Line_MouseEnter;
+                theLine.MouseLeave += this.Line_MouseLeave;
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+
+                _rightCensorLine.AxisX = xAxis;
+                _rightCensorLine.AxisY = yAxis;
+                _rightCensorLine.IsSizeAlwaysRelative = false;
+                _rightCensorLine.AllowMoving = true;
+                _rightCensorLine.AnchorY = y;
+                _rightCensorLine.IsInfinitive = true;
+                _rightCensorLine.ClipToChartArea = this.ChartAreas[0].Name;
+                _rightCensorLine.LineColor = Color.Red;
+                _rightCensorLine.LineDashStyle = ChartDashStyle.Dash;
+                _rightCensorLine.LineWidth = 2;
+
+                this.Annotations.Add(_rightCensorLine);
+            }
+        }
+
+        public void DrawThresholdBoundLine()
+        {
+            if (this._thresholdLine == null)
+            {
+                _thresholdLine = new HorizontalLineAnnotation();
+               
+                var xAxis = this.ChartAreas[0].AxisX;
+                var yAxis = this.ChartAreas[0].AxisY;
+
+                var y = yAxis.Maximum / 2;
+
+                var x = xAxis.Maximum;
+                //x = Math.Pow(10, Math.Ceiling(Math.Log10(x)));
+<<<<<<< HEAD
+
+                var dp1 = new DataPoint(x, y);
+                var dp2 = new DataPoint(xAxis.Minimum, y);
+
+                theLine.StartDataPoint = dp1;
+                theLine.EndDataPoint = dp2;
+
+                theLine.StartPoint = this.DataPointToPoint(dp1);
+                theLine.EndPoint = this.DataPointToPoint(dp2);
+
+                theLine.MouseEnter += this.Line_MouseEnter;
+                theLine.MouseLeave += this.Line_MouseLeave;
+
+                this._thresholdLine = theLine;
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+
+                _thresholdLine.AxisX = xAxis;
+                _thresholdLine.AxisY = yAxis;
+                _thresholdLine.IsSizeAlwaysRelative = false;
+                _thresholdLine.AllowMoving = true;
+                _thresholdLine.AnchorY = y;
+                _thresholdLine.IsInfinitive = true;
+                _thresholdLine.ClipToChartArea = this.ChartAreas[0].Name;
+                _thresholdLine.LineColor = Color.Green;
+                _thresholdLine.LineDashStyle = ChartDashStyle.Dash;
+                _thresholdLine.LineWidth = 2;
+               
+                this.Annotations.Add(_thresholdLine);
+            }
+        }
+
+        public void DrawConfidenceBoundLines()
+        {
+            // TODO: Hook to python code and draw lines
+        }
+
+        public void DrawScatterLines()
+        {
+            // TODO: Hook to python code and draw lines
+        }
+
+        protected override void AHatVsAChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            // Override base event handling to prevent flickering and other drawing issues
+            //base.AHatVsAChart_MouseClick(sender, e);
+        }
+
+        protected override void AHatVsAChart_MouseEnter(object sender, EventArgs e)
+        {
+            // Override base event handling to prevent flickering and other drawing issues
+            //base.AHatVsAChart_MouseEnter(sender, e);
+
+        }
+
+        protected override void AHatVsAChart_MouseLeave(object sender, EventArgs e)
+        {
+            // Override base event handling to prevent flickering and other drawing issues
+            //base.AHatVsAChart_MouseLeave(sender, e);
+        }
+        
+        private void RegressionAnalysisChart_Resize(object sender, System.EventArgs e)
+        {
+            this.ChartAreas[0].RecalculateAxesScale();
+        }
+        
+        private void FillLists(DataTable flawTable, DataTable responseTable, Series series)
+        {
+            FillFromTableSeries(sortByX, flawTable, responseTable, series);
+            sortByX.Sort();
+        }
+
+        private void FillFromTableSeries(
+            List<SortPoint> sortPoints,
+            DataTable flawTable,
+            DataTable responseTable,
+            Series series)
+        {
+            for (int i = 0; i < flawTable.Rows.Count; i++)
+            {
+                var row = flawTable.Rows[i];
+
+                var sp = new SortPoint
+                         {
+                             ColIndex = responseTable.Columns.IndexOf(series.Name),
+                             RowIndex = i,
+                             SeriesIndex = series.Name,
+                             XValue = Convert.ToDouble(row.ItemArray[0]),
+                             YValue =
+                                 Convert.ToDouble(
+                                     responseTable.Rows[i].ItemArray[
+                                         responseTable.Columns.IndexOf(series.Name)])
+                         };
+                sp.SeriesPtIndex =
+                    series.Points.IndexOf(
+                        series.Points.First(
+                            p =>
+                                (Math.Abs(p.XValue - sp.XValue) < Math.Abs(sp.XValue * FLOATING_POINT_EQ_THRESHOLD))
+                                && (Math.Abs(p.YValues.First() - sp.YValue)
+                                    < Math.Abs(sp.YValue * FLOATING_POINT_EQ_THRESHOLD))));
+                sortPoints.Add(sp);
+            }
+        }
+
+        private void MoveLine(VerticalLineAnnotation lineAbove, VerticalLineAnnotation lineBelow)
+        {
+            if (sortByX.Any())
+            {
+                int xAboveIndex = sortByX.BinarySearch(new SortPoint { XValue = lineAbove.AnchorX });
+                int xBelowIndex = sortByX.BinarySearch(new SortPoint { XValue = lineBelow.AnchorX });
+               
+                if (xAboveIndex < 0)
+                {
+                    xAboveIndex = ~xAboveIndex;
+                }
+
+                if (xBelowIndex < 0)
+                {
+                    xBelowIndex = ~xBelowIndex;
+                }
+                
+                if (xAboveIndex >= sortByX.Count)
+                {
+                    xAboveIndex = sortByX.Count - 1;
+                }
+
+                // remove points from out of bounds
+                // else add points to out of bounds
+                if (xAboveIndex > prevAbove)
+                {
+                    for (int i = prevAbove; i < xAboveIndex; i++)
+                    {
+                        FixColor(sortByX[i].SeriesIndex, sortByX[i].SeriesPtIndex, Flag.InBounds);
+                        UpdateTable(sortByX[i].RowIndex, sortByX[i].ColIndex, Flag.InBounds);
+                    }
+                }
+                else if (xAboveIndex < prevAbove)
+                {
+                    for (int i = prevAbove; i >= xAboveIndex; i--)
+                    {
+                        FixColor(sortByX[i].SeriesIndex, sortByX[i].SeriesPtIndex, Flag.OutBounds);
+                        UpdateTable(sortByX[i].RowIndex, sortByX[i].ColIndex, Flag.OutBounds);
+                    }
+                }
+
+                // Repeat for below line
+                if (xBelowIndex < prevBelow)
+                {
+                    for (int i = prevBelow; i >= xBelowIndex; i--)
+                    {
+                        FixColor(sortByX[i].SeriesIndex, sortByX[i].SeriesPtIndex, Flag.InBounds);
+                        UpdateTable(sortByX[i].RowIndex, sortByX[i].ColIndex, Flag.InBounds);
+                    }
+                }
+                else if (xBelowIndex > prevBelow)
+                {
+                    for (int i = prevBelow; i < xBelowIndex; i++)
+                    {
+                        FixColor(sortByX[i].SeriesIndex, sortByX[i].SeriesPtIndex, Flag.OutBounds);
+                        UpdateTable(sortByX[i].RowIndex, sortByX[i].ColIndex, Flag.OutBounds);
+                    }
+                }
+
+                // update the prevIndex values for next check
+                prevAbove = xAboveIndex;
+                prevBelow = xBelowIndex;
+            }
+        }
+
+        private void UpdateTable(int rowIndex, int colIndex, Flag bounds)
+        {
+            switch (bounds)
+            {
+                case Flag.InBounds:
+                    _analysisData.TurnOnPoint(colIndex, rowIndex);
+                    break;
+                case Flag.OutBounds:
+                    _analysisData.TurnOffPoint(colIndex, rowIndex);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("bounds must be either InBounds or OutBounds");
+            }
+        }
+
+        private void FixColor(string seriesIndex, int seriesPtIndex, Flag bounds)
+        {
+<<<<<<< HEAD
+            var xAxis = this.ChartAreas[0].AxisX;
+            var yAxis = this.ChartAreas[0].AxisY;
+            double x = 0.0;
+            double y = 0.0;
+
+            try
+            {
+               
+                x = xAxis.PixelPositionToValue(point.X);
+                //x = Math.Pow(10, x);
+
+                y = yAxis.PixelPositionToValue(point.Y);
+            }
+            catch(Exception exp)
+            {
+                //MessageBox.Show("Conversion error in Point to Data Point");
+            }
+
+            if (Double.IsNaN(x))
+            {
+                x = 0.0;
+            }
+
+            if (Double.IsNaN(y))
+=======
+            switch (bounds)
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            {
+                case Flag.InBounds:
+                    this.Series[seriesIndex].Points[seriesPtIndex].Color = _colorMap[seriesIndex];
+                    break;
+                case Flag.OutBounds:
+                    this.Series[seriesIndex].Points[seriesPtIndex].Color = Color.Gray;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("bounds must be either InBounds or OutBounds");
+            }
+        }
+    }
+
+    internal enum Flag
+    {
+        InBounds,
+        OutBounds 
+    }
+
+    internal class SortPoint : IComparable<SortPoint>
+    {
+        public int RowIndex { get; set; }
+
+        public int ColIndex { get; set; }
+
+        public string SeriesIndex { get; set; }
+
+        public int SeriesPtIndex { get; set; }
+
+        public double XValue { get; set; }
+
+        public double YValue { get; set; }
+
+        public int CompareTo(SortPoint otherSortPoint)
+        {
+            if (otherSortPoint == null)
+            {
+                return 1;
+            }
+
+            int result = this.XValue.CompareTo(otherSortPoint.XValue);
+            if (result == 0)
+            {
+                result = this.YValue.CompareTo(otherSortPoint.YValue);
+                if (result == 0)
+                {
+                    result = this.ColIndex.CompareTo(otherSortPoint.ColIndex);
+                    if (result == 0)
+                    {
+                        result = this.RowIndex.CompareTo(otherSortPoint.RowIndex);
+                    }
+                }
+            }
+            return result;
+        }
+    }
+}

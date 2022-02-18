@@ -1,0 +1,15 @@
+﻿3. Nomenclature|
+4. GENERAL GUIDANCE|
+Appendix G  Statistical Analysis of NDE Data|
+Appendix G  Statistical Analysis of NDE Data|G.1 SCOPE|
+Appendix G  Statistical Analysis of NDE Data|G.2 PROCEDURES|
+Appendix G  Statistical Analysis of NDE Data|G.2 PROCEDURES|G.2.1 Background|
+Appendix I  Special Topics|
+Appendix I  Special Topics|I.1 Departures from underlying assumptions  crack sizing and POD analysis of images|
+Appendix I  Special Topics|I.1 Departures from underlying assumptions  crack sizing and POD analysis of images|I.1.1 Uncertainty in X|
+Appendix I  Special Topics|I.1 Departures from underlying assumptions  crack sizing and POD analysis of images|I.1.2 Uncertainty in Y|
+Appendix I  Special Topics|I.2 False positives, Sensitivity and Specificity|
+Appendix I  Special Topics|I.3 The misunderstood receiver operating characteristic (ROC) curve|
+Appendix I  Special Topics|I.4 Asymptotic POD functions|
+Appendix I  Special Topics|I.5 A voluntary grading scheme for POD(a) studies|
+Appendix J  Related Documents|

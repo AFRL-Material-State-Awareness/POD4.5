@@ -1,0 +1,607 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B1E7CE39-1B54-40ED-BE54-93DEEAF3C3C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>POD.Wizards</RootNamespace>
+    <AssemblyName>Wizards</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="RemovedPointsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RemovedPointsPanel.Designer.cs">
+      <DependentUpon>RemovedPointsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewHitMissRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewHitMissRangeForm.Designer.cs">
+      <DependentUpon>NewHitMissRangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewResponseRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewResponseRangeForm.Designer.cs">
+      <DependentUpon>NewResponseRangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewSourceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewSourceForm.Designer.cs">
+      <DependentUpon>NewSourceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegressionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RegressionPanel.Designer.cs">
+      <DependentUpon>RegressionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SideChartPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SideChartPanel.Designer.cs">
+      <DependentUpon>SideChartPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\AHatVsACompareStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\AHatVsACompareStep.Designer.cs">
+      <DependentUpon>AHatVsACompareStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedTitle.Designer.cs">
+      <DependentUpon>DocumentRemovedTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedTutorial.Designer.cs">
+      <DependentUpon>DocumentRemovedTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedBar.Designer.cs">
+      <DependentUpon>DocumentRemovedBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformStep.Designer.cs">
+      <DependentUpon>ChooseTransformStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformBar.Designer.cs">
+      <DependentUpon>ChooseTransformBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\QuickRegressionBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\QuickRegressionBar.Designer.cs">
+      <DependentUpon>QuickRegressionBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionBar.Designer.cs">
+      <DependentUpon>FullRegressionBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformPanel.Designer.cs">
+      <DependentUpon>ChooseTransformPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\QuickRegressionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\QuickRegressionPanel.Designer.cs">
+      <DependentUpon>QuickRegressionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionPanel.Designer.cs">
+      <DependentUpon>FullRegressionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedStep.Designer.cs">
+      <DependentUpon>DocumentRemovedStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\QuickRegressionStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\QuickRegressionStep.Designer.cs">
+      <DependentUpon>QuickRegressionStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionStep.Designer.cs">
+      <DependentUpon>FullRegressionStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformTitle.Designer.cs">
+      <DependentUpon>ChooseTransformTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionTitle.Designer.cs">
+      <DependentUpon>FullRegressionTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\ChooseTransformTutorial.Designer.cs">
+      <DependentUpon>ChooseTransformTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\FullRegressionTutorial.Designer.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>FullRegressionTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedPanel.Designer.cs">
+      <DependentUpon>DocumentRemovedPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformBar.Designer.cs">
+      <DependentUpon>ChooseTransformBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformPanel.Designer.cs">
+      <DependentUpon>ChooseTransformPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformStep.Designer.cs">
+      <DependentUpon>ChooseTransformStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformTitle.Designer.cs">
+      <DependentUpon>ChooseTransformTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\ChooseTransformTutorial.Designer.cs">
+      <DependentUpon>ChooseTransformTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedBar.Designer.cs">
+      <DependentUpon>DocumentRemovedBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedPanel.Designer.cs">
+      <DependentUpon>DocumentRemovedPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedStep.Designer.cs">
+      <DependentUpon>DocumentRemovedStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedTitle.Designer.cs">
+      <DependentUpon>DocumentRemovedTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\DocumentRemovedTutorial.Designer.cs">
+      <DependentUpon>DocumentRemovedTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionBar.Designer.cs">
+      <DependentUpon>FullRegressionBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\QuickRegressionBar.Designer.cs">
+      <DependentUpon>QuickRegressionBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\QuickRegressionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\QuickRegressionPanel.Designer.cs">
+      <DependentUpon>QuickRegressionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionPanel.Designer.cs">
+      <DependentUpon>FullRegressionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\QuickRegressionBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\QuickRegressionStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\QuickRegressionStep.Designer.cs">
+      <DependentUpon>QuickRegressionStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionStep.Designer.cs">
+      <DependentUpon>FullRegressionStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionTitle.Designer.cs">
+      <DependentUpon>FullRegressionTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\FullRegressionTutorial.Designer.cs">
+      <DependentUpon>FullRegressionTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewInfoPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewInfoPanel.Designer.cs">
+      <DependentUpon>ViewInfoPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\AHatvsAAnalysis\AHatvsANormalWizard.cs" />
+    <Compile Include="AnalysisFinishArgs.cs" />
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesBar.Designer.cs">
+      <DependentUpon>CreateAnalysesBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesPanel.Designer.cs">
+      <DependentUpon>CreateAnalysesPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesStep.Designer.cs">
+      <DependentUpon>CreateAnalysesStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesTitle.Designer.cs">
+      <DependentUpon>CreateAnalysesTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\CreateAnalysesTutorial.Designer.cs">
+      <DependentUpon>CreateAnalysesTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataBar.Designer.cs">
+      <DependentUpon>PasteDataBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataPanel.Designer.cs">
+      <DependentUpon>PasteDataPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataStep.Designer.cs">
+      <DependentUpon>PasteDataStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataTitle.Designer.cs">
+      <DependentUpon>PasteDataTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\PasteDataTutorial.Designer.cs">
+      <DependentUpon>PasteDataTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesBar.Designer.cs">
+      <DependentUpon>ProjectPropertiesBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesPanel.Designer.cs">
+      <DependentUpon>ProjectPropertiesPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesStep.Designer.cs">
+      <DependentUpon>ProjectPropertiesStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesTitle.Designer.cs">
+      <DependentUpon>ProjectPropertiesTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesTutorial.Designer.cs">
+      <DependentUpon>ProjectPropertiesTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportBar.Designer.cs">
+      <DependentUpon>ViewImportBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportStep.Designer.cs">
+      <DependentUpon>ViewImportStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportPanel.Designer.cs">
+      <DependentUpon>ViewImportPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportTitle.Designer.cs">
+      <DependentUpon>ViewImportTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportTutorial.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\FullAnalysisProjectSteps\ViewImportTutorial.Designer.cs">
+      <DependentUpon>ViewImportTutorial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectFinishArgs.cs" />
+    <Compile Include="ProjectWizard.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TutorialOverlay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TutorialOverlay.Designer.cs">
+      <DependentUpon>TutorialOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard.cs" />
+    <Compile Include="WizardActionBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WizardActionBar.Designer.cs">
+      <DependentUpon>WizardActionBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardList.cs" />
+    <Compile Include="WizardStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WizardStep.Designer.cs">
+      <DependentUpon>WizardStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardStepList.cs" />
+    <Compile Include="WizardPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WizardPanel.Designer.cs">
+      <DependentUpon>WizardPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AnalysisWizard.cs" />
+    <Compile Include="Wizards\AHatvsAAnalysis\AHatvsAQuickWizard.cs" />
+    <Compile Include="Wizards\HitMissAnalysis\HitMissNormalWizard.cs" />
+    <Compile Include="Wizards\HitMissAnalysis\HitMissQuickWizard.cs" />
+    <Compile Include="Wizards\Project\FullAnalysisProjectWizard.cs" />
+    <Compile Include="WizardTitle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WizardTitle.Designer.cs">
+      <DependentUpon>WizardTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RemovedPointsPanel.resx">
+      <DependentUpon>RemovedPointsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewHitMissRangeForm.resx">
+      <DependentUpon>NewHitMissRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewResponseRangeForm.resx">
+      <DependentUpon>NewResponseRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewSourceForm.resx">
+      <DependentUpon>NewSourceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegressionPanel.resx">
+      <DependentUpon>RegressionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\AHatVsANormalSteps\AHatVsACompareStep.resx">
+      <DependentUpon>AHatVsACompareStep.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\AHatVsANormalSteps\ChooseTransformPanel.resx">
+      <DependentUpon>ChooseTransformPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\AHatVsANormalSteps\DocumentRemovedPanel.resx">
+      <DependentUpon>DocumentRemovedPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\AHatVsANormalSteps\QuickRegressionPanel.resx">
+      <DependentUpon>QuickRegressionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\AHatVsANormalSteps\FullRegressionPanel.resx">
+      <DependentUpon>FullRegressionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\FullAnalysisProjectSteps\CreateAnalysesPanel.resx">
+      <DependentUpon>CreateAnalysesPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\FullAnalysisProjectSteps\CreateAnalysesStep.resx">
+      <DependentUpon>CreateAnalysesStep.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\FullAnalysisProjectSteps\PasteDataPanel.resx">
+      <DependentUpon>PasteDataPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\FullAnalysisProjectSteps\ProjectPropertiesPanel.resx">
+      <DependentUpon>ProjectPropertiesPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\FullAnalysisProjectSteps\ViewImportPanel.resx">
+      <DependentUpon>ViewImportPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\HitMissNormalSteps\ChooseTransformPanel.resx">
+      <DependentUpon>ChooseTransformPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\HitMissNormalSteps\DocumentRemovedPanel.resx">
+      <DependentUpon>DocumentRemovedPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\HitMissNormalSteps\QuickRegressionPanel.resx">
+      <DependentUpon>QuickRegressionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\HitMissNormalSteps\FullRegressionPanel.resx">
+      <DependentUpon>FullRegressionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewInfoPanel.resx">
+      <DependentUpon>ViewInfoPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardActionBar.resx">
+      <DependentUpon>WizardActionBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardPanel.resx">
+      <DependentUpon>WizardPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardStep.resx">
+      <DependentUpon>WizardStep.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardTitle.resx">
+      <DependentUpon>WizardTitle.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Analysis\Analyze.csproj">
+      <Project>{e4a03508-e0fa-4061-bfc7-d03837888402}</Project>
+      <Name>Analyze</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Controls\Controls.csproj">
+      <Project>{7a2d07db-3686-4fec-ba8c-5b905eca1af0}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{bee41d1e-eba8-4d3e-b297-4c1ca6fff8db}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExcelData\ExcelData.csproj">
+      <Project>{678ff9c7-a42a-4ac0-a708-6fc460a27c7d}</Project>
+      <Name>ExcelData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PODMain\Main.csproj">
+      <Project>{81f8c14d-ee9a-4a93-9186-481357c9fe9d}</Project>
+      <Name>Main</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\POD\Global.csproj">
+      <Project>{f7db9280-e09a-470d-8fdb-3c97c538a6c1}</Project>
+      <Name>Global</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paint bucket.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\question.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

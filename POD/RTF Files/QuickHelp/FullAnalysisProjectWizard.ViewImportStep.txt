@@ -1,0 +1,22 @@
+﻿Configure Data Step|
+Configure Data Step|Overview|
+Configure Data Step|Tasks|
+Configure Data Step|Tasks|Entering Information about Your Data Source|
+Configure Data Step|Tasks|Steps for Entering Flaw Information|
+Configure Data Step|Tasks|Steps for Entering Flaw Information|Considerations When Entering Flaw Information|
+Configure Data Step|Tasks|Steps for Entering Flaw Information|Tips for Entering Flaw Information|
+Configure Data Step|Tasks|Steps for Entering Response Information|
+Configure Data Step|Tasks|Steps for Entering Response Information|Considerations When Entering Response Information|
+Configure Data Step|Tasks|Steps for Entering Response Information|Tips for Entering Response Information|
+Configure Data Step|Tasks|Confirming Your Data|
+Configure Data Step|Tasks|Confirming Your Data|Tips for Confirming Data|
+Configure Data Step|Available Actions|
+Configure Data Step|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

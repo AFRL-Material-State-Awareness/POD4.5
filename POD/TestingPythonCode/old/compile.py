@@ -1,0 +1,12 @@
+import clr
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\CPodDoc.dll", "CPodDoc.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\ahat.dll", "ahat.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\linreg.dll", "linreg.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\sysolv.dll", "sysolv.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\funcr.dll", "funcr.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\mdnord.dll", "mdnord.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\__future__.dll", "C:\\Program Files (x86)\\IronPython 2.7\\Lib\\__future__.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\fcn.dll", "fcn.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\leqslv.dll", "leqslv.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\funcr.dll", "funcr.py")
+clr.CompileModules("..\\WinForms POD UI\\bin\\Debug\\qsort.dll", "qsort.py")

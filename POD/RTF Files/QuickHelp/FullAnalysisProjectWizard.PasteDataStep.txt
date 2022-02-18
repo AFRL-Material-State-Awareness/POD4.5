@@ -1,0 +1,23 @@
+﻿Import Data Step|
+Import Data Step|Overview|
+Import Data Step|Overview|What’s a Data Source?|
+Import Data Step|Overview|What’s a Data Source?|Considerations for Data Sources|
+Import Data Step|Tasks|
+Import Data Step|Tasks|Steps for Pasting Data into POD v4|
+Import Data Step|Tasks|Steps for Pasting Data into POD v4|Considerations When Pasting Data|
+Import Data Step|Tasks|Steps for Defining Your New Data|
+Import Data Step|Tasks|Steps for Defining Your New Data|Considerations When Defining Data|
+Import Data Step|Tasks|Steps for Defining Your New Data|Tips for Defining Data|
+Import Data Step|Tasks|Steps for Modifying Your Data|
+Import Data Step|Tasks|Tips for Modifying Data|
+Import Data Step|Steps for Appending Additional Rows|
+Import Data Step|Available Actions|
+Import Data Step|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

@@ -1,0 +1,29 @@
+﻿3. Nomenclature|
+3. Nomenclature|aHat|
+3. Nomenclature|saturation|
+3. Nomenclature|inspection threshold|
+3. Nomenclature|decision threshold|
+3. Nomenclature|censored data|
+3. Nomenclature|hit|
+3. Nomenclature|miss|
+3. Nomenclature|POD|
+3. Nomenclature|POD(a)|
+3. Nomenclature|residual|
+6. NOTES|
+6. NOTES|6.4 A common misconception about statistics and POD  Repeated inspections improve POD|
+Appendix G  Statistical Analysis of NDE Data|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.1 Generalized linear models|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.1 Generalized linear models|G.4.1.1 Link functions|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.2 USERS MANUAL (Hit/Miss)|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.2 USERS MANUAL (Hit/Miss)|G.4.2.2 Constructing hit/miss confidence bounds|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.2 USERS MANUAL (Hit/Miss)|G.4.2.2 Constructing hit/miss confidence bounds|G.4.2.2.1 How the loglikelihoood ratio criterion works|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.3 Choosing an asymmetric link function: EXAMPLE 4 hm cloglog.xls|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.4 Analyzing repeated measures (multiple inspections of the same target set)|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.5 Analyzing disparate data correctly (EXAMPLE 6 hm DISPARATE disks.xls)|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.6 Analyzing hit/miss noise|
+Appendix I  Special Topics|
+Appendix I  Special Topics|I.2 False positives, Sensitivity and Specificity|
+Appendix I  Special Topics|I.3 The misunderstood receiver operating characteristic (ROC) curve|
+Appendix I  Special Topics|I.4 Asymptotic POD functions|
+Appendix J  Related Documents|

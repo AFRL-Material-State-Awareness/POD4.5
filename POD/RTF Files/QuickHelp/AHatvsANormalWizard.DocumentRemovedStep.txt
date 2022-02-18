@@ -1,0 +1,22 @@
+﻿Document and Export Step|
+Document and Export Step|Overview|
+Document and Export Step|Tasks|
+Document and Export Step|Tasks|Steps for Documenting Removed Points with New Comments|
+Document and Export Step|Tasks|Steps for Documenting Removed Points with New Comments|Considerations When Documenting Points|
+Document and Export Step|Tasks|Steps for Documenting Removed Points with New Comments|Tips for Documenting Points|
+Document and Export Step|Tasks|Steps for Documenting Removed Points with Comment Templates|
+Document and Export Step|Tasks|Steps for Documenting Removed Points with Comment Templates|Tip for Using Comment Templates|
+Document and Export Step|Tasks|Steps for Exporting Your Analysis to Excel|
+Document and Export Step|Tasks|Steps for Exporting Your Project to Excel|
+Document and Export Step|Tasks|Steps for Exporting Your Project to Excel|Tip for Exporting Data|
+Document and Export Step|Tasks|Steps for Exporting Your Project to Excel|Considerations When Exporting Data|
+Document and Export Step|Available Actions|
+Document and Export Step|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

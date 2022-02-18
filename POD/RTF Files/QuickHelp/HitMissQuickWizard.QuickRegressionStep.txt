@@ -1,0 +1,33 @@
+﻿aHat vs a Quick Analysis|
+aHat vs a Quick Analysis|Overview|
+aHat vs a Quick Analysis|Tasks|
+aHat vs a Quick Analysis|Tasks|Initial Inputs|
+aHat vs a Quick Analysis|Tasks|Steps to Filling out Initial Inputs|
+aHat vs a Quick Analysis|Tasks|Tips for Filling out Initial Inputs|
+aHat vs a Quick Analysis|Tasks|Entering Table Data|
+aHat vs a Quick Analysis|Tasks|Steps to Entering Table Data Manually|
+aHat vs a Quick Analysis|Tasks|Steps to Entering Table Data Manually|Tips for Entering Table Data Manually|
+aHat vs a Quick Analysis|Tasks|Steps to Pasting Data into the Table|
+aHat vs a Quick Analysis|Tasks|Steps to Pasting Data into the Table|Tips for Pasting Data into the Table|
+aHat vs a Quick Analysis|Tasks|Steps to Exporting the Data Table|
+aHat vs a Quick Analysis|Tasks|Linear Regression Input Controls|
+aHat vs a Quick Analysis|Tasks|Steps to Changing Numeric Input Values (Three Methods)|
+aHat vs a Quick Analysis|Tasks|Steps to Changing Numeric Input Values (Three Methods)|Tips for Changing Numeric Input Values|
+aHat vs a Quick Analysis|Tasks|Steps for Changing Your Transforms|
+aHat vs a Quick Analysis|Tasks|Steps for Changing Your Transforms|Tips for Changing Your Transforms|
+aHat vs a Quick Analysis|Tasks|Steps for Toggling Data Points|
+aHat vs a Quick Analysis|Tasks|Steps for Toggling Data Points|Considerations When Toggling Data Points|
+aHat vs a Quick Analysis|Tasks|Steps for Toggling Data Points|Tips for Toggling Data Points|
+aHat vs a Quick Analysis|Steps for Resizing Left Side Charts|
+aHat vs a Quick Analysis|Steps for Resizing Left Side Charts|Tips for Resizing Left Side Charts|
+aHat vs a Quick Analysis|Steps for Resizing Left Side Charts|Resizing Right Side Controls|
+aHat vs a Quick Analysis|Available Actions|
+aHat vs a Quick Analysis|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

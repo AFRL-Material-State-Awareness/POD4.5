@@ -1,0 +1,534 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using POD.Controls;
+using POD.Analyze;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing;
+
+namespace POD.Wizards.Steps.AHatVsANormalSteps
+{
+    using System.Data;
+    using System.Windows.Forms.DataVisualization.Charting;
+
+    using POD.Analyze;
+    using POD.Data;
+
+    public partial class FullRegressionPanel : WizardPanel
+    {
+        private bool controlValueChanged;
+
+
+        public FullRegressionPanel()
+        {
+            InitializeComponent();
+
+            SideCharts = new List<AHatVsAChart>();
+
+            SideCharts.Add(linearityChart);
+            SideCharts.Add(normalityChart);
+            SideCharts.Add(equalVarianceChart);
+            SideCharts.Add(podChart);
+            SideCharts.Add(thresholdChart);
+
+            graphFlowPanel.Controls.Clear();
+            CheckSideCharts();
+<<<<<<< HEAD
+
+            aHatVsAChart1.LineMouseUp += RunAnalysis_MouseUp;
+
+            linearityChart.SetupChart();
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+        }
+
+        public void DrawLine(Series mySeries, double myY, double myXMin, double myXMax)
+        {
+            mySeries.Points.Clear();
+
+            mySeries.Points.AddXY(myXMin, myY);
+            mySeries.Points.AddXY(myXMax, myY);
+        }
+
+
+        public void SetAnalysisData(Analysis myAnalysis)
+        {
+            //aHatVsAChart1.Series.Clear();
+
+            //aHatVsAChart1.Series.Add(new Series("Fit"));
+
+            //Series series = aHatVsAChart1.Series[0];
+
+            //series.ChartType = SeriesChartType.Line;
+            //series.IsXValueIndexed = false;
+            //series.YValuesPerPoint = 1;
+            //series.BorderWidth = 3;
+            //series.Color = System.Drawing.Color.Black;
+
+            //aHatVsAChart1.Series.Add(new Series("Left Censor"));
+
+            //series = aHatVsAChart1.Series[1];
+
+            //series.ChartType = SeriesChartType.Line;
+            //series.IsXValueIndexed = false;
+            //series.YValuesPerPoint = 1;
+            //series.BorderWidth = 3;
+            //series.Color = System.Drawing.Color.Red;
+            //series.Points.AddXY(1.0, 1.0);
+            //series.Points.AddXY(100.0, 1.0);
+
+            //aHatVsAChart1.Series.Add(new Series("Right Censor"));
+
+            //series = aHatVsAChart1.Series[2];
+
+            //series.ChartType = SeriesChartType.Line;
+            //series.IsXValueIndexed = false;
+            //series.YValuesPerPoint = 1;
+            //series.BorderWidth = 3;
+            //series.Color = System.Drawing.Color.Red;
+            //series.Points.AddXY(1.0, 100.0);
+            //series.Points.AddXY(100.0, 100.0);
+
+            //foreach (string name in myAnalysis.Data.ActivatedResponseNames)
+            //{
+            //    aHatVsAChart1.Series.Add(new Series(name));
+            //    series = aHatVsAChart1.Series[name];
+
+
+            //    series.ChartType = SeriesChartType.Point;
+            //    series.YValuesPerPoint = 1;
+
+            //    series.Points.DataBindXY(myAnalysis.Data.ActivatedFlaws.DefaultView,
+            //                                              myAnalysis.Data.ActivatedFlawNames[0],
+            //                                              myAnalysis.Data.ActivatedResponses.DefaultView,
+            //                                              name);
+            //}
+
+            myAnalysis.CalculateInitialValuesWithNewData();
+        }
+
+        public List<AHatVsAChart> SideCharts;    
+    
+        public void RunAnalysis()
+        {
+<<<<<<< HEAD
+
+            Analysis.InResponseMin = Convert.ToDouble(leftCensorControl.Value);
+            Analysis.InResponseMax = Convert.ToDouble(rightCensorControl.Value);
+            Analysis.InResponseDecision = Convert.ToDouble(thresholdControl.Value);
+
+            this.Cursor = Cursors.WaitCursor;
+
+            Analysis.RunAnalysis();
+
+            this.Cursor = Cursors.Default;
+
+            aHatVsAChart1.UpdateChartData(Analysis.Data);
+
+            linearityChart.ChartAreas[0].AxisX.IsLogarithmic = false;
+
+            modelMOut.Value = Convert.ToDecimal(Analysis.OutModelSlope);
+            modelBOut.Value = Convert.ToDecimal(Analysis.OutModelIntercept);
+            a90Out.Value = Convert.ToDecimal(Analysis.OutResponseDecisionPODLevelValue);
+            a90_95Out.Value = Convert.ToDecimal(Analysis.OutResponseDecisionPODConfidenceValue);
+            a50Out.Value = Convert.ToDecimal(Analysis.OutResponseDecisionPODA50Value);
+
+//aHatVsAChart1.Series[1].Points.Clear();
+            aHatVsAChart1.Series[fitIndex].Points.DataBindXY(Analysis.Data.ResidualUncensoredTable.DefaultView,
+                                                      "t_flaw",
+                                                      Analysis.Data.ResidualUncensoredTable.DefaultView,
+                                                      "t_fit");
+=======
+            Analysis.RunAnalysis();
+
+            //aHatVsAChart1.Series[1].Points.Clear();
+            aHatVsAChart1.Series[0].Points.DataBindXY(Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                      Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[1].ColumnName);
+
+            DrawLine(aHatVsAChart1.Series[1], Analysis.InResponseMin, Analysis.InFlawMin, Analysis.InFlawMax);
+            DrawLine(aHatVsAChart1.Series[2], Analysis.InResponseMax, Analysis.InFlawMin, Analysis.InFlawMax);
+
+            linearityChart.Series[3].Points.DataBindXY(Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                      Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[2].ColumnName);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+
+            /*DataView view = Analysis.Data.FitResidualsTable.DefaultView;
+
+            linearityChart.LeftCensor.Points.DataBindXY(Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                      Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[3].ColumnName);
+
+            linearityChart.RightCensor.Points.DataBindXY(Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                      Analysis.Data.FitResidualsTable.DefaultView,
+                                                      Analysis.Data.FitResidualsTable.Columns[4].ColumnName);
+<<<<<<< HEAD
+
+            if (Analysis.Data.FitResidualsTable.Rows.Count > 0)
+            {
+                double min = Convert.ToDouble(Analysis.Data.FitResidualsTable.Compute("min(" + Analysis.Data.FitResidualsTable.Columns[0].ColumnName + ")", string.Empty));
+                double max = Convert.ToDouble(Analysis.Data.FitResidualsTable.Compute("max(" + Analysis.Data.FitResidualsTable.Columns[0].ColumnName + ")", string.Empty));
+
+                DrawLine(linearityChart.FlawEstimate, 0.0, min, max);
+            }
+
+            view.RowFilter = "FitCensorTypes = " + 2 + "OR FitCensorTypes = " + 1;
+            linearityChart.CompleteCensored.Points.DataBindXY(view, Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                       view,  Analysis.Data.FitResidualsTable.Columns[2].ColumnName);
+
+            view.RowFilter = "FitCensorTypes = " + 4 + "OR FitCensorTypes = " + 3;
+            linearityChart.PartialCensored.Points.DataBindXY(view, Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                      view,  Analysis.Data.FitResidualsTable.Columns[2].ColumnName);
+
+            view.RowFilter = "FitCensorTypes = " + 0 ;
+            linearityChart.Uncensored.Points.DataBindXY(view, Analysis.Data.FitResidualsTable.Columns[0].ColumnName,
+                                                       view, Analysis.Data.FitResidualsTable.Columns[2].ColumnName);            
+
+            view.RowFilter = "";
+
+            //linearityChart.ChartAreas[0].AxisX.Maximum = aHatVsAChart1.ChartAreas[0].AxisX.Maximum;
+            //linearityChart.ChartAreas[0].AxisX.Minimum = aHatVsAChart1.ChartAreas[0].AxisX.Minimum;
+            linearityChart.ChartAreas[0].AxisX.RoundAxisValues();
+            linearityChart.ChartAreas[0].AxisY.RoundAxisValues();*/
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+        }
+
+        public int LinearityIndex
+        {
+            get { return SideCharts.IndexOf(linearityChart); }
+        }
+
+        public int NormalityIndex
+        {
+            get { return SideCharts.IndexOf(normalityChart); }
+        }
+
+        public int EqualVarianceIndex
+        {
+            get { return SideCharts.IndexOf(equalVarianceChart); }
+        }
+
+        public int PodIndex
+        {
+            get { return SideCharts.IndexOf(podChart); }
+        }
+
+        public int ThresholdIndex
+        {
+            get { return SideCharts.IndexOf(thresholdChart); }
+        }
+
+        private void aMaxControl_ValueChanged(object sender, EventArgs e)
+        {
+            controlValueChanged = true;
+
+            var dataPoint = new DataPoint(Convert.ToDouble(aMaxControl.Value), 0);
+            aHatVsAChart1.SetAMaxBoundary(sender, e, dataPoint);
+
+            controlValueChanged = false;
+        }
+
+        private void aMinControl_ValueChanged(object sender, EventArgs e)
+        {
+            controlValueChanged = true;
+
+            var dataPoint = new DataPoint(Convert.ToDouble(aMinControl.Value), 0);
+            aHatVsAChart1.SetAMinBoundary(sender, e, dataPoint);
+
+            controlValueChanged = false;
+        }
+
+        private void leftCensorControl_ValueChanged(object sender, EventArgs e)
+        {
+            controlValueChanged = true;
+
+            var dataPoint = new DataPoint(0, Convert.ToDouble(leftCensorControl.Value));
+            aHatVsAChart1.SetLeftCensorBoundary(sender, e, dataPoint);
+
+            controlValueChanged = false;
+        }
+
+        private void rightControl_ValueChanged(object sender, EventArgs e)
+        {
+            controlValueChanged = true;
+
+            var dataPoint = new DataPoint(0, Convert.ToDouble(rightCensorControl.Value));
+            aHatVsAChart1.SetRightCensorBoundary(sender, e, dataPoint);
+
+            controlValueChanged = false;
+        }
+
+        private void thresholdControl_ValueChanged(object sender, EventArgs e)
+        {
+            controlValueChanged = true;
+
+            var dataPoint = new DataPoint(0, Convert.ToDouble(thresholdControl.Value));
+            aHatVsAChart1.SetThresholdBoundary(sender, e, dataPoint);
+
+            controlValueChanged = false;
+        }
+
+        private void Panel_Resize(object sender, EventArgs e)
+        {
+            ResizeAlternateChart();
+        }
+
+        private void ResizeAlternateChart()
+        {
+            int scrollbarWidth = 0;
+
+            if (graphFlowPanel.VerticalScroll.Visible == true)
+                scrollbarWidth = ScrollbarWidth();
+
+            foreach (Control control in graphFlowPanel.Controls)
+            {
+                control.Width = graphSplitter.SplitterDistance - (scrollbarWidth + control.Margin.Left + control.Margin.Right);
+                control.Height = control.Width;
+            }
+
+            CheckSideCharts();
+        }
+
+        private void Splitter_Moved(object sender, SplitterEventArgs e)
+        {
+            ResizeAlternateChart();
+        }
+
+        private void GraphSplitter_Moved(object sender, SplitterEventArgs e)
+        {
+            ResizeAlternateChart();
+        }
+
+        public void CheckSideCharts()
+        {
+            if (graphFlowPanel.Controls.Count == 0)
+            {
+                graphSplitter.Panel1Collapsed = true;
+            }
+            else
+            {
+                graphSplitter.Panel1Collapsed = false;
+            }
+        }
+
+        private int ChartWidth(Controls.AHatVsAChart myChart)
+        {
+            return myChart.Width + myChart.Margin.Left + myChart.Margin.Right;
+        }
+
+        private int ScrollbarWidth()
+        {
+            return SystemInformation.VerticalScrollBarWidth + 3;
+        }
+
+        public bool DisplayChart(int myIndex)
+        {
+            AHatVsAChart chart = SideCharts[myIndex];
+            bool show = false;
+
+            if (graphFlowPanel.Contains(chart) == false)
+            {
+                graphFlowPanel.Controls.Add(chart);
+
+                show = true;
+            }
+            else
+            {
+                graphFlowPanel.Controls.Remove(chart);
+
+                show = false;
+            }
+
+            CheckSideCharts();
+            ResizeAlternateChart();
+
+            graphFlowPanel.ScrollControlIntoView(chart);
+
+            return show;
+        }
+
+        public override void RefreshValues()
+        {
+            var chart = aHatVsAChart1;
+            var data = Analysis.Data;
+
+            graphFlowPanel.Controls.Clear();
+
+            chart.LoadChartData(data);
+
+<<<<<<< HEAD
+            chart.ChartAreas[0].AxisX.RoundAxisValues();
+            chart.ChartAreas[0].AxisY.RoundAxisValues();
+
+            //chart.ChartAreas[0].AxisY.Maximum = 6000;
+            //chart.ChartAreas[0].AxisY.Minimum = 0;
+
+            chart.Series.Add(new Series("Fit"));
+
+            fitIndex = chart.Series.Count - 1;
+
+            Series series = chart.Series[fitIndex];
+
+            series.ChartType = SeriesChartType.Line;
+            series.IsXValueIndexed = false;
+            series.YValuesPerPoint = 1;
+            series.BorderWidth = 3;
+            series.Color = System.Drawing.Color.Black;
+
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            // TODO: Replace with proper call to get data table
+            //this.LoadLinearityChartData();
+
+            chart.LinesChanged += MainChart_LinesChanged;
+            
+            this.aMaxControl.Maximum = decimal.MaxValue;
+            this.aMaxControl.Minimum = decimal.MinValue;
+            this.aMaxControl.DecimalPlaces = 3;
+
+            this.aMinControl.Maximum = decimal.MaxValue;
+            this.aMinControl.Minimum = decimal.MinValue;
+            this.aMinControl.DecimalPlaces = 3;
+
+            this.leftCensorControl.Maximum = decimal.MaxValue;
+            this.leftCensorControl.Minimum = decimal.MinValue;
+            this.leftCensorControl.DecimalPlaces = 3;
+
+            this.rightCensorControl.Maximum = decimal.MaxValue;
+            this.rightCensorControl.Minimum = decimal.MinValue;
+            this.rightCensorControl.DecimalPlaces = 3;
+
+            this.thresholdControl.Maximum = decimal.MaxValue;
+            this.thresholdControl.Minimum = decimal.MinValue;
+            this.thresholdControl.DecimalPlaces = 3;
+
+            aMaxControl.ValueChanged += this.aMaxControl_ValueChanged;
+            aMinControl.ValueChanged += this.aMinControl_ValueChanged;
+            leftCensorControl.ValueChanged += this.leftCensorControl_ValueChanged;
+            rightCensorControl.ValueChanged += this.rightControl_ValueChanged;
+            thresholdControl.ValueChanged += this.thresholdControl_ValueChanged;
+<<<<<<< HEAD
+
+            Analysis.CalculateInitialValuesWithNewData();
+
+            //aHatVsAChart1.ChartAreas[0].AxisY.Minimum = 1.0;
+
+            graphSplitter.SplitterDistance = Convert.ToInt32(Width * .25);
+
+            DisplayChart(LinearityIndex);
+
+            RunAnalysis();
+=======
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+        }
+
+        private void LoadLinearityChartData(DataTable flaws, DataTable responses)
+        {
+            /*var difference = "difference";
+            var predicted = "predicted";
+
+            linearityChart.Series.Add(difference);
+            linearityChart.Series[difference].ChartType = SeriesChartType.Point;
+
+            linearityChart.Series.Add(predicted);
+            linearityChart.Series[predicted].ChartType = SeriesChartType.Line;
+
+            //TODO: dummy series. Remove
+            linearityChart.Series.Add("dummy");
+            linearityChart.Series["dummy"].ChartType = SeriesChartType.Line;
+
+            linearityChart.ChartAreas[0].AxisX.IsLogarithmic = false;
+            linearityChart.ChartAreas[0].AxisX.MinorTickMark.Interval = 1;
+            linearityChart.ChartAreas[0].AxisX.MinorTickMark.Enabled = true;
+            linearityChart.ChartAreas[0].AxisX.LabelStyle.Interval = 1;
+            linearityChart.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            linearityChart.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+
+            linearityChart.ReloadChartData(flaws.Rows, responses);*/
+        }
+
+        private void MainChart_LinesChanged(object sender, EventArgs e)
+        {
+            if (!controlValueChanged)
+            {
+                this.aMaxControl.Value = Convert.ToDecimal(aHatVsAChart1.GetControlLineValue(ControlLine.AMax));
+                this.aMinControl.Value = Convert.ToDecimal(aHatVsAChart1.GetControlLineValue(ControlLine.AMin));
+                this.leftCensorControl.Value =
+                    Convert.ToDecimal(aHatVsAChart1.GetControlLineValue(ControlLine.LeftCensor));
+                this.rightCensorControl.Value =
+                    Convert.ToDecimal(aHatVsAChart1.GetControlLineValue(ControlLine.RightCensor));
+                this.thresholdControl.Value = Convert.ToDecimal(
+                    aHatVsAChart1.GetControlLineValue(ControlLine.Threshold));
+            }
+        }
+
+        private void Annotation_Moving(object sender, AnnotationPositionChangingEventArgs e)
+        {
+            var xAxis = aHatVsAChart1.ChartAreas[0].AxisX;
+            var yAxis = aHatVsAChart1.ChartAreas[0].AxisY;
+
+            if (e.NewLocationX < xAxis.Minimum)
+            {
+                e.NewLocationX = xAxis.Minimum;
+            }
+            else if (e.NewLocationX > xAxis.Maximum)
+            {
+                e.NewLocationX = xAxis.Maximum;
+            }
+
+            if (e.NewLocationY < yAxis.Minimum)
+            {
+                e.NewLocationY = yAxis.Minimum;
+            }
+            else if (e.NewLocationY > yAxis.Maximum)
+            {
+                e.NewLocationY = yAxis.Maximum;
+            }
+
+            aHatVsAChart1.OnLinesChanged(EventArgs.Empty);
+        }
+
+        private void Annotation_Moved(object sender, EventArgs e)
+        {
+            Annotation moved = (Annotation)sender;
+
+            var xAxis = aHatVsAChart1.ChartAreas[0].AxisX;
+            var yAxis = aHatVsAChart1.ChartAreas[0].AxisY;
+
+            if (moved.X < xAxis.Minimum)
+            {
+                moved.X = xAxis.Minimum;
+            }
+            else if (moved.X > xAxis.Maximum)
+            {
+                moved.X = xAxis.Maximum;
+            }
+
+            if (moved.Y < yAxis.Minimum)
+            {
+                moved.Y = yAxis.Minimum;
+            }
+            else if (moved.Y > yAxis.Maximum)
+            {
+                moved.Y = yAxis.Maximum;
+            }
+
+<<<<<<< HEAD
+            
+
+            dontRun = false;
+=======
+            aHatVsAChart1.OnLinesChanged(EventArgs.Empty);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+        }
+    }
+}

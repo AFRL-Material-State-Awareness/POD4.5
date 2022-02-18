@@ -1,0 +1,930 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace POD.Wizards.Steps.AHatVsANormalSteps
+{
+    partial class FullRegressionPanel
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title5 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title6 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            this.controlSplitter = new System.Windows.Forms.SplitContainer();
+            this.graphSplitter = new System.Windows.Forms.SplitContainer();
+            this.graphFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
+<<<<<<< HEAD
+            this.linearityChart = new POD.Controls.CensoredLinearityChart();
+=======
+            this.linearityChart = new POD.Controls.AHatVsAChart();
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.normalityChart = new POD.Controls.AHatVsAChart();
+            this.equalVarianceChart = new POD.Controls.AHatVsAChart();
+            this.podChart = new POD.Controls.AHatVsAChart();
+            this.thresholdChart = new POD.Controls.AHatVsAChart();
+            this.aHatVsAChart1 = new POD.Controls.RegressionAnalysisChart();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.inputBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.leftCensorControl = new System.Windows.Forms.NumericUpDown();
+            this.rightCensorControl = new System.Windows.Forms.NumericUpDown();
+            this.aMaxControl = new System.Windows.Forms.NumericUpDown();
+            this.AMaxInputLabel = new System.Windows.Forms.Label();
+            this.aMinControl = new System.Windows.Forms.NumericUpDown();
+            this.AMinInputLabel = new System.Windows.Forms.Label();
+            this.LeftCensorInputLabel = new System.Windows.Forms.Label();
+            this.RightCensorInputLabel = new System.Windows.Forms.Label();
+            this.thresholdLabel = new System.Windows.Forms.Label();
+            this.thresholdControl = new System.Windows.Forms.NumericUpDown();
+            this.outputBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.modelBLabel = new System.Windows.Forms.Label();
+            this.modelBOut = new System.Windows.Forms.NumericUpDown();
+            this.modelMLabel = new System.Windows.Forms.Label();
+            this.modelMOut = new System.Windows.Forms.NumericUpDown();
+            this.a50label = new System.Windows.Forms.Label();
+            this.a50Out = new System.Windows.Forms.NumericUpDown();
+            this.a90Label = new System.Windows.Forms.Label();
+            this.a90Out = new System.Windows.Forms.NumericUpDown();
+            this.a90_95Label = new System.Windows.Forms.Label();
+<<<<<<< HEAD
+            this.a90_95Out = new System.Windows.Forms.NumericUpDown();
+=======
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            ((System.ComponentModel.ISupportInitialize)(this.controlSplitter)).BeginInit();
+            this.controlSplitter.Panel1.SuspendLayout();
+            this.controlSplitter.Panel2.SuspendLayout();
+            this.controlSplitter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.graphSplitter)).BeginInit();
+            this.graphSplitter.Panel1.SuspendLayout();
+            this.graphSplitter.Panel2.SuspendLayout();
+            this.graphSplitter.SuspendLayout();
+            this.graphFlowPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.linearityChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.normalityChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.equalVarianceChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.podChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aHatVsAChart1)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.inputBox.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.leftCensorControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rightCensorControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aMaxControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aMinControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdControl)).BeginInit();
+            this.outputBox.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+<<<<<<< HEAD
+            ((System.ComponentModel.ISupportInitialize)(this.modelBOut)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.modelMOut)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.a50Out)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.a90Out)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.a90_95Out)).BeginInit();
+=======
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.SuspendLayout();
+            // 
+            // controlSplitter
+            // 
+            this.controlSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.controlSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.controlSplitter.Location = new System.Drawing.Point(0, 0);
+            this.controlSplitter.Name = "controlSplitter";
+            // 
+            // controlSplitter.Panel1
+            // 
+            this.controlSplitter.Panel1.Controls.Add(this.graphSplitter);
+            // 
+            // controlSplitter.Panel2
+            // 
+            this.controlSplitter.Panel2.Controls.Add(this.tableLayoutPanel1);
+            this.controlSplitter.Size = new System.Drawing.Size(698, 458);
+            this.controlSplitter.SplitterDistance = 525;
+            this.controlSplitter.TabIndex = 1;
+            this.controlSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.Splitter_Moved);
+            // 
+            // graphSplitter
+            // 
+            this.graphSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graphSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.graphSplitter.Location = new System.Drawing.Point(0, 0);
+            this.graphSplitter.Name = "graphSplitter";
+            // 
+            // graphSplitter.Panel1
+            // 
+            this.graphSplitter.Panel1.Controls.Add(this.graphFlowPanel);
+            // 
+            // graphSplitter.Panel2
+            // 
+            this.graphSplitter.Panel2.Controls.Add(this.aHatVsAChart1);
+            this.graphSplitter.Size = new System.Drawing.Size(525, 458);
+            this.graphSplitter.SplitterDistance = 210;
+            this.graphSplitter.TabIndex = 0;
+            this.graphSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.GraphSplitter_Moved);
+            // 
+            // graphFlowPanel
+            // 
+            this.graphFlowPanel.AutoScroll = true;
+            this.graphFlowPanel.Controls.Add(this.linearityChart);
+            this.graphFlowPanel.Controls.Add(this.normalityChart);
+            this.graphFlowPanel.Controls.Add(this.equalVarianceChart);
+            this.graphFlowPanel.Controls.Add(this.podChart);
+            this.graphFlowPanel.Controls.Add(this.thresholdChart);
+            this.graphFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graphFlowPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.graphFlowPanel.Location = new System.Drawing.Point(0, 0);
+            this.graphFlowPanel.Name = "graphFlowPanel";
+            this.graphFlowPanel.Size = new System.Drawing.Size(210, 458);
+            this.graphFlowPanel.TabIndex = 0;
+            this.graphFlowPanel.WrapContents = false;
+            // 
+            // linearityChart
+            // 
+            this.linearityChart.BorderlineColor = System.Drawing.Color.Transparent;
+            this.linearityChart.CanUnselect = false;
+            chartArea1.AxisX.Title = " Crack Size (mils)";
+            chartArea1.AxisY.Title = "Response";
+            chartArea1.Name = "ChartArea1";
+            this.linearityChart.ChartAreas.Add(chartArea1);
+            this.linearityChart.IsSelected = false;
+            this.linearityChart.IsSquare = false;
+<<<<<<< HEAD
+            this.linearityChart.Location = new System.Drawing.Point(3, 3);
+            this.linearityChart.Name = "linearityChart";
+            this.linearityChart.Selectable = false;
+=======
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.linearityChart.Legends.Add(legend1);
+            this.linearityChart.Location = new System.Drawing.Point(3, 3);
+            this.linearityChart.Name = "linearityChart";
+            this.linearityChart.Selectable = false;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.linearityChart.Series.Add(series1);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.linearityChart.Size = new System.Drawing.Size(160, 160);
+            this.linearityChart.TabIndex = 0;
+            this.linearityChart.Text = "aHatVsAChart1";
+            title1.Name = "Title1";
+            title1.Text = "Linearity";
+            this.linearityChart.Titles.Add(title1);
+            // 
+            // normalityChart
+            // 
+            this.normalityChart.BorderlineColor = System.Drawing.Color.Transparent;
+            this.normalityChart.CanUnselect = false;
+            chartArea2.AxisX.Title = " Crack Size (mils)";
+            chartArea2.AxisY.Title = "Response";
+            chartArea2.Name = "ChartArea1";
+            this.normalityChart.ChartAreas.Add(chartArea2);
+            this.normalityChart.IsSelected = false;
+            this.normalityChart.IsSquare = false;
+<<<<<<< HEAD
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.normalityChart.Legends.Add(legend1);
+            this.normalityChart.Location = new System.Drawing.Point(3, 169);
+            this.normalityChart.Name = "normalityChart";
+            this.normalityChart.Selectable = false;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.normalityChart.Series.Add(series1);
+=======
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            this.normalityChart.Legends.Add(legend2);
+            this.normalityChart.Location = new System.Drawing.Point(3, 169);
+            this.normalityChart.Name = "normalityChart";
+            this.normalityChart.Selectable = false;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.normalityChart.Series.Add(series2);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.normalityChart.Size = new System.Drawing.Size(160, 160);
+            this.normalityChart.TabIndex = 0;
+            this.normalityChart.Text = "aHatVsAChart1";
+            title2.Name = "Title1";
+            title2.Text = "Normality";
+            this.normalityChart.Titles.Add(title2);
+            // 
+            // equalVarianceChart
+            // 
+            this.equalVarianceChart.BorderlineColor = System.Drawing.Color.Transparent;
+            this.equalVarianceChart.CanUnselect = false;
+            chartArea3.AxisX.Title = " Crack Size (mils)";
+            chartArea3.AxisY.Title = "Response";
+            chartArea3.Name = "ChartArea1";
+            this.equalVarianceChart.ChartAreas.Add(chartArea3);
+            this.equalVarianceChart.IsSelected = false;
+            this.equalVarianceChart.IsSquare = false;
+<<<<<<< HEAD
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            this.equalVarianceChart.Legends.Add(legend2);
+            this.equalVarianceChart.Location = new System.Drawing.Point(3, 335);
+            this.equalVarianceChart.Name = "equalVarianceChart";
+            this.equalVarianceChart.Selectable = false;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.equalVarianceChart.Series.Add(series2);
+=======
+            legend3.Enabled = false;
+            legend3.Name = "Legend1";
+            this.equalVarianceChart.Legends.Add(legend3);
+            this.equalVarianceChart.Location = new System.Drawing.Point(3, 335);
+            this.equalVarianceChart.Name = "equalVarianceChart";
+            this.equalVarianceChart.Selectable = false;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.equalVarianceChart.Series.Add(series3);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.equalVarianceChart.Size = new System.Drawing.Size(160, 160);
+            this.equalVarianceChart.TabIndex = 0;
+            this.equalVarianceChart.Text = "aHatVsAChart1";
+            title3.Name = "Title1";
+            title3.Text = "Equal Variance";
+            this.equalVarianceChart.Titles.Add(title3);
+            // 
+            // podChart
+            // 
+            this.podChart.BorderlineColor = System.Drawing.Color.Transparent;
+            this.podChart.CanUnselect = false;
+            chartArea4.AxisX.Title = " Crack Size (mils)";
+            chartArea4.AxisY.Title = "Response";
+            chartArea4.Name = "ChartArea1";
+            this.podChart.ChartAreas.Add(chartArea4);
+            this.podChart.IsSelected = false;
+            this.podChart.IsSquare = false;
+<<<<<<< HEAD
+            legend3.Enabled = false;
+            legend3.Name = "Legend1";
+            this.podChart.Legends.Add(legend3);
+            this.podChart.Location = new System.Drawing.Point(3, 501);
+            this.podChart.Name = "podChart";
+            this.podChart.Selectable = false;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.podChart.Series.Add(series3);
+=======
+            legend4.Enabled = false;
+            legend4.Name = "Legend1";
+            this.podChart.Legends.Add(legend4);
+            this.podChart.Location = new System.Drawing.Point(3, 501);
+            this.podChart.Name = "podChart";
+            this.podChart.Selectable = false;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.podChart.Series.Add(series4);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.podChart.Size = new System.Drawing.Size(160, 160);
+            this.podChart.TabIndex = 1;
+            this.podChart.Text = "aHatVsAChart5";
+            title4.Name = "Title1";
+            title4.Text = "POD";
+            this.podChart.Titles.Add(title4);
+            // 
+            // thresholdChart
+            // 
+            this.thresholdChart.BorderlineColor = System.Drawing.Color.Transparent;
+            this.thresholdChart.CanUnselect = false;
+            chartArea5.AxisX.Title = " Crack Size (mils)";
+            chartArea5.AxisY.Title = "Response";
+            chartArea5.Name = "ChartArea1";
+            this.thresholdChart.ChartAreas.Add(chartArea5);
+            this.thresholdChart.IsSelected = false;
+            this.thresholdChart.IsSquare = false;
+<<<<<<< HEAD
+            legend4.Enabled = false;
+            legend4.Name = "Legend1";
+            this.thresholdChart.Legends.Add(legend4);
+            this.thresholdChart.Location = new System.Drawing.Point(3, 667);
+            this.thresholdChart.Name = "thresholdChart";
+            this.thresholdChart.Selectable = false;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.thresholdChart.Series.Add(series4);
+=======
+            legend5.Enabled = false;
+            legend5.Name = "Legend1";
+            this.thresholdChart.Legends.Add(legend5);
+            this.thresholdChart.Location = new System.Drawing.Point(3, 667);
+            this.thresholdChart.Name = "thresholdChart";
+            this.thresholdChart.Selectable = false;
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.thresholdChart.Series.Add(series5);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.thresholdChart.Size = new System.Drawing.Size(160, 160);
+            this.thresholdChart.TabIndex = 2;
+            this.thresholdChart.Text = "aHatVsAChart6";
+            title5.Name = "Title1";
+            title5.Text = "Threshold";
+            this.thresholdChart.Titles.Add(title5);
+            // 
+            // aHatVsAChart1
+            // 
+            this.aHatVsAChart1.BestFitACoeff = 0D;
+            this.aHatVsAChart1.BestFitBCoeff = 0D;
+            this.aHatVsAChart1.BorderlineColor = System.Drawing.Color.Transparent;
+            this.aHatVsAChart1.CanUnselect = false;
+            chartArea6.AxisX.Title = " Crack Size (mils)";
+            chartArea6.AxisY.Title = "Response";
+            chartArea6.Name = "ChartArea1";
+            this.aHatVsAChart1.ChartAreas.Add(chartArea6);
+            this.aHatVsAChart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.aHatVsAChart1.IsSelected = false;
+            this.aHatVsAChart1.IsSquare = false;
+<<<<<<< HEAD
+            legend5.Enabled = false;
+            legend5.Name = "Legend1";
+            this.aHatVsAChart1.Legends.Add(legend5);
+            this.aHatVsAChart1.Location = new System.Drawing.Point(0, 0);
+            this.aHatVsAChart1.Name = "aHatVsAChart1";
+            this.aHatVsAChart1.Selectable = false;
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.aHatVsAChart1.Series.Add(series5);
+=======
+            legend6.Enabled = false;
+            legend6.Name = "Legend1";
+            this.aHatVsAChart1.Legends.Add(legend6);
+            this.aHatVsAChart1.Location = new System.Drawing.Point(0, 0);
+            this.aHatVsAChart1.Name = "aHatVsAChart1";
+            this.aHatVsAChart1.Selectable = false;
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series6.Legend = "Legend1";
+            series6.Name = "Series1";
+            this.aHatVsAChart1.Series.Add(series6);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.aHatVsAChart1.Size = new System.Drawing.Size(311, 458);
+            this.aHatVsAChart1.TabIndex = 0;
+            this.aHatVsAChart1.Text = "aHatVsAChart1";
+            title6.Name = "Title1";
+            title6.Text = "Response vs Crack Size";
+            this.aHatVsAChart1.Titles.Add(title6);
+<<<<<<< HEAD
+            this.aHatVsAChart1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RunAnalysis_MouseUp);
+=======
+            this.aHatVsAChart1.AnnotationPositionChanged += new System.EventHandler(this.Annotation_Moved);
+            this.aHatVsAChart1.AnnotationPositionChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.AnnotationPositionChangingEventArgs>(this.Annotation_Moving);
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.inputBox, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.outputBox, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(169, 458);
+            this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // inputBox
+            // 
+            this.inputBox.Controls.Add(this.tableLayoutPanel2);
+            this.inputBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.inputBox.Location = new System.Drawing.Point(3, 3);
+            this.inputBox.Name = "inputBox";
+            this.inputBox.Size = new System.Drawing.Size(163, 223);
+            this.inputBox.TabIndex = 0;
+            this.inputBox.TabStop = false;
+            this.inputBox.Text = "Inputs";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.AutoSize = true;
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this.leftCensorControl, 0, 5);
+            this.tableLayoutPanel2.Controls.Add(this.rightCensorControl, 0, 7);
+            this.tableLayoutPanel2.Controls.Add(this.aMaxControl, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.AMaxInputLabel, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.aMinControl, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.AMinInputLabel, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.LeftCensorInputLabel, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.RightCensorInputLabel, 0, 6);
+            this.tableLayoutPanel2.Controls.Add(this.thresholdLabel, 0, 8);
+            this.tableLayoutPanel2.Controls.Add(this.thresholdControl, 0, 9);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 10;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(157, 204);
+            this.tableLayoutPanel2.TabIndex = 2;
+            // 
+            // leftCensorControl
+            // 
+            this.leftCensorControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.leftCensorControl.Location = new System.Drawing.Point(3, 94);
+            this.leftCensorControl.Name = "leftCensorControl";
+            this.leftCensorControl.Size = new System.Drawing.Size(151, 20);
+            this.leftCensorControl.TabIndex = 5;
+            // 
+            // rightCensorControl
+            // 
+            this.rightCensorControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rightCensorControl.Location = new System.Drawing.Point(3, 133);
+            this.rightCensorControl.Name = "rightCensorControl";
+            this.rightCensorControl.Size = new System.Drawing.Size(151, 20);
+            this.rightCensorControl.TabIndex = 7;
+            // 
+            // aMaxControl
+            // 
+            this.aMaxControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.aMaxControl.Location = new System.Drawing.Point(3, 16);
+            this.aMaxControl.Name = "aMaxControl";
+            this.aMaxControl.Size = new System.Drawing.Size(151, 20);
+            this.aMaxControl.TabIndex = 0;
+            // 
+            // AMaxInputLabel
+            // 
+            this.AMaxInputLabel.AutoSize = true;
+            this.AMaxInputLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AMaxInputLabel.Location = new System.Drawing.Point(3, 0);
+            this.AMaxInputLabel.Name = "AMaxInputLabel";
+            this.AMaxInputLabel.Size = new System.Drawing.Size(151, 13);
+            this.AMaxInputLabel.TabIndex = 1;
+            this.AMaxInputLabel.Text = "A Max";
+            // 
+            // aMinControl
+            // 
+            this.aMinControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.aMinControl.Location = new System.Drawing.Point(3, 55);
+            this.aMinControl.Name = "aMinControl";
+            this.aMinControl.Size = new System.Drawing.Size(151, 20);
+            this.aMinControl.TabIndex = 3;
+            // 
+            // AMinInputLabel
+            // 
+            this.AMinInputLabel.AutoSize = true;
+            this.AMinInputLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AMinInputLabel.Location = new System.Drawing.Point(3, 39);
+            this.AMinInputLabel.Name = "AMinInputLabel";
+            this.AMinInputLabel.Size = new System.Drawing.Size(151, 13);
+            this.AMinInputLabel.TabIndex = 2;
+            this.AMinInputLabel.Text = "A Min";
+            // 
+            // LeftCensorInputLabel
+            // 
+            this.LeftCensorInputLabel.AutoSize = true;
+            this.LeftCensorInputLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LeftCensorInputLabel.Location = new System.Drawing.Point(3, 78);
+            this.LeftCensorInputLabel.Name = "LeftCensorInputLabel";
+            this.LeftCensorInputLabel.Size = new System.Drawing.Size(151, 13);
+            this.LeftCensorInputLabel.TabIndex = 4;
+            this.LeftCensorInputLabel.Text = "Left Censor";
+            // 
+            // RightCensorInputLabel
+            // 
+            this.RightCensorInputLabel.AutoSize = true;
+            this.RightCensorInputLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RightCensorInputLabel.Location = new System.Drawing.Point(3, 117);
+            this.RightCensorInputLabel.Name = "RightCensorInputLabel";
+            this.RightCensorInputLabel.Size = new System.Drawing.Size(151, 13);
+            this.RightCensorInputLabel.TabIndex = 6;
+            this.RightCensorInputLabel.Text = "Right Censor";
+            // 
+            // thresholdLabel
+            // 
+            this.thresholdLabel.AutoSize = true;
+            this.thresholdLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.thresholdLabel.Location = new System.Drawing.Point(3, 156);
+            this.thresholdLabel.Name = "thresholdLabel";
+            this.thresholdLabel.Size = new System.Drawing.Size(151, 13);
+            this.thresholdLabel.TabIndex = 8;
+            this.thresholdLabel.Text = "Threshold";
+            // 
+            // thresholdControl
+            // 
+            this.thresholdControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.thresholdControl.Location = new System.Drawing.Point(3, 172);
+            this.thresholdControl.Name = "thresholdControl";
+            this.thresholdControl.Size = new System.Drawing.Size(151, 20);
+            this.thresholdControl.TabIndex = 9;
+            // 
+            // outputBox
+            // 
+            this.outputBox.Controls.Add(this.tableLayoutPanel3);
+            this.outputBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.outputBox.Location = new System.Drawing.Point(3, 232);
+            this.outputBox.Name = "outputBox";
+            this.outputBox.Size = new System.Drawing.Size(163, 223);
+            this.outputBox.TabIndex = 1;
+            this.outputBox.TabStop = false;
+            this.outputBox.Text = "Outputs";
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.Controls.Add(this.modelBLabel, 0, 10);
+            this.tableLayoutPanel3.Controls.Add(this.modelBOut, 0, 11);
+            this.tableLayoutPanel3.Controls.Add(this.modelMLabel, 0, 9);
+            this.tableLayoutPanel3.Controls.Add(this.modelMOut, 0, 9);
+            this.tableLayoutPanel3.Controls.Add(this.a50label, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.a50Out, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.a90Label, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.a90Out, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.a90_95Label, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.a90_95Out, 0, 5);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 12;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(157, 204);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // modelBLabel
+            // 
+            this.modelBLabel.AutoSize = true;
+            this.modelBLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelBLabel.Location = new System.Drawing.Point(3, 156);
+            this.modelBLabel.Name = "modelBLabel";
+            this.modelBLabel.Size = new System.Drawing.Size(151, 13);
+            this.modelBLabel.TabIndex = 8;
+            this.modelBLabel.Text = "Model: b";
+            // 
+            // modelBOut
+            // 
+            this.modelBOut.DecimalPlaces = 3;
+            this.modelBOut.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelBOut.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.modelBOut.InterceptArrowKeys = false;
+            this.modelBOut.Location = new System.Drawing.Point(3, 172);
+            this.modelBOut.Maximum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            0});
+            this.modelBOut.Minimum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            -2147483648});
+            this.modelBOut.Name = "modelBOut";
+            this.modelBOut.ReadOnly = true;
+            this.modelBOut.Size = new System.Drawing.Size(151, 20);
+            this.modelBOut.TabIndex = 9;
+            // 
+            // modelMLabel
+            // 
+            this.modelMLabel.AutoSize = true;
+            this.modelMLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelMLabel.Location = new System.Drawing.Point(3, 117);
+            this.modelMLabel.Name = "modelMLabel";
+            this.modelMLabel.Size = new System.Drawing.Size(151, 13);
+            this.modelMLabel.TabIndex = 6;
+            this.modelMLabel.Text = "Model: m";
+            // 
+            // modelMOut
+            // 
+            this.modelMOut.DecimalPlaces = 3;
+            this.modelMOut.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelMOut.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.modelMOut.InterceptArrowKeys = false;
+            this.modelMOut.Location = new System.Drawing.Point(3, 133);
+            this.modelMOut.Maximum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            0});
+            this.modelMOut.Minimum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            -2147483648});
+            this.modelMOut.Name = "modelMOut";
+            this.modelMOut.ReadOnly = true;
+            this.modelMOut.Size = new System.Drawing.Size(151, 20);
+            this.modelMOut.TabIndex = 7;
+            // 
+            // a50label
+            // 
+            this.a50label.AutoSize = true;
+            this.a50label.Location = new System.Drawing.Point(3, 0);
+            this.a50label.Name = "a50label";
+            this.a50label.Size = new System.Drawing.Size(25, 13);
+            this.a50label.TabIndex = 0;
+            this.a50label.Text = "a50";
+            // 
+            // a50Out
+            // 
+            this.a50Out.DecimalPlaces = 3;
+            this.a50Out.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.a50Out.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+<<<<<<< HEAD
+            this.a50Out.InterceptArrowKeys = false;
+            this.a50Out.Location = new System.Drawing.Point(3, 16);
+            this.a50Out.Maximum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            0});
+            this.a50Out.Minimum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            -2147483648});
+            this.a50Out.Name = "a50Out";
+            this.a50Out.ReadOnly = true;
+            this.a50Out.Size = new System.Drawing.Size(151, 20);
+            this.a50Out.TabIndex = 1;
+=======
+            this.numericUpDown1.Location = new System.Drawing.Point(3, 16);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.ReadOnly = true;
+            this.numericUpDown1.Size = new System.Drawing.Size(151, 20);
+            this.numericUpDown1.TabIndex = 1;
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            // 
+            // a90Label
+            // 
+            this.a90Label.AutoSize = true;
+            this.a90Label.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.a90Label.Location = new System.Drawing.Point(3, 39);
+            this.a90Label.Name = "a90Label";
+            this.a90Label.Size = new System.Drawing.Size(151, 13);
+            this.a90Label.TabIndex = 2;
+            this.a90Label.Text = "a90";
+            // 
+            // a90Out
+            // 
+            this.a90Out.DecimalPlaces = 3;
+            this.a90Out.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.a90Out.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+<<<<<<< HEAD
+            this.a90Out.InterceptArrowKeys = false;
+            this.a90Out.Location = new System.Drawing.Point(3, 55);
+            this.a90Out.Maximum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            0});
+            this.a90Out.Minimum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            -2147483648});
+            this.a90Out.Name = "a90Out";
+            this.a90Out.ReadOnly = true;
+            this.a90Out.Size = new System.Drawing.Size(151, 20);
+            this.a90Out.TabIndex = 3;
+=======
+            this.numericUpDown2.Location = new System.Drawing.Point(3, 55);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.ReadOnly = true;
+            this.numericUpDown2.Size = new System.Drawing.Size(151, 20);
+            this.numericUpDown2.TabIndex = 3;
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            // 
+            // a90_95Label
+            // 
+            this.a90_95Label.AutoSize = true;
+            this.a90_95Label.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.a90_95Label.Location = new System.Drawing.Point(3, 78);
+            this.a90_95Label.Name = "a90_95Label";
+            this.a90_95Label.Size = new System.Drawing.Size(151, 13);
+            this.a90_95Label.TabIndex = 4;
+            this.a90_95Label.Text = "a90/95";
+            // 
+            // a90_95Out
+            // 
+            this.a90_95Out.DecimalPlaces = 3;
+            this.a90_95Out.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.a90_95Out.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+<<<<<<< HEAD
+            this.a90_95Out.InterceptArrowKeys = false;
+            this.a90_95Out.Location = new System.Drawing.Point(3, 94);
+            this.a90_95Out.Maximum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            0});
+            this.a90_95Out.Minimum = new decimal(new int[] {
+            1215752192,
+            23,
+            0,
+            -2147483648});
+            this.a90_95Out.Name = "a90_95Out";
+            this.a90_95Out.ReadOnly = true;
+            this.a90_95Out.Size = new System.Drawing.Size(151, 20);
+            this.a90_95Out.TabIndex = 5;
+=======
+            this.numericUpDown3.Location = new System.Drawing.Point(3, 94);
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.ReadOnly = true;
+            this.numericUpDown3.Size = new System.Drawing.Size(151, 20);
+            this.numericUpDown3.TabIndex = 5;
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            // 
+            // FullRegressionPanel
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.Controls.Add(this.controlSplitter);
+            this.Name = "FullRegressionPanel";
+            this.Size = new System.Drawing.Size(698, 458);
+            this.Resize += new System.EventHandler(this.Panel_Resize);
+            this.controlSplitter.Panel1.ResumeLayout(false);
+            this.controlSplitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.controlSplitter)).EndInit();
+            this.controlSplitter.ResumeLayout(false);
+            this.graphSplitter.Panel1.ResumeLayout(false);
+            this.graphSplitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.graphSplitter)).EndInit();
+            this.graphSplitter.ResumeLayout(false);
+            this.graphFlowPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.linearityChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.normalityChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.equalVarianceChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.podChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aHatVsAChart1)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.inputBox.ResumeLayout(false);
+            this.inputBox.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.leftCensorControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rightCensorControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aMaxControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aMinControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdControl)).EndInit();
+            this.outputBox.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+<<<<<<< HEAD
+            ((System.ComponentModel.ISupportInitialize)(this.modelBOut)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.modelMOut)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.a50Out)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.a90Out)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.a90_95Out)).EndInit();
+=======
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+>>>>>>> e6c4443e5514949c8ccfb60a07f3170cdc06b702
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private Controls.RegressionAnalysisChart aHatVsAChart1;
+        private SplitContainer graphSplitter;
+        private FlowLayoutPanel graphFlowPanel;
+        private POD.Controls.CensoredLinearityChart linearityChart;
+        private Controls.AHatVsAChart normalityChart;
+        private Controls.AHatVsAChart equalVarianceChart;
+        private Controls.AHatVsAChart podChart;
+        private Controls.AHatVsAChart thresholdChart;
+        private TableLayoutPanel tableLayoutPanel1;
+        private GroupBox inputBox;
+        private TableLayoutPanel tableLayoutPanel2;
+        private GroupBox outputBox;
+        private System.Windows.Forms.SplitContainer controlSplitter;
+        private NumericUpDown aMaxControl;
+        private Label AMaxInputLabel;
+        private Label AMinInputLabel;
+        private Label LeftCensorInputLabel;
+        private NumericUpDown aMinControl;
+        private NumericUpDown leftCensorControl;
+        private Label RightCensorInputLabel;
+        private NumericUpDown rightCensorControl;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Label a50label;
+        private NumericUpDown a50Out;
+        private Label a90Label;
+        private NumericUpDown a90Out;
+        private Label a90_95Label;
+        private NumericUpDown a90_95Out;
+        private Label thresholdLabel;
+        private NumericUpDown thresholdControl;
+        private Label modelMLabel;
+        private NumericUpDown modelMOut;
+        private Label modelBLabel;
+        private NumericUpDown modelBOut;
+    }
+}
