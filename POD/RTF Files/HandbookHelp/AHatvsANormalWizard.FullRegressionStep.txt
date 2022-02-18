@@ -1,0 +1,33 @@
+﻿3. Nomenclature|
+3. Nomenclature|aHat|
+3. Nomenclature|saturation|
+3. Nomenclature|inspection threshold|
+3. Nomenclature|decision threshold|
+3. Nomenclature|censored data|
+3. Nomenclature|hit|
+3. Nomenclature|miss|
+3. Nomenclature|POD|
+3. Nomenclature|POD(a)|
+3. Nomenclature|residual|
+6. NOTES|
+6. NOTES|6.4 A common misconception about statistics and POD  Repeated inspections improve POD|
+Appendix G  Statistical Analysis of NDE Data|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.1 Plot the data|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.2 Four guidelines|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.3 Warning|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.4 How to analyze aHat vs a data|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.4 How to analyze aHat vs a data|G.3.4.1 Wald method for building confidence bounds about a regression line|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.4 How to analyze aHat vs a data|G.3.4.2 Understanding noise|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.4 How to analyze aHat vs a data|G.3.4.3 How to go from aHat vs a to POD vs a  The Delta Method|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.4 How to analyze aHat vs a data|G.3.4.4 The POD(a) curve|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.5 How to analyze noise|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.5 How to analyze noise|G.3.5.1 Definition of noise|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.5 How to analyze noise|G.3.5.2 Noise measurements|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.5 How to analyze noise|G.3.5.3 Choosing a probability density to describe the noise|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.6 Repeated measures, mh1823 POD software and aHat vs a users manual|
+Appendix I  Special Topics|
+Appendix I  Special Topics|I.2 False positives, Sensitivity and Specificity|
+Appendix I  Special Topics|I.3 The misunderstood receiver operating characteristic (ROC) curve|
+Appendix I  Special Topics|I.4 Asymptotic POD functions|
+Appendix J  Related Documents|

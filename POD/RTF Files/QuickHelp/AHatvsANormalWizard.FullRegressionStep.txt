@@ -1,0 +1,24 @@
+﻿Linear Regression Step for aHat vs a Analysis|
+Linear Regression Step for aHat vs a Analysis|Overview|
+Linear Regression Step for aHat vs a Analysis|Tasks|
+Linear Regression Step for aHat vs a Analysis|Tasks|Linear Regression Input Controls|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps to Changing Numeric Input Values (Three Methods)|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps to Changing Numeric Input Values (Three Methods)|Tips for Changing Numeric Input Values|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Changing Your Transforms|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Changing Your Transforms|Tips for Changing Your Transforms|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Toggling Data Points|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Toggling Data Points|Considerations When Toggling Data Points|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Toggling Data Points|Tips for Toggling Data Points|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Resizing Left Side Charts|
+Linear Regression Step for aHat vs a Analysis|Tasks|Steps for Resizing Left Side Charts|Tips for Resizing Left Side Charts|
+Linear Regression Step for aHat vs a Analysis|Tasks|Resizing Right Side Controls|
+Linear Regression Step for aHat vs a Analysis|Available Actions|
+Linear Regression Step for aHat vs a Analysis|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

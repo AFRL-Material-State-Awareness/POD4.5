@@ -1,0 +1,10 @@
+﻿3. Nomenclature|
+4. GENERAL GUIDANCE|
+6. NOTES|
+6. NOTES|6.4 A common misconception about statistics and POD  Repeated inspections improve POD|
+Appendix G  Statistical Analysis of NDE Data|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|
+Appendix G  Statistical Analysis of NDE Data|G.3 aHat vs a DATA ANALYSIS|G.3.6 Repeated measures, mh1823 POD software and aHat vs a users manual|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|
+Appendix G  Statistical Analysis of NDE Data|G.4 Binary (hit/miss) data|G.4.4 Analyzing repeated measures (multiple inspections of the same target set)|
+Appendix J  Related Documents|

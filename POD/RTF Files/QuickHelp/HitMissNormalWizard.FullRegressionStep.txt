@@ -1,0 +1,24 @@
+﻿Hit Miss Regression Step|
+Hit Miss Regression Step|Overview|
+Hit Miss Regression Step|Tasks|
+Hit Miss Regression Step|Tasks|Hit Miss Regression Input Controls|
+Hit Miss Regression Step|Tasks|Steps to Changing Numeric Input Values (Three Methods)|
+Hit Miss Regression Step|Tasks|Steps to Changing Numeric Input Values (Three Methods)|Tips Changing Numeric Input Values|
+Hit Miss Regression Step|Tasks|Steps for Changing Your Transform or Model|
+Hit Miss Regression Step|Tasks|Steps for Changing Your Transform or Model|Tips for Changing Your Transforms|
+Hit Miss Regression Step|Tasks|Steps for Toggling Data Points|
+Hit Miss Regression Step|Tasks|Steps for Toggling Data Points|Considerations When Toggling Data Points|
+Hit Miss Regression Step|Tasks|Steps for Toggling Data Points|Tips for Toggling Data Points|
+Hit Miss Regression Step|Tasks|Steps for Resizing Left Side Charts|
+Hit Miss Regression Step|Tasks|Resizing Right Side Controls|
+Hit Miss Regression Step|Tasks|Resizing Right Side Controls|Tips for Resizing Left Side Charts|
+Hit Miss Regression Step|Available Actions|
+Hit Miss Regression Step|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

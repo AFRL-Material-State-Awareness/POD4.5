@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="POD.Analyze.AHatAnalysis" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AHatAnalysis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.AHatBeginner" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AHatBeginner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.AHatExpert" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AHatExpert.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.AHatIntermediate" Collapsed="true">
+    <Position X="9.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AHatIntermediate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.AHatTutorial" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AHatTutorial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.Analysis" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Analysis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.AnalysisList" Collapsed="true">
+    <Position X="27.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AnalysisList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.HitMissAnalysis" Collapsed="true">
+    <Position X="19.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HitMissAnalysis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.HitMissBeginner" Collapsed="true">
+    <Position X="23" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HitMissBeginner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.HitMissExpert" Collapsed="true">
+    <Position X="25.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HitMissExpert.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.HitMissIntermediate" Collapsed="true">
+    <Position X="14" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HitMissIntermediate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.HitMissTutorial" Collapsed="true">
+    <Position X="20.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HitMissTutorial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.QuickAHatAnalysis" Collapsed="true">
+    <Position X="6" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuickAHatAnalysis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.QuickAHatBeginner" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuickAHatBeginner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.QuickAHatTutorial" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuickAHatTutorial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.QuickHitMissAnalysis" Collapsed="true">
+    <Position X="17.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuickHitMissAnalysis.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.QuickHitMissBeginner" Collapsed="true">
+    <Position X="16.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuickHitMissBeginner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Analyze.QuickHitMissTutorial" Collapsed="true">
+    <Position X="18.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>QuickHitMissTutorial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Wizards.AHatVsASteps.AHatVsACompareStep01" Collapsed="true">
+    <Position X="0.5" Y="8" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.AHatVsASteps.DataPlots" Collapsed="true">
+    <Position X="5.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.AHatVsASteps.PlotType" Collapsed="true">
+    <Position X="7" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.FullAnalysisSetup.ProjectProperties" Collapsed="true">
+    <Position X="2.75" Y="8" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.TutorialOverlay" Collapsed="true">
+    <Position X="8.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.WizardActionBar" Collapsed="true">
+    <Position X="5.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.WizardPanel" Collapsed="true">
+    <Position X="1.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.WizardStep" Collapsed="true">
+    <Position X="7" Y="7.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.WizardStepList" Collapsed="true">
+    <Position X="8.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Wizards.WizardTitle" Collapsed="true">
+    <Position X="5.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Globals" Collapsed="true">
+    <Position X="15.25" Y="6" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Snapshot" Collapsed="true">
+    <Position X="13.5" Y="8" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.Report" Collapsed="true">
+    <Position X="17" Y="7" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="POD.ReportPage" Collapsed="true">
+    <Position X="11.75" Y="8" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Enum Name="POD.AnalysisTypeEnum" Collapsed="true">
+    <Position X="11.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier />
+  </Enum>
+  <Enum Name="POD.SkillLevelEnum" Collapsed="true">
+    <Position X="13.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier />
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

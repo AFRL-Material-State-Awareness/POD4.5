@@ -1,0 +1,21 @@
+﻿Create Analyses Step|
+Create Analyses Step|Overview|
+Create Analyses Step|Tasks|
+Create Analyses Step|Tasks|Steps for Creating an Analysis|
+Create Analyses Step|Tasks|Steps for Creating an Analysis|Considerations When Creating Analyses|
+Create Analyses Step|Tasks|Steps for Creating an Analysis|Tips for Creating Analyses|
+Create Analyses Step|Tasks|Steps for Modifying Existing Analyses|
+Create Analyses Step|Tasks|Steps for Modifying Existing Analyses|Considerations When Modifying Existing Analyses|
+Create Analyses Step|Tasks|Steps for Modifying Existing Analyses|Tips for Modifying Existing Analyses|
+Create Analyses Step|Confirming Data|
+Create Analyses Step|Confirming Data|Tips for Confirming Data|
+Create Analyses Step|Available Actions|
+Create Analyses Step|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="POD.Docks.AnalysisProgressDock" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AggAAAAAACAAAAAAAACAAAACAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>AnalysisProgressDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.HandbookHelpDock" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>HandbookHelpDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.PodDock" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAABAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>PodDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.ProjectDock" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ProjectManagerDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.QuickHelpDock" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>QuickHelpDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.ReportDock" Collapsed="true">
+    <Position X="14" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>ReportViewerDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.SnapshotDock" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>SnapshotManagerDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.WizardDock" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAACAAAAAIAACBAAICAAAAAAAAAABAACAAAAA=</HashCode>
+      <FileName>WizardDock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="POD.Docks.Properties.Resources" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

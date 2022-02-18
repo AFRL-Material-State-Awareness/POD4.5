@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7A2D07DB-3686-4FEC-BA8C-5B905ECA1AF0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>POD.Controls</RootNamespace>
+    <AssemblyName>Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Spire.PdfViewer.Forms">
+      <HintPath>..\Spire\Spire.PdfViewer.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionIconsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ActionIconsList.Designer.cs">
+      <DependentUpon>ActionIconsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BookmarkLink.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CellTag.cs" />
+    <Compile Include="ColorMap.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ColorMap.Designer.cs">
+      <DependentUpon>ColorMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContextMenuStripConnected.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataChartTableArg.cs" />
+    <Compile Include="LinkLayout.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OverviewChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OverviewChart.Designer.cs">
+      <DependentUpon>OverviewChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODFlowLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODPdfViewer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODToolTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="QuickDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="QuickDataGridView.Designer.cs">
+      <DependentUpon>QuickDataGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataPointChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataPointChart.Designer.cs">
+      <DependentUpon>DataPointChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AHatVsARegressionChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AHatVsARegressionChart.Designer.cs">
+      <DependentUpon>AHatVsARegressionChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AnalysisType.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AnalysisType.Designer.cs">
+      <DependentUpon>AnalysisType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BlendPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BlendPictureBox.Designer.cs">
+      <DependentUpon>BlendPictureBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ButtonHandler.cs" />
+    <Compile Include="ButtonHandlerList.cs" />
+    <Compile Include="CensoredLinearityChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CensoredLinearityChart.Designer.cs">
+      <DependentUpon>CensoredLinearityChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit Analysis Dialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Edit Analysis Dialog.Designer.cs">
+      <DependentUpon>Edit Analysis Dialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HitMissFitChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HitMissFitChart.Designer.cs">
+      <DependentUpon>HitMissFitChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HitMissRegressionChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HitMissRegressionChart.Designer.cs">
+      <DependentUpon>HitMissRegressionChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LinearityChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LinearityChart.Designer.cs">
+      <DependentUpon>LinearityChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MixedCheckBoxesTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PFModelBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PFModelBox.Designer.cs">
+      <DependentUpon>PFModelBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODChart.Designer.cs">
+      <DependentUpon>PODChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODInfoNumericUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PODInfoNumericUpDown.Designer.cs">
+      <DependentUpon>PODInfoNumericUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODChartNumericUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PODChartNumericUpDown.Designer.cs">
+      <DependentUpon>PODChartNumericUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODNumericUpDown.Designer.cs">
+      <DependentUpon>PODNumericUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODImageNumericUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PODImageNumericUpDown.Designer.cs">
+      <DependentUpon>PODImageNumericUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODRatedNumericUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PODRatedNumericUpDown.Designer.cs">
+      <DependentUpon>PODRatedNumericUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODTableLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODThresholdChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODThresholdChart.Designer.cs">
+      <DependentUpon>PODThresholdChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RegressionAnalysisChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RegressionAnalysisChart.Designer.cs">
+      <DependentUpon>RegressionAnalysisChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomFlowLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomFlowLayoutPanel.Designer.cs">
+      <DependentUpon>CustomFlowLayoutPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataGridViewDB.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataGridViewDB.Designer.cs">
+      <DependentUpon>DataGridViewDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODBooleanButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODBooleanButton.Designer.cs">
+      <DependentUpon>PODBooleanButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODListBox.Designer.cs">
+      <DependentUpon>PODListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODOverButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODTreeNode.cs" />
+    <Compile Include="PointXY.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SideSplitter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SideSplitter.Designer.cs">
+      <DependentUpon>SideSplitter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleActionBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SimpleActionBar.Designer.cs">
+      <DependentUpon>SimpleActionBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TransformBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TransformBox.Designer.cs">
+      <DependentUpon>TransformBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TransformChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TutorialButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TutorialPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ActionIconsList.resx">
+      <DependentUpon>ActionIconsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnalysisType.resx">
+      <DependentUpon>AnalysisType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ColorMap.resx">
+      <DependentUpon>ColorMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OverviewChart.resx">
+      <DependentUpon>OverviewChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="QuickDataGridView.resx">
+      <DependentUpon>QuickDataGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataGridViewDB.resx">
+      <DependentUpon>DataGridViewDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataPointChart.resx">
+      <DependentUpon>DataPointChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit Analysis Dialog.resx">
+      <DependentUpon>Edit Analysis Dialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PODInfoNumericUpDown.resx">
+      <DependentUpon>PODInfoNumericUpDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PODChartNumericUpDown.resx">
+      <DependentUpon>PODChartNumericUpDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PODListBox.resx">
+      <DependentUpon>PODListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PODImageNumericUpDown.resx">
+      <DependentUpon>PODImageNumericUpDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PODRatedNumericUpDown.resx">
+      <DependentUpon>PODRatedNumericUpDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegressionAnalysisChart.resx">
+      <DependentUpon>RegressionAnalysisChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SimpleActionBar.resx">
+      <DependentUpon>SimpleActionBar.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{BEE41D1E-EBA8-4D3E-B297-4C1CA6FFF8DB}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\POD\Global.csproj">
+      <Project>{f7db9280-e09a-470d-8fdb-3c97c538a6c1}</Project>
+      <Name>Global</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CopyToAll.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\question.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cycle Transforms.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete Selected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh Charts.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Insert Row.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete Row.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

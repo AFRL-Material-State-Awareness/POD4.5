@@ -1,0 +1,18 @@
+﻿Project Setup Step|
+Project Setup Step|Overview|
+Project Setup Step|Tasks|
+Project Setup Step|Tasks|Entering Project Information|
+Project Setup Step|Tasks|Entering Project Information|Considerations When Entering Project Information|
+Project Setup Step|Tasks|Entering Project Information|Tips for Entering Project Information|
+Project Setup Step|Tasks|Project Overview|
+Project Setup Step|Tasks|Project Overview|Tips for Using the Project Overview|
+Project Setup Step|Available Actions|
+Project Setup Step|Keyboard/Mouse Shortcuts|
+Navigation Options|
+Navigation Options|Main Navigation Buttons|
+Navigation Options|Progress List|
+Navigation Options|Available Actions|
+Navigation Options|Keyboard/Mouse Shortcuts|
+Minimizing Mouse Travel|
+Exporting Charts to the Clipboard|
+Exporting Charts to the Clipboard|Image Resolutions of Exported Charts|

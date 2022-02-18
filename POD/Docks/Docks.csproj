@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{03A62E1E-31EF-423F-8246-716BE7864932}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>POD.Docks</RootNamespace>
+    <AssemblyName>MilHandbookReader</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Spire.License">
+      <HintPath>..\Spire\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.PdfViewer.Forms">
+      <HintPath>..\Spire\Spire.PdfViewer.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DocksManager.cs" />
+    <Compile Include="HandbookHelpDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HandbookHelpDock.Designer.cs">
+      <DependentUpon>HandbookHelpDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDFDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDFDisplay.Designer.cs">
+      <DependentUpon>PDFDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PodDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuickHelpDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuickHelpDock.Designer.cs">
+      <DependentUpon>QuickHelpDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RTFViewerDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RTFViewerDock.Designer.cs">
+      <DependentUpon>RTFViewerDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SnapshotManagerDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SnapshotManagerDock.Designer.cs">
+      <DependentUpon>SnapshotManagerDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectManagerDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectManagerDock.Designer.cs">
+      <DependentUpon>ProjectManagerDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportViewerDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportViewerDock.Designer.cs">
+      <DependentUpon>ReportViewerDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SwapStepsEventArgs.cs" />
+    <Compile Include="WizardDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WizardDock.Designer.cs">
+      <DependentUpon>WizardDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardProgressDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WizardProgressDock.Designer.cs">
+      <DependentUpon>WizardProgressDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardStepAnimator.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Controls\Controls.csproj">
+      <Project>{7a2d07db-3686-4fec-ba8c-5b905eca1af0}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dockpanelsuite-development_3.0\WinFormsUI\WinFormsUI.csproj">
+      <Project>{d23040b2-b914-4879-8041-a62f1f545a94}</Project>
+      <Name>WinFormsUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\POD\Global.csproj">
+      <Project>{f7db9280-e09a-470d-8fdb-3c97c538a6c1}</Project>
+      <Name>Global</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Transitions\Transitions.csproj">
+      <Project>{95cde461-0720-4c3b-b5e1-d188391fb7c0}</Project>
+      <Name>Transitions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wizards\Wizards.csproj">
+      <Project>{b1e7ce39-1b54-40ed-be54-93deeaf3c3c3}</Project>
+      <Name>Wizards</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HandbookHelpDock.resx">
+      <DependentUpon>HandbookHelpDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="PDFDisplay.resx">
+      <DependentUpon>PDFDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PodDock.resx">
+      <DependentUpon>PodDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuickHelpDock.resx">
+      <DependentUpon>QuickHelpDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RTFViewerDock.resx">
+      <DependentUpon>RTFViewerDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapshotManagerDock.resx">
+      <DependentUpon>SnapshotManagerDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectManagerDock.resx">
+      <DependentUpon>ProjectManagerDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportViewerDock.resx">
+      <DependentUpon>ReportViewerDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardDock.resx">
+      <DependentUpon>WizardDock.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardProgressDock.resx">
+      <DependentUpon>WizardProgressDock.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Resources\G.1.2.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\kitten.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\puppy.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="license.elic.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
