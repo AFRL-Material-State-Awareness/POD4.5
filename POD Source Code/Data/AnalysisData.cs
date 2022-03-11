@@ -1803,9 +1803,8 @@ namespace POD.Data
             int colIndex = 1;
 
             myWriter.SetCellValue(rowIndex, colIndex, "Analysis Name");
-            myWriter.SetCellValue(rowIndex, colIndex + 1, myAnalysisName);
-
-            rowIndex = WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, rowIndex, colIndex);
+            WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, 1, 1);
+            rowIndex++;
 
             //change to excel appropriate names
             oldNames = ChangeTableColumnNames(_iterationsTable, iterationNames);
@@ -1819,19 +1818,18 @@ namespace POD.Data
 
             colIndex = 1;
             rowIndex++;
+
+            WriteAnalysisName(myWriter, myAnalysisName, myPartOfProject);
         }
 
-        private static int WriteTableOfContentsLink(ExcelExport myWriter, string myWorksheetName, bool myPartOfProject, int rowIndex, int colIndex)
+        private static void WriteTableOfContentsLink(ExcelExport myWriter, string myWorksheetName, bool myPartOfProject, int rowIndex, int colIndex)
         {
             if (myPartOfProject)
             {
-                myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex + 1, rowIndex, colIndex + 2);
-                myWriter.InsertReturnToTableOfContents(rowIndex++, colIndex + 3, myWorksheetName);
+                //myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex + 1, rowIndex, colIndex + 2);
+                myWriter.InsertReturnToTableOfContents(rowIndex, colIndex, myWorksheetName);
+                
             }
-            else
-                rowIndex++;
-
-            return rowIndex;
         }
 
         private void WriteRemovedPointsToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true)
@@ -1882,7 +1880,7 @@ namespace POD.Data
             myWriter.WriteTableToExcel(removedPoints, ref rowIndex, ref colIndex, false);
 
             //done after fitting
-            myWriter.SetCellValue(1, 2, myAnalysisName);
+            
             WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, 1, 1);
 
             colIndex = 1;
@@ -1932,6 +1930,8 @@ namespace POD.Data
                 colIndex = 1;
                 rowIndex++;
             }
+
+            WriteAnalysisName(myWriter, myAnalysisName, myPartOfProject);
         }
 
         private DataTable GenerateRemovedPointsTable()
@@ -1986,8 +1986,8 @@ namespace POD.Data
             int colIndex = 1;
 
             myWriter.SetCellValue(rowIndex, colIndex, "Analysis Name");
-            myWriter.SetCellValue(rowIndex, colIndex + 1, myAnalysisName);
-            rowIndex = WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, rowIndex, colIndex);
+            WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, 1, 1);
+            rowIndex++;
 
             //change to excel appropriate names
             oldNames = ChangeTableColumnNames(_thresholdPlotTable, thresholdNames);
@@ -2003,6 +2003,8 @@ namespace POD.Data
 
             colIndex = 1;
             rowIndex++;
+
+            WriteAnalysisName(myWriter, myAnalysisName, myPartOfProject);
         }
 
         private void WritePODToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true)
@@ -2016,8 +2018,8 @@ namespace POD.Data
             int colIndex = 1;
 
             myWriter.SetCellValue(rowIndex, colIndex, "Analysis Name");
-            myWriter.SetCellValue(rowIndex, colIndex + 1, myAnalysisName);
-            rowIndex = WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, rowIndex, colIndex);
+            WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, 1, 1);
+            rowIndex++;
 
             //change to excel appropriate names
             oldNames = ChangeTableColumnNames(_podCurveTable, podNames);
@@ -2034,6 +2036,8 @@ namespace POD.Data
 
             colIndex = 1;
             rowIndex++;
+
+            WriteAnalysisName(myWriter, myAnalysisName, myPartOfProject);
         }
 
         private void WriteResidualsToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true)
@@ -2054,8 +2058,8 @@ namespace POD.Data
             int colIndex = 1;
 
             myWriter.SetCellValue(rowIndex, colIndex, "Analysis Name");
-            myWriter.SetCellValue(rowIndex, colIndex + 1, myAnalysisName);
-            rowIndex = WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, rowIndex, colIndex);
+            WriteTableOfContentsLink(myWriter, myWorksheetName, myPartOfProject, 1, 1);
+            rowIndex++;
 
             //change to excel appropriate names
             oldNames = ChangeTableColumnNames(_fitResidualsTable, fitResidualNames);
@@ -2098,6 +2102,22 @@ namespace POD.Data
 
             //change to excel appropriate names
             oldNames = ChangeTableColumnNames(_residualCensoredTable, oldNames);
+
+            WriteAnalysisName(myWriter, myAnalysisName, myPartOfProject);
+        }
+
+        private void WriteAnalysisName(ExcelExport myWriter, string myAnalysisName, bool myPartOfProject)
+        {
+            //if (myPartOfProject)
+            //{
+            //    myWriter.SetCellValue(1, 3, myAnalysisName);
+            //}
+            //else
+            //{
+            //    myWriter.SetCellValue(1, 2, myAnalysisName);
+            //}
+
+            myWriter.SetCellValue(1, 2, myAnalysisName);
         }
 
         /// <summary>
@@ -2220,7 +2240,7 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountPartialBelowResponseMin();// Convert.ToInt32(_fitResidualsTable.Compute("count(Flaws)", "")); 
+                return _podDoc.GetFlawCountPartialBelowResponseMin();
             }
         }
 
@@ -2228,7 +2248,7 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountPartialAboveResponseMax();// Convert.ToInt32(_fitResidualsTable.Compute("count(Flaws)", "")); 
+                return _podDoc.GetFlawCountPartialAboveResponseMax();
             }
         }
 
@@ -2236,7 +2256,7 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountFullBelowResponseMin(); //Convert.ToInt32(_fitResidualsTable.Compute("Count(Flaws)", "Flaws = " + _podDoc.tmin)); 
+                return _podDoc.GetFlawCountFullBelowResponseMin();
             }
         }
 
@@ -2244,7 +2264,7 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountFullAboveResponseMax(); //Convert.ToInt32(_fitResidualsTable.Compute("Count(Flaws)", "Flaws = " + _podDoc.tmax)); 
+                return _podDoc.GetFlawCountFullAboveResponseMax();
             }
         }
 
@@ -2300,10 +2320,10 @@ namespace POD.Data
             }
         }
 
-        public void GetXYBufferedRanges(AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed)
+        public void GetXYBufferedRanges(Control chart, AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed)
         {
-            GetXBufferedRange(myXAxis, myGetTransformed);
-            GetYBufferedRange(myYAxis, myGetTransformed);
+            GetXBufferedRange(chart, myXAxis, myGetTransformed);
+            GetYBufferedRange(chart, myYAxis, myGetTransformed);
         }
 
         public static void GetMinMaxOfTable(DataTable myTable, ref double myMin, ref double myMax)
@@ -2315,16 +2335,6 @@ namespace POD.Data
             {
                 foreach (DataColumn col in myTable.Columns)
                 {
-                    //var val = (double) myTable.Compute("max([" + col.ColumnName + "])", "");
-                    //
-                    //if (val > myMax)
-                    //    myMax = val;
-                    //
-                    //val = (double) myTable.Compute("min([" + col.ColumnName + "])", "");
-                    //
-                    //if (val < myMin)
-                    //    myMin = val;
-
                     Compute.MinMax(myTable, col, ref myMin, ref myMax);
                 }
             }
@@ -2334,17 +2344,17 @@ namespace POD.Data
 
         }
 
-        public static void GetBufferedRange(AxisObject myAxis, DataTable myTable, bool isLinear)
+        public static void GetBufferedRange(Control chart, AxisObject myAxis, DataTable myTable, AxisKind kind)
         {
             double myMin = Double.MaxValue;
             double myMax = Double.MinValue;
 
             GetMinMaxOfTable(myTable, ref myMin, ref myMax);
 
-            GetBufferedRange(myAxis, myMin, myMax, isLinear);
+            GetBufferedRange(chart, myAxis, myMin, myMax, kind);
         }
 
-        public static void GetBufferedRange(AxisObject myAxis, double myMin, double myMax, bool isLinear)
+        public static void GetBufferedRange(Control chart, AxisObject myAxis, double myMin, double myMax, AxisKind kind)
         {
             if (myMin != myMax)
             {
@@ -2361,29 +2371,19 @@ namespace POD.Data
                 range = Math.Abs(max - min);
 
                 myAxis.Interval = correctedRange;
-                double multiplier = 5.0;
+                double multiplier = 1.0;
 
-                while (range / myAxis.Interval > 10)
+                var count = Globals.GetLabelIntervalBasedOnChartSize(chart, kind);
+
+                while (range / myAxis.Interval > count)
                 {
                     myAxis.Interval = correctedRange * multiplier;
 
-                    multiplier += 5.0;
+                    multiplier += .5;
                 }
 
                 myAxis.Max = max;
                 myAxis.Min = min;
-
-                /*var maxLeftOver = myAxis.Max - Math.Floor(myAxis.Max);
-                var minLeftOver = myAxis.Min - Math.Floor(myAxis.Min);
-
-                var nearestFive = Math.Pow(10.0, logRange + Math.Log10(5));
-
-                maxLeftOver = myAxis.Max / nearestFive;
-                minLeftOver = myAxis.Min / nearestFive;
-
-                myAxis.Max = Math.Ceiling(maxLeftOver + .000000001) * nearestFive;
-                myAxis.Min = Math.Floor(minLeftOver + .000000001) * nearestFive;*/
-                //myAxis.Interval = nearestFive;
             }
             else
             {
@@ -2392,26 +2392,9 @@ namespace POD.Data
                 
                 myAxis.Interval = .25;
             }
-
-            
-
-            /*//get rid of the weird values at small numbers
-            if (maxLeftOver > .5)
-                myAxis.Max = Math.Ceiling(myAxis.Max);
-            else if (maxLeftOver > 0.0)
-                myAxis.Max = Math.Ceiling(myAxis.Max) - .5;
-
-            if (minLeftOver < .5)
-                myAxis.Min = Math.Floor(myAxis.Min);
-            else if (minLeftOver > .5)
-                myAxis.Min = Math.Ceiling(myAxis.Min) - .5;
-
-            //make sure axis ticks start at 0 if using negative 
-            if (myAxis.Min < 0 && isLinear)
-                myAxis.IntervalOffset = -myAxis.Min;*/
         }
 
-        public void GetYBufferedRange(AxisObject myAxis, bool myGetTransformed)
+        public void GetYBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
 
@@ -2420,10 +2403,10 @@ namespace POD.Data
             else
                 table = _activatedResponseTable;
 
-            GetBufferedRange(myAxis, table, !myGetTransformed || _responseTransform == TransformTypeEnum.Linear || _responseTransform == TransformTypeEnum.Inverse);
+            GetBufferedRange(chart, myAxis, table, AxisKind.Y);
         }
 
-        public void GetXBufferedRange(AxisObject myAxis, bool myGetTransformed)
+        public void GetXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
 
@@ -2432,10 +2415,10 @@ namespace POD.Data
             else
                 table = _activatedFlawTable;
 
-            GetBufferedRange(myAxis, table, !myGetTransformed || _flawTransform == TransformTypeEnum.Linear || _flawTransform == TransformTypeEnum.Inverse);
+            GetBufferedRange(chart, myAxis, table, AxisKind.X);
         }
 
-        public void GetUncensoredXBufferedRange(AxisObject myAxis, bool myGetTransformed)
+        public void GetUncensoredXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
             var isLinear = !myGetTransformed || _flawTransform == TransformTypeEnum.Linear || _flawTransform == TransformTypeEnum.Inverse;
@@ -2444,7 +2427,7 @@ namespace POD.Data
             _podDoc.ahat_transform = _python.TransformEnumToInt(_responseTransform);
             
             AxisObject maxAxis = new AxisObject();
-            GetXBufferedRange(maxAxis, false);
+            GetXBufferedRange(chart, maxAxis, false);
 
             if (myGetTransformed)
                 table = ActivatedFlaws;
@@ -2516,34 +2499,34 @@ namespace POD.Data
             if (myMax > xMax)
                 myMax = xMax;
 
-            GetBufferedRange(myAxis, myMin, myMax, isLinear);
+            GetBufferedRange(null, myAxis, myMin, myMax, AxisKind.X);
 
             
         }
 
-        public AxisObject GetXBufferedRange(bool myGetTransformed)
+        public AxisObject GetXBufferedRange(Control chart, bool myGetTransformed)
         {
             AxisObject axis = new AxisObject();
 
-            GetXBufferedRange(axis, myGetTransformed);
+            GetXBufferedRange(chart, axis, myGetTransformed);
 
             return axis;
         }
 
-        public AxisObject GetUncensoredXBufferedRange(bool myGetTransformed)
+        public AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed)
         {
             AxisObject axis = new AxisObject();
 
-            GetUncensoredXBufferedRange(axis, myGetTransformed);
+            GetUncensoredXBufferedRange(chart, axis, myGetTransformed);
 
             return axis;
         }
 
-        public AxisObject GetYBufferedRange(bool myGetTransformed)
+        public AxisObject GetYBufferedRange(Control chart, bool myGetTransformed)
         {
             AxisObject axis = new AxisObject();
 
-            GetYBufferedRange(axis, myGetTransformed);
+            GetYBufferedRange(chart, axis, myGetTransformed);
 
             return axis;
         }
@@ -3438,9 +3421,18 @@ namespace POD.Data
         public double Interval = .25;
         public double BufferPercentage = 5.0;
 
-        public void RecalculateInterval()
+
+        public AxisObject Clone()
         {
-            throw new NotImplementedException();
+            var axis = new AxisObject();
+
+            axis.Max = Max;
+            axis.Min = Min;
+            axis.IntervalOffset = IntervalOffset;
+            axis.Interval = Interval;
+            axis.BufferPercentage = BufferPercentage;
+
+            return axis;
         }
     }
 }

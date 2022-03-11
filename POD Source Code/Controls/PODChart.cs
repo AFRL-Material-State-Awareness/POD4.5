@@ -334,6 +334,8 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData, bool usingLoadedFromFileData = false)
         {
+            //_lastUsedData = myData;
+
             //FillChart(myData.PodCurveTable, "flaw", "pod", "confidenceFlawAtPOD", "confidence", 0.0, 1.0);
             //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence", 0.0, 1.0);
 

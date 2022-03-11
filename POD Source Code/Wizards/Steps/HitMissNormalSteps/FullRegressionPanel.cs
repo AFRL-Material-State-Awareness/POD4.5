@@ -294,7 +294,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             Analysis.InHitMissModel = ModelBox.SelectedModel;
             Analysis.InFlawMax = Convert.ToDouble(aMaxControl.Value);
             Analysis.InFlawMin = Convert.ToDouble(aMinControl.Value);
-            var xAxis = Analysis.Data.GetXBufferedRange(false);
+            var xAxis = Analysis.Data.GetXBufferedRange(null, false);
             Analysis.InFlawCalcMax = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Max));
             Analysis.InFlawCalcMin = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Min));
             Analysis.InResponseDecisionMin = mainChart.ChartAreas[0].AxisY.Minimum;
@@ -383,7 +383,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
 
             podChart.FillChart(Analysis.Data);
-            podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(false), Analysis.Data, true);
+            podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
             podChart.UpdateLevelConfidenceLines(a50Original,
                                                 a90Original,
                                                 a9095Original);

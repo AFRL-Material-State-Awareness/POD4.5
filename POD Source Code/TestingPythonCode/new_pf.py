@@ -106,11 +106,11 @@ class crack_new_bounds():
 
         if pstar >= 1.0:
             pstar = .999999999999
-            self.seriousIssue = True
+            ##self.seriousIssue = True
 
         if pstar <= 0.0:
             pstar = .000000000001
-            self.seriousIssue = True
+            ##self.seriousIssue = True
 
 
         return self.yi*log(pstar)+(self.ni - self.yi)*log(1-pstar)
@@ -204,14 +204,14 @@ class pf_new_bounds():
         for crack in self.new_pf_flaws:
             P = self.Pi(gamma, b, crack, pod_level)
             if P == 0.0:
-                #P = 1E-20
-                self.seriousIssue = True
-                break
+                P = 1E-20
+                ##self.seriousIssue = True
+                ##break
             if P == 1.0:
-                #P = .999999999999999999999999
-                #Q = 1E-20
-                self.seriousIssue = True
-                break
+                P = .999999999999999999999999
+                Q = 1E-20
+                ##self.seriousIssue = True
+                ##break
             else:
                 Q = 1- P      
 
@@ -241,14 +241,14 @@ class pf_new_bounds():
         for crack in self.new_pf_flaws:
             P = self.Pi(gamma, b, crack, pod_level)
             if P == 0.0:
-                #P = 1E-20
-                self.seriousIssue = True
-                break
+                P = 1E-20
+                ##self.seriousIssue = True
+                ##break
             if P == 1.0:
-                #P = .999999999999999999999999
-                #Q = 1E-20
-                self.seriousIssue = True
-                break
+                P = .999999999999999999999999
+                Q = 1E-20
+                ##self.seriousIssue = True
+                ##break
             else:
                 Q = 1- P    
                                               

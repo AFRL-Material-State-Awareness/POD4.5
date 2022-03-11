@@ -210,7 +210,7 @@ namespace POD
             else if(myType == PyTypeEnum.PyFiles)
             {                
                 string pyFilesDir = Path.GetFullPath("..\\..\\..\\TestingPythonCode\\");
-                string pyLib = "C:\\Program Files (x86)\\IronPython 2.7\\Lib\\";
+                string pyLib = "C:\\Program Files\\IronPython 2.7\\Lib\\";
                 string numerics = Path.GetFullPath("..\\..\\..\\packages\\MathNet.Numerics.3.6.0\\lib\\net40\\");
                 _pyEngine.SetSearchPaths(new string[] {pyFilesDir, pyLib, numerics});
 

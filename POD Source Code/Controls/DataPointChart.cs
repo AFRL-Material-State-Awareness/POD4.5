@@ -45,6 +45,7 @@ namespace POD.Controls
         protected Bitmap _sizeBitmap;
         protected Bitmap[,] MenuBitmaps = new Bitmap[3,4];
         protected ToolTip _chartToolTip = null;
+        private int _lastWidth = -1;
 
         public ToolTip ChartToolTip
         {
@@ -75,7 +76,7 @@ namespace POD.Controls
             MouseLeave += AHatVsAChart_MouseLeave;
             MouseClick += AHatVsAChart_MouseClick;
             MouseDoubleClick += AHatVsAChart_MouseClick;
-            Resize += AHatVsAChart_Resize;
+            Resize += DataPointChart_Resize;
             Customize += DataPointChart_Customize;
 
             _selectable = true;
@@ -134,6 +135,8 @@ namespace POD.Controls
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            
+
             if (!MenuIsOpen && e.X < ImageSize && e.Y < ImageSize)
             {
                 MenuIsOpen = true;
@@ -159,9 +162,9 @@ namespace POD.Controls
                 if (ChartToolTip != null && ChartToolTip.Active == false)
                     ChartToolTip.Active = true;
             }
-            
 
             base.OnMouseMove(e);
+            
         }
 
         private void HighlightMenuOption(int x, int y)
@@ -914,139 +917,178 @@ namespace POD.Controls
             axis.MinorGrid.IntervalOffset = Double.NaN;
         }
 
-        public void PickBestAxisRange(AnalysisData data, int labelCount)
+        //public void PickBestAxisRange(AnalysisData data, int labelCount)
+        //{
+        //    AxisObject yAxis = new AxisObject();
+        //    AxisObject xAxis = new AxisObject();
+
+        //    data.GetXYBufferedRanges(xAxis, yAxis, true);
+
+        //    RelabelAxesBetter(xAxis, yAxis, data.InvertTransformValueForXAxis,
+        //                data.InvertTransformValueForYAxis, labelCount, labelCount, false, false, data.FlawTransform, data.ResponseTransform,
+        //                data.TransformValueForXAxis, data.TransformValueForYAxis);
+
+        //    //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
+        //    //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
+
+
+        //}
+
+
+        #region OLD RELABEL CODE
+        //protected virtual void RelabelAxes(AxisObject xAxis, AxisObject yAxis, InvertAxisFunction invertX, InvertAxisFunction invertY, 
+        //                                   int xLabelCount, int yLabelCount, bool myCenterXAtZero = false, bool myCenterYAtZero = false, 
+        //                                   TransformTypeEnum xAxisTransform = TransformTypeEnum.Linear, 
+        //                                   TransformTypeEnum yAxisTransform = TransformTypeEnum.Linear)
+        //{
+        //    double xOffset = 0.0;
+        //    double yOffset = 0.0;
+
+
+        //    ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
+        //    ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
+
+        //    ClearIntervals(ChartAreas[0].AxisX);
+        //    ClearIntervals(ChartAreas[0].AxisY);
+
+        //    ChartAreas[0].AxisX.CustomLabels.Clear();
+        //    ChartAreas[0].AxisY.CustomLabels.Clear();
+
+        //    ChartAreas[0].AxisX.Maximum = xAxis.Max;
+        //    ChartAreas[0].AxisX.Minimum = xAxis.Min;
+        //    ChartAreas[0].AxisY.Maximum = yAxis.Max;
+        //    ChartAreas[0].AxisY.Minimum = yAxis.Min;
+
+        //    ChartAreas[0].AxisX.Interval = xAxis.Interval;
+        //    ChartAreas[0].AxisX.IntervalOffset = xAxis.IntervalOffset;
+
+        //    ChartAreas[0].AxisY.Interval = yAxis.Interval;
+        //    ChartAreas[0].AxisY.IntervalOffset = yAxis.IntervalOffset;
+
+        //    if(myCenterXAtZero == true)
+        //    {
+        //        xOffset = -(xAxis.Min % xAxis.Interval);
+        //        ChartAreas[0].AxisX.IntervalOffset += xOffset;
+        //    }
+
+        //    if (myCenterYAtZero == true)
+        //    {
+        //        yOffset = -(yAxis.Min % yAxis.Interval);
+        //        ChartAreas[0].AxisY.IntervalOffset += yOffset;
+        //    }
+
+        //    if (yLabelCount > 1)
+        //        yAxis.Interval = (yAxis.Max - yAxis.Min) / (yLabelCount-1);
+
+        //    if(xLabelCount > 1)
+        //        xAxis.Interval = (xAxis.Max - xAxis.Min) / (xLabelCount-1);
+
+        //    Random rand = new Random();
+
+        //    for (int i = 0; i < yLabelCount; i++)
+        //    {
+
+        //        var modify = 0.0;// (rand.Next(50, 100) / 100.0) * yAxis.Interval;
+
+        //        double intv = (yAxis.Interval * i + yAxis.Min + yAxis.IntervalOffset + yOffset + modify);
+        //        string intvString = intv.ToString("0.##");
+
+        //        if (invertY != null)
+        //            intvString = invertY(intv).ToString("0.##");
+
+
+        //        CustomLabel label = new CustomLabel
+        //        {
+        //            FromPosition = yAxis.Interval * i - 1 + yAxis.Min + yAxis.IntervalOffset + yOffset + modify,
+        //            ToPosition = yAxis.Interval * i + 1 + yAxis.Min + yAxis.IntervalOffset + yOffset + modify,
+        //            Text = intvString,
+        //            RowIndex = 0,
+        //            GridTicks = GridTickTypes.All
+        //        };
+
+        //        ChartAreas[0].AxisY.CustomLabels.Add(label);
+        //    }
+
+        //    ChartAreas[0].AxisY.LabelAutoFitMinFontSize = 5;
+
+        //    for (int i = 0; i < xLabelCount; i++)
+        //    {
+        //        var modify = 0.0;// (rand.Next(50, 100) / 100.0) * xAxis.Interval;
+
+        //        double intv = (xAxis.Interval * i + xAxis.Min + xAxis.IntervalOffset + xOffset + modify);
+        //        string intvString = intv.ToString("0.##"); 
+
+        //        if(invertX != null)
+        //            intvString = invertX(intv).ToString("0.##");
+
+        //        CustomLabel label = new CustomLabel
+        //        {
+        //            FromPosition = xAxis.Interval * i - 1 + xAxis.Min + xAxis.IntervalOffset + xOffset + modify,
+        //            ToPosition = xAxis.Interval * i + 1 + xAxis.Min + xAxis.IntervalOffset + xOffset + modify,
+        //            Text = intvString,
+        //            RowIndex = 0,
+        //            GridTicks = GridTickTypes.All
+        //        };
+
+        //        ChartAreas[0].AxisX.CustomLabels.Add(label);
+        //    }
+
+        //    ChartAreas[0].AxisX.LabelAutoFitMinFontSize = 5;
+        //}
+        #endregion
+
+        private void RefreshAxisLabelingBasedOnCurrentSize()
         {
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            if(_xRelabel != null && _yRelabel != null)
+            {
+                if (_xRelabel.Axis != null)
+                {
+                    _xRelabel.Axis.BufferPercentage = 0;
+                    AnalysisData.GetBufferedRange(this, _xRelabel.Axis, _xRelabel.Axis.Min, _xRelabel.Axis.Max, AxisKind.X);
+                    //_xRelabel.LabelCount = Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind);//Convert.ToInt32(Math.Abs(_xRelabel.Axis.Max - _xRelabel.Axis.Min) / _xRelabel.Axis.Interval + 1);
+                }
 
-            data.GetXYBufferedRanges(xAxis, yAxis, true);
+                if (_yRelabel.Axis != null)
+                {
+                    _yRelabel.Axis.BufferPercentage = 0;
+                    AnalysisData.GetBufferedRange(this, _yRelabel.Axis, _yRelabel.Axis.Min, _yRelabel.Axis.Max, AxisKind.Y);
+                    //_yRelabel.LabelCount = Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind);//Convert.ToInt32(Math.Abs(_yRelabel.Axis.Max - _yRelabel.Axis.Min) / _yRelabel.Axis.Interval + 1);
+                }
 
-            RelabelAxesBetter(xAxis, yAxis, data.InvertTransformValueForXAxis,
-                        data.InvertTransformValueForYAxis, labelCount, labelCount, false, false, data.FlawTransform, data.ResponseTransform,
-                        data.TransformValueForXAxis, data.TransformValueForYAxis);
-
-            //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-            //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
+                RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
+                                  _xRelabel.InvertFunc, _yRelabel.InvertFunc,
+                                  _xRelabel.LabelCount, _yRelabel.LabelCount,
+                                  _xRelabel.CenterAtZero, _yRelabel.CenterAtZero,
+                                  _xRelabel.TransformType, _yRelabel.TransformType,
+                                  _xRelabel.TransformFunc, _yRelabel.TransformFunc);
+            }
         }
 
-        public delegate double InvertAxisFunction(double x);
-
-        protected virtual void RelabelAxes(AxisObject xAxis, AxisObject yAxis, InvertAxisFunction invertX, InvertAxisFunction invertY, 
-                                           int xLabelCount, int yLabelCount, bool myCenterXAtZero = false, bool myCenterYAtZero = false, 
-                                           TransformTypeEnum xAxisTransform = TransformTypeEnum.Linear, 
-                                           TransformTypeEnum yAxisTransform = TransformTypeEnum.Linear)
-        {
-            double xOffset = 0.0;
-            double yOffset = 0.0;
-
-            ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
-            ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
-
-            ClearIntervals(ChartAreas[0].AxisX);
-            ClearIntervals(ChartAreas[0].AxisY);
-
-            ChartAreas[0].AxisX.CustomLabels.Clear();
-            ChartAreas[0].AxisY.CustomLabels.Clear();
-
-            ChartAreas[0].AxisX.Maximum = xAxis.Max;
-            ChartAreas[0].AxisX.Minimum = xAxis.Min;
-            ChartAreas[0].AxisY.Maximum = yAxis.Max;
-            ChartAreas[0].AxisY.Minimum = yAxis.Min;
-
-            ChartAreas[0].AxisX.Interval = xAxis.Interval;
-            ChartAreas[0].AxisX.IntervalOffset = xAxis.IntervalOffset;
-
-            ChartAreas[0].AxisY.Interval = yAxis.Interval;
-            ChartAreas[0].AxisY.IntervalOffset = yAxis.IntervalOffset;
-
-            if(myCenterXAtZero == true)
-            {
-                xOffset = -(xAxis.Min % xAxis.Interval);
-                ChartAreas[0].AxisX.IntervalOffset += xOffset;
-            }
-
-            if (myCenterYAtZero == true)
-            {
-                yOffset = -(yAxis.Min % yAxis.Interval);
-                ChartAreas[0].AxisY.IntervalOffset += yOffset;
-            }
-
-            if (yLabelCount > 1)
-                yAxis.Interval = (yAxis.Max - yAxis.Min) / (yLabelCount-1);
-
-            if(xLabelCount > 1)
-                xAxis.Interval = (xAxis.Max - xAxis.Min) / (xLabelCount-1);
-
-            Random rand = new Random();
-
-            for (int i = 0; i < yLabelCount; i++)
-            {
-
-                var modify = 0.0;// (rand.Next(50, 100) / 100.0) * yAxis.Interval;
-
-                double intv = (yAxis.Interval * i + yAxis.Min + yAxis.IntervalOffset + yOffset + modify);
-                string intvString = intv.ToString("0.##");
-
-                if (invertY != null)
-                    intvString = invertY(intv).ToString("0.##");
-
-
-                CustomLabel label = new CustomLabel
-                {
-                    FromPosition = yAxis.Interval * i - 1 + yAxis.Min + yAxis.IntervalOffset + yOffset + modify,
-                    ToPosition = yAxis.Interval * i + 1 + yAxis.Min + yAxis.IntervalOffset + yOffset + modify,
-                    Text = intvString,
-                    RowIndex = 0,
-                    GridTicks = GridTickTypes.All
-                };
-
-                ChartAreas[0].AxisY.CustomLabels.Add(label);
-            }
-
-            ChartAreas[0].AxisY.LabelAutoFitMinFontSize = 10;
-
-            for (int i = 0; i < xLabelCount; i++)
-            {
-                var modify = 0.0;// (rand.Next(50, 100) / 100.0) * xAxis.Interval;
-
-                double intv = (xAxis.Interval * i + xAxis.Min + xAxis.IntervalOffset + xOffset + modify);
-                string intvString = intv.ToString("0.##"); 
-
-                if(invertX != null)
-                    intvString = invertX(intv).ToString("0.##");
-
-                CustomLabel label = new CustomLabel
-                {
-                    FromPosition = xAxis.Interval * i - 1 + xAxis.Min + xAxis.IntervalOffset + xOffset + modify,
-                    ToPosition = xAxis.Interval * i + 1 + xAxis.Min + xAxis.IntervalOffset + xOffset + modify,
-                    Text = intvString,
-                    RowIndex = 0,
-                    GridTicks = GridTickTypes.All
-                };
-
-                ChartAreas[0].AxisX.CustomLabels.Add(label);
-            }
-
-            ChartAreas[0].AxisX.LabelAutoFitMinFontSize = 10;
-        }
-
-        protected virtual void RelabelAxesBetter(AxisObject xAxis, AxisObject yAxis, InvertAxisFunction invertX, InvertAxisFunction invertY,
-                                                 int xLabelCount, int yLabelCount, bool myCenterXAtZero = false, bool myCenterYAtZero = false,
+        protected virtual void RelabelAxesBetter(AxisObject xAxis, AxisObject yAxis, 
+                                                 Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY,
+                                                 int xLabelCount, int yLabelCount, 
+                                                 bool myCenterXAtZero = false, bool myCenterYAtZero = false,
                                                  TransformTypeEnum xAxisTransform = TransformTypeEnum.Linear,
-                                                 TransformTypeEnum yAxisTransform = TransformTypeEnum.Linear, InvertAxisFunction transformX = null, InvertAxisFunction transformY = null)
+                                                 TransformTypeEnum yAxisTransform = TransformTypeEnum.Linear, 
+                                                 Globals.InvertAxisFunction transformX = null, Globals.InvertAxisFunction transformY = null,
+                                                 bool forceKeepCountX = false, bool forceKeepCountY = false)
         {
             double xOffset = 0.0;
             double yOffset = 0.0;
+
+            if(xAxis != null && !forceKeepCountX)
+                xLabelCount = Convert.ToInt32(Math.Abs(xAxis.Max - xAxis.Min) / xAxis.Interval + 1);
+
+            if (yAxis != null && !forceKeepCountY)
+                yLabelCount = Convert.ToInt32(Math.Abs(yAxis.Max - yAxis.Min) / yAxis.Interval + 1);
+
+            StoreLabelingParameters(xAxis, yAxis, invertX, invertY, xLabelCount, yLabelCount, 
+                                    myCenterXAtZero, myCenterYAtZero, xAxisTransform, yAxisTransform,
+                                    transformX, transformY);
 
             xOffset = UpdateChartAxis(ChartAreas[0].AxisX, xAxis, myCenterXAtZero);
             yOffset = UpdateChartAxis(ChartAreas[0].AxisY, yAxis, myCenterYAtZero);
-
             
-            //yAxis.Interval = (yAxis.Max - yAxis.Min) / 10.0;
-            //xAxis.Interval = (xAxis.Max - xAxis.Min) / 10.0;
-
             Random rand = new Random();
 
             if (yAxis != null && yAxisTransform != TransformTypeEnum.Log)
@@ -1061,7 +1103,7 @@ namespace POD.Controls
                 }
             }
 
-            ChartAreas[0].AxisY.LabelAutoFitMinFontSize = 10;
+            ChartAreas[0].AxisY.LabelAutoFitMinFontSize = 5;
 
             if (xAxis != null && xAxisTransform != TransformTypeEnum.Log)
             {
@@ -1075,7 +1117,19 @@ namespace POD.Controls
                 }
             }
 
-            ChartAreas[0].AxisX.LabelAutoFitMinFontSize = 10;
+            ChartAreas[0].AxisX.LabelAutoFitMinFontSize = 5;
+        }
+
+        private void StoreLabelingParameters(AxisObject xAxis, AxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 
+                                             int xLabelCount, int yLabelCount, bool xCenterAtZero, bool yCenterAtZero, 
+                                             TransformTypeEnum xAxisTransform, TransformTypeEnum yAxisTransform,
+                                             Globals.InvertAxisFunction xTransform, Globals.InvertAxisFunction yTransform)
+        {
+            if(_xRelabel == null || _xRelabel.Axis == null || xAxis != null)
+                _xRelabel = new RelabelParameters(xAxis, invertX, xLabelCount, xCenterAtZero, xAxisTransform, xTransform);
+
+            if (_yRelabel == null || _yRelabel.Axis == null || yAxis != null)
+                _yRelabel = new RelabelParameters(yAxis, invertY, yLabelCount, yCenterAtZero, yAxisTransform, yTransform);
         }
 
         private double UpdateChartAxis(Axis axis, AxisObject axisObj, bool myCenterZero)
@@ -1110,22 +1164,36 @@ namespace POD.Controls
             }
         }
 
-        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, InvertAxisFunction invert, int labelCount, double offset, bool redoing = false)
+        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false)
         {
-            for (int i = 0; i < labelCount; i++)
-            {
+            var lastString = "";
+            var precision = 1;
 
-                var modify = 0.0;// (rand.Next(50, 100) / 100.0) * yAxis.Interval;
+            for (int i = 0; i < labelCount; i++)
+            {                
+                var modify = 0.0;
+                
+                var format = GetFormat(precision);
 
                 double intv = (axis.Interval * i + axis.Min + axis.IntervalOffset + offset + modify);
-                string intvString = intv.ToString("0.##");
+                string intvString = intv.ToString(format);
 
                 if (invert != null && intv != 0.0)
-                    intvString = invert(intv).ToString("0.##");
+                    intvString = invert(intv).ToString(format);
                 else
-                    intvString = intv.ToString("0.##");
+                    intvString = intv.ToString(format);
 
-                if (intv >= axis.Min && intv <= axis.Max)
+                double convertedIntv = double.Parse(intvString);
+
+                double diff = Math.Abs(intv - convertedIntv);
+
+                if ((intvString == lastString || diff > Math.Abs(intv * .1)) && precision < 10)
+                {
+                    i = -1;
+                    precision++;
+                    chartAxis.CustomLabels.Clear();
+                }
+                else if (intv >= axis.Min && intv <= axis.Max)
                 {
                     CustomLabel label = new CustomLabel
                     {
@@ -1137,11 +1205,14 @@ namespace POD.Controls
                     };
 
                     chartAxis.CustomLabels.Add(label);
+                    
+
+                    lastString = label.Text;
                 }
                 
             }
 
-            if(chartAxis.CustomLabels.Count <= 3 && redoing == false)
+            if(chartAxis.CustomLabels.Count <= 2 && redoing == false)
             {
                 axis.Interval = axis.Interval / 2.0;
                 chartAxis.CustomLabels.Clear();
@@ -1149,7 +1220,19 @@ namespace POD.Controls
             }
         }
 
-        private void LabelLog10Axis(Axis chartAxis, AxisObject axis, InvertAxisFunction transform, bool forceAll = false)
+        private string GetFormat(int precision)
+        {
+            var format = "0.#";
+
+            for(int i = 1; i < precision; i++)
+            {
+                format = format + "#";
+            }
+
+            return format;
+        }
+
+        private void LabelLog10Axis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction transform, bool forceAll = false)
         {
             var labeledTick = 0;
 
@@ -1306,13 +1389,22 @@ namespace POD.Controls
             CopyYAxisRange(myChart.ChartAreas[0].AxisY);
         }
 
-        void AHatVsAChart_Resize(object sender, EventArgs e)
+        void DataPointChart_Resize(object sender, EventArgs e)
         {
             if(IsSquare == true)
             {
                 Height = Width;
             }
+
+            if(_lastWidth != Width)
+            {
+                RefreshAxisLabelingBasedOnCurrentSize();
+            }
+            
+            _lastWidth = Width;
         }
+
+        
 
         public void SelectChart()
         {
@@ -1529,8 +1621,10 @@ namespace POD.Controls
             return finalName;
         }
 
-        public void SetXAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false)
+        public void SetXAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount = false)
         {
+            AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.X);
+
             if (myAxis.Max < myAxis.Min)
             {
                 myAxis.Max = 1.0;
@@ -1542,19 +1636,21 @@ namespace POD.Controls
 
             if (!forceLinear)
             {
-                RelabelAxesBetter(myAxis, null, data.InvertTransformedFlaw, data.InvertTransformedResponse, 10, 10,
-                                    false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
+                RelabelAxesBetter(myAxis, null, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                    false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, keepLabelCount, false);
             }
             else
             {
-                RelabelAxesBetter(myAxis, null, data.DoNoTransform, data.DoNoTransform, 10, 10,
-                                    false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform);
+                RelabelAxesBetter(myAxis, null, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                    false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, keepLabelCount, false);
 
             }
         }
 
-        public void SetYAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false)
+        public void SetYAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount=false)
         {
+            AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.Y);
+
             if (myAxis.Max < myAxis.Min)
             {
                 myAxis.Max = 1.0;
@@ -1566,13 +1662,13 @@ namespace POD.Controls
 
             if (!forceLinear)
             {
-                RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 10, 10,
-                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
+                RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount);
             }
             else
             {
-                RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, 10, 10,
-                                  false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform);
+                RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                  false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
             }
         }
 
@@ -2084,6 +2180,9 @@ namespace POD.Controls
         protected List<int> mBorderWidths = null;
         public delegate void FailedDrawingHandler(DataPointChart chart, string myError);
         public event FailedDrawingHandler HasFailedDrawing;
+        private RelabelParameters _xRelabel = null;
+        private RelabelParameters _yRelabel = null;
+        
         protected void LineChartPrePaint(object sender, System.Windows.Forms.DataVisualization.Charting.ChartPaintEventArgs e)
         {
             if (e.ChartElement.GetType() == typeof(System.Windows.Forms.DataVisualization.Charting.ChartArea))

@@ -63,12 +63,40 @@ namespace POD
 	    }
     }
 
-    
+    public enum AxisKind
+    {
+        X,
+        Y
+    }
 
     public static class Globals
     {
+        public delegate double InvertAxisFunction(double x);
 
-        
+        public const int DefaultLabelCount = 10;
+
+        public static int GetLabelIntervalBasedOnChartSize(Control chart, AxisKind kind)
+        {
+            if (chart != null)
+            {
+                var scale = CalculateScreenScaling(chart);
+
+                int width = Convert.ToInt32(chart.Width / scale); //Convert.ToInt32(chart.Width - ((scale - 1) * chart.Width));
+                int height = Convert.ToInt32(chart.Height / scale);//Convert.ToInt32(chart.Height - ((scale - 1) * chart.Height));
+
+                switch (kind)
+                {
+                    case AxisKind.X:
+                        return Convert.ToInt32(width / 100) + 1;
+                    case AxisKind.Y:
+                        return Convert.ToInt32(width / 100) + 1;
+                    default:
+                        break;
+                }
+            }
+
+            return DefaultLabelCount;
+        }
 
         public const string UndefinedProjectName = "<undefined>";
 
@@ -110,6 +138,13 @@ namespace POD
 
         public static int StdHeight(Control control)
         {
+            var scale = CalculateScreenScaling(control);
+
+            return Convert.ToInt32(59 * scale);
+        }
+
+        private static double CalculateScreenScaling(Control control)
+        {
             var scale = 1.0;
 
             if (control != null)
@@ -119,8 +154,7 @@ namespace POD
                     scale = g.DpiX / 96.0;
                 }
             }
-
-            return Convert.ToInt32(59 * scale);
+            return scale;
         }
 
         public static Color AlphaOverWhiteToOpaque(Color color)

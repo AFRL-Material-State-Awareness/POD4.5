@@ -243,8 +243,10 @@ namespace POD
         /// </summary>
         internal void SetWizardToFirstStep()
         {
+            //Dock.Pane.SuspendDrawing();
             Wizard.CurrentStep = Wizard.FirstStep;
             SyncDock();
+            //Dock.Pane.ResumeDrawing();
         }
 
         /// <summary>
@@ -289,7 +291,7 @@ namespace POD
             OnSourceModified(this, e);
 
             SetWizardToFirstStep();
-            Dock.Close();
+            Dock.Hide();
         }
 
         /// <summary>
@@ -369,7 +371,9 @@ namespace POD
             OnSourceModified(this, e);
 
             SetWizardToFirstStep();
-            Dock.Close();
+            this.Wizard.CurrentStep.RefreshValues();
+            //Dock.Hide();
+            //Dock.Show();
         }
 
         /// <summary>

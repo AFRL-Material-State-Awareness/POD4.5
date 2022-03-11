@@ -102,22 +102,25 @@ namespace POD.Controls
             yAxis.IntervalOffset = 0.0;
             yAxis.BufferPercentage = 0.0;
 
-            AnalysisData.GetBufferedRange(xAxis, uncensoredMin, uncensoredMax, myData.FlawTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, xAxis, uncensoredMin, uncensoredMax, AxisKind.X);
             //AnalysisData.GetBufferedRange(yAxis, myYMin, myYMax);
 
             //xAxis.Interval /= 2.0;
             //yAxis.Interval /= 2.0;
 
-            SetXAxisRange(xAxis, myData);
-            SetYAxisRange(yAxis, myData);
+            SetXAxisRange(xAxis, myData, false, false);
+            SetYAxisRange(yAxis, myData, false, true);
 
             //RelabelAxes(xAxis, yAxis,
             //            myData.InvertTransformValueForXAxis, null, 10, 3, false, false, myData.FlawTransform, TransformTypeEnum.Linear);
 
+            yAxis.Interval = .25;
+            yAxis.IntervalOffset = 0.0;
+
             RelabelAxesBetter(xAxis, yAxis, myData.InvertTransformValueForXAxis, null,
-                                                 10, 6, false, false,
-                                                 myData.FlawTransform,
-                                                 TransformTypeEnum.Linear, myData.TransformValueForXAxis);
+                              Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 5, false, false,
+                              myData.FlawTransform,
+                              TransformTypeEnum.Linear, myData.TransformValueForXAxis, null, false, true);
         }
     }
 }

@@ -112,6 +112,8 @@ namespace POD
             //always after Close() or will crash on close because of PDF viewer
             _dockMgr = new DocksManager(dockPanel1);
 
+            _dockMgr.AllWizardsClosed += _dockMgr_AllWizardsClosed;
+
             Visible = false;
             _lastFile = "";
 
@@ -202,6 +204,23 @@ namespace POD
             _loader.Close();
 
             _loader.Dispose();
+        }
+
+        void _dockMgr_AllWizardsClosed(object sender, EventArgs e)
+        {
+            WizardDock dock = sender as WizardDock;
+
+            if(dock != null && dock.IsHidden)
+            {
+                //ClearDocks();
+
+                //var setupNode = _dockMgr.ProjectDock.Tree.Nodes[0].Nodes[0];
+
+                //Tree_NodeMouseDoubleClick(setupNode, new TreeNodeMouseClickEventArgs(setupNode, MouseButtons.Left, 2, 0, 0));
+
+                _controller.ProjectDock.RefreshValues();
+                _controller.ProjectDock.Show();
+            }
         }
 
         private void Load_IronPython(object sender, DoWorkEventArgs e)
@@ -647,6 +666,7 @@ namespace POD
                     if (activeDoc.Label == wizardLabel)
                     {
                         _dockMgr.Activate(activeDoc);
+                        //activeDoc.Visible = true;
                         return;
                     }
                         
@@ -775,21 +795,6 @@ namespace POD
         private void Content_Removed(object sender, DockContentEventArgs e)
         {
             ClearDocks();
-
-            var count = 0;
-
-            foreach (var doc in dockPanel1.Documents)
-            {
-                if (doc.DockHandler.TabText == _dockMgr.HandbookDock.HelpName || doc.DockHandler.TabText == _dockMgr.QuickHelpDock.HelpName)
-                    count++;
-            }
-
-            if (dockPanel1.Documents.Count() == count)
-            {
-                var setupNode = _dockMgr.ProjectDock.Tree.Nodes[0].Nodes[0];
-
-                Tree_NodeMouseDoubleClick(setupNode, new TreeNodeMouseClickEventArgs(setupNode, MouseButtons.Left, 2, 0, 0));
-            }
         }
 
         private void MenuOpenFile_Click(object sender, EventArgs e)

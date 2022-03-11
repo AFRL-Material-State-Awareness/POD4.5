@@ -2395,25 +2395,30 @@ class CPodDoc():
         xi = 0.0
         yi = 0.0
 
-        for i in range(crkcount):
-            xi = t_cracks[i]
-            yi = crackresults[i]
-            zhat = (xi-self.muhat)/self.sighat 
-            if (self.model==LINEAR_MODEL):
-                pod = mdnord(zhat)
-            else:
-                pod = pod_odds(zhat)
+        try:
+            for i in range(crkcount):
+                xi = t_cracks[i]
+                yi = crackresults[i]
+                zhat = (xi-self.muhat)/self.sighat 
+                if (self.model==LINEAR_MODEL):
+                    pod = mdnord(zhat)
+                else:
+                    pod = pod_odds(zhat)
 
-            self.pf_test_ha_likihood += (yi * log(pod) + (1-yi) * log(1-pod))
+                self.pf_test_ha_likihood += (yi * log(pod) + (1-yi) * log(1-pod))
 
-        self.pf_censor_test_result = -2.0 * (self.pf_test_h0_likihood - self.pf_test_ha_likihood)
-
-        if self.pf_censor_test_result >= 2.70554:
-            self.pf_censor_test_pass = True
-            self.lackOfFitRating = self.choices[0]            
-        else:
+                self.pf_censor_test_result = -2.0 * (self.pf_test_h0_likihood - self.pf_test_ha_likihood)
+        except ValueError:
             self.pf_censor_test_pass = False
-            self.lackOfFitRating = self.choices[5]
+            self.lackOfFitRating = self.choices[6]
+            self.pf_censor_test_result = 0.0
+        else:
+            if self.pf_censor_test_result >= 2.70554:
+                self.pf_censor_test_pass = True
+                self.lackOfFitRating = self.choices[0]            
+            else:
+                self.pf_censor_test_pass = False
+                self.lackOfFitRating = self.choices[5]
         
         self.fcalc = self.pf_censor_test_result
 

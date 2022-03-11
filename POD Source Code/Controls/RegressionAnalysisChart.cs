@@ -1010,7 +1010,7 @@ namespace POD.Controls
             //myFlawMin = _analysisData.TransformValueForXAxis(myFlawMin);
             //myFlawMax = _analysisData.TransformValueForXAxis(myFlawMax);
 
-            _analysisData.GetXYBufferedRanges(xAxis, yAxis, true);
+            _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
 
             
 
@@ -1034,13 +1034,13 @@ namespace POD.Controls
             }
             else
             {
-                AnalysisData.GetBufferedRange(yAxis, yAxis.Min, yAxis.Max, _analysisData.ResponseTransform == TransformTypeEnum.Linear);
+                AnalysisData.GetBufferedRange(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
             }
 
-            AnalysisData.GetBufferedRange(xAxis, xAxis.Min, xAxis.Max, _analysisData.FlawTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
 
             RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, 10, 10, false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
 
             //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
             //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
@@ -1053,13 +1053,13 @@ namespace POD.Controls
             AxisObject yAxis = new AxisObject();
             AxisObject xAxis = new AxisObject();
 
-            _analysisData.GetXYBufferedRanges(xAxis, yAxis, true);
+            _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
 
             //RelabelAxes(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis, 
             //            _analysisData.InvertTransformValueForYAxis, 10, 10);
 
             RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, 10, 10, false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
 
             //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
             //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;

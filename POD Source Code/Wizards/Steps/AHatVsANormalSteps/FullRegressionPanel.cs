@@ -483,7 +483,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             Analysis.InFlawMin = Convert.ToDouble(aMinControl.Value);
             Analysis.InFlawMax = Convert.ToDouble(aMaxControl.Value);
-            var xAxis = Analysis.Data.GetXBufferedRange(false);
+            var xAxis = Analysis.Data.GetXBufferedRange(null, false);
             Analysis.InFlawCalcMax = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Max));
             Analysis.InFlawCalcMin = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Min));
             Analysis.InResponseMin = Convert.ToDouble(leftCensorControl.Value);
@@ -655,7 +655,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
 
             podChart.FillChart(Analysis.Data);
-            podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(false), Analysis.Data, true);
+            podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
             podChart.UpdateLevelConfidenceLines(a50Original,
                                                 a90Original,
                                                 a9095Original);
@@ -663,8 +663,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             StepToolTip.SetToolTip(podChart, podChart.TooltipText);
             podChart.ChartToolTip = StepToolTip;
 
-            thresholdChart.SetXAxisRange(Analysis.Data.GetYBufferedRange(false), Analysis.Data, true);
-            thresholdChart.SetYAxisRange(Analysis.Data.GetUncensoredXBufferedRange(false), Analysis.Data, true);
+            thresholdChart.SetXAxisRange(Analysis.Data.GetYBufferedRange(thresholdChart, false), Analysis.Data, true);
+            thresholdChart.SetYAxisRange(Analysis.Data.GetUncensoredXBufferedRange(thresholdChart, false), Analysis.Data, true);
             thresholdChart.FillChart(Analysis.Data);
             thresholdChart.UpdateLevelConfidenceLines(a50Original,
                                                       a90Original,

@@ -9,7 +9,7 @@
     <SearchPath>..\packages\MathNet.Numerics.3.6.0\lib\net40\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <IsWindowsApplication>True</IsWindowsApplication>
-    <InterpreterId>Global|VisualStudio|IronPython 2.7</InterpreterId>
+    <InterpreterId>Global|VisualStudio|IronPython 2.7 Install (32-bit)</InterpreterId>
     <LaunchProvider>IronPython (.NET) launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
     <Name>TestingPythonCode</Name>
@@ -27,7 +27,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <InterpreterReference Include="Global|VisualStudio|IronPython 2.7" />
+    <InterpreterReference Include="Global|VisualStudio|IronPython 2.7 Install (32-bit)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="alnorm.py" />

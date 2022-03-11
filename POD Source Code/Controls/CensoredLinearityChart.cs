@@ -165,6 +165,8 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData, double mySlope, double myIntercept, double fitError, double repeatError)
         {
+            //_lastUsedData = myData;
+
             double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
             double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
 
@@ -213,8 +215,8 @@ namespace POD.Controls
             AxisObject yAxis = new AxisObject();
             AxisObject xAxis = new AxisObject();
 
-            AnalysisData.GetBufferedRange(xAxis, xMin, xMax, true);
-            AnalysisData.GetBufferedRange(yAxis, globalResponseMin, globalResponseMax, false);//myData.ResponseTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, xAxis, xMin, xMax, AxisKind.X);
+            AnalysisData.GetBufferedRange(this, yAxis, globalResponseMin, globalResponseMax, AxisKind.Y);//myData.ResponseTransform == TransformTypeEnum.Linear);
 
             //xAxis.Interval /= 2.0;
             //yAxis.Interval /= 2.0;
@@ -222,8 +224,10 @@ namespace POD.Controls
             SetXAxisRange(xAxis, myData);
             SetYAxisRange(yAxis, myData);
 
-            RelabelAxes(xAxis, yAxis,
-                        null, null, 10, 10, false, true);
+            RelabelAxesBetter(xAxis, yAxis, null, null, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 
+                              Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, true);
+
+            
 
             //view = myData.ResidualFullCensoredTable.DefaultView;
             //CompleteCensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
@@ -232,11 +236,7 @@ namespace POD.Controls
             double flawRangeMax = ChartAreas[0].AxisX.Maximum;
 
             double fitMax = flawRangeMax * mySlope + myIntercept;
-            double fitMin = flawRangeMin * mySlope + myIntercept;
-
-            
-
-            
+            double fitMin = flawRangeMin * mySlope + myIntercept;            
 
             /*LeftCensor.Points.Clear();
             LeftCensor.Points.AddXY(flawRangeMin, myResponseMax - fitMin);

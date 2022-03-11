@@ -322,6 +322,8 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData)
         {
+            //_lastUsedData = myData;
+
             DataView view = myData.ThresholdPlotTable.DefaultView;
 
             POD90.Points.DataBindXY(view, "threshold", view, "level");

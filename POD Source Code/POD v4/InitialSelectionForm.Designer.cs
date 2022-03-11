@@ -355,7 +355,7 @@
             this.MinimizeBox = false;
             this.Name = "InitialSelectionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "UDRI POD v4.0.2 - Welcome!";
+            this.Text = "UDRI POD v4.0.5 - Welcome!";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SelectionForm_Closing);
             this.Shown += new System.EventHandler(this.frmMain_Shown);

@@ -37,6 +37,8 @@ namespace POD.Docks
         ProjectDock _projectDock;
         PDFDisplay _show1823ADock;
 
+        public event EventHandler AllWizardsClosed;
+
         public PDFDisplay Show1823ADock
         {
             get { return _show1823ADock; }
@@ -229,13 +231,14 @@ namespace POD.Docks
             _showQuickHelp.Show(_panel, DockState.DockLeft);
 
             
-            _wizardProgDock.DockTo(_projectDock.Pane, DockStyle.Top, 0);
+            
 
             //_show1823ADock.Show(_panel, DockState.Float);
             //_showQuickHelp.Show(_panel, DockState.Float);
 
             _show1823ADock.DockTo(_handbookDock.Pane, DockStyle.Bottom, 0);
             _showQuickHelp.DockTo(_show1823ADock.Pane, DockStyle.Fill, 0);
+            _wizardProgDock.DockTo(_handbookDock.Pane, DockStyle.Bottom, 0);
 
             _quickHelpDock.DockTo(_handbookDock.Pane, DockStyle.Left, 0);
 
@@ -489,11 +492,30 @@ namespace POD.Docks
                     myWizard.FormClosing += Wizard_Closing;
                     myWizard.FormClosed += myWizard_FormClosed;
                     myWizard.DockStateChanged += myWizard_DockStateChanged;
+                    myWizard.VisibleChanged += myWizard_VisibleChanged;
                     
                 }
             }
 
             return alreadyThere;
+        }
+
+        private void myWizard_VisibleChanged(object sender, EventArgs e)
+        {
+            WizardDock dock = sender as WizardDock;
+
+            if (dock != null && dock.IsHidden && HasNoWizardsLeft)
+            {
+                RaiseAllWizardsClosed(dock);
+            }
+        }
+
+        private void RaiseAllWizardsClosed(WizardDock dock)
+        {
+            if(AllWizardsClosed != null)
+            {
+                AllWizardsClosed.Invoke(dock, null);
+            }
         }
 
         private void myWizard_DockStateChanged(object sender, EventArgs e)
@@ -534,7 +556,6 @@ namespace POD.Docks
                 _wizardProgDock.Clear();
                 _handbookDock.Clear();
                 _quickHelpDock.Clear();
-                
             }
 
             _lastClosed = null;

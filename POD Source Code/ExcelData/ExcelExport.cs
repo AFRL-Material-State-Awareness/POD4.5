@@ -289,7 +289,9 @@ namespace POD.ExcelData
         {
             int index = Convert.ToInt32(myAnalysisIndex) + 1;
 
-            Workbook.InsertHyperlink(myRowIndex, myColIndex, SLHyperlinkTypeValues.InternalDocumentLink, "'Analysis Table of Contents'!A" + index, "Return", "Return to Analysis Table of Contents.");
+            Workbook.InsertHyperlink(myRowIndex, myColIndex, SLHyperlinkTypeValues.InternalDocumentLink, "'Analysis Table of Contents'!A" + index, "Analysis Name", "Return to Analysis Table of Contents.");
+
+            //RightJustifyCell(myRowIndex, myColIndex);
         }
 
         public void InsertAnalysisWorksheetLink(int myRowIndex, int myColIndex, string myAnalysisWorksheetName, string myPageName)
@@ -313,6 +315,22 @@ namespace POD.ExcelData
         public void MergeCells(int rowStart,int columnStart, int rowEnd,int columnEnd)
         {
             Workbook.MergeWorksheetCells(rowStart, columnStart, rowEnd, columnEnd);
+        }
+
+        public void SetRowSize(int rowIndex, double multFactor)
+        {
+            var style = Workbook.GetRowHeight(rowIndex);
+
+            Workbook.SetRowHeight(rowIndex, style * multFactor);
+        }
+
+        public void RightJustifyCell(int rowIndex, int colIndex)
+        {
+            var style =Workbook.GetCellStyle(rowIndex, colIndex);
+
+            style.Alignment.Horizontal = HorizontalAlignmentValues.Right;
+
+            Workbook.SetCellStyle(rowIndex, colIndex, style);
         }
     }
 }

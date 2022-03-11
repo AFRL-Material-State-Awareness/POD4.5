@@ -83,7 +83,8 @@ namespace POD.Wizards
             _actionBar = new WizardActionBar();
             _overlay = new TutorialOverlay();*/
 
-            _source = mySource;            
+            _source = mySource;
+
 
             InitializeMainControls();
             PlaceMainControls(myOrganize);
@@ -91,7 +92,7 @@ namespace POD.Wizards
             StepToolTip = new PODToolTip();
             
         }
-
+        
         /// <summary>
         /// Create an empty wizard step.
         /// </summary>

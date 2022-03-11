@@ -527,7 +527,7 @@ namespace POD.Data
                         if (myPair.To.Name == RangeNames.FlawSize)
                         {
                             //can't have flaw sizes equal to 0.0 in an analysis
-                            if (value == 0.0)
+                            if (value <= 0.0)
                                 hasInvalidFlaw = true;
                         }
                     }

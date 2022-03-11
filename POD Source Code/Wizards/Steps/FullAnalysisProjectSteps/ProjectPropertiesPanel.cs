@@ -216,6 +216,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             stopWatch.Start();
 
+            if (_propertiesToolTip != null)
+                _propertiesToolTip.RemoveAll();
+
             _propertiesToolTip = new PODToolTip();
 
             _propertiesToolTip.AutoPopDelay = 15000;
@@ -298,12 +301,13 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                     if (analysis.Data.PodCurveTable.Rows.Count > 0)
                     {
                         chart.FillChart(analysis.Data, true);
-                        chart.SetXAxisRange(analysis.Data.GetUncensoredXBufferedRange(false), analysis.Data, true);
+                        chart.SetXAxisRange(analysis.Data.GetUncensoredXBufferedRange(chart, false), analysis.Data, true);
                         chart.UpdateLevelConfidenceLines(analysis.OutResponseDecisionPODA50Value,
                                                          analysis.OutResponseDecisionPODLevelValue,
                                                          analysis.OutResponseDecisionPODConfidenceValue);
                     }
 
+                    
                     _propertiesToolTip.SetToolTip(chart, analysis.ToolTipText);
 
                     var index = sourceLabelNames.IndexOf(analysis.SourceName + "." + analysis.FlawName);
@@ -330,7 +334,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                             {
                                 _propertiesToolTip.SetToolTip(chart, analysis.ToolTipText);
                                 chart.FillChart(analysis.Data, true);
-                                chart.SetXAxisRange(analysis.Data.GetUncensoredXBufferedRange(false), analysis.Data, true);
+                                chart.SetXAxisRange(analysis.Data.GetUncensoredXBufferedRange(chart, false), analysis.Data, true);
                                 chart.UpdateLevelConfidenceLines(analysis.OutResponseDecisionPODA50Value,
                                                                     analysis.OutResponseDecisionPODLevelValue,
                                                                     analysis.OutResponseDecisionPODConfidenceValue);

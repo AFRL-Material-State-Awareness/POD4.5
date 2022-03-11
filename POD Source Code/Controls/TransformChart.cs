@@ -331,54 +331,13 @@ namespace POD.Controls
             _normalYAxis = new AxisObject();
             _normalXAxis = new AxisObject();
 
-            //var uncensoredMax = Double.NegativeInfinity;
-            //var uncensoredMin = Double.PositiveInfinity;
-
-            //if (Original.Points.Count > 0)
-            //{
-            //    uncensoredMax = Original.Points.FindMaxByValue("Y1").YValues[0];
-            //    uncensoredMin = Original.Points.FindMinByValue("Y1").YValues[0];
-            //}
-
-            //var censoredMax = Double.NegativeInfinity;
-            //var censoredMin = Double.PositiveInfinity;
-
-            //if (PartialCensored.Points.Count > 0)
-            //{
-            //    censoredMax = PartialCensored.Points.FindMaxByValue("Y1").YValues[0];
-            //    censoredMin = PartialCensored.Points.FindMinByValue("Y1").YValues[0];
-            //}
-
-            //var globalResponseMax = (uncensoredMax > censoredMax) ? uncensoredMax : censoredMax;
-            //var globalResponseMin = (uncensoredMin < censoredMin) ? uncensoredMin : censoredMin;
-
-            //if (globalResponseMax < globalResponseMin)
-            //{
-            //    globalResponseMax = 1.0;
-            //    globalResponseMin = -1.0;
-            //}
-
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
-
-            //var globalResponseMax = 1.0;// uncensoredMax;
-            //var globalResponseMin = 0.0;// uncensoredMin;
-
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
-
             _normalYAxis.Interval = .5;
             _normalYAxis.IntervalOffset = 0.0;
             _normalYAxis.Max = 1.0;
             _normalYAxis.Min = 0.0;
             _normalYAxis.BufferPercentage = 0.0;
 
-            AnalysisData.GetBufferedRange(_normalXAxis, xMin, xMax, false);
-            //AnalysisData.GetBufferedRange(_normalYAxis, globalResponseMin, globalResponseMax, false);//myData.ResponseTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, _normalXAxis, xMin, xMax, AxisKind.X);
         }
 
         private void GetAxisRangeForOriginals(AnalysisData myData)
@@ -408,39 +367,11 @@ namespace POD.Controls
                 uncensoredMin = Original.Points.FindMinByValue("Y1").YValues[0];
             }
 
-            //var censoredMax = Double.NegativeInfinity;
-            //var censoredMin = Double.PositiveInfinity;
-
-            //if (PartialCensored.Points.Count > 0)
-            //{
-            //    censoredMax = PartialCensored.Points.FindMaxByValue("Y1").YValues[0];
-            //    censoredMin = PartialCensored.Points.FindMinByValue("Y1").YValues[0];
-            //}
-
-            //var globalResponseMax = (uncensoredMax > censoredMax) ? uncensoredMax : censoredMax;
-            //var globalResponseMin = (uncensoredMin < censoredMin) ? uncensoredMin : censoredMin;
-
-            //if (globalResponseMax < globalResponseMin)
-            //{
-            //    globalResponseMax = 1.0;
-            //    globalResponseMin = -1.0;
-            //}
-
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
-
             var globalResponseMax = uncensoredMax;
             var globalResponseMin = uncensoredMin;
 
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
-
-            AnalysisData.GetBufferedRange(_normalXAxis, xMin, xMax, false);
-            AnalysisData.GetBufferedRange(_normalYAxis, globalResponseMin, globalResponseMax, false);//myData.ResponseTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, _normalXAxis, xMin, xMax, AxisKind.X);
+            AnalysisData.GetBufferedRange(this, _normalYAxis, globalResponseMin, globalResponseMax, AxisKind.Y);
         }
 
         private void AddHitMissResidualSeries(AnalysisData myData, List<Color> colors, int colorIndex, int styleIndex)
@@ -452,13 +383,6 @@ namespace POD.Controls
             DataView view = myData.ResidualUncensoredTable.DefaultView;
             Uncensored.Points.DataBindXY(view, "t_flaw", view, "diff");
             Uncensored.Enabled = false;
-
-            //view = myData.ResidualPartialCensoredTable.DefaultView;
-            //PartialCensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
-            //PartialCensored.Enabled = false;
-
-            //series = PartialCensored;
-            //ColorSeries(colors, colorIndex, styleIndex, series);
 
             series = Uncensored;
             ColorSeries(colors, colorIndex, styleIndex, series);
@@ -476,13 +400,6 @@ namespace POD.Controls
             DataView view = myData.ResidualRawTable.DefaultView;
             Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
             Uncensored.Enabled = false;
-
-            //view = myData.ResidualPartialCensoredTable.DefaultView;
-            //PartialCensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
-            //PartialCensored.Enabled = false;
-            
-            //series = PartialCensored;
-            //ColorSeries(colors, colorIndex, styleIndex, series);
 
             series = Uncensored;
             ColorSeries(colors, colorIndex, styleIndex, series);
@@ -514,54 +431,13 @@ namespace POD.Controls
             _residualYAxis = new AxisObject();
             _residualXAxis = new AxisObject();
 
-            //var uncensoredMax = Double.NegativeInfinity;
-            //var uncensoredMin = Double.PositiveInfinity;
-
-            //if (Uncensored.Points.Count > 0)
-            //{
-            //    uncensoredMax = Uncensored.Points.FindMaxByValue("Y1").YValues[0];
-            //    uncensoredMin = Uncensored.Points.FindMinByValue("Y1").YValues[0];
-            //}
-
-            //var censoredMax = Double.NegativeInfinity;
-            //var censoredMin = Double.PositiveInfinity;
-
-            //if (PartialCensored.Points.Count > 0)
-            //{
-            //    censoredMax = PartialCensored.Points.FindMaxByValue("Y1").YValues[0];
-            //    censoredMin = PartialCensored.Points.FindMinByValue("Y1").YValues[0];
-            //}
-
-            //var globalResponseMax = (uncensoredMax > censoredMax) ? uncensoredMax : censoredMax;
-            //var globalResponseMin = (uncensoredMin < censoredMin) ? uncensoredMin : censoredMin;
-
-            //if (globalResponseMax < globalResponseMin)
-            //{
-            //    globalResponseMax = 1.0;
-            //    globalResponseMin = -1.0;
-            //}
-
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
-
-            //var globalResponseMax = 1.0;// uncensoredMax;
-            //var globalResponseMin = -1.0;// uncensoredMin;
-
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
-
             _residualYAxis.Interval = .5;
             _residualYAxis.IntervalOffset = 0.0;
             _residualYAxis.Max = 1.0;
             _residualYAxis.Min = -1.0;
             _residualYAxis.BufferPercentage = 0.0;
 
-            AnalysisData.GetBufferedRange(_residualXAxis, xMin, xMax, false);
-            //AnalysisData.GetBufferedRange(_residualYAxis, globalResponseMin, globalResponseMax, true);//myData.ResponseTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, _residualXAxis, xMin, xMax, AxisKind.X);
 
         }
 
@@ -628,8 +504,8 @@ namespace POD.Controls
             else
                 globalResponseMin = -globalResponseMax;
 
-            AnalysisData.GetBufferedRange(_residualXAxis, xMin, xMax, false);
-            AnalysisData.GetBufferedRange(_residualYAxis, globalResponseMin, globalResponseMax, false);//myData.ResponseTransform == TransformTypeEnum.Linear);
+            AnalysisData.GetBufferedRange(this, _residualXAxis, xMin, xMax, AxisKind.X);
+            AnalysisData.GetBufferedRange(this, _residualYAxis, globalResponseMin, globalResponseMax, AxisKind.Y);//myData.ResponseTransform == TransformTypeEnum.Linear);
 
         }
 
@@ -645,9 +521,10 @@ namespace POD.Controls
         {
             SetXAxisRange(_residualXAxis, data);
             SetYAxisRange(_residualYAxis, data);
-            
-            RelabelAxesBetter(_residualXAxis, _residualYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 10, 10,
-                              false, true, XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
+
+            RelabelAxesBetter(_residualXAxis, _residualYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 
+                              Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, true, 
+                              XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
         }
 
         public void SwitchToNormalAxes(AnalysisData data)
@@ -655,8 +532,9 @@ namespace POD.Controls
             SetXAxisRange(_normalXAxis, data);
             SetYAxisRange(_normalYAxis, data);
 
-            RelabelAxesBetter(_normalXAxis, _normalYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 10, 10,
-                              false, false, XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
+            RelabelAxesBetter(_normalXAxis, _normalYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 
+                              Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, 
+                              XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
         }
 
         private void ColorSeries(List<Color> colors, int colorIndex, int styleIndex, Series series)

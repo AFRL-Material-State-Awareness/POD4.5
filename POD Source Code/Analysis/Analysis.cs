@@ -6,6 +6,8 @@ using POD.Data;
 using System.Diagnostics;
 using System.Windows.Forms;
 using POD.ExcelData;
+using System.IO;
+using System.Linq;
 using SpreadsheetLight;
 using POD.Controls;
 using POD;
@@ -974,7 +976,57 @@ namespace POD.Analyze
             }
             catch (Exception exp)
             {
-                //essageBox.Show("Analysis Error:" + Environment.NewLine + Environment.NewLine + exp.Message);
+                var moreInfo = string.Empty;
+
+                try
+                {
+                    //essageBox.Show("Analysis Error:" + Environment.NewLine + Environment.NewLine + exp.Message);
+                    var fullString = exp.ToString();
+                    var lineIndex = fullString.IndexOf(".py:line");
+
+                    var fileString = fullString.Substring(lineIndex - 100, 100);
+                    var fileIndex = 100 - fileString.LastIndexOf("\\");
+                    var endLineIndex = fullString.IndexOf(Environment.NewLine, lineIndex);
+                    var startIndex = lineIndex - fileIndex + 1;
+                    var endLength = endLineIndex - startIndex;
+
+                    var pathString = fullString.Substring(0, lineIndex);
+                    var fileStart = pathString.LastIndexOf(" in ") + 3;
+                    var fullFileString = fullString.Substring(fileStart, endLineIndex - fileStart + 1);
+                    var fileEnd = fullFileString.LastIndexOf(":") + fileStart;
+
+                    var filePath = fullString.Substring(fileStart, fileEnd - fileStart);
+
+                    var numberStart = fileEnd + 5;
+
+                    var lineNumberStr = fullString.Substring(numberStart, endLineIndex - numberStart);
+                    if (Int32.TryParse(lineNumberStr, out int lineNumber) && File.Exists(filePath))
+                    {
+                        var lines = File.ReadAllLines(filePath);
+
+                        var line = string.Empty;
+
+                        while (!line.TrimStart().StartsWith("def"))
+                        {
+                            line = lines[lineNumber];
+                            lineNumber--;
+                        }
+
+                        moreInfo = "Error Occurs In Function " + line.Trim() + " starting at " + lineNumber.ToString() + " in " + Path.GetFileName(filePath);
+
+                    }
+                    else
+                    {
+                        moreInfo = "Error Occurs In Function That Ends At: " + fullString.Substring(startIndex, endLength);
+                    }
+
+                    moreInfo = Environment.NewLine + Environment.NewLine + moreInfo;
+                }
+                catch(Exception exp2)
+                {
+                    moreInfo = string.Empty;
+                }
+
 
                 _python.AddErrorText("Analysis Error: " + exp.Message);
 
@@ -1814,11 +1866,11 @@ namespace POD.Analyze
             rowIndex = 1;
             colIndex = 2;
 
-            myWriter.SetCellValue(rowIndex, colIndex, Name);
             if (WorksheetName.Length > 0)
             {
-                myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex, colIndex + 1);
-                myWriter.InsertReturnToTableOfContents(rowIndex++, colIndex + 2, WorksheetName);
+                //myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex, colIndex + 1);
+                myWriter.InsertReturnToTableOfContents(1, 1, WorksheetName);
+                rowIndex++;
             }
             else
                 rowIndex++;
@@ -1894,7 +1946,16 @@ namespace POD.Analyze
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 //write assumption hypothesis test label
+
+                myWriter.Workbook.AutoFitColumn(colIndex + 1, colIndex + 1);
+
+                myWriter.SetCellValue(rowIndex, colIndex, "Test Statistic");
                 myWriter.SetCellValue(rowIndex, colIndex + 1, "Assumption Compatibility");
+                myWriter.SetCellValue(rowIndex, colIndex + 2, "P-Value");
+
+                myWriter.SetCellTextWrapped(rowIndex, colIndex + 1, true);
+
+                myWriter.SetRowSize(rowIndex, 2.0);
 
                 //skip analysis model test label
                 rowIndex++;
@@ -1920,8 +1981,14 @@ namespace POD.Analyze
             
 
             myWriter.Workbook.AutoFitColumn(1, 2);
+
+            WriteAnalysisName(myWriter, WorksheetName.Length > 0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="myWriter"></param>
         private void WriteInfoSheet(ExcelExport myWriter)
         {
             myWriter.Workbook.AddWorksheet((WorksheetName + " Info").Trim());
@@ -1986,11 +2053,11 @@ namespace POD.Analyze
             rowIndex = 1;
             colIndex = 2;
 
-            myWriter.SetCellValue(rowIndex, colIndex, Name);
             if (WorksheetName.Length > 0)
             {
-                myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex, colIndex + 1);
-                myWriter.InsertReturnToTableOfContents(rowIndex++, colIndex + 2, WorksheetName);
+                //myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex, colIndex + 1);
+                myWriter.InsertReturnToTableOfContents(1, 1, WorksheetName);
+                rowIndex++;
             }
             else
                 rowIndex++;
@@ -2068,6 +2135,22 @@ namespace POD.Analyze
             //}
 
             myWriter.Workbook.AutoFitColumn(1, 2);
+
+            WriteAnalysisName(myWriter, WorksheetName.Length > 0);
+        }
+
+        private void WriteAnalysisName(ExcelExport myWriter, bool myPartOfProject)
+        {
+            //if (myPartOfProject)
+            //{
+            //    myWriter.SetCellValue(1, 3, Name);
+            //}
+            //else
+            //{
+            //    myWriter.SetCellValue(1, 2, Name);
+            //}
+
+            myWriter.SetCellValue(1, 2, Name);
         }
 
         public double OutPFCovarianceV11 { get; set; }
