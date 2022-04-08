@@ -63,6 +63,8 @@ namespace POD
 
             BuildMRUList();
 
+            CreatePublicDocumentDirectories();
+
             GotSize = false;
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
@@ -94,6 +96,13 @@ namespace POD
 
                 }
             }
+        }
+
+        private void CreatePublicDocumentDirectories()
+        {
+            var logs = Globals.PODv4LogFolder;
+            var data = Globals.PODv4DataFolder;
+            var images = Globals.PODv4ImageFolder;
         }
 
         int originalExStyle = -1;
