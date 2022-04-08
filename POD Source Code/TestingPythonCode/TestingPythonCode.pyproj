@@ -9,7 +9,7 @@
     <SearchPath>..\packages\MathNet.Numerics.3.6.0\lib\net40\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <IsWindowsApplication>True</IsWindowsApplication>
-    <InterpreterId>Global|VisualStudio|IronPython 2.7 Install (32-bit)</InterpreterId>
+    <InterpreterId>MSBuild|PythonEnvironment|$(MSBuildProjectFullPath)</InterpreterId>
     <LaunchProvider>IronPython (.NET) launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
     <Name>TestingPythonCode</Name>
@@ -26,9 +26,6 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <InterpreterReference Include="Global|VisualStudio|IronPython 2.7 Install (32-bit)" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="alnorm.py" />
     <Compile Include="alogam.py" />
@@ -60,16 +57,21 @@
     <Compile Include="sysolv.py" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics, Version=3.6.0.0, Culture=neutral, PublicKeyToken=null">
-      <Name>MathNet.Numerics</Name>
-      <AssemblyName>MathNet.Numerics.dll</AssemblyName>
-      <HintPath>..\..\IronPythonProject\packages\MathNet.Numerics.3.6.0\lib\net40\MathNet.Numerics.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="mscorlib">
       <Name>mscorlib</Name>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="..\PythonEnvironment\">
+      <Id>PythonEnvironment</Id>
+      <Version>2.7</Version>
+      <Description>PythonEnvironment</Description>
+      <InterpreterPath>ipy32.exe</InterpreterPath>
+      <WindowsInterpreterPath>ipyw32.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>

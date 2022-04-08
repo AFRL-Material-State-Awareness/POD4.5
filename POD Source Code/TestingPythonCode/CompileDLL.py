@@ -1,8 +1,8 @@
 import clr
 import shutil
 import os
+import zipfile
 from System import Array
-
 
 
 class CompileDLL(object):
@@ -17,7 +17,7 @@ class CompileDLL(object):
 
     def Compile(self):
 
-        pythonFolder = "C:\\Program Files\\IronPython 2.7\\Lib\\"
+        pythonFolder = "..\\PythonEnvironment\\Lib\\"
 
         #if you run into a missing module error you probably need to add more to your compile modules list
 

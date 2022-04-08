@@ -249,15 +249,25 @@ namespace POD
         {
             get
             {
-                return System.IO.Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.Windows)) + "UDRI\\PODv4\\";
+                return CreateMissingFolder(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\UDRI\\PODv4\\");
             }
+        }
+
+        private static string CreateMissingFolder(string folder)
+        {
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            return folder;
         }
 
         public static string PODv4ImageFolder
         {
             get
             {
-                return PODv4Folder + "Images\\";
+                return CreateMissingFolder(PODv4Folder + "Images\\");
             }
         }
 
@@ -265,7 +275,7 @@ namespace POD
         {
             get
             {
-                return PODv4Folder + "Logs\\";
+                return CreateMissingFolder(PODv4Folder + "Logs\\");
             }
         }
 
@@ -273,7 +283,7 @@ namespace POD
         {
             get
             {
-                return PODv4Folder + "Data\\";
+                return CreateMissingFolder(PODv4Folder + "Data\\");
             }
         }
 

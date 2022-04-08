@@ -139,6 +139,7 @@ namespace POD
             Dictionary<string, object> options = new Dictionary<string, object>();
             options["Debug"] = myDebug;
             _pyEngine = Python.CreateEngine(options);
+            //_pyEngine = Python.CreateEngine();
 
             _pyEngine.Runtime.IO.SetOutput(_outputStream, _outputWriter);
             _pyEngine.Runtime.IO.SetErrorOutput(_errorStream, _errorWriter);
@@ -210,8 +211,8 @@ namespace POD
             else if(myType == PyTypeEnum.PyFiles)
             {                
                 string pyFilesDir = Path.GetFullPath("..\\..\\..\\TestingPythonCode\\");
-                string pyLib = "C:\\Program Files\\IronPython 2.7\\Lib\\";
-                string numerics = Path.GetFullPath("..\\..\\..\\packages\\MathNet.Numerics.3.6.0\\lib\\net40\\");
+                string pyLib = Path.GetFullPath("..\\..\\..\\PythonEnvironment\\Lib\\");
+                string numerics = Path.GetFullPath("..\\..\\..\\..\\packages\\MathNet.Numerics.3.6.0\\lib\\net40\\");
                 _pyEngine.SetSearchPaths(new string[] {pyFilesDir, pyLib, numerics});
 
                 //_modules.Add("curdir");
@@ -271,9 +272,9 @@ namespace POD
                         file = numerics + path;
                     }
 
-                    ScriptSource source = _pyEngine.CreateScriptSourceFromFile(file);
-                    ScriptScope scope = _pyEngine.CreateScope();
-                    ObjectOperations op = _pyEngine.Operations;
+                    dynamic source = _pyEngine.CreateScriptSourceFromFile(file);
+                    dynamic scope = _pyEngine.CreateScope();
+                    dynamic op = _pyEngine.Operations;
                     source.Execute(scope);
 
                     _pyScopes.Add(path, scope);

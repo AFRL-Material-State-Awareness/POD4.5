@@ -8,7 +8,7 @@ class FileLogger():
     def Log_Start(file):
 
         if file is None or len(file) == 0:
-            file = 'C:/UDRI/PODv4/Logs/log.txt'
+            file = 'C:/Users/Public/Documents/UDRI/PODv4/Logs/log.txt'
 
         f = open(file, 'w')
 
@@ -18,7 +18,7 @@ class FileLogger():
     def Log_Msg(file, name, msg, func):
 
         if file is None or len(file) == 0:
-            file = 'C:/UDRI/PODv4/Logs/log.txt'
+            file = 'C:/Users/Public/Documents/UDRI/PODv4/Logs/log.txt'
 
         #directory = os.path.dirname(file)
 
