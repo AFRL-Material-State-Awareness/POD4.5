@@ -88,7 +88,7 @@ def funcr(value, transform):
         f = 0.0
     return f
 
-
+#this is where the code performs transformations back to linear space (i.e. ln(x) to x
 def funcinv(value, transform):
     if transform == 1:
         f = value

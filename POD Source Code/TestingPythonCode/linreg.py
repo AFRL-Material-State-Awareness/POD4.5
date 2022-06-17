@@ -8,10 +8,11 @@ class linear_regression():
     def __init__(self):
         self.slope=0.0
         self.intercept=0.0
+        #related to r squared
         self.rmse=0.0
         self.xbar=0.0
         self.ybar=0.0
-        self.des = [0 for each in range(5)];
+        self.des = [0 for each in range(5)]; #[0,0,0,0,0]
         self.anova = [0 for each in range(14)];
         self.stat = [0 for each in range(9)];
         self.SEmean = []
@@ -43,7 +44,7 @@ class linear_regression():
         axx = sumx2/npts;         
         axy = sumxy/npts;
         ayy = sumy2/npts;
-        cxx = axx-xbar*xbar;
+        cxx = axx-xbar*xbar
         cxy = axy-xbar*ybar;
         cyy = ayy-ybar*ybar;
         ssx = sumx2 - sumx * sumx / npts  # Pete equation 1
@@ -117,7 +118,7 @@ class linear_regression():
         self.stat[0] = slope;
         self.stat[4] = intercept;
 
-        self.anova[0]=1.;
+        self.anova[0]=1.;#[1, npts-2, npts-1, 
         self.anova[1]=npts-2.;
         self.anova[2]=npts-1.;
         self.anova[3]=slope*slope*npts*cxx;  #// npts*cxy*cxy/cxx

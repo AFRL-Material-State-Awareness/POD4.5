@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="IPy4C_classToRVersion\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="R.NET" Version="1.9.0" />
+  </ItemGroup>
+
+</Project>

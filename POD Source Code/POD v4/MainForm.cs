@@ -16,6 +16,8 @@ using POD.Data;
 using System.IO;
 using System.Windows.Forms.DataVisualization;
 using System.Diagnostics;
+//used for REngine
+using CSharpBackendWithR;
 
 namespace POD
 {
@@ -35,6 +37,7 @@ namespace POD
         Analysis _analysis = null;
         WizardDock _dockToShow = null;
         IPy4C py = null;
+        REngineObject REngineInstance = null;
 
         public MainForm()
         {
@@ -74,7 +77,7 @@ namespace POD
         {
  	         base.OnPaint(e);
         }
-
+        //initialize loading everything in the Main form
         void MainForm_Load(object loadSender, EventArgs loadE)
         {
 
@@ -99,8 +102,10 @@ namespace POD
             _loader.Visible = true;
 
             ShowInTaskbar = true;
-
+            //python engine
             while (py == null && _loader.Visible);
+            //REngine (although this probably is quicker than the python engine
+            //while ()
 
             if (initialForm.ClosedWithoutSelection == true)
             {
@@ -108,6 +113,7 @@ namespace POD
                 Close();
                 return;
             }
+            
 
             //always after Close() or will crash on close because of PDF viewer
             _dockMgr = new DocksManager(dockPanel1);
@@ -231,11 +237,12 @@ namespace POD
             //{
             try
             {
-                py = new IPy4C(PyTypeEnum.DLLFiles, false);//, _bar);
-                //py = new IPy4C(PyTypeEnum.PyFiles, true);//, _bar);                    
+                //initialize the iron python engine either by .dll or by importing the .py modules
+                py = new IPy4C(PyTypeEnum.PyFiles, true);
+                //initialize the REngine Object to create an instance with the R.Net engine
+                REngineInstance = new REngineObject();
 
-                //forcing assemblies to load while the user is picking out a file to load
-                    
+                //forcing assemblies to load while the user is picking out a file to load    
                 var wizard = new WizardActionBar();
                 var export = new ExcelExport();
                 var point = new FixPoint(0, 0, Flag.InBounds);
@@ -250,7 +257,7 @@ namespace POD
             {
 
                 MessageBox.Show(exp.Message);
-
+                MessageBox.Show("OOPS! Something Went Wrong in initializing the main form!");
                 MessageBox.Show("Note to Developer: Have you ran TestingPythonCode\\CompileDLL.py?");
 
                 this.Invoke((MethodInvoker)delegate()

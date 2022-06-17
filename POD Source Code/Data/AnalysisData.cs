@@ -1132,6 +1132,7 @@ namespace POD.Data
             ActivateResponses(myResponses);
             ActivateSpecIDs(mySpecIDs);
 
+            //Variable used to store analysis type (hit/miss, ahat, etc)
             _dataType = mySource.AnalysisDataType;
 
             _flawTransform = TransformTypeEnum.Linear;
@@ -1153,7 +1154,7 @@ namespace POD.Data
             CalculateMinFlaw();
             CalculateMinResponse();
         }
-
+        //Method is used to calculate the minimum flaw size of the dataset
         private void CalculateMinFlaw()
         {
             double minFlaw = double.MaxValue;
@@ -1478,21 +1479,25 @@ namespace POD.Data
                 TurnPoint(i, myRowIndex, myTurnOn);
             }
         }
-
+        //pass datatables from c# into the 
         public void UpdateData()
         {
             //only update python data when appropriate
             if (_updatePythonData == true && _python != null && _podDoc != null)
             {
+                //create list to store the flaws
                 List<double> flaws = new List<double>();
+                //create dictionary to store responses
                 Dictionary<string, List<double>> responses = new Dictionary<string, List<double>>();
+                //Create a dictionary to store ALL responses in the event the user censors data
                 Dictionary<string, List<double>> allResponses = new Dictionary<string, List<double>>();
 
                 foreach (DataRow row in _activatedFlawTable.Rows)
                 {
+                    //store the flaws in the list
                     flaws.Add((double)row[0]);
                 }
-
+                //for each loop is used for more than one response column (such as multiple inspectors)
                 foreach (DataColumn col in _calculatedResponseTable.Columns)
                 {
                     List<double> list = new List<double>();
@@ -1516,7 +1521,7 @@ namespace POD.Data
 
                     allResponses.Add(col.ColumnName, list);
                 }
-
+                //convert the two c# dictionaries to python dictionaries
                 dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
                 dynamic pyAllResponses = _python.DotNetToPythonDictionary(allResponses);
 
@@ -1556,7 +1561,7 @@ namespace POD.Data
                 UpdateHitMissOutput();
             }
         }
-
+        //updates the tables in the GUI by getting the tables from python
         private void UpdateHitMissOutput()
         {
             try
@@ -1570,6 +1575,7 @@ namespace POD.Data
 
             try
             {
+                //first table to be passed back for the transformations window in pass fail (it is empty at first)
                 _podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFPODTable());
 
                 //DataTable newPFTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetNewPFTable());
@@ -1602,6 +1608,7 @@ namespace POD.Data
 
             try
             { 
+                //check if this table is necessary
                 _iterationsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFSolveIterationTable());
             }
             catch (Exception exp)

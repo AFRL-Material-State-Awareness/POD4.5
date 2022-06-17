@@ -9,7 +9,7 @@
     <SearchPath>..\packages\MathNet.Numerics.3.6.0\lib\net40\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <IsWindowsApplication>True</IsWindowsApplication>
-    <InterpreterId>MSBuild|PythonEnvironment|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>Global|VisualStudio|PythonEnvironment</InterpreterId>
     <LaunchProvider>IronPython (.NET) launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
     <Name>TestingPythonCode</Name>
@@ -43,6 +43,15 @@
     <Compile Include="linreg.py" />
     <Compile Include="lookup_table.py" />
     <Compile Include="mdnord.py" />
+    <Compile Include="Compare.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CAnal.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SolveIteration.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="new_pf.py" />
     <Compile Include="nonlinear.py" />
     <Compile Include="nrmden.py" />
@@ -63,15 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="..\PythonEnvironment\">
-      <Id>PythonEnvironment</Id>
-      <Version>2.7</Version>
-      <Description>PythonEnvironment</Description>
-      <InterpreterPath>ipy32.exe</InterpreterPath>
-      <WindowsInterpreterPath>ipyw32.exe</WindowsInterpreterPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X86</Architecture>
-    </Interpreter>
+    <InterpreterReference Include="Global|VisualStudio|PythonEnvironment" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>

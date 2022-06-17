@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>POD</RootNamespace>
     <AssemblyName>POD v4</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -26,6 +26,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -180,6 +181,10 @@
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{7a2d07db-3686-4fec-ba8c-5b905eca1af0}</Project>
       <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSharpBackendWithR\CSharpBackendWithR.csproj">
+      <Project>{910fe8f4-2cae-4a5b-8d9e-f5f3c099f80f}</Project>
+      <Name>CSharpBackendWithR</Name>
     </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{bee41d1e-eba8-4d3e-b297-4c1ca6fff8db}</Project>

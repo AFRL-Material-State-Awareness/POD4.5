@@ -91,7 +91,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             if (analysisLauncher != null)
             {
-                analysisLauncher.Dispose();
+                analysisLauncher.Dispose(); 
                 analysisLauncher = null;
             }
 
@@ -217,6 +217,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             if(_source != null)
             {
+                //*******
                 SelectChartBasedOnAnalysis();
 
                 var yAxisIndex = 0;
@@ -426,11 +427,12 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         
         private void SelectChartBasedOnAnalysis()
         {
+            //gets all transforms
             var yTransforms = AllModels;
             var xTransforms = AllXTransforms;
 
             DeselectAllCharts();
-
+            //Ask tom About this
             for(int i = 0; i < yTransforms.Count; i++)
             {
                 for(int j = 0; j < xTransforms.Count; j++)

@@ -73,7 +73,7 @@ def write_one_variance(variance, r, c, func, line):
     #    f.close()
 
 def start_variance():
-
+    #NADA
     pass
     #f = open('C:/Temp/variance python.txt', 'w')
 
@@ -377,14 +377,20 @@ def pf_fcn(x,  f,  data):
     #x[1] = sighat
     #f = res_sums
     f[0],  f[1] = 0.0,  0.0
+    #for hit/miss data, prob is the same as above  in terms of value
     for pfd in data.pfdata:
+         #claculate transformed crack z score with the etimated mu and sigma
         z = (pfd.crkf-x[0])/x[1]
+        #apply the cumulative normal distribution 
         pod = mdnord(z)
         temp1 = pod*(1.0-pod)
+        #pfd.count is always 1 with 1 analysis, 1*pod-1
         temp2 = pfd.count * pod - pfd.above
         if (temp1>0.0):
+            #nrmden(z) returns the output of the standard normal distribution function
             temp2 *= nrmden(z)/temp1
         else: 
+            #if temp1 is zero or negative, just store the absolute value of it * temp2
             temp2  *= fabs(z)
         f[0] += temp2;
         f[1] += temp2*z;

@@ -22,6 +22,8 @@ namespace POD
 
     public class IPy4C
     {
+        //count the number of tables ********USED FOR DEBUGGING
+        public int tableNum = 0;
         ScriptEngine _pyEngine;
         List<string> _modules;
         Dictionary<string, ScriptScope> _pyScopes;
@@ -98,9 +100,6 @@ namespace POD
 
         public void AddErrorText(string myError)
         {
-            //if (_statusBar != null)
-            //    _statusBar.AddErrorText(myError);
-            //else
                 _simpleError = _simpleError + "; " + myError;
 
             if(OnAnalysisError != null)
@@ -146,68 +145,19 @@ namespace POD
 
             _modules = new List<string>();
             _pyScopes = new Dictionary<string, ScriptScope>();
-
-            //_modules.Add("curdir");
-            //_modules.Add("ntpath");
-            //_modules.Add("os");
-            //_modules.Add("linecache");
-            //_modules.Add("warnings");
-
-            //_modules.Add("MathNet.Numerics.dll");
-            //_modules.Add("alogam");
-            //_modules.Add("gammds");
-            //_modules.Add("betain");
-            //_modules.Add("lookup_table");
-            //_modules.Add("new_pf");
-            //_modules.Add("bisect");
-            //_modules.Add("heapq");
-            //_modules.Add("keyword");
-            //_modules.Add("collections");
-            //_modules.Add("PODglobals");
-            //_modules.Add("smtxinv");
-            //_modules.Add("PODaccessories");
-            //_modules.Add("numbers");
-            //_modules.Add("decimal");
-            //_modules.Add("_weakrefset");
-            //_modules.Add("abc");
-            //_modules.Add("_abcoll");
-            //_modules.Add("UserDict");
-            //_modules.Add("weakref");
-            //_modules.Add("types");
-            //_modules.Add("copy");
-            //_modules.Add("alnorm");
-            //_modules.Add("nrmden");
-            //_modules.Add("phinv");
-            //_modules.Add("CPodDoc");
-            //_modules.Add("linreg");
-            //_modules.Add("mdnord");
-            //_modules.Add("sysolv");
-            //_modules.Add("__future__");
-            //_modules.Add("fcn");
-            //_modules.Add("leqslv");
-            //_modules.Add("funcr");
-            //_modules.Add("qsort");
-
-            //_modules.Add("POD");
             
 
             _cpDocs = new Dictionary<string, dynamic>();
-
+            //if the .dll is being used in the program
             if (myType == PyTypeEnum.DLLFiles)
             {
-                //foreach (string path in _modules)
-                //{
                 var pathFull = Path.GetFullPath("POD_All.dll");
 
                 Assembly pod = Assembly.LoadFile(pathFull);
                 _pyEngine.Runtime.LoadAssembly(pod);
-                //}
-
-                //foreach (string path in _modules)
-                //{
                 _pyScopes.Add("CPodDoc", _pyEngine.Runtime.ImportModule("CPodDoc"));
-                //}
             }
+            //if just the python files are being used to run the program
             else if(myType == PyTypeEnum.PyFiles)
             {                
                 string pyFilesDir = Path.GetFullPath("..\\..\\..\\TestingPythonCode\\");
@@ -215,12 +165,8 @@ namespace POD
                 string numerics = Path.GetFullPath("..\\..\\..\\..\\packages\\MathNet.Numerics.3.6.0\\lib\\net40\\");
                 _pyEngine.SetSearchPaths(new string[] {pyFilesDir, pyLib, numerics});
 
-                //_modules.Add("curdir");
-                //_modules.Add("ntpath");
-                //_modules.Add("os");
-                //_modules.Add("linecache");
-                ///_modules.Add("warnings");
 
+                //add each module in the project
                 _modules.Add("FileLogger");
                 _modules.Add("alogam");
                 _modules.Add("gammds");
@@ -255,7 +201,9 @@ namespace POD
                 _modules.Add("leqslv");
                 _modules.Add("funcr");
                 _modules.Add("qsort");
-
+                //additional modules for modifications
+                _modules.Add("Compare");
+                //iterate through each module to add the scope and path to the _pyscope dictionary
                 foreach (string path in _modules)
                 {
                     string file = "";
@@ -293,18 +241,23 @@ namespace POD
 
             return cinfo;
         }
-
+        //function is used to take a new analsys and make an instance in the cpoddoc class in the python backend
         public dynamic CPodDoc(string myAnalysisName)
         {
+            //if analysis name doesn't alredy exist in the dictionary create a new one
             if (_cpDocs.ContainsKey(myAnalysisName) == false)
             {
+                //get the python class CPodDoc object from CPodDoc.py through pyScopes
                 dynamic CPodDoc = _pyScopes["CPodDoc"].GetVariable("CPodDoc");
+                //this is  where the new instance is created
+                //If we make separate instances for signal reponse and hit/miss, we could create if statements here
                 dynamic cpoddoc = CPodDoc();
-
+                //the dictionary contains a string as the key and the cPoddoc class object as its value/definition
                 _cpDocs.Add(myAnalysisName, cpoddoc);
 
                 return cpoddoc;
             }
+            //if it does, simply return that def/key pair from the _cpDocs dictionary
             else
             {
                 return _cpDocs[myAnalysisName];
@@ -315,7 +268,8 @@ namespace POD
         {
             return this;
         }
-
+        //This function converts the transform type into an integer and returns it
+        //The transformtypeEnum is located in Globals.cs
         public int TransformEnumToInt(TransformTypeEnum myTransformType)
         {
             int transform = 0;
@@ -341,7 +295,7 @@ namespace POD
 
             return transform;
         }
-
+        //returns the value for the respective data analyis type
         public int AnalysisDataTypeEnumToInt(AnalysisDataTypeEnum myAnalysisDataType)
         {
             int analysisDataType = 0;
@@ -361,7 +315,7 @@ namespace POD
 
             return analysisDataType;
         }
-
+        //used to determine if the normal or odds model is to be generated (it is normal by default)
         public int PFModelEnumToInt(PFModelEnum myModel)
         {
             int modelType = 0;
@@ -381,7 +335,8 @@ namespace POD
 
             return modelType;
         }
-
+        //convert c# dictionary to python dictionary
+        //my dictionary is the c# dictionary
         public dynamic DotNetToPythonDictionary(Dictionary<string, List<double>> myDictionary)
         {
             /*dynamic dict = _pyScopes["CPodDoc"].GetVariable("PDictionary")
@@ -389,7 +344,7 @@ namespace POD
 
             IronPython.Runtime.PythonDictionary dictionary = new IronPython.Runtime.PythonDictionary();
             IronPython.Runtime.List list;
-
+            //copy the values into the new python dictionary
             foreach(string key in myDictionary.Keys)
             {
                 list = new IronPython.Runtime.List();
@@ -475,6 +430,14 @@ namespace POD
 
             var copyRowTime = watch.ElapsedMilliseconds;
 
+            //This produces the tables that appear in the user interface
+            tableNum += 1;
+            //print datatable from python
+            //Debug.WriteLine(table.Rows[rowIndex][colIndex].ToString());
+            Debug.WriteLine("This datatable is table" + tableNum.ToString());
+            Debug.WriteLine("The data table has " + table.Rows.Count.ToString() + " rows");
+            Debug.WriteLine("The data table has " + table.Columns.Count.ToString() + " Columns");
+            printDT(table);
             //MessageBox.Show("ADD ROW: " + addRowTime + " COPY ROW: " + copyRowTime);
 
             return table;
@@ -534,6 +497,48 @@ namespace POD
             {
 
             }
+        }
+        //This method is for debugging purpose
+        //should be removed in the final product
+        static void printDT(DataTable data)
+        {
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            Dictionary<string, int> colWidths = new Dictionary<string, int>();
+
+            foreach (DataColumn col in data.Columns)
+            {
+                //Console.Write(col.ColumnName);
+                Debug.Write(col.ColumnName);
+                var maxLabelSize = data.Rows.OfType<DataRow>()
+                        .Select(m => (m.Field<object>(col.ColumnName)?.ToString() ?? "").Length)
+                        .OrderByDescending(m => m).FirstOrDefault();
+
+                colWidths.Add(col.ColumnName, maxLabelSize);
+                for (int i = 0; i < maxLabelSize - col.ColumnName.Length + 10; i++) Debug.Write(" ");
+            }
+
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            int rowCounter = 0;
+            int limit = 100;
+            foreach (DataRow dataRow in data.Rows)
+            {
+                for (int j = 0; j < dataRow.ItemArray.Length; j++)
+                {
+                    //Console.Write(dataRow.ItemArray[j]);
+                    Debug.Write((dataRow.ItemArray[j]).ToString());
+                    for (int i = 0; i < colWidths[data.Columns[j].ColumnName] - dataRow.ItemArray[j].ToString().Length + 10; i++) Debug.Write(" ");
+                }
+                //Console.WriteLine();
+                Debug.WriteLine('\n');
+                rowCounter = rowCounter + 1;
+                if (rowCounter >= limit)
+                {
+                    break;
+                }
+            }
+            Debug.WriteLine('\n');
         }
 
 

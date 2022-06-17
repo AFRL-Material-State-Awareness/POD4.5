@@ -17,90 +17,26 @@ from gammds import *
 from nrmden import *
 from time import time
 from FileLogger import *
+#moving classes out of CPodDoc
+from Compare import Compare
+from SolveIteration import SolveIteration
+from CAnal import CAnal
+
 import pyevent
 
-#from decimal import *
+#class SolveIteration ():
 
-class Compare ():
-    @staticmethod
-    def eq(a, b, tol):
-        return math.fabs(a - b) < tol
+#    def __init__(self, trial, iteration, mu, sigma, fnorm, didDamp, dampValue):
+#        self.trial = trial
+#        self.iteration = iteration
+#        self.mu = mu
+#        self.sigma = sigma
+#        self.fnorm = fnorm
+#        if didDamp == True:
+#            self.dampValue = dampValue
+#        else:
+#            self.dampValue = 1.0
 
-    @staticmethod
-    def lteq(a, b, tol):
-        return math.fabs(a - b) < tol or a < b
-
-    @staticmethod
-    def gteq(a, b, tol):
-        return math.fabs(a - b) < tol or a > b
-
-    @staticmethod
-    def lt(a, b, tol):
-        return (not (math.fabs(a - b) < tol)) and a < b
-
-    @staticmethod
-    def gt(a, b, tol):
-        return (not (math.fabs(a - b) < tol)) and a > b
-
-
-class SolveIteration ():
-
-    def __init__(self, trial, iteration, mu, sigma, fnorm, didDamp, dampValue):
-        self.trial = trial
-        self.iteration = iteration
-        self.mu = mu
-        self.sigma = sigma
-        self.fnorm = fnorm
-        if didDamp == True:
-            self.dampValue = dampValue
-        else:
-            self.dampValue = 1.0
-
-class CAnal ():
-    'Holds a given analysis'
-    def __init__(self, flaw, data):
-        self.flaw = flaw
-        self.crksize = flaw.crksize
-        self.crkf = flaw.crkf
-        self.ybar = flaw.ybar
-        self.ybar_inv = flaw.ybar_inv
-        if data.ahat_model == NONLINEAR_MODEL:
-            self.yfit = data.linfit['intercept'] + data.linfit['slope'] \
-                * self.crkf / (1.0 * data.linfit['rms'] * data.crkf)
-        else:
-            self.yfit = data.linfit['intercept'] + data.linfit['slope'] \
-                * self.crkf
-        self.yfit_inv = r_inv(self.yfit, data.ahat_transform)
-        self.diff = self.ybar - self.yfit
-        if data.linfit['rms'] != 0.0:
-            self.dstar = alnorm(self.diff / data.linfit['rms'], False)
-        else:
-            self.dstar = 0.0
-        self.censored = flaw.censored
-
-
-    def __lt__(self,other):
-        return self.crksize < other.crksize
-
-
-    def __le__(self,other):
-        return self.crksize <= other.crksize
-
-
-    def __eq__(self,other):
-        return self.crksize == other.crksize
-
-
-    def __ne__(self,other):
-        return self.crksize != other.crksize
-
-
-    def __gt__(self,other):
-        return self.crksize > other.crksize
-
-
-    def __ge__(self,other):
-        return self.crksize >= other.crksize
 
 
 class CInspection():
@@ -132,7 +68,7 @@ class CrackData():
         self.ssy = 0       # censoring?
         self.ncensor = 0   # censoring?
         self.a_transform = TRANS_NONE  # default to no transform
-        self.ahat_transform = TRANS_NONE  # default to no transfor
+        self.ahat_transform = TRANS_NONE  # default to no transform
         
         self.dstar = 0.0
         self.sw = 0.0
@@ -281,8 +217,10 @@ class CrackData():
     def crack_pf_censor(self, tmin):
         self.count = self.above = 0;
         for i in range(self.nsets):
+            #accumulates the count variable if the data point is included in the analysis
             if self.rdata[i].IsIncluded:
                 self.count += 1 
+                #if the crack size is above the threshold value
                 if self.rdata[i].value>tmin:
                     self.above += 1
                 self.rdata[i].flag = IF_Okay
@@ -293,7 +231,7 @@ class CrackData():
 class PFData():
     def __init__(self):
         self.crksize = 0.0
-        self.crkf = 0.0
+        self.crkf = 0.0 #transformed crack size if necessary
         self.prob = 0.0  # // prob = above/count
         self.above = 0
         self.count = 0
@@ -336,7 +274,8 @@ class CPodDoc():
 
         # Info Worksheet access
         self.info_row = 0
-        self.analysis = AHAT_ANALYSIS  # 0 = ahat, 1 = pass/fail
+        #WHY DOES THE DEFAULT VALUE SAY 1=ahat ANALYSIS?
+        self.analysis = AHAT_ANALYSIS  # 1 = ahat, 2 = pass/fail
         self.model = 0  # 0 - linear, 1 = non-linear, 2 - odds
         self.flaw_name = ''
         self.flaw_column = 0
@@ -466,10 +405,11 @@ class CPodDoc():
         self.pf_POD_conf95 = []
         self.pf_POD_ptxpt = []
 
+        #I don't think these are used
         self.newPFGamma = 0.0
         self.newPFBetaodict = 0.0
         self.newPFPODLevel = 0.0
-
+        ####
         self.new_pf_a = []
         self.new_pf_gamma = []
         self.new_pf_beta = []
@@ -948,11 +888,11 @@ class CPodDoc():
        #[pfd.crksize, pfd.prob, pfd.crkf, pfTest.pfit[i], pfd.prob-pfTest.pfit[i]]
         
         odict['list_names'] = ['flaw', 't_flaw', 'hitrate', 't_fit', 'diff']
-        odict['flaw'] = [flaw.crksize for flaw in self.pfdata]
-        odict['t_flaw'] = [flaw.crkf for flaw in self.pfdata]
+        odict['flaw'] = [flaw.crksize for flaw in self.pfdata] #grab all the flaw sizes in pfdata
+        odict['t_flaw'] = [flaw.crkf for flaw in self.pfdata] #grab all the transformed flaw sizes in pfdata
         odict['hitrate'] = [flaw.prob for flaw in self.pfdata]
-        odict['t_fit'] = self.pfit
-        odict['diff'] = self.diff 
+        odict['t_fit'] = self.pfit #residual fit
+        odict['diff'] = self.diff #diff = pfd.prob - pfit
         
         return odict
         
@@ -1228,86 +1168,6 @@ class CPodDoc():
                 self.new_pf_beta.append(b)
                 self.new_pf_pod.append(i/100.0)
                 self.new_pf_old.append(old)
-
-    #guess using previous beta/gamma
-    #def CalcNewPFPOD(self):
-
-    #    self.new_pf_a = []
-    #    self.new_pf_gamma = []
-    #    self.new_pf_beta = []
-    #    self.new_pf_pod = []
-    #    self.new_pf_old = []
-
-    #    new_bounds = pf_new_bounds(self)
-    #    gamma = self.x90
-    #    b = 1/(2*self.sighat)
-    #    #DEBUG = False
-    #    for i in range(5,100):
-    #        if i == 5:
-    #            b = 1/(2*self.sighat)
-    #            X = self.muhat + new_bounds.zXX(i/100.0)*self.sighat
-    #            gamma = X
-            
-    #        old = a_inv(self.muhat + new_bounds.zXX(i/100.0)*self.sighat,  self.a_transform)
-    #        (gamma, b) = new_bounds.solve(i/100.0,  gamma,  b, self.muhat,  self.sighat)
-    #        a = a_inv(gamma,self.a_transform)
-    #        tries = 0
-    #        while a < old:
-    #            delta = (old - a)
-    #            a = old + delta
-    #            delta = delta + (a / (100.0-i) * tries)
-    #            gammanew = a_fwd(old+delta, self.a_transform)                        
-    #            (gamma, b) = new_bounds.solve(i/100.0,  gammanew,  b/2, self.muhat,  self.sighat)
-    #            a = a_inv(gamma,self.a_transform)
-    #            tries = tries + 1
-    #        #else:
-    #            #gammanew = gamma
-
-    #        self.new_pf_a.append(a)
-    #        self.new_pf_gamma.append(gamma)
-    #        self.new_pf_beta.append(b)
-    #        self.new_pf_pod.append(i/100.0)
-    #        self.new_pf_old.append(old)
-
-    #always guess with POD
-    #def CalcNewPFPOD(self):
-
-    #    self.new_pf_a = []
-    #    self.new_pf_gamma = []
-    #    self.new_pf_beta = []
-    #    self.new_pf_pod = []
-    #    self.new_pf_old = []
-
-    #    new_bounds = pf_new_bounds(self)
-    #    gamma = self.x90
-    #    b = 1/(2*self.sighat)
-    #    #DEBUG = False
-    #    for i in range(5,100):
-    #        #if i == 5:
-    #        b = 1/(2*self.sighat)
-    #        X = self.muhat + new_bounds.zXX(i/100.0)*self.sighat
-    #        gamma = X
-            
-    #        old = a_inv(self.muhat + new_bounds.zXX(i/100.0)*self.sighat,  self.a_transform)
-    #        (gamma, b) = new_bounds.solve(i/100.0,  gamma,  b, self.muhat,  self.sighat)
-    #        a = a_inv(gamma,self.a_transform)
-    #        tries = 0
-    #        while a < old:
-    #            delta = (old - a)
-    #            a = old + delta
-    #            delta = delta + (a / (100.0-i) * tries)
-    #            gammanew = a_fwd(old+delta, self.a_transform)                        
-    #            (gamma, b) = new_bounds.solve(i/100.0,  gammanew,  b/2, self.muhat,  self.sighat)
-    #            a = a_inv(gamma,self.a_transform)
-    #            tries = tries + 1
-    #        #else:
-    #            #gammanew = gamma
-
-    #        self.new_pf_a.append(a)
-    #        self.new_pf_gamma.append(gamma)
-    #        self.new_pf_beta.append(b)
-    #        self.new_pf_pod.append(i/100.0)
-    #        self.new_pf_old.append(old)
     
     def GetThresholdTable(self):
         '#threshold value, flaw50, level, confidence'
@@ -1330,7 +1190,7 @@ class CPodDoc():
     def GetPFSolveIterationTable(self):
         #trial index, iteration index, mu, sigma, damping 
         odict = dict() #OrderedDict()
-
+        #this table contans iterations that were used to find the optimal value of mu and sigma
         odict['list_names'] = ['trial index', 'iteration index', 'mu', 'sigma', 'fnorm', 'damping']
         odict['trial index'] = [obj.trial for obj in self.pf_solve_params]
         odict['iteration index'] = [obj.iteration for obj in self.pf_solve_params]
@@ -1429,11 +1289,6 @@ class CPodDoc():
 
 
     def AHAT2(self):
-        # lcrk = [0.2, 1.1, 1.1, 1.6, 2, 2.2, 2.2, 2.4, 2.4, 2.7, 2.9, 2.9, 2.9,
-        #    2.9, 3.1, 3.3, 3.3, 3.3, 3.5, 3.7, 4.6, 4.6, 5.1, 5.1, 5.1, 5.5,
-        #    5.5, 4.6, 5.9, 5.9, 5.5, 6.4, 6.4, 6.8, 6.8, 7.3, 7.3, 7.7, 7.7,
-        #    8.1, 8.6, 9, 9, 8.8, 9.5, 9.9, 9.9, 9.9, 10.8, 11.2, 11.7, 11.7,
-        #    12.5, 12.1, 13, 13.4, 13.9, 14.3, 15.6, 16.1]
         self.SetFlawData([0.2, 1.1, 1.1, 1.6, 2, 2, 2.2, 2.2, 2.4, 2.4, 2.7, 2.9, 2.9, 2.9,
             2.9, 3.1, 3.3, 3.3, 3.3, 3.5, 3.7, 4.6, 4.6, 5.1, 5.1, 5.1, 5.5,
             5.5, 4.6, 5.9, 5.9, 5.5, 6.4, 6.4, 6.8, 6.8, 7.3, 7.3, 7.7, 7.7,
@@ -1667,11 +1522,14 @@ class CPodDoc():
         self.SortData();
         self.count = 0
         for flaw in self.flaws:
+            #used when there are multiple reponses
             flaw.crack_pf_censor(self.pod_threshold)
             if (flaw.IsIncluded() and flaw.count != 0): 
+                #accumulates with every flaw is included in the analysis and 
                 self.count += 1;
         # // identify unique cases
         pfd = PFData()
+        #store the smallest flaw size in the last crack variable
         lastcrack = self.flaws[0]
         pfd.above = lastcrack.above
         pfd.count = lastcrack.count
@@ -1702,10 +1560,7 @@ class CPodDoc():
             if DEBUG:
                 pretty_print([each.crksize, each.above, pfd.above, pfd.count,  pfd.prob])
                 #print("Unique Flaws: " + str(self.npts) )
-            lastcrack = each
-
-        #list = [pfd.crksize, pfd.count]
-        ##write_list_params(list, 'crack[{0}] '.format(len(self.pfdata)), "pf_censor", 1257);
+            lastcrack = each;
 
         self.pfdata += [pfd]
         self.npts = len(self.pfdata)
@@ -1770,32 +1625,6 @@ class CPodDoc():
 
 
     def pf_guess(self):
-        #i = 0
-        #shft = 0.0
-        #a, b, arg = 0.0, 0.0, 0.0
-        #lna1, lna2 = 0.0, 0.0
-        #t1, t2 =0.0, 0.0
-        #a,  b = 0.0,  0.0
-        
-        #if (self.pfdata[0].crksize<1.0): 
-        #    shft = -1.1*log(self.pfdata[0].crksize)
-        #for i in range(self.npts)[1:]:
-        #    lna1 = log(self.pfdata[i].crksize)+shft;
-        #    lna2 = log(self.pfdata[i-1].crksize)+shft;
-        #    t1 = (lna1-lna2)*(self.pfdata[i].prob+self.pfdata[i-1].prob);
-        #    t2 = t1*(lna1+lna2);
-        #    a += t1;
-        #    b += t2;
-        #lna1 = log(self.pfdata[0].crksize)+shft;
-        #lna2 = log(self.pfdata[self.npts-1].crksize)+shft;
-        #t1 = lna1*self.pfdata[0].prob/2.0;
-        #a = lna2 - t1 - a/2.0;
-        #t2 = t1*lna1;
-        #arg = lna2*lna2-t2-b/2.0-a*a;
-        #b = sqrt(fabs(arg));
-        #a -= shft;
-        #self.muhat = a;
-        #self.sighat = b;
 
         i = 0
         shft = 0.0
@@ -1807,18 +1636,25 @@ class CPodDoc():
         if (self.pfdata[0].crksize<1.0): 
             shft = -1.1*a_fwd(self.pfdata[0].crksize, self.a_transform)
         for i in range(self.npts)[1:]:
+            #store a given crack and the previous crack in two variables after performing a shift of -1.1*crack_1
             lna1 = a_fwd(self.pfdata[i].crksize, self.a_transform)+shft;
             lna2 = a_fwd(self.pfdata[i-1].crksize, self.a_transform)+shft;
+            #if the y-values(hit/miss) of both crack sizes is zero, both t1 and t2 will be zero
+            #t1 is what is being used to approximate the muhat
             t1 = (lna1-lna2)*(self.pfdata[i].prob+self.pfdata[i-1].prob);
+            #t2 is what is being used to approximate sigmahat
             t2 = t1*(lna1+lna2);
             a += t1;
             b += t2;
         lna1 = a_fwd(self.pfdata[0].crksize, self.a_transform)+shft;
+        #takes the seond to last crack size in the dataset and applies the shift to it
         lna2 = a_fwd(self.pfdata[self.npts-1].crksize, self.a_transform)+shft;
+        #will end up being zero unless the first crack in the dataset was a hit
         t1 = lna1*self.pfdata[0].prob/2.0;
         a = lna2 - t1 - a/2.0;
         t2 = t1*lna1;
         arg = lna2*lna2-t2-b/2.0-a*a;
+        #fabs() returns the absolute value of a number as a float (will ALYWAYS be a float value)
         b = sqrt(fabs(arg));
         a -= shft;
         self.muhat = a;
@@ -1847,37 +1683,17 @@ class CPodDoc():
         if (have_guess) :
             mumom = self.mu_guess;
             sigmom = self.sig_guess;
+        #store mu and sigma guesses into the list 'x'
         x[0] = mumom;        
         x[1] = sigmom;
         write_list_params(x, "x", "pf_solve", 1338);
         for n in range(4):
             if n == 3:
-                #pDoc = 0
-                #// Generate some debug information
-                #int i;
-                #int row = info_row + 2;
-                #xlGetSheet("Results");
-                #xlValue(row,1,"Pass/Fail analysis failed to converge");
-                #row += 2;
-                #xlValue(row,1,"trial");
-                #xlValue(row,2,"muhat");
-                #xlValue(row,3,"sighat");
-                #xlValue(row,4,"fnorm");
-                #row++;
-                #xlValue(row,1,"guess");
-                #xlValue(row,2,mumom);
-                #xlValue(row,3,sigmom);
-                #for (i=0; i<n; i++) {
-                # xlValue(++row,1,i+1);
-                # xlValue(row,2,mus[i]);
-                # xlValue(row,3,sigs[i]);
-                # xlValue(row,4,fnorm[i]);
-                #}
                 self.AddErrorLine("Pass/Fail analysis failed to converge")
                 return False
-
+            #check if the model to solve is either normal linear or odds linear
             if (self.model==LINEAR_MODEL):
-                #iret = self.pf_sysolv(x,jb,fnorm[n],row)
+                #iret = self.pf_sysolv(x,jb,fnorm[n],row)                
                 self.iret = pf_sysolv(self,  x, n)
             else:
                 self.iret = odds_sysolv(self,  x, n);
@@ -1910,13 +1726,9 @@ class CPodDoc():
         self.pf_solve_params.append(iteration)
 
     def SortData(self):
-        #from qsort import qsort
-        #qsort(self.flaws)
         self.flaws.sort()
 
-    #def Kill(self):
-    #    _exit(0)
-
+    ##when choosing a transform in the program, this is the entry point of the python code from c\#
     def OnFitOnlyAnalysis(self):
         ##ahat_model = self.model
 
@@ -1927,7 +1739,8 @@ class CPodDoc():
         FileLogger.Log_Msg("", self.name, "Starting Analysis", "OnAnalysis")
 
         self.ClearErrors(self)
-
+        ########self.analsysis stores an integer to determine the analysis type the data is. It is compared to the global ariables AHAT_ANALYSIS and PF_ANALYSIS
+        #execute if the data analysis is AHAT/Signal Response
         if (self.analysis == AHAT_ANALYSIS):
             FileLogger.Log_Msg("", self.name, "AHat Censoring", "OnAnalysis")
             self.ahat_censor()    # defined in ahat.cpp
@@ -1946,7 +1759,7 @@ class CPodDoc():
 
             FileLogger.Log_Msg("", self.name, "AHat Residuals", "OnAnalysis")
             self.ahat_residuals()            
-
+        #execute if the analyis type is hit/miss data
         elif (self.analysis==PF_ANALYSIS):
             FileLogger.Log_Msg("", self.name, "PF Censoring", "OnAnalysis")
             self.pf_censor();
@@ -2032,11 +1845,10 @@ class CPodDoc():
         self.SetFlawData(self.flaws_reload, self.a_transform)
         self.SetResponseData(self.responses_missing, self.ahat_transform)
         self.OnSimpleAnalysis()
-
+    #this function is the entry point for a standard solving of a POD curve (after the transformation is picked
     def OnAnalysis(self):
         self.showMessages = True
         self.OnSimpleAnalysis()
-
     def OnSimpleAnalysis(self):
         ##ahat_model = self.model
 
@@ -2278,20 +2090,6 @@ class CPodDoc():
 
     
     def pf_residuals(self):
-        #int i, row;
-        #PFData *pfd;
-        #double z, pfit;
-        #xlGetEmptySheet("Residuals");
-        #row = 1;
-        #xlValue(row,1,"a");
-        #xlValue(row,2,"log(a)");
-        #xlValue(row,3,"p");
-        #xlValue(row,4,"fit");
-        #xlValue(row,5,"diff");
-        #pfd = pfdata;
-        #xlValue(++row,1,pfd->crksize);
-        #xlValue(row,2,pfd->crkf);
-        #xlValue(row,3,pfd->prob);
 
         self.SetNewStatus(self, "Started Calculating Residuals")
 
@@ -2303,19 +2101,21 @@ class CPodDoc():
         for pfd in self.pfdata:
             z = (pfd.crkf - self.muhat) / self.sighat;
             if self.model==LINEAR_MODEL:
+               #uses the cumulative normal distirubtion fucntion in order to find probability fit
                pfit = mdnord(z)
+               #in pfdata, pfd.prob is simply just a hit=1 or miss=0
+               # reponse value for a given crack size - the converted z score for the crack size
                diff = pfd.prob - pfit
             else:
-                pfit = pod_odds(z)
-                diff = pfd.prob - pfit
+               #uses a sigmoid transformation curve to find probability fit 
+               pfit = pod_odds(z)
+               diff = pfd.prob - pfit
+            #The +=[x] is essential the same as appending to an array 
+            #calculated z-score uing mu and sigma hat, run it through the cumulative normal distibution function and store in an array to return it as 't_fit'
             self.pfit += [pfit]
             self.diff += [diff]
             if DEBUG:
                 pretty_print([pfd.crksize, pfd.crkf, pfd.prob, pfit, diff])
-        
-            #xlValue(row,4,pfit);
-            #xlValue(row,5,pfd->prob-pfit);
-        #nexcluded = 0; #// !!!!!!!!!!!!!!!!!!  Add excluded points to residuals worksheet
 
         self.SetNewStatus(self, "Finished Calculating Residuals")
 
@@ -2386,9 +2186,6 @@ class CPodDoc():
 
         crackTerm = self.pf_test_crksum * log(self.pf_test_phat) + (crkcount - self.pf_test_crksum) * log(1 - self.pf_test_phat)
 
-        #taking out factorial term for now - (06-30-2015)
-        #factorialTerm = log(self.statFactorial(crkcount, self.pf_test_crksum))
-
         self.pf_test_h0_likihood = crackTerm # + factorialTerm 
 
         result = 0.0
@@ -2423,6 +2220,7 @@ class CPodDoc():
         self.fcalc = self.pf_censor_test_result
 
         #until we get it fixed
+        #ask Christie
         self.fclac = 0.0
         
 
@@ -2675,9 +2473,6 @@ class CPodDoc():
             else:
                 self.sighat = 0.0
 
-        #if len(self.ath > 0):
-        #    self.pod_threshold = self.ath[0];
- 
         if self.linfit['slope'] > 0.0:
             self.muhat = (r_fwd(self.pod_threshold,  self.ahat_transform) - self.linfit['intercept'])/self.linfit['slope']
         else:
@@ -2755,8 +2550,6 @@ class CPodDoc():
             try:
                 se_a90 = sqrt(v2[0]+(2.0*v2[1]+v2[2]*self.z90)*self.z90)
                 self.a9095 = self.a90 + self.z95 * se_a90
-                #self.a9095 = self.sighat*(v2[0]+(2.0*v2[1]+v2[2]*zp)*zp);
-                #self.a9095 = self.a90 + self.a9095/(sqrt(self.sighat*self.a9095/chi-deter)-v2[1]-v2[2]*zp);
                 self.m9095 = a_inv(self.a9095,  self.a_transform);
                 self.SetNewStatus(self, "Finished Running Final Calculations")
             except(ValueError):
@@ -2772,7 +2565,7 @@ class CPodDoc():
 
         self.SetNewStatus(self, "Started Running Final Calculations")
 
-        DEBUG = False
+        DEBUG = True
         if DEBUG:
             print("Mu-hat: " + str(self.muhat))
             print("Sigma-hat: " + str(self.sighat))
@@ -2846,13 +2639,6 @@ class CPodDoc():
         
         abot = a_inv(self.muhat - 8.0 * self.sighat, self.a_transform)
         atop = a_inv(self.muhat + 4.0 * self.sighat, self.a_transform)
-
-        #if abot<self.calcmin: 
-        #    abot = self.calcmin
-        #if self.calcmax<atop: 
-        #    atop = self.calcmax
-        
-        
         
         self.pod_crksize = []
         self.pod_crksizef = []
@@ -2860,49 +2646,6 @@ class CPodDoc():
         self.pod_bounds = []
         self.pod_bounds_crksize = []
         self.pod_bounds_crksizef = []
-
-        #comment out until we fix POD curve
-
-        ##get back to pod abot instead of 95 curve abot
-        #if self.m9095 > 0.0:
-            
-        #    bound_95_inv = abot + 1
-        #    startTestCrack = abot
-        #    newPOD = 1.0
-
-        #    while(bound_95_inv > abot and newPOD > .01):
-        #        a_t = a_fwd(startTestCrack, self.a_transform)
-        #        zhat = (a_t-self.muhat) / self.sighat      
-        #        newPOD = mdnord(zhat)      
-        #        se_zhat = sqrt(v[0]+(2.0*v[1]+v[2]*zhat)*zhat)
-        #        bound_95 = a_t + self.z95 * se_zhat
-        #        bound_95_inv = a_inv(bound_95, self.a_transform)
-
-        #        if(bound_95_inv > abot):
-        #                startTestCrack /= 2.0
-
-        #    abot = startTestCrack
-
-        #    bound_95_inv = atop - 1
-        #    startTestCrack = atop
-        #    newPOD = .9
-
-        #    while(bound_95_inv < atop and newPOD < .99):
-        #        a_t = a_fwd(startTestCrack, self.a_transform)
-        #        zhat = (a_t-self.muhat) / self.sighat                       
-        #        se_zhat = sqrt(v[0]+(2.0*v[1]+v[2]*zhat)*zhat)
-        #        bound_95 = a_t + self.z95 * se_zhat
-        #        bound_95_inv = a_inv(bound_95, self.a_transform)
-        #        new_zHat = (bound_95-self.muhat) / self.sighat
-        #        newPOD = mdnord(new_zHat)     
-
-        #        if(bound_95_inv < atop):
-        #                startTestCrack *= 2.0
-
-        #    atop = startTestCrack
-
-        
-
         podBottom = 1.0
         tries = 0
 
@@ -2951,11 +2694,7 @@ class CPodDoc():
             if h > 0.0 and self.sighat > 0.0:
                 zcl = zhat - sqrt(h) / self.sighat
             else:
-                zcl = 0.0         
-                
-            #self.pod_crksize += [a]
-            #self.pod_crksizef += [a_t]
-            #self.pod += [mdnord(zhat)]   
+                zcl = 0.0 
 
             if self.m9095 > 0.0 and self.sighat > 0.0:
                 #p value we are using for calculating the 95 curve 
@@ -3048,14 +2787,18 @@ class CPodDoc():
         self.SetNewStatus(self, "Started Calculating POD Curve")
 
         chi = cbound(self.npts)
+        #the higher the number, the smoother the POD curve will be
+        #this will help generate the POD curve in POD space
         n = 150
         abot = a_inv(self.muhat - 6.0*self.sighat,  self.a_transform)
         atop = a_inv(self.muhat + 6.0*self.sighat,  self.a_transform)
+        #ask TOM or christie about this 
         if abot<self.calcmin: 
             abot = self.calcmin
         if self.calcmax<atop: 
             atop = self.calcmax
         delta = (atop-abot)/(n-1)
+        #does this even do anything?
         z95 = phinv(self.confidence_level);
         self.pf_POD_a = []
         self.pf_POD_af = []
@@ -3064,21 +2807,26 @@ class CPodDoc():
         self.pf_POD_ptxpt = []
         
         #calculate here so we know the range to calculate for the 95 curve
+        #increment by delta to get a point on the POD curve
         for i in range(n):
             i = float(i)
             a = abot + delta*i
+            #transform back if necessary
             a_t = a_fwd(a, self.a_transform)
             zhat = (a_t-self.muhat)/self.sighat 
             cov = self.pf_covariance
             h = chi*(cov[0]+(cov[2]*zhat+2.0*cov[1])*zhat)
             if h>0.0:
+                #calculate confidence interval for POD curve
                 zcl = zhat - sqrt(h)/self.sighat
             else: 
                 zcl = 0.0
             if (self.model==LINEAR_MODEL):
+                #cumulative normal distribution
                 pod = mdnord(zhat)
             else:
                 pod = pod_odds(zhat)
+            #transform z confidence interval for a given value into probability space
             pcl = mdnord(zcl)
             zhat = phinv(pod)
             alb = a_inv(self.muhat+zhat*self.sighat
@@ -3090,6 +2838,7 @@ class CPodDoc():
             self.pf_POD_ptxpt += [alb]
 
         #need to do the test here to decide if we want to attempt to do the 95 curve 
+        #dont think this does anything, but ask christie about this
         self.pf_tests()
 
         self.CalcNewPFPOD()
@@ -3125,31 +2874,6 @@ class CPodDoc():
             self.pf_POD_ptxpt += [alb]
 
         self.SetNewStatus(self, "Finished Calculating POD Curve")
-        
-        #for i in range(n):
-        #    i = float(i)
-        #    a = abot + delta*i
-        #    a_t = a_fwd(a, self.a_transform)
-        #    zhat = (a_fwd(a, self.a_transform)-self.muhat)/self.sighat 
-        #    cov = self.pf_covariance
-        #    h = chi*(cov[0]+(cov[2]*zhat+2.0*cov[1])*zhat)
-        #    if h>0.0:
-        #        zcl = zhat - sqrt(h)/self.sighat
-        #    else: 
-        #        zcl = 0.0
-        #    if (self.model==LINEAR_MODEL):
-        #        pod = mdnord(zhat)
-        #    else:
-        #        pod = pod_odds(zhat)
-        #    pcl = mdnord(zcl)
-        #    zhat = phinv(pod)
-        #    alb = a_inv(self.muhat+zhat*self.sighat
-        #        +z95*sqrt(cov[0]+zhat*(2.0*cov[1]+zhat*cov[2])),  self.a_transform);
-        #    self.pf_POD_a += [a]
-        #    self.pf_POD_af += [a_t]
-        #    self.pf_POD_poda += [pod]
-        #    self.pf_POD_conf95 += [pcl]
-        #    self.pf_POD_ptxpt += [alb]
 
     def ahat_decision(self):
 
@@ -3174,11 +2898,6 @@ class CPodDoc():
         xp = zp*self.sighat
         sighat = self.sighat
 
-        #store so you can restore values after calculating decision thresholds
-        #tempSigHat = self.sighat
-        #tempMuHat = self.muhat
-        #tempMHat = self.mhat
-
         if self.fit_errors[1] != 0.0:
             tstsig = self.linfit['slope'] / self.fit_errors[1]  #sighat*sighat/v2[2];
         else:
@@ -3192,30 +2911,7 @@ class CPodDoc():
                 nsteps = 1
                 step = 0.0
             for j in range(nsteps):
-                #threshold = self.decision_thresholds[i] + step * j
-                #self.decision_table_thresholds += [threshold]
-                #self.muhat = (r_fwd(threshold,  self.ahat_transform) - self.linfit['intercept'])/self.linfit['slope'];
-                #tmp = (self.linfit['rms']/self.linfit['slope'])**2;
-                #v2 = [-(self.variance[0][0]+(2.0*self.variance[0][1]+self.variance[1][1]*self.muhat)*self.muhat)*tmp, 
-                #-(self.sighat*(self.variance[0][1]+self.muhat*self.variance[1][1])-self.variance[0][2]-self.muhat*self.variance[1][2])*tmp, 
-                #-(self.variance[1][1]*self.sighat*self.sighat-2.0*self.sighat*self.variance[1][2]+self.variance[2][2])*tmp]
-                #deter = v2[0]*v2[2]-v2[1]*v2[1];
-                #tstsig = sighat*sighat/v2[2];
-                #a90 = self.muhat + xp
-                #m90 = a_inv(a90, self.a_transform)
-                #mhat = a_inv(self.muhat,  self.a_transform);
-                #self.decision_a50 += [mhat]
-                #self.decision_level += [m90]
-                #if (tstsig < chi):
-                #    m9095 = 0.0
-                #else:
-                #    a9095 = sighat*(v2[0]+(2.0*v2[1]+v2[2]*zp)*zp);
-                #    a9095 = a90 + a9095/(sqrt(sighat*a9095/chi-deter)-v2[1]-v2[2]*zp);
-                #    m9095 = a_inv(a9095,  self.a_transform);
-                #self.decision_confidence += [m9095]
-                #self.decision_V11 += [v2[0]]
-                #self.decision_V12 += [v2[1]]
-                #self.decision_V22 += [v2[2]]
+
                 threshold = self.decision_thresholds[i] + step * j
                 self.decision_table_thresholds += [threshold]
 
@@ -3261,341 +2957,5 @@ class CPodDoc():
             del self.decision_V11[0]
             del self.decision_V12[0]
             del self.decision_V22[0]
-
-        #restore decision threshold calculation after calculating range of decision thresholds
-        #self.sighat = tempSigHat
-        #self.muhat = tempMuHat
-        #self.mhat = tempMHat
-
         if self.m9095 > 0.0:
             self.SetNewStatus(self, "Finished Calculating Threshold Curve")
-
-#if __name__ == '__main__':
-    
-#    import pickle
-#    #######################################################
-#    if False: # Do the ahat analysis
-#        pDoc = CPodDoc()
-#        a_trans = TRANS_LOG
-#        ahat_trans = TRANS_LOG
-###            pDoc.a_transform = a_trans
-###            pDoc.ahat_transform = ahat_trans
-
-#        # This is the AHAT2.xls data
-#        pDoc.SetFlawData([2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.4, 2.4, 2.7, 2.9, 2.9, 2.9,
-#        2.9, 3.1, 3.3, 3.3, 3.3, 3.5, 3.7, 4.6, 4.6, 5.1, 5.1, 5.1, 5.5,
-#        5.5, 4.6, 5.9, 5.9, 5.5, 6.4, 6.4, 6.8, 6.8, 7.3, 7.3, 7.7, 7.7,
-#        8.1, 8.6, 9, 9, 8.8, 9.5, 9.9, 9.9, 9.9, 10.8, 11.2, 11.7, 11.7,
-#        12.5, 12.1, 13, 13.4, 13.9, 14.3, 15.6, 16.1],  XF_LOG)
-        
-#        pDoc.SetResponseData({
-#        'A11': [float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'),   
-#            35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-#            35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 41, 35, 35, 60, 57,
-#            76, 55, 90, 65, 78, 70, 85, 107, 131, 113, 140, 111, 227, 128, 183,
-#            215, 185, 203, 210, 210, 233, 201, 286, 286, 321, 385, 366],
-#            #215, 185, 203, 210, 210, 233, 201, 286, 286, 321, 385, float('NaN')],
-#        'A21':[float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'),  
-#            35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-#            35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 42, 41, 35, 65, 62,
-#            80, 55, 95, 67, 78, 77, 92, 121, 136, 112, 145, 112, 231, 124, 189,
-#            230, 187, 205, 212, 210, 198, 230, 308, 289, 309, 342, 376],
-#            #230, 187, 205, 212, 210, 198, 230, 308, 289, 309, 342, float('NaN')],
-#        'A12':[float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'), float('NaN'),   
-#            35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-#            35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 44, 39, 35, 61, 61,
-#            81, 55, 92, 65, 80, 86, 88, 114, 135, 113, 142, 111, 228, 128, 184,
-#            226, 184, 208, 212, 211, 242, 277, 314, 295, 317, 349, 388]}, XF_LOG)
-#            #226, 184, 208, 212, 211, 242, 277, 314, 295, 317, 349, float('NaN')]}, XF_LOG)
-#        #pDoc.SetFlawMaxSize(10.0)
-#        pDoc.SetResponseMin(35)
-#        pDoc.SetResponseMax(1360)
-#        pDoc.SetDecisionThresholds([35,  50,  75,  100,  150,  200,  300,  400])
-#        pDoc.SetPODThreshold(55)
-#        pDoc.SetPODLevel(0.90)
-#        pDoc.SetPODLevel(0.99)
-#        pDoc.SetPODLevel(0.95)
-#        pDoc.SetPODLevel()
-        
-#        pDoc.SetPODConfidence(0.90)
-#        pDoc.SetPODConfidence(0.99)
-#        pDoc.SetPODConfidence(0.95)
-
-#        if a_trans == TRANS_NONE:
-#            a_str = "a"
-#        else:
-#            a_str = "Log a"
-#        if ahat_trans == TRANS_NONE:
-#            ahat_str = "ahat"
-#        else:
-#            ahat_str = "Log ahat"
-
-#        analysis_str = a_str + " vs " + ahat_str
-
-#        print(analysis_str + " analysis:")
-
-#        pDoc.OnAnalysis()
-        
-#        #################################################
-#        if False:
-#            #Save the results as a pickled python object we can reuse in other files
-#            f = open("ahatsavedata.txt",  'w')
-#            ahatsavedata = pickle.Pickler(f)
-#            ahatsavedata.dump(pDoc)
-#            f.close
-
-#    ###################################################
-#    if False:  # Print ahat data tables?
-#        print("Input Data")
-#        print("Seq. #\tLength\tA11\tA21\tA12")
-#        for i in range(len(pDoc.flaws)):
-#            flaw = pDoc.flaws[i]
-#            output = [i,  flaw.crksize] + [int(meas.value) for meas in flaw.rdata]
-#            pretty_print(output)
-#        R = pDoc.GetResidualTable()
-#        C = pDoc.GetCensoredTable()
-#        F = pDoc.GetFitTable()
-#        P = pDoc.GetPODTable()
-#        T = pDoc.GetThresholdTable()
-#        print("Residual Table")
-#        pretty_print(["a","ln(a)","ahat","ln(ahat)","fit","dif", str(R.keys()[6]),str(R.keys()[7])])
-        
-#        for i in range(len(R['flaw'])):
-##            output = [R['flaw'][i], 
-##            R['t_flaw'][i], 
-##            R['ave_response'][i],  
-##            R['t_ave_response'][i], 
-##            R['t_fit'][i],  
-##            R['t_diff'][i]]
-#            output = [R[key][i] for key in R.keys()]
-#            pretty_print(output)
-            
-#        #print(R)
-#        print("Censored Table")
-#        print("a\tln(a)\tahat\tln(ahat)")
-#        for i in range(len(C['flaw'])):
-#            output = [C['flaw'][i], 
-#            C['t_flaw'][i], 
-#            C['ave_response'][i],  
-#            C['t_ave_response'][i]
-#            ]
-#            pretty_print(output)
-#        #print(C)
-#        print("Fit Table")
-#        print("a\tfit\tA11\tA21\tA12")
-#        for i in range(len(F['flaw'])):
-#            output = [F['flaw'][i], 
-#            F['fit'][i],
-#            F['A11'][i],
-#            F['A21'][i],  
-#            F['A12'][i]]
-#            pretty_print(output)
-#        #print(F)
-#        print("POD Table")
-#        print("a\tPOD(a)\t95% bounds")
-#        for i in range(len(P['flaw'])):
-#            output = [P['flaw'][i],
-#            P['pod'][i], 
-#            P['confidence'][i]]
-#            pretty_print(output)
-            
-#        print("Inspection Threshold\ta50\ta90\ta90/95")
-#        for i in range(len(T['threshold'])):
-#            output = [T['threshold'][i], 
-#            T['flaw50'][i], 
-#            T['level'][i], 
-#            T['confidence'][i]
-#            ]
-#            pretty_print(output)
-    
-#        ##################################################
-#        if False:  # If true, spit out ahat plots
-#            import podplot
-            
-#            podplot.fit((F['flaw'],R['ave_response']),
-#            (F['flaw'],F['fit'],pDoc.linfit['rms']),
-#            "mean")
-            
-#            podplot.fit((F['flaw']+F['flaw']+F['flaw'],F['A11']+F['A21']+F['A12']),
-#            (F['flaw'],F['fit'],pDoc.linfit['rms']),
-#            "plot")
-            
-#            podplot.resid((F['flaw'], R['t_diff']), "-resid")
-            
-#            podplot.POD(P['flaw'],  P['pod'],  P['confidence'])
-            
-#            podplot.Threshold(T['threshold'], T['level'],  T['confidence'])
-        
-#    #######################################################
-#    if False:  # Print aHat parameters
-#        print("Max and Min Flaw:")
-#        print(pDoc.GetAnalyzedFlawRangeMax())
-#        print(pDoc.GetAnalyzedFlawRangeMin())
-        
-#        print("All Cracks, Analyzed, Partial Below,  Partial Above,  Full Below,  Full Above")
-#        print(
-#        len(pDoc.flaws), 
-#        pDoc.GetAnalyzedFlawCount(), 
-#        pDoc.GetFlawCountPartialBelowResponseMin(), 
-#        pDoc.GetFlawCountPartialAboveResponseMax(), 
-#        pDoc.GetFlawCountFullBelowResponseMin(), 
-#        pDoc.GetFlawCountFullAboveResponseMax())
-        
-#        print("Intercept B, Slope M, and RMS Error")
-#        print((
-#        pDoc.GetModelIntercept(), 
-#        pDoc.GetModelSlope(), 
-#        pDoc.GetModelResidual()
-#        ))
-#        print("Uncertainties:")
-#        print((
-#        pDoc.GetModelInterceptError(), 
-#        pDoc.GetModelSlopeError(), 
-#        pDoc.GetModelResidualError()
-#        ))
-        
-#        print("Repeatability Error")
-#        print(pDoc.GetRepeatabilityError())
-        
-#        print("Normality: Anderson-Darling")
-#        print(pDoc.GetNormality())
-        
-#        print("Equal Variance: Bartlett")
-#        print(pDoc.GetEqualVariance())
-        
-#        print("Lack of fit: Pure Error (df=9)")
-#        print(pDoc.GetLackOfFit())
-        
-#        print("Sigma:")
-#        print(pDoc.GetPODSigma())
-        
-#        print("pDoc.GetPlotMinFlaw()")
-#        print(pDoc.GetPlotMinFlaw())
-        
-#        print("pDoc.GetPlotMaxFlaw() ")
-#        print(pDoc.GetPlotMaxFlaw() )
-        
-#        print("pDoc.GetPlotMinFlawMinResponse()")
-#        print(pDoc.GetPlotMinFlawMinResponse())
-        
-#        print("pDoc.GetPlotMinFlawMaxResponse()")
-#        print(pDoc.GetPlotMinFlawMaxResponse())
-        
-#        print("pDoc.GetPlotMaxFlawMinResponse()")
-#        print(pDoc.GetPlotMaxFlawMinResponse())
-        
-#        print("pDoc.GetPlotMaxFlawMaxResponse()")
-#        print(pDoc.GetPlotMaxFlawMaxResponse())
-        
-#        print("pDoc.GetFitMinFlaw()")
-#        print(pDoc.GetFitMinFlaw())
-        
-#        print("pDoc.GetFitMaxFlaw()")
-#        print(pDoc.GetFitMaxFlaw())
-        
-#        print("pDoc.GetFitMinResponse()")
-#        print(pDoc.GetFitMinResponse())
-
-#        print("pDoc.GetFitMaxResponse()")
-#        print(pDoc.GetFitMaxResponse())
-    
-#    #########################################################
-#    if True:  # Do PF analysis
-#        DEBUG = False
-#        pfTest = CPodDoc()
-#        pfTest.SetFlawData(flaws=[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,4.28,4.28,4.28,4.28,5.17,5.17,5.17,5.17,5.17,
-#        5.17,5.17,5.17,5.615,5.615,5.615,5.615,5.615,5.615,5.615,5.615,6.06,6.06,6.06,6.06,6.06,6.06,6.06,6.06,6.505,
-#        6.505,6.505,6.505,6.505,6.505,6.505,6.505,6.505,6.505,6.95,6.95,6.95,6.95,6.95,7.395,7.395,7.395,7.84,7.84,
-#        7.84,8.285,8.285,8.285,8.73,8.73,8.73,8.73,8.73,8.73,9.62,9.62,9.62,9.62,10.065,10.51,10.51,10.51,10.688,10.955,
-#        10.955,11.934,11.934,11.934,11.934,11.934,11.934,11.934,12.379,12.468,12.468,12.468,12.557,12.557,13.18,
-#        13.625,13.625,13.714,13.803,13.803,13.803,13.803,14.07,14.96,15.1736,15.405,15.939,15.939,15.939,16.562,
-#        16.562,16.74,16.74,16.74,17.185,17.541,18.1462,18.1462,18.52,18.52,18.7514,19.2676,19.3744,19.855,20.389,
-#        21.19,22.08,22.08,22.6229,22.97,22.97,22.97,23.415,27.8116,27.8116,27.8116,27.8116,27.8116,27.8116,27.8116,
-#        27.8116,27.8116,27.8116,27.8116,27.8116,27.8116], 
-#        transform=TRANS_LOG,
-#        sequence_numbers=[28,29,54,57,65,74,91,92,93,94,30,45,47,56,31,32,37,44,46,58,95,100,9,18,36,43,48,73,99,
-#        126,10,12,33,35,38,40,53,122,1,2,3,4,7,8,27,51,66,75,42,67,83,96,121,5,6,39,11,49,97,52,84,144,19,34,50,59,
-#        118,120,13,41,55,64,98,89,117,119,68,17,90,60,69,70,72,77,80,82,101,62,63,71,87,123,85,15,76,61,86,88,124,
-#        125,14,143,26,24,78,79,81,127,128,20,22,25,16,136,108,109,21,142,135,102,129,130,116,137,23,141,110,103,
-#        115,138,114,104,105,106,107,111,112,113,131,132,133,134,139,140])
-        
-#        pfTest.SetResponseData({'Ins 1':[0,0,1,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,
-#        0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-#        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]}) 
-        
-#        pfTest.analysis = PF_ANALYSIS
-#        #pfTest.SetFlawMaxSize(30.0)
-#        pfTest.OnAnalysis()
-        
-#        #################################################
-#        #Save the results as a pickled python object we can reuse in other files
-#        if False:
-#            f = open("pfsavedata.txt",  'w')
-#            pfsavedata = pickle.Pickler(f)
-#            pfsavedata.dump(pfTest)
-#            f.close()
-        
-#        #################################################
-#        if False:
-#            i=0
-#            R = pfTest.GetPFResidualTable()
-#            print("flaw \t t_flaw \t hit rate \t t_fit \t diff")
-#            for i in range(len(R['flaw'])):
-#                output = [R['flaw'][i], 
-#                R['t_flaw'][i], 
-#                R['hitrate'][i],  
-#                R['t_fit'][i],  
-#                R['diff'][i]]
-#                pretty_print(output)
-            
-#            P = pfTest.GetPFPODTable()
-#            print("POD Table")
-#            print("a\tPOD(a)\t95% bounds")
-#            for i in range(len(P['flaw'])):
-#                output = [P['flaw'][i],
-#                P['pod'][i], 
-#                P['confidence'][i]]
-#                pretty_print(output)
-        
-#        if False:
-#            for each in range(0,100):
-#                b=2.0+.01*each
-#                print("gamma initial="+str(b))
-#                newtable = pfTest.GetNewPFTable(gamma=b)
-#                print("gamma " + str(newtable['gamma'][0]) + " b " + str(newtable['b'][0]) )            
-#                print("new a90/95 " + str(newtable['new a90/95']))
-#        if False:
-#            title = ""
-#            for key in newtable.keys():
-#                title += key
-#                title += '\t'
-#            print(title)
-            
-#            for i in range(len(newtable[newtable.keys()[0]])):
-#                output = []
-#                for key in newtable.keys():
-#                    output += [newtable[key][i]]
-#                pretty_print(output)
-            
-#            print("mu")
-#            print(pfTest.muhat)
-#            print("sigma")
-#            print(pfTest.sighat)
-            
-#        if True:
-#            print("POD     gamma           b               a9095")
-#            new_bounds = pf_new_bounds(pfTest)
-#            for i in range(5,95):
-#                gamma = pfTest.x90
-#                b = 1/(2*pfTest.sighat)
-#                (gamma, b) = new_bounds.solve(i/100.0,  gamma,  b, pfTest.muhat,  pfTest.sighat)
-#                print(str(i/100.0) + '\t' + str(gamma) + '\t' + str(b) + '\t' + str(a_inv(gamma,pfTest.a_transform)))
-                
-            
-        
-#        #pfTest.model = ODDS_MODEL
-#        #pfTest.OnAnalysis()
-        
-        
-
-

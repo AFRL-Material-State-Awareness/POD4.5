@@ -969,6 +969,7 @@ namespace POD.Analyze
 
             try
             {
+                //entry point for pod caluclation in PODv4 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                     _podDoc.OnAnalysis();
                 else
@@ -1494,9 +1495,9 @@ namespace POD.Analyze
         {
             if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
                 _podDoc.RegisterUpdateProgressEvent(this);
-
+            // update the progress text in the python engine object object 
             _python.ProgressText = "Starting Analysis...";
-
+            // store the analysis name in the python engine object 
             _python.CurrentAnalysisName = Name;
 
             _python.OutputWriter.StringWritten += OutputWriter_StringWritten;
@@ -1504,17 +1505,19 @@ namespace POD.Analyze
 
             //TODO: Add code here to call python analysis code with the current analysis data and settings
             //only use the column specified by InAnalysisFlawColumnName for the x-axis of the calculations
+            //_podDoc.analysis stores the analysis type (hit/miss or ahat)
             _podDoc.analysis = _python.AnalysisDataTypeEnumToInt(AnalysisDataType);
             //_podDoc.ahat_transform = 0;
 
             //flip them so the calculation code still work properly
+            //used if the censor lines cross each other
             if (InResponseMin >= InResponseMax)
             {
                 double temp = InResponseMin;
                 InResponseMin = InResponseMax;
                 InResponseMax = temp;
             }
-
+            //used to store the current transformation the program is performing in the 'choose transform' window
             UpdatePythonTransforms();
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
@@ -1524,8 +1527,6 @@ namespace POD.Analyze
 
             Data.UpdateData();
 
-            //_podDoc.SetFlawMin(InFlawMin);
-            //_podDoc.SetFlawMax(InFlawMax);
             _podDoc.SetCalcMin(InFlawCalcMin);
             _podDoc.SetCalcMax(InFlawCalcMax);
             _podDoc.SetResponseMin(InResponseMin);
@@ -1539,7 +1540,7 @@ namespace POD.Analyze
             double value = 0.0;
             double inc = (InResponseDecisionMax - InResponseDecisionMin) / (InResponseDecisionIncCount);
 
-
+            //set the decision thresholds to be run 20 times
             for (int i = 0; i <= InResponseDecisionIncCount; i++)
             {
                 value = InResponseDecisionMin + (inc * i);
@@ -1554,8 +1555,9 @@ namespace POD.Analyze
         {
             Data.FlawTransform = InFlawTransform;
             Data.ResponseTransform = InResponseTransform;
-
+            //x-axis transformation check
             _podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
+            //y-axis transformation check
             _podDoc.ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
         }
 
@@ -2462,6 +2464,7 @@ namespace POD.Analyze
 
             try
             {
+                //for the case of hit/miss data, this is where the program first enters the python program
                 _podDoc.OnFitOnlyAnalysis();
             }
             catch

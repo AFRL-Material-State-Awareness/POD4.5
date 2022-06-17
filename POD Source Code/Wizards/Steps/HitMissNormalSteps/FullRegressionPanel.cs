@@ -326,7 +326,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 MainChart.ClearProgressBar();
 
             EnableInputControls();
-
+            //copy parameters from the Analysis class in order to print them to the user interface
             double a90Transformed = Analysis.OutResponseDecisionPODLevelValue;
             double a9095Transformed = Analysis.OutResponseDecisionPODConfidenceValue;
             double a50Transformed = Analysis.OutResponseDecisionPODA50Value;

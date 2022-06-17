@@ -186,7 +186,7 @@ namespace POD.Wizards
             this.rightFlowPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            //al UI has been loaded!
         }
 
         #endregion

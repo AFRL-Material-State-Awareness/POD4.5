@@ -16,7 +16,7 @@ namespace POD
             get { return _objectType; }
             set { _objectType = value; }
         }
-
+        //global variable that is initialize in the POD object class (used to store the data analysis type such as hit/miss, ahat, custom etc
         AnalysisDataTypeEnum _analysisDataType;
 
         public AnalysisDataTypeEnum AnalysisDataType

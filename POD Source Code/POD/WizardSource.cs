@@ -65,6 +65,7 @@ namespace POD
         [NonSerialized]
         protected IPy4C _python;
 
+        //return the python engine class
         public IPy4C Python
         {
             get { return _python; }
@@ -214,7 +215,7 @@ namespace POD
         public virtual void SetPythonEngine(IPy4C myPy)
         {
             _python = myPy;
-
+            //initializes a new instance of the cPODDoc class in the .py file
             if(_podDoc == null)
                 _podDoc = _python.CPodDoc(Name);
         }

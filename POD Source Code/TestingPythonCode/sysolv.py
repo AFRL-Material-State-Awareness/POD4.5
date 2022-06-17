@@ -59,7 +59,7 @@ def pf_norm(res_sums):
 
 def pf_sysolv(data,  x, setinc):
     'This is the pass/fail solver using the linear model'
-    DEBUG = False
+    DEBUG = True
     nret = True
     n = 2
     d = [0.01,  0.01]
@@ -69,7 +69,9 @@ def pf_sysolv(data,  x, setinc):
     f = [0.0, 0.0]
 
     wIteration = 0
+    #method of moments mu
     wMu = x[0]
+    #method of moments sigma
     wSigma = x[1]
     wFNorm = 0.0
     wDidDamp = False
