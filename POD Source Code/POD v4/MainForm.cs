@@ -37,6 +37,7 @@ namespace POD
         Analysis _analysis = null;
         WizardDock _dockToShow = null;
         IPy4C py = null;
+        //create the R Engine object
         REngineObject REngineInstance = null;
 
         public MainForm()
@@ -105,7 +106,7 @@ namespace POD
             //python engine
             while (py == null && _loader.Visible);
             //REngine (although this probably is quicker than the python engine
-            //while ()
+            while (REngineInstance == null && _loader.Visible)
 
             if (initialForm.ClosedWithoutSelection == true)
             {

@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelData", "ExcelData\Exce
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsUI", "dockpanelsuite-development_3.0\WinFormsUI\WinFormsUI.csproj", "{D23040B2-B914-4879-8041-A62F1F545A94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBackendWithR", "CSharpBackendWithR\CSharpBackendWithR.csproj", "{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBackendWithR", "CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj", "{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -68,7 +68,8 @@ namespace POD
         [NonSerialized]
         IPy4C _py;
         #endregion
-
+        ///Ask Tom about nonserialized
+        ///create a private variable for the Rengine
         #region Constructors
         /// <summary>
         /// Create a controller with an empty project and no analyses
@@ -990,7 +991,11 @@ namespace POD
         {
             _py = myPy;
         }
+        //set R Engine along with python
+        public void SetREngine()
+        {
 
+        }
         public bool AutoOpen(string myName)
         {
             return _wizards[myName].Analysis.AutoOpen;

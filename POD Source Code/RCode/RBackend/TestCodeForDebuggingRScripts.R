@@ -11,10 +11,11 @@ library(MASS)
 library(mcprofile) ## MLR and LR
 library(glmnet)
 library(logistf)
-hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Bad.csv")
+hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
+#hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Bad.csv")
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")
 #get the working directory, used for debugging only
-codeLocation="C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend"
+codeLocation="C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend"
 source(paste(codeLocation,"/HitMissMainAnalysisRObject.R",sep=""))
 source(paste(codeLocation,"/WaldCI_RObject.R",sep=""))
 source(paste(codeLocation,"/HMLogitApproximationRObject.R",sep=""))
@@ -48,6 +49,7 @@ source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 
 
 CITypeList=list("Standard Wald", "Modified Wald", "LR", "MLR")
+CITypeList=list("Standard Wald")
 ###loops through all the CIs and returns the values
 for(i in CITypeList){
   newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, CIType=i, N=nrow(hitMissDF), normSampleAmount=250)
