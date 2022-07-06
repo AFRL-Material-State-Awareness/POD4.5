@@ -82,6 +82,10 @@
     <Compile Include="TableRangePair.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">
+      <Project>{910fe8f4-2cae-4a5b-8d9e-f5f3c099f80f}</Project>
+      <Name>CSharpBackendWithR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExcelData\ExcelData.csproj">
       <Project>{678ff9c7-a42a-4ac0-a708-6fc460a27c7d}</Project>
       <Name>ExcelData</Name>

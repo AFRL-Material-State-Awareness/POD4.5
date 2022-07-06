@@ -6,7 +6,8 @@ using System.Runtime.Serialization;
 using System.Linq;
 using POD.ExcelData;
 using System.Windows.Forms;
-
+//Rengine
+using CSharpBackendWithR;
 namespace POD.Data
 {
     /// <summary>
@@ -183,6 +184,14 @@ namespace POD.Data
         /// </summary>
         [NonSerialized]
         private dynamic _podDoc;
+        /// <summary>
+        /// RDotEngineObjectInstance
+        /// </summary>
+        [NonSerialized]
+        private REngineObject _rDotNet;
+
+        private HMAnalysisObjectTransform _hmAnalysisObject;
+
 
         /// <summary>
         ///     the type of transform to apply on the response data table
@@ -1548,6 +1557,14 @@ namespace POD.Data
 
             if (_podDoc == null)
                 _podDoc = _python.CPodDoc(myAnalysisName);
+        }
+        public void SetREngine(REngineObject myREngine, string myAnalysisName)
+        {
+            _rDotNet = myREngine;
+            if (_hmAnalysisObject == null)
+            {
+                _hmAnalysisObject = new HMAnalysisObjectTransform(myAnalysisName);
+            }
         }
 
         public void UpdateOutput()

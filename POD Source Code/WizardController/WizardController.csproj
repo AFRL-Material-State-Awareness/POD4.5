@@ -82,6 +82,10 @@
       <Project>{e4a03508-e0fa-4061-bfc7-d03837888402}</Project>
       <Name>Analyze</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">
+      <Project>{910fe8f4-2cae-4a5b-8d9e-f5f3c099f80f}</Project>
+      <Name>CSharpBackendWithR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{bee41d1e-eba8-4d3e-b297-4c1ca6fff8db}</Project>
       <Name>Data</Name>

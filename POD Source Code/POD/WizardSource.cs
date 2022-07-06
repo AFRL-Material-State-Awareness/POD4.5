@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+//TODO: could make r engine global instead
+using CSharpBackendWithR;
 namespace POD
 {
 
@@ -70,6 +71,16 @@ namespace POD
         {
             get { return _python; }
         }
+        /// <summary>
+        /// used to call the r code
+        /// </summary>
+        /// 
+        [NonSerialized]
+        protected REngineObject _rDotNet;
+        public REngineObject RDotNet
+        {
+            get { return _rDotNet;  }
+        }
 
         public virtual string AdditionalWorksheet1Name
         {
@@ -78,12 +89,19 @@ namespace POD
                 return Globals.NotApplicable;
             }
         }
-
+        
         /// <summary>
         /// Reference to the CPodDoc Python class
         /// </summary>
         [NonSerialized]
         protected dynamic _podDoc;
+
+        /// <summary>
+        /// Reference to the object transform class in csharpbackend
+        /// </summary>
+        [NonSerialized]
+        protected dynamic _hmAnalysisObject;
+
         #endregion
 
         #region Constructors
@@ -93,7 +111,7 @@ namespace POD
         /// <summary>
         /// Contains data needed by the Finish event handling method.
         /// </summary>
-        
+
         public FinishArgs FinishArg
         {
             get
@@ -218,6 +236,14 @@ namespace POD
             //initializes a new instance of the cPODDoc class in the .py file
             if(_podDoc == null)
                 _podDoc = _python.CPodDoc(Name);
+        }
+        public virtual void SetREngine(REngineObject myREngine)
+        {
+            _rDotNet = myREngine;
+            if (_hmAnalysisObject == null)
+            {
+                _hmAnalysisObject = new HMAnalysisObjectTransform(Name);
+            }
         }
     
         #endregion

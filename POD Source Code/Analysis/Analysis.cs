@@ -11,7 +11,8 @@ using System.Linq;
 using SpreadsheetLight;
 using POD.Controls;
 using POD;
-
+//for r engine
+using CSharpBackendWithR;
 namespace POD.Analyze
 {
     /// <summary>
@@ -1648,11 +1649,19 @@ namespace POD.Analyze
         public override void SetPythonEngine(IPy4C myPy)
         {
             _python = myPy;
-
+            //creates a new pod doc for analysis in python
             if (_podDoc == null)
                 _podDoc = _python.CPodDoc(Name);         
-
             _data.SetPythonEngine(_python, Name);
+        }
+        public override void SetREngine(REngineObject myREngine)
+        {
+            _rDotNet = myREngine;
+            if(_hmAnalysisObject== null)
+            {
+                _hmAnalysisObject = new HMAnalysisObjectTransform(Name);
+            }
+            _data.SetREngine(_rDotNet, Name);
         }
 
         #region Event Handling
