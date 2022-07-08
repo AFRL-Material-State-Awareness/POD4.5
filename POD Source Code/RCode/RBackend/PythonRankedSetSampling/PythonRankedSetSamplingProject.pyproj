@@ -1,0 +1,54 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>71e3ab8d-98fc-4588-a2d4-2ba400160d5a</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>DebuggingOnly.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>PythonRankedSetSamplingProject</Name>
+    <RootNamespace>PythonRankedSetSamplingProject</RootNamespace>
+    <InterpreterId>Global|PythonCore|3.8</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="MainRSSamplingClass.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CyclesArrayGenerator.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DebuggingOnly.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RSS2DArrayGenerator.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RSSRowSorter.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.8" />
+    <InterpreterReference Include="Global|VisualStudio|PythonEnvironment" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
