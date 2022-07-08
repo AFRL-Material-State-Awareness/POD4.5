@@ -71,6 +71,8 @@ namespace POD
         #endregion
         ///Ask Tom about nonserialized
         ///create a private variable for the Rengine
+        [NonSerialized]
+        REngineObject _r;
         #region Constructors
         /// <summary>
         /// Create a controller with an empty project and no analyses
@@ -153,7 +155,7 @@ namespace POD
             if (!_wizards.Names.Contains(myAnalysis.Name))
             {
                 myAnalysis.SetPythonEngine(_py);
-
+                myAnalysis.SetREngine(_r);
                 myAnalysis.ProjectInfoNeeded += GetProjectInfo;
                 myAnalysis.ExportProject += ExportProjectToExcel;
                 myAnalysis.CreatedAnalysis += CreatedAnalysis_Analysis;
@@ -186,7 +188,7 @@ namespace POD
             if (!_wizards.Names.Contains(myAnalysis.Name))
             {
                 myAnalysis.SetPythonEngine(_py);
-
+                myAnalysis.SetREngine(_r);
                 myAnalysis.ProjectInfoNeeded += GetProjectInfo;
                 myAnalysis.ExportProject += ExportProjectToExcel;
                 myAnalysis.CreatedAnalysis += CreatedAnalysis_Analysis;
@@ -289,7 +291,7 @@ namespace POD
             _wizards.Project.Project.NeedOpenAnalysis += OpenExistingAnalsyis;
 
             _wizards.Project.Project.SetPythonEngine(_py);
-
+            _wizards.Project.Project.SetREngine(_r);
             AddEventHandling(_wizards.Project);
 
 
@@ -942,7 +944,7 @@ namespace POD
             _wizards.Project.Project.NeedOpenAnalysis += OpenExistingAnalsyis;
 
             _wizards.Project.Project.SetPythonEngine(_py);
-
+            _wizards.Project.Project.SetREngine(_r);
             AddEventHandling(_wizards.Project);
 
 

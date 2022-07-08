@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using System.Data;
 using IronPython.Hosting;
 using System.Diagnostics;
-
+using CSharpBackendWithR;
 namespace POD
 {
     public enum PyTypeEnum
@@ -28,6 +28,7 @@ namespace POD
         List<string> _modules;
         Dictionary<string, ScriptScope> _pyScopes;
         Dictionary<string, dynamic> _cpDocs;
+        Dictionary<string, HMAnalysisObjectTransform> _hitMissAnalyses;
         MemoryStream _outputStream;
         MemoryStream _errorStream;
         EventRaisingStreamWriter _outputWriter;
@@ -148,6 +149,8 @@ namespace POD
             
 
             _cpDocs = new Dictionary<string, dynamic>();
+            //used to store the hitmiss analyses
+            _hitMissAnalyses = new Dictionary<string, HMAnalysisObjectTransform>();
             //if the .dll is being used in the program
             if (myType == PyTypeEnum.DLLFiles)
             {
@@ -252,6 +255,8 @@ namespace POD
                 //this is  where the new instance is created
                 //If we make separate instances for signal reponse and hit/miss, we could create if statements here
                 dynamic cpoddoc = CPodDoc();
+                //create the new HM analsysis object
+
                 //the dictionary contains a string as the key and the cPoddoc class object as its value/definition
                 _cpDocs.Add(myAnalysisName, cpoddoc);
 
@@ -262,6 +267,23 @@ namespace POD
             {
                 return _cpDocs[myAnalysisName];
             }
+        }
+        public HMAnalysisObjectTransform HitMissAnalsysis(string myAnalysisName)
+        {
+            //if analysis name doesn't alredy exist in the dictionary create a new one
+            if (_hitMissAnalyses.ContainsKey(myAnalysisName) == false)
+            {
+                //create a new hitmiss analysis object
+                HMAnalysisObjectTransform hitMissAnalsyis = new HMAnalysisObjectTransform(myAnalysisName);
+                _hitMissAnalyses.Add(myAnalysisName, hitMissAnalsyis);
+                return (hitMissAnalsyis);
+            }
+            //if it does, simply return that def/key pair from the _cpDocs dictionary
+            else
+            {
+                return _hitMissAnalyses[myAnalysisName];
+            }
+
         }
 
         public IPy4C CreateDuplicate()
@@ -448,7 +470,7 @@ namespace POD
             _modules.Clear();
             _pyScopes.Clear();
             _cpDocs.Clear();
-            
+            _hitMissAnalyses.Clear();
             try
             {
                 _outputStream.Flush();

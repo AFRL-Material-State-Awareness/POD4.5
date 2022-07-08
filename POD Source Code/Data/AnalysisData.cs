@@ -1168,7 +1168,7 @@ namespace POD.Data
         {
             double minFlaw = double.MaxValue;
             var flaws = _availableFlawsTable;
-
+            printDT(_availableFlawsTable);
             //used for quick analysis
             if (flaws.Rows.Count == 0)
                 minFlaw = 0.0;
@@ -1563,7 +1563,7 @@ namespace POD.Data
             _rDotNet = myREngine;
             if (_hmAnalysisObject == null)
             {
-                _hmAnalysisObject = new HMAnalysisObjectTransform(myAnalysisName);
+                _hmAnalysisObject = _python.HitMissAnalsysis(myAnalysisName);
             }
         }
 
@@ -3434,7 +3434,49 @@ namespace POD.Data
             }
 
             return values;
-        }       
+        }
+        //This method is for debugging purpose
+        //should be removed in the final product
+        static void printDT(DataTable data)
+        {
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            Dictionary<string, int> colWidths = new Dictionary<string, int>();
+
+            foreach (DataColumn col in data.Columns)
+            {
+                //Console.Write(col.ColumnName);
+                Debug.Write(col.ColumnName);
+                var maxLabelSize = data.Rows.OfType<DataRow>()
+                        .Select(m => (m.Field<object>(col.ColumnName)?.ToString() ?? "").Length)
+                        .OrderByDescending(m => m).FirstOrDefault();
+
+                colWidths.Add(col.ColumnName, maxLabelSize);
+                for (int i = 0; i < maxLabelSize - col.ColumnName.Length + 10; i++) Debug.Write(" ");
+            }
+
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            int rowCounter = 0;
+            int limit = 100;
+            foreach (DataRow dataRow in data.Rows)
+            {
+                for (int j = 0; j < dataRow.ItemArray.Length; j++)
+                {
+                    //Console.Write(dataRow.ItemArray[j]);
+                    Debug.Write((dataRow.ItemArray[j]).ToString());
+                    for (int i = 0; i < colWidths[data.Columns[j].ColumnName] - dataRow.ItemArray[j].ToString().Length + 10; i++) Debug.Write(" ");
+                }
+                //Console.WriteLine();
+                Debug.WriteLine('\n');
+                rowCounter = rowCounter + 1;
+                if (rowCounter >= limit)
+                {
+                    break;
+                }
+            }
+            Debug.WriteLine('\n');
+        }
     }
 
     public class AxisObject

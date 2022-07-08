@@ -242,7 +242,7 @@ namespace POD
             _rDotNet = myREngine;
             if (_hmAnalysisObject == null)
             {
-                _hmAnalysisObject = new HMAnalysisObjectTransform(Name);
+                _hmAnalysisObject = _python.HitMissAnalsysis(Name);
             }
         }
     
