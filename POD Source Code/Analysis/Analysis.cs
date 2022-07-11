@@ -41,7 +41,8 @@ namespace POD.Analyze
         public EventHandler ExportProject;
         [NonSerialized]
         public AnalysisListHandler CreatedAnalysis;
-
+        [NonSerialized]
+        public HMAnalysisObjectTransform _finalAnalysis;
         /// <summary>
         /// No input values or data will be allowed to be changed while the analysis is frozen.
         /// Created this state to allow UI to be sync'd with the analysis values after being loaded from file.
@@ -1123,8 +1124,11 @@ namespace POD.Analyze
                 OutPFCovarianceV12 = covMatrix[1];
                 OutPFCovarianceV22 = covMatrix[2];
 
-                OutPODMu = _podDoc.GetPODMu();
+                //OutPODMu = _podDoc.GetPODMu();
                 OutPODSigma = _podDoc.GetPODSigma();
+                OutPODMu = _hmAnalysisObject.Muhat;
+                //OutPODSigma = _hmAnalysisObject.Sighat;
+
             }
 
             watch.Stop();
@@ -1222,8 +1226,10 @@ namespace POD.Analyze
                 InFlawTransform = TransformTypeEnum.Log;
                 Data.FlawTransform = InFlawTransform;
 
-                if(_python != null)
+                if(_python != null) {
                     _podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
+                    _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
+                }  
             }
         }
 
@@ -1494,13 +1500,15 @@ namespace POD.Analyze
 
         private void CopyInputToPython()
         {
+            //TODO: get this working with r
             if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
                 _podDoc.RegisterUpdateProgressEvent(this);
             // update the progress text in the python engine object object 
             _python.ProgressText = "Starting Analysis...";
+            _hmAnalysisObject.ProgressText = "Starting Analysis";
             // store the analysis name in the python engine object 
             _python.CurrentAnalysisName = Name;
-
+            
             _python.OutputWriter.StringWritten += OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten += ErrorWriter_StringWritten;
 
@@ -1523,18 +1531,25 @@ namespace POD.Analyze
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 _podDoc.model = _python.PFModelEnumToInt(InHitMissModel);
+                //add code for other tranform options here(right now it's just normal and odds)
 
             _podDoc.name = Name;
-
             Data.UpdateData();
 
             _podDoc.SetCalcMin(InFlawCalcMin);
+            //_hmAnalysisObject.Crckmin = InFlawCalcMin;
             _podDoc.SetCalcMax(InFlawCalcMax);
+            //_hmAnalysisObject.Crckmax = InFlawCalcMax;
             _podDoc.SetResponseMin(InResponseMin);
+            //_hmAnalysisObject.HitMissMin= InResponseMin
             _podDoc.SetResponseMax(InResponseMax);
+            //_hmAnalysisObject.HitMissMax= HitMissMax
             _podDoc.SetPODThreshold(InResponseDecision);
+            _hmAnalysisObject.Pod_threshold = InResponseDecision;
             _podDoc.SetPODLevel(.90);
+            _hmAnalysisObject.Pod_level = .90;
             _podDoc.SetPODConfidence(.95);
+            _hmAnalysisObject.Confidence_level = .95;
 
             List<double> thresholds = new List<double>();
 
@@ -1550,6 +1565,8 @@ namespace POD.Analyze
             }
 
             _podDoc.SetDecisionThresholds(thresholds);
+            //used for modified wald, LR, etc. Will implement into the UI later
+            _hmAnalysisObject.A_x_n = 500;
         }
 
         public void UpdatePythonTransforms()
@@ -1558,6 +1575,11 @@ namespace POD.Analyze
             Data.ResponseTransform = InResponseTransform;
             //x-axis transformation check
             _podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
+            //if (_dataType == "HitMiss")
+            //{
+
+            //}
+            _hmAnalysisObject.ModelType= _python.TransformEnumToInt(Data.FlawTransform);
             //y-axis transformation check
             _podDoc.ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
         }
@@ -2475,10 +2497,13 @@ namespace POD.Analyze
             {
                 //for the case of hit/miss data, this is where the program first enters the python program
                 _podDoc.OnFitOnlyAnalysis();
+                AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_hmAnalysisObject, _rDotNet);
+                newAnalysisControl.ExecuteReqSampleAnalysisType();
+                _finalAnalysis = newAnalysisControl.HMAnalsysResults;
             }
-            catch
+            catch(Exception executeProblemAnalysis)
             {
-
+                Debug.WriteLine(executeProblemAnalysis.ToString());
             }
 
             watch.Stop();

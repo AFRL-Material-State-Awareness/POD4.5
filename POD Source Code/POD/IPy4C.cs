@@ -268,6 +268,7 @@ namespace POD
                 return _cpDocs[myAnalysisName];
             }
         }
+        //object used for hit miss analyses
         public HMAnalysisObjectTransform HitMissAnalsysis(string myAnalysisName)
         {
             //if analysis name doesn't alredy exist in the dictionary create a new one

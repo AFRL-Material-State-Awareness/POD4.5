@@ -995,9 +995,9 @@ namespace POD
             _py = myPy;
         }
         //set R Engine along with python
-        public void SetREngine()
+        public void SetREngine(REngineObject myREngine)
         {
-
+            _r = myREngine;
         }
         public bool AutoOpen(string myName)
         {

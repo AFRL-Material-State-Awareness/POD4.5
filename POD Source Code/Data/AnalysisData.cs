@@ -1142,7 +1142,7 @@ namespace POD.Data
             ActivateSpecIDs(mySpecIDs);
 
             //Variable used to store analysis type (hit/miss, ahat, etc)
-            _dataType = mySource.AnalysisDataType;
+             _dataType = mySource.AnalysisDataType;
 
             _flawTransform = TransformTypeEnum.Linear;
             _responseTransform = TransformTypeEnum.Linear;
@@ -1161,14 +1161,14 @@ namespace POD.Data
             UpdateData();
 
             CalculateMinFlaw();
-            CalculateMinResponse();
+             CalculateMinResponse();
         }
         //Method is used to calculate the minimum flaw size of the dataset
         private void CalculateMinFlaw()
         {
             double minFlaw = double.MaxValue;
             var flaws = _availableFlawsTable;
-            printDT(_availableFlawsTable);
+            //printDT(_availableFlawsTable);
             //used for quick analysis
             if (flaws.Rows.Count == 0)
                 minFlaw = 0.0;
@@ -1538,6 +1538,11 @@ namespace POD.Data
                 _podDoc.SetResponseData(pyResponses, _python.TransformEnumToInt(ResponseTransform));
 
                 _podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
+
+                //used for the hit miss analysis object for RDotNet
+                _hmAnalysisObject.Flaws = flaws;
+                _hmAnalysisObject.Responses = responses;
+                _hmAnalysisObject.Responses_all = allResponses;
             }
         }
 
@@ -1583,7 +1588,8 @@ namespace POD.Data
         {
             try
             {
-                _totalFlawCount = _podDoc.GetTotalFlawCount();
+                //_totalFlawCount = _podDoc.GetTotalFlawCount();
+                _totalFlawCount = _hmAnalysisObject.Flaws.Count();
             }
             catch (Exception exp)
             {
@@ -1593,10 +1599,11 @@ namespace POD.Data
             try
             {
                 //first table to be passed back for the transformations window in pass fail (it is empty at first)
-                _podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFPODTable());
-
+                //_podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFPODTable());
+                _podCurveTable = _hmAnalysisObject.LogitFitTable;
                 //DataTable newPFTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetNewPFTable());
 
+                //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
             }
@@ -1604,7 +1611,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
             }
-
+            printDT(_podCurveTable);
             //_iterationsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetIterationsTable());
 
             //_iterationsTable.DefaultView.Sort = "iteration" + " " + "ASC";
@@ -1612,8 +1619,8 @@ namespace POD.Data
 
             try
             {
-                _residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFResidualTable());
-                //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetNewPFTable());
+                //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFResidualTable());
+                _residualUncensoredTable = _hmAnalysisObject.LogitFitTable;;
 
                 _residualUncensoredTable.DefaultView.Sort = "t_flaw" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
@@ -1622,10 +1629,12 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
             }
+            printDT(_residualUncensoredTable);
 
             try
             { 
                 //check if this table is necessary
+                //TODO: will end up removing this table later
                 _iterationsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFSolveIterationTable());
             }
             catch (Exception exp)

@@ -24,6 +24,10 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               results <<- psResults
                             },
                             getResults = function(){
+                              results$Index <<- NULL
+                              names(results)[names(results) == 'x'] <<- 'flaw'
+                              names(results)[names(results) == 'y'] <<- 'hitrate'
+                              names(results)[names(results) == 't_trans'] <<- 'pod'
                               return(results)
                             },
                             setKeyAValues=function(psAValues){

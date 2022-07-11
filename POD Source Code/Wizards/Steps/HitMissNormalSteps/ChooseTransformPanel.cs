@@ -165,9 +165,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                         {
                             _analysis.RunOnlyFitAnalysis();
                         }
-                        catch
+                        catch(Exception eProblem)
                         {
-
+                            MessageBox.Show(eProblem.ToString());
                         }
 
                         this.Invoke((MethodInvoker)delegate()
