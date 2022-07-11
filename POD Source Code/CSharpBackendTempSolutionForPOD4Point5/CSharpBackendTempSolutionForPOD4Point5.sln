@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBackendWithR", "CSharpBackendWithR\CSharpBackendWithR.csproj", "{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BDCF01A2-AFDA-4F9F-A385-3F50549269DE}
+	EndGlobalSection
+EndGlobal
