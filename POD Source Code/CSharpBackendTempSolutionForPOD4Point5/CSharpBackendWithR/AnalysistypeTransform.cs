@@ -61,13 +61,15 @@ namespace CSharpBackendWithR
             newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
             newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
             newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
+            //store the original dataframe in the HM analysis object
+            newPFAnalysisObject.HitMissDataOrig =newHitMissControl.getOrigHitMissDF();
             //clear all contents in R and restart the global environment
             analysisEngine.clearGlobalIInREngineObject();
             //Console.WriteLine(newPFAnalysisObject);
 
-            //pass fail residuals
+            
 
-            //repeat the process with a log transform
+
             //finish analysis
 
             //return object to UI

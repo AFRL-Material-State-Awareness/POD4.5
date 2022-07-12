@@ -42,7 +42,7 @@ namespace POD.Controls
         public void FillChart(AnalysisData myData, double mu, double sigma)
         {
             //FillChart(myData, myData.ResidualUncensoredTable, "t_flaw", "t_fit", "t_flaw", "hitrate", 0, 1.0, mu, sigma);
-            FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma);
+            FillChart(myData, myData.ResidualUncensoredTable,"flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
         }
 
         public void FillChart(AnalysisData myData, string my90X, string my90Y, string my95X, string my95Y, double mu, double sigma)
@@ -62,8 +62,10 @@ namespace POD.Controls
             ChartTitle = "Model Fit";
         }
 
-        public void FillChart(AnalysisData myData, DataTable myTable, string myFitX, string myFitY, string myHitRateX, string myHitRateY, double myYMin, double myYMax, double mu, double sigma)
+        public void FillChart(AnalysisData myData, DataTable myTable,  string myFitX, string myFitY, 
+            string myHitRateX, string myHitRateY, double myYMin, double myYMax, double mu, double sigma, DataTable origData = null)
         {
+            DataView origView = origData.DefaultView;
             DataView view = myTable.DefaultView;
 
             ClearIntervals(XAxis);
@@ -72,7 +74,7 @@ namespace POD.Controls
             _sigma = sigma;
 
             FlawEstimate.Points.DataBindXY(view, myFitX, view, myFitY);
-            Uncensored.Points.DataBindXY(view, myHitRateX, view, myHitRateY);
+            Uncensored.Points.DataBindXY(origView, myHitRateX, origView, myHitRateY);
 
             ChartAreas[0].AxisY.Minimum = myYMin;
             ChartAreas[0].AxisY.Maximum = myYMax;

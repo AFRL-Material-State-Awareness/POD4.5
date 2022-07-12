@@ -269,7 +269,7 @@ namespace POD.Controls
 
         private void addOriginalHitMissSeries(AnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
         {
-            var view = data.ResidualUncensoredTable.AsDataView();
+            var view = data.OriginalData.AsDataView();
 
             //Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
             Original.Points.DataBindXY(view, "flaw", view, "hitrate");

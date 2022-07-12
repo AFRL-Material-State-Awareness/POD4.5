@@ -12,6 +12,7 @@ namespace CSharpBackendWithR
         /// are inherited from the ParentAnalysisObjectClass.
         /// the ones that are not are listed below...
         /// </summary> 
+        private DataTable hitMissDataOrig;
         private List<double> flawsTemp;
         private int modelType;
         //used for logit, firth, or lasso
@@ -21,6 +22,8 @@ namespace CSharpBackendWithR
         private int maxResamples;
         public HMAnalysisObjectTransform(string nameInput="")
         {
+            //original HMDataframe
+            this.hitMissDataOrig = null;
             //becomes true if any points are censored
             Pts_censored = false;
 
@@ -94,7 +97,7 @@ namespace CSharpBackendWithR
             //m=number of cycles(usually 30 is sufficient
             int Set_r = 0;
             //default to standard wald unless overwritten
-            CIType = "Standard Wald";
+            CIType = "Modified Wald";
             //datatables that will be sent back to the UI
             DataTable LogitHMFitTable = new DataTable();
             DataTable LogLogitHMFitTable = new DataTable();
@@ -104,7 +107,11 @@ namespace CSharpBackendWithR
             //max resamples
             this.maxResamples = 1; //1 by default
         }
-        //public bool pts_censored{get; set;}
+        public DataTable HitMissDataOrig
+        {
+            set { this.hitMissDataOrig = value; }
+            get { return this.hitMissDataOrig; }
+        }
         public bool Pts_censored { set; get; }
         public dynamic Podfile { set; get; }
         public string Name { set; get; }

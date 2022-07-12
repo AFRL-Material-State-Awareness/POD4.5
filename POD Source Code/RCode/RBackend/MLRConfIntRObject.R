@@ -16,7 +16,7 @@ ModifiedLikelihoodRatioConfInt <- setRefClass("ModifiedLikelihoodRatioConfInt", 
                                         },
                                         executeMLR=function(){
                                           ptm <- proc.time()
-                                          castCalcLinCombo<<-calcLinearCombo
+                                          castCalcLinCombo<-calcLinearCombo
                                           class(castCalcLinCombo)<-"mcprofile"
                                           ci.logit.profile.mlr = try(confint(hoa(castCalcLinCombo), level = 0.95, adjust = "none",
                                                                              alternative="greater",

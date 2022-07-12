@@ -1114,10 +1114,11 @@ namespace POD.Analyze
             OutTestEqualVariance_p = _podDoc.GetEqualVariance_p();
             OutTestEqualVariance = _podDoc.GetEqualVariance();
             OutTestEqualVarianceRating = _podDoc.GetEqualVarianceRating();
-            OutResponseDecisionPODSigma = _podDoc.GetPODSigma();
-            OutResponseDecisionPODA50Value = _podDoc.GetPODFlaw50();
-            OutResponseDecisionPODLevelValue = _podDoc.GetPODFlawLevel();
-            OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
+            //A Values and sigma
+            //OutResponseDecisionPODSigma = _podDoc.GetPODSigma();
+            //OutResponseDecisionPODA50Value = _podDoc.GetPODFlaw50();
+            //OutResponseDecisionPODLevelValue = _podDoc.GetPODFlawLevel();
+            //OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
             OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_podDoc.GetLackOfDegreesFreedom());
             OutTestLackOfFitCalculated = _podDoc.GetLackOfFitCalculated();
 
@@ -1128,6 +1129,11 @@ namespace POD.Analyze
                 OutPFCovarianceV11 = covMatrix[0];
                 OutPFCovarianceV12 = covMatrix[1];
                 OutPFCovarianceV22 = covMatrix[2];
+
+                OutResponseDecisionPODSigma = _hmAnalysisObject.Sighat;
+                OutResponseDecisionPODA50Value = _hmAnalysisObject.A50;
+                OutResponseDecisionPODLevelValue = _hmAnalysisObject.A90;
+                OutResponseDecisionPODConfidenceValue = _hmAnalysisObject.A9095;
 
                 //OutPODMu = _podDoc.GetPODMu();
                 //OutPODSigma = _podDoc.GetPODSigma();
@@ -1288,6 +1294,7 @@ namespace POD.Analyze
                     InFlawTransform = TransformTypeEnum.Log;
                     Data.FlawTransform = InFlawTransform;
                     _podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
+                    _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
                 }
 
                 ForceUpdateInputsFromData();
@@ -1366,6 +1373,8 @@ namespace POD.Analyze
             analysis._data = _data.CreateDuplicate();
             analysis._python = null;
             analysis._podDoc = null;
+            analysis._hmAnalysisObject = null;
+            analysis._rDotNet = null;
             //analysis.Report = Report.CreateDuplicate();
 
 
@@ -2504,7 +2513,7 @@ namespace POD.Analyze
                 _podDoc.OnFitOnlyAnalysis();
                 AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_hmAnalysisObject, _rDotNet);
                 newAnalysisControl.ExecuteReqSampleAnalysisType();
-                _finalAnalysis = newAnalysisControl.HMAnalsysResults;
+                _hmAnalysisObject = newAnalysisControl.HMAnalsysResults;
             }
             catch(Exception executeProblemAnalysis)
             {

@@ -30,43 +30,61 @@ namespace CSharpBackendWithR
             if (newTranformAnalysis.ModelType == 1)
             {
                 this.myREngine.Evaluate("isLog=FALSE");
+                //create index column for dataframe
+                for (int i = 1; i <= cracks.Count; i++)
+                {
+                    indices.Add(i);
+                }
+                //initialize the matrices used to create the input dataframe
+                this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
+                this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
+                this.myREngine.Evaluate("y<-c(" + hitMiss[0].ToString() + ")");
+                //acumulate r matrices in order to create the dataframe
+                for (int i = 1; i < cracks.Count; i++)
+                {
+                    this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
+                    this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
+                    this.myREngine.Evaluate("y<-c(y," + hitMiss[i].ToString() + ")");
+                };
+                //build the dataframe in the global environment
+                //this dataframe will remain in the global environment
+                this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
+                this.myREngine.Evaluate("rm(Index)");
+                this.myREngine.Evaluate("rm(x)");
+                this.myREngine.Evaluate("rm(y)");
             }
             else if (newTranformAnalysis.ModelType == 2)
             {
                 this.myREngine.Evaluate("isLog=TRUE");
+                //create index column for dataframe
+                for (int i = 1; i <= cracks.Count; i++)
+                {
+                    indices.Add(i);
+                }
+                //initialize the matrices used to create the input dataframe
+                this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
+                this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
+                this.myREngine.Evaluate("y<-c(" + hitMiss[0].ToString() + ")");
+                //acumulate r matrices in order to create the dataframe
+                for (int i = 1; i < cracks.Count; i++)
+                {
+                    this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
+                    this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
+                    this.myREngine.Evaluate("y<-c(y," + hitMiss[i].ToString() + ")");
+                };
+                //build the dataframe in the global environment
+                //this dataframe will remain in the global environment
+                this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
+                this.myREngine.Evaluate("rm(Index)");
+                this.myREngine.Evaluate("rm(x)");
+                this.myREngine.Evaluate("rm(y)");
             }
-            //create index column for dataframe
-            for (int i = 1; i <= cracks.Count; i++)
+            else
             {
-                indices.Add(i);
+                throw new Exception("model type not found exception! (currently only supports linear and log)");
             }
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-            //this.myREngine.Evaluate("print(Index)");
-            this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-            //this.myREngine.Evaluate("print(x)");
-            this.myREngine.Evaluate("y<-c(" + hitMiss[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                //this.myREngine.Evaluate("print(Index)");
-                this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(y," + hitMiss[i].ToString() + ")");
-            };
-            //build the dataframe in the global environment
-            //this dataframe will remain in the global environment
-            this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
-            //debugging
-            //this.myREngine.Evaluate("print('checking global environment:')");
-            //this.myREngine.Evaluate("str(as.list(.GlobalEnv))");
-            //remove the global variables no longer being used
-            this.myREngine.Evaluate("rm(Index)");
-            this.myREngine.Evaluate("rm(x)");
-            this.myREngine.Evaluate("rm(y)");
-            //debugging
-            //this.myREngine.Evaluate("print('REchecking global environment:')");
-            //this.myREngine.Evaluate("str(as.list(.GlobalEnv))");
+            
+            
         }
         public void ExecuteAnalysis(HMAnalysisObjectTransform newTranformAnalysis)
         {
@@ -97,10 +115,19 @@ namespace CSharpBackendWithR
         }
         public DataTable getLogitFitTableForUI()
         {
-            ShowResults();
+            //ShowResults();
             RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getResults()").AsDataFrame();
             DataTable LogitFitDataTable= myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return LogitFitDataTable;
+        }
+        public DataTable getOrigHitMissDF()
+        {
+            myREngine.Evaluate("hitMissDF$index=NULL");
+            myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'x'] = 'flaw'");
+            myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'y'] = 'hitrate'");
+            RDotNet.DataFrame origDataFrame = myREngine.Evaluate("hitMissDF").AsDataFrame();
+            DataTable originalData = myREngineObject.rDataFrameToDataTable(origDataFrame);
+            return originalData;
         }
         public Dictionary<string, double> getKeyA_Values()
         {

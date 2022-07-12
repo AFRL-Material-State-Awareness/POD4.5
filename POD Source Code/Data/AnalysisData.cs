@@ -172,7 +172,10 @@ namespace POD.Data
         /// </summary>
         private DataTable _podCurveTable;
         private DataTable _podCurveTable_All;
-
+        /// <summary>
+        /// used to store and plot the original data (mainly used when modified wald, lr, or mlr is used
+        /// </summary>
+        private DataTable _originalData;
         /// <summary>
         ///     IronPython engine used to call Python code/libraries.
         /// </summary>
@@ -615,6 +618,11 @@ namespace POD.Data
             get { return _podCurveTable_All; }
         }
 
+        public DataTable OriginalData
+        {
+            get { return _originalData; }
+        }
+
         /// <summary>
         ///     Get/set the response data transform type
         /// </summary>
@@ -880,7 +888,8 @@ namespace POD.Data
                 _residualsTable,
                 _residualUncensoredTable,
                 _thresholdPlotTable,
-                _thresholdPlotTable_All
+                _thresholdPlotTable_All,
+                _originalData
             };
 
             
@@ -909,7 +918,7 @@ namespace POD.Data
             data._residualUncensoredTable = new DataTable();
             data._thresholdPlotTable = new DataTable();
             data._thresholdPlotTable_All = new DataTable();
-
+            data._originalData = new DataTable();
             var toTables = new List<DataTable>
             {
                 data._activatedFlawTable,
@@ -936,6 +945,7 @@ namespace POD.Data
                 data._residualUncensoredTable,
                 data._thresholdPlotTable,
                 data._thresholdPlotTable_All,
+                data._originalData
             };
 
             Debug.Assert(fromTables.Count == toTables.Count);
@@ -1586,6 +1596,16 @@ namespace POD.Data
         //updates the tables in the GUI by getting the tables from python
         private void UpdateHitMissOutput()
         {
+            //store original data for plotting
+            try
+            {
+                _originalData = _hmAnalysisObject.HitMissDataOrig;
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
+            }
+            printDT(_originalData);
             try
             {
                 //_totalFlawCount = _podDoc.GetTotalFlawCount();
@@ -2460,6 +2480,7 @@ namespace POD.Data
             var isLinear = !myGetTransformed || _flawTransform == TransformTypeEnum.Linear || _flawTransform == TransformTypeEnum.Inverse;
             
             _podDoc.a_transform = _python.TransformEnumToInt(_flawTransform);
+            _hmAnalysisObject.ModelType= _python.TransformEnumToInt(_flawTransform);
             _podDoc.ahat_transform = _python.TransformEnumToInt(_responseTransform);
             
             AxisObject maxAxis = new AxisObject();
@@ -3449,6 +3470,7 @@ namespace POD.Data
         }
         //This method is for debugging purpose
         //should be removed in the final product
+        //should be removed in the final product
         static void printDT(DataTable data)
         {
             //Console.WriteLine();
@@ -3470,7 +3492,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 100;
+            int limit = 5;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

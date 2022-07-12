@@ -73,7 +73,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 newWaldCI$executeStandardWald()
                                 Confidence_Interval=newWaldCI$getCIDataFrame()
                                 #set the dataframe to return to c#
-                                setResults(cbind(hitMissDF, t_trans, Confidence_Interval))
+                                x=hitMissDF$x
+                                setResults(cbind(x, t_trans, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=hitMissDF)
                                 new_Acalc$calcAValuesStandardWald()
@@ -162,17 +163,17 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             },
                             #used for Debugging ONLY
                             plotSimdata=function(df){
-                              myPlot=ggplot(data=df, mapping=aes(x=x, y=t_trans))+geom_point()+
+                              myPlot=ggplot(data=df, mapping=aes(x=flaw, y=pod))+geom_point()+
                                 ggtitle(paste("POD Curve:", CIType," model type:", modelType))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
                               print(myPlot)
                             },
                             plotCI=function(df){
-                              myPlot=ggplot(data=df, mapping=aes(x=x, y=Confidence_Interval))+geom_point()+
+                              myPlot=ggplot(data=df, mapping=aes(x=flaw, y=Confidence_Interval))+geom_point()+
                                 ggtitle(paste("Confidence interval:", CIType," model type:", modelType))+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
                               print(myPlot)
                             },
                             plotCIRSS=function(df){
-                              myPlot=ggplot(data=df, mapping=aes(x=Confidence_Interval, y=t_trans))+geom_point()+
+                              myPlot=ggplot(data=df, mapping=aes(x=Confidence_Interval, y=pod))+geom_point()+
                                 ggtitle("Confidence interval:", CIType)+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1.0))
                               print(myPlot)
                             }

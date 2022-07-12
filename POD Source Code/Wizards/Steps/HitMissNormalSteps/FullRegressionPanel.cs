@@ -339,20 +339,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             double covV12 = Analysis.OutPFCovarianceV12;
             double covV22 = Analysis.OutPFCovarianceV22;
             double lackOfFit = Analysis.OutTestLackOfFit;
-            
-
-
-            /*HandleNaN(ref a90Transformed, 0.0);
-            HandleNaN(ref a9095Transformed, 0.0);
-            HandleNaN(ref a50Transformed, 0.0);
-            HandleNaN(ref a90Original, 0.0);
-            HandleNaN(ref a9095Original, 0.0);
-            HandleNaN(ref a50Original, 0.0);
-            HandleNaN(ref podMu, 0.0);
-            HandleNaN(ref podSigma, 0.0);
-            HandleNaN(ref covV11, 0.0);
-            HandleNaN(ref covV12, 0.0);
-            HandleNaN(ref covV22, 0.0);*/
 
             try
             {
@@ -400,18 +386,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             mainChart.UpdateLevelConfidenceLines(a50Transformed,
                                                  a90Transformed,
                                                  a9095Transformed);
-
-
-
-            //linearityChart.XAxis.Interval = mainChart.XAxis.Interval;
-            //linearityChart.XAxis.RoundAxisValues();
-            //linearityChart.XAxis.LabelStyle.Format = "F1";
-            //SetXAxisRange(Analysis.Data.GetXBufferedRange(true));
             linearityChart.FillChart(Analysis.Data, Analysis.OutPODMu, Analysis.OutPODSigma);
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
             linearityChart.ChartToolTip = StepToolTip;
-
-            //RefreshValues();
         }
         
             
