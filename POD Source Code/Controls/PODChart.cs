@@ -350,8 +350,8 @@ namespace POD.Controls
                         POD9095_All.Points.DataBindXY(view, "flaw", view, "confidence");
                         break;
                     case AnalysisDataTypeEnum.HitMiss:
-                        //FillChart(myData.PodCurveTable, "flaw", "pod", "confidence flaw", "confidence pod", 0.0, 1.0);
-                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence pod", 0.0, 1.0);
+                        //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence pod", 0.0, 1.0);
+                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0);
                         break;
                 }
             }

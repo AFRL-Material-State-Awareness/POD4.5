@@ -262,7 +262,7 @@ namespace POD.Controls
 
             AddHitMissFitSeries(data);
 
-            AddHitMissResidualSeries(data, colors, colorIndex, styleIndex);
+            //AddHitMissResidualSeries(data, colors, colorIndex, styleIndex);
 
             ModelCompare.Enabled = _compareModels;
         }
@@ -271,7 +271,9 @@ namespace POD.Controls
         {
             var view = data.ResidualUncensoredTable.AsDataView();
 
-            Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
+            //Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
+            Original.Points.DataBindXY(view, "flaw", view, "hitrate");
+
             Original.Enabled = false;
 
             //var index = 0;
@@ -381,7 +383,9 @@ namespace POD.Controls
 
 
             DataView view = myData.ResidualUncensoredTable.DefaultView;
-            Uncensored.Points.DataBindXY(view, "t_flaw", view, "diff");
+            //Uncensored.Points.DataBindXY(view, "t_flaw", view, "diff");
+            Uncensored.Points.DataBindXY(view, "flaw", view, "Confidence_Interval");
+
             Uncensored.Enabled = false;
 
             series = Uncensored;
@@ -559,7 +563,8 @@ namespace POD.Controls
 
             DataView view = data.ResidualUncensoredTable.DefaultView;
 
-            fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
+            //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
+            fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
         }
 
         private void AddFitSeries(AnalysisData data)

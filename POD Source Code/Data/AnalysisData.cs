@@ -1603,6 +1603,7 @@ namespace POD.Data
                 _podCurveTable = _hmAnalysisObject.LogitFitTable;
                 //DataTable newPFTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetNewPFTable());
 
+
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1620,9 +1621,11 @@ namespace POD.Data
             try
             {
                 //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFResidualTable());
-                _residualUncensoredTable = _hmAnalysisObject.LogitFitTable;;
+                _hmAnalysisObject.LogitFitTable.Columns["pod"].ColumnName= "t_fit";
+                _residualUncensoredTable = _hmAnalysisObject.LogitFitTable;
 
-                _residualUncensoredTable.DefaultView.Sort = "t_flaw" + " " + "ASC";
+                //_residualUncensoredTable.DefaultView.Sort = "t_flaw" + " " + "ASC";
+                _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)

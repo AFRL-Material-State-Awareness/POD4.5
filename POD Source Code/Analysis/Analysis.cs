@@ -973,7 +973,12 @@ namespace POD.Analyze
             {
                 //entry point for pod caluclation in PODv4 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
+                {
                     _podDoc.OnAnalysis();
+                    AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_hmAnalysisObject, _rDotNet);
+                    newAnalysisControl.ExecuteReqSampleAnalysisType();
+                    _finalAnalysis = newAnalysisControl.HMAnalsysResults;
+                }
                 else
                     _podDoc.OnFullAnalysis();
             }
@@ -1125,9 +1130,9 @@ namespace POD.Analyze
                 OutPFCovarianceV22 = covMatrix[2];
 
                 //OutPODMu = _podDoc.GetPODMu();
-                OutPODSigma = _podDoc.GetPODSigma();
+                //OutPODSigma = _podDoc.GetPODSigma();
                 OutPODMu = _hmAnalysisObject.Muhat;
-                //OutPODSigma = _hmAnalysisObject.Sighat;
+                OutPODSigma = _hmAnalysisObject.Sighat;
 
             }
 

@@ -132,7 +132,7 @@ namespace CSharpBackendWithR
         {
             this.rEngine.ClearGlobalEnvironment();
             InitializeRScripts();
-            InitializePythonScripts();
+            //InitializePythonScripts();
         }    
     }
 }
