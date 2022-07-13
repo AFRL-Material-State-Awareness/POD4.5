@@ -358,7 +358,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             catch
             {
-                //TODO: stop this error from happening when a9095 doesn't exist
                 //MessageBox.Show("Analysis Error caused invalid output values that are out of range.");
                 Source.Python.AddErrorText("Output values out of range.");
 
