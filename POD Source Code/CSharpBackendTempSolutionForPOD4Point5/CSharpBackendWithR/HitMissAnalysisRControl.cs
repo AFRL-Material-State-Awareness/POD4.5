@@ -113,14 +113,30 @@ namespace CSharpBackendWithR
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize, rankedSetSampleObject= newRSSComponent)");
             this.myREngine.Evaluate("newAnalysis$initializeRSS()");
         }
-        public DataTable getLogitFitTableForUI()
+        public DataTable GetLogitFitTableForUI()
         {
             //ShowResults();
             RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getResults()").AsDataFrame();
             DataTable LogitFitDataTable= myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return LogitFitDataTable;
         }
-        public DataTable getOrigHitMissDF()
+        public List<double> GetCovarianceMatrixValues()
+        {
+            RDotNet.DataFrame returnCovMatrix = myREngine.Evaluate("newAnalysis$getCovMatrix()").AsDataFrame();
+            int matrixColumns = Convert.ToInt32(myREngine.Evaluate("ncol(newAnalysis$getCovMatrix())").AsNumeric()[0]);
+            int matrixRows = Convert.ToInt32(myREngine.Evaluate("nrow(newAnalysis$getCovMatrix())").AsNumeric()[0]);
+            List<double> CovarianceMatrix = new List<double>();
+            //covariance matrix is realtively small, so double for loop should be okay
+            for (int i=0; i< matrixRows; i++)
+            {
+                for(int j=0; j<matrixColumns; j++)
+                {
+                    CovarianceMatrix.Add(Convert.ToDouble(returnCovMatrix[i][j]));
+                }
+            }
+            return CovarianceMatrix;
+        }
+        public DataTable GetOrigHitMissDF()
         {
             myREngine.Evaluate("hitMissDF$index=NULL");
             myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'x'] = 'flaw'");

@@ -1094,10 +1094,6 @@ namespace POD.Analyze
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
 
-            var watch = new Stopwatch();
-
-            watch.Start();
-
             OutModelIntercept = _podDoc.GetModelIntercept();
             OutModelInterceptStdError = _podDoc.GetModelInterceptError();
             OutModelSlope = _podDoc.GetModelSlope();
@@ -1124,11 +1120,13 @@ namespace POD.Analyze
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
+                //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
+                List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
 
                 OutPFCovarianceV11 = covMatrix[0];
                 OutPFCovarianceV12 = covMatrix[1];
-                OutPFCovarianceV22 = covMatrix[2];
+                //OutPFCovarianceV22 = covMatrix[2];
+                OutPFCovarianceV22 = covMatrix[3];
 
                 OutResponseDecisionPODSigma = _hmAnalysisObject.Sighat;
                 OutResponseDecisionPODA50Value = _hmAnalysisObject.A50;
@@ -1142,21 +1140,7 @@ namespace POD.Analyze
 
             }
 
-            watch.Stop();
-
-            var inputTime = watch.ElapsedMilliseconds;
-
-            //MessageBox.Show(watch.ElapsedMilliseconds.ToString());
-
-            watch.Restart();
-
             Data.UpdateOutput();
-
-            watch.Stop();
-
-            var outputTime = watch.ElapsedMilliseconds;
-            
-            //MessageBox.Show("INPUTS: " + inputTime + " DATA: " + outputTime);
 
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
@@ -1542,6 +1526,16 @@ namespace POD.Analyze
             }
             //used to store the current transformation the program is performing in the 'choose transform' window
             UpdatePythonTransforms();
+            //change the model type of logistic regression to firth logistical regression if using log odds
+            if (InHitMissModel.ToString() == "Normal")
+            {
+                _hmAnalysisObject.RegressionType = "Logistic Regression";
+            }
+            else if (InHitMissModel.ToString() == "Odds")
+            {
+                _hmAnalysisObject.RegressionType = "Firth Logistic Regression";
+            }
+
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 _podDoc.model = _python.PFModelEnumToInt(InHitMissModel);

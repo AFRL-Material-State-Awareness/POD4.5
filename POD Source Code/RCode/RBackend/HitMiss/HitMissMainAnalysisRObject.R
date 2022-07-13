@@ -9,7 +9,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         normSampleAmount="numeric",
                                         results="data.frame",
                                         a_values="list",
-                                        rankedSetSampleObject="RSSComponents"),
+                                        rankedSetSampleObject="RSSComponents",
+                                        covarianceMatrix="matrix"),
                           methods = list(
                             getHitMissDF = function(){
                               return(hitMissDF)
@@ -31,10 +32,24 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               return(results)
                             },
                             setKeyAValues=function(psAValues){
+                              #overwrite a9095 to the largest possible double if the value doesn't exist
+                              if(is.na(psAValues[5])){
+                                psAValues[5]<- .Machine$double.xmax
+                              }
                               a_values<<-psAValues
                             },
                             getKeyAValues=function(){
                               return(a_values)
+                            },
+                            setCovMatrix=function(psMatrix){
+                              covarianceMatrix<<-psMatrix
+                            },
+                            getCovMatrix=function(){
+                              if(is.null(covarianceMatrix)){
+                                #return an empty matrix of negative ones if empty
+                                covarianceMatrix<<-matrix(0, nrow=2, ncol=2)
+                              }
+                              return(as.data.frame(covarianceMatrix))
                             },
                             #this is the entry point from c# if the user wants to do ranked set sampling
                             initializeRSS=function(){
@@ -68,10 +83,11 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 #print("start conf int")
                                 #set t_trans
                                 t_trans=regressionResults$fitted.values
-                                #calculate wald using conf intervals class
+                                #calculate wald using conf intervals class and store the covariance matrix
                                 newWaldCI= WaldConfInt$new(LogisticRegressionResult=regressionResults)
                                 newWaldCI$executeStandardWald()
                                 Confidence_Interval=newWaldCI$getCIDataFrame()
+                                setCovMatrix(newWaldCI$getCovarMatrix())
                                 #set the dataframe to return to c#
                                 x=hitMissDF$x
                                 setResults(cbind(x, t_trans, Confidence_Interval))
@@ -94,6 +110,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 newWaldCI= WaldConfInt$new(LogisticRegressionResult=regressionResults,simCrackVals=x)
                                 newWaldCI$executeModifiedWald()
                                 Confidence_Interval=newWaldCI$getCIDataFrame()
+                                setCovMatrix(newWaldCI$getCovarMatrix())
                                 #set the dataframe to return to c#
                                 setResults(cbind(x,Confidence_Interval))
                                 #get key a values
@@ -118,9 +135,6 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calca9095LR()
                                 setKeyAValues(new_Acalc$getAValuesList())
-                                #TODO: TRY TO KEEP THIS OUT OF THE GLOBAL ENVIRONMENT
-                                #remove calcLinearCombo from the global environment
-                                #rm(calcLinearCombo, envir = .GlobalEnv)
                               }
                               else if(CIType=="MLR"){
                                 ptm <- proc.time()
@@ -139,9 +153,6 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calca9095MLR()
                                 setKeyAValues(new_Acalc$getAValuesList())
-                                #TODO: TRY TO KEEP THIS OUT OF THE GLOBAL ENVIRONMENT
-                                #remove calcLinearCombo from the global environment
-                                #rm(calcLinearCombo, envir = .GlobalEnv)
                               }
                               else{
                                 stop("Confidence interval type not found!")
@@ -170,11 +181,6 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             plotCI=function(df){
                               myPlot=ggplot(data=df, mapping=aes(x=flaw, y=Confidence_Interval))+geom_point()+
                                 ggtitle(paste("Confidence interval:", CIType," model type:", modelType))+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
-                              print(myPlot)
-                            },
-                            plotCIRSS=function(df){
-                              myPlot=ggplot(data=df, mapping=aes(x=Confidence_Interval, y=pod))+geom_point()+
-                                ggtitle("Confidence interval:", CIType)+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1.0))
                               print(myPlot)
                             }
                           ))

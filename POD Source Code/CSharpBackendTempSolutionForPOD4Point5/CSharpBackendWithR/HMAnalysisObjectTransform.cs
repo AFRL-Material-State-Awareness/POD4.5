@@ -13,6 +13,7 @@ namespace CSharpBackendWithR
         /// the ones that are not are listed below...
         /// </summary> 
         private DataTable hitMissDataOrig;
+        private List<double> covarMatrix;
         private List<double> flawsTemp;
         private int modelType;
         //used for logit, firth, or lasso
@@ -24,6 +25,8 @@ namespace CSharpBackendWithR
         {
             //original HMDataframe
             this.hitMissDataOrig = null;
+            //used to store the covariance matrix as a list
+            this.covarMatrix = null;
             //becomes true if any points are censored
             Pts_censored = false;
 
@@ -111,6 +114,11 @@ namespace CSharpBackendWithR
         {
             set { this.hitMissDataOrig = value; }
             get { return this.hitMissDataOrig; }
+        }
+        public List<double> CovarianceMatrix
+        {
+            set { this.covarMatrix = value; }
+            get { return this.covarMatrix; }
         }
         public bool Pts_censored { set; get; }
         public dynamic Podfile { set; get; }

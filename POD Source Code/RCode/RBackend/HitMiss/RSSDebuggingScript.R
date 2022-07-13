@@ -9,10 +9,10 @@ isLog=FALSE
 #Sys.which("python")
 use_python('C:/ProgramData/Anaconda3')
 filepath=dirname(rstudioapi::getSourceEditorContext()$path)
-source_python(paste(filepath,"/PythonRankedSetSampling/RSSRowSorter.py", sep=""))
-source_python(paste(filepath,"/PythonRankedSetSampling/CyclesArrayGenerator.py", sep=""))
-source_python(paste(filepath,"/PythonRankedSetSampling/MainRSSamplingClass.py", sep=""))
-source_python(paste(filepath,"/PythonRankedSetSampling/RSS2DArrayGenerator.py", sep=""))
+source_python(paste(filepath,"/../PythonRankedSetSampling/RSSRowSorter.py", sep=""))
+source_python(paste(filepath,"/../PythonRankedSetSampling/CyclesArrayGenerator.py", sep=""))
+source_python(paste(filepath,"/../PythonRankedSetSampling/MainRSSamplingClass.py", sep=""))
+source_python(paste(filepath,"/../PythonRankedSetSampling/RSS2DArrayGenerator.py", sep=""))
 #rscripts
 source(paste(filepath,"/RankedSetSamplingMainRObject.R", sep = ""))
 source(paste(filepath,"/RSSComponentsObject.R", sep = ""))
@@ -43,7 +43,7 @@ regression="Logistic Regression"
 normSamp=500
 resamplesMax=30
 #conf int type
-ciType="MLR"
+ciType="Modified Wald"
 start.time <- Sys.time()
 set_m=6
 

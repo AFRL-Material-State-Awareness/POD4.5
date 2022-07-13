@@ -36,6 +36,7 @@ type="Logistic Regression"
   newAnalysis$detAnalysisApproach()
   results<-newAnalysis$getResults()
   aValues<-newAnalysis$getKeyAValues()
+  covarianceMatrix<-newAnalysis$getCovMatrix()
   newAnalysis$plotSimdata(results)
   newAnalysis$plotCI(results)
 #}

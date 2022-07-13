@@ -52,7 +52,7 @@ namespace CSharpBackendWithR
             newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
             newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             newHitMissControl.ExecuteAnalysis(newPFAnalysisObject);
-            newPFAnalysisObject.LogitFitTable = newHitMissControl.getLogitFitTableForUI();
+            newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict=newHitMissControl.getKeyA_Values();
             newPFAnalysisObject.A25 = finalAValuesDict["a25"];
@@ -62,7 +62,9 @@ namespace CSharpBackendWithR
             newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
             newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
             //store the original dataframe in the HM analysis object
-            newPFAnalysisObject.HitMissDataOrig =newHitMissControl.getOrigHitMissDF();
+            newPFAnalysisObject.HitMissDataOrig =newHitMissControl.GetOrigHitMissDF();
+            //store the covariance matrix values to return to UI
+            newPFAnalysisObject.CovarianceMatrix = newHitMissControl.GetCovarianceMatrixValues();
             //clear all contents in R and restart the global environment
             analysisEngine.clearGlobalIInREngineObject();
             //Console.WriteLine(newPFAnalysisObject);
@@ -88,7 +90,7 @@ namespace CSharpBackendWithR
             HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
             newHitMissControl.ExecuteRSS(newPFAnalysisObject);
             //newHitMissControl.getRSS_Results();
-            newPFAnalysisObject.LogitFitTable = newHitMissControl.getLogitFitTableForUI();
+            newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = newHitMissControl.getKeyA_Values();
             newPFAnalysisObject.A25 = finalAValuesDict["a25"];

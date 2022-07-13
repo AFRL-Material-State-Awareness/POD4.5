@@ -73,26 +73,26 @@ namespace CSharpBackendWithR
         {
             
             //import necessary R classes for analysis
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/WaldCI_RObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HMLogitApproximationRObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/GenNormFitClassR.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/LinearComboGeneratorClassR.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/LRConfIntRObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/MLRConfIntRObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/GenAValuesOnPODCurveRObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/GenAValuesOnPODCurveRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMLogitApproximationRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenNormFitClassR.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LinearComboGeneratorClassR.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LRConfIntRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MLRConfIntRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
             //Ranked Set Sampling scripts
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/RSSComponentsObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/RankedSetSamplingMainRObject.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/RankedSetRegGen.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/GenPODCurveRSS.R')");
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/GenRSS_A_Values.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RSSComponentsObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetSamplingMainRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetRegGen.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenPODCurveRSS.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenRSS_A_Values.R')");
             //this is the main Hit miss R analysis object
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMissMainAnalysisRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
             //minimcprofile(used for parallel processing
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/miniMcprofile.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
             //Firth script classs- added june 6th
-            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HMFirthApproximationRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
             //supress warnings in r (change to zero if wanting to see them)
             this.rEngine.Evaluate("options( warn = 0 )");
 
