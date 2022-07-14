@@ -100,7 +100,7 @@ namespace POD
         /// Reference to the object transform class in csharpbackend
         /// </summary>
         [NonSerialized]
-        protected HMAnalysisObjectTransform _hmAnalysisObject;
+        protected HMAnalysisObject _hmAnalysisObject;
 
         #endregion
 

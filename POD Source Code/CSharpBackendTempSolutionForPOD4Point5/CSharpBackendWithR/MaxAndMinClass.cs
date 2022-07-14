@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-//using RDotNet;
 //used for maxmin function
 using System.Linq;
 namespace CSharpBackendWithR
@@ -15,21 +14,21 @@ namespace CSharpBackendWithR
         public MaxAndMinClass()
         {
             this.maxAndMinDict = new Dictionary<string, double>();
-            maxValue = double.MaxValue;
-            minValue= double.MinValue;
+            this.maxValue = double.MaxValue;
+            this.minValue= double.MinValue;
         }
         //function used to get the maximum and minimum crack
         public void calcCrackRange(List<double> flaws)
         {
             
-            double maxValue = flaws.Max();
-            double minValue = flaws.Min();
-            maxAndMinDict.Add(key: "Max", value: maxValue);
-            maxAndMinDict.Add(key: "Min", value: minValue);
+            this.maxValue = flaws.Max();
+            this.minValue = flaws.Min();
+            this.maxAndMinDict.Add(key: "Max", value: maxValue);
+            this.maxAndMinDict.Add(key: "Min", value: minValue);
         }
         public Dictionary<string, double> maxAndMinListControl{
             get{
-                return maxAndMinDict;
+                return this.maxAndMinDict;
             }
         }
     }

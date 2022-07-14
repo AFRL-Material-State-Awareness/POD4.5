@@ -1,4 +1,4 @@
-SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRespDF="data.frame", 
+AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame", 
                                                                         y_dec="numeric", 
                                                                         modelType="character",
                                                                         varCovarMatrix="matrix",
@@ -20,6 +20,24 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                     getCritPts=function(){
                                       return(critPts)
                                     },
+                                    setLinearTestResults=function(psTestResults){
+                                      linearTestResults<<-psTestResults
+                                    },
+                                    getLinearTestResults=function(){
+                                      return(linearTestResults)
+                                    },
+                                    setCovarianceMatrix=function(psAVPOD){
+                                      aVPOD<<-psAVPOD
+                                    },
+                                    getCovarianceMatrix=function(){
+                                      return(as.data.frame(aVPOD))
+                                    },
+                                    setKeyAValues=function(psKeyAValues){
+                                      keyAValues<<-psKeyAValues
+                                    },
+                                    getKeyAValues=function(){
+                                      return(as.data.frame(keyAValues))
+                                    },
                                     executeAhatvsA=function(){
                                       #perform necessary transforms
                                       performTransforms()
@@ -30,16 +48,13 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                       #generate ahat versus acensored
                                       ahatvACensored=genAhatVersusACensored()
                                       #find the key a values and the covariance matrix
-                                      print("generate matrix and a values")
                                       genAvaluesAndMatrix(ahatvACensored)
                                       #calculate POD dataframe
-                                      print("start POD")
                                       newPODSR=GenPODSignalResponse$new()
                                       newPODSR$initialize(a.V_POD=aVPOD, aMu=keyAValues[[1]], aSigma=keyAValues[[3]])
                                       newPODSR$genPODCurve()
                                       setResults(newPODSR$getPODSR())
                                       setCritPts(newPODSR$getCriticalPoints())
-                                      print("finished analysis")
                                     },
                                     performTransforms=function(){
                                       SignalRespDF$x.trans<<-f_a(SignalRespDF$x)
@@ -57,7 +72,7 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                       # Test for auto-correlation (ie, a pattern in the data due to "time," or in this case, order)
                                       # Data does not have auto-correlation. 
                                       durbinWTest=durbinWatsonTest(linearM)
-                                      linearTestResults<<-list(shapiro,nonConst,durbinWTest)
+                                      setLinearTestResults(list(shapiro,nonConst,durbinWTest))
                                     },
                                     genAhatVersusACensored=function(){
                                       # It expects a censored object; this data is not censored but we can still use it.
@@ -100,9 +115,10 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                       a90 <- f_a_i(a90)
                                       a9095 <- f_a_i(a9095)
                                       #set parameters
-                                      aVPOD<<-a.V_POD
-                                      keyAValuesGlobal<<-list(a50, a90, aSigma, a9095)
-                                      keyAValues<<-list(a50, a90, aSigma, a9095)
+                                      setCovarianceMatrix(a.V_POD)
+                                      #keyAValuesGlobal<<-list(a50, a90, aSigma, a9095)
+                                      ###TODO: Also calculate A25 which is now set to -1
+                                      setKeyAValues(list(-1, a50, a90, aSigma, a9095))
                                     },
                                     # Inverse function of f_a. Uncomment 1
                                     f_a_i=function(a){ return(a) # exp(a)#log(a) #sqrt(a)

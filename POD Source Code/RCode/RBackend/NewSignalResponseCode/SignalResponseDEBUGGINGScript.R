@@ -6,6 +6,7 @@ library(stats)
 library(nlme) # contains gls = generalized least squares
 library(pracma) #practical math...contains some functions from matlab
 library(ggResidpanel)
+library(carData)
 library(car) # Need this for durbinWatsonTest
 library(tibble)
 library(survival)
@@ -18,9 +19,11 @@ data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TR
 data_obs=na.omit(data_obs)
 
 #perform signal response analysis
-newSRAnalysis<-SRMainAnalysisObject$new(SignalRespDF=data_obs,y_dec=5)
+newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=5)
 newSRAnalysis$executeAhatvsA()
 results<-newSRAnalysis$getResults()
 critPoints<-newSRAnalysis$getCritPts()
-
+keyAValues<-newSRAnalysis$getKeyAValues()
+testResults<-newSRAnalysis$getLinearTestResults()
+covarMatrix<-newSRAnalysis$getCovarianceMatrix()
 newSRAnalysis$plotPOD(results,critPoints)

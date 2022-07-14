@@ -193,7 +193,7 @@ namespace POD.Data
         [NonSerialized]
         private REngineObject _rDotNet;
 
-        private HMAnalysisObjectTransform _hmAnalysisObject;
+        private HMAnalysisObject _hmAnalysisObject;
 
 
         /// <summary>

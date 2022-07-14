@@ -12,11 +12,10 @@ namespace CSharpBackendWithR
         public HitMissAnalysisRControl(REngineObject myREngineObject)
         {
             this.myREngineObject = myREngineObject;
-            //this.myREngineObject.clearGlobalIInREngineObject();
             this.myREngine = myREngineObject.RDotNetEngine;
         }
         //convert to a dataframe by adding strings
-        private void createDataFrameinGlobalEnvr(HMAnalysisObjectTransform newTranformAnalysis)
+        private void createDataFrameinGlobalEnvr(HMAnalysisObject newTranformAnalysis)
         {
             //create private variable names to shorten length
             List<double> cracks = newTranformAnalysis.Flaws;
@@ -86,7 +85,7 @@ namespace CSharpBackendWithR
             
             
         }
-        public void ExecuteAnalysis(HMAnalysisObjectTransform newTranformAnalysis)
+        public void ExecuteAnalysis(HMAnalysisObject newTranformAnalysis)
         {
             
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
@@ -99,7 +98,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("newAnalysis$detAnalysisApproach()");
         }
 
-        public void ExecuteRSS(HMAnalysisObjectTransform newTranformAnalysis)
+        public void ExecuteRSS(HMAnalysisObject newTranformAnalysis)
         {
             //create and load the dataframe into the r.NET global environment
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
@@ -145,7 +144,7 @@ namespace CSharpBackendWithR
             DataTable originalData = myREngineObject.rDataFrameToDataTable(origDataFrame);
             return originalData;
         }
-        public Dictionary<string, double> getKeyA_Values()
+        public Dictionary<string, double> GetKeyA_Values()
         {
             Dictionary<string, double> aValuesDict= new Dictionary<string, double>();
             List<string> aValuesStrings = new List<string> { "a25", "a50", "a90", "sigmahat", "a9095" };
@@ -153,7 +152,7 @@ namespace CSharpBackendWithR
             //current list used returns a25, a50 (muhat), a90, sigmahat (SE of a90), and a9095 
             for (int i= 1;i<=5; i++)
             {
-                this.myREngine.Evaluate("print(newAnalysis$getKeyAValues()[" + i + "])").AsList();
+                //this.myREngine.Evaluate("print(newAnalysis$getKeyAValues()[" + i + "])").AsList();
                 aValuesVector = this.myREngine.Evaluate("newAnalysis$getKeyAValues()["+i+"]").AsNumeric();
                 aValuesDict.Add(key: aValuesStrings[i-1], value: (double)aValuesVector[0]);
             }

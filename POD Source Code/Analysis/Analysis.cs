@@ -42,7 +42,7 @@ namespace POD.Analyze
         [NonSerialized]
         public AnalysisListHandler CreatedAnalysis;
         [NonSerialized]
-        public HMAnalysisObjectTransform _finalAnalysis;
+        public HMAnalysisObject _finalAnalysis;
         /// <summary>
         /// No input values or data will be allowed to be changed while the analysis is frozen.
         /// Created this state to allow UI to be sync'd with the analysis values after being loaded from file.
@@ -975,8 +975,8 @@ namespace POD.Analyze
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     _podDoc.OnAnalysis();
-                    AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_hmAnalysisObject, _rDotNet);
-                    newAnalysisControl.ExecuteReqSampleAnalysisType();
+                    AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+                    newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
                 }
                 else
@@ -2505,8 +2505,8 @@ namespace POD.Analyze
             {
                 //for the case of hit/miss data, this is where the program first enters the python program
                 _podDoc.OnFitOnlyAnalysis();
-                AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_hmAnalysisObject, _rDotNet);
-                newAnalysisControl.ExecuteReqSampleAnalysisType();
+                AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform (_rDotNet, _hmAnalysisObject);
+                newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                 _hmAnalysisObject = newAnalysisControl.HMAnalsysResults;
             }
             catch(Exception executeProblemAnalysis)

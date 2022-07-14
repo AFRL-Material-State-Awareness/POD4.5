@@ -28,7 +28,7 @@ namespace POD
         List<string> _modules;
         Dictionary<string, ScriptScope> _pyScopes;
         Dictionary<string, dynamic> _cpDocs;
-        Dictionary<string, HMAnalysisObjectTransform> _hitMissAnalyses;
+        Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
         MemoryStream _outputStream;
         MemoryStream _errorStream;
         EventRaisingStreamWriter _outputWriter;
@@ -150,7 +150,7 @@ namespace POD
 
             _cpDocs = new Dictionary<string, dynamic>();
             //used to store the hitmiss analyses
-            _hitMissAnalyses = new Dictionary<string, HMAnalysisObjectTransform>();
+            _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
             //if the .dll is being used in the program
             if (myType == PyTypeEnum.DLLFiles)
             {
@@ -269,13 +269,13 @@ namespace POD
             }
         }
         //object used for hit miss analyses
-        public HMAnalysisObjectTransform HitMissAnalsysis(string myAnalysisName)
+        public HMAnalysisObject HitMissAnalsysis(string myAnalysisName)
         {
             //if analysis name doesn't alredy exist in the dictionary create a new one
             if (_hitMissAnalyses.ContainsKey(myAnalysisName) == false)
             {
                 //create a new hitmiss analysis object
-                HMAnalysisObjectTransform hitMissAnalsyis = new HMAnalysisObjectTransform(myAnalysisName);
+                HMAnalysisObject hitMissAnalsyis = new HMAnalysisObject(myAnalysisName);
                 _hitMissAnalyses.Add(myAnalysisName, hitMissAnalsyis);
                 return (hitMissAnalsyis);
             }

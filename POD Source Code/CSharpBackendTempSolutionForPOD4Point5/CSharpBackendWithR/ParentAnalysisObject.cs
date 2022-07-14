@@ -32,20 +32,17 @@ namespace CSharpBackendWithR
         protected string Data_units;
 
         //called signal min and signal max in the python code
-        protected int Signalmin;
-        protected int Signalmax;
+        protected double Signalmin;
+        protected double Signalmax;
         //used for hit miss
         protected int HitMissMin;
         protected int HitMissMax;
 
-        //protected double z95; //z score at .95
-        //protected double z90; //z score at .90
-
         protected bool ShowMessages;
         protected List<double> Decision_thresholds;
-        protected List<string> Decision_table_thesholds;
-        protected List<string> Decision_a50;
-        protected List<string> Decision_level;
+        //protected List<string> Decision_table_thesholds;
+        //protected List<string> Decision_a50;
+        //protected List<string> Decision_level;
         //decision_confidence
         //decision_v11
         //decision_v12
@@ -53,11 +50,12 @@ namespace CSharpBackendWithR
         protected List<string> Titles;
         /////////////////////////
         ///MAKE flaws CLASS for this variable
-        protected List<HMCrackData> Flaws;
+        //protected List<HMCrackData> Flaws;
+        protected List<double> Flaws;
         ////////////////////////
         protected List<double> Flaws_reload; //used for POD when no points are missing
         protected Dictionary<string, List<int>> Responses;//used for POD with censored points
-        protected Dictionary<string, List<int>> Responses_all;//used for POD when no points are missing
+        protected Dictionary<string, List<double>> Responses_all;//used for POD when no points are missing
         protected Dictionary<string, List<int>> Responses_missing;//used for POD when no points are missing
         protected int Nsets; //might remove this, but it may be used to pass from the FlawsClass
         protected int Count; //number of data points
@@ -82,7 +80,7 @@ namespace CSharpBackendWithR
         ///MAKE PFDATA CLASS for this variable
         ///protected List<PFDATAclass> flaws;
         ////////////////////////
-        protected int Npts;
+        //protected int Npts;
 
         //protected int acount;//# number of cases with all inspections at maximum
         //protected int bcount;// # number with all at minimum
@@ -93,10 +91,9 @@ namespace CSharpBackendWithR
         protected double Sighat;
         protected double Muhat;//POD flaw a50
         //protected double mhat; 
-
         protected double A90;
-        protected double M90;
-        protected double M9095;
+        //protected double M90;
+        //protected double M9095;
 
         //may have to adjust this later
         protected double Pod_all;
@@ -121,7 +118,7 @@ namespace CSharpBackendWithR
         //protected Dictionary<string, float> linfit;
         protected bool Iret; //it is used as a boolean in hit/miss data and a integer in ahat
         protected List<double> Fnorm;
-        protected List<double> Variance; //this stores a 2x2 array for hitmiss data
+        protected List<double> CovarianceMatrix; //this stores a 2x2 array for hitmiss data
         protected List<double> Res_sums;
         //protected List<double> fiterrors;
         //protected int repeatability_error;
@@ -130,7 +127,7 @@ namespace CSharpBackendWithR
         //protected List<double> analsysis
         protected int A_transform; //identifies transformation on the x-axis
         protected int Ahat_transform; //identifies transformation on the y-axis (although not really applicable in hit/miss data)
-        protected List<string> Choices;
+        //protected List<string> Choices;
 
         //ahat tests
         /*

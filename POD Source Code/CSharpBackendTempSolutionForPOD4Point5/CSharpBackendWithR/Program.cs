@@ -18,17 +18,21 @@ namespace CSharpBackendWithR
         {
             REngineObject newREngine = new REngineObject();
             newREngine.InitializeRScripts();
-            string csvInputPath = @"C:\Users\gohmancm\Desktop\PODv4Point5FullProjectFolder\CSharpBackendTempSolution\CSharpBackendTempSolutionForPOD4Point5\RCode\RBackend\HitMissInfo_BadLL.csv";
-            DataTable mydt= GetDataTableFromCsv(csvInputPath);
-            printDT(mydt);
-            getDataFromPFTransform(newREngine, mydt);
+            //string csvInputPathDF = @"C:\Users\gohmancm\Desktop\PODv4Point5FullProjectFolder\CSharpBackendTempSolution\CSharpBackendTempSolutionForPOD4Point5\RCode\RBackend\HitMissInfo_BadLL.csv";
+            string csvInputPathDF2 = @"C:\Users\gohmancm\Desktop\PODv4Point5FullProjectFolder\PODv4Point5Attemp1\PODv4\POD Source Code\RCode\RBackend\NewSignalResponseCode\dataFromPlots.csv";
+            //DataTable mydt= GetDataTableFromCsv(csvInputPathDF);
+            //printDT(mydt);
+            DataTable myAhat = GetDataTableFromCsv(csvInputPathDF2);
+            printDT(myAhat);
+            //GetDataFromPFTransform(newREngine, mydt);
+            GetDataFromAHatTransform(newREngine, myAhat);
             ///
             /// These values are attrifial and inserted to test the backend
             ///
-            //newTranformAnalysis
+            //newAnalysis
 
         }
-        public static void getDataFromPFTransform(REngineObject analysisEngine, DataTable testDataTable)
+        public static void GetDataFromPFTransform(REngineObject analysisEngine, DataTable testDataTable)
         {
             //convert the the necessary columns in the datatables to a list
             List<double> cracksList = new List<double>();
@@ -40,48 +44,49 @@ namespace CSharpBackendWithR
             }
 
 
-            HMAnalysisObjectTransform newTranformAnalysis = new HMAnalysisObjectTransform();
+            HMAnalysisObject newAnalysis = new HMAnalysisObject();
             //assign values we know so far
-            newTranformAnalysis.Name = "test analysis";
+            newAnalysis.Name = "test analysis";
             //needed to make this public for some reason?
-            newTranformAnalysis.ModelType = 0; //do not transform x axis
-            newTranformAnalysis.Flaw_name = "My Crack sizes";
-            newTranformAnalysis.HitMiss_name = "INSP 1";
+            //newAnalysis.ModelType = 1; //do not transform x axis by default
+            newAnalysis.Flaw_name = "My Crack sizes";
+            newAnalysis.HitMiss_name = "y";
             //store the responses as a dictionary
             //this dictionary may get  larger with more than one inspector
-            newTranformAnalysis.Responses_all.Add(key: newTranformAnalysis.HitMiss_name, value: responsesList);
+            newAnalysis.Responses_all.Add(key: newAnalysis.HitMiss_name, value: responsesList);
             //for loop used to create flaws class
             //for..
             //foreach(double i in cracksList)
             //{
-            //    newTranformAnalysis.Flaws.Add(new HMCrackData(i));
+            //    newAnalysis.Flaws.Add(new HMCrackData(i));
             //}
-            //newTranformAnalysis.FlawsTemp = testFlawList;
+            //newAnalysis.FlawsTemp = cracksList;
+            newAnalysis.Flaws = cracksList;
             //get the max and min values
 
             //these values will be dependent on the UI
-            newTranformAnalysis.Xmax = 1.0;
-            newTranformAnalysis.Xmin = 0.0;
+            newAnalysis.Xmax = 1.0;
+            newAnalysis.Xmin = 0.0;
             //set a_x_n and profile_pts
-            newTranformAnalysis.A_x_n = 500;
-            //newTranformAnalysis.Profile_pts = 500;
+            newAnalysis.A_x_n = 500;
+            //newAnalysis.Profile_pts = 500;
             //confidence interval control
-            newTranformAnalysis.CIType = "Modified Wald";
-            newTranformAnalysis.ModelType = 0;//0=standard, 1=log transform
-            newTranformAnalysis.RegressionType = "Firth Logistic Regression";//  "Logistic Regression"  ,"Firth Logistic Regression"
-            newTranformAnalysis.SrsOrRSS = 1; // 0 = simple random sampling, 1= index ranked set sampling
+            newAnalysis.CIType = "Modified Wald";
+            newAnalysis.ModelType = 1;//0=standard, 1=log transform
+            newAnalysis.RegressionType = "Logistic Regression";//  "Logistic Regression"  ,"Firth Logistic Regression"
+            newAnalysis.SrsOrRSS = 0; // 0 = simple random sampling, 1= index ranked set sampling
             //Ranked set sampling
-            newTranformAnalysis.Set_m = 6;
-            newTranformAnalysis.Set_r = newTranformAnalysis.Flaws.Count()/newTranformAnalysis.Set_m;
-            newTranformAnalysis.MaxResamples = 60;
+            newAnalysis.Set_m = 6;
+            newAnalysis.Set_r = newAnalysis.Flaws.Count()/newAnalysis.Set_m;
+            newAnalysis.MaxResamples = 60;
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             //HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
-            //newHitMissControl.ExecuteAnalysis(newTranformAnalysis);
-            AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(newTranformAnalysis, analysisEngine);
-            newAnalysisControl.ExecuteReqSampleAnalysisType();
-            HMAnalysisObjectTransform finalAnalysis = newAnalysisControl.HMAnalsysResults;
-            //HMAnalysisObjectTransform finalAnalysis= newAnalysisControl.ExecutePFAnalysisTrans();
+            //newHitMissControl.ExecuteAnalysis(newAnalysis);
+            AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(analysisEngine, newAnalysis);
+            newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
+            HMAnalysisObject finalAnalysis = newAnalysisControl.HMAnalsysResults;
+            //HMAnalysisObject finalAnalysis= newAnalysisControl.ExecutePFAnalysisTrans();
             watch.Stop();
             printcSharpDatatables(finalAnalysis);
             
@@ -89,6 +94,34 @@ namespace CSharpBackendWithR
             Console.WriteLine("The total runtime was this: " + time +" seconds");
 
             //newAnalysisControl.ExecuteRankedSetSampling();
+        }
+        public static void GetDataFromAHatTransform(REngineObject analysisEngine, DataTable testDataTable)
+        {
+            //convert the the necessary columns in the datatables to a list
+            List<double> cracksList = new List<double>();
+            List<double> responsesList = new List<double>();
+            foreach (DataRow row in testDataTable.Rows)
+            {
+                cracksList.Add(Convert.ToDouble(row[1]));
+                responsesList.Add(Convert.ToDouble(row[2]));
+            }
+            AHatAnalysisObject newAnalysis = new AHatAnalysisObject();
+            //assign values we know so far
+            newAnalysis.Name = "test analysis";
+            //needed to make this public for some reason?
+            //newAnalysis.ModelType = 1; //do not transform x axis by default
+            newAnalysis.Flaw_name = "My Crack sizes";
+            newAnalysis.SignalResponseName = "y";
+            //store the responses as a dictionary
+            //this dictionary may get  larger with more than one inspector
+            newAnalysis.Responses_all.Add(key: newAnalysis.SignalResponseName, value: responsesList);
+            //add flaws
+            newAnalysis.Flaws = cracksList;
+            //set y decision threshold
+            newAnalysis.YDecision = 5;
+            AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(analysisEngine, null, newAnalysis);
+            newAnalysisControl.ExecuteAnalysisAHat();
+            AHatAnalysisObject finalAnalysis = newAnalysisControl.AHatAnalysisResults;
         }
         static void printDT(DataTable data)
         {
@@ -132,7 +165,7 @@ namespace CSharpBackendWithR
                 Console.WriteLine('\n');
             //}
         }
-        public static void printcSharpDatatables(HMAnalysisObjectTransform finalAnalysis)
+        public static void printcSharpDatatables(HMAnalysisObject finalAnalysis)
         {
             try
             {
