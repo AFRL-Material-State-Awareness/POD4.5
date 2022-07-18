@@ -21,7 +21,7 @@ from FileLogger import *
 from Compare import Compare
 from SolveIteration import SolveIteration
 from CAnal import CAnal
-
+NONLINEAR_MODEL=1
 import pyevent
 
 #class SolveIteration ():

@@ -93,6 +93,9 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
             //Firth script classs- added june 6th
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
+            //AHat Analysis R scripts
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
             //supress warnings in r (change to zero if wanting to see them)
             this.rEngine.Evaluate("options( warn = 0 )");
 
@@ -113,6 +116,17 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("library(logistf)");
             //used to interact with the python scripts
             this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+            //the following libraries are used for signal response
+            this.rEngine.Evaluate("library(gridExtra)");
+            this.rEngine.Evaluate("library(nlme)");
+            this.rEngine.Evaluate("library(pracma)");
+            this.rEngine.Evaluate("library(carData)");
+            this.rEngine.Evaluate("library(car)");
+            this.rEngine.Evaluate("library(survival)");
+            //temporary
+            this.rEngine.Evaluate("library(ggResidpanel)");
+            this.rEngine.Evaluate("library(corrplot)");
+
         }
         //used to initialize helper python scripts
         private void InitializePythonScripts()

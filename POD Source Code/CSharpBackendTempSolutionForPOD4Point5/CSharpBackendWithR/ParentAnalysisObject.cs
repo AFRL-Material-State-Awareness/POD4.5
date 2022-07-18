@@ -54,7 +54,7 @@ namespace CSharpBackendWithR
         protected List<double> Flaws;
         ////////////////////////
         protected List<double> Flaws_reload; //used for POD when no points are missing
-        protected Dictionary<string, List<int>> Responses;//used for POD with censored points
+        protected Dictionary<string, List<double>> Responses;//used for POD with censored points
         protected Dictionary<string, List<double>> Responses_all;//used for POD when no points are missing
         protected Dictionary<string, List<int>> Responses_missing;//used for POD when no points are missing
         protected int Nsets; //might remove this, but it may be used to pass from the FlawsClass

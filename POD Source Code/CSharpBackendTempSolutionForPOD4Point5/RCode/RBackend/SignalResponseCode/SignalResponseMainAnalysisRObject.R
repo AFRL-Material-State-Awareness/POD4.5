@@ -3,13 +3,20 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                                                         modelType="character",
                                                                         varCovarMatrix="matrix",
                                                                         keyAValues="list",
+                                                                        linearModel="data.frame",
                                                                         linearTestResults="list",
                                                                         aVPOD="matrix",
                                                                         ResultsPOD="data.frame",
                                                                         critPts="data.frame"),
                                   methods=list(
-                                    setResults=function(psResultsPOD){
-                                      ResultsPOD<<-psResultsPOD
+                                    setLinearModel=function(psLMObject){
+                                      linearModel<<-psLMObject
+                                    },
+                                    getLinearModel=function(){
+                                      return(linearModel)
+                                    },
+                                    setResults=function(psResults){
+                                      ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
                                       return(ResultsPOD)
@@ -36,13 +43,20 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       keyAValues<<-psKeyAValues
                                     },
                                     getKeyAValues=function(){
-                                      return(as.data.frame(keyAValues))
+                                      return(keyAValues)
                                     },
                                     executeAhatvsA=function(){
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
                                       linearModel_lm = lm(y ~ x, data = SignalRespDF, na.action=na.omit)
+                                      #set the linear model so it can be returned
+                                      linearModDF=data.frame(
+                                        #Index= 1:length(linearModel_lm$fitted.values),
+                                        x=SignalRespDF$x,
+                                        y=linearModel_lm$fitted.values
+                                      )
+                                      setLinearModel(linearModDF)
                                       #peformTests
                                       linearTests(linearM=linearModel_lm)
                                       #generate ahat versus acensored
@@ -141,5 +155,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                         xlim(min(na.exclude(plotPoints$defect_sizes)),max(na.exclude(plotPoints$defect_sizes)))+
                                         ylab("Probability of Detection, POD(a)")+
                                         xlab("Defect Size, a")
+                                    },
+                                    #used for Debugging ONLY
+                                    plotSimdata=function(df){
+                                      myPlot=ggplot(data=df, mapping=aes(x=x, y=y))+geom_point()
+                                      print(myPlot)
                                     }
                                   ))

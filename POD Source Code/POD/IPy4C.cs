@@ -29,6 +29,7 @@ namespace POD
         Dictionary<string, ScriptScope> _pyScopes;
         Dictionary<string, dynamic> _cpDocs;
         Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
+        Dictionary<string, AHatAnalysisObject> _ahatAnalyses;
         MemoryStream _outputStream;
         MemoryStream _errorStream;
         EventRaisingStreamWriter _outputWriter;
@@ -151,6 +152,8 @@ namespace POD
             _cpDocs = new Dictionary<string, dynamic>();
             //used to store the hitmiss analyses
             _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
+            //used to store ahat analyses
+            _ahatAnalyses = new Dictionary<string, AHatAnalysisObject>();
             //if the .dll is being used in the program
             if (myType == PyTypeEnum.DLLFiles)
             {
@@ -285,6 +288,22 @@ namespace POD
                 return _hitMissAnalyses[myAnalysisName];
             }
 
+        }
+        public AHatAnalysisObject AHatAnalysis(string myAnalysisName)
+        {
+            //if analysis name doesn't alredy exist in the dictionary create a new one
+            if (_ahatAnalyses.ContainsKey(myAnalysisName) == false)
+            {
+                //create a new hitmiss analysis object
+                AHatAnalysisObject aHatAnalsyis = new AHatAnalysisObject(myAnalysisName);
+                _ahatAnalyses.Add(myAnalysisName, aHatAnalsyis);
+                return (aHatAnalsyis);
+            }
+            //if it does, simply return that def/key pair from the _cpDocs dictionary
+            else
+            {
+                return _ahatAnalyses[myAnalysisName];
+            }
         }
 
         public IPy4C CreateDuplicate()

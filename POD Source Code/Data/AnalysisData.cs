@@ -194,7 +194,7 @@ namespace POD.Data
         private REngineObject _rDotNet;
 
         private HMAnalysisObject _hmAnalysisObject;
-
+        private AHatAnalysisObject _aHatAnalysisObject;
 
         /// <summary>
         ///     the type of transform to apply on the response data table
@@ -1171,7 +1171,7 @@ namespace POD.Data
             UpdateData();
 
             CalculateMinFlaw();
-             CalculateMinResponse();
+            CalculateMinResponse();
         }
         //Method is used to calculate the minimum flaw size of the dataset
         private void CalculateMinFlaw()
@@ -1548,11 +1548,21 @@ namespace POD.Data
                 _podDoc.SetResponseData(pyResponses, _python.TransformEnumToInt(ResponseTransform));
 
                 _podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
-
-                //used for the hit miss analysis object for RDotNet
-                _hmAnalysisObject.Flaws = flaws;
-                _hmAnalysisObject.Responses = responses;
-                _hmAnalysisObject.Responses_all = allResponses;
+                if(_dataType== AnalysisDataTypeEnum.HitMiss)
+                {
+                    //used for the hit miss analysis object for RDotNet
+                    _hmAnalysisObject.Flaws = flaws;
+                    _hmAnalysisObject.Responses = responses;
+                    _hmAnalysisObject.Responses_all = allResponses;
+                }
+                else if (_dataType == AnalysisDataTypeEnum.AHat)
+                {
+                    //used for the ahat analysis obejct for RDotnet
+                    _aHatAnalysisObject.Flaws = flaws;
+                    _aHatAnalysisObject.Responses = responses;
+                    _aHatAnalysisObject.Responses_all = allResponses;
+                }
+                
             }
         }
 
@@ -1576,9 +1586,13 @@ namespace POD.Data
         public void SetREngine(REngineObject myREngine, string myAnalysisName)
         {
             _rDotNet = myREngine;
-            if (_hmAnalysisObject == null)
+            if (_hmAnalysisObject == null && _dataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject = _python.HitMissAnalsysis(myAnalysisName);
+            }
+            else if(_aHatAnalysisObject==null && _dataType == AnalysisDataTypeEnum.AHat)
+            {
+                _aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
             }
         }
 
@@ -1674,8 +1688,9 @@ namespace POD.Data
 
             try
             {      
-                _fitResidualsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFitTable());
-
+                //_fitResidualsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFitTable());
+                _fitResidualsTable = _aHatAnalysisObject.AHatResultsLinear;
+                
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();                
@@ -1684,24 +1699,26 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Fit Error");
             }
-
+            printDT(_fitResidualsTable);
             try
             {
-                _residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetResidualTable());
-
-                _residualUncensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetResidualTable());
+                //_residualUncensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                _residualUncensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
             }
-
+            printDT(_residualUncensoredTable);
             try
             {
-                _residualRawTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetRawResidualTable());
-
-                _residualRawTable.DefaultView.Sort = "t_flaw, t_response" + " " + "ASC";
+                //_residualRawTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetRawResidualTable());
+                //_residualRawTable.DefaultView.Sort = "t_flaw, t_response" + " " + "ASC";
+                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
+                _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualRawTable = _residualRawTable.DefaultView.ToTable();
             }
             catch (Exception exp)
@@ -2480,8 +2497,20 @@ namespace POD.Data
             var isLinear = !myGetTransformed || _flawTransform == TransformTypeEnum.Linear || _flawTransform == TransformTypeEnum.Inverse;
             
             _podDoc.a_transform = _python.TransformEnumToInt(_flawTransform);
-            _hmAnalysisObject.ModelType= _python.TransformEnumToInt(_flawTransform);
+            if (_dataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                _hmAnalysisObject.ModelType = _python.TransformEnumToInt(_flawTransform);
+            }
+            else if (_dataType == AnalysisDataTypeEnum.AHat)
+            {
+                _aHatAnalysisObject.A_transform= _python.TransformEnumToInt(_flawTransform);
+            }
             _podDoc.ahat_transform = _python.TransformEnumToInt(_responseTransform);
+            if (_dataType == AnalysisDataTypeEnum.AHat)
+            {
+                _aHatAnalysisObject.Ahat_transform = _python.TransformEnumToInt(_flawTransform);
+                AHatModelUpdate();
+            }
             
             AxisObject maxAxis = new AxisObject();
             GetXBufferedRange(chart, maxAxis, false);
@@ -2569,7 +2598,25 @@ namespace POD.Data
 
             return axis;
         }
-
+        private void AHatModelUpdate()
+        {
+            if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 1)
+            {
+                _aHatAnalysisObject.ModelType = 1;
+            }
+            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 1)
+            {
+                _aHatAnalysisObject.ModelType = 2;
+            }
+            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 2)
+            {
+                _aHatAnalysisObject.ModelType = 3;
+            }
+            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
+            {
+                _aHatAnalysisObject.ModelType = 4;
+            }
+        }
         public AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed)
         {
             AxisObject axis = new AxisObject();

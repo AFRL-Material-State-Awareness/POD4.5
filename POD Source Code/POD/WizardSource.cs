@@ -97,11 +97,15 @@ namespace POD
         protected dynamic _podDoc;
 
         /// <summary>
-        /// Reference to the object transform class in csharpbackend
+        /// Reference to the object Hitmiss class in csharpbaackedWithR
         /// </summary>
         [NonSerialized]
         protected HMAnalysisObject _hmAnalysisObject;
-
+        /// <summary>
+        /// Reference to the object ahat class in csharpbaackedWithR 
+        /// </summary>
+        [NonSerialized]
+        protected AHatAnalysisObject _aHatAnalysisObject;
         #endregion
 
         #region Constructors
@@ -244,6 +248,11 @@ namespace POD
             {
                 _hmAnalysisObject = _python.HitMissAnalsysis(Name);
             }
+            if(_aHatAnalysisObject == null)
+            {
+                _aHatAnalysisObject = _python.AHatAnalysis(Name);
+            }
+            
         }
     
         #endregion

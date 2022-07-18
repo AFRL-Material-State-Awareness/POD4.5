@@ -297,7 +297,8 @@ namespace POD.Controls
         {
             var view = data.ResidualRawTable.AsDataView();
 
-            Original.Points.DataBindXY(view, "t_flaw", view, "t_response");
+            //Original.Points.DataBindXY(view, "t_flaw", view, "t_response");
+            Original.Points.DataBindXY(view, "flaw", view, "y");
             Original.Enabled = false;
 
             //var index = 0;
@@ -402,7 +403,8 @@ namespace POD.Controls
             
 
             DataView view = myData.ResidualRawTable.DefaultView;
-            Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
+            //Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
+            Uncensored.Points.DataBindXY(view, "flaw", view, "diff");
             Uncensored.Enabled = false;
 
             series = Uncensored;
@@ -577,7 +579,8 @@ namespace POD.Controls
 
             DataView view = data.ResidualRawTable.DefaultView;
 
-            fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
+            //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
+            fitLine.Points.DataBindXY(view, "flaw", view, "fit");
         }
 
         public Series FlawEstimate

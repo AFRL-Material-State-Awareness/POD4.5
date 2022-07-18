@@ -8,7 +8,6 @@ namespace CSharpBackendWithR
 {
     public class AHatAnalysisObject : ParentAnalysisObject
     {
-
         private int modelType;
         private double shapiroTestStat;//Shapiro-Wilk normality test
         private double shapiroPValue;
@@ -22,14 +21,20 @@ namespace CSharpBackendWithR
         private double y_decision;
         //private string xAxisName;
         private string signalResponseName;
+        //private DataTable originalData;
+        private DataTable aHatLinearResults;
+        private DataTable aHatResidualResults;
         private DataTable aHatResultsPOD;
+        //linear model unique metrics
+        private double intercept;
+        private double slope;
         public AHatAnalysisObject(string nameInput = "")
         {
             //name of the analysis
             Name = nameInput;
             Flaw_name = ""; //holds the name of the flaw in the datatable
             Info_row = 0;
-            this.modelType = 0; //0=no transform, 1=x-axis only transform, 2=y-axis only transform, 3=both axis tranform
+            this.modelType = 1; //1=no transform, 2=x-axis only transform, 3=y-axis only transform, 4=both axis tranform
             //stores the max and min signal reponses
             Signalmin = -1.0;
             Signalmax = -1.0;
@@ -42,6 +47,7 @@ namespace CSharpBackendWithR
             Flaws = new List<double>();
             ////////////////////
             ///this.flawsTemp = new List<double>();
+            Responses = new Dictionary<string, List<double>>();
             Responses_all = new Dictionary<string, List<double>>();
             Nsets = 0;
             Count = 0; //the original number of data points in a given analysis
@@ -91,9 +97,17 @@ namespace CSharpBackendWithR
             signalResponseName = "";
             //default theshold is zero(will be determined by the user)
             this.y_decision = 0.0;
+            //linear model
+            this.slope = 0.0;
+            this.intercept = 0.0;
+            //used to store the linear dataframe
+            this.aHatLinearResults = new DataTable();
+            //used to store the residual dataframe(adds a diff column to the linear df)
+            this.aHatResidualResults = new DataTable();
             //used to store the results dataframe
-            aHatResultsPOD = new DataTable();
+            this.aHatResultsPOD = new DataTable();
         }
+        public new string ProgressText { set; get; }
         public new string Name { set; get; }
         public new string Flaw_name { set; get; }
         public new int ModelType
@@ -103,8 +117,8 @@ namespace CSharpBackendWithR
         }
         public new double Signalmin { set; get; }
         public new double Signalmax { set; get; }
-
         public new List<double> Flaws { set; get; }
+        public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
         public new double Crckmin { set; get; }
         public new double Crckmax { set; get; }
@@ -160,6 +174,26 @@ namespace CSharpBackendWithR
         {
             set { this.signalResponseName = value; }
             get { return this.signalResponseName; }
+        }
+        public double Slope
+        {
+            set { this.slope = value; }
+            get { return this.slope; }
+        }
+        public double Intercept
+        {
+            set { this.intercept=value; }
+            get { return this.intercept; }
+        }
+        public DataTable AHatResultsLinear
+        {
+            set { this.aHatLinearResults = value; }
+            get { return this.aHatLinearResults; }
+        }
+        public DataTable AHatResultsResid
+        {
+            set { this.aHatResidualResults = value; }
+            get { return this.aHatResidualResults; }
         }
         public DataTable AHatResultsPOD
         {

@@ -12,12 +12,16 @@ namespace CSharpBackendWithR
         private int srsOrRSS;//0=simple random sampling, 1=ranked set sampling
         private HMAnalysisObject resultsHMAnalysis;
         private AHatAnalysisObject resultsAHatAnalysis;
+       
         public AnalysistypeTransform(REngineObject analysisEngine, HMAnalysisObject newPFAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
         {
             this.analysisEngine = analysisEngine;
             this.newPFAnalysisObject = newPFAnalysisObjectInput;
-            this.srsOrRSS = newPFAnalysisObjectInput.SrsOrRSS;
-            this.resultsHMAnalysis = newPFAnalysisObjectInput;
+            if (newPFAnalysisObjectInput != null)
+            {
+                this.srsOrRSS = newPFAnalysisObjectInput.SrsOrRSS;
+                this.resultsHMAnalysis = newPFAnalysisObjectInput;
+            }
             this.newAHatAnalysisObject = newAhatAnalysisObjectInput;
             this.resultsAHatAnalysis = newAhatAnalysisObjectInput;
         }
@@ -70,7 +74,7 @@ namespace CSharpBackendWithR
             //store the covariance matrix values to return to UI
             this.newPFAnalysisObject.CovarianceMatrix = newHitMissControl.GetCovarianceMatrixValues();
             //clear all contents in R and restart the global environment
-            analysisEngine.clearGlobalIInREngineObject();
+            this.analysisEngine.clearGlobalIInREngineObject();
             //Console.WriteLine(newPFAnalysisObject);
             //finish analysis
 
@@ -84,25 +88,25 @@ namespace CSharpBackendWithR
             //sets the flaw sizes in flaws temp
             newPFAnalysisObject.CurrFlawsAnalysis();
             newMaxMin.calcCrackRange(newPFAnalysisObject.Flaws);
-            newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            this.newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
             newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             //create the class for hitMissControl
             HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
-            newHitMissControl.ExecuteRSS(newPFAnalysisObject);
+            newHitMissControl.ExecuteRSS(this.newPFAnalysisObject);
             //newHitMissControl.getRSS_Results();
-            newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
+            this.newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = newHitMissControl.GetKeyA_Values();
-            newPFAnalysisObject.A25 = finalAValuesDict["a25"];
-            newPFAnalysisObject.A50 = finalAValuesDict["a50"];
-            newPFAnalysisObject.A90 = finalAValuesDict["a90"];
-            newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
-            newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
-            newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
+            this.newPFAnalysisObject.A25 = finalAValuesDict["a25"];
+            this.newPFAnalysisObject.A50 = finalAValuesDict["a50"];
+            this.newPFAnalysisObject.A90 = finalAValuesDict["a90"];
+            this.newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
+            this.newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
+            this.newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
             //clear all contents in R and restart the global environment
-            analysisEngine.clearGlobalIInREngineObject();
+            this.analysisEngine.clearGlobalIInREngineObject();
             //Console.WriteLine(newPFAnalysisObject);
-            return newPFAnalysisObject;
+            return this.newPFAnalysisObject;
         }
 
         private AHatAnalysisObject ExecuteaHatAnalysis()
@@ -118,29 +122,40 @@ namespace CSharpBackendWithR
             //create a for loop here to do both the standard and log transform for the graph
             //overwrite the max and min class each iteration
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
-            //write the max and min crack size to the pfanalysisObject
-            //sets the flaw sizes in flaws temp
-            newPFAnalysisObject.CurrFlawsAnalysis();
-            //TODO: maybe Flaws temp doesn't need to exist? (code breaking here currently)
-            //newMaxMin.calcCrackRange(newPFAnalysisObject.FlawsTemp);
-            newMaxMin.calcCrackRange(newPFAnalysisObject.Flaws);
+            //write the max and min crack size to the ahatAnalysis object
+            newMaxMin.calcCrackRange(this.newAHatAnalysisObject.Flaws);
             this.newAHatAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
-            newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            this.newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             //execute analysis and return parameters
             newAHatControl.ExecuteAnalysis(this.newAHatAnalysisObject);
-            newAHatAnalysisObject.AHatResultsPOD = newAHatControl.GetLogitFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsPOD = newAHatControl.GetLogitFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsLinear = newAHatControl.GetLinearFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsResid = newAHatControl.GetResidualTableForUI();
+            List<double> linearMetrics = newAHatControl.GetLinearModelMetrics();
+            this.newAHatAnalysisObject.Intercept = linearMetrics[0];
+            this.newAHatAnalysisObject.Slope = linearMetrics[1];
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = newAHatControl.GetKeyA_Values();
-            newPFAnalysisObject.A25 = finalAValuesDict["a25"];
-            newPFAnalysisObject.A50 = finalAValuesDict["a50"];
-            newPFAnalysisObject.A90 = finalAValuesDict["a90"];
-            newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
-            newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
-            newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
+            this.newAHatAnalysisObject.A25 = finalAValuesDict["a25"];
+            this.newAHatAnalysisObject.A50 = finalAValuesDict["a50"];
+            this.newAHatAnalysisObject.A90 = finalAValuesDict["a90"];
+            this.newAHatAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
+            this.newAHatAnalysisObject.A9095 = finalAValuesDict["a9095"];
+            this.newAHatAnalysisObject.Muhat = finalAValuesDict["a50"];
+            //get linear test results
+            List<double> linTestResults = newAHatControl.GetLinearTestMetrics();
+            this.newAHatAnalysisObject.ShapiroTestStat = linTestResults[0];
+            this.newAHatAnalysisObject.ShapiroPValue = linTestResults[1];
+            this.newAHatAnalysisObject.ChiSqValue = linTestResults[2];
+            this.newAHatAnalysisObject.ChiSqDF = Convert.ToInt32(linTestResults[3]);
+            this.newAHatAnalysisObject.ChiSqPValue = linTestResults[4];
+            this.newAHatAnalysisObject.DurbinWatson_r = linTestResults[5];
+            this.newAHatAnalysisObject.DurbinWatsonDW = linTestResults[6];
+            this.newAHatAnalysisObject.DurbinWatsonPValue = linTestResults[7];
             //clear all contents in R and restart the global environment
             analysisEngine.clearGlobalIInREngineObject();
             //return the completed aHatAnalysisObject
-            return newAHatAnalysisObject;
+            return this.newAHatAnalysisObject;
         }
 
         public HMAnalysisObject HMAnalsysResults

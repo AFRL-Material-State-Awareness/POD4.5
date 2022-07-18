@@ -43,6 +43,8 @@ namespace POD.Analyze
         public AnalysisListHandler CreatedAnalysis;
         [NonSerialized]
         public HMAnalysisObject _finalAnalysis;
+        [NonSerialized]
+        public AHatAnalysisObject _finalAnalysisAHat;
         /// <summary>
         /// No input values or data will be allowed to be changed while the analysis is frozen.
         /// Created this state to allow UI to be sync'd with the analysis values after being loaded from file.
@@ -979,8 +981,17 @@ namespace POD.Analyze
                     newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
                 }
+                //entry point for pod calculate in PODv4 ahat
                 else
+                {
+
                     _podDoc.OnFullAnalysis();
+                    AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+                    newAnalysisControl.ExecuteAnalysisAHat();
+                    _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;
+                    
+                }
+                    
             }
             catch (Exception exp)
             {
@@ -1094,11 +1105,11 @@ namespace POD.Analyze
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
 
-            OutModelIntercept = _podDoc.GetModelIntercept();
+            OutModelIntercept = _podDoc.GetModelIntercept(); //yes
             OutModelInterceptStdError = _podDoc.GetModelInterceptError();
-            OutModelSlope = _podDoc.GetModelSlope();
+            OutModelSlope = _podDoc.GetModelSlope(); //yes
             OutModelSlopeStdError = _podDoc.GetModelSlopeError();
-            OutModelResidualError = _podDoc.GetModelResidual();
+            OutModelResidualError = _podDoc.GetModelResidual(); //yes
             OutModelResidualErrorStdError = _podDoc.GetModelResidualError();
             OutRepeatabilityError = _podDoc.GetRepeatabilityError();
             OutTestNormality_p = _podDoc.GetNormality_p();
@@ -1117,7 +1128,33 @@ namespace POD.Analyze
             //OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
             OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_podDoc.GetLackOfDegreesFreedom());
             OutTestLackOfFitCalculated = _podDoc.GetLackOfFitCalculated();
-
+            if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
+            {
+                //TODO: replace the rest of the metrics
+                OutModelIntercept = _aHatAnalysisObject.Intercept;
+                //OutModelInterceptStdError
+                OutModelSlope = _aHatAnalysisObject.Slope;
+                //OutModelSlopeStdError
+                //OutModelResidualError
+                //OutModelResidualErrorStdError
+                //OutRepeatabilityError
+                //replaced normality test with shapiro-wilk
+                OutTestNormality_p = _aHatAnalysisObject.ShapiroPValue;
+                OutTestNormality = _aHatAnalysisObject.ShapiroTestStat;
+                //OutTestNormalityRating
+                //OutTestLackOfFit_p
+                //OutTestLackOfFit
+                //OutTestLackOfFitRating
+                OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
+                OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
+                //OutTestEqualVarianceRating
+                //A Values and sigma
+                OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
+                OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
+                OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
+                OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
+                
+            }
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
@@ -1358,6 +1395,7 @@ namespace POD.Analyze
             analysis._python = null;
             analysis._podDoc = null;
             analysis._hmAnalysisObject = null;
+            analysis._aHatAnalysisObject = null;
             analysis._rDotNet = null;
             //analysis.Report = Report.CreateDuplicate();
 
@@ -1503,7 +1541,15 @@ namespace POD.Analyze
                 _podDoc.RegisterUpdateProgressEvent(this);
             // update the progress text in the python engine object object 
             _python.ProgressText = "Starting Analysis...";
-            _hmAnalysisObject.ProgressText = "Starting Analysis";
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                _hmAnalysisObject.ProgressText = "Starting Analysis";
+            }
+            else
+            {
+                _aHatAnalysisObject.ProgressText= "Starting Analysis";
+            }
+            
             // store the analysis name in the python engine object 
             _python.CurrentAnalysisName = Name;
             
@@ -1527,11 +1573,11 @@ namespace POD.Analyze
             //used to store the current transformation the program is performing in the 'choose transform' window
             UpdatePythonTransforms();
             //change the model type of logistic regression to firth logistical regression if using log odds
-            if (InHitMissModel.ToString() == "Normal")
+            if (InHitMissModel.ToString() == "Normal" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.RegressionType = "Logistic Regression";
             }
-            else if (InHitMissModel.ToString() == "Odds")
+            else if (InHitMissModel.ToString() == "Odds" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.RegressionType = "Firth Logistic Regression";
             }
@@ -1553,18 +1599,22 @@ namespace POD.Analyze
             _podDoc.SetResponseMax(InResponseMax);
             //_hmAnalysisObject.HitMissMax= HitMissMax
             _podDoc.SetPODThreshold(InResponseDecision);
-            _hmAnalysisObject.Pod_threshold = InResponseDecision;
             _podDoc.SetPODLevel(.90);
-            _hmAnalysisObject.Pod_level = .90;
             _podDoc.SetPODConfidence(.95);
-            _hmAnalysisObject.Confidence_level = .95;
-
+            
+            if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                _hmAnalysisObject.Pod_threshold = InResponseDecision;
+                _hmAnalysisObject.Pod_level = .90;
+                _hmAnalysisObject.Confidence_level = .95;
+                //used for modified wald, LR, etc. Will implement into the UI later
+                _hmAnalysisObject.A_x_n = 500;
+            }
             List<double> thresholds = new List<double>();
 
             double value = 0.0;
             double inc = (InResponseDecisionMax - InResponseDecisionMin) / (InResponseDecisionIncCount);
 
-            //set the decision thresholds to be run 20 times
             for (int i = 0; i <= InResponseDecisionIncCount; i++)
             {
                 value = InResponseDecisionMin + (inc * i);
@@ -1573,8 +1623,7 @@ namespace POD.Analyze
             }
 
             _podDoc.SetDecisionThresholds(thresholds);
-            //used for modified wald, LR, etc. Will implement into the UI later
-            _hmAnalysisObject.A_x_n = 500;
+            
         }
 
         public void UpdatePythonTransforms()
@@ -1583,13 +1632,41 @@ namespace POD.Analyze
             Data.ResponseTransform = InResponseTransform;
             //x-axis transformation check
             _podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
-            //if (_dataType == "HitMiss")
-            //{
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
 
-            //}
-            _hmAnalysisObject.ModelType= _python.TransformEnumToInt(Data.FlawTransform);
+            }
+            else
+            {
+                _aHatAnalysisObject.A_transform = _python.TransformEnumToInt(Data.FlawTransform);
+            }
             //y-axis transformation check
             _podDoc.ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
+            if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
+            {
+                _aHatAnalysisObject.Ahat_transform= _python.TransformEnumToInt(Data.ResponseTransform);
+                AHatModelUpdate();
+            }
+        }
+        private void AHatModelUpdate()
+        {
+            if(_aHatAnalysisObject.A_transform==1 && _aHatAnalysisObject.Ahat_transform == 1)
+            {
+                _aHatAnalysisObject.ModelType = 1;
+            }
+            else if(_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 1)
+            {
+                _aHatAnalysisObject.ModelType = 2;
+            }
+            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 2)
+            {
+                _aHatAnalysisObject.ModelType = 3;
+            }
+            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
+            {
+                _aHatAnalysisObject.ModelType = 4;
+            }
         }
 
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
@@ -1687,9 +1764,13 @@ namespace POD.Analyze
         public override void SetREngine(REngineObject myREngine)
         {
             _rDotNet = myREngine;
-            if(_hmAnalysisObject== null)
+            if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject = _python.HitMissAnalsysis(Name);
+            }
+            else
+            {
+                _aHatAnalysisObject = _python.AHatAnalysis(Name);
             }
             _data.SetREngine(_rDotNet, Name);
         }
@@ -2503,11 +2584,21 @@ namespace POD.Analyze
 
             try
             {
-                //for the case of hit/miss data, this is where the program first enters the python program
+                //for the case of hit/miss data and ahat, this is where the program first enters the python program
+               
+                if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+                    newAnalysisControlHM.ExecuteReqSampleAnalysisTypeHitMiss();
+                    _hmAnalysisObject = newAnalysisControlHM.HMAnalsysResults;
+                }
+                else
+                {
+                    AnalysistypeTransform newAnalysisControlAHat = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+                    newAnalysisControlAHat.ExecuteAnalysisAHat();
+                    _aHatAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
+                }
                 _podDoc.OnFitOnlyAnalysis();
-                AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform (_rDotNet, _hmAnalysisObject);
-                newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
-                _hmAnalysisObject = newAnalysisControl.HMAnalsysResults;
             }
             catch(Exception executeProblemAnalysis)
             {

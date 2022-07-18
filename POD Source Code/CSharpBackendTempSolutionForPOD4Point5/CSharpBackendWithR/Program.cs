@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Data;
 using System.Collections.Generic;
 using System.IO;
@@ -16,22 +17,23 @@ namespace CSharpBackendWithR
     {
         static void Main(string[] args)
         {
-            REngineObject newREngine = new REngineObject();
-            newREngine.InitializeRScripts();
+            //REngineObject newREngine = new REngineObject();
+            //newREngine.InitializeRScripts();
             //string csvInputPathDF = @"C:\Users\gohmancm\Desktop\PODv4Point5FullProjectFolder\CSharpBackendTempSolution\CSharpBackendTempSolutionForPOD4Point5\RCode\RBackend\HitMissInfo_BadLL.csv";
-            string csvInputPathDF2 = @"C:\Users\gohmancm\Desktop\PODv4Point5FullProjectFolder\PODv4Point5Attemp1\PODv4\POD Source Code\RCode\RBackend\NewSignalResponseCode\dataFromPlots.csv";
+            //string csvInputPathDF2 = @"C:\Users\gohmancm\Desktop\PODv4Point5FullProjectFolder\PODv4Point5Attemp1\PODv4\POD Source Code\CSharpBackendTempSolutionForPOD4Point5\RCode\RBackend\SignalResponseCode\dataFromPlots.csv";
             //DataTable mydt= GetDataTableFromCsv(csvInputPathDF);
             //printDT(mydt);
-            DataTable myAhat = GetDataTableFromCsv(csvInputPathDF2);
-            printDT(myAhat);
+            //DataTable myAhat = GetDataTableFromCsv(csvInputPathDF2);
+            //printDT(myAhat);
             //GetDataFromPFTransform(newREngine, mydt);
-            GetDataFromAHatTransform(newREngine, myAhat);
+            //GetDataFromAHatTransform(newREngine, myAhat);
             ///
             /// These values are attrifial and inserted to test the backend
             ///
             //newAnalysis
 
         }
+        /*
         public static void GetDataFromPFTransform(REngineObject analysisEngine, DataTable testDataTable)
         {
             //convert the the necessary columns in the datatables to a list
@@ -206,6 +208,6 @@ namespace CSharpBackendWithR
                 dt.Rows.Add(Row);
             }
             return dt;
-        }
+        }*/
     }
 }

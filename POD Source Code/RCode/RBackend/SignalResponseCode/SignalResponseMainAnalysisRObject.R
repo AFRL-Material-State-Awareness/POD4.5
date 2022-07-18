@@ -1,18 +1,51 @@
-SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRespDF="data.frame", 
+AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame", 
                                                                         y_dec="numeric", 
                                                                         modelType="character",
                                                                         varCovarMatrix="matrix",
                                                                         keyAValues="list",
+                                                                        linearModel="data.frame",
                                                                         linearTestResults="list",
                                                                         aVPOD="matrix",
                                                                         ResultsPOD="data.frame",
-                                                                        critPts="data.frame"),
+                                                                        critPts="data.frame",
+                                                                        #copyoutputfrompython
+                                                                        residualTable="data.frame",
+                                                                        modelIntercept="numeric",
+                                                                        modelSlope="numeric"
+                                                                        ),
                                   methods=list(
-                                    setResults=function(psResultsPOD){
-                                      ResultsPOD<<-psResultsPOD
+                                    setLinearModel=function(psLMObject){
+                                      linearModel<<-psLMObject
+                                    },
+                                    getLinearModel=function(){
+                                      names(linearModel)[names(linearModel) == 'x'] <- 'flaw'
+                                      return(linearModel)
+                                    },
+                                    setResidualTable=function(psResidTable){
+                                      residualTable<<-psResidTable
+                                    },
+                                    getResidualTable=function(){
+                                      names(residualTable)[names(residualTable) == 'x'] <- 'flaw'
+                                      return(residualTable)
+                                    },
+                                    setResults=function(psResults){
+                                      ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
+                                      names(ResultsPOD)[names(ResultsPOD) == 'x'] <- 'flaw'
                                       return(ResultsPOD)
+                                    },
+                                    setModelIntercept=function(psModelInt){
+                                      modelIntercept<<-psModelInt
+                                    },
+                                    getModelIntercept=function(){
+                                      return(modelIntercept)
+                                    },
+                                    setModelSlope=function(psSlope){
+                                      modelSlope<<-psSlope
+                                    },
+                                    getModelSlope=function(){
+                                      return(modelSlope)
                                     },
                                     setCritPts=function(psCritPts){
                                       critPts<<-psCritPts
@@ -30,13 +63,33 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                       aVPOD<<-psAVPOD
                                     },
                                     getCovarianceMatrix=function(){
-                                      return(avPOD)
+                                      return(as.data.frame(aVPOD))
+                                    },
+                                    setKeyAValues=function(psKeyAValues){
+                                      keyAValues<<-psKeyAValues
+                                    },
+                                    getKeyAValues=function(){
+                                      return(keyAValues)
                                     },
                                     executeAhatvsA=function(){
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
-                                      linearModel_lm = lm(y ~ x, data = SignalRespDF, na.action=na.omit)
+                                      linearModel_lm <<- lm(y ~ x, data = SignalRespDF, na.action=na.omit)
+                                      setModelIntercept(linearModel_lm$coefficients[[1]])
+                                      setModelSlope(linearModel_lm$coefficients[[2]])
+                                      #set the linear model so it can be returned
+                                      linearModDF=data.frame(
+                                        #Index= 1:length(linearModel_lm$fitted.values),
+                                        x=SignalRespDF$x,
+                                        y=SignalRespDF$y,
+                                        fit=linearModel_lm$fitted.values
+                                      )
+                                      setLinearModel(linearModDF)
+                                      ##create the residual dataframe
+                                      ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
+                                      names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
+                                      setResidualTable(ResidualDF)
                                       #peformTests
                                       linearTests(linearM=linearModel_lm)
                                       #generate ahat versus acensored
@@ -110,8 +163,8 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                       a9095 <- f_a_i(a9095)
                                       #set parameters
                                       setCovarianceMatrix(a.V_POD)
-                                      #keyAValuesGlobal<<-list(a50, a90, aSigma, a9095)
-                                      keyAValues<<-list(a50, a90, aSigma, a9095)
+                                      ###TODO: Also calculate A25 which is now set to -1
+                                      setKeyAValues(list(-1, a50, a90, aSigma, a9095))
                                     },
                                     # Inverse function of f_a. Uncomment 1
                                     f_a_i=function(a){ return(a) # exp(a)#log(a) #sqrt(a)
@@ -134,5 +187,10 @@ SRMainAnalysisObject<-setRefClass("SRMainAnalysisObject", fields = list(SignalRe
                                         xlim(min(na.exclude(plotPoints$defect_sizes)),max(na.exclude(plotPoints$defect_sizes)))+
                                         ylab("Probability of Detection, POD(a)")+
                                         xlab("Defect Size, a")
+                                    },
+                                    #used for Debugging ONLY
+                                    plotSimdata=function(df){
+                                      myPlot=ggplot(data=df, mapping=aes(x=x, y=y))+geom_point()
+                                      print(myPlot)
                                     }
                                   ))
