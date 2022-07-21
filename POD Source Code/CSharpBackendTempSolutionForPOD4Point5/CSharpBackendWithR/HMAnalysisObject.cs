@@ -96,11 +96,11 @@ namespace CSharpBackendWithR
             //int Profile_pts = 0;
             //used for ranked set sampling###
             //k=sample subset size
-            int Set_m = 0;
-            //m=number of cycles(usually 30 is sufficient
+            int Set_m = 6;
+            //m=number of cycles
             int Set_r = 0;
             //default to standard wald unless overwritten
-            CIType = "LR";
+            CIType = "Modified Wald";
             //datatables that will be sent back to the UI
             DataTable LogitHMFitTable = new DataTable();
             DataTable LogLogitHMFitTable = new DataTable();

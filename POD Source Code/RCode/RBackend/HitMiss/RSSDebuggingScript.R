@@ -29,9 +29,9 @@ source(paste(filepath,"/LRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/MLRConfIntRObject.R", sep = ""))
 #testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Good.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Bad.csv")
-#testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissInfo_BadLL.csv")
+testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissInfo_BadLL.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/newHitMissRSSTest.csv")
-testData <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
+#testData <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
 
 
 options(warn=-1)
@@ -44,7 +44,7 @@ regression="Firth Logistic Regression"
 normSamp=500
 resamplesMax=30
 #conf int type
-ciType="MLR"
+ciType="Modified Wald"
 start.time <- Sys.time()
 set_m=6
 
