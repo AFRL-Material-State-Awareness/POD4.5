@@ -114,6 +114,7 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
             //this.rEngine.Evaluate("library(glmnet)"); //LICENSED UNDER GPLv2 only, may end up not using this
             this.rEngine.Evaluate("library(logistf)");
+            this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
             this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
             //the following libraries are used for signal response

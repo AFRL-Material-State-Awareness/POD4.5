@@ -966,20 +966,26 @@ namespace POD.Analyze
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             Stopwatch watch = new Stopwatch();
-
-            watch.Start();
-
             IsBusy = true;
-
             try
             {
                 //entry point for pod caluclation in PODv4 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    _podDoc.OnAnalysis();
+                    //watch.Start();
+                    //_podDoc.OnAnalysis();
+                    //watch.Stop();
+                    //Debug.WriteLine("Python:"+watch.ElapsedMilliseconds);
+                    //MessageBox.Show("Python: " + watch.ElapsedMilliseconds);
+                    //watch.Restart();
+                    watch.Start();
                     AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
                     newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
+                    watch.Stop();
+                    //Debug.WriteLine("R"+watch.ElapsedMilliseconds);
+                    MessageBox.Show("R: " + watch.ElapsedMilliseconds);
+
                 }
                 //entry point for pod calculate in PODv4 ahat
                 else
@@ -1056,7 +1062,7 @@ namespace POD.Analyze
 
             }
 
-            watch.Stop();            
+                        
         }
 
         private void Background_AnalysisProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -1159,11 +1165,20 @@ namespace POD.Analyze
             {
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
                 List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
-
-                OutPFCovarianceV11 = covMatrix[0];
-                OutPFCovarianceV12 = covMatrix[1];
-                //OutPFCovarianceV22 = covMatrix[2];
-                OutPFCovarianceV22 = covMatrix[3];
+                //TODO: figure out how to get the covariance matrix for LR and MLR
+                try
+                {
+                    OutPFCovarianceV11 = covMatrix[0];
+                    OutPFCovarianceV12 = covMatrix[1];
+                    OutPFCovarianceV22 = covMatrix[3];
+                }
+                catch(Exception whoops)
+                {
+                    OutPFCovarianceV11 = -1;
+                    OutPFCovarianceV12 = -1;
+                    OutPFCovarianceV22 = -1;
+                }
+                
 
                 OutResponseDecisionPODSigma = _hmAnalysisObject.Sighat;
                 OutResponseDecisionPODA50Value = _hmAnalysisObject.A50;
@@ -2598,7 +2613,7 @@ namespace POD.Analyze
                     newAnalysisControlAHat.ExecuteAnalysisAHat();
                     _aHatAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
                 }
-                _podDoc.OnFitOnlyAnalysis();
+                //_podDoc.OnFitOnlyAnalysis();
             }
             catch(Exception executeProblemAnalysis)
             {

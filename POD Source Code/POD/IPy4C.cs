@@ -256,10 +256,7 @@ namespace POD
                 //get the python class CPodDoc object from CPodDoc.py through pyScopes
                 dynamic CPodDoc = _pyScopes["CPodDoc"].GetVariable("CPodDoc");
                 //this is  where the new instance is created
-                //If we make separate instances for signal reponse and hit/miss, we could create if statements here
                 dynamic cpoddoc = CPodDoc();
-                //create the new HM analsysis object
-
                 //the dictionary contains a string as the key and the cPoddoc class object as its value/definition
                 _cpDocs.Add(myAnalysisName, cpoddoc);
 
@@ -282,7 +279,7 @@ namespace POD
                 _hitMissAnalyses.Add(myAnalysisName, hitMissAnalsyis);
                 return (hitMissAnalsyis);
             }
-            //if it does, simply return that def/key pair from the _cpDocs dictionary
+            //if it does, simply return that def/key pair from the _hitMissAnalyses dictionary
             else
             {
                 return _hitMissAnalyses[myAnalysisName];
@@ -299,7 +296,7 @@ namespace POD
                 _ahatAnalyses.Add(myAnalysisName, aHatAnalsyis);
                 return (aHatAnalsyis);
             }
-            //if it does, simply return that def/key pair from the _cpDocs dictionary
+            //if it does, simply return that def/key pair from the _ahatAnalyses dictionary
             else
             {
                 return _ahatAnalyses[myAnalysisName];
