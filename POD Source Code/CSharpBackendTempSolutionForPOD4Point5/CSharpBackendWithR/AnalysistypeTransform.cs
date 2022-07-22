@@ -83,6 +83,7 @@ namespace CSharpBackendWithR
         }
         private HMAnalysisObject ExecuteRankedSetSampling()
         {
+            analysisEngine.RDotNetEngine.Evaluate("str(as.list(.GlobalEnv))");
             //Get crack max and min class
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
             //sets the flaw sizes in flaws temp

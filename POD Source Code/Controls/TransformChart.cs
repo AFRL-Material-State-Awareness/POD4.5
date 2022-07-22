@@ -8,6 +8,7 @@ using System.Data;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 
+using System.Diagnostics;
 namespace POD.Controls
 {
     public class TransformChart : DataPointChart
@@ -56,7 +57,6 @@ namespace POD.Controls
                 SingleSeriesCount = 5;
                 YAxisTitle = responseNames[0];
                 YAxisUnit = responseUnits[0];
-
             }
             else
             {
@@ -64,9 +64,7 @@ namespace POD.Controls
                 YAxisNameIsUnitlessConstant = true;
                 YAxisTitle = newTitle;
                 OriginalYAxisTitle = newTitle;
-            }
-
-            
+            }   
         }
 
         private void AddAllSeries()
@@ -227,8 +225,6 @@ namespace POD.Controls
             {
                 YAxisTitle = _originalTitle;
             }
-
-            
         }
 
         public void FillFromAnalysis(AnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
@@ -400,11 +396,12 @@ namespace POD.Controls
         {
 
             Series series = null;
-            
-
+            //TEMP
+            DataTable debugTest = myData.ResidualRawTable;
+            printDT(debugTest);
             DataView view = myData.ResidualRawTable.DefaultView;
             //Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
-            Uncensored.Points.DataBindXY(view, "flaw", view, "diff");
+            Uncensored.Points.DataBindXY(view, "flaw", view, "t_diff");
             Uncensored.Enabled = false;
 
             series = Uncensored;
@@ -653,6 +650,46 @@ namespace POD.Controls
         }
 
 
-        
+        static void printDT(DataTable data)
+        {
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            Dictionary<string, int> colWidths = new Dictionary<string, int>();
+
+            foreach (DataColumn col in data.Columns)
+            {
+                //Console.Write(col.ColumnName);
+                Debug.Write(col.ColumnName);
+                var maxLabelSize = data.Rows.OfType<DataRow>()
+                        .Select(m => (m.Field<object>(col.ColumnName)?.ToString() ?? "").Length)
+                        .OrderByDescending(m => m).FirstOrDefault();
+
+                colWidths.Add(col.ColumnName, maxLabelSize);
+                for (int i = 0; i < maxLabelSize - col.ColumnName.Length + 10; i++) Debug.Write(" ");
+            }
+
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            int rowCounter = 0;
+            int limit = 100;
+            foreach (DataRow dataRow in data.Rows)
+            {
+                for (int j = 0; j < dataRow.ItemArray.Length; j++)
+                {
+                    //Console.Write(dataRow.ItemArray[j]);
+                    Debug.Write((dataRow.ItemArray[j]).ToString());
+                    for (int i = 0; i < colWidths[data.Columns[j].ColumnName] - dataRow.ItemArray[j].ToString().Length + 10; i++) Debug.Write(" ");
+                }
+                //Console.WriteLine();
+                Debug.WriteLine('\n');
+                rowCounter = rowCounter + 1;
+                if (rowCounter >= limit)
+                {
+                    break;
+                }
+            }
+            Debug.WriteLine('\n');
+        }
     }
+    
 }

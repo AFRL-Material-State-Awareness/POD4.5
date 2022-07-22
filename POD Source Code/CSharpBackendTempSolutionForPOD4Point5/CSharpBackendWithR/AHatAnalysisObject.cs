@@ -18,7 +18,7 @@ namespace CSharpBackendWithR
         private double durbinWatsonDW;
         private double durbinWatsonPValue;
         //y decision theshold
-        private double y_decision;
+        //private double y_decision;
         //private string xAxisName;
         private string signalResponseName;
         //private DataTable originalData;
@@ -96,7 +96,7 @@ namespace CSharpBackendWithR
             //used to store the signal response name
             signalResponseName = "";
             //default theshold is zero(will be determined by the user)
-            this.y_decision = 0.0;
+            //this.y_decision = 0.0;
             //linear model
             this.slope = 0.0;
             this.intercept = 0.0;
@@ -115,6 +115,7 @@ namespace CSharpBackendWithR
             set { this.modelType = value; }
             get { return this.modelType; }
         }
+        public new double Pod_threshold { set; get; }
         public new double Signalmin { set; get; }
         public new double Signalmax { set; get; }
         public new List<double> Flaws { set; get; }
@@ -200,10 +201,10 @@ namespace CSharpBackendWithR
             set { this.aHatResultsPOD=value; }
             get { return this.aHatResultsPOD; }
         }
-        public double YDecision
-        {
-            set { this.y_decision = value; }
-            get { return this.y_decision; }
-        }
+        //public double YDecision
+        //{
+        //    set { this.y_decision = value; }
+        //    get { return this.y_decision; }
+        //}
     }
 }

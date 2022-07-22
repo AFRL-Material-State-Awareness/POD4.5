@@ -1725,7 +1725,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
             }
-
+            printDT(_residualRawTable);
             try
             {
                 _residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
@@ -1765,19 +1765,19 @@ namespace POD.Data
             try 
             { 
                 _podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable());
-
-                _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable = _aHatAnalysisObject.AHatResultsPOD;
+                _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
             }
-
+            printDT(PodCurveTable);
             try
             {
                 _podCurveTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable_All());
-
+                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
             }
@@ -3367,8 +3367,6 @@ namespace POD.Data
             AddStringRowToTable(myID, index, _availableSpecIDsTable);
             AddDoubleRowToTable(myFlaw, index, _availableFlawsTable);
             AddDoubleRowToTable(myResponse, index, _availableResponsesTable);
-
-
         }
 
         private static void AddStringRowToTable(string myID, int index, DataTable table)

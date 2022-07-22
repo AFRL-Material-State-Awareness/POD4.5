@@ -1564,8 +1564,15 @@ namespace POD.Controls
 
             this.Invoke((MethodInvoker)delegate()
             {
-                fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+                try
+                {
+                    fitLine.Points.DataBindXY(view, "flaw", view, "fit");
+                }
+                catch(Exception fixme) {
+                    fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+                }
                 //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
+                //fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
             });
             
         }

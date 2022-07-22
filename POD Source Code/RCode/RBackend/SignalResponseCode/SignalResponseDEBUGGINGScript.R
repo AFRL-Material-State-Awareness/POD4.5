@@ -19,7 +19,7 @@ data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TR
 data_obs=na.omit(data_obs)
 
 #perform signal response analysis
-newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=5)
+newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=100)
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()

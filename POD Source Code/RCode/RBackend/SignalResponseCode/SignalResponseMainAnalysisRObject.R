@@ -18,22 +18,28 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       linearModel<<-psLMObject
                                     },
                                     getLinearModel=function(){
-                                      names(linearModel)[names(linearModel) == 'x'] <- 'flaw'
+                                      names(linearModel)[names(linearModel) == 'x'] <<- 'flaw'
                                       return(linearModel)
                                     },
                                     setResidualTable=function(psResidTable){
                                       residualTable<<-psResidTable
                                     },
                                     getResidualTable=function(){
-                                      names(residualTable)[names(residualTable) == 'x'] <- 'flaw'
+                                      names(residualTable)[names(residualTable) == 'x'] <<- 'flaw'
                                       return(residualTable)
                                     },
                                     setResults=function(psResults){
                                       ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
-                                      names(ResultsPOD)[names(ResultsPOD) == 'x'] <- 'flaw'
-                                      return(ResultsPOD)
+                                      #ResultsPOD$case=NULL
+                                      #names(ResultsPOD)[names(ResultsPOD) == 'probabilities'] <- 'POD'
+                                      finalResultsPOD=data.frame(
+                                        flaw= ResultsPOD$defect_sizes,
+                                        POD = ResultsPOD$probabilities,
+                                        confidence= ResultsPOD$defect_sizes_upCI
+                                      )
+                                      return(finalResultsPOD)
                                     },
                                     setModelIntercept=function(psModelInt){
                                       modelIntercept<<-psModelInt
@@ -75,7 +81,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
-                                      linearModel_lm <<- lm(y ~ x, data = SignalRespDF, na.action=na.omit)
+                                      linearModel_lm <- lm(y ~ x, data = SignalRespDF, na.action=na.omit)
                                       setModelIntercept(linearModel_lm$coefficients[[1]])
                                       setModelSlope(linearModel_lm$coefficients[[2]])
                                       #set the linear model so it can be returned
@@ -176,21 +182,21 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                     plotPOD=function(plotPoints, criticalPoints){
                                       # POD Plot  
                                       ggplot()+theme_bw()+
-                                        geom_line(aes(plotPoints$defect_sizes,plotPoints$probabilities),colour="blue",size=1.5)+
-                                        geom_line(aes(plotPoints$defect_sizes_upCI,plotPoints$probabilities),linetype=2,colour="darkcyan",size=1)+
+                                        geom_line(aes(plotPoints$flaw,plotPoints$POD),colour="blue",size=1.5)+
+                                        geom_line(aes(plotPoints$confidence,plotPoints$POD),linetype=2,colour="darkcyan",size=1)+
                                         #    geom_point(aes(criticalPoints$a_50_50,0.5),colour=index,shape=1)+
                                         geom_hline(yintercept=0.9, colour="red")+
                                         geom_vline(xintercept=criticalPoints$a_90_50, colour="red",linetype=2)+
                                         geom_vline(xintercept=criticalPoints$a_90_95, colour="darkturquoise",linetype=2)+
                                         geom_point(aes(criticalPoints$a_90_50,0.9),shape=18,size=2, colour="red")+
                                         geom_point(aes(criticalPoints$a_90_95,0.9),shape=18,size=2, colour="darkturquoise")+
-                                        xlim(min(na.exclude(plotPoints$defect_sizes)),max(na.exclude(plotPoints$defect_sizes)))+
+                                        xlim(min(na.exclude(plotPoints$flaw)),max(na.exclude(plotPoints$flaw)))+
                                         ylab("Probability of Detection, POD(a)")+
                                         xlab("Defect Size, a")
                                     },
                                     #used for Debugging ONLY
                                     plotSimdata=function(df){
-                                      myPlot=ggplot(data=df, mapping=aes(x=x, y=y))+geom_point()
+                                      myPlot=ggplot(data=df, mapping=aes(x=flaw, y=y))+geom_point()
                                       print(myPlot)
                                     }
                                   ))

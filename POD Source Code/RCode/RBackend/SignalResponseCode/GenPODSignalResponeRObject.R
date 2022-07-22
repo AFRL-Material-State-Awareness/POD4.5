@@ -70,6 +70,6 @@ GenPODSignalResponse<-setRefClass("GenPODSignalResponse", fields=list(
                                      setCriticalPoints(criticalPts)
                                    },
                                    # Inverse function of f_a. Uncomment 1
-                                   f_a_i=function(a){ return(a) # exp(a)#log(a) #sqrt(a)
+                                   f_a_i=function(a){ return(a)#(a) # exp(a)#log(a) #sqrt(a)
                                    }
                                  ))

@@ -37,7 +37,7 @@ namespace CSharpBackendWithR
             this.modelType = 1; //becomes 1 if using log transform
             this.regressionType = "Logistic Regression";//becomes logit, firth, or lasso (logit by default)
             Flaw_name = ""; //holds the name of the flaw in the datatable
-            string HitMiss_name = "";
+            HitMiss_name = "";
             //TODO: these may not be necessary
             HitMissMin = 0;
             HitMissMax = 1;
@@ -92,15 +92,15 @@ namespace CSharpBackendWithR
             Diff = new List<double>(); //found by taking the response value - pfit
 
             //used for ranked set sampling, modified wald, lr, and mlr
-            int A_x_n = 0;
+            A_x_n = 0;
             //int Profile_pts = 0;
             //used for ranked set sampling###
             //k=sample subset size
-            int Set_m = 6;
+            Set_m = 6;
             //m=number of cycles
-            int Set_r = 0;
+            Set_r = 0;
             //default to standard wald unless overwritten
-            CIType = "Modified Wald";
+            CIType = "MLR";
             //datatables that will be sent back to the UI
             DataTable LogitHMFitTable = new DataTable();
             DataTable LogLogitHMFitTable = new DataTable();

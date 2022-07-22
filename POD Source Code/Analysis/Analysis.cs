@@ -1616,14 +1616,21 @@ namespace POD.Analyze
             _podDoc.SetPODThreshold(InResponseDecision);
             _podDoc.SetPODLevel(.90);
             _podDoc.SetPODConfidence(.95);
-            
-            if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
+            {
+                _aHatAnalysisObject.Pod_threshold = InResponseDecision;
+            }
+
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.Pod_threshold = InResponseDecision;
                 _hmAnalysisObject.Pod_level = .90;
                 _hmAnalysisObject.Confidence_level = .95;
                 //used for modified wald, LR, etc. Will implement into the UI later
                 _hmAnalysisObject.A_x_n = 500;
+                //used for RSS
+                _hmAnalysisObject.Set_r = _hmAnalysisObject.A_x_n / _hmAnalysisObject.Set_m;
+                _hmAnalysisObject.MaxResamples = 30;
             }
             List<double> thresholds = new List<double>();
 

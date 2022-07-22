@@ -42,7 +42,7 @@ regression="Firth Logistic Regression"
 #regression="Logistic Regression"
 
 normSamp=500
-resamplesMax=30
+resamplesMax=60
 #conf int type
 ciType="Modified Wald"
 start.time <- Sys.time()
