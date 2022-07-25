@@ -1,3 +1,5 @@
+
+from PODglobals import *
 class CAnal ():
     'Holds a given analysis'
     def __init__(self, flaw, data):

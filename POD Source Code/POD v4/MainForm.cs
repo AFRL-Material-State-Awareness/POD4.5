@@ -241,6 +241,7 @@ namespace POD
             {
                 //initialize the iron python engine either by .dll or by importing the .py modules
                 py = new IPy4C(PyTypeEnum.PyFiles, true);
+                //py = new IPy4C(PyTypeEnum.DLLFiles, false);
                 //initialize the REngine Object to create an instance with the R.Net engine
                 REngineInstance = new REngineObject();
 

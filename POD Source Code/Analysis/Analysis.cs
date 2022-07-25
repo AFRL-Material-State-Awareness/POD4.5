@@ -973,7 +973,7 @@ namespace POD.Analyze
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     //watch.Start();
-                    //_podDoc.OnAnalysis();
+                    //_podDoc.anasis();
                     //watch.Stop();
                     //Debug.WriteLine("Python:"+watch.ElapsedMilliseconds);
                     //MessageBox.Show("Python: " + watch.ElapsedMilliseconds);
@@ -984,18 +984,19 @@ namespace POD.Analyze
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
                     watch.Stop();
                     //Debug.WriteLine("R"+watch.ElapsedMilliseconds);
-                    MessageBox.Show("R: " + watch.ElapsedMilliseconds);
+                    //MessageBox.Show("R: " + watch.ElapsedMilliseconds);
 
                 }
                 //entry point for pod calculate in PODv4 ahat
                 else
                 {
 
-                    _podDoc.OnFullAnalysis();
+                    
                     AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
                     newAnalysisControl.ExecuteAnalysisAHat();
                     _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;
-                    
+                    //_podDoc.OnFullAnalysis();
+
                 }
                     
             }
@@ -1005,7 +1006,7 @@ namespace POD.Analyze
 
                 try
                 {
-                    //essageBox.Show("Analysis Error:" + Environment.NewLine + Environment.NewLine + exp.Message);
+                    //MessageBox.Show("Analysis Error:" + Environment.NewLine + Environment.NewLine + exp.Message);
                     var fullString = exp.ToString();
                     var lineIndex = fullString.IndexOf(".py:line");
 
@@ -1110,30 +1111,37 @@ namespace POD.Analyze
 
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
+            try
+            {
+                //OutModelIntercept = _podDoc.GetModelIntercept(); //yes
+                OutModelInterceptStdError = _podDoc.GetModelInterceptError();
+                //OutModelSlope = _podDoc.GetModelSlope(); //yes
+                OutModelSlopeStdError = _podDoc.GetModelSlopeError();
+                OutModelResidualError = _podDoc.GetModelResidual(); //yes
+                OutModelResidualErrorStdError = _podDoc.GetModelResidualError();
+                OutRepeatabilityError = _podDoc.GetRepeatabilityError();
+                //OutTestNormality_p = _podDoc.GetNormality_p();
+                //OutTestNormality = _podDoc.GetNormality();
+                OutTestNormalityRating = _podDoc.GetNormalityRating();
+                OutTestLackOfFit_p = _podDoc.GetLackOfFit_p();
+                OutTestLackOfFit = _podDoc.GetLackOfFit();
+                OutTestLackOfFitRating = _podDoc.GetLackOfFitRating();
+                //OutTestEqualVariance_p = _podDoc.GetEqualVariance_p();
+                //OutTestEqualVariance = _podDoc.GetEqualVariance();
+                OutTestEqualVarianceRating = _podDoc.GetEqualVarianceRating();
+                //A Values and sigma
+                //OutResponseDecisionPODSigma = _podDoc.GetPODSigma();
+                //OutResponseDecisionPODA50Value = _podDoc.GetPODFlaw50();
+                //OutResponseDecisionPODLevelValue = _podDoc.GetPODFlawLevel();
+                //OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
+                OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_podDoc.GetLackOfDegreesFreedom());
+                OutTestLackOfFitCalculated = _podDoc.GetLackOfFitCalculated();
+            }
+            catch(Exception noPodDoc)
+            {
 
-            OutModelIntercept = _podDoc.GetModelIntercept(); //yes
-            OutModelInterceptStdError = _podDoc.GetModelInterceptError();
-            OutModelSlope = _podDoc.GetModelSlope(); //yes
-            OutModelSlopeStdError = _podDoc.GetModelSlopeError();
-            OutModelResidualError = _podDoc.GetModelResidual(); //yes
-            OutModelResidualErrorStdError = _podDoc.GetModelResidualError();
-            OutRepeatabilityError = _podDoc.GetRepeatabilityError();
-            OutTestNormality_p = _podDoc.GetNormality_p();
-            OutTestNormality = _podDoc.GetNormality();
-            OutTestNormalityRating = _podDoc.GetNormalityRating();
-            OutTestLackOfFit_p = _podDoc.GetLackOfFit_p();
-            OutTestLackOfFit = _podDoc.GetLackOfFit();
-            OutTestLackOfFitRating = _podDoc.GetLackOfFitRating();
-            OutTestEqualVariance_p = _podDoc.GetEqualVariance_p();
-            OutTestEqualVariance = _podDoc.GetEqualVariance();
-            OutTestEqualVarianceRating = _podDoc.GetEqualVarianceRating();
-            //A Values and sigma
-            //OutResponseDecisionPODSigma = _podDoc.GetPODSigma();
-            //OutResponseDecisionPODA50Value = _podDoc.GetPODFlaw50();
-            //OutResponseDecisionPODLevelValue = _podDoc.GetPODFlawLevel();
-            //OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
-            OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_podDoc.GetLackOfDegreesFreedom());
-            OutTestLackOfFitCalculated = _podDoc.GetLackOfFitCalculated();
+            }
+            
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 //TODO: replace the rest of the metrics
@@ -1161,7 +1169,7 @@ namespace POD.Analyze
                 OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
                 
             }
-            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            else if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
                 List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
@@ -1512,7 +1520,10 @@ namespace POD.Analyze
 
                 _python.FailedRunCount = 0;
 
+                //ASK TOM About this
+                //RunOnlyFitAnalysis();
                 analysisLauncher.RunWorkerAsync();
+
             }
             else
             {

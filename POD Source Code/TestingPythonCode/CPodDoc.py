@@ -21,7 +21,7 @@ from FileLogger import *
 from Compare import Compare
 from SolveIteration import SolveIteration
 from CAnal import CAnal
-NONLINEAR_MODEL=1
+#NONLINEAR_MODEL=1
 import pyevent
 
 #class SolveIteration ():
@@ -1758,7 +1758,7 @@ class CPodDoc():
                 self.ahat_solve()  # defined in ahat.cpp
 
             FileLogger.Log_Msg("", self.name, "AHat Residuals", "OnAnalysis")
-            self.ahat_residuals()            
+            #self.ahat_residuals()            
         #execute if the analyis type is hit/miss data
         elif (self.analysis==PF_ANALYSIS):
             FileLogger.Log_Msg("", self.name, "PF Censoring", "OnAnalysis")

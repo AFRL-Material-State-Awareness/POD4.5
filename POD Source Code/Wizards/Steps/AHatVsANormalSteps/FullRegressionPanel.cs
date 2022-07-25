@@ -477,7 +477,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             if (yMin <= 0.0 && _yTransformBox.SelectedTransform == TransformTypeEnum.Log)
                 yMin = 1.0;
-
+            // This may be where the problem occurs *****************************
             Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
             Analysis.InResponseTransform = _yTransformBox.SelectedTransform;
 

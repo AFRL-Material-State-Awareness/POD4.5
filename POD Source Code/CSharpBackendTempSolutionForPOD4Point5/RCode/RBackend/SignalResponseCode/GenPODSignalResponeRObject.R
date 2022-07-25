@@ -38,7 +38,8 @@ GenPODSignalResponse<-setRefClass("GenPODSignalResponse", fields=list(
                                      return(mu_x_p+ z_q*stdev_x_p)
                                    },
                                    genPODCurve=function(){
-                                     numPlotPoints=100
+                                     numPlotPoints=101
+                                     print(numPlotPoints)
                                      criticalPts=data.frame(index=NULL,a_50_50=NULL,a_90_50=NULL,a_90_95=NULL)
                                      plotPoints = data.frame(case=NULL, probabilities = NULL,defect_sizes=NULL, defect_sizes_upCI=NULL)
                                      #TODO: replace this function with the function that doesn't require PRACMA
@@ -52,12 +53,15 @@ GenPODSignalResponse<-setRefClass("GenPODSignalResponse", fields=list(
                                      )
                                      
                                      # Remember to undo the transformation on the flaw sizes to get them in the original units (f_a_i)
+                                     
                                      for (index in 1:length(unique(V_pod_df$cat_level))){
                                        V_pod_at_index = subset(V_pod_df,cat_level==index)
+                                       a_25_25 = f_a_i(a_p_q_df(0.5, 0.25, aMu[index], aSigma, V_pod_at_index))
                                        a_50_50 = f_a_i(a_p_q_df(0.5, 0.50, aMu[index], aSigma, V_pod_at_index))
                                        a_90_50 = f_a_i(a_p_q_df(0.9, 0.50, aMu[index], aSigma, V_pod_at_index))
                                        a_90_95 = f_a_i(a_p_q_df(0.9, 0.95, aMu[index], aSigma, V_pod_at_index))
-                                       criticalPts=rbind(criticalPts,data.frame(index,a_50_50,a_90_50,a_90_95))
+                                       #criticalPts=rbind(criticalPts,data.frame(index,a_50_50,a_90_50,a_90_95))
+                                       criticalPts=rbind(criticalPts,data.frame(index,a_25_25, a_50_50,a_90_50,aSigma, a_90_95))
                                        defect_sizes = f_a_i(a_p_q_df(probabilities, 0.5, aMu[index], aSigma, V_pod_at_index))
                                        defect_sizes_upCI = f_a_i(a_p_q_df(probabilities, 0.95, aMu[index], aSigma, V_pod_at_index))
                                        plotPoints=rbind(plotPoints,data.frame(

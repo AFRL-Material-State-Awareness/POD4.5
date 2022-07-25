@@ -19,7 +19,7 @@ data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TR
 data_obs=na.omit(data_obs)
 
 #perform signal response analysis
-newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=100)
+newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=50)
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()
@@ -31,4 +31,4 @@ testResults<-newSRAnalysis$getLinearTestResults()
 covarMatrix<-newSRAnalysis$getCovarianceMatrix()
 resDF<-newSRAnalysis$getResidualTable()
 newSRAnalysis$plotPOD(results,critPoints)
-newSRAnalysis$plotSimdata(linResults)
+#newSRAnalysis$plotSimdata(linResults)

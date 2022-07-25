@@ -1729,7 +1729,7 @@ namespace POD.Data
             try
             {
                 _residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
-
+                //_residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
             }

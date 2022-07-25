@@ -74,7 +74,7 @@ namespace CSharpBackendWithR
                     }
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
+                    this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
                     this.myREngine.Evaluate("y<-c(log(" + SignalResponse[0].ToString() + "))");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
@@ -92,14 +92,19 @@ namespace CSharpBackendWithR
                     }
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
+                    this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
                     this.myREngine.Evaluate("y<-c(log(" + SignalResponse[0].ToString() + "))");
+                    //this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
+                    //this.myREngine.Evaluate("y<-c(" + SignalResponse[0].ToString() + ")");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
                     {
                         this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
                         this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
                         this.myREngine.Evaluate("y<-c(y, log(" + SignalResponse[i].ToString() + "))");
+                        //this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
+                        //this.myREngine.Evaluate("y<-c(y," + SignalResponse[i].ToString() + ")");
+
                     }
                     break;
                 default:
@@ -148,7 +153,7 @@ namespace CSharpBackendWithR
             //current list used returns a25, a50 (muhat), a90, sigmahat (SE of a90), and a9095 
             for (int i = 1; i <= 5; i++)
             {
-                this.myREngine.Evaluate("print(newSRAnalysis$getKeyAValues()[" + i + "])").AsList();
+                //this.myREngine.Evaluate("print(newSRAnalysis$getKeyAValues()[" + i + "])").AsList();
                 aValuesVector = this.myREngine.Evaluate("newSRAnalysis$getKeyAValues()[" + i + "]").AsNumeric();
                 aValuesDict.Add(key: aValuesStrings[i - 1], value: (double)aValuesVector[0]);
             }            return aValuesDict;

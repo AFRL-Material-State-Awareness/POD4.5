@@ -398,7 +398,7 @@ namespace POD.Controls
             Series series = null;
             //TEMP
             DataTable debugTest = myData.ResidualRawTable;
-            printDT(debugTest);
+            //printDT(debugTest);
             DataView view = myData.ResidualRawTable.DefaultView;
             //Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
             Uncensored.Points.DataBindXY(view, "flaw", view, "t_diff");
@@ -671,7 +671,7 @@ namespace POD.Controls
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 100;
+            int limit = 5;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

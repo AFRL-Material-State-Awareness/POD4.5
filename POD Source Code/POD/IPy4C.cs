@@ -560,7 +560,7 @@ namespace POD
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 100;
+            int limit = 5;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

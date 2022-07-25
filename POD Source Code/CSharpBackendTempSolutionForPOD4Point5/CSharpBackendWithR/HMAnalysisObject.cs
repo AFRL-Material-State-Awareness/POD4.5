@@ -100,7 +100,7 @@ namespace CSharpBackendWithR
             //m=number of cycles
             Set_r = 0;
             //default to standard wald unless overwritten
-            CIType = "MLR";
+            CIType = "Modified Wald";
             //datatables that will be sent back to the UI
             DataTable LogitHMFitTable = new DataTable();
             DataTable LogLogitHMFitTable = new DataTable();

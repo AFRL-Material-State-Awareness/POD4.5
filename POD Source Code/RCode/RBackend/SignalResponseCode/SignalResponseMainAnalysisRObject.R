@@ -34,12 +34,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                     getResults=function(){
                                       #ResultsPOD$case=NULL
                                       #names(ResultsPOD)[names(ResultsPOD) == 'probabilities'] <- 'POD'
-                                      finalResultsPOD=data.frame(
+                                      ResultsPOD<<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
                                         POD = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
-                                      return(finalResultsPOD)
+                                      return(ResultsPOD)
                                     },
                                     setModelIntercept=function(psModelInt){
                                       modelIntercept<<-psModelInt
