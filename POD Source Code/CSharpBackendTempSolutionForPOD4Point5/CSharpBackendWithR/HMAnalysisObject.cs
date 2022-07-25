@@ -21,6 +21,7 @@ namespace CSharpBackendWithR
         //parameter for ranked set sampling
         private int srsOrRSS;
         private int maxResamples;
+        private double goodnessOfFit;
         public HMAnalysisObject(string nameInput="")
         {
             //original HMDataframe
@@ -109,6 +110,8 @@ namespace CSharpBackendWithR
             this.srsOrRSS = 0; //simple random sampling by default
             //max resamples
             this.maxResamples = 1; //1 by default
+            //goodness of fit test with likelihood ratio
+            this.goodnessOfFit = -1.0;
         }
         public DataTable HitMissDataOrig
         {
@@ -192,7 +195,11 @@ namespace CSharpBackendWithR
             set { this.maxResamples = value; }
             get { return this.maxResamples; }
         }
-
+        public double GoodnessOfFit
+        {
+            set { this.goodnessOfFit = value; }
+            get { return this.goodnessOfFit; }
+        } 
 
         public void CurrFlawsAnalysis()
         {

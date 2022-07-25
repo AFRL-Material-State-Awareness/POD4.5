@@ -10,7 +10,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         results="data.frame",
                                         a_values="list",
                                         rankedSetSampleObject="RSSComponents",
-                                        covarianceMatrix="matrix"),
+                                        covarianceMatrix="matrix",
+                                        goodnessOfFit="numeric"),
                           methods = list(
                             getHitMissDF = function(){
                               return(hitMissDF)
@@ -51,6 +52,12 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               }
                               return(as.data.frame(covarianceMatrix))
                             },
+                            setGoodnessOfFit=function(psGOF){
+                              goodnessOfFit<<-psGOF
+                            },
+                            getGoodnessOfFit=function(){
+                              return(goodnessOfFit)
+                            },
                             #this is the entry point from c# if the user wants to do ranked set sampling
                             initializeRSS=function(){
                               #print("Startin RSS")
@@ -78,7 +85,9 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             detAnalysisApproach=function(){
                               #execute regression with original dataset depending which type
                               #is called (logit, firth, lasso, etc)
-                              regressionResults=determineRegressionType()
+                              regressionResults<-determineRegressionType()
+                              #calculate the goodness of fit
+                              setGoodnessOfFit(1- regressionResults$deviance/regressionResults$null.deviance)
                               if(CIType=="Standard Wald"){
                                 #print("start conf int")
                                 #set t_trans
@@ -120,6 +129,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               }
                               else if(CIType=="LR"){
                                 #ptm <- proc.time()
+                                #set the covariance matrix
+                                setCovMatrix(vcov(regressionResults))
                                 newLinearComboInstance=new("LinearComboGenerator", LogisticRegressionResult=regressionResults, 
                                                            simCracks=0.0,samples=normSampleAmount)
                                 calcLinearCombo=unclass(newLinearComboInstance$genLinearCombinations())
@@ -137,7 +148,9 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 setKeyAValues(new_Acalc$getAValuesList())
                               }
                               else if(CIType=="MLR"){
-                                ptm <- proc.time()
+                                #ptm <- proc.time()
+                                #set the covariance matrix
+                                setCovMatrix(vcov(regressionResults))
                                 newLinearComboInstance=new("LinearComboGenerator", LogisticRegressionResult=regressionResults, 
                                                            simCracks=0.0,samples=normSampleAmount)
                                 calcLinearCombo= unclass(newLinearComboInstance$genLinearCombinations())
@@ -145,8 +158,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 newMLRConfInt=ModifiedLikelihoodRatioConfInt$new(LogisticRegressionResult=regressionResults)
                                 newMLRConfInt$setLinCombo(calcLinearCombo)
                                 newMLRConfInt$executeMLR()
-                                print("Time of Calculation")
-                                print(proc.time() - ptm)
+                                #print("Time of Calculation")
+                                #print(proc.time() - ptm)
                                 Confidence_Interval=newMLRConfInt$getCIDataFrame()
                                 setResults(cbind(x, Confidence_Interval))
                                 #get key a values

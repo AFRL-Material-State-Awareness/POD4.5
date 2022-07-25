@@ -1182,6 +1182,7 @@ namespace POD.Analyze
                 }
                 catch(Exception whoops)
                 {
+                    MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
                     OutPFCovarianceV11 = -1;
                     OutPFCovarianceV12 = -1;
                     OutPFCovarianceV22 = -1;
@@ -1197,7 +1198,7 @@ namespace POD.Analyze
                 //OutPODSigma = _podDoc.GetPODSigma();
                 OutPODMu = _hmAnalysisObject.Muhat;
                 OutPODSigma = _hmAnalysisObject.Sighat;
-
+                OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
             }
 
             Data.UpdateOutput();

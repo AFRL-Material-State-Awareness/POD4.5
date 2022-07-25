@@ -2221,7 +2221,7 @@ class CPodDoc():
 
         #until we get it fixed
         #ask Christie
-        self.fclac = 0.0
+        self.fclac = 5.0
         
 
     def ahat_tests(self):

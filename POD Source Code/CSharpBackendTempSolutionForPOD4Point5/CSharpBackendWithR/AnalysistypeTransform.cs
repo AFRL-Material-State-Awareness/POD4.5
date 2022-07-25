@@ -73,6 +73,8 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.HitMissDataOrig =newHitMissControl.GetOrigHitMissDF();
             //store the covariance matrix values to return to UI
             this.newPFAnalysisObject.CovarianceMatrix = newHitMissControl.GetCovarianceMatrixValues();
+            //get the goodness of fit
+            this.newPFAnalysisObject.GoodnessOfFit = newHitMissControl.GetGoodnessOfFit();
             //clear all contents in R and restart the global environment
             this.analysisEngine.clearGlobalIInREngineObject();
             //Console.WriteLine(newPFAnalysisObject);

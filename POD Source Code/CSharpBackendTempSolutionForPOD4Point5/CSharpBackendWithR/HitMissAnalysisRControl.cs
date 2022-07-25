@@ -135,6 +135,11 @@ namespace CSharpBackendWithR
             }
             return CovarianceMatrix;
         }
+        public double GetGoodnessOfFit()
+        {
+            double goodFit=Convert.ToDouble(myREngine.Evaluate("newAnalysis$getGoodnessOfFit()").AsNumeric()[0]);
+            return goodFit;
+        }
         public DataTable GetOrigHitMissDF()
         {
             myREngine.Evaluate("hitMissDF$index=NULL");

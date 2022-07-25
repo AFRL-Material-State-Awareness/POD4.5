@@ -10,9 +10,9 @@ library(mcprofile) ## MLR and LR
 library(logistf)
 library(splines)
 library(parallel)
-#hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
+hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
-hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
+#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")
 #get the working directory, used for debugging only
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
@@ -28,8 +28,8 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
-CItype0="LR"
-type="Firth Logistic Regression"
+CItype0="Standard Wald"
+type="Logistic Regression"
 #type="Logistic Regression"
 #for(i in 1:10){
   newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
@@ -37,6 +37,7 @@ type="Firth Logistic Regression"
   results<-newAnalysis$getResults()
   aValues<-newAnalysis$getKeyAValues()
   covarianceMatrix<-newAnalysis$getCovMatrix()
+  goodnessOfFit<-newAnalysis$getGoodnessOfFit()
   newAnalysis$plotSimdata(results)
   newAnalysis$plotCI(results)
 #}
