@@ -138,6 +138,12 @@ namespace CSharpBackendWithR
             DataTable AHatResiduals = myREngineObject.rDataFrameToDataTable(returnDataFrameResid);
             return AHatResiduals;
         }
+        public DataTable GetThresholdsTableForUI()
+        {
+            RDotNet.DataFrame returnDataFrameThresh = myREngine.Evaluate("newSRAnalysis$getThresholdDF()").AsDataFrame();
+            DataTable AHatThresholds = myREngineObject.rDataFrameToDataTable(returnDataFrameThresh);
+            return AHatThresholds;
+        }
         public DataTable GetLogitFitTableForUI()
         {
             //ShowResults();

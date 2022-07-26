@@ -24,6 +24,7 @@ namespace CSharpBackendWithR
         //private DataTable originalData;
         private DataTable aHatLinearResults;
         private DataTable aHatResidualResults;
+        private DataTable aHatThresholdsTable;
         private DataTable aHatResultsPOD;
         //linear model unique metrics
         private double intercept;
@@ -104,6 +105,8 @@ namespace CSharpBackendWithR
             this.aHatLinearResults = new DataTable();
             //used to store the residual dataframe(adds a diff column to the linear df)
             this.aHatResidualResults = new DataTable();
+            //used to store and plot the POD at various thresholds in ahat vs a
+            this.aHatThresholdsTable = new DataTable();
             //used to store the results dataframe
             this.aHatResultsPOD = new DataTable();
         }
@@ -190,6 +193,11 @@ namespace CSharpBackendWithR
         {
             set { this.aHatLinearResults = value; }
             get { return this.aHatLinearResults; }
+        }
+        public DataTable AHatThresholdsTable
+        {
+            set { this.aHatThresholdsTable = value; }
+            get { return this.aHatThresholdsTable; }
         }
         public DataTable AHatResultsResid
         {

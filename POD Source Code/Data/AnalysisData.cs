@@ -1764,7 +1764,7 @@ namespace POD.Data
 
             try 
             { 
-                _podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable());
+                //_podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable());
                 _podCurveTable = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1788,21 +1788,23 @@ namespace POD.Data
 
             try
             {
-                _thresholdPlotTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable());
-
-                _thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
+                //_thresholdPlotTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable());
+                _thresholdPlotTable = _aHatAnalysisObject.AHatThresholdsTable;
+                //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
+                _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
             }
-
+            printDT(_thresholdPlotTable);
             try
             {
                 _thresholdPlotTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable_All());
-
-                _thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";
+                _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
+                //_thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";
+                _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
             }
             catch (Exception exp)

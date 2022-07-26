@@ -326,13 +326,16 @@ namespace POD.Controls
 
             DataView view = myData.ThresholdPlotTable.DefaultView;
 
-            POD90.Points.DataBindXY(view, "threshold", view, "level");
-            POD9095.Points.DataBindXY(view, "threshold", view, "confidence");
+            //POD90.Points.DataBindXY(view, "threshold", view, "level");
+            POD90.Points.DataBindXY(view, "threshold", view, "a90");
+            //POD9095.Points.DataBindXY(view, "threshold", view, "confidence");
+            POD9095.Points.DataBindXY(view, "threshold", view, "a9095");
 
             DataView all_view = myData.ThresholdPlotTable_All.DefaultView;
-            POD90_All.Points.DataBindXY(all_view, "threshold", all_view, "level");
-            POD9095_All.Points.DataBindXY(all_view, "threshold", all_view, "confidence");
-
+            //POD90_All.Points.DataBindXY(all_view, "threshold", all_view, "level");
+            POD90_All.Points.DataBindXY(all_view, "threshold", all_view, "a90");
+            //POD9095_All.Points.DataBindXY(all_view, "threshold", all_view, "confidence");
+            POD9095_All.Points.DataBindXY(all_view, "threshold", all_view, "a9095");
             //no point in plotting a 90/95 that couldn't be calculated (zeroed out by analysis code)
             if (POD9095.Points.Count > 0 && POD9095.Points.First().YValues[0] + POD9095.Points.Last().YValues[0] == 0.0)
             {

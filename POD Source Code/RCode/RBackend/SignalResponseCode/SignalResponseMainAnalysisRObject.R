@@ -11,7 +11,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                                                         #copyoutputfrompython
                                                                         residualTable="data.frame",
                                                                         modelIntercept="numeric",
-                                                                        modelSlope="numeric"
+                                                                        modelSlope="numeric",
+                                                                        thesholdTable="data.frame"
                                                                         ),
                                   methods=list(
                                     setLinearModel=function(psLMObject){
@@ -40,6 +41,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
                                       return(ResultsPOD)
+                                    },
+                                    setThresholdDF=function(psThreshDF){
+                                      thesholdTable<<-psThreshDF
+                                    },
+                                    getThresholdDF=function(){
+                                      return(thesholdTable)
                                     },
                                     setModelIntercept=function(psModelInt){
                                       modelIntercept<<-psModelInt
@@ -102,9 +109,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       ahatvACensored=genAhatVersusACensored()
                                       #find the key a values and the covariance matrix
                                       genAvaluesAndMatrix(ahatvACensored)
+                                      #generates the thesholds table for UI
+                                      genThresholdsTable(ahatvACensored)
                                       #calculate POD dataframe
                                       newPODSR=GenPODSignalResponse$new()
-                                      newPODSR$initialize(a.V_POD=aVPOD, aMu=keyAValues[[1]], aSigma=keyAValues[[3]])
+                                      #print(keyAValues)
+                                      newPODSR$initialize(a.V_POD=aVPOD, aMu=keyAValues[[2]], aSigma=keyAValues[[4]])
                                       newPODSR$genPODCurve()
                                       setResults(newPODSR$getPODSR())
                                       setCritPts(newPODSR$getCriticalPoints())
@@ -172,6 +182,45 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       ###TODO: Also calculate A25 which is now set to -1
                                       setKeyAValues(list(-1, a50, a90, aSigma, a9095))
                                     },
+                                    genThresholdsTable=function(a.hat.vs.a.censored){
+                                      thresholds=linspace(-10, 15, 300)
+                                      columns=c("threshold", "a90", "a90_95", "a50", "v11", "v12", "v22")
+                                      threshDataFrame=data.frame(matrix(nrow=0, ncol=length(columns)))
+                                      colnames(threshDataFrame)=columns
+                                      a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
+                                      a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
+                                      a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
+                                      a.covariance.matrix <- a.hat.vs.a.censored$var
+                                      varCovarMatrix<<-a.covariance.matrix
+                                      for(i in thresholds){
+                                        a.hat.decision = i # = 200
+                                        aMu <- (a.hat.decision - a.b0)/a.b1
+                                        aSigma <- a.tau/a.b1
+                                        POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                        a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
+                                        a50 <- aMu
+                                        a90 <- aMu + qnorm(0.9) * aSigma
+                                        z90 <- qnorm(0.9)
+                                        #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
+                                        a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                        a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
+                                        SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
+                                        a9095 <- aMu + z90 * aSigma + qnorm(0.95) * SD.a.90
+                                        # Transform x back to the original units
+                                        a50 <- f_a_i(a50)
+                                        a90 <- f_a_i(a90)
+                                        a9095 <- f_a_i(a9095)
+                                        threshDataFrame=rbind(threshDataFrame,
+                                                              data.frame(threshold=i,
+                                                                         a90, 
+                                                                         a9095, 
+                                                                         a50, 
+                                                                         v11=varCovarMatrix[[1]],  
+                                                                         v12=varCovarMatrix[1,2],
+                                                                         v22=varCovarMatrix[2,2]))
+                                      }
+                                      setThresholdDF(threshDataFrame)
+                                    },
                                     # Inverse function of f_a. Uncomment 1
                                     f_a_i=function(a){ return(a) # exp(a)#log(a) #sqrt(a)
                                     },
@@ -193,6 +242,18 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                         xlim(min(na.exclude(plotPoints$flaw)),max(na.exclude(plotPoints$flaw)))+
                                         ylab("Probability of Detection, POD(a)")+
                                         xlab("Defect Size, a")
+                                    },
+                                    #used for Debugging ONLY
+                                    plotSimdata=function(df){
+                                      myPlot=ggplot(data=df, mapping=aes(x=flaw, y=POD))+geom_point()+
+                                        ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
+                                      print(myPlot)
+                                    },
+                                    #used for Debugging ONLY
+                                    plotCI=function(df){
+                                      myPlot=ggplot(data=df, mapping=aes(x=flaw, y=confidence))+geom_point()+
+                                        ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
+                                      print(myPlot)
                                     },
                                     #used for Debugging ONLY
                                     plotSimdata=function(df){

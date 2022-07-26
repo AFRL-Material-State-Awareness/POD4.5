@@ -950,7 +950,7 @@ namespace POD.Analyze
             analysisLauncher.WorkerSupportsCancellation = true;
             analysisLauncher.WorkerReportsProgress = true;
 
-            analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
+             analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
             analysisLauncher.ProgressChanged += new ProgressChangedEventHandler(Background_AnalysisProgressChanged);
             analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
 
@@ -990,8 +990,6 @@ namespace POD.Analyze
                 //entry point for pod calculate in PODv4 ahat
                 else
                 {
-
-                    
                     AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
                     newAnalysisControl.ExecuteAnalysisAHat();
                     _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;

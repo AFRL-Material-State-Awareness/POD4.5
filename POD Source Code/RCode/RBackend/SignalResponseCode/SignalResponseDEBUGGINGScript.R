@@ -17,9 +17,10 @@ source(paste(folderLocation, "/SignalResponseMainAnalysisRObject.R", sep=""))
 #data_obs = read.csv(paste(folderLocation,'/Plot_Data_50.csv',sep=""), header=TRUE, col.names=c("y","x"))
 data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TRUE)
 data_obs=na.omit(data_obs)
-
+begin<-proc.time()
 #perform signal response analysis
-newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=50)
+#usually 40% of the highest signal response value
+newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=1.415)
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()
@@ -30,5 +31,10 @@ intercept<-newSRAnalysis$getModelIntercept()
 testResults<-newSRAnalysis$getLinearTestResults()
 covarMatrix<-newSRAnalysis$getCovarianceMatrix()
 resDF<-newSRAnalysis$getResidualTable()
-newSRAnalysis$plotPOD(results,critPoints)
+threshDF<-newSRAnalysis$getThresholdDF()
+print(proc.time()-begin)
+newSRAnalysis$plotSimdata(results)
+newSRAnalysis$plotCI(results)
+
 #newSRAnalysis$plotSimdata(linResults)
+
