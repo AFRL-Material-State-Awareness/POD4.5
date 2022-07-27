@@ -14,7 +14,7 @@ namespace CSharpBackendWithR
         /// </summary> 
         private DataTable hitMissDataOrig;
         private List<double> covarMatrix;
-        private List<double> flawsTemp;
+        private List<double> uncensoredFlaws;
         private int modelType;
         //used for logit, firth, or lasso
         private string regressionType;
@@ -45,14 +45,13 @@ namespace CSharpBackendWithR
 
             //decision_thesholds = .5; //this was its value in PODv4 whenever hit/miss is used
             Titles = new List<string>();
-            //detailed information about flaws
-            //Flaws = new List<HMCrackData>();
             //holds the flaw sizes
+            FlawsUncensored = new List<double>();
             Flaws = new List<double>();
             //current crack size list to be sent to r(can be either normal or log transformed
             //List<double> currFlawsAnalysis;
             //TODO: temporary varaible used to store flaws array until the class is working
-            this.flawsTemp = new List<double>();
+            this.uncensoredFlaws = new List<double>();
             Responses_all = new Dictionary<string, List<double>>();
             Nsets = 0;
             Count = 0; //the original number of data points in a given analysis
@@ -145,10 +144,10 @@ namespace CSharpBackendWithR
         public new List<string> Titles { set; get; }
         //public List<HMCrackData> Flaws { set; get; }
         public new List<double> Flaws { set; get; }
-        public List<double> FlawsTemp {
-            set { this.flawsTemp = value; }
-            get { return this.flawsTemp; } 
-        }
+        public new List<double> FlawsUncensored { set; get; }
+        //    set { this.uncensoredFlaws = value; }
+       //     get { return this.uncensoredFlaws; } 
+        //}
         //TODO: FIX THIS TO MAKE THIS ONLY integers since this object controls hitmiss data only
         public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
@@ -204,7 +203,7 @@ namespace CSharpBackendWithR
         public void CurrFlawsAnalysis()
         {
             //empty the temp array whenever this function is called
-            //this.flawsTemp.Clear();
+            //this.uncensoredFlaws.Clear();
             //iterate through the list of HMCrackDataObjects to make the x-axis
             //a normal tranform o a log tranform depending on what the value of model is 
             /*
@@ -212,11 +211,11 @@ namespace CSharpBackendWithR
             {
                 if (this.modelType == 0)
                 {
-                    this.flawsTemp.Add(i.CrkSizeControl);
+                    this.uncensoredFlaws.Add(i.CrkSizeControl);
                 }
                 else if(this.modelType == 1)
                 {
-                    this.flawsTemp.Add(i.CrkfControl);
+                    this.uncensoredFlaws.Add(i.CrkfControl);
                 }
             } 
             */

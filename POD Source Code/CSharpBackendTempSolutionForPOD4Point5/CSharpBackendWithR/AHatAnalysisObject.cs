@@ -46,8 +46,9 @@ namespace CSharpBackendWithR
             Titles = new List<string>();
             //holds the flaw sizes
             Flaws = new List<double>();
+            FlawsUncensored = new List<double>();
             ////////////////////
-            ///this.flawsTemp = new List<double>();
+            ///this.uncensoredFlaws = new List<double>();
             Responses = new Dictionary<string, List<double>>();
             Responses_all = new Dictionary<string, List<double>>();
             Nsets = 0;
@@ -122,6 +123,7 @@ namespace CSharpBackendWithR
         public new double Signalmin { set; get; }
         public new double Signalmax { set; get; }
         public new List<double> Flaws { set; get; }
+        public new List<double> FlawsUncensored { set; get; }
         public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
         public new double Crckmin { set; get; }

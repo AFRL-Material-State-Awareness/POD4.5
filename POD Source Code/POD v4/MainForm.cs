@@ -239,8 +239,12 @@ namespace POD
             //{
             try
             {
+                Stopwatch newTimer = new Stopwatch();
+                newTimer.Start();
                 //initialize the iron python engine either by .dll or by importing the .py modules
                 py = new IPy4C(PyTypeEnum.PyFiles, true);
+                newTimer.Stop();
+                //MessageBox.Show("Total time was:" + newTimer.ElapsedMilliseconds);
                 //py = new IPy4C(PyTypeEnum.DLLFiles, false);
                 //initialize the REngine Object to create an instance with the R.Net engine
                 REngineInstance = new REngineObject();

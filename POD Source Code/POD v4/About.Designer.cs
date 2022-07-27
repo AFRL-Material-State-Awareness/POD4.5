@@ -96,7 +96,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(362, 24);
             this.label1.TabIndex = 1;
-            this.label1.Text = "POD version 4.0.5";
+            this.label1.Text = "POD version 4.1";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2

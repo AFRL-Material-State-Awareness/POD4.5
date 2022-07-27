@@ -21,7 +21,7 @@ namespace CSharpBackendWithR
             List<double> cracks = newTranformAnalysis.Flaws;
             //TODO: FIX MEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             newTranformAnalysis.HitMiss_name = "y";
-            List<double> hitMiss = newTranformAnalysis.Responses_all[newTranformAnalysis.HitMiss_name];
+            List<double> hitMiss = newTranformAnalysis.Responses[newTranformAnalysis.HitMiss_name];
             int a_x_n = newTranformAnalysis.A_x_n;
             List<int> indices = new List<int>();
             //needed for the r code 

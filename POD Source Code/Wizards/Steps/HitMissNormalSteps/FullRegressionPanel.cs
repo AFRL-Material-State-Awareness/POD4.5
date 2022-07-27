@@ -367,7 +367,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                 return;
             }
-
+            
             podChart.FillChart(Analysis.Data);
             podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
             podChart.UpdateLevelConfidenceLines(a50Original,

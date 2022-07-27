@@ -1123,7 +1123,7 @@ namespace POD.Data
         public void SetSource(DataSource mySource, List<string> myFlaws, List<string> myMetaDatas,
             List<string> myResponses, List<string> mySpecIDs)
         {
-            _availableResponses = myResponses;
+             _availableResponses = myResponses;
             _availableFlaws = myFlaws;
             _availableMetaDatas = myMetaDatas;
             _availableSpecIDs = mySpecIDs;
@@ -1550,17 +1550,31 @@ namespace POD.Data
                 _podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
                 if(_dataType== AnalysisDataTypeEnum.HitMiss)
                 {
+                    if (_hmAnalysisObject.FlawsUncensored.Count()==0)
+                    {
+                        _hmAnalysisObject.FlawsUncensored = flaws;
+                    }
+                    if (_hmAnalysisObject.Responses_all.Count() == 0)
+                    {
+                        _hmAnalysisObject.Responses_all = allResponses;
+                    }
                     //used for the hit miss analysis object for RDotNet
                     _hmAnalysisObject.Flaws = flaws;
-                    _hmAnalysisObject.Responses = responses;
-                    _hmAnalysisObject.Responses_all = allResponses;
+                    _hmAnalysisObject.Responses = responses;  
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
                 {
+                    if (_aHatAnalysisObject.FlawsUncensored.Count() == 0)
+                    {
+                        _aHatAnalysisObject.FlawsUncensored = flaws;
+                    }
+                    if (_aHatAnalysisObject.Responses_all.Count() == 0)
+                    {
+                        _aHatAnalysisObject.Responses_all = allResponses;
+                    }
                     //used for the ahat analysis obejct for RDotnet
                     _aHatAnalysisObject.Flaws = flaws;
                     _aHatAnalysisObject.Responses = responses;
-                    _aHatAnalysisObject.Responses_all = allResponses;
                 }
                 
             }
@@ -1699,7 +1713,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Fit Error");
             }
-            printDT(_fitResidualsTable);
+            //printDT(_fitResidualsTable);
             try
             {
                 //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetResidualTable());
@@ -1712,7 +1726,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
             }
-            printDT(_residualUncensoredTable);
+            //printDT(_residualUncensoredTable);
             try
             {
                 //_residualRawTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetRawResidualTable());
@@ -1725,7 +1739,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
             }
-            printDT(_residualRawTable);
+            //printDT(_residualRawTable);
             try
             {
                 _residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
@@ -1773,7 +1787,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
             }
-            printDT(PodCurveTable);
+            //printDT(PodCurveTable);
             try
             {
                 _podCurveTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable_All());
@@ -1798,7 +1812,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
             }
-            printDT(_thresholdPlotTable);
+            //printDT(_thresholdPlotTable);
             try
             {
                 _thresholdPlotTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable_All());
