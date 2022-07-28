@@ -7,6 +7,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         N="numeric",
                                         #also known as a_x_n
                                         normSampleAmount="numeric",
+                                        iterationTable="data.frame",
                                         results="data.frame",
                                         a_values="list",
                                         rankedSetSampleObject="RSSComponents",
@@ -31,6 +32,12 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               names(results)[names(results) == 'y'] <<- 'hitrate'
                               names(results)[names(results) == 't_trans'] <<- 'pod'
                               return(results)
+                            },
+                            setIterationTable =function(psiterTable){
+                              iterationTable<<-psiterTable
+                            },
+                            getIterationTable=function(){
+                              return(iterationTable)
                             },
                             setKeyAValues=function(psAValues){
                               #overwrite a9095 to the largest possible double if the value doesn't exist
@@ -86,6 +93,15 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               #execute regression with original dataset depending which type
                               #is called (logit, firth, lasso, etc)
                               regressionResults<-determineRegressionType()
+                              #add iteration metrics(TEMP)
+                              setIterationTable(data.frame(
+                                trial=1,
+                                indexiteration=regressionResults$iter,
+                                indexmu=-1,
+                                sigma=-1,
+                                fnorm=-1,
+                                damping=1
+                              ))
                               #calculate the goodness of fit
                               setGoodnessOfFit(1- regressionResults$deviance/regressionResults$null.deviance)
                               if(CIType=="StandardWald"){

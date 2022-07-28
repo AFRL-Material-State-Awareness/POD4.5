@@ -61,6 +61,7 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             newHitMissControl.ExecuteAnalysis(this.newPFAnalysisObject);
             this.newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
+            this.newPFAnalysisObject.IterationTable = newHitMissControl.GetIterationTableForUI();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict=newHitMissControl.GetKeyA_Values();
             this.newPFAnalysisObject.A25 = finalAValuesDict["a25"];

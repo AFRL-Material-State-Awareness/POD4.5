@@ -119,6 +119,12 @@ namespace CSharpBackendWithR
             DataTable LogitFitDataTable= myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return LogitFitDataTable;
         }
+        public DataTable GetIterationTableForUI()
+        {
+            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getIterationTable()").AsDataFrame();
+            DataTable IterationDatatable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            return IterationDatatable;
+        }
         public List<double> GetCovarianceMatrixValues()
         {
             RDotNet.DataFrame returnCovMatrix = myREngine.Evaluate("newAnalysis$getCovMatrix()").AsDataFrame();

@@ -521,36 +521,6 @@ namespace POD.Analyze
             }
         }
 
-        //double _outResponseDecisionPODConfidenceValue_All;
-
-        ///// <summary>
-        /////     POD flaw size for the response data decision threshold confidence value (a90/95)
-        ///// </summary>
-        //public double OutResponseDecisionPODConfidenceValue_All
-        //{
-        //    get
-        //    {
-        //        return NoBigNumbers(_outResponseDecisionPODConfidenceValue_All);
-        //    }
-
-        //    private set
-        //    {
-        //        if (!IsFrozen)
-        //            _outResponseDecisionPODConfidenceValue_All = value;
-        //    }
-        //}
-
-        
-
-        //public double OutResponseDecisionPODConfidencePlot
-        //{
-        //    get
-        //    {
-        //        return _podDoc.GetTransformedFlawValue(OutResponseDecisionPODConfidenceValue);
-        //    }
-
-        //}
-
         double _outResponseDecisionPODLevelValue;
 
         /// <summary>
@@ -1878,8 +1848,8 @@ namespace POD.Analyze
         {
             _python = myPy;
             //creates a new pod doc for analysis in python
-            if (_podDoc == null)
-                _podDoc = _python.CPodDoc(Name);         
+            //if (_podDoc == null)
+            //    _podDoc = _python.CPodDoc(Name);         
             _data.SetPythonEngine(_python, Name);
         }
         public override void SetREngine(REngineObject myREngine)
@@ -2486,8 +2456,10 @@ namespace POD.Analyze
             {
                 try
                 {
-                    return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
-                    //return Convert.ToDecimal()
+                    //Debug.WriteLine(_podDoc.GetTransformedValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
+                    //return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
+                    return Convert.ToDecimal(TransformAValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
+                    //return Convert.ToDecimal(_data.SmallestFlaw / 2.0)
                 }
                 catch (OverflowException overflow)
                 {
@@ -2501,8 +2473,10 @@ namespace POD.Analyze
 
             try
             {
-                value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
-                Debug.WriteLine(value);
+                //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                //Debug.WriteLine(value);
+                value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                //Debug.WriteLine(value);
             }
             catch(OverflowException overflow)
             {
@@ -2529,7 +2503,8 @@ namespace POD.Analyze
             {
                 try
                 {
-                    return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
+                    //return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
+                    return Convert.ToDecimal(TransformAValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                 }
                 catch (OverflowException overflow)
                 {
@@ -2545,8 +2520,9 @@ namespace POD.Analyze
 
             try
             {
-                value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
+                //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
                 //value = myValue;
+                value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
             }
             catch(OverflowException overflow)
             {
@@ -2572,9 +2548,14 @@ namespace POD.Analyze
             try
             {
                 if (_python != null)
-                    value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                {
+                    //value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                    value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                }
                 else
+                {
                     value = myValue;
+                }       
             }
             catch
             {
@@ -2596,7 +2577,10 @@ namespace POD.Analyze
             try
             {
                 if (_python != null)
-                    value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
+                {
+                    //value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
+                    value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                }    
                 else
                     value = myValue;
             }
@@ -2750,6 +2734,42 @@ namespace POD.Analyze
             stillRunningAnalysis = false;
 
             //MessageBox.Show("IN: " + inputTime + " OUT: " + outputTime + " RUN: " + runTime);
+        }
+        public double TransformAValue(double myValue, int transform)
+        {
+            double transformValue = 0.0;
+            switch (transform)
+            {
+                case 1:
+                    transformValue = myValue;
+                    break;
+                case 2:
+                    transformValue = Math.Log(myValue);
+                    break;
+                default:
+                    transformValue = myValue;
+                    break;
+            }
+            return transformValue;
+                
+        }
+        public double TransformBackAValue(double myValue, int transform)
+        {
+            double transformValue = 0.0;
+            switch (transform)
+            {
+                case 1:
+                    transformValue = myValue;
+                    break;
+                case 2:
+                    transformValue = Math.Exp(myValue);
+                    break;
+                default:
+                    transformValue = myValue;
+                    break;
+            }
+            return transformValue;
+
         }
 
         public void ClearInitialGuesses()

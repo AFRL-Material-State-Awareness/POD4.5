@@ -41,10 +41,14 @@ GenPODSignalResponse<-setRefClass("GenPODSignalResponse", fields=list(
                                      numPlotPoints=101
                                      criticalPts=data.frame(index=NULL,a_50_50=NULL,a_90_50=NULL,a_90_95=NULL)
                                      plotPoints = data.frame(case=NULL, probabilities = NULL,defect_sizes=NULL, defect_sizes_upCI=NULL)
-                                     #TODO: replace this function with the function that doesn't require PRACMA
+                                     #generate probabilities for pod curve
                                      probabilities = linspace(0,1,numPlotPoints)
-                                     
-                                     
+                                     probabilities=probabilities[-1]
+                                     probabilities=probabilities[-length(probabilities)]
+                                     #smooth out top of curve
+                                     additionalProbs= c(.995, .9975, .99875, .999375, .9996875, .99984375, .999921875, .9999609375, .99998046875,
+                                                        .99999023437, .99999511718)
+                                     probabilities=append(probabilities,additionalProbs )
                                      V_pod_df=data.frame(
                                        cat_level=rep(1,4),
                                        name=c("var_mu","var_cov1","var_cov2","var_sigma"),

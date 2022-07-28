@@ -182,7 +182,7 @@ namespace CSharpBackendWithR
 
         //get or set DataTables
         public DataTable LogitFitTable { set; get; }
-        public DataTable LogLogitFitTable { set; get; }
+        public DataTable IterationTable { set; get; }
         //RSS
         public int SrsOrRSS
         {
