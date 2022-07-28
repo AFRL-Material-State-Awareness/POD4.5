@@ -955,7 +955,7 @@ namespace POD.Analyze
             analysisLauncher.WorkerSupportsCancellation = true;
             analysisLauncher.WorkerReportsProgress = true;
 
-              analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
+            analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
             analysisLauncher.ProgressChanged += new ProgressChangedEventHandler(Background_AnalysisProgressChanged);
             analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
 
@@ -1201,9 +1201,21 @@ namespace POD.Analyze
                 //TODO: figure out how to get the covariance matrix for LR and MLR
                 try
                 {
-                    OutPFCovarianceV11 = covMatrix[0];
-                    OutPFCovarianceV12 = covMatrix[1];
-                    OutPFCovarianceV22 = covMatrix[3];
+                    //if (InFlawTransform == TransformTypeEnum.Linear)
+                    //{
+                        OutPFCovarianceV11 = covMatrix[0];
+                        OutPFCovarianceV12 = covMatrix[1];
+                        OutPFCovarianceV22 = covMatrix[3];
+                    //}
+                    /*
+                    else if(InFlawTransform == TransformTypeEnum.Log)
+                    {
+                        OutPFCovarianceV11 =Math.Exp(covMatrix[0]);
+                        OutPFCovarianceV12 = Math.Exp(covMatrix[1]);
+                        OutPFCovarianceV22 = Math.Exp(covMatrix[3]);
+                    }
+                    */
+                    
                 }
                 catch(Exception whoops)
                 {
@@ -1212,12 +1224,22 @@ namespace POD.Analyze
                     OutPFCovarianceV12 = -1;
                     OutPFCovarianceV22 = -1;
                 }
-                
 
-                OutResponseDecisionPODSigma = _hmAnalysisObject.Sighat;
-                OutResponseDecisionPODA50Value = _hmAnalysisObject.A50;
-                OutResponseDecisionPODLevelValue = _hmAnalysisObject.A90;
-                OutResponseDecisionPODConfidenceValue = _hmAnalysisObject.A9095;
+                if (InFlawTransform == TransformTypeEnum.Linear)
+                {
+                    OutResponseDecisionPODSigma = _hmAnalysisObject.Sighat;
+                    OutResponseDecisionPODA50Value = _hmAnalysisObject.A50;
+                    OutResponseDecisionPODLevelValue = _hmAnalysisObject.A90;
+                    OutResponseDecisionPODConfidenceValue = _hmAnalysisObject.A9095;
+                }
+                else if (InFlawTransform == TransformTypeEnum.Log)
+                {
+                    OutResponseDecisionPODSigma =Math.Exp(_hmAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = Math.Exp(_hmAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = Math.Exp(_hmAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = Math.Exp(_hmAnalysisObject.A9095);
+                }
+                
 
                 //OutPODMu = _podDoc.GetPODMu();
                 //OutPODSigma = _podDoc.GetPODSigma();
@@ -2465,6 +2487,7 @@ namespace POD.Analyze
                 try
                 {
                     return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
+                    //return Convert.ToDecimal()
                 }
                 catch (OverflowException overflow)
                 {

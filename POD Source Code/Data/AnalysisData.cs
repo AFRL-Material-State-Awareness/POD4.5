@@ -1651,7 +1651,24 @@ namespace POD.Data
                 _podCurveTable = _hmAnalysisObject.LogitFitTable;
                 //DataTable newPFTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetNewPFTable());
 
-
+                //used to transform the POD curve back to linear space
+                if (_hmAnalysisObject.ModelType == 1)
+                {
+                    _podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        _podCurveTable.Rows[i][3] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
+                    }
+                }
+                else if (_hmAnalysisObject.ModelType == 2)
+                {
+                    _podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i=0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        _podCurveTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
+                    }
+                }
+                printDT(_podCurveTable);
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
