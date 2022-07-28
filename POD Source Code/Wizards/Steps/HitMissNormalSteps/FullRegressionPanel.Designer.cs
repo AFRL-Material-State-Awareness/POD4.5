@@ -889,6 +889,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private POD.Controls.PODChartNumericUpDown covV12Out;
         private Label CovV11OutLabel;
         private Controls.PFModelBox ModelBox;
+        //private Controls.ConfidenceBox ConfIntBox;
         private Label ModelLabel;
         private Controls.ColorMap TestColorMap;
         private Controls.PODRatedNumericUpDown likelihoodRatioTestOut;

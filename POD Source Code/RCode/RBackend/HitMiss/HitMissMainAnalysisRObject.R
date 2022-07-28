@@ -88,7 +88,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               regressionResults<-determineRegressionType()
                               #calculate the goodness of fit
                               setGoodnessOfFit(1- regressionResults$deviance/regressionResults$null.deviance)
-                              if(CIType=="Standard Wald"){
+                              if(CIType=="StandardWald"){
                                 #print("start conf int")
                                 #set t_trans
                                 t_trans=regressionResults$fitted.values
@@ -105,7 +105,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 new_Acalc$calcAValuesStandardWald()
                                 setKeyAValues(new_Acalc$getAValuesList())
                               }
-                              else if(CIType=="Modified Wald"){
+                              else if(CIType=="ModifiedWald"){
                                 #calc logit regression
                                 #execute logit regression with original dataset
                                 #generate normally distributed crack sizes

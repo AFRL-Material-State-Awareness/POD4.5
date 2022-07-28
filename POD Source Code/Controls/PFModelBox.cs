@@ -55,10 +55,10 @@ namespace POD.Controls
             switch (ModelType)
             {
                 case PFModelEnum.Normal:
-                    _label = "Normal";
+                    _label = "Logistic Reg";
                     break;
                 case PFModelEnum.Odds:
-                    _label = "Odds";
+                    _label = "Firth Logistic Reg";
                     break;
                 default:
                     _label = "Undefined";

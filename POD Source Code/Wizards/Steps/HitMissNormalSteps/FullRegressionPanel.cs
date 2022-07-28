@@ -21,6 +21,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
     {
         private TransformBox _xTransformBox;
         private Label _xTransformLabel;
+
+        private ConfidenceBox _confIntBox;
+        private Label _confIntLabel;
         //private TransformBox _yTransformBox;
 
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
@@ -171,11 +174,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             MainChart.ContextMenuImageList = aMaxControl.RatingImages;
 
             IntitalizeTransformBoxes();
-
+            InitializeCITypeBox();
             var list = new List<Control> {
                                            AxisTransformsHeader,
                                            _xTransformLabel, _xTransformBox,
-
+                                           _confIntLabel, _confIntBox,
                                            PODModelTypeHeader,
                                            ModelLabel, ModelBox,
 
@@ -210,10 +213,14 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void IntitalizeTransformBoxes()
         {
             PrepareLabelBoxPair(ref _xTransformLabel, "Flaw", ref _xTransformBox);
-
+            //PrepareLabelBoxPairConfint(ref _confIntLabel, "Confidence Interval", ref _confIntBox);
             ModelBox.SelectedIndex = 0;
         }
-
+        public void InitializeCITypeBox()
+        {
+            PrepareLabelBoxPairConfint(ref _confIntLabel, "Confidence Interval Type", ref _confIntBox);
+            _confIntBox.SelectedIndex = 0;
+        }
         /// <summary>
         /// Sets up event handling for right side numeric controls. Only call after InitializeComponent().
         /// </summary>
@@ -223,6 +230,17 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             aMinControl.NumericUpDown.ValueChanged += this.aMinControl_ValueChanged;
             _xTransformBox.SelectedIndexChanged += XTransformBox_ValueChanged;
             ModelBox.SelectedIndexChanged += ModelBox_ValueChanged;
+            _confIntBox.SelectedIndexChanged += ConfIntBox_ValueChanged;
+        }
+        private void ConfIntBox_ValueChanged(object sender, EventArgs e)
+        {
+            Analysis.InConfIntervalType = _confIntBox.SelectedConfInt;
+            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+            mainChart.SetAMaxBoundary(x, false);
+            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+            mainChart.SetAMinBoundary(x, false);
+
+            ForceUpdateAfterTransformChange();
         }
 
         private void XTransformBox_ValueChanged(object sender, EventArgs e)
@@ -299,6 +317,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             Analysis.InFlawCalcMin = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Min));
             Analysis.InResponseDecisionMin = mainChart.ChartAreas[0].AxisY.Minimum;
             Analysis.InResponseDecisionMax = mainChart.ChartAreas[0].AxisY.Maximum;
+            //prototype for the UI
+            Analysis.InConfIntervalType = _confIntBox.SelectedConfInt;
             Analysis.InResponseDecisionIncCount = 21;
             
         }

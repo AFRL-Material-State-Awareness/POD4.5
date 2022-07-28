@@ -276,8 +276,13 @@ namespace POD.Analyze
             set { if (!IsFrozen) _pfModelIn = value; }
         }
 
+        private ConfidenceIntervalTypeEnum _confIntHMType;
+        public ConfidenceIntervalTypeEnum InConfIntervalType
+        {
+            get { return _confIntHMType; }
+            set { if (!IsFrozen) _confIntHMType = value; }
+        }
         
-
         private double NoBigNumbers(double myValue)
         {
             if (myValue > 1E9)
@@ -950,7 +955,7 @@ namespace POD.Analyze
             analysisLauncher.WorkerSupportsCancellation = true;
             analysisLauncher.WorkerReportsProgress = true;
 
-             analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
+              analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
             analysisLauncher.ProgressChanged += new ProgressChangedEventHandler(Background_AnalysisProgressChanged);
             analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
 
@@ -1699,6 +1704,7 @@ namespace POD.Analyze
                 _hmAnalysisObject.Confidence_level = .95;
                 //used for modified wald, LR, etc. Will implement into the UI later
                 _hmAnalysisObject.A_x_n = 500;
+                _hmAnalysisObject.CIType = InConfIntervalType.ToString(); //
                 //used for RSS
                 _hmAnalysisObject.Set_r = _hmAnalysisObject.A_x_n / _hmAnalysisObject.Set_m;
                 _hmAnalysisObject.MaxResamples = 30;
@@ -2517,6 +2523,7 @@ namespace POD.Analyze
             try
             {
                 value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
+                //value = myValue;
             }
             catch(OverflowException overflow)
             {

@@ -1174,7 +1174,13 @@ namespace POD
         Exponetial,
         Custom
     }
-
+    public enum ConfidenceIntervalTypeEnum
+    {
+        StandardWald,
+        ModifiedWald,
+        LR,
+        MLR
+    }
     public enum PFModelEnum
     {
         Normal,

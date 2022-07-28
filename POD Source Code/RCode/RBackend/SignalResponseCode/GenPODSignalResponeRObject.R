@@ -38,7 +38,7 @@ GenPODSignalResponse<-setRefClass("GenPODSignalResponse", fields=list(
                                      return(mu_x_p+ z_q*stdev_x_p)
                                    },
                                    genPODCurve=function(){
-                                     numPlotPoints=2001
+                                     numPlotPoints=101
                                      criticalPts=data.frame(index=NULL,a_50_50=NULL,a_90_50=NULL,a_90_95=NULL)
                                      plotPoints = data.frame(case=NULL, probabilities = NULL,defect_sizes=NULL, defect_sizes_upCI=NULL)
                                      #TODO: replace this function with the function that doesn't require PRACMA

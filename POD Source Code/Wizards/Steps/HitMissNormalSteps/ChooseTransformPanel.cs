@@ -176,7 +176,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                             //watch.Restart();
                             //watch.Stop();
-                            //MessageBox.Show(xTrans.TransformType.ToString() + " " + yTrans.TransformType.ToString() + " " + watch.ElapsedMilliseconds + "ms");
+                            //MessageBox.Show(xTrans.ConfIntervalType.ToString() + " " + yTrans.ConfIntervalType.ToString() + " " + watch.ElapsedMilliseconds + "ms");
                             chart.FillFromAnalysis(_analysis.Data, _analysis.InHitMissModel, _colors, xColumnIndex, yColumnIndex);
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();

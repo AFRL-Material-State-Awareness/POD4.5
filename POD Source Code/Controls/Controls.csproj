@@ -85,6 +85,12 @@
     <Compile Include="ContextMenuStripConnected.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ConfidenceBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ConfidenceBox.Designer.cs">
+      <DependentUpon>ConfidenceBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataChartTableArg.cs" />
     <Compile Include="LinkLayout.cs">
       <SubType>Component</SubType>

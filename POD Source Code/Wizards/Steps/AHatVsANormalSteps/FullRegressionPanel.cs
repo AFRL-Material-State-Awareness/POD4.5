@@ -23,6 +23,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private Label _xTransformLabel;
         private TransformBox _yTransformBox;
         private Label _yTransformLabel;
+        //used for confidence intervals
+        
 
         private List<Control> _inputWithLabels = new List<Control>();
         private List<Control> _outputWithLabels = new List<Control>();
@@ -307,13 +309,12 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             inputTablePanel.Controls.Clear();
 
             IntitalizeTransformBoxes();
-
+            //InitializeCITypeBox();
             _inputWithLabels = new List<Control>
             {
                 AxisTransformsHeader,
                 _xTransformLabel, _xTransformBox,
                 _yTransformLabel, _yTransformBox,
-
                 FlawRangeHeader,
                 AMaxInputLabel, aMaxControl,
                 AMinInputLabel, aMinControl,
@@ -367,7 +368,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _xTransformBox.SelectedIndex = 0;
             _yTransformBox.SelectedIndex = 0;
         }
-
+        
         protected override void SetupNumericControlEvents()
         {
             aMaxControl.NumericUpDown.ValueChanged += this.aMaxControl_ValueChanged;

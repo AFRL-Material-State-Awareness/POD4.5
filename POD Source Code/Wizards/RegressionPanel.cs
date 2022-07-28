@@ -135,8 +135,22 @@ namespace POD.Wizards
         public static void PrepareLabelBoxPair(ref Label myLabel, string myName, ref TransformBox myBox)
         {
             myLabel = new Label();
+
             myBox = new TransformBox();
-            
+
+            myLabel.Text = myName;
+            myLabel.AutoSize = true;
+            myLabel.Dock = DockStyle.Fill;
+
+            myBox.Dock = DockStyle.Fill;
+            myBox.SelectedIndex = 1;
+        }
+        public static void PrepareLabelBoxPairConfint(ref Label myLabel, string myName, ref ConfidenceBox myBox)
+        {
+            myLabel = new Label();
+
+            myBox = new ConfidenceBox();
+
             myLabel.Text = myName;
             myLabel.AutoSize = true;
             myLabel.Dock = DockStyle.Fill;
