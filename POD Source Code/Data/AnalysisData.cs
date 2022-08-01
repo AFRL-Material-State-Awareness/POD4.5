@@ -1651,8 +1651,8 @@ namespace POD.Data
             try
             {
                 _originalData = _hmAnalysisObject.HitMissDataOrig;
-                Debug.Write("original Data");
-                printDT(_originalData);
+                //Debug.Write("original Data");
+                //printDT(_originalData);
             }
             
             catch (Exception exp)
@@ -1703,8 +1703,8 @@ namespace POD.Data
                         _podCurveTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                 }
-                Debug.WriteLine("POD curve table");
-                printDT(_podCurveTable);
+                //Debug.WriteLine("POD curve table");
+                //printDT(_podCurveTable);
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1730,9 +1730,9 @@ namespace POD.Data
                 }
                 //_residualUncensoredTable.DefaultView.Sort = "t_flaw" + " " + "ASC";
                 _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
-                Debug.WriteLine("Residual Table");
+                //Debug.WriteLine("Residual Table");
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                printDT(_residualUncensoredTable);
+                //printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1746,7 +1746,7 @@ namespace POD.Data
                 //TODO: will end up removing this table later
                 //_iterationsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFSolveIterationTable());
                 _iterationsTable = _hmAnalysisObject.IterationTable;
-                printDT(_iterationsTable);
+                //printDT(_iterationsTable);
             }
             catch (Exception exp)
             {
@@ -1802,8 +1802,8 @@ namespace POD.Data
             //printDT(_residualRawTable);
             try
             {
-                _residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
-                //_residualRawTable = _aHatAnalysisObject.AHatResultsResid;
+                //_residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
+                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
             }
@@ -1814,8 +1814,8 @@ namespace POD.Data
 
             try
             {
-                _residualFullCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFullCensoredTable());
-
+                //_residualFullCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFullCensoredTable());
+                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
             }
@@ -1826,8 +1826,8 @@ namespace POD.Data
 
             try
             {
-                _residualPartialCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPartialCensoredTable());
-
+                //_residualPartialCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPartialCensoredTable());
+                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualPartialCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
             }
@@ -2482,7 +2482,7 @@ namespace POD.Data
                 return 0;
             }
         }
-
+        // lines 2486 to 2524 are used for writing to excel only(will need to implement this in r
         public int ResponsePartialBelowMinCount
         {
             get
@@ -2522,7 +2522,7 @@ namespace POD.Data
                 return _podDoc.GetFlawCountUncensored();
             }
         }
-
+        /*
         public void UpdateActivatedResponses()
         {
             if (_podDoc != null)
@@ -2566,7 +2566,7 @@ namespace POD.Data
                 }
             }
         }
-
+        */
         public void GetXYBufferedRanges(Control chart, AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed)
         {
             GetXBufferedRange(chart, myXAxis, myGetTransformed);
@@ -2857,9 +2857,9 @@ namespace POD.Data
         {
             if (myValue <= 0.0 && (_flawTransform == TransformTypeEnum.Log || _flawTransform == TransformTypeEnum.Inverse))
                 return 0.0;
-            
-            return _podDoc.GetTransformedValue(myValue, _python.TransformEnumToInt(_flawTransform));
-            //return TransformAValue(myValue, _python.TransformEnumToInt(_flawTransform));
+
+            //return _podDoc.GetTransformedValue(myValue, _python.TransformEnumToInt(_flawTransform));
+            return TransformAValue(myValue, _python.TransformEnumToInt(_flawTransform));
         }
         
         public double TransformValueForYAxis(double myValue)
@@ -2867,8 +2867,8 @@ namespace POD.Data
             if (myValue <= 0.0 && (_responseTransform == TransformTypeEnum.Log || _responseTransform == TransformTypeEnum.Inverse))
                 return 0.0;
 
-            return _podDoc.GetTransformedValue(myValue, _python.TransformEnumToInt(_responseTransform));
-            //return TransformAValue(myValue, _python.TransformEnumToInt(_responseTransform));
+            //return _podDoc.GetTransformedValue(myValue, _python.TransformEnumToInt(_responseTransform));
+            return TransformAValue(myValue, _python.TransformEnumToInt(_responseTransform));
         }
 
         public double InvertTransformValueForXAxis(double myValue)
@@ -2876,8 +2876,8 @@ namespace POD.Data
             if (myValue == 0.0 && _flawTransform == TransformTypeEnum.Inverse)
                 return 0.0;
 
-            return _podDoc.GetInvtTransformedValue(myValue, _python.TransformEnumToInt(_flawTransform));
-            //return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
+            //return _podDoc.GetInvtTransformedValue(myValue, _python.TransformEnumToInt(_flawTransform));
+            return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
 
         }
 

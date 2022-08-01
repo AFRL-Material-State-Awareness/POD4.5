@@ -130,6 +130,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 #newNormalCrackDist$initialize()
                                 newNormalCrackDist$genNormalFit()
                                 simCracks=newNormalCrackDist$getSimCrackSizesArray()
+                                #simCracks<-append(simCracks, max(hitMissDF[,2]))
                                 x = sort(simCracks)[seq(from=1,to=length(simCracks),length.out=normSampleAmount)]
                                 #modified wald calculation
                                 newWaldCI= WaldConfInt$new(LogisticRegressionResult=regressionResults,simCrackVals=x)
