@@ -154,91 +154,6 @@ namespace POD
             _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
             //used to store ahat analyses
             _ahatAnalyses = new Dictionary<string, AHatAnalysisObject>();
-            /*
-            //if the .dll is being used in the program
-            if (myType == PyTypeEnum.DLLFiles)
-            {
-                var pathFull = Path.GetFullPath("POD_All.dll");
-
-                Assembly pod = Assembly.LoadFile(pathFull);
-                _pyEngine.Runtime.LoadAssembly(pod);
-                _pyScopes.Add("CPodDoc", _pyEngine.Runtime.ImportModule("CPodDoc"));
-            }
-            
-            //if just the python files are being used to run the program
-            else if(myType == PyTypeEnum.PyFiles)
-            {                
-                string pyFilesDir = Path.GetFullPath("..\\..\\..\\TestingPythonCode\\");
-                string pyLib = Path.GetFullPath("..\\..\\..\\PythonEnvironment\\Lib\\");
-                string numerics = Path.GetFullPath("..\\..\\..\\..\\packages\\MathNet.Numerics.3.6.0\\lib\\net40\\");
-                _pyEngine.SetSearchPaths(new string[] {pyFilesDir, pyLib, numerics});
-
-
-                //add each module in the project
-                _modules.Add("FileLogger");
-                _modules.Add("alogam");
-                _modules.Add("gammds");
-                _modules.Add("betain");
-                _modules.Add("lookup_table");
-                _modules.Add("new_pf");
-                _modules.Add("bisect");
-                _modules.Add("heapq");
-                _modules.Add("keyword");
-                _modules.Add("collections");
-                _modules.Add("PODglobals");
-                _modules.Add("smtxinv");
-                _modules.Add("PODaccessories");
-                _modules.Add("numbers");
-                _modules.Add("decimal");
-                _modules.Add("_weakrefset");
-                _modules.Add("abc");
-                _modules.Add("_abcoll");
-                _modules.Add("UserDict");
-                _modules.Add("weakref");
-                _modules.Add("types");
-                _modules.Add("copy");
-                _modules.Add("alnorm");
-                _modules.Add("nrmden");
-                _modules.Add("phinv");
-                _modules.Add("CPodDoc");
-                _modules.Add("linreg");
-                _modules.Add("mdnord");
-                _modules.Add("sysolv");
-                _modules.Add("__future__");
-                _modules.Add("fcn");
-                _modules.Add("leqslv");
-                _modules.Add("funcr");
-                _modules.Add("qsort");
-                //additional modules for modifications
-                _modules.Add("Compare");
-                //iterate through each module to add the scope and path to the _pyscope dictionary
-                foreach (string path in _modules)
-                {
-                    string file = "";
-
-                    if (!path.EndsWith(".dll"))
-                    {
-                        file = pyFilesDir + path + ".py";
-
-                        if (File.Exists(file) == false)
-                            file = pyLib + path + ".py";
-                    }
-                    else
-                    {
-                        file = numerics + path;
-                    }
-
-                    dynamic source = _pyEngine.CreateScriptSourceFromFile(file);
-                    dynamic scope = _pyEngine.CreateScope();
-                    dynamic op = _pyEngine.Operations;
-                    source.Execute(scope);
-
-                    _pyScopes.Add(path, scope);
-                }
-
-            }
-            */
-            
         }
 
         public dynamic CInfo()
@@ -249,27 +164,6 @@ namespace POD
             cinfo.row = 10;
 
             return cinfo;
-        }
-        //function is used to take a new analsys and make an instance in the cpoddoc class in the python backend
-        public dynamic CPodDoc(string myAnalysisName)
-        {
-            //if analysis name doesn't alredy exist in the dictionary create a new one
-            if (_cpDocs.ContainsKey(myAnalysisName) == false)
-            {
-                //get the python class CPodDoc object from CPodDoc.py through pyScopes
-                dynamic CPodDoc = _pyScopes["CPodDoc"].GetVariable("CPodDoc");
-                //this is  where the new instance is created
-                dynamic cpoddoc = CPodDoc();
-                //the dictionary contains a string as the key and the cPoddoc class object as its value/definition
-                _cpDocs.Add(myAnalysisName, cpoddoc);
-
-                return cpoddoc;
-            }
-            //if it does, simply return that def/key pair from the _cpDocs dictionary
-            else
-            {
-                return _cpDocs[myAnalysisName];
-            }
         }
         //object used for hit miss analyses
         public HMAnalysisObject HitMissAnalsysis(string myAnalysisName)
@@ -401,90 +295,6 @@ namespace POD
 
             return dictionary;
         }
-
-        public List<double> PythonToDotNetList(dynamic myList)
-        {
-            IronPython.Runtime.List list = myList;
-
-            List<double> newList = new List<double>();
-
-            foreach (object value in list)
-            {
-                newList.Add(Convert.ToDouble(value));
-            }
-
-            return newList;
-        }
-
-        public DataTable PythonDictionaryToDotNetNumericTable(dynamic myList)
-        {
-            IronPython.Runtime.PythonDictionary list = myList;
-
-            DataTable table = new DataTable();
-            List<IronPython.Runtime.List> data = new List<IronPython.Runtime.List>();
-
-            var names = list["list_names"] as IronPython.Runtime.List;
-
-            foreach(string name in names)
-            {
-                table.Columns.Add(new DataColumn(name, typeof(Double)));
-                data.Add((IronPython.Runtime.List)list[name]);
-            }
-
-            int count = data[0].Count;
-            object[] row = new object[table.Columns.Count];
-            int colIndex = 0;
-            int rowIndex = 0;
-
-            var watch = new Stopwatch();
-
-            watch.Start();
-
-            for (int i = 0; i < count; i++)
-            {
-                table.Rows.Add(row);
-            }
-
-            watch.Stop();
-
-            var addRowTime = watch.ElapsedMilliseconds;
-
-
-            watch.Restart();
-
-            foreach(IronPython.Runtime.List col in data)
-            {
-                rowIndex = 0;
-
-                foreach (object value in col)
-                {
-                    if (rowIndex < table.Rows.Count)
-                    {
-                        table.Rows[rowIndex][colIndex] = Convert.ToDouble(value);
-                        rowIndex++;
-                    }
-                }
-
-                colIndex++;
-            }
-
-            watch.Stop();
-
-            var copyRowTime = watch.ElapsedMilliseconds;
-
-            //This produces the tables that appear in the user interface
-            tableNum += 1;
-            //print datatable from python
-            //Debug.WriteLine(table.Rows[rowIndex][colIndex].ToString());
-            Debug.WriteLine("This datatable is table" + tableNum.ToString());
-            Debug.WriteLine("The data table has " + table.Rows.Count.ToString() + " rows");
-            Debug.WriteLine("The data table has " + table.Columns.Count.ToString() + " Columns");
-            printDT(table);
-            //MessageBox.Show("ADD ROW: " + addRowTime + " COPY ROW: " + copyRowTime);
-
-            return table;
-        }
-
         public void Close()
         {
             _modules.Clear();
@@ -540,52 +350,6 @@ namespace POD
 
             }
         }
-        //This method is for debugging purpose
-        //should be removed in the final product
-        static void printDT(DataTable data)
-        {
-            //Console.WriteLine();
-            Debug.WriteLine('\n');
-            Dictionary<string, int> colWidths = new Dictionary<string, int>();
-
-            foreach (DataColumn col in data.Columns)
-            {
-                //Console.Write(col.ColumnName);
-                Debug.Write(col.ColumnName);
-                var maxLabelSize = data.Rows.OfType<DataRow>()
-                        .Select(m => (m.Field<object>(col.ColumnName)?.ToString() ?? "").Length)
-                        .OrderByDescending(m => m).FirstOrDefault();
-
-                colWidths.Add(col.ColumnName, maxLabelSize);
-                for (int i = 0; i < maxLabelSize - col.ColumnName.Length + 10; i++) Debug.Write(" ");
-            }
-
-            //Console.WriteLine();
-            Debug.WriteLine('\n');
-            int rowCounter = 0;
-            int limit = 5;
-            foreach (DataRow dataRow in data.Rows)
-            {
-                for (int j = 0; j < dataRow.ItemArray.Length; j++)
-                {
-                    //Console.Write(dataRow.ItemArray[j]);
-                    Debug.Write((dataRow.ItemArray[j]).ToString());
-                    for (int i = 0; i < colWidths[data.Columns[j].ColumnName] - dataRow.ItemArray[j].ToString().Length + 10; i++) Debug.Write(" ");
-                }
-                //Console.WriteLine();
-                Debug.WriteLine('\n');
-                rowCounter = rowCounter + 1;
-                if (rowCounter >= limit)
-                {
-                    break;
-                }
-            }
-            Debug.WriteLine('\n');
-        }
-
-
-
-
         public int FailedRunCount { get; set; }
     }
 }

@@ -1548,8 +1548,8 @@ namespace POD.Data
                     allResponses.Add(col.ColumnName, list);
                 }
                 //convert the two c# dictionaries to python dictionaries
-                dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
-                dynamic pyAllResponses = _python.DotNetToPythonDictionary(allResponses);
+                //dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
+                //dynamic pyAllResponses = _python.DotNetToPythonDictionary(allResponses);
 
                 //_podDoc.SetFlawData(flaws, _python.TransformEnumToInt(FlawTransform));
                 //_podDoc.SetResponseData(pyResponses, _python.TransformEnumToInt(ResponseTransform));
@@ -1803,12 +1803,13 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
             }
-            //printDT(_residualRawTable);
+            //**************IMPORTANT NOTE
+            //TODO: fix the following rsidual tables in order to properly export to excel
             try
             {
                 //_residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
-                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
-                _residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                _residualCensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
@@ -1819,8 +1820,8 @@ namespace POD.Data
             try
             {
                 //_residualFullCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFullCensoredTable());
-                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
-                _residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                _residualFullCensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
@@ -1831,8 +1832,8 @@ namespace POD.Data
             try
             {
                 //_residualPartialCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPartialCensoredTable());
-                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
-                _residualPartialCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                _residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                //_residualPartialCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
