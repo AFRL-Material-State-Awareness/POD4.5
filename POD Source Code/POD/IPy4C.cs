@@ -154,6 +154,7 @@ namespace POD
             _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
             //used to store ahat analyses
             _ahatAnalyses = new Dictionary<string, AHatAnalysisObject>();
+            /*
             //if the .dll is being used in the program
             if (myType == PyTypeEnum.DLLFiles)
             {
@@ -163,6 +164,7 @@ namespace POD
                 _pyEngine.Runtime.LoadAssembly(pod);
                 _pyScopes.Add("CPodDoc", _pyEngine.Runtime.ImportModule("CPodDoc"));
             }
+            
             //if just the python files are being used to run the program
             else if(myType == PyTypeEnum.PyFiles)
             {                
@@ -235,6 +237,7 @@ namespace POD
                 }
 
             }
+            */
             
         }
 

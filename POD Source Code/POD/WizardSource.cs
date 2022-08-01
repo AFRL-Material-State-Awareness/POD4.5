@@ -238,8 +238,8 @@ namespace POD
         {
             _python = myPy;
             //initializes a new instance of the cPODDoc class in the .py file
-            if(_podDoc == null)
-                _podDoc = _python.CPodDoc(Name);
+            //if(_podDoc == null)
+            //    _podDoc = _python.CPodDoc(Name);
         }
         public virtual void SetREngine(REngineObject myREngine)
         {

@@ -185,8 +185,8 @@ namespace POD.Data
         /// <summary>
         /// Reference to the CPodDoc Python class
         /// </summary>
-        [NonSerialized]
-        private dynamic _podDoc;
+        //[NonSerialized]
+        //private dynamic _podDoc;
         /// <summary>
         /// RDotEngineObjectInstance
         /// </summary>
@@ -860,7 +860,7 @@ namespace POD.Data
 
             data._python = null;// _python.CreateDuplicate();
 
-            data._podDoc = null;
+            //data._podDoc = null;
 
             data._hmAnalysisObject = null;
             data._aHatAnalysisObject = null;
@@ -1339,9 +1339,13 @@ namespace POD.Data
                             //}
                         }
                     }
-
-                    _podDoc.TransformData(values, _python.TransformEnumToInt(myTransformType));
-
+                    //Debug.WriteLine(values);
+                    //_podDoc.TransformData(values, _python.TransformEnumToInt(myTransformType));
+                    for(int i=0; i < values.Count(); i++)
+                    {
+                        values[i]=TransformAValue(values[i], _python.TransformEnumToInt(myTransformType));
+                    }
+                    //Debug.WriteLine(values);
                     //copy transformed data back to the other table
                     int index = 0;
                     foreach (double value in values)
@@ -1547,10 +1551,10 @@ namespace POD.Data
                 dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
                 dynamic pyAllResponses = _python.DotNetToPythonDictionary(allResponses);
 
-                _podDoc.SetFlawData(flaws, _python.TransformEnumToInt(FlawTransform));
-                _podDoc.SetResponseData(pyResponses, _python.TransformEnumToInt(ResponseTransform));
+                //_podDoc.SetFlawData(flaws, _python.TransformEnumToInt(FlawTransform));
+                //_podDoc.SetResponseData(pyResponses, _python.TransformEnumToInt(ResponseTransform));
 
-                _podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
+                //_podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
                 if(_dataType== AnalysisDataTypeEnum.HitMiss)
                 {
                     if (_hmAnalysisObject.FlawsUncensored.Count()==0)
@@ -1617,8 +1621,8 @@ namespace POD.Data
         {
             _python = myPy;
 
-            if (_podDoc == null)
-                _podDoc = _python.CPodDoc(myAnalysisName);
+            //if (_podDoc == null)
+            //    _podDoc = _python.CPodDoc(myAnalysisName);
         }
         public void SetREngine(REngineObject myREngine, string myAnalysisName)
         {
@@ -2482,12 +2486,14 @@ namespace POD.Data
                 return 0;
             }
         }
+        //**********IMPORTANT NOTE
         // lines 2486 to 2524 are used for writing to excel only(will need to implement this in r
         public int ResponsePartialBelowMinCount
         {
             get
             {
-                return _podDoc.GetFlawCountPartialBelowResponseMin();
+                //return _podDoc.GetFlawCountPartialBelowResponseMin();
+                return -1;
             }
         }
 
@@ -2495,7 +2501,8 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountPartialAboveResponseMax();
+                //return _podDoc.GetFlawCountPartialAboveResponseMax();
+                return -1;
             }
         }
 
@@ -2503,7 +2510,8 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountFullBelowResponseMin();
+                //return _podDoc.GetFlawCountFullBelowResponseMin();
+                return -1;
             }
         }
 
@@ -2511,7 +2519,8 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountFullAboveResponseMax();
+                //return _podDoc.GetFlawCountFullAboveResponseMax();
+                return -1;
             }
         }
 
@@ -2519,7 +2528,8 @@ namespace POD.Data
         {
             get
             {
-                return _podDoc.GetFlawCountUncensored();
+                //return _podDoc.GetFlawCountUncensored();
+                return -1;
             }
         }
         /*
