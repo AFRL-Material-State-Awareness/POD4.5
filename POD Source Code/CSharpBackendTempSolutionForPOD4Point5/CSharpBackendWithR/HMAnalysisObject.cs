@@ -14,7 +14,7 @@ namespace CSharpBackendWithR
         /// </summary> 
         private DataTable hitMissDataOrig;
         private List<double> covarMatrix;
-        private List<double> uncensoredFlaws;
+        //private List<double> uncensoredFlaws;
         private int modelType;
         //used for logit, firth, or lasso
         private string regressionType;
@@ -51,7 +51,7 @@ namespace CSharpBackendWithR
             //current crack size list to be sent to r(can be either normal or log transformed
             //List<double> currFlawsAnalysis;
             //TODO: temporary varaible used to store flaws array until the class is working
-            this.uncensoredFlaws = new List<double>();
+            //this.uncensoredFlaws = new List<double>();
             Responses_all = new Dictionary<string, List<double>>();
             Nsets = 0;
             Count = 0; //the original number of data points in a given analysis
@@ -145,8 +145,9 @@ namespace CSharpBackendWithR
         //public List<HMCrackData> Flaws { set; get; }
         public new List<double> Flaws { set; get; }
         public new List<double> FlawsUncensored { set; get; }
+        public new List<double> LogFlawsUncensored { set; get; }
         //    set { this.uncensoredFlaws = value; }
-       //     get { return this.uncensoredFlaws; } 
+        //     get { return this.uncensoredFlaws; } 
         //}
         //TODO: FIX THIS TO MAKE THIS ONLY integers since this object controls hitmiss data only
         public new Dictionary<string, List<double>> Responses { set; get; }

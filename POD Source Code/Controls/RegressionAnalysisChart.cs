@@ -1561,15 +1561,16 @@ namespace POD.Controls
             Series fitLine = Series[PODRegressionLabels.BestFitLine];
 
             DataView view = _analysisData.ResidualUncensoredTable.DefaultView;
-
+            
             this.Invoke((MethodInvoker)delegate()
             {
                 try
                 {
-                    fitLine.Points.DataBindXY(view, "flaw", view, "fit");
+                    fitLine.Points.DataBindXY(view, "Flaw", view, "fit");
                 }
                 catch(Exception fixme) {
-                    fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+                    //MessageBox.Show("This One!");
+                    fitLine.Points.DataBindXY(view, "Flaw", view, "t_fit");
                 }
                 //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
                 //fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");

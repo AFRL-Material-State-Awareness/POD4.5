@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using POD.Data;
 
+using System.Diagnostics;
 namespace POD.Controls
 {
     public partial class HitMissFitChart : LinearityChart
@@ -41,8 +42,9 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData, double mu, double sigma)
         {
-            //FillChart(myData, myData.ResidualUncensoredTable, "t_flaw", "t_fit", "t_flaw", "hitrate", 0, 1.0, mu, sigma);
-            FillChart(myData, myData.ResidualUncensoredTable,"flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
+            FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
+            //FillChart(myData, myData.ResidualUncensoredTable, "transformFlaw", "t_fit", "transformFlaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
+            //FillChart(myData, myData.ResidualUncensoredTable, "transformFlaw", "t_fit", "Flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
         }
 
         public void FillChart(AnalysisData myData, string my90X, string my90Y, string my95X, string my95Y, double mu, double sigma)
@@ -124,6 +126,46 @@ namespace POD.Controls
                               Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 5, false, false,
                               myData.FlawTransform,
                               TransformTypeEnum.Linear, myData.TransformValueForXAxis, null, false, true);
+        }
+        static void printDT(DataTable data)
+        {
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            Dictionary<string, int> colWidths = new Dictionary<string, int>();
+
+            foreach (DataColumn col in data.Columns)
+            {
+                //Console.Write(col.ColumnName);
+                Debug.Write(col.ColumnName);
+                var maxLabelSize = data.Rows.OfType<DataRow>()
+                        .Select(m => (m.Field<object>(col.ColumnName)?.ToString() ?? "").Length)
+                        .OrderByDescending(m => m).FirstOrDefault();
+
+                colWidths.Add(col.ColumnName, maxLabelSize);
+                for (int i = 0; i < maxLabelSize - col.ColumnName.Length + 10; i++) Debug.Write(" ");
+            }
+
+            //Console.WriteLine();
+            Debug.WriteLine('\n');
+            int rowCounter = 0;
+            int limit = 5;
+            foreach (DataRow dataRow in data.Rows)
+            {
+                for (int j = 0; j < dataRow.ItemArray.Length; j++)
+                {
+                    //Console.Write(dataRow.ItemArray[j]);
+                    Debug.Write((dataRow.ItemArray[j]).ToString());
+                    for (int i = 0; i < colWidths[data.Columns[j].ColumnName] - dataRow.ItemArray[j].ToString().Length + 10; i++) Debug.Write(" ");
+                }
+                //Console.WriteLine();
+                Debug.WriteLine('\n');
+                rowCounter = rowCounter + 1;
+                if (rowCounter >= limit)
+                {
+                    break;
+                }
+            }
+            Debug.WriteLine('\n');
         }
     }
 }

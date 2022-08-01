@@ -53,6 +53,7 @@ namespace CSharpBackendWithR
         //protected List<HMCrackData> Flaws;
         protected List<double> Flaws;
         protected List<double> FlawsUncensored;
+        protected List<double> LogFlawsUncensored;
         ////////////////////////
         protected List<double> Flaws_reload; //used for POD when no points are missing
         protected Dictionary<string, List<double>> Responses;//used for POD with censored points

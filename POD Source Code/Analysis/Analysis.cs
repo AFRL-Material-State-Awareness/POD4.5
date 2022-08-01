@@ -1522,6 +1522,7 @@ namespace POD.Analyze
             {
                 List<double> HMcensoredFlaws = new List<double>();
                 List<double> HMcensoredResponses = new List<double>();
+
                 foreach (double flaw in _hmAnalysisObject.FlawsUncensored)
                 {
                     if(flaw >= InFlawMin && flaw <= InFlawMax)

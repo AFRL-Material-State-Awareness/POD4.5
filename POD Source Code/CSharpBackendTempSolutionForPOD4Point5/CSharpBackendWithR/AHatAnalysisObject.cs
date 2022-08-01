@@ -124,6 +124,7 @@ namespace CSharpBackendWithR
         public new double Signalmax { set; get; }
         public new List<double> Flaws { set; get; }
         public new List<double> FlawsUncensored { set; get; }
+        public new List<double> LogFlawsUncensored { set; get; }
         public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
         public new double Crckmin { set; get; }
