@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Scripting.Hosting;
-using Microsoft.Scripting.Utils;
+//using Microsoft.Scripting.Hosting;
+//using Microsoft.Scripting.Utils;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Data;
-using IronPython.Hosting;
+//using IronPython.Hosting;
 using System.Diagnostics;
 using CSharpBackendWithR;
 namespace POD
@@ -24,9 +24,9 @@ namespace POD
     {
         //count the number of tables ********USED FOR DEBUGGING
         public int tableNum = 0;
-        ScriptEngine _pyEngine;
+        //ScriptEngine _pyEngine;
         List<string> _modules;
-        Dictionary<string, ScriptScope> _pyScopes;
+        //Dictionary<string, ScriptScope> _pyScopes;
         Dictionary<string, dynamic> _cpDocs;
         Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
         Dictionary<string, AHatAnalysisObject> _ahatAnalyses;
@@ -139,14 +139,14 @@ namespace POD
 
             Dictionary<string, object> options = new Dictionary<string, object>();
             options["Debug"] = myDebug;
-            _pyEngine = Python.CreateEngine(options);
+            //_pyEngine = Python.CreateEngine(options);
             //_pyEngine = Python.CreateEngine();
 
-            _pyEngine.Runtime.IO.SetOutput(_outputStream, _outputWriter);
-            _pyEngine.Runtime.IO.SetErrorOutput(_errorStream, _errorWriter);
+            //_pyEngine.Runtime.IO.SetOutput(_outputStream, _outputWriter);
+            //_pyEngine.Runtime.IO.SetErrorOutput(_errorStream, _errorWriter);
 
             _modules = new List<string>();
-            _pyScopes = new Dictionary<string, ScriptScope>();
+            //_pyScopes = new Dictionary<string, ScriptScope>();
             
 
             _cpDocs = new Dictionary<string, dynamic>();
@@ -155,7 +155,7 @@ namespace POD
             //used to store ahat analyses
             _ahatAnalyses = new Dictionary<string, AHatAnalysisObject>();
         }
-
+        /*
         public dynamic CInfo()
         {
             dynamic CInfo = _pyScopes["CPodDoc"].GetVariable("CInfo");
@@ -165,6 +165,7 @@ namespace POD
 
             return cinfo;
         }
+        */
         //object used for hit miss analyses
         public HMAnalysisObject HitMissAnalsysis(string myAnalysisName)
         {
@@ -273,32 +274,10 @@ namespace POD
         }
         //convert c# dictionary to python dictionary
         //my dictionary is the c# dictionary
-        public dynamic DotNetToPythonDictionary(Dictionary<string, List<double>> myDictionary)
-        {
-            /*dynamic dict = _pyScopes["CPodDoc"].GetVariable("PDictionary")
-            dynamic dictionary = dict();*/
-
-            IronPython.Runtime.PythonDictionary dictionary = new IronPython.Runtime.PythonDictionary();
-            IronPython.Runtime.List list;
-            //copy the values into the new python dictionary
-            foreach(string key in myDictionary.Keys)
-            {
-                list = new IronPython.Runtime.List();
-
-                foreach(double value in myDictionary[key])
-                {
-                    list.Add(value);
-                }
-
-                dictionary[key] = list;
-            }
-
-            return dictionary;
-        }
         public void Close()
         {
             _modules.Clear();
-            _pyScopes.Clear();
+            //_pyScopes.Clear();
             _cpDocs.Clear();
             _hitMissAnalyses.Clear();
             try
@@ -343,7 +322,8 @@ namespace POD
 
             try
             {
-                _pyEngine.Runtime.Shutdown();
+                //_pyEngine.Runtime.Shutdown();
+                
             }
             catch
             {

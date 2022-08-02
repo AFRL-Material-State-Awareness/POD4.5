@@ -325,11 +325,12 @@ namespace POD.Controls
             //_lastUsedData = myData;
 
             DataView view = myData.ThresholdPlotTable.DefaultView;
-
+            
             //POD90.Points.DataBindXY(view, "threshold", view, "level");
             POD90.Points.DataBindXY(view, "threshold", view, "a90");
-            //POD9095.Points.DataBindXY(view, "threshold", view, "confidence");
+            //POD90.Points.DataBindXY(view, "transformThreshold", view, "a90");
             POD9095.Points.DataBindXY(view, "threshold", view, "a9095");
+            //POD9095.Points.DataBindXY(view, "transformThreshold", view, "a9095");
 
             DataView all_view = myData.ThresholdPlotTable_All.DefaultView;
             //POD90_All.Points.DataBindXY(all_view, "threshold", all_view, "level");

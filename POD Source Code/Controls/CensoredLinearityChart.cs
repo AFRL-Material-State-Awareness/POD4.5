@@ -180,7 +180,7 @@ namespace POD.Controls
             _repeatError = repeatError;
 
             DataView view = myData.ResidualUncensoredTable.DefaultView;
-            Uncensored.Points.DataBindXY(view, "flaw", view, "t_diff");
+            Uncensored.Points.DataBindXY(view, "transformFlaw", view, "t_diff");
 
             var uncensoredMax = Double.NegativeInfinity;
             var uncensoredMin = Double.PositiveInfinity;

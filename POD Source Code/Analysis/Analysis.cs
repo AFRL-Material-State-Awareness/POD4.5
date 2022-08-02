@@ -1162,7 +1162,26 @@ namespace POD.Analyze
                 OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
                 OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
                 OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
-                
+
+                if (InFlawTransform == TransformTypeEnum.Linear)
+                {
+                    OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
+                    OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
+                    OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
+                    OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
+                }
+                else if (InFlawTransform == TransformTypeEnum.Log)
+                {
+                    OutResponseDecisionPODSigma = Math.Exp(_aHatAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = Math.Exp(_aHatAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = Math.Exp(_aHatAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = Math.Exp(_aHatAnalysisObject.A9095);
+                }
+                //OutPODMu = _podDoc.GetPODMu();
+                //OutPODSigma = _podDoc.GetPODSigma();
+                OutPODMu = _aHatAnalysisObject.Muhat;
+                OutPODSigma = _aHatAnalysisObject.Sighat;
+                //OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
             }
             else if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
@@ -1209,8 +1228,6 @@ namespace POD.Analyze
                     OutResponseDecisionPODLevelValue = Math.Exp(_hmAnalysisObject.A90);
                     OutResponseDecisionPODConfidenceValue = Math.Exp(_hmAnalysisObject.A9095);
                 }
-                
-
                 //OutPODMu = _podDoc.GetPODMu();
                 //OutPODSigma = _podDoc.GetPODSigma();
                 OutPODMu = _hmAnalysisObject.Muhat;

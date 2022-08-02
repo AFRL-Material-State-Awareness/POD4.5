@@ -1768,10 +1768,31 @@ namespace POD.Data
             {      
                 //_fitResidualsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFitTable());
                 _fitResidualsTable = _aHatAnalysisObject.AHatResultsLinear;
-                
+                //used to transform the POD curve back to linear space
+                if (_fitResidualsTable.Columns.Contains("transformFlaw") == false)
+                {
+                    _fitResidualsTable.Columns.Add("transformFlaw", typeof(System.Double));
+                }
+                if (_aHatAnalysisObject.ModelType == 1)
+                {
+
+                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                    {
+                        _fitResidualsTable.Rows[i][3] = Convert.ToDouble(_fitResidualsTable.Rows[i][0]);
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 2)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                    {
+                        _fitResidualsTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
+                    }
+                }
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
-                _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();                
+                _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
+                printDT(_fitResidualsTable);
             }
             catch(Exception exp)
             {
@@ -1783,8 +1804,30 @@ namespace POD.Data
                 //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetResidualTable());
                 //_residualUncensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualUncensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                //used to transform the POD curve back to linear space
+                if (_residualUncensoredTable.Columns.Contains("transformFlaw") == false)
+                {
+                    _residualUncensoredTable.Columns.Add("transformFlaw", typeof(System.Double));
+                }
+                if (_aHatAnalysisObject.ModelType == 1)
+                {
+
+                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
+                    {
+                        _residualUncensoredTable.Rows[i][4] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 2)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
+                    {
+                        _residualUncensoredTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
+                    }
+                }
                 _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
+                printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1798,6 +1841,7 @@ namespace POD.Data
                 _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualRawTable = _residualRawTable.DefaultView.ToTable();
+                printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1811,6 +1855,7 @@ namespace POD.Data
                 _residualCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
+                printDT(_residualCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1823,6 +1868,7 @@ namespace POD.Data
                 _residualFullCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
+                printDT(_residualFullCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1835,6 +1881,7 @@ namespace POD.Data
                 _residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualPartialCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
+                printDT(_residualPartialCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1843,8 +1890,56 @@ namespace POD.Data
 
             try 
             { 
+
                 //_podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable());
                 _podCurveTable = _aHatAnalysisObject.AHatResultsPOD;
+                //used to transform the POD curve back to linear space
+                if (_podCurveTable.Columns.Contains("transformFlaw") == false)
+                {
+                    _podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                }
+                if (_podCurveTable.Columns.Contains("t_fit"))
+                {
+                    _podCurveTable.Columns["t_fit"].ColumnName = "pod";
+
+                }
+                printDT(_podCurveTable);
+                if (_aHatAnalysisObject.ModelType == 1)
+                {
+
+                    for (int i = 0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        _podCurveTable.Rows[i][3] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 2)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        _podCurveTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 3)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        _podCurveTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][1]));
+                        _podCurveTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][2]));
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 4)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
+                        _podCurveTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][1]));
+                        _podCurveTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][2]));
+                    }
+                }
+                printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
             }
@@ -1859,6 +1954,7 @@ namespace POD.Data
                 _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
+                printDT(_podCurveTable_All);
             }
             catch (Exception exp)
             {
@@ -1869,9 +1965,30 @@ namespace POD.Data
             {
                 //_thresholdPlotTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable());
                 _thresholdPlotTable = _aHatAnalysisObject.AHatThresholdsTable;
+                if (_thresholdPlotTable.Columns.Contains("transformThreshold") == false)
+                {
+                    _thresholdPlotTable.Columns.Add("transformThreshold", typeof(System.Double));
+                }
+                if (_aHatAnalysisObject.ModelType == 1)
+                {
+
+                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                    {
+                        _thresholdPlotTable.Rows[i][7] = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 2)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                    {
+                        _thresholdPlotTable.Rows[i][7] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
+                    }
+                }
                 //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
+                printDT(_thresholdPlotTable);
             }
             catch (Exception exp)
             {
@@ -1882,9 +1999,30 @@ namespace POD.Data
             {
                 //_thresholdPlotTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable_All());
                 _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
+                if (_thresholdPlotTable_All.Columns.Contains("transformThreshold") == false)
+                {
+                    _thresholdPlotTable_All.Columns.Add("transformThreshold", typeof(System.Double));
+                }
+                if (_aHatAnalysisObject.ModelType == 1)
+                {
+
+                    for (int i = 0; i < _thresholdPlotTable_All.Rows.Count; i++)
+                    {
+                        _thresholdPlotTable_All.Rows[i][7] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][0]);
+                    }
+                }
+                else if (_aHatAnalysisObject.ModelType == 2)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _thresholdPlotTable_All.Rows.Count; i++)
+                    {
+                        _thresholdPlotTable_All.Rows[i][7] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][0]));
+                    }
+                }
                 //_thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
+                printDT(_thresholdPlotTable_All);
             }
             catch (Exception exp)
             {

@@ -37,7 +37,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       #names(ResultsPOD)[names(ResultsPOD) == 'probabilities'] <- 'POD'
                                       ResultsPOD<<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
-                                        POD = ResultsPOD$probabilities,
+                                        pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
                                       return(ResultsPOD)

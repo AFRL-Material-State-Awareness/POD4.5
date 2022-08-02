@@ -344,10 +344,10 @@ namespace POD.Controls
                 switch (myData.DataType)
                 {
                     case AnalysisDataTypeEnum.AHat:
-                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence", 0.0, 1.0);
+                        FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "confidence", 0.0, 1.0);
                         var view = myData.PodCurveTable_All.DefaultView;
-                        POD_All.Points.DataBindXY(view, "flaw", view, "pod");
-                        POD9095_All.Points.DataBindXY(view, "flaw", view, "confidence");
+                        POD_All.Points.DataBindXY(view, "transformFlaw", view, "pod");
+                        POD9095_All.Points.DataBindXY(view, "transformFlaw", view, "confidence");
                         break;
                     case AnalysisDataTypeEnum.HitMiss:
                         //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence pod", 0.0, 1.0);
