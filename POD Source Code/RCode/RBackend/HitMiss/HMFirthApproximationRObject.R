@@ -38,7 +38,10 @@ HMFirthApproximation <- setRefClass("HMFirthApproximation", fields = list(inputD
                                  }
                                  else{
                                    firth.modglm=firth.mod
-                                   firth.modglm=convertTOGLMObject(firth.mod)
+                                   currRVersion=R.Version()
+                                   if(as.numeric(currRVersion$major)<4){
+                                     firth.modglm=convertTOGLMObject(firth.mod)
+                                   }
                                    #firth.modglmGlobal<<-firth.modglm
                                    
                                    #TRY and fix this? much more efficent code (doesn't work with mcprofile because p>0 error)

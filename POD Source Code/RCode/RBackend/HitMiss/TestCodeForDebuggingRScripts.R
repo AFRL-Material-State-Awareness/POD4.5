@@ -30,9 +30,9 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
-CItype0="StandardWald"
-type="Firth Logistic Regression"
-#type="Logistic Regression"
+CItype0="LR"
+#type="Firth Logistic Regression"
+type="Logistic Regression"
 #for(i in 1:10){
   newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
   newAnalysis$detAnalysisApproach()

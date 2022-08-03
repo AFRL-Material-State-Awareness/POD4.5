@@ -1792,7 +1792,7 @@ namespace POD.Data
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
-                printDT(_fitResidualsTable);
+                //printDT(_fitResidualsTable);
             }
             catch(Exception exp)
             {
@@ -1827,7 +1827,7 @@ namespace POD.Data
                 }
                 _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                printDT(_residualUncensoredTable);
+                //printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1841,7 +1841,7 @@ namespace POD.Data
                 _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualRawTable = _residualRawTable.DefaultView.ToTable();
-                printDT(_residualUncensoredTable);
+                //printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1855,7 +1855,7 @@ namespace POD.Data
                 _residualCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
-                printDT(_residualCensoredTable);
+                //printDT(_residualCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1868,7 +1868,7 @@ namespace POD.Data
                 _residualFullCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
-                printDT(_residualFullCensoredTable);
+                //printDT(_residualFullCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1881,7 +1881,7 @@ namespace POD.Data
                 _residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualPartialCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
-                printDT(_residualPartialCensoredTable);
+                //printDT(_residualPartialCensoredTable);
             }
             catch (Exception exp)
             {

@@ -1,4 +1,6 @@
 options( warn = -1 )
+#used for folder location debugging scripts
+install.packages('rstudioapi')
 #establish a path for Rtools to run properly run this first line and then restart r
 writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"', con = "~/.Renviron")
 #after r is restarted run the rest of the code
@@ -58,11 +60,11 @@ install_version('car', version =  '3.1-0', repos = 'http://cran.us.r-project.org
 install_version('Matrix', version =  '1.4-1', repos = 'http://cran.us.r-project.org')
 install_version('survival', version =  '3.3-1', repos = 'http://cran.us.r-project.org')
 ###ggresidpanel library and dependencies
-install_version('cowplot', version =  '1.1.1', repos = 'http://cran.us.r-project.org')
-install_version('plotly', version =  '4.10.0', repos = 'http://cran.us.r-project.org')
-install_version('qqplotr', version =  '0.0.5', repos = 'http://cran.us.r-project.org')
-install_version('stringr', version =  '1.4.0', repos = 'http://cran.us.r-project.org')
-install_version('ggResidpanel', version =  '0.3.0', repos = 'http://cran.us.r-project.org')
+install_version('cowplot', version =  '1.1.1', repos = 'http://cran.us.r-project.org') ##Will ask if you wanna update
+install_version('plotly', version =  '4.10.0', repos = 'http://cran.us.r-project.org') ##Will ask if you wanna update
+install_version('qqplotr', version =  '0.0.5', repos = 'http://cran.us.r-project.org') ##Will ask if you wanna update
+install_version('stringr', version =  '1.4.0', repos = 'http://cran.us.r-project.org') 
+install_version('ggResidpanel', version =  '0.3.0', repos = 'http://cran.us.r-project.org')##Will ask if you wanna update
 #####
 install_version('corrplot', version =  '0.92', repos = 'http://cran.us.r-project.org')
 #### Used for firth approximation

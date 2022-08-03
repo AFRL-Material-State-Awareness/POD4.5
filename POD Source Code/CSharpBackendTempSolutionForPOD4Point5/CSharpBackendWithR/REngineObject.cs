@@ -17,7 +17,8 @@ namespace CSharpBackendWithR
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
-            this.applicationPath=@"C:\Program Files\R\";
+            this.applicationPath=@"C:\Program Files\R";
+            this.applicationPath = @"C:\Users\gohmancm\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\R";
             //convert the application path to forward slashes (when using file paths in r)
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
             //create variable for r engine
@@ -33,8 +34,8 @@ namespace CSharpBackendWithR
             //initialize the R engine
             string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
             string homePath = this.applicationPath + @"\R-3.5.3\";
-            //string rPath = this.applicationPath + @"\R-4.0.0\bin\i386";
-            //string homePath = this.applicationPath + @"\R-4.0.0\";
+            //string rPath = this.applicationPath;
+            //string homePath = this.applicationPath;
 
             REngine.SetEnvironmentVariables(rPath, homePath);
             REngine engine = REngine.GetInstance();
