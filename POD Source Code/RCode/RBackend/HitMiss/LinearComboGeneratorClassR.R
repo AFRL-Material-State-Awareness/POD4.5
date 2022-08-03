@@ -17,11 +17,11 @@ LinearComboGenerator <- setRefClass("LinearComboGenerator", fields = list(Logist
                                                               a_i_2 = sort(a)[seq(from=1,to=length(a),length.out=samples)]
                                                               simCracks<<-a_i_2
                                                               K = matrix(c(rep(1,length(a_i_2)),a_i_2),ncol=2)
-                                                              #ptm <- proc.time()
+                                                              ptm <- proc.time()
                                                               linearCombo<-minimcprofile(object = LogisticRegressionResult, CM = K)# Calculate -2log(Lambda)
                                                               #print("mcprofile time calc parallel")
-                                                              #p=proc.time() - ptm
-                                                              #print(p)
+                                                              p=proc.time() - ptm
+                                                              print(p)
                                                               #linearCombo<-mcprofile(object = LogisticRegressionResult, CM = K)# Calculate -2log(Lambda)
                                                               #linearComboGlobal<<-linearCombo
                                                               return(linearCombo)

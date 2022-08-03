@@ -265,7 +265,6 @@ namespace POD
 
                 MessageBox.Show(exp.Message);
                 MessageBox.Show("OOPS! Something Went Wrong in initializing the main form!");
-                MessageBox.Show("Note to Developer: Have you ran TestingPythonCode\\CompileDLL.py?");
                 MessageBox.Show("Something may have went wrong with initializing the RDotNet Engine!");
 
                 this.Invoke((MethodInvoker)delegate()

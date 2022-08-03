@@ -11,13 +11,15 @@ namespace CSharpBackendWithR
     public class REngineObject
     {
         private REngine rEngine;
+        private string applicationPathScripts;
         private string applicationPath;
         private string forwardSlashAppPath;
         public REngineObject()
         {
-            this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
+            this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
+            this.applicationPath=@"C:\Program Files\R\";
             //convert the application path to forward slashes (when using file paths in r)
-            this.forwardSlashAppPath = applicationPath.Replace(@"\", "/");
+            this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
             //create variable for r engine
             this.rEngine = initializeRDotNet();
             InitializeRLibraries();
@@ -30,8 +32,10 @@ namespace CSharpBackendWithR
         {
             //initialize the R engine
             //for this github commit, the R exe used is located just outside the github folder
-            string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
-            string homePath = this.applicationPath + @"\R-3.5.3\";
+            //string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
+            //string homePath = this.applicationPath + @"\R-3.5.3\";
+            string rPath = this.applicationPath + @"\R-4.0.0\bin\i386";
+            string homePath = this.applicationPath + @"\R-4.0.0\";
             REngine.SetEnvironmentVariables(rPath, homePath);
             REngine engine = REngine.GetInstance();
             engine.Initialize();
@@ -96,12 +100,13 @@ namespace CSharpBackendWithR
             //AHat Analysis R scripts
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
-            //supress warnings in r (change to zero if wanting to see them)
-            this.rEngine.Evaluate("options( warn = 0 )");
+            
 
         }
         private void InitializeRLibraries()
         {
+            //supress warnings in r (change to zero if wanting to see them)
+            this.rEngine.Evaluate("options( warn = -1 )");
             //dependency of MCProfile
             this.rEngine.Evaluate("library(ggplot2)");
             //dependency of glmnet
@@ -113,7 +118,7 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("library(MASS)");
             this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
             //this.rEngine.Evaluate("library(glmnet)"); //LICENSED UNDER GPLv2 only, may end up not using this
-            this.rEngine.Evaluate("library(logistf)");
+            //this.rEngine.Evaluate("library(logistf)");
             this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
             //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
