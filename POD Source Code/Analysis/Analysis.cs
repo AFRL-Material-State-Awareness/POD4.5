@@ -1048,7 +1048,7 @@ namespace POD.Analyze
         {
             while (analysisLauncher.IsBusy == true);
 
-            CopyOutputFromPython();
+            CopyOutputFromR();
 
             if ((e.Cancelled == true))
             {
@@ -1077,7 +1077,7 @@ namespace POD.Analyze
             IsBusy = false;
         }
 
-        private void CopyOutputFromPython()
+        private void CopyOutputFromR()
         {
             //if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
             //    _podDoc.DeregisterUpdateProgressEvent(this);
@@ -1591,12 +1591,11 @@ namespace POD.Analyze
             {
                 stillRunningAnalysis = true;
 
-                CopyInputToPython();
+                CopyInputToR();
                 UpdateCensoredData();
                 _python.FailedRunCount = 0;
 
-                //ASK TOM About this
-                //RunOnlyFitAnalysis();
+                //The analysis is run with parallelization. Use the 'threads' window to see what each worker is computing
                 analysisLauncher.RunWorkerAsync();
 
             }
@@ -1635,7 +1634,7 @@ namespace POD.Analyze
             _python.FailedRunCount = 0;
         }
 
-        private void CopyInputToPython()
+        private void CopyInputToR()
         {
             //TODO: get this working with r
             //if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
@@ -2700,7 +2699,7 @@ namespace POD.Analyze
 
             watch.Start();
 
-            CopyInputToPython();
+            CopyInputToR();
 
             watch.Stop();
 
@@ -2737,7 +2736,7 @@ namespace POD.Analyze
 
             watch.Restart();
 
-            CopyOutputFromPython();
+            CopyOutputFromR();
 
             watch.Stop();
 

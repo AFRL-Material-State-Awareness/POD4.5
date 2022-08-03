@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 namespace CSharpBackendWithR
 {
+    [Serializable]
     public class AHatAnalysisObject : ParentAnalysisObject
     {
         private int modelType;

@@ -1,7 +1,7 @@
 #this class is used to calculate Firth logistic regression
 #for hitmiss data
-library(logistf)
-library(roxygen2)
+#library(logistf)
+#library(roxygen2)
 HMFirthApproximation <- setRefClass("HMFirthApproximation", fields = list(inputDataFrameFirth="data.frame", 
                                                                           modelFailed="logical", 
                                                                           separated="numeric",

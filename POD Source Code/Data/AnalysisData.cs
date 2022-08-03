@@ -1939,7 +1939,7 @@ namespace POD.Data
                         _podCurveTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][2]));
                     }
                 }
-                printDT(_podCurveTable);
+                //printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
             }
@@ -1954,7 +1954,7 @@ namespace POD.Data
                 _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
-                printDT(_podCurveTable_All);
+                //printDT(_podCurveTable_All);
             }
             catch (Exception exp)
             {
@@ -1965,24 +1965,36 @@ namespace POD.Data
             {
                 //_thresholdPlotTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable());
                 _thresholdPlotTable = _aHatAnalysisObject.AHatThresholdsTable;
-                if (_thresholdPlotTable.Columns.Contains("transformThreshold") == false)
-                {
-                    _thresholdPlotTable.Columns.Add("transformThreshold", typeof(System.Double));
-                }
+                //if (_thresholdPlotTable.Columns.Contains("transformA90") == false)
+                //{
+                //    _thresholdPlotTable.Columns.Add("transformThreshold", typeof(System.Double));
+                //}
+                /*
                 if (_aHatAnalysisObject.ModelType == 1)
                 {
 
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
-                        _thresholdPlotTable.Rows[i][7] = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
+                        _thresholdPlotTable.Rows[i][1] = Convert.ToDouble(_thresholdPlotTable.Rows[i][1]);
+                        _thresholdPlotTable.Rows[i][2] = Convert.ToDouble(_thresholdPlotTable.Rows[i][2]);
+                        _thresholdPlotTable.Rows[i][3] = Convert.ToDouble(_thresholdPlotTable.Rows[i][3]);
+                        _thresholdPlotTable.Rows[i][4] = Convert.ToDouble(_thresholdPlotTable.Rows[i][4]);
+                        _thresholdPlotTable.Rows[i][5] = Convert.ToDouble(_thresholdPlotTable.Rows[i][5]);
+                        _thresholdPlotTable.Rows[i][6] = Convert.ToDouble(_thresholdPlotTable.Rows[i][6]);
                     }
                 }
-                else if (_aHatAnalysisObject.ModelType == 2)
+                */
+                if (_aHatAnalysisObject.ModelType == 2)
                 {
                     //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
-                        _thresholdPlotTable.Rows[i][7] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
+                        _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
+                        _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
+                        _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
+                        //_thresholdPlotTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][4]));
+                        //_thresholdPlotTable.Rows[i][5] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][5]));
+                        //_thresholdPlotTable.Rows[i][6] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][6]));
                     }
                 }
                 //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
@@ -1999,24 +2011,36 @@ namespace POD.Data
             {
                 //_thresholdPlotTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable_All());
                 _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
-                if (_thresholdPlotTable_All.Columns.Contains("transformThreshold") == false)
-                {
-                    _thresholdPlotTable_All.Columns.Add("transformThreshold", typeof(System.Double));
-                }
-                if (_aHatAnalysisObject.ModelType == 1)
-                {
-
-                    for (int i = 0; i < _thresholdPlotTable_All.Rows.Count; i++)
+                //if (_thresholdPlotTable_All.Columns.Contains("transformA90") == false)
+                //{
+                //    _thresholdPlotTable_All.Columns.Add("transformThreshold", typeof(System.Double));
+                //}
+                    /*
+                    if (_aHatAnalysisObject.ModelType == 1)
                     {
-                        _thresholdPlotTable_All.Rows[i][7] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][0]);
+
+                        for (int i = 0; i < _thresholdPlotTable_All.Rows.Count; i++)
+                        {
+                            _thresholdPlotTable_All.Rows[i][1] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][1]);
+                            _thresholdPlotTable_All.Rows[i][2] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][2]);
+                            _thresholdPlotTable_All.Rows[i][3] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][3]);
+                            _thresholdPlotTable_All.Rows[i][4] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][4]);
+                            _thresholdPlotTable_All.Rows[i][5] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][5]);
+                            _thresholdPlotTable_All.Rows[i][6] = Convert.ToDouble(_thresholdPlotTable_All.Rows[i][6]);
+                        }
                     }
-                }
-                else if (_aHatAnalysisObject.ModelType == 2)
+                    */
+                if (_aHatAnalysisObject.ModelType == 2)
                 {
                     //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i = 0; i < _thresholdPlotTable_All.Rows.Count; i++)
                     {
-                        _thresholdPlotTable_All.Rows[i][7] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][0]));
+                        _thresholdPlotTable_All.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][1]));
+                        _thresholdPlotTable_All.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][2]));
+                        _thresholdPlotTable_All.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][3]));
+                        //_thresholdPlotTable_All.Rows[i][4] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][4]));
+                        //_thresholdPlotTable_All.Rows[i][5] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][5]));
+                        //_thresholdPlotTable_All.Rows[i][6] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][6]));
                     }
                 }
                 //_thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";

@@ -31,11 +31,11 @@ namespace CSharpBackendWithR
         private REngine initializeRDotNet()
         {
             //initialize the R engine
-            //for this github commit, the R exe used is located just outside the github folder
-            //string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
-            //string homePath = this.applicationPath + @"\R-3.5.3\";
-            string rPath = this.applicationPath + @"\R-4.0.0\bin\i386";
-            string homePath = this.applicationPath + @"\R-4.0.0\";
+            string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
+            string homePath = this.applicationPath + @"\R-3.5.3\";
+            //string rPath = this.applicationPath + @"\R-4.0.0\bin\i386";
+            //string homePath = this.applicationPath + @"\R-4.0.0\";
+
             REngine.SetEnvironmentVariables(rPath, homePath);
             REngine engine = REngine.GetInstance();
             engine.Initialize();
@@ -127,11 +127,12 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("library(nlme)");
             this.rEngine.Evaluate("library(pracma)");
             this.rEngine.Evaluate("library(carData)");
-            this.rEngine.Evaluate("library(car)");
+            this.rEngine.Evaluate("suppressPackageStartupMessages(library(car))");
             this.rEngine.Evaluate("library(survival)");
             //temporary
             this.rEngine.Evaluate("library(ggResidpanel)");
-            this.rEngine.Evaluate("library(corrplot)");
+            this.rEngine.Evaluate("suppressPackageStartupMessages(library(corrplot))");
+            this.rEngine.Evaluate("library(roxygen2)");
 
         }
         //used to initialize helper python scripts

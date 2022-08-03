@@ -4,6 +4,7 @@ using System.Text;
 
 namespace CSharpBackendWithR
 {
+    [Serializable]
     public class ParentAnalysisObject
     {
 

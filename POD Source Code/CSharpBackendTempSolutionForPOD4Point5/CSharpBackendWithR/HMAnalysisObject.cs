@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 namespace CSharpBackendWithR
 {
+    [Serializable]
     public class HMAnalysisObject : ParentAnalysisObject
     {
         //bool Is_solvableHitMiss;

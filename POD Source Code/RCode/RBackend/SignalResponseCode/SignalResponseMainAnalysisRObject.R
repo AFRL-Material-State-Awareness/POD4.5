@@ -183,7 +183,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       setKeyAValues(list(-1, a50, a90, aSigma, a9095))
                                     },
                                     genThresholdsTable=function(a.hat.vs.a.censored){
-                                      thresholds=linspace(-10, 15, 300)
+                                      thresholds=linspace(-.4, 15, 300)
                                       columns=c("threshold", "a90", "a90_95", "a50", "v11", "v12", "v22")
                                       threshDataFrame=data.frame(matrix(nrow=0, ncol=length(columns)))
                                       colnames(threshDataFrame)=columns
