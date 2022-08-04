@@ -1670,6 +1670,11 @@ namespace POD.Analyze
                 InResponseMin = InResponseMax;
                 InResponseMax = temp;
             }
+            //tranform the response decision back to linear space if necessary
+            //if (AnalysisDataType == AnalysisDataTypeEnum.AHat && _aHatAnalysisObject.ModelType == 2)
+            //{
+            //    InResponseDecision = Math.Log(InResponseDecision);
+            //}
             //used to store the current transformation the program is performing in the 'choose transform' window
             UpdatePythonTransforms();
             //change the model type of logistic regression to firth logistical regression if using log odds
@@ -2596,7 +2601,7 @@ namespace POD.Analyze
                 if (_python != null)
                 {
                     //value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
-                    value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                    value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
                 }    
                 else
                     value = myValue;

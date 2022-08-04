@@ -23,7 +23,7 @@ namespace CSharpBackendWithR
             List<double> cracks = newAHatAnalysis.Flaws;
             //TODO: FIX MEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             newAHatAnalysis.SignalResponseName = "y";
-            List<double> SignalResponse = newAHatAnalysis.Responses_all[newAHatAnalysis.SignalResponseName];
+            List<double> SignalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
             //needed for the r code 
             //this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());

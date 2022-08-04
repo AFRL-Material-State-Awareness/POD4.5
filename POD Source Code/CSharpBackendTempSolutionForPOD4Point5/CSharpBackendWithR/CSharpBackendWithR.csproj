@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>CSharpBackendWithR</RootNamespace>
     <AssemblyName>CSharpBackendWithR</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>

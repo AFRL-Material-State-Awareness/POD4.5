@@ -1253,41 +1253,6 @@ namespace POD.Data
                 //var maxValue = Double.PositiveInfinity;
                 var safeValue = 1.0;
                 var minValueTransformed = 0.0;
-                //var maxValueTransformed = 0.0;
-                //var isResponse = IsResponseTable(mySourceTable);
-                //var isFlaw = IsFlawTable(mySourceTable);
-
-                //if (FilterTransformedDataByRanges)
-                //{
-                //    if (isResponse)
-                //    {
-                //        if(MinSignal > 0.0)
-                //        {
-                //            minValue = MinSignal;
-                //            minValueTransformed = _podDoc.GetTransformedValue(MinSignal, _python.TransformEnumToInt(myTransformType));
-                //        }
-
-                //        if (MaxSignal > MinSignal)
-                //        {
-                //            maxValue = MaxSignal;
-                //            maxValueTransformed = _podDoc.GetTransformedValue(MaxSignal, _python.TransformEnumToInt(myTransformType));
-                //        }
-                //    }
-                //    else if (isFlaw)
-                //    {
-                //        if (MinFlaw > 0.0)
-                //        {
-                //            minValue = MinFlaw;
-                //            minValueTransformed = _podDoc.GetTransformedValue(MinFlaw, _python.TransformEnumToInt(myTransformType));
-                //        }
-
-                //        if (MaxFlaw > MinFlaw)
-                //        {
-                //            maxValue = MaxFlaw;
-                //            maxValueTransformed = _podDoc.GetTransformedValue(MaxFlaw, _python.TransformEnumToInt(myTransformType));
-                //        }
-                //    }
-                //}
 
                 foreach (DataColumn column in mySourceTable.Columns)
                 {
@@ -1298,22 +1263,6 @@ namespace POD.Data
                         var value = (double)row[column.ColumnName];
 
                         values.Add(value);
-
-                        //if (isResponse || !FilterTransformedDataByRanges)
-                        //{
-                        //    values.Add(value);
-                        //}
-                        //else if (isFlaw && FilterTransformedDataByRanges)
-                        //{
-                        //    if(value > minValue && value < maxValue)
-                        //    {
-                        //        values.Add(value);
-                        //    }
-                        //    else
-                        //    {
-                        //        values.Add(Double.NaN);
-                        //    }
-                        //}
                     }
 
                     //TODO: transform list of data here
@@ -1358,11 +1307,6 @@ namespace POD.Data
                     {
                         myTransformTable.Rows[changedIndex][column.ColumnName] = minValueTransformed;
                     }
-
-                    //foreach (var changedIndex in maxChanged)
-                    //{
-                    //    myTransformTable.Rows[changedIndex][column.ColumnName] = maxValueTransformed;
-                    //}
                 }
             }
         }
@@ -1903,7 +1847,7 @@ namespace POD.Data
                     _podCurveTable.Columns["t_fit"].ColumnName = "pod";
 
                 }
-                printDT(_podCurveTable);
+                //printDT(_podCurveTable);
                 if (_aHatAnalysisObject.ModelType == 1)
                 {
 
@@ -2000,7 +1944,7 @@ namespace POD.Data
                 //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
-                printDT(_thresholdPlotTable);
+                //printDT(_thresholdPlotTable);
             }
             catch (Exception exp)
             {
@@ -2046,7 +1990,7 @@ namespace POD.Data
                 //_thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
-                printDT(_thresholdPlotTable_All);
+                //printDT(_thresholdPlotTable_All);
             }
             catch (Exception exp)
             {
