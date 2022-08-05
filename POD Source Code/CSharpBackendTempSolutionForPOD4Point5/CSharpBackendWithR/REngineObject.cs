@@ -26,7 +26,7 @@ namespace CSharpBackendWithR
             InitializeRLibraries();
             InitializeRScripts();
             //add back in later
-            //InitializePythonScripts();
+            InitializePythonScripts();
         }
         
         private REngine initializeRDotNet()
@@ -144,7 +144,8 @@ namespace CSharpBackendWithR
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             Debug.WriteLine("starting python scripts");
-            this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
+            //this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
+            this.rEngine.Evaluate("use_python('use_python('C:/ProgramData/Anaconda3')");
             this.rEngine.Evaluate("source_python('"+this.forwardSlashAppPath+ "/RCode/RBackend/PythonRankedSetSampling/RSSRowSorter.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/CyclesArrayGenerator.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/MainRSSamplingClass.py')");
@@ -162,7 +163,7 @@ namespace CSharpBackendWithR
         {
             this.rEngine.ClearGlobalEnvironment();
             InitializeRScripts();
-            //InitializePythonScripts();
+            InitializePythonScripts();
         }    
     }
 }
