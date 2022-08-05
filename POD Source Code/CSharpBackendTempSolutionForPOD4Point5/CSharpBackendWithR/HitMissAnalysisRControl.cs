@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using RDotNet;
+using System.Threading;
 namespace CSharpBackendWithR
 {
     class HitMissAnalysisRControl
@@ -110,6 +111,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType='" + newTranformAnalysis.RegressionType + "',"
                 + "CIType='" + newTranformAnalysis.CIType +
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize, rankedSetSampleObject= newRSSComponent)");
+            //Thread.Sleep(1000);
             this.myREngine.Evaluate("newAnalysis$initializeRSS()");
         }
         public DataTable GetLogitFitTableForUI()

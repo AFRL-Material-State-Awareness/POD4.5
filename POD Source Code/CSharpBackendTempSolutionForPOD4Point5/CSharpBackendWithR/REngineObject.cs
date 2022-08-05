@@ -37,6 +37,8 @@ namespace CSharpBackendWithR
             //string homePath = this.applicationPath + @"\R-3.5.3\";
             string rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
             string homePath = this.applicationPath + @"\R-3.5.3\";
+            //string rPath = this.applicationPath + @"\R-4.1.2\bin\x64";
+            //string homePath = this.applicationPath + @"\R-4.1.2\";
             //string rPath = this.applicationPath;
             //string homePath = this.applicationPath;
 
@@ -126,6 +128,7 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
             this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+            this.rEngine.Evaluate("print(packageVersion('reticulate'))");
             //the following libraries are used for signal response
             this.rEngine.Evaluate("library(gridExtra)");
             this.rEngine.Evaluate("library(nlme)");
