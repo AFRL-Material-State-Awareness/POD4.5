@@ -3,6 +3,7 @@ library(reticulate)
 library(MASS)
 library(mcprofile)
 library(parallel)
+library(logistf)
 # #Test Code
 #flag used for genNormFitClassR
 isLog=FALSE

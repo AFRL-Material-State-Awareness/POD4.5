@@ -1188,13 +1188,13 @@ namespace POD.Analyze
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
                 List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
                 //TODO: figure out how to get the covariance matrix for LR and MLR
-                try
+                if(_hmAnalysisObject.CovarianceMatrix != null)
                 {
                     //if (InFlawTransform == TransformTypeEnum.Linear)
                     //{
-                        OutPFCovarianceV11 = covMatrix[0];
-                        OutPFCovarianceV12 = covMatrix[1];
-                        OutPFCovarianceV22 = covMatrix[3];
+                    OutPFCovarianceV11 = covMatrix[0];
+                    OutPFCovarianceV12 = covMatrix[1];
+                    OutPFCovarianceV22 = covMatrix[3];
                     //}
                     /*
                     else if(InFlawTransform == TransformTypeEnum.Log)
@@ -1206,7 +1206,7 @@ namespace POD.Analyze
                     */
                     
                 }
-                catch(Exception whoops)
+                else
                 {
                     MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
                     OutPFCovarianceV11 = -1;

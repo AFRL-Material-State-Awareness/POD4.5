@@ -124,7 +124,7 @@ namespace CSharpBackendWithR
             //this.rEngine.Evaluate("library(logistf)");
             this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
-            //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+            this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
             //the following libraries are used for signal response
             this.rEngine.Evaluate("library(gridExtra)");
             this.rEngine.Evaluate("library(nlme)");
@@ -145,7 +145,7 @@ namespace CSharpBackendWithR
             watch.Start();
             Debug.WriteLine("starting python scripts");
             //this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
-            this.rEngine.Evaluate("use_python('use_python('C:/ProgramData/Anaconda3')");
+            this.rEngine.Evaluate("use_python('C:/ProgramData/Anaconda3')");
             this.rEngine.Evaluate("source_python('"+this.forwardSlashAppPath+ "/RCode/RBackend/PythonRankedSetSampling/RSSRowSorter.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/CyclesArrayGenerator.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/MainRSSamplingClass.py')");
