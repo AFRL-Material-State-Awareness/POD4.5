@@ -1208,7 +1208,8 @@ namespace POD.Analyze
                 }
                 else
                 {
-                    MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
+                    //MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
+                    Debug.WriteLine("Warning: something went wrong with calculating the vcov matrix!");
                     OutPFCovarianceV11 = -1;
                     OutPFCovarianceV12 = -1;
                     OutPFCovarianceV22 = -1;
@@ -1720,7 +1721,14 @@ namespace POD.Analyze
                 _hmAnalysisObject.A_x_n = 500;
                 _hmAnalysisObject.CIType = InConfIntervalType.ToString(); //
                 //used for RSS
-                _hmAnalysisObject.Set_r = _hmAnalysisObject.A_x_n / _hmAnalysisObject.Set_m;
+                if (_hmAnalysisObject.CIType == "StandardWald")
+                {
+                    _hmAnalysisObject.Set_r = _hmAnalysisObject.Count / _hmAnalysisObject.Set_m;
+                }
+                else
+                {
+                    _hmAnalysisObject.Set_r = _hmAnalysisObject.A_x_n / _hmAnalysisObject.Set_m;
+                }
                 _hmAnalysisObject.MaxResamples = 30;
             }
             List<double> thresholds = new List<double>();

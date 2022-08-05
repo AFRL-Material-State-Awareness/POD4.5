@@ -50,6 +50,7 @@ RankedSetRegGen=setRefClass("RankedSetRegGen", fields = list(testData="data.fram
                                       rankedSetResults=list()
                                       #excute python scripts (fourth parameter is to account for the indices between
                                       #r and python arrays)
+                                      print("starting python code!!!")
                                       newGenSamples=RSSamplingMain(testData, set_r, set_m, TRUE)
                                       for(i in 1:maxResamples){
                                         newGenSamples$performRSS()

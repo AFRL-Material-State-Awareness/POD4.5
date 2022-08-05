@@ -76,6 +76,14 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               newRSSMainObject$executeRSSPOD()
                               setResults(newRSSMainObject$getPODDataFrame())
                               setKeyAValues(newRSSMainObject$getMedianAValues())
+                              setIterationTable(data.frame(
+                                trial=1,
+                                indexiteration=-1,
+                                indexmu=-1,
+                                sigma=-1,
+                                fnorm=-1,
+                                damping=1
+                              ))
                             },
                             determineRegressionType=function(){
                               if(modelType=="Logistic Regression"){

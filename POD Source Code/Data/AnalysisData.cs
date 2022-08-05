@@ -1504,6 +1504,8 @@ namespace POD.Data
                     if (_hmAnalysisObject.FlawsUncensored.Count()==0)
                     {
                         _hmAnalysisObject.FlawsUncensored = flaws;
+                        //set the dataset size
+                        _hmAnalysisObject.Count = _hmAnalysisObject.FlawsUncensored.Count();
                         List<double> logOfFlaws = new List<double>();
                         for(int i=0; i<flaws.Count(); i++)
                         {
@@ -1600,7 +1602,7 @@ namespace POD.Data
             {
                 _originalData = _hmAnalysisObject.HitMissDataOrig;
                 //Debug.Write("original Data");
-                //printDT(_originalData);
+                printDT(_originalData);
             }
             
             catch (Exception exp)
@@ -1652,7 +1654,7 @@ namespace POD.Data
                     }
                 }
                 //Debug.WriteLine("POD curve table");
-                //printDT(_podCurveTable);
+                printDT(_podCurveTable);
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1680,7 +1682,7 @@ namespace POD.Data
                 _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 //Debug.WriteLine("Residual Table");
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                //printDT(_residualUncensoredTable);
+                printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1694,7 +1696,7 @@ namespace POD.Data
                 //TODO: will end up removing this table later
                 //_iterationsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFSolveIterationTable());
                 _iterationsTable = _hmAnalysisObject.IterationTable;
-                //printDT(_iterationsTable);
+                printDT(_iterationsTable);
             }
             catch (Exception exp)
             {

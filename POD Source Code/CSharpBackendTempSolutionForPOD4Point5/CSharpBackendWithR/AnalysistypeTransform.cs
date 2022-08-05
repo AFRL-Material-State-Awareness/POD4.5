@@ -99,8 +99,10 @@ namespace CSharpBackendWithR
             //create the class for hitMissControl
             HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
             newHitMissControl.ExecuteRSS(this.newPFAnalysisObject);
-            //newHitMissControl.getRSS_Results();
             this.newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
+            this.newPFAnalysisObject.IterationTable = newHitMissControl.GetIterationTableForUI();
+            //store the original dataframe in the HM analysis object
+            this.newPFAnalysisObject.HitMissDataOrig = newHitMissControl.GetOrigHitMissDF();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = newHitMissControl.GetKeyA_Values();
             this.newPFAnalysisObject.A25 = finalAValuesDict["a25"];

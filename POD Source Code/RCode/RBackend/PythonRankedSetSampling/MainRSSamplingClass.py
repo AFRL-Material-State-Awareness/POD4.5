@@ -1,18 +1,19 @@
 ###This class is used to perform ranked set sampling and calculate the logit results
-#import numpy as np
+import numpy as np
 import pandas as pd
-import time
+#import time
 #only used if running from python. R imports all the needed python scripts on its own
-try:
-    from RSSRowSorter import *
-    from CyclesArrayGenerator import *
-    #from RSSDataFrameGenerator import *
-    from RSS2DArrayGenerator import *
-except:
-    pass
+#try:
+#    from RSSRowSorter import *
+#    from CyclesArrayGenerator import *
+#    #from RSSDataFrameGenerator import *
+#    from RSS2DArrayGenerator import *
+#except:
+#    pass
 #Main RSSampling Class
 class RSSamplingMain():
     def __init__(self, dataset, r, m, usingRIter=False):
+        print("made it!")
         #allows the user to insert a pandas dataframe or a 2d array
         #use this argument if running from r(programming langauge) to fix the index offset
         self.usingRIter=usingRIter
@@ -32,6 +33,7 @@ class RSSamplingMain():
         #results array
         self.resultsRSSArray=None
     def performRSS(self):
+        print("starting RSS in python")
         #timer for debugging
         #starttime=time.time()
         newArrayGenator=CyclesArrayGenerator(self.fullRSSArray, self.dataset, self.m)

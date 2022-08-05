@@ -7,7 +7,7 @@ library(logistf)
 # #Test Code
 #flag used for genNormFitClassR
 isLog=FALSE
-#Sys.which("python")
+Sys.which("python")
 use_python('C:/ProgramData/Anaconda3')
 filepath=dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(filepath,"/../PythonRankedSetSampling/RSSRowSorter.py", sep=""))
@@ -45,7 +45,7 @@ regression="Logistic Regression"
 normSamp=500
 resamplesMax=60
 #conf int type
-ciType="StandardWald"
+ciType="ModifiedWald"
 start.time <- Sys.time()
 set_m=6
 
@@ -65,6 +65,8 @@ newHMRSSInstance<-HMAnalysis$new(hitMissDF=testData, CIType=ciType, modelType=re
 newHMRSSInstance$initializeRSS()
 resultDF<-newHMRSSInstance$getResults()
 aValResults<-newHMRSSInstance$getKeyAValues()
+resid<-newHMRSSInstance$getGoodnessOfFit()
+iteration<-newHMRSSInstance$getIterationTable()
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 print("total execution time was:")
