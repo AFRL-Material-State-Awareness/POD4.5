@@ -39,19 +39,19 @@ options(warn=-1)
 #set the number of resamples here(usually 30 is sufficient)
 #used for modified wald
 
-regression="Firth Logistic Regression"
-#regression="Logistic Regression"
+#regression="Firth Logistic Regression"
+regression="Logistic Regression"
 
 normSamp=500
 resamplesMax=60
 #conf int type
-ciType="Modified Wald"
+ciType="StandardWald"
 start.time <- Sys.time()
 set_m=6
 
-if(ciType=="Standard Wald"){
+if(ciType=="StandardWald"){
   set_r=floor(nrow(testData)/set_m)
-}else if(ciType=="Modified Wald"){
+}else if(ciType=="ModifiedWald"){
   set_r=floor(normSamp/set_m)
 }else if(ciType=="LR"){
   set_r=floor(normSamp/set_m)

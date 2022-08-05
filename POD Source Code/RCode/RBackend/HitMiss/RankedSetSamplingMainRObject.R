@@ -19,7 +19,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           return(pODDataFrame)
                                                         },
                                                         executeRSSPOD=function(){
-                                                          if(CITypeRSS=="Modified Wald" || CITypeRSS=="LR" || CITypeRSS=="MLR"){
+                                                          if(CITypeRSS=="ModifiedWald" || CITypeRSS=="LR" || CITypeRSS=="MLR"){
                                                             simCracks=genModifiedWaldDataset()
                                                           }
                                                           #generate the logit data and store the results in the environment
@@ -40,7 +40,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           if(checkFailures==FALSE){
                                                             newPODCurve<-GenPODCurveRSS$new()
                                                             #standard wald
-                                                            if(CITypeRSS=="Standard Wald"){
+                                                            if(CITypeRSS=="StandardWald"){
                                                               # newPODCurve$initialize(logitResultsPODInput=logitResultsSet,
                                                               #                        excludeNAInput=rsSComponentFromMain$excludeNA,
                                                               #                        RSSDataFrames=RankedResultsSet)
@@ -52,7 +52,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                               newPODCurve$newWaldGen()
                                                             }
                                                             #modified wald
-                                                            else if(CITypeRSS=="Modified Wald"){
+                                                            else if(CITypeRSS=="ModifiedWald"){
                                                               newPODCurve$initialize(logitResultsPODInput=logitResultsSet, 
                                                                                      excludeNAInput=rsSComponentFromMain$excludeNA,
                                                                                      RSSDataFrames=RankedResultsSet,
@@ -97,11 +97,11 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                                                     excludeNAInput= rsSComponentFromMain$excludeNA,
                                                                                     logitResultsListInput=logitResults,
                                                                                     RSSDataFramesInput=RankedResults)
-                                                          if(CITypeRSS=="Standard Wald"){
+                                                          if(CITypeRSS=="StandardWald"){
                                                             #newAValuesCalc$genAValueswald()
                                                             newAValuesCalc$genAValuesStandWald()
                                                           }
-                                                          else if(CITypeRSS=="Modified Wald"){
+                                                          else if(CITypeRSS=="ModifiedWald"){
                                                             newAValuesCalc$genAValuesModWald()
                                                           }
                                                           setMedianAValues(newAValuesCalc$getAValuesList())
