@@ -26,6 +26,7 @@ namespace CSharpBackendWithR
             InitializeRLibraries();
             InitializeRScripts();
             //add back in later
+            SetUsePython();
             InitializePythonScripts();
         }
         
@@ -138,19 +139,22 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("library(roxygen2)");
 
         }
+        private void SetUsePython()
+        {
+            //this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
+            this.rEngine.Evaluate("use_python('C:/ProgramData/Anaconda3')");
+        }
         //used to initialize helper python scripts
         private void InitializePythonScripts()
         {
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             Debug.WriteLine("starting python scripts");
-            //this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
-            this.rEngine.Evaluate("use_python('C:/ProgramData/Anaconda3')");
+            
             this.rEngine.Evaluate("source_python('"+this.forwardSlashAppPath+ "/RCode/RBackend/PythonRankedSetSampling/RSSRowSorter.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/CyclesArrayGenerator.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/MainRSSamplingClass.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/RSS2DArrayGenerator.py')");
-            //this.rEngine.Evaluate("source_python('" + forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/RSSDataFrameGenerator.py')");
             Debug.WriteLine("finished loading python scripts");
             watch.Stop();
             var time = watch.ElapsedMilliseconds / 1000.00;
