@@ -80,6 +80,7 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.GoodnessOfFit = newHitMissControl.GetGoodnessOfFit();
             //clear all contents in R and restart the global environment
             this.analysisEngine.clearGlobalIInREngineObject();
+            //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
             //Console.WriteLine(newPFAnalysisObject);
             //finish analysis
 
@@ -113,6 +114,7 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
             //clear all contents in R and restart the global environment
             this.analysisEngine.clearGlobalIInREngineObject();
+            //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
             //Console.WriteLine(newPFAnalysisObject);
             return this.newPFAnalysisObject;
         }
