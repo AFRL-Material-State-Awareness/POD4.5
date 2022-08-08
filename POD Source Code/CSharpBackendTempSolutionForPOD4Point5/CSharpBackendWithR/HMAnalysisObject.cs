@@ -202,25 +202,16 @@ namespace CSharpBackendWithR
             get { return this.goodnessOfFit; }
         } 
 
-        public void CurrFlawsAnalysis()
+        public void ClearMetrics()
         {
-            //empty the temp array whenever this function is called
-            //this.uncensoredFlaws.Clear();
-            //iterate through the list of HMCrackDataObjects to make the x-axis
-            //a normal tranform o a log tranform depending on what the value of model is 
-            /*
-            foreach (HMCrackData i in this.Flaws)
-            {
-                if (this.modelType == 0)
-                {
-                    this.uncensoredFlaws.Add(i.CrkSizeControl);
-                }
-                else if(this.modelType == 1)
-                {
-                    this.uncensoredFlaws.Add(i.CrkfControl);
-                }
-            } 
-            */
+            A25 = -1;
+            A50 = -1;
+            A90 = -1;
+            A9095 = -1;
+            covarMatrix = null;
+            this.goodnessOfFit = -1;
+            LogitFitTable = null;
+            IterationTable = null;
         }
     }
     

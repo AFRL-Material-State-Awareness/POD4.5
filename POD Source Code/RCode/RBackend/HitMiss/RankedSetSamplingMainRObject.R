@@ -4,7 +4,8 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                                       CITypeRSS="character",
                                                                       normSampleAmount="numeric",
                                                                       medianAValues="list",
-                                                                      pODDataFrame="data.frame"),
+                                                                      pODDataFrame="data.frame",
+                                                                      covarMatrix="matrix"),
                                                         methods = list(
                                                         setMedianAValues=function(psMedianAValues){
                                                           medianAValues<<-psMedianAValues
@@ -17,6 +18,12 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                         },
                                                         getPODDataFrame=function(){
                                                           return(pODDataFrame)
+                                                        },
+                                                        getMedianCovarMatrix=function(){
+                                                          return(covarMatrix)
+                                                        },
+                                                        setMedianCovarMatrix=function(psCovarMatrix){
+                                                          covarMatrix<<-psCovarMatrix
                                                         },
                                                         executeRSSPOD=function(){
                                                           if(CITypeRSS=="ModifiedWald" || CITypeRSS=="LR" || CITypeRSS=="MLR"){
@@ -73,6 +80,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                                                      simCrackSizes=simCracks)
                                                               newPODCurve$genPODMLR()
                                                             }
+                                                            setMedianCovarMatrix(newPODCurve$getMedianCovarMatrix())
                                                             setPODDataFrame(newPODCurve$getPODCurveDF())
                                                             genAValues(logitResultsSet, RankedResultsSet)
                                                           }

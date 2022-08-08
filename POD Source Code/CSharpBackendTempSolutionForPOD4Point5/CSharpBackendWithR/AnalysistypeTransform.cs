@@ -54,8 +54,6 @@ namespace CSharpBackendWithR
             //overwrite the max and min class each iteration
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
             //write the max and min crack size to the pfanalysisObject
-            //sets the flaw sizes in flaws temp
-            this.newPFAnalysisObject.CurrFlawsAnalysis();
             //TODO: maybe Flaws temp doesn't need to exist? (code breaking here currently)
             //newMaxMin.calcCrackRange(newPFAnalysisObject.FlawsTemp);
             newMaxMin.calcCrackRange(this.newPFAnalysisObject.Flaws);
@@ -92,8 +90,6 @@ namespace CSharpBackendWithR
             //analysisEngine.RDotNetEngine.Evaluate("str(as.list(.GlobalEnv))");
             //Get crack max and min class
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
-            //sets the flaw sizes in flaws temp
-            newPFAnalysisObject.CurrFlawsAnalysis();
             newMaxMin.calcCrackRange(newPFAnalysisObject.Flaws);
             this.newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
             newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];

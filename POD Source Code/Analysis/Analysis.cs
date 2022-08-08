@@ -1246,6 +1246,11 @@ namespace POD.Analyze
 
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
+
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                _hmAnalysisObject.ClearMetrics();
+            }
         }
 
         public void UpdateProgress(Object sender, int myProgressOutOf100)

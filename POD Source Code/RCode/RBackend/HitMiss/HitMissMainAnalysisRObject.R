@@ -84,6 +84,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 fnorm=-1,
                                 damping=1
                               ))
+                              setCovMatrix(newRSSMainObject$getMedianCovarMatrix())
                             },
                             determineRegressionType=function(){
                               if(modelType=="Logistic Regression"){
@@ -111,7 +112,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 damping=1
                               ))
                               #calculate the goodness of fit
-                              setGoodnessOfFit(1- regressionResults$deviance/regressionResults$null.deviance)
+                              setGoodnessOfFit(regressionResults$deviance/regressionResults$null.deviance)
                               if(CIType=="StandardWald"){
                                 #print("start conf int")
                                 #set t_trans
