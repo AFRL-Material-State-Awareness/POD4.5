@@ -39,7 +39,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           #if at least one logit model converged, generate a pod curve
                                                           if(checkFailures==FALSE){
                                                             newPODCurve<-GenPODCurveRSS$new()
-                                                            #standard wald
+                                                            #Standard wald
                                                             if(CITypeRSS=="StandardWald"){
                                                               # newPODCurve$initialize(logitResultsPODInput=logitResultsSet,
                                                               #                        excludeNAInput=rsSComponentFromMain$excludeNA,
@@ -51,7 +51,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                                                      origDataSetInput=dataFrame)
                                                               newPODCurve$newWaldGen()
                                                             }
-                                                            #modified wald
+                                                            #Modified wald
                                                             else if(CITypeRSS=="ModifiedWald"){
                                                               newPODCurve$initialize(logitResultsPODInput=logitResultsSet, 
                                                                                      excludeNAInput=rsSComponentFromMain$excludeNA,
