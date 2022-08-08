@@ -282,6 +282,12 @@ namespace POD.Analyze
             get { return _confIntHMType; }
             set { if (!IsFrozen) _confIntHMType = value; }
         }
+        private SamplingTypeEnum _samplingHMType;
+        public SamplingTypeEnum InSamplingType
+        {
+            get { return _samplingHMType; }
+            set { if (!IsFrozen) _samplingHMType = value; }
+        }
         
         private double NoBigNumbers(double myValue)
         {
@@ -1719,7 +1725,19 @@ namespace POD.Analyze
                 _hmAnalysisObject.Confidence_level = .95;
                 //used for modified wald, LR, etc. Will implement into the UI later
                 _hmAnalysisObject.A_x_n = 500;
-                _hmAnalysisObject.CIType = InConfIntervalType.ToString(); //
+                _hmAnalysisObject.CIType = InConfIntervalType.ToString(); // used to change the confidence interval if the user chooses to
+                switch (InSamplingType.ToString())
+                {
+                    case "SimpleRandomSampling":
+                        _hmAnalysisObject.SrsOrRSS = 0;
+                        break;
+                    case "RankedSetSampling":
+                        _hmAnalysisObject.SrsOrRSS = 1;
+                        break;
+                    default:
+                        _hmAnalysisObject.SrsOrRSS = 0; //use simple random sampling by default
+                        break;
+                }
                 //used for RSS
                 if (_hmAnalysisObject.CIType == "StandardWald")
                 {

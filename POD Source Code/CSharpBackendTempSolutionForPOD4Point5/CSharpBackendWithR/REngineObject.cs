@@ -26,8 +26,8 @@ namespace CSharpBackendWithR
             InitializeRLibraries();
             InitializeRScripts();
             //add back in later
-            SetUsePython();
-            InitializePythonScripts();
+            //SetUsePython();
+            //InitializePythonScripts();
         }
         
         private REngine initializeRDotNet()
@@ -97,6 +97,7 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetRegGen.R')");
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenPODCurveRSS.R')");
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenRSS_A_Values.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MainRSSamplingDataInR.R')");
             //this is the main Hit miss R analysis object
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
             //minimcprofile(used for parallel processing
@@ -153,7 +154,6 @@ namespace CSharpBackendWithR
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             Debug.WriteLine("starting python scripts");
-            
             this.rEngine.Evaluate("source_python('"+this.forwardSlashAppPath+ "/RCode/RBackend/PythonRankedSetSampling/RSSRowSorter.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/CyclesArrayGenerator.py')");
             this.rEngine.Evaluate("source_python('" + this.forwardSlashAppPath + "/RCode/RBackend/PythonRankedSetSampling/MainRSSamplingClass.py')");
@@ -170,7 +170,7 @@ namespace CSharpBackendWithR
         {
             this.rEngine.ClearGlobalEnvironment();
             InitializeRScripts();
-            InitializePythonScripts();
+            //InitializePythonScripts();
         }    
     }
 }

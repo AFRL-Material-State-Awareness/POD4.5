@@ -84,6 +84,12 @@
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="SamplingTypeBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SamplingTypeBox.Designer.cs">
+      <DependentUpon>SamplingTypeBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="ContextMenuStripConnected.cs">
       <SubType>Component</SubType>
     </Compile>

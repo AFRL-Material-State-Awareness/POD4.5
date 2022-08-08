@@ -24,6 +24,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         private ConfidenceBox _confIntBox;
         private Label _confIntLabel;
+
+        private SamplingTypeBox _sampleTypeBox;
+        private Label _sampleTypeLabel;
         //private TransformBox _yTransformBox;
 
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
@@ -175,10 +178,12 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             IntitalizeTransformBoxes();
             InitializeCITypeBox();
+            InitializeSamplingTypeBox();
             var list = new List<Control> {
                                            AxisTransformsHeader,
                                            _xTransformLabel, _xTransformBox,
                                            _confIntLabel, _confIntBox,
+                                           _sampleTypeLabel, _sampleTypeBox,
                                            PODModelTypeHeader,
                                            ModelLabel, ModelBox,
 
@@ -213,13 +218,17 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void IntitalizeTransformBoxes()
         {
             PrepareLabelBoxPair(ref _xTransformLabel, "Flaw", ref _xTransformBox);
-            //PrepareLabelBoxPairConfint(ref _confIntLabel, "Confidence Interval", ref _confIntBox);
             ModelBox.SelectedIndex = 0;
         }
         public void InitializeCITypeBox()
         {
-            PrepareLabelBoxPairConfint(ref _confIntLabel, "Confidence Interval Type", ref _confIntBox);
+            PrepareLabelBoxPairConfint(ref _confIntLabel, "Conf-Int Type", ref _confIntBox);
             _confIntBox.SelectedIndex = 0;
+        }
+        public void InitializeSamplingTypeBox()
+        {
+            PrepareLabelBoxPairSamplingType(ref _sampleTypeLabel, "Sampling Type", ref _sampleTypeBox);
+            _sampleTypeBox.SelectedIndex = 0;
         }
         /// <summary>
         /// Sets up event handling for right side numeric controls. Only call after InitializeComponent().
@@ -231,18 +240,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             _xTransformBox.SelectedIndexChanged += XTransformBox_ValueChanged;
             ModelBox.SelectedIndexChanged += ModelBox_ValueChanged;
             _confIntBox.SelectedIndexChanged += ConfIntBox_ValueChanged;
+            _sampleTypeBox.SelectedIndexChanged += SamplingTypeBox_ValueChanged;
         }
-        private void ConfIntBox_ValueChanged(object sender, EventArgs e)
-        {
-            Analysis.InConfIntervalType = _confIntBox.SelectedConfInt;
-            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-            mainChart.SetAMaxBoundary(x, false);
-            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-            mainChart.SetAMinBoundary(x, false);
-
-            ForceUpdateAfterTransformChange();
-        }
-
+       
         private void XTransformBox_ValueChanged(object sender, EventArgs e)
         {
             Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
@@ -259,6 +259,28 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             Analysis.InHitMissModel = ModelBox.SelectedModel;
 
+            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+            mainChart.SetAMaxBoundary(x, false);
+            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+            mainChart.SetAMinBoundary(x, false);
+
+            ForceUpdateAfterTransformChange();
+        }
+
+        private void ConfIntBox_ValueChanged(object sender, EventArgs e)
+        {
+            Analysis.InConfIntervalType = _confIntBox.SelectedConfInt;
+            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+            mainChart.SetAMaxBoundary(x, false);
+            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+            mainChart.SetAMinBoundary(x, false);
+
+            ForceUpdateAfterTransformChange();
+        }
+
+        private void SamplingTypeBox_ValueChanged(object sender, EventArgs e)
+        {
+            Analysis.InSamplingType = _sampleTypeBox.SelectedSamplingType;
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
             mainChart.SetAMaxBoundary(x, false);
             x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));

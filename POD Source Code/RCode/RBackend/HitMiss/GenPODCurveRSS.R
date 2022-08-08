@@ -87,14 +87,14 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 setPODCurveDF(PODCurve)
                               },
                               genPODLR=function(){
-                                logitResultsPODG<<-logitResultsPOD
+                                #logitResultsPODG<<-logitResultsPOD
                                 print("starting LR RSS")
                                 ##TODO: apply parallel processing to speed things up
                                 #generate the Lr conf interval with RSS(WARNING: VERY SLOW)
                                 #Initialize the K matrix
                                 a=simCrackSizes
                                 a_i_2 = sort(a)[seq(from=1,to=length(a),length.out=length(simCrackSizes))]
-                                K <<- matrix(c(rep(1,length(a_i_2)),a_i_2),ncol=2)
+                                K = matrix(c(rep(1,length(a_i_2)),a_i_2),ncol=2)
                                 finalConfInt=list()
                                 print("no parallel")
                                 for(i in 1:length(logitResultsPOD)){
@@ -104,19 +104,19 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   newLRConfInt$executeLR()
                                   finalConfInt=append(finalConfInt, data.frame(newLRConfInt$getCIDataFrame()))
                                 }
-                                finalConfIntGlobal<<-finalConfInt
+                                #finalConfIntGlobal<<-finalConfInt
                                 t_transList=list()
                                 confIntList=list()
-                                for(i in 1:length(finalConfIntGlobal)){
+                                for(i in 1:length(finalConfInt)){
                                   if(i%%2==1){
-                                    t_transList=append(t_transList, finalConfIntGlobal[i])
+                                    t_transList=append(t_transList, finalConfInt[i])
                                   }
                                   else if (i%%2==0){
-                                    confIntList=append(confIntList, finalConfIntGlobal[i])
+                                    confIntList=append(confIntList, finalConfInt[i])
                                   }
                                 }
-                                t_transDF<<-data.frame(t_transList)
-                                confIntListDF<<-data.frame(confIntList)
+                                t_transDF=data.frame(t_transList)
+                                confIntListDF=data.frame(confIntList)
                                 #calculate medians and store them in final DF column 
                                 t_trans=c()
                                 Confidence_Interval=c()
@@ -131,7 +131,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   "t_trans"= t_trans,
                                   "Confidence_Interval"=Confidence_Interval
                                 )
-                                globalPODCurve<<-PODCurve
+                                #globalPODCurve<<-PODCurve
                                 setPODCurveDF(PODCurve)
                                 
                               },
@@ -158,19 +158,19 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   newMLRConfInt$executeMLR()
                                   finalConfInt=append(finalConfInt, data.frame(newMLRConfInt$getCIDataFrame()))
                                 }
-                                finalConfIntGlobal<<-finalConfInt
+                                #finalConfIntGlobal<<-finalConfInt
                                 t_transList=list()
                                 confIntList=list()
-                                for(i in 1:length(finalConfIntGlobal)){
+                                for(i in 1:length(finalConfInt)){
                                   if(i%%2==1){
-                                    t_transList=append(t_transList, finalConfIntGlobal[i])
+                                    t_transList=append(t_transList, finalConfInt[i])
                                   }
                                   else if (i%%2==0){
-                                    confIntList=append(confIntList, finalConfIntGlobal[i])
+                                    confIntList=append(confIntList, finalConfInt[i])
                                   }
                                 }
-                                t_transDF<<-data.frame(t_transList)
-                                confIntListDF<<-data.frame(confIntList)
+                                t_transDF=data.frame(t_transList)
+                                confIntListDF=data.frame(confIntList)
                                 #calculate medians and store them in final DF column 
                                 t_trans=c()
                                 Confidence_Interval=c()

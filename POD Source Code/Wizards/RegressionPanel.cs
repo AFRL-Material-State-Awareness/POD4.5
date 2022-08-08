@@ -158,6 +158,19 @@ namespace POD.Wizards
             myBox.Dock = DockStyle.Fill;
             myBox.SelectedIndex = 1;
         }
+        public static void PrepareLabelBoxPairSamplingType(ref Label myLabel, string myName, ref SamplingTypeBox myBox)
+        {
+            myLabel = new Label();
+
+            myBox = new SamplingTypeBox();
+
+            myLabel.Text = myName;
+            myLabel.AutoSize = true;
+            myLabel.Dock = DockStyle.Fill;
+
+            myBox.Dock = DockStyle.Fill;
+            myBox.SelectedIndex = 1;
+        }
 
         protected void FixColumnWidth(TableLayoutPanel outputTablePanel, PODChartNumericUpDown myNumeric)
         {

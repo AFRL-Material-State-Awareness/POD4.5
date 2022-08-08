@@ -107,7 +107,7 @@ namespace CSharpBackendWithR
             DataTable LogLogitHMFitTable = new DataTable();
 
             //0=simple random sampling selected, 1= ranked set sampling(indexed based)
-            this.srsOrRSS = 1; //simple random sampling by default
+            this.srsOrRSS = 0; //simple random sampling by default
             //max resamples
             this.maxResamples = 30; //1 by default
             //goodness of fit test with likelihood ratio

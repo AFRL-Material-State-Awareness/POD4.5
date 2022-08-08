@@ -1,5 +1,5 @@
 library(ggplot2)
-library(reticulate)
+#library(reticulate)
 library(MASS)
 library(mcprofile)
 library(parallel)
@@ -7,7 +7,7 @@ library(logistf)
 # #Test Code
 #flag used for genNormFitClassR
 isLog=FALSE
-Sys.which("python")
+#Sys.which("python")
 use_python('C:/ProgramData/Anaconda3')
 filepath=dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(filepath,"/../PythonRankedSetSampling/RSSRowSorter.py", sep=""))
@@ -16,6 +16,7 @@ source_python(paste(filepath,"/../PythonRankedSetSampling/MainRSSamplingClass.py
 source_python(paste(filepath,"/../PythonRankedSetSampling/RSS2DArrayGenerator.py", sep=""))
 #rscripts
 source(paste(filepath,"/RankedSetSamplingMainRObject.R", sep = ""))
+source(paste(filepath,"/MainRSSamplingDataInR.R", sep = ""))
 source(paste(filepath,"/RSSComponentsObject.R", sep = ""))
 source(paste(filepath,"/RankedSetRegGen.R", sep = ""))
 source(paste(filepath,"/HMLogitApproximationRObject.R", sep = ""))

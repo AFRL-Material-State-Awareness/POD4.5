@@ -50,12 +50,27 @@ RankedSetRegGen=setRefClass("RankedSetRegGen", fields = list(testData="data.fram
                                       rankedSetResults=list()
                                       #excute python scripts (fourth parameter is to account for the indices between
                                       #r and python arrays)
-                                      print("starting python code!!!")
-                                      newGenSamples=RSSamplingMain(testData, set_r, set_m, TRUE)
+                                      #print("starting python code!!!")
+                                      # start<-Sys.time()
+                                      # newGenSamples=RSSamplingMain(testData, set_r, set_m, TRUE)
+                                      # for(i in 1:maxResamples){
+                                      #  newGenSamples$performRSS()
+                                      #  rankedSetResults=append(rankedSetResults, list(newGenSamples$RSSDataFrame))
+                                      # }
+                                      # end<-Sys.time()
+                                      # print("python")
+                                      # print(end-start)
+                                      # start<-Sys.time()
+                                      newGenSamples=RSSamplingMain_R$new()
+                                      newGenSamples$initialize(testDataInput=testData, set_rInput = set_r, set_mInput = set_m)
                                       for(i in 1:maxResamples){
-                                        newGenSamples$performRSS()
-                                        rankedSetResults=append(rankedSetResults, list(newGenSamples$RSSDataFrame))
+                                       newGenSamples$performRSS()
+                                       rankedSetResults=append(rankedSetResults, list(newGenSamples$getRSSDAtaFrame()))
                                       }
+                                      #ranksetGlobal<<-rankedSetResults
+                                      # end<-Sys.time()
+                                      # print("python")
+                                      # print(end-start)
                                       setRankedSetResults(rankedSetResults)
                                       #end.time <- Sys.time()
                                       #time.taken <- end.time - start.time

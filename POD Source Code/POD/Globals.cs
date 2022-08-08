@@ -1181,6 +1181,11 @@ namespace POD
         LR,
         MLR
     }
+    public enum SamplingTypeEnum
+    {
+        SimpleRandomSampling,
+        RankedSetSampling
+    }
     public enum PFModelEnum
     {
         Normal,

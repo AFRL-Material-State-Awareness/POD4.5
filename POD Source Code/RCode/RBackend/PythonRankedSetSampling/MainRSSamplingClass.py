@@ -13,7 +13,7 @@ import pandas as pd
 #Main RSSampling Class
 class RSSamplingMain():
     def __init__(self, dataset, r, m, usingRIter=False):
-        print("made it!")
+        #print("made it!")
         #allows the user to insert a pandas dataframe or a 2d array
         #use this argument if running from r(programming langauge) to fix the index offset
         self.usingRIter=usingRIter
@@ -33,7 +33,7 @@ class RSSamplingMain():
         #results array
         self.resultsRSSArray=None
     def performRSS(self):
-        print("starting RSS in python")
+        #print("starting RSS in python")
         #timer for debugging
         #starttime=time.time()
         newArrayGenator=CyclesArrayGenerator(self.fullRSSArray, self.dataset, self.m)
