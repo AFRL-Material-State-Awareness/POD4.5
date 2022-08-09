@@ -18,9 +18,10 @@ source(paste(folderLocation, "/SignalResponseMainAnalysisRObject.R", sep=""))
 data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TRUE)
 data_obs=na.omit(data_obs)
 begin<-proc.time()
+data_obs$y=log(data_obs$y)
 #perform signal response analysis
 #usually 40% of the highest signal response value
-newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=1.415)
+newSRAnalysis<-AHatAnalysis$new(SignalRespDF=data_obs,y_dec=1.415, modelType=3)
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()

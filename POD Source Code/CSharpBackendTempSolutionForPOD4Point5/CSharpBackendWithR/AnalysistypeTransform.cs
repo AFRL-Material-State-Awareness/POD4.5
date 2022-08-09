@@ -108,6 +108,10 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
             this.newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
             this.newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
+            //store the covariance matrix values to return to UI
+            this.newPFAnalysisObject.CovarianceMatrix = newHitMissControl.GetCovarianceMatrixValues();
+            //get the goodness of fit
+            this.newPFAnalysisObject.GoodnessOfFit = newHitMissControl.GetGoodnessOfFit();
             //clear all contents in R and restart the global environment
             this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");

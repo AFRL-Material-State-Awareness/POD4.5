@@ -184,7 +184,7 @@ namespace POD.Controls
 
             var uncensoredMax = Double.NegativeInfinity;
             var uncensoredMin = Double.PositiveInfinity;
-
+            //TODO: fix this when tranform log of y
             if (Uncensored.Points.Count > 0)
             {
                 uncensoredMax = Uncensored.Points.FindMaxByValue("Y1").YValues[0];

@@ -1,6 +1,6 @@
 AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame", 
                                                                         y_dec="numeric", 
-                                                                        modelType="character",
+                                                                        modelType="numeric",
                                                                         varCovarMatrix="matrix",
                                                                         keyAValues="list",
                                                                         linearModel="data.frame",
@@ -149,7 +149,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       return(a.hat.vs.a.censored)
                                     },
                                     genAvaluesAndMatrix=function(a.hat.vs.a.censored){
-                                      a.hat.decision = y_dec # = 200
+                                      a.hat.decision = y_dec 
+                                      if(modelType==3 || modelType==4){
+                                        a.hat.decision=log(a.hat.decision)
+                                      }
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma

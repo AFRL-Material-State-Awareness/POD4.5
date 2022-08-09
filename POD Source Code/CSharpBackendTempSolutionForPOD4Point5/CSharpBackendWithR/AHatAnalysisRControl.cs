@@ -123,7 +123,7 @@ namespace CSharpBackendWithR
             //System.Diagnostics.Debug.WriteLine(this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')").ToString());
             //this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')");
             //execute class with appropriate parameters
-            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(SignalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+")");
+            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(SignalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+newTranformAnalysis.ModelType+")");
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
         }
         public DataTable GetLinearFitTableForUI()

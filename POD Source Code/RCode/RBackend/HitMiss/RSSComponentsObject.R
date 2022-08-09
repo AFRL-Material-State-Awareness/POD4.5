@@ -3,7 +3,7 @@ RSSComponents <- setRefClass("RSSComponents", fields = list(maxResamples="numeri
                                                             regressionType="character",excludeNA="logical"), #medianAValues="list", 
                              #logitResultsListRSS="list", RankedSetResults="list"),
                              methods=list(
-                               initialize=function(maxResamplesInput=30, set_mInput=15, set_rInput=30,
+                               initialize=function(maxResamplesInput=30, set_mInput=6, set_rInput=10,
                                                    regressionTypeInput="", excludeNAInput=TRUE){
                                  maxResamples<<-maxResamplesInput
                                  set_m<<-set_mInput

@@ -2,7 +2,7 @@
 #NOTE: the increment and step size plots 198 points total. It is designed to capture the critical A values to save time in the calculation
 #the default constructor for c(0,0,0) is simply to fill the simCrackSizes metric
 GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="list", excludeNA="logical",RSSDataFrames="list",
-                            simCrackSizes="numeric",origDataSet= "data.frame", pODCurveDF="data.frame", covarMatrix="matrix"),
+                            simCrackSizes="numeric",origDataSet= "data.frame", pODCurveDF="data.frame", covarMatrix="matrix", goodnessOfFit="numeric"),
                             methods = list(
                               initialize=function(logitResultsPODInput=list(),excludeNAInput=TRUE,RSSDataFramesInput=list() ,
                                                   simCrackSizesInput=c(0,0,0),origDataSetInput=data.frame(matrix(ncol = 1, nrow = 0))){
@@ -24,14 +24,22 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                               setMedianCovarMatrix=function(psCovarMatrix){
                                 covarMatrix<<-psCovarMatrix
                               },
+                              setGoodnessOfFit=function(psGoodFit){
+                                goodnessOfFit<<-psGoodFit
+                              },
+                              getGoodnessOfFit=function(){
+                                return(goodnessOfFit)
+                              },
                               newWaldGen=function(){
                                 t_transDataFrameMed=data.frame("Index"=1:length(nrow(origDataSet)))
                                 probsAt95CIDataFrameMed=data.frame("Index"=1:length(nrow(origDataSet)))
-                                #varCovarMatrixList=list()
+                                #store all of the values for the covariance matrices
                                 covar11=c()
                                 covar12=c()
                                 covar21=c()
                                 covar22=c()
+                                #used to store the goodness of fit values
+                                goodnessOfFitValues=c()
                                 for(i in 1:length(logitResultsPOD)){
                                   linear_pred=predict(logitResultsPOD[[i]], type="link", se.fit=TRUE,
                                                       newdata=data.frame(x=origDataSet$x))
@@ -42,6 +50,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   covar12=append(covar12, varcovmat[1,2])
                                   covar21=append(covar21, varcovmat[2,1])
                                   covar22=append(covar22, varcovmat[2,2])
+                                  thisGoodnessOfFit=logitResultsPOD[[i]]$deviance/logitResultsPOD[[i]]$null.deviance
+                                  goodnessOfFitValues=append(goodnessOfFitValues, thisGoodnessOfFit)
                                   sigmaOfCrack_i = sqrt(varcovmat[1,1]+2*varcovmat[1,2]*
                                                           logitResultsPOD[[i]]$data$x+varcovmat[2,2]*
                                                           logitResultsPOD[[i]]$data$x^2)
@@ -51,6 +61,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   t_transDataFrameMed=cbind(t_transDataFrameMed, currProbs)
                                   probsAt95CIDataFrameMed=cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
                                 }
+                                setGoodnessOfFit(median(goodnessOfFitValues))
                                 #globalVarCovar<<-varCovarMatrixList
                                 medianCovarMatrix=matrix(nrow=2, ncol=2)
                                 medianCovarMatrix[1,1]=median(covar11)
@@ -79,12 +90,26 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 setPODCurveDF(PODCurve)
                               },
                               genPODModWald=function(){
+                                #store all of the values for the covariance matrices
+                                covar11=c()
+                                covar12=c()
+                                covar21=c()
+                                covar22=c()
+                                #used to store the goodness of fit values
+                                goodnessOfFitValues=c()
                                 t_transDataFrameMed=data.frame("Index"=1:length(simCrackSizes))
                                 probsAt95CIDataFrameMed=data.frame("Index"=1:length(simCrackSizes))
                                 for(i in 1:length(logitResultsPOD)){
                                   linear_pred=predict(logitResultsPOD[[i]], type="link", se.fit=TRUE, 
                                                       newdata=data.frame(x=simCrackSizes))
                                   varcovmat =vcov(logitResultsPOD[[i]])
+                                  #varCovarMatrixList=append(varCovarMatrixList, list(varcovmat))
+                                  covar11=append(covar11, varcovmat[1,1])
+                                  covar12=append(covar12, varcovmat[1,2])
+                                  covar21=append(covar21, varcovmat[2,1])
+                                  covar22=append(covar22, varcovmat[2,2])
+                                  thisGoodnessOfFit=logitResultsPOD[[i]]$deviance/logitResultsPOD[[i]]$null.deviance
+                                  goodnessOfFitValues=append(goodnessOfFitValues, thisGoodnessOfFit)
                                   sigmaOfCrack_i = sqrt(varcovmat[1,1]+2*varcovmat[1,2]*
                                                           simCrackSizes+varcovmat[2,2]*
                                                           simCrackSizes^2)
@@ -94,6 +119,15 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   t_transDataFrameMed=cbind(t_transDataFrameMed, currt_trans)
                                   probsAt95CIDataFrameMed=cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
                                 }
+                                setGoodnessOfFit(median(goodnessOfFitValues))
+                                #globalVarCovar<<-varCovarMatrixList
+                                medianCovarMatrix=matrix(nrow=2, ncol=2)
+                                medianCovarMatrix[1,1]=median(covar11)
+                                medianCovarMatrix[1,2]=median(covar12)
+                                medianCovarMatrix[2,1]=median(covar21)
+                                medianCovarMatrix[2,2]=median(covar22)
+                                #globalcovar<<-medianCovarMatrix
+                                setMedianCovarMatrix(medianCovarMatrix)
                                 t_transDataFrameMed$Index=NULL
                                 probsAt95CIDataFrameMed$Index=NULL
                                 #calculate medians and store them in final DF column 

@@ -44,9 +44,9 @@ options(warn=-1)
 regression="Logistic Regression"
 
 normSamp=500
-resamplesMax=60
+resamplesMax=30
 #conf int type
-ciType="StandardWald"
+ciType="ModifiedWald"
 start.time <- Sys.time()
 set_m=6
 
@@ -74,6 +74,7 @@ print("total execution time was:")
 print(time.taken)
 resultDF<-na.omit(resultDF)
 covarMatrix=newHMRSSInstance$getCovMatrix()
+goodFitYAY=newHMRSSInstance$getGoodnessOfFit()
 newHMRSSInstance$plotSimdata(resultDF)
 newHMRSSInstance$plotCI(resultDF)
 

@@ -85,6 +85,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 damping=1
                               ))
                               setCovMatrix(newRSSMainObject$getMedianCovarMatrix())
+                              setGoodnessOfFit(newRSSMainObject$getGoodnessOfFit())
                             },
                             determineRegressionType=function(){
                               if(modelType=="Logistic Regression"){
