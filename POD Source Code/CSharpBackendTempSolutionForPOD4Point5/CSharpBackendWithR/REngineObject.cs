@@ -59,14 +59,14 @@ namespace CSharpBackendWithR
             for (int i = 0; i < myDataFrame.ColumnCount; ++i)
             {
                 dtable.Columns.Add(myDataFrame.ColumnNames[i]);
-                if (dtable.Columns[i].ColumnName == "hitrate")
-                {
-                    dtable.Columns[i].DataType = typeof(Int32);
-                }
-                else
-                {
+                //if (dtable.Columns[i].ColumnName == "hitrate")
+                //{
+                //    dtable.Columns[i].DataType = typeof(Int32);
+                //}
+                //else
+                //{
                     dtable.Columns[i].DataType = typeof(Double);
-                }
+                //}
             }
             for (int i = 0; i < myDataFrame.RowCount; i++)
             {
@@ -128,8 +128,8 @@ namespace CSharpBackendWithR
             //this.rEngine.Evaluate("library(logistf)");
             this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
-            this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
-            this.rEngine.Evaluate("print(packageVersion('reticulate'))");
+            //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+            //this.rEngine.Evaluate("print(packageVersion('reticulate'))");
             //the following libraries are used for signal response
             this.rEngine.Evaluate("library(gridExtra)");
             this.rEngine.Evaluate("library(nlme)");

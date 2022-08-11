@@ -84,6 +84,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 }
                                 PODCurve=data.frame(
                                   "x"=origDataSet$x,
+                                  "transformFlaw"=rep(0,length(origDataSet$x)),
                                   "t_trans"= t_trans,
                                   "Confidence_Interval"=Confidence_Interval
                                 )
@@ -140,6 +141,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 }
                                 PODCurve=data.frame(
                                   "x"=simCrackSizes,
+                                  "transformFlaw"=rep(0,length(simCrackSizes)),
                                   "t_trans"= t_trans,
                                   "Confidence_Interval"=Confidence_Interval
                                 )
@@ -187,6 +189,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 print("FINISHED!")
                                 PODCurve=data.frame(
                                   "x"=simCrackSizes,
+                                  "transformFlaw"=rep(0, length(simCrackSizes)),
                                   "t_trans"= t_trans,
                                   "Confidence_Interval"=Confidence_Interval
                                 )
@@ -241,6 +244,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 print("FINISHED!")
                                 PODCurve=data.frame(
                                   "x"=simCrackSizes,
+                                  "transformFlaw"=rep(0,length(simCrackSizes)),
                                   "t_trans"= t_trans,
                                   "Confidence_Interval"=Confidence_Interval
                                 )

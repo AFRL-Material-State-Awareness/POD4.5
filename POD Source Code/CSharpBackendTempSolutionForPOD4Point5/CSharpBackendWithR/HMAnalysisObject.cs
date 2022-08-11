@@ -23,6 +23,9 @@ namespace CSharpBackendWithR
         private int srsOrRSS;
         private int maxResamples;
         private double goodnessOfFit;
+        //tables
+        private DataTable logitFitTable;
+        private DataTable residualTable;
         public HMAnalysisObject(string nameInput="")
         {
             //original HMDataframe
@@ -103,8 +106,9 @@ namespace CSharpBackendWithR
             //default to standard wald unless overwritten
             CIType = "StandardWald";
             //datatables that will be sent back to the UI
-            DataTable LogitHMFitTable = new DataTable();
-            DataTable LogLogitHMFitTable = new DataTable();
+            this.logitFitTable = new DataTable();
+            this.residualTable = new DataTable();
+            //DataTable LogLogitHMFitTable = new DataTable();
 
             //0=simple random sampling selected, 1= ranked set sampling(indexed based)
             this.srsOrRSS = 0; //simple random sampling by default
@@ -117,6 +121,11 @@ namespace CSharpBackendWithR
         {
             set { this.hitMissDataOrig = value; }
             get { return this.hitMissDataOrig; }
+        }
+        public DataTable ResidualTable
+        {
+            set { this.residualTable = value; }
+            get { return this.residualTable; }
         }
         public new List<double> CovarianceMatrix
         {
@@ -183,7 +192,10 @@ namespace CSharpBackendWithR
         public new string ProgressText { set; get; }
 
         //get or set DataTables
-        public DataTable LogitFitTable { set; get; }
+        public DataTable LogitFitTable {
+            set { this.logitFitTable = value; }
+            get { return this.logitFitTable; } 
+        }
         public DataTable IterationTable { set; get; }
         //RSS
         public int SrsOrRSS
@@ -204,6 +216,7 @@ namespace CSharpBackendWithR
 
         public void ClearMetrics()
         {
+            /*
             A25 = -1;
             A50 = -1;
             A90 = -1;
@@ -211,7 +224,9 @@ namespace CSharpBackendWithR
             covarMatrix = null;
             this.goodnessOfFit = -1;
             LogitFitTable = null;
+            ResidualTable = null;
             IterationTable = null;
+            */
         }
     }
     

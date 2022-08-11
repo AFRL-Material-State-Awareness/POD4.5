@@ -20,8 +20,6 @@ namespace CSharpBackendWithR
         {
             //create private variable names to shorten length
             List<double> cracks = newTranformAnalysis.Flaws;
-            //TODO: FIX MEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            newTranformAnalysis.HitMiss_name = "y";
             List<double> hitMiss = newTranformAnalysis.Responses[newTranformAnalysis.HitMiss_name];
             int a_x_n = newTranformAnalysis.A_x_n;
             List<int> indices = new List<int>();
@@ -121,6 +119,14 @@ namespace CSharpBackendWithR
             DataTable LogitFitDataTable= myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return LogitFitDataTable;
         }
+        public DataTable GetResidualFitTableForUI()
+        {
+            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getResidualTable()").AsDataFrame();
+            DataTable residualDataTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            //residualDataTable.Columns["pod"].ColumnName = "t_fit";
+            return residualDataTable;
+            
+        }
         public DataTable GetIterationTableForUI()
         {
             RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getIterationTable()").AsDataFrame();
@@ -150,10 +156,10 @@ namespace CSharpBackendWithR
         }
         public DataTable GetOrigHitMissDF()
         {
-            myREngine.Evaluate("hitMissDF$index=NULL");
-            myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'x'] = 'flaw'");
-            myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'y'] = 'hitrate'");
-            RDotNet.DataFrame origDataFrame = myREngine.Evaluate("hitMissDF").AsDataFrame();
+            //myREngine.Evaluate("hitMissDF$index=NULL");
+            //myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'x'] = 'flaw'");
+            //myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'y'] = 'hitrate'");
+            RDotNet.DataFrame origDataFrame = myREngine.Evaluate("newAnalysis$getHitMissDF()").AsDataFrame();
             DataTable originalData = myREngineObject.rDataFrameToDataTable(origDataFrame);
             return originalData;
         }

@@ -351,8 +351,8 @@ namespace POD.Controls
                         break;
                     case AnalysisDataTypeEnum.HitMiss:
                         //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence pod", 0.0, 1.0);
-                        
-                        FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
+                        //FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
+                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0);
                         break;
                 }
             }
@@ -370,7 +370,8 @@ namespace POD.Controls
                     case AnalysisDataTypeEnum.HitMiss:
                         //FillChart(myData.PodCurveTable, "flaw", "pod", "confidence flaw", "confidence pod", 0.0, 1.0);
                         //FillChart(myData.PodCurveTable, flaw, pod, flaw, conf, 0.0, 1.0);
-                        FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
+                        //FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
+                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0);
                         break;
                 }
             }

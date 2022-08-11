@@ -42,9 +42,9 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData, double mu, double sigma)
         {
-            FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
-            //FillChart(myData, myData.ResidualUncensoredTable, "transformFlaw", "t_fit", "transformFlaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
-            //FillChart(myData, myData.ResidualUncensoredTable, "transformFlaw", "t_fit", "Flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
+            //FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
+            FillChart(myData, myData.ResidualUncensoredTable, "transformFlaw", "t_fit", "transformFlaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
+            //FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
         }
 
         public void FillChart(AnalysisData myData, string my90X, string my90Y, string my95X, string my95Y, double mu, double sigma)

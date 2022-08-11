@@ -1558,12 +1558,14 @@ namespace POD.Analyze
                     {
                         HMcensoredFlaws.Add(flaw);
                         int responseIndex = _hmAnalysisObject.FlawsUncensored.IndexOf(flaw);
-                        HMcensoredResponses.Add(_hmAnalysisObject.Responses_all["y"][responseIndex]);
+                        HMcensoredResponses.Add(_hmAnalysisObject.Responses_all[_hmAnalysisObject.HitMiss_name][responseIndex]);
                     }
                 }
                 //overwrite the temporary flaw variables in HitMiss object
                 _hmAnalysisObject.Flaws = HMcensoredFlaws;
-                _hmAnalysisObject.Responses["y"] = HMcensoredResponses;
+                
+                //_hmAnalysisObject.Responses["y"] = HMcensoredResponses;
+                _hmAnalysisObject.Responses[_hmAnalysisObject.HitMiss_name] = HMcensoredResponses;
             }
             else
             {
@@ -1572,16 +1574,16 @@ namespace POD.Analyze
                 foreach (double flaw in _aHatAnalysisObject.FlawsUncensored)
                 {
                     int responseIndex = _aHatAnalysisObject.FlawsUncensored.IndexOf(flaw);
-                    if (flaw >= InFlawMin && flaw <= InFlawMax && _aHatAnalysisObject.Responses_all["y"][responseIndex] >= InResponseMin &&
-                        _aHatAnalysisObject.Responses_all["y"][responseIndex] <= InResponseMax)
+                    if (flaw >= InFlawMin && flaw <= InFlawMax && _aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] >= InResponseMin &&
+                        _aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] <= InResponseMax)
                     {
                         aHatcensoredFlaws.Add(flaw);
-                        aHatcensoredResponses.Add(_aHatAnalysisObject.Responses_all["y"][responseIndex]);
+                        aHatcensoredResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
                     }
                 }
                 //overwrite the temporary flaw variables in HitMiss object
                 _aHatAnalysisObject.Flaws = aHatcensoredFlaws;
-                _aHatAnalysisObject.Responses["y"] = aHatcensoredResponses;
+                _aHatAnalysisObject.Responses[_aHatAnalysisObject.SignalResponseName] = aHatcensoredResponses;
             }
 
 

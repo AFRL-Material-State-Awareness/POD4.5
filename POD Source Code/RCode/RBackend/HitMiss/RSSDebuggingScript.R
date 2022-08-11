@@ -46,7 +46,7 @@ regression="Logistic Regression"
 normSamp=500
 resamplesMax=30
 #conf int type
-ciType="ModifiedWald"
+ciType="StandardWald"
 start.time <- Sys.time()
 set_m=6
 
@@ -67,6 +67,7 @@ newHMRSSInstance$initializeRSS()
 resultDF<-newHMRSSInstance$getResults()
 aValResults<-newHMRSSInstance$getKeyAValues()
 resid<-newHMRSSInstance$getGoodnessOfFit()
+residualDF<-newHMRSSInstance$getResidualTable()
 iteration<-newHMRSSInstance$getIterationTable()
 end.time <- Sys.time()
 time.taken <- end.time - start.time

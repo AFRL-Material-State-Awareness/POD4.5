@@ -1490,6 +1490,15 @@ namespace POD.Data
                     }
 
                     allResponses.Add(col.ColumnName, list);
+                    if (_dataType == AnalysisDataTypeEnum.HitMiss)
+                    {
+                        _hmAnalysisObject.HitMiss_name = col.ColumnName;
+                    }
+                    else if(_dataType == AnalysisDataTypeEnum.AHat)
+                    {
+                        _aHatAnalysisObject.SignalResponseName = col.ColumnName;
+                    }
+                    
                 }
                 //convert the two c# dictionaries to python dictionaries
                 //dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
@@ -1519,6 +1528,7 @@ namespace POD.Data
                     }
                     //used for the hit miss analysis object for RDotNet
                     _hmAnalysisObject.Flaws = flaws;
+                    //string[] names = _hmAnalysisObject.Name.Split('.');
                     _hmAnalysisObject.Responses = responses;  
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
@@ -1566,9 +1576,6 @@ namespace POD.Data
         public void SetPythonEngine(IPy4C myPy, string myAnalysisName)
         {
             _python = myPy;
-
-            //if (_podDoc == null)
-            //    _podDoc = _python.CPodDoc(myAnalysisName);
         }
         public void SetREngine(REngineObject myREngine, string myAnalysisName)
         {
@@ -1600,8 +1607,24 @@ namespace POD.Data
             //store original data for plotting
             try
             {
+
                 _originalData = _hmAnalysisObject.HitMissDataOrig;
-                //Debug.Write("original Data");
+                if (_hmAnalysisObject.ModelType == 1)
+                {
+                    for (int i = 0; i < _originalData.Rows.Count; i++)
+                    {
+                        _originalData.Rows[i][1] = Convert.ToDouble(_originalData.Rows[i][0]);
+                    }
+                }
+                else if (_hmAnalysisObject.ModelType == 2)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _originalData.Rows.Count; i++)
+                    {
+                        _originalData.Rows[i][1] = Convert.ToDouble(_originalData.Rows[i][0]);
+                        _originalData.Rows[i][0] = Math.Exp(Convert.ToDouble(_originalData.Rows[i][0]));
+                    }
+                }
                 printDT(_originalData);
             }
             
@@ -1624,25 +1647,26 @@ namespace POD.Data
             {
                 //first table to be passed back for the transformations window in pass fail (it is empty at first)
                 //_podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFPODTable());
+                //_podCurveTable = temp;
                 _podCurveTable = _hmAnalysisObject.LogitFitTable;
                 //DataTable newPFTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetNewPFTable());
 
                 //used to transform the POD curve back to linear space
-                if (_podCurveTable.Columns.Contains("transformFlaw") == false)
-                {
-                    _podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                }
-                if (_podCurveTable.Columns.Contains("t_fit"))
-                {
-                    _podCurveTable.Columns["t_fit"].ColumnName = "pod";
+                // if (_podCurveTable.Columns.Contains("transformFlaw") == false)
+                //{
+                //    _podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                //}
+                //if (_podCurveTable.Columns.Contains("t_fit"))
+                //{
+                //    _podCurveTable.Columns["t_fit"].ColumnName = "pod";
 
-                }
+                //}
+                _podCurveTable.Columns.Remove("transformFlaw");
                 if (_hmAnalysisObject.ModelType == 1)
                 {
-                    
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
-                        _podCurveTable.Rows[i][3] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
+                        //_podCurveTable.Rows[i][1] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                 }
                 else if (_hmAnalysisObject.ModelType == 2)
@@ -1650,7 +1674,8 @@ namespace POD.Data
                     //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i=0; i < _podCurveTable.Rows.Count; i++)
                     {
-                        _podCurveTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
+                        //_podCurveTable.Rows[i][1] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
+                        _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                 }
                 //Debug.WriteLine("POD curve table");
@@ -1673,10 +1698,25 @@ namespace POD.Data
             {
                 //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFResidualTable());
                 //_hmAnalysisObject.LogitFitTable.Columns["pod"].ColumnName= "t_fit";
-                _residualUncensoredTable = _hmAnalysisObject.LogitFitTable;
-                if (_podCurveTable.Columns.Contains("POD"))
+                _residualUncensoredTable = _hmAnalysisObject.ResidualTable;
+                if (_residualUncensoredTable.Columns.Contains("t_trans"))
                 {
-                    _residualUncensoredTable.Columns["pod"].ColumnName = "t_fit";
+                    _residualUncensoredTable.Columns["t_trans"].ColumnName = "t_fit";
+                }
+                if (_hmAnalysisObject.ModelType == 1)
+                {
+                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
+                    {
+                        _residualUncensoredTable.Rows[i][1] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
+                    }
+                }
+                else if (_hmAnalysisObject.ModelType == 2)
+                {
+                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
+                    {
+                        _residualUncensoredTable.Rows[i][1] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
+                        _residualUncensoredTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
+                    }
                 }
                 //_residualUncensoredTable.DefaultView.Sort = "t_flaw" + " " + "ASC";
                 _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
@@ -1735,26 +1775,6 @@ namespace POD.Data
                         _fitResidualsTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
                     }
                 }
-                /*
-                else if (_aHatAnalysisObject.ModelType == 3)
-                {
-                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
-                    {
-                        _fitResidualsTable.Rows[i][3] = Convert.ToDouble(_fitResidualsTable.Rows[i][0]);
-                        _fitResidualsTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][1]));
-                        _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 4)
-                {
-                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
-                    {
-                        _fitResidualsTable.Rows[i][3] = Convert.ToDouble(_fitResidualsTable.Rows[i][0]);
-                        _fitResidualsTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][1]));
-                        _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
-                    }
-                }
-                */
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
@@ -1832,8 +1852,6 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
             }
-            //**************IMPORTANT NOTE
-            //TODO: fix the following rsidual tables in order to properly export to excel
             try
             {
                 //_residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
@@ -2287,6 +2305,7 @@ namespace POD.Data
 
         private void WritePODToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true)
         {
+            //var podNames = new List<string>(new string[] { "a","ln(a)", "POD(a)", "95 confidence bound" });
             var podNames = new List<string>(new string[] { "a", "POD(a)", "95 confidence bound" });
             var oldNames = new List<string>();
 
@@ -3891,7 +3910,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 1000;
+            int limit = 5;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

@@ -268,7 +268,7 @@ namespace POD.Controls
             var view = data.OriginalData.AsDataView();
 
             //Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
-            Original.Points.DataBindXY(view, "flaw", view, "hitrate");
+            Original.Points.DataBindXY(view, "transformFlaw", view, "hitrate");
 
             Original.Enabled = false;
 
@@ -563,7 +563,8 @@ namespace POD.Controls
             DataView view = data.ResidualUncensoredTable.DefaultView;
 
             //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
-            fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+            fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
+
         }
 
         private void AddFitSeries(AnalysisData data)

@@ -9,13 +9,21 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         normSampleAmount="numeric",
                                         iterationTable="data.frame",
                                         results="data.frame",
+                                        residualTable="data.frame",
                                         a_values="list",
                                         rankedSetSampleObject="RSSComponents",
                                         covarianceMatrix="matrix",
                                         goodnessOfFit="numeric"),
                           methods = list(
                             getHitMissDF = function(){
-                              return(hitMissDF)
+                              #modify table for clean excel output later
+                              hitMissDF_trans=data.frame(
+                                #Index=1:nrow(hitMissDF),
+                                flaw=hitMissDF$x,
+                                transformFlaw=integer(nrow(hitMissDF)),
+                                hitrate=hitMissDF$y
+                              )
+                              return(hitMissDF_trans)
                             },
                             setCIType = function(psCIType){
                               CIType <<- psCIType
@@ -29,9 +37,32 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             getResults = function(){
                               results$Index <<- NULL
                               names(results)[names(results) == 'x'] <<- 'flaw'
-                              names(results)[names(results) == 'y'] <<- 'hitrate'
                               names(results)[names(results) == 't_trans'] <<- 'pod'
+                              names(results)[names(results) == 'y'] <<- 'hitrate'
                               return(results)
+                            },
+                            setResidualTable=function(psResidTable){
+                              residualTable<<-psResidTable
+                            },
+                            getResidualTable=function(){
+                              if(CIType=="StandardWald"){
+                                retResidualTable=data.frame(
+                                  flaw=residualTable$x,
+                                  transformFlaw= residualTable$transformFlaw,
+                                  hitrate= hitMissDF$y,
+                                  t_trans= residualTable$t_trans,
+                                  diff=hitMissDF$y-residualTable$t_trans
+                                )
+                              }
+                              else{
+                                retResidualTable=data.frame(
+                                  flaw=residualTable$x,
+                                  transformFlaw= residualTable$transformFlaw,
+                                  t_trans= residualTable$t_trans,
+                                  Confidence_Interval=residualTable$Confidence_Interval
+                                )
+                              }
+                              return(retResidualTable)
                             },
                             setIterationTable =function(psiterTable){
                               iterationTable<<-psiterTable
@@ -75,6 +106,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                                                       normSampleAmount=normSampleAmount)
                               newRSSMainObject$executeRSSPOD()
                               setResults(newRSSMainObject$getPODDataFrame())
+                              setResidualTable(newRSSMainObject$getPODDataFrame())
                               setKeyAValues(newRSSMainObject$getMedianAValues())
                               setIterationTable(data.frame(
                                 trial=1,
@@ -125,7 +157,10 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 setCovMatrix(newWaldCI$getCovarMatrix())
                                 #set the dataframe to return to c#
                                 x=hitMissDF$x
-                                setResults(cbind(x, t_trans, Confidence_Interval))
+                                #this will be overwritten in c# sharp with the appropriate flaw transform
+                                transformFlaw=integer(nrow(hitMissDF))
+                                setResults(cbind(x, transformFlaw, t_trans, Confidence_Interval))
+                                setResidualTable(cbind(x, transformFlaw, t_trans, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=hitMissDF)
                                 new_Acalc$calcAValuesStandardWald()
@@ -147,8 +182,11 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 newWaldCI$executeModifiedWald()
                                 Confidence_Interval=newWaldCI$getCIDataFrame()
                                 setCovMatrix(newWaldCI$getCovarMatrix())
+                                #this will be overwritten in c# sharp with the appropriate flaw transform
+                                transformFlaw=integer(length(x))
                                 #set the dataframe to return to c#
-                                setResults(cbind(x,Confidence_Interval))
+                                setResults(cbind(x, transformFlaw, Confidence_Interval))
+                                setResidualTable(cbind(x, transformFlaw,  Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calcAValuesModWald()
@@ -168,7 +206,10 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 #print("Time of Calculation")
                                 #print(proc.time() - ptm)
                                 Confidence_Interval=newLRConfInt$getCIDataFrame()
-                                setResults(cbind(x, Confidence_Interval))
+                                #this will be overwritten in c# sharp with the appropriate flaw transform
+                                transformFlaw=integer(length(x))
+                                setResults(cbind(x, transformFlaw, Confidence_Interval))
+                                setResidualTable(cbind(x, transformFlaw, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calca9095LR()
@@ -188,7 +229,10 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 #print("Time of Calculation")
                                 #print(proc.time() - ptm)
                                 Confidence_Interval=newMLRConfInt$getCIDataFrame()
-                                setResults(cbind(x, Confidence_Interval))
+                                #this will be overwritten in c# sharp with the appropriate flaw transform
+                                transformFlaw=integer(length(x))
+                                setResults(cbind(x, transformFlaw, Confidence_Interval))
+                                setResidualTable(cbind(x, transformFlaw, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calca9095MLR()

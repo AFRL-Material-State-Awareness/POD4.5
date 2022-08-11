@@ -21,8 +21,7 @@ namespace CSharpBackendWithR
         {
             //create private variable names to shorten length
             List<double> cracks = newAHatAnalysis.Flaws;
-            //TODO: FIX MEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            newAHatAnalysis.SignalResponseName = "y";
+
             List<double> SignalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
             //needed for the r code 

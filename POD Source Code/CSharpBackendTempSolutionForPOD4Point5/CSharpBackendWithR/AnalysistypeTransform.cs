@@ -61,6 +61,7 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             newHitMissControl.ExecuteAnalysis(this.newPFAnalysisObject);
             this.newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
+            this.newPFAnalysisObject.ResidualTable = newHitMissControl.GetResidualFitTableForUI();
             this.newPFAnalysisObject.IterationTable = newHitMissControl.GetIterationTableForUI();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict=newHitMissControl.GetKeyA_Values();
@@ -97,6 +98,7 @@ namespace CSharpBackendWithR
             HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
             newHitMissControl.ExecuteRSS(this.newPFAnalysisObject);
             this.newPFAnalysisObject.LogitFitTable = newHitMissControl.GetLogitFitTableForUI();
+            this.newPFAnalysisObject.ResidualTable = newHitMissControl.GetResidualFitTableForUI();
             this.newPFAnalysisObject.IterationTable = newHitMissControl.GetIterationTableForUI();
             //store the original dataframe in the HM analysis object
             this.newPFAnalysisObject.HitMissDataOrig = newHitMissControl.GetOrigHitMissDF();

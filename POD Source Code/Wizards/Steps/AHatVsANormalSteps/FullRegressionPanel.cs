@@ -528,29 +528,6 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             double sigma = Analysis.OutResponseDecisionPODSigma;
             bool lackOfFitCalculated = Analysis.OutTestLackOfFitCalculated;
 
-            
-
-            /*HandleNaN(ref a90Transformed, 0.0);
-            HandleNaN(ref a9095Transformed, 0.0);
-            HandleNaN(ref a50Transformed, 0.0);
-            HandleNaN(ref a90Original, 0.0);
-            HandleNaN(ref a9095Original, 0.0);
-            HandleNaN(ref a50Original, 0.0);
-            HandleNaN(ref responseMinTransformed, 0.0);
-            HandleNaN(ref responseMaxTransformed, 0.0);
-
-            HandleNaN(ref modelM, 0.0);
-            HandleNaN(ref modelB, 0.0);
-            HandleNaN(ref modelError, 0.0);
-            HandleNaN(ref modelMStdError, 0.0);
-            HandleNaN(ref modelBStdError, 0.0);
-            HandleNaN(ref modelErrorStdError, 0.0);
-            HandleNaN(ref repeatabilityError, 0.0);
-
-            HandleNaN(ref normality, 0.0);
-            HandleNaN(ref lackOfFit, 0.0);
-            HandleNaN(ref equalVariance, 0.0);*/
-
             var showA50Error = false;
             var showA90Error = false;
             var showA9095Error = false;
