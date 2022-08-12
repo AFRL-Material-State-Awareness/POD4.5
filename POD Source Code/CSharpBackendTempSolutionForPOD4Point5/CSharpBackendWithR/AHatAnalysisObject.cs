@@ -30,6 +30,10 @@ namespace CSharpBackendWithR
         //linear model unique metrics
         private double intercept;
         private double slope;
+        //store the censored points
+        private List<double> flawsCensored;
+        private Dictionary<string, List<double>> responsesCensoredLeft;
+        private Dictionary<string, List<double>> responsesCensoredRight;
         public AHatAnalysisObject(string nameInput = "")
         {
             //name of the analysis
@@ -47,8 +51,11 @@ namespace CSharpBackendWithR
             Titles = new List<string>();
             //holds the flaw sizes
             Flaws = new List<double>();
-            FlawsUncensored = new List<double>();
+            Flaws_All = new List<double>();
             ////////////////////
+            this.flawsCensored = new List<double> ();
+            this.responsesCensoredLeft = new Dictionary<string, List<double>>();
+            this.responsesCensoredRight = new Dictionary<string, List<double>>();
             ///this.uncensoredFlaws = new List<double>();
             Responses = new Dictionary<string, List<double>>();
             Responses_all = new Dictionary<string, List<double>>();
@@ -124,8 +131,23 @@ namespace CSharpBackendWithR
         public new double Signalmin { set; get; }
         public new double Signalmax { set; get; }
         public new List<double> Flaws { set; get; }
-        public new List<double> FlawsUncensored { set; get; }
-        public new List<double> LogFlawsUncensored { set; get; }
+        public new List<double> Flaws_All { set; get; }
+        public new List<double> LogFlaws_All { set; get; }
+        public List<double> FlawsCensored
+        {
+            set { this.flawsCensored = value; }
+            get { return this.flawsCensored; }
+        }
+        public Dictionary<string, List<double>> ResponsesCensoredLeft
+        {
+            set { this.responsesCensoredLeft = value; }
+            get { return this.responsesCensoredLeft; }
+        }
+        public Dictionary<string, List<double>> ResponsesCensoredRight
+        {
+            set { this.responsesCensoredRight = value; }
+            get { return this.responsesCensoredRight; }
+        }
         public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
         public new double Crckmin { set; get; }

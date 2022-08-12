@@ -1510,17 +1510,17 @@ namespace POD.Data
                 //_podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
                 if(_dataType== AnalysisDataTypeEnum.HitMiss)
                 {
-                    if (_hmAnalysisObject.FlawsUncensored.Count()==0)
+                    if (_hmAnalysisObject.Flaws_All.Count()==0)
                     {
-                        _hmAnalysisObject.FlawsUncensored = flaws;
+                        _hmAnalysisObject.Flaws_All = flaws;
                         //set the dataset size
-                        _hmAnalysisObject.Count = _hmAnalysisObject.FlawsUncensored.Count();
+                        _hmAnalysisObject.Count = _hmAnalysisObject.Flaws_All.Count();
                         List<double> logOfFlaws = new List<double>();
                         for(int i=0; i<flaws.Count(); i++)
                         {
                             logOfFlaws.Add(Math.Log(flaws[i]));
                         }
-                        _hmAnalysisObject.LogFlawsUncensored = logOfFlaws;
+                        _hmAnalysisObject.LogFlaws_All = logOfFlaws;
                     }
                     if (_hmAnalysisObject.Responses_all.Count() == 0)
                     {
@@ -1533,16 +1533,16 @@ namespace POD.Data
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
                 {
-                    if (_aHatAnalysisObject.FlawsUncensored.Count() == 0)
+                    if (_aHatAnalysisObject.Flaws_All.Count() == 0)
                     {
 
-                        _aHatAnalysisObject.FlawsUncensored = flaws;
+                        _aHatAnalysisObject.Flaws_All = flaws;
                         List<double> logOfFlaws = new List<double>();
                         for (int i = 0; i < flaws.Count(); i++)
                         {
                             logOfFlaws.Add(Math.Log(flaws[i]));
                         }
-                        _aHatAnalysisObject.LogFlawsUncensored = logOfFlaws;
+                        _aHatAnalysisObject.LogFlaws_All = logOfFlaws;
                     }
                     if (_aHatAnalysisObject.Responses_all.Count() == 0)
                     {
@@ -1832,7 +1832,7 @@ namespace POD.Data
                 }
                 _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                //printDT(_residualUncensoredTable);
+                printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -2430,23 +2430,23 @@ namespace POD.Data
                 {
                     if (_flawTransform == TransformTypeEnum.Linear)
                     {
-                        return _hmAnalysisObject.FlawsUncensored.Min();
+                        return _hmAnalysisObject.Flaws_All.Min();
                     }
                     else
                     {
-                        return _hmAnalysisObject.LogFlawsUncensored.Min();
+                        return _hmAnalysisObject.LogFlaws_All.Min();
                     }
                 }
                 else
                 {
-                    //return _aHatAnalysisObject.FlawsUncensored.Max();
+                    //return _aHatAnalysisObject.Flaws_All.Max();
                     if (_flawTransform == TransformTypeEnum.Linear)
                     {
-                        return _aHatAnalysisObject.FlawsUncensored.Min();
+                        return _aHatAnalysisObject.Flaws_All.Min();
                     }
                     else
                     {
-                        return _aHatAnalysisObject.LogFlawsUncensored.Min();
+                        return _aHatAnalysisObject.LogFlaws_All.Min();
                     }
                 }
 
@@ -2467,7 +2467,7 @@ namespace POD.Data
                 }
                 else
                 {
-                    //return _aHatAnalysisObject.FlawsUncensored.Max();
+                    //return _aHatAnalysisObject.Flaws_All.Max();
                     return _aHatAnalysisObject.Flaws.Min();
 
                 }
@@ -2488,23 +2488,23 @@ namespace POD.Data
                 {
                     if(_flawTransform == TransformTypeEnum.Linear)
                     {
-                        return _hmAnalysisObject.FlawsUncensored.Max();
+                        return _hmAnalysisObject.Flaws_All.Max();
                     }
                     else
                     {
-                        return _hmAnalysisObject.LogFlawsUncensored.Max();
+                        return _hmAnalysisObject.LogFlaws_All.Max();
                     }   
                 }
                 else
                 {
-                    //return _aHatAnalysisObject.FlawsUncensored.Max();
+                    //return _aHatAnalysisObject.Flaws_All.Max();
                     if (_flawTransform == TransformTypeEnum.Linear)
                     {
-                        return _aHatAnalysisObject.FlawsUncensored.Max();
+                        return _aHatAnalysisObject.Flaws_All.Max();
                     }
                     else
                     {
-                        return _aHatAnalysisObject.LogFlawsUncensored.Max();
+                        return _aHatAnalysisObject.LogFlaws_All.Max();
                     }
                 }
 
@@ -2526,7 +2526,7 @@ namespace POD.Data
                 }
                 else
                 {
-                    //return _aHatAnalysisObject.FlawsUncensored.Max();
+                    //return _aHatAnalysisObject.Flaws_All.Max();
                     return _aHatAnalysisObject.Flaws.Max();
 
                 }

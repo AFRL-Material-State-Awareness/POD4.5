@@ -21,11 +21,38 @@ namespace CSharpBackendWithR
         {
             //create private variable names to shorten length
             List<double> cracks = newAHatAnalysis.Flaws;
-
+            List<double> cracksCensored = newAHatAnalysis.FlawsCensored;
+            
             List<double> SignalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
             //needed for the r code 
             //this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());
+            if(newAHatAnalysis.ResponsesCensoredLeft.Count() != 0 || newAHatAnalysis.ResponsesCensoredRight.Count() != 0) {
+                List<double> responsesLeftCensored = newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName];
+                List<double> responsesRightCensored = newAHatAnalysis.ResponsesCensoredRight[newAHatAnalysis.SignalResponseName];
+                this.myREngine.Evaluate("event<- c()");
+                for (int i = 0; i < cracks.Count; i++)
+                {
+                    foreach (double j in responsesRightCensored)
+                    {
+                        if (SignalResponse[i] == j)
+                        {
+                            this.myREngine.Evaluate("event<- c(event, 0)");
+                            break;
+                        }
+                    }
+                    foreach (double j in responsesLeftCensored)
+                    {
+                        if (SignalResponse[i] == j)
+                        {
+                            this.myREngine.Evaluate("event<- c(event, 2)");
+                            break;
+                        }
+                    }
+                    this.myREngine.Evaluate("event<- c(event, 1)");
+                }
+
+            }
             switch (newAHatAnalysis.ModelType)
             {
                 case 1:

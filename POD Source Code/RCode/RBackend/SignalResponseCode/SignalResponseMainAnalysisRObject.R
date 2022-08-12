@@ -146,6 +146,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       # Here's the linear model. 
                                       a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x, 
                                                                      dist = "gaussian", data = a.hat.censor.df)
+                                      #survreg(formula= Surv(y.trans, event = 1)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
                                     },
                                     genAvaluesAndMatrix=function(a.hat.vs.a.censored){

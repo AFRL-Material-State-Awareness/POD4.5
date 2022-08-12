@@ -59,14 +59,14 @@ namespace CSharpBackendWithR
             for (int i = 0; i < myDataFrame.ColumnCount; ++i)
             {
                 dtable.Columns.Add(myDataFrame.ColumnNames[i]);
-                if (dtable.Columns[i].ColumnName == "hitrate")
-                {
-                    dtable.Columns[i].DataType = typeof(Int32);
-                }
-                else
-                {
+                //if (dtable.Columns[i].ColumnName == "hitrate")
+                //{
+                //    dtable.Columns[i].DataType = typeof(Int32);
+                //}
+                //else
+                //{
                     dtable.Columns[i].DataType = typeof(Double);
-                }
+                //}
             }
             for (int i = 0; i < myDataFrame.RowCount; i++)
             {

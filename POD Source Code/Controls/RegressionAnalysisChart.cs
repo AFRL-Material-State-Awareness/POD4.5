@@ -1565,7 +1565,7 @@ namespace POD.Controls
             
             this.Invoke((MethodInvoker)delegate()
             {
-                if (_analysisData.DataType.ToString() == "hitMiss")
+                if (_analysisData.DataType.ToString() == "HitMiss")
                 {
                     fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
                 }

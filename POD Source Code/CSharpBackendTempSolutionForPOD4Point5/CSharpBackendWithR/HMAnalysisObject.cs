@@ -50,7 +50,7 @@ namespace CSharpBackendWithR
             //decision_thesholds = .5; //this was its value in PODv4 whenever hit/miss is used
             Titles = new List<string>();
             //holds the flaw sizes
-            FlawsUncensored = new List<double>();
+            Flaws_All = new List<double>();
             Flaws = new List<double>();
             //current crack size list to be sent to r(can be either normal or log transformed
             //List<double> currFlawsAnalysis;
@@ -154,8 +154,8 @@ namespace CSharpBackendWithR
         public new List<string> Titles { set; get; }
         //public List<HMCrackData> Flaws { set; get; }
         public new List<double> Flaws { set; get; }
-        public new List<double> FlawsUncensored { set; get; }
-        public new List<double> LogFlawsUncensored { set; get; }
+        public new List<double> Flaws_All { set; get; }
+        public new List<double> LogFlaws_All { set; get; }
         //    set { this.uncensoredFlaws = value; }
         //     get { return this.uncensoredFlaws; } 
         //}

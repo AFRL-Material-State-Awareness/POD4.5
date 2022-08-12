@@ -1549,41 +1549,67 @@ namespace POD.Analyze
         {
             if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                List<double> HMcensoredFlaws = new List<double>();
-                List<double> HMcensoredResponses = new List<double>();
+                List<double> hmExludedFlaws = new List<double>();
+                List<double> hmExcludedResponses = new List<double>();
 
-                foreach (double flaw in _hmAnalysisObject.FlawsUncensored)
+                foreach (double flaw in _hmAnalysisObject.Flaws_All)
                 {
                     if(flaw >= InFlawMin && flaw <= InFlawMax)
                     {
-                        HMcensoredFlaws.Add(flaw);
-                        int responseIndex = _hmAnalysisObject.FlawsUncensored.IndexOf(flaw);
-                        HMcensoredResponses.Add(_hmAnalysisObject.Responses_all[_hmAnalysisObject.HitMiss_name][responseIndex]);
+                        hmExludedFlaws.Add(flaw);
+                        int responseIndex = _hmAnalysisObject.Flaws_All.IndexOf(flaw);
+                        hmExcludedResponses.Add(_hmAnalysisObject.Responses_all[_hmAnalysisObject.HitMiss_name][responseIndex]);
                     }
                 }
                 //overwrite the temporary flaw variables in HitMiss object
-                _hmAnalysisObject.Flaws = HMcensoredFlaws;
+                _hmAnalysisObject.Flaws = hmExludedFlaws;
                 
-                //_hmAnalysisObject.Responses["y"] = HMcensoredResponses;
-                _hmAnalysisObject.Responses[_hmAnalysisObject.HitMiss_name] = HMcensoredResponses;
+                //_hmAnalysisObject.Responses["y"] = hmExcludedResponses;
+                _hmAnalysisObject.Responses[_hmAnalysisObject.HitMiss_name] = hmExcludedResponses;
             }
             else
             {
-                List<double> aHatcensoredFlaws = new List<double>();
-                List<double> aHatcensoredResponses = new List<double>();
-                foreach (double flaw in _aHatAnalysisObject.FlawsUncensored)
+                //used for storing the excluded flaws
+                List<double> aHatIncludedFlaws = new List<double>();
+                List<double> aHatIncludedResponses = new List<double>();
+                //used for storing the censored flaws and responses
+                List<double> censoredFlaws = new List<double>();
+                List<double> censoredResponsesL = new List<double>();
+                List<double> censoredResponsesR = new List<double>();
+                foreach (double flaw in _aHatAnalysisObject.Flaws_All)
                 {
-                    int responseIndex = _aHatAnalysisObject.FlawsUncensored.IndexOf(flaw);
+                    int responseIndex = _aHatAnalysisObject.Flaws_All.IndexOf(flaw);
+                    /*
                     if (flaw >= InFlawMin && flaw <= InFlawMax && _aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] >= InResponseMin &&
                         _aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] <= InResponseMax)
                     {
-                        aHatcensoredFlaws.Add(flaw);
-                        aHatcensoredResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
+                        aHatIncludedFlaws.Add(flaw);
+                        aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
                     }
+                    */
+                    if (flaw >= InFlawMin && flaw <= InFlawMax)
+                    {
+                        aHatIncludedFlaws.Add(flaw);
+                        aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
+                        if (_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] < InResponseMin)
+                        {
+                            censoredFlaws.Add(flaw);
+                            censoredResponsesL.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
+                        }
+                        if (_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] > InResponseMax)
+                        {
+                            censoredFlaws.Add(flaw);
+                            censoredResponsesR.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
+                        }
+                    }
+                    
                 }
                 //overwrite the temporary flaw variables in HitMiss object
-                _aHatAnalysisObject.Flaws = aHatcensoredFlaws;
-                _aHatAnalysisObject.Responses[_aHatAnalysisObject.SignalResponseName] = aHatcensoredResponses;
+                _aHatAnalysisObject.Flaws = aHatIncludedFlaws;
+                _aHatAnalysisObject.Responses[_aHatAnalysisObject.SignalResponseName] = aHatIncludedResponses;
+                _aHatAnalysisObject.FlawsCensored = censoredFlaws;
+                _aHatAnalysisObject.ResponsesCensoredLeft[_aHatAnalysisObject.SignalResponseName] = censoredResponsesL;
+                _aHatAnalysisObject.ResponsesCensoredRight[_aHatAnalysisObject.SignalResponseName] = censoredResponsesR;
             }
 
 
