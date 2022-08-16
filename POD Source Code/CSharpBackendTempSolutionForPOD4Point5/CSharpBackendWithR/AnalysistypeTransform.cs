@@ -142,6 +142,7 @@ namespace CSharpBackendWithR
             newAHatControl.ExecuteAnalysis(this.newAHatAnalysisObject);
             this.newAHatAnalysisObject.AHatResultsPOD = newAHatControl.GetLogitFitTableForUI();
             this.newAHatAnalysisObject.AHatResultsLinear = newAHatControl.GetLinearFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsResidUncensored = newAHatControl.GetResidualUncensoredTableForUI();
             this.newAHatAnalysisObject.AHatResultsResid = newAHatControl.GetResidualTableForUI();
             this.newAHatAnalysisObject.AHatThresholdsTable = newAHatControl.GetThresholdsTableForUI();
             //get slope and intercept (need to add the errors for each as well)

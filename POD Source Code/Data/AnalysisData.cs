@@ -1789,7 +1789,7 @@ namespace POD.Data
             {
                 //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetResidualTable());
                 //_residualUncensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
-                _residualUncensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                _residualUncensoredTable = _aHatAnalysisObject.AHatResultsResidUncensored;
                 //used to transform the POD curve back to linear space
                 if (_residualUncensoredTable.Columns.Contains("transformFlaw") == false)
                 {
@@ -1832,6 +1832,18 @@ namespace POD.Data
                 }
                 _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
+                for(int i = _residualUncensoredTable.Rows.Count-1; i >=0; i--)
+                {
+                    Console.WriteLine(_residualUncensoredTable.Rows[i][0]);
+                    for(int j=0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
+                    {
+                        if(Convert.ToDouble(_residualUncensoredTable.Rows[i][0])== _aHatAnalysisObject.FlawsCensored[j])
+                        {
+                            _residualUncensoredTable.Rows[i].Delete();
+                            break;
+                        }
+                    }
+                }
                 printDT(_residualUncensoredTable);
             }
             catch (Exception exp)

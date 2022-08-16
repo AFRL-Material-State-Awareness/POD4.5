@@ -1240,6 +1240,7 @@ namespace POD.Analyze
                 OutPODMu = _hmAnalysisObject.Muhat;
                 OutPODSigma = _hmAnalysisObject.Sighat;
                 OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
+                OutTestNormalityRating = ;
             }
 
             Data.UpdateOutput();
@@ -1587,6 +1588,7 @@ namespace POD.Analyze
                         aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
                     }
                     */
+
                     if (flaw >= InFlawMin && flaw <= InFlawMax)
                     {
                         aHatIncludedFlaws.Add(flaw);

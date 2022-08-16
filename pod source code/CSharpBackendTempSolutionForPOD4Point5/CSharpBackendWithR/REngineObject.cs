@@ -33,10 +33,10 @@ namespace CSharpBackendWithR
         private REngine initializeRDotNet()
         {
             //initialize the R engine
-            //string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
-            //string homePath = this.applicationPath + @"\R-3.5.3\";
-            string rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
+            string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
             string homePath = this.applicationPath + @"\R-3.5.3\";
+            //string rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
+            //string homePath = this.applicationPath + @"\R-3.5.3\";
             //string rPath = this.applicationPath + @"\R-4.1.2\bin\x64";
             //string homePath = this.applicationPath + @"\R-4.1.2\";
             //string rPath = this.applicationPath;

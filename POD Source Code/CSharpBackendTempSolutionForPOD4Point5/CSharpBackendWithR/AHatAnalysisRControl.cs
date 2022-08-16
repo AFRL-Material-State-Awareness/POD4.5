@@ -40,7 +40,7 @@ namespace CSharpBackendWithR
                     {
                         if (SignalResponse[i] == j)
                         {
-                            this.myREngine.Evaluate("event<- c(event, 2)");
+                            this.myREngine.Evaluate("event<- c(event, 0)");
                             updatedEvent = true;
                             break;
                         }
@@ -49,7 +49,7 @@ namespace CSharpBackendWithR
                     {
                         if (SignalResponse[i] == j)
                         {
-                            this.myREngine.Evaluate("event<- c(event, 0)");
+                            this.myREngine.Evaluate("event<- c(event, 2)");
                             updatedEvent = true;
                             break;
                         }
@@ -175,6 +175,13 @@ namespace CSharpBackendWithR
             RDotNet.DataFrame returnDataFrameLinear = myREngine.Evaluate("newSRAnalysis$getLinearModel()").AsDataFrame();
             DataTable AHatLinTable = myREngineObject.rDataFrameToDataTable(returnDataFrameLinear);
             return AHatLinTable;
+
+        }
+        public DataTable GetResidualUncensoredTableForUI()
+        {
+            RDotNet.DataFrame returnDataFrameResid = myREngine.Evaluate("newSRAnalysis$getResidualTable()").AsDataFrame();
+            DataTable AHatResiduals = myREngineObject.rDataFrameToDataTable(returnDataFrameResid);
+            return AHatResiduals;
         }
         public DataTable GetResidualTableForUI()
         {

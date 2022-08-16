@@ -24,6 +24,7 @@ namespace CSharpBackendWithR
         private string signalResponseName;
         //private DataTable originalData;
         private DataTable aHatLinearResults;
+        private DataTable aHatResidualResultsUncensored;
         private DataTable aHatResidualResults;
         private DataTable aHatThresholdsTable;
         private DataTable aHatResultsPOD;
@@ -112,6 +113,8 @@ namespace CSharpBackendWithR
             this.intercept = 0.0;
             //used to store the linear dataframe
             this.aHatLinearResults = new DataTable();
+            //censored residual Results
+            this.aHatResidualResultsUncensored = new DataTable();
             //used to store the residual dataframe(adds a diff column to the linear df)
             this.aHatResidualResults = new DataTable();
             //used to store and plot the POD at various thresholds in ahat vs a
@@ -224,6 +227,11 @@ namespace CSharpBackendWithR
         {
             set { this.aHatThresholdsTable = value; }
             get { return this.aHatThresholdsTable; }
+        }
+        public DataTable AHatResultsResidUncensored
+        {
+            set { this.aHatResidualResultsUncensored = value; }
+            get { return this.aHatResidualResultsUncensored; }
         }
         public DataTable AHatResultsResid
         {
