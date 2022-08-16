@@ -1,4 +1,4 @@
-AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame", 
+AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame", 
                                                                         y_dec="numeric", 
                                                                         modelType="numeric",
                                                                         varCovarMatrix="matrix",
@@ -85,17 +85,18 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       return(keyAValues)
                                     },
                                     executeAhatvsA=function(){
+                                      #print(signalResp)
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
-                                      linearModel_lm <- lm(y ~ x, data = SignalRespDF, na.action=na.omit)
+                                      linearModel_lm <- lm(y ~ x, data = signalRespDF, na.action=na.omit)
                                       setModelIntercept(linearModel_lm$coefficients[[1]])
                                       setModelSlope(linearModel_lm$coefficients[[2]])
                                       #set the linear model so it can be returned
                                       linearModDF=data.frame(
                                         #Index= 1:length(linearModel_lm$fitted.values),
-                                        x=SignalRespDF$x,
-                                        y=SignalRespDF$y,
+                                        x=signalRespDF$x,
+                                        y=signalRespDF$y,
                                         fit=linearModel_lm$fitted.values
                                       )
                                       setLinearModel(linearModDF)
@@ -120,8 +121,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       setCritPts(newPODSR$getCriticalPoints())
                                     },
                                     performTransforms=function(){
-                                      SignalRespDF$x.trans<<-f_a(SignalRespDF$x)
-                                      SignalRespDF$y.trans<<-f_a(SignalRespDF$y)
+                                      signalRespDF$x.trans<<-f_a(signalRespDF$x)
+                                      signalRespDF$y.trans<<-f_a(signalRespDF$y)
                                     },
                                     linearTests=function(linearM){
                                       # Shapiro-Wilk Normality Test
@@ -138,15 +139,15 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       setLinearTestResults(list(shapiro,nonConst,durbinWTest))
                                     },
                                     genAhatVersusACensored=function(){
-                                      # It expects a censored object; this data is not censored but we can still use it.
-                                      # Note, we are using the Box Cox transformed y and f_a (log) transformed x
-                                      censored.a.hat <- Surv(time = SignalRespDF$y.trans, time2 = SignalRespDF$y.trans, type = "interval2")
-                                      #censored.a.hat <- Surv(time = SignalRespDF$y, time2 = SignalRespDF$y, type = "interval2")
-                                      a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(SignalRespDF$x))
-                                      # Here's the linear model. 
-                                      a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x, 
-                                                                     dist = "gaussian", data = a.hat.censor.df)
-                                      #survreg(formula= Surv(y.trans, event = 1)~x, dist= "gaussian", data= signalRespDF)
+                                      # # It expects a censored object; this data is not censored but we can still use it.
+                                      # # Note, we are using the Box Cox transformed y and f_a (log) transformed x
+                                      # censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$y.trans, type = "interval2")
+                                      # #censored.a.hat <- Surv(time = signalRespDF$y, time2 = signalRespDF$y, type = "interval2")
+                                      # a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
+                                      # # Here's the linear model. 
+                                      # a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x, 
+                                      #                                dist = "gaussian", data = a.hat.censor.df)
+                                      a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
                                     },
                                     genAvaluesAndMatrix=function(a.hat.vs.a.censored){
@@ -187,7 +188,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                       setKeyAValues(list(-1, a50, a90, aSigma, a9095))
                                     },
                                     genThresholdsTable=function(a.hat.vs.a.censored){
-                                      thresholds=linspace(min(SignalRespDF$y)-.5*max(SignalRespDF$y), max(SignalRespDF$y)+.5*max(SignalRespDF$y), 300)
+                                      thresholds=linspace(min(signalRespDF$y)-.5*max(signalRespDF$y), max(signalRespDF$y)+.5*max(signalRespDF$y), 300)
                                       columns=c("threshold", "a90", "a90_95", "a50", "v11", "v12", "v22")
                                       threshDataFrame=data.frame(matrix(nrow=0, ncol=length(columns)))
                                       colnames(threshDataFrame)=columns
@@ -249,7 +250,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(SignalRespDF="data.frame
                                     },
                                     #used for Debugging ONLY
                                     plotSimdata=function(df){
-                                      myPlot=ggplot(data=df, mapping=aes(x=flaw, y=POD))+geom_point()+
+                                      myPlot=ggplot(data=df, mapping=aes(x=flaw, y=pod))+geom_point()+
                                         ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
                                       print(myPlot)
                                     },

@@ -27,17 +27,21 @@ namespace CSharpBackendWithR
             List<int> indices = new List<int>();
             //needed for the r code 
             //this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());
-            if(newAHatAnalysis.ResponsesCensoredLeft.Count() != 0 || newAHatAnalysis.ResponsesCensoredRight.Count() != 0) {
+            if (newAHatAnalysis.ResponsesCensoredLeft.Count() != 0 || newAHatAnalysis.ResponsesCensoredRight.Count() != 0)
+            {
                 List<double> responsesLeftCensored = newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName];
                 List<double> responsesRightCensored = newAHatAnalysis.ResponsesCensoredRight[newAHatAnalysis.SignalResponseName];
                 this.myREngine.Evaluate("event<- c()");
+                bool updatedEvent = false;
                 for (int i = 0; i < cracks.Count; i++)
                 {
+                    updatedEvent = false;
                     foreach (double j in responsesRightCensored)
                     {
                         if (SignalResponse[i] == j)
                         {
-                            this.myREngine.Evaluate("event<- c(event, 0)");
+                            this.myREngine.Evaluate("event<- c(event, 2)");
+                            updatedEvent = true;
                             break;
                         }
                     }
@@ -45,13 +49,26 @@ namespace CSharpBackendWithR
                     {
                         if (SignalResponse[i] == j)
                         {
-                            this.myREngine.Evaluate("event<- c(event, 2)");
+                            this.myREngine.Evaluate("event<- c(event, 0)");
+                            updatedEvent = true;
                             break;
                         }
                     }
-                    this.myREngine.Evaluate("event<- c(event, 1)");
+                    if (updatedEvent == false)
+                    {
+                        this.myREngine.Evaluate("event<- c(event, 1)");
+                    }
                 }
 
+            }
+            //mark all the points as uncensored by default
+            else
+            {
+                this.myREngine.Evaluate("event<- c()");
+                for (int i = 0; i < cracks.Count; i++)
+                {
+                    this.myREngine.Evaluate("event<- c(event, 1)");
+                }
             }
             switch (newAHatAnalysis.ModelType)
             {
@@ -138,10 +155,11 @@ namespace CSharpBackendWithR
             }
             //build the dataframe in the global environment
             //this dataframe will remain in the global environment
-            this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y)");
+            this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y, event)");
             this.myREngine.Evaluate("rm(Index)");
             this.myREngine.Evaluate("rm(x)");
             this.myREngine.Evaluate("rm(y)");
+            this.myREngine.Evaluate("rm(event)");
         }
         public void ExecuteAnalysis(AHatAnalysisObject newTranformAnalysis)
         {
@@ -149,7 +167,7 @@ namespace CSharpBackendWithR
             //System.Diagnostics.Debug.WriteLine(this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')").ToString());
             //this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')");
             //execute class with appropriate parameters
-            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(SignalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+newTranformAnalysis.ModelType+")");
+            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+newTranformAnalysis.ModelType+")");
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
         }
         public DataTable GetLinearFitTableForUI()
