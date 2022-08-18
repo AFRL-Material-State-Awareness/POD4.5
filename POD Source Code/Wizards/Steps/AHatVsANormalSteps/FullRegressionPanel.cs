@@ -110,7 +110,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 modelMLabel,            
                 modelBLabel,         
                 modelErrorLabel,
-                repeatabilityErrorLabel,
+                rSqauredLabel,
                 modelMStdErrLabel,
                 modelBStdErrLabel,
                 modelErrorStdErrLabel,
@@ -201,7 +201,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 modelMLabel, modelMOut,                
                 modelBLabel, modelBOut,                
                 modelErrorLabel, modelErrorOut,
-                repeatabilityErrorLabel, repeatabilityErrorOut,
+                rSqauredLabel, rSquaredValueOut,
 
                 LinearFitStdErrorHeader,
                 modelMStdErrLabel, modelMStdErrOut,
@@ -238,7 +238,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             modelBOut.PartType = ChartPartType.LinearFit;
             modelMOut.PartType = ChartPartType.LinearFit;
             modelErrorOut.PartType = ChartPartType.Undefined;
-            repeatabilityErrorOut.PartType = ChartPartType.Undefined;
+            rSquaredValueOut.PartType = ChartPartType.Undefined;
             modelMStdErrOut.PartType = ChartPartType.Undefined;
             modelBStdErrOut.PartType = ChartPartType.Undefined;
             modelErrorStdErrOut.PartType = ChartPartType.Undefined;            
@@ -258,7 +258,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             modelMOut.TooltipForNumeric = Globals.SplitIntoLines("Slope of the linear fit of the transformed data.");
             modelBOut.TooltipForNumeric = Globals.SplitIntoLines("Intercept of the linear fit of the transformed data.");
             modelErrorOut.TooltipForNumeric = Globals.SplitIntoLines("Standard deviation of the differences between the average aHat values and the linear fit.");
-            repeatabilityErrorOut.TooltipForNumeric = Globals.SplitIntoLines("Pooled standard deviation of the repeated aHat values for each flaw.");
+            rSquaredValueOut.TooltipForNumeric = Globals.SplitIntoLines("Pooled standard deviation of the repeated aHat values for each flaw.");
             modelMStdErrOut.TooltipForNumeric = Globals.SplitIntoLines("Standard deviation of the estimate of the slope. Indicates degree of precision.");
             modelBStdErrOut.TooltipForNumeric = Globals.SplitIntoLines("Standard deviation of the estimate of the intercept. Indicates degree of precision.");
             modelErrorStdErrOut.TooltipForNumeric = Globals.SplitIntoLines("Standard deviation of the estimate of the residual error. Indicates degree of precision.");
@@ -430,7 +430,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                                                     modelMOut.NumericUpDown, modelMStdErrOut.NumericUpDown, modelBOut.NumericUpDown, modelBStdErrOut.NumericUpDown, 
                                                     modelErrorOut.NumericUpDown, modelErrorStdErrOut.NumericUpDown, 
                                                     normalityTestOut.NumericUpDown, equalVarianceTestOut.NumericUpDown, lackOfFitTestOut.NumericUpDown, 
-                                                    repeatabilityErrorOut.NumericUpDown, MuOut.NumericUpDown, SigmaOut.NumericUpDown};
+                                                    rSquaredValueOut.NumericUpDown, MuOut.NumericUpDown, SigmaOut.NumericUpDown};
 
 
             foreach (var number in list)
@@ -469,7 +469,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             normalityTestOut.BackColor = Globals.AlphaOverWhiteToOpaque(Color.FromArgb(ChartColors.ControlBackColorAlpha, ChartColors.TestUnknownColor));
             lackOfFitTestOut.BackColor = Globals.AlphaOverWhiteToOpaque(Color.FromArgb(ChartColors.ControlBackColorAlpha, ChartColors.TestUnknownColor));
             equalVarianceTestOut.BackColor = Globals.AlphaOverWhiteToOpaque(Color.FromArgb(ChartColors.ControlBackColorAlpha, ChartColors.TestUnknownColor));
-            repeatabilityErrorOut.BackColor = Globals.AlphaOverWhiteToOpaque(Color.FromArgb(ChartColors.ControlBackColorAlpha, ChartColors.FitColor));*/
+            rSquaredValueOut.BackColor = Globals.AlphaOverWhiteToOpaque(Color.FromArgb(ChartColors.ControlBackColorAlpha, ChartColors.FitColor));*/
         }        
 
         public override void SetupAnalysisInput()
@@ -520,7 +520,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             double modelMStdError = Analysis.OutModelSlopeStdError;
             double modelBStdError = Analysis.OutModelInterceptStdError;
             double modelErrorStdError = Analysis.OutModelResidualErrorStdError;
-            double repeatabilityError = Analysis.OutRepeatabilityError;
+            double rSquaredValue = Analysis.OutRepeatabilityError;
             double normality = Analysis.OutTestNormality_p;
             double lackOfFit = Analysis.OutTestLackOfFit_p;
             double equalVariance = Analysis.OutTestEqualVariance_p;
@@ -578,7 +578,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 modelMStdErrOut.Value = Convert.ToDecimal(modelMStdError);
                 modelBStdErrOut.Value = Convert.ToDecimal(modelBStdError);
                 modelErrorStdErrOut.Value = Convert.ToDecimal(modelErrorStdError);
-                repeatabilityErrorOut.Value = Convert.ToDecimal(repeatabilityError);
+                rSquaredValueOut.Value = Convert.ToDecimal(rSquaredValue);
                 SigmaOut.Value = Convert.ToDecimal(sigma);
                 MuOut.Value = Convert.ToDecimal(mu);
 

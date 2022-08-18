@@ -149,6 +149,13 @@ namespace CSharpBackendWithR
             List<double> linearMetrics = newAHatControl.GetLinearModelMetrics();
             this.newAHatAnalysisObject.Intercept = linearMetrics[0];
             this.newAHatAnalysisObject.Slope = linearMetrics[1];
+            //get r-squared value
+            this.newAHatAnalysisObject.RSqaured = newAHatControl.GetRSquaredValue();
+            //get standard errors for linear model
+            Dictionary<string, double> standardErrors = newAHatControl.GetLinearModelStdErrors();
+            this.newAHatAnalysisObject.SlopeStdErr = standardErrors["slopeStdError"];
+            this.newAHatAnalysisObject.InterceptStdErr = standardErrors["interceptStdError"];
+            this.newAHatAnalysisObject.ResidualStdErr = standardErrors["residualStdError"];
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = newAHatControl.GetKeyA_Values();
             this.newAHatAnalysisObject.A25 = finalAValuesDict["a25"];

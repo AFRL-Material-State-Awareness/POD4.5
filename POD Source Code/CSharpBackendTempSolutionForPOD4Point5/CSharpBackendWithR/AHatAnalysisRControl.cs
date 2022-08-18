@@ -202,6 +202,25 @@ namespace CSharpBackendWithR
             DataTable AHatPODTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return AHatPODTable;
         }
+        public double GetRSquaredValue()
+        {
+            double rSqaured= this.myREngine.Evaluate("newSRAnalysis$getRSquared()").AsNumeric()[0];
+            return rSqaured;
+        }
+        public Dictionary<string, double> GetLinearModelStdErrors()
+        {
+            Dictionary<string, double> standardErrors = new Dictionary<string, double>();
+            List<string> aValuesStrings = new List<string> { "slopeStdError", "interceptStdError","residualStdError" };
+            RDotNet.NumericVector aValuesVector;
+            //current list used returns a25, a50 (muhat), a90, sigmahat (SE of a90), and a9095 
+            for (int i = 1; i <= 3; i++)
+            {
+                //this.myREngine.Evaluate("print(newSRAnalysis$getKeyAValues()[" + i + "])").AsList();
+                aValuesVector = this.myREngine.Evaluate("newSRAnalysis$getRegressionStdErrs()[" + i + "]").AsNumeric();
+                standardErrors.Add(key: aValuesStrings[i - 1], value: (double)aValuesVector[0]);
+            }
+            return standardErrors;
+        }
         public Dictionary<string, double> GetKeyA_Values()
         {
             Dictionary<string, double> aValuesDict = new Dictionary<string, double>();
@@ -213,7 +232,8 @@ namespace CSharpBackendWithR
                 //this.myREngine.Evaluate("print(newSRAnalysis$getKeyAValues()[" + i + "])").AsList();
                 aValuesVector = this.myREngine.Evaluate("newSRAnalysis$getKeyAValues()[" + i + "]").AsNumeric();
                 aValuesDict.Add(key: aValuesStrings[i - 1], value: (double)aValuesVector[0]);
-            }            return aValuesDict;
+            }            
+            return aValuesDict;
         }
         public List<double> GetLinearModelMetrics()
         {

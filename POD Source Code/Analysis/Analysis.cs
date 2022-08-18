@@ -1147,12 +1147,12 @@ namespace POD.Analyze
             {
                 //TODO: replace the rest of the metrics
                 OutModelIntercept = _aHatAnalysisObject.Intercept;
-                //OutModelInterceptStdError
+                OutModelInterceptStdError = _aHatAnalysisObject.InterceptStdErr;
                 OutModelSlope = _aHatAnalysisObject.Slope;
-                //OutModelSlopeStdError
+                OutModelSlopeStdError = _aHatAnalysisObject.SlopeStdErr;
                 //OutModelResidualError
-                //OutModelResidualErrorStdError
-                //OutRepeatabilityError
+                OutModelResidualErrorStdError = _aHatAnalysisObject.ResidualStdErr;
+                OutRepeatabilityError = _aHatAnalysisObject.RSqaured;
                 //replaced normality test with shapiro-wilk
                 OutTestNormality_p = _aHatAnalysisObject.ShapiroPValue;
                 OutTestNormality = _aHatAnalysisObject.ShapiroTestStat;

@@ -1125,16 +1125,16 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.TestColorMap.Size = new System.Drawing.Size(140, 20);
             this.TestColorMap.TabIndex = 14;
             // 
-            // repeatabilityErrorLabel
+            // rSqauredLabel
             // 
             this.repeatabilityErrorLabel.AutoSize = true;
             this.repeatabilityErrorLabel.Location = new System.Drawing.Point(4, 263);
-            this.repeatabilityErrorLabel.Name = "repeatabilityErrorLabel";
+            this.repeatabilityErrorLabel.Name = "rSqauredLabel";
             this.repeatabilityErrorLabel.Size = new System.Drawing.Size(67, 13);
             this.repeatabilityErrorLabel.TabIndex = 15;
             this.repeatabilityErrorLabel.Text = "Repeat Error";
             // 
-            // repeatabilityErrorOut
+            // rSquaredValueOut
             // 
             this.repeatabilityErrorOut.AutoSize = true;
             this.repeatabilityErrorOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -1158,7 +1158,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             0,
             0,
             0});
-            this.repeatabilityErrorOut.Name = "repeatabilityErrorOut";
+            this.repeatabilityErrorOut.Name = "rSquaredValueOut";
             this.repeatabilityErrorOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.repeatabilityErrorOut.PartType = POD.ChartPartType.Undefined;
             this.repeatabilityErrorOut.ReadOnly = true;

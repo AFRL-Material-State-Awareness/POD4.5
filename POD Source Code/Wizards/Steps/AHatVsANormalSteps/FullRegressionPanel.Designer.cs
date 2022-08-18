@@ -77,8 +77,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.equalVarianceTestLabel = new System.Windows.Forms.Label();
             this.equalVarianceTestOut = new POD.Controls.PODRatedNumericUpDown();
             this.TestColorMap = new POD.Controls.ColorMap();
-            this.repeatabilityErrorLabel = new System.Windows.Forms.Label();
-            this.repeatabilityErrorOut = new POD.Controls.PODChartNumericUpDown();
+            this.rSqauredLabel = new System.Windows.Forms.Label();
+            this.rSquaredValueOut = new POD.Controls.PODChartNumericUpDown();
             this.PodModelParametersHeader = new System.Windows.Forms.Label();
             this.LinearFitEstimatesHeader = new System.Windows.Forms.Label();
             this.LinearFitStdErrorHeader = new System.Windows.Forms.Label();
@@ -123,7 +123,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             ((System.ComponentModel.ISupportInitialize)(this.normalityTestOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lackOfFitTestOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.equalVarianceTestOut)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repeatabilityErrorOut)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rSquaredValueOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SigmaOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MuOut)).BeginInit();
             this.SuspendLayout();
@@ -153,8 +153,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.PutControlsHerePanel.Controls.Add(this.FlawRangeHeader);
             this.PutControlsHerePanel.Controls.Add(this.TestOfAssumptionsHeader);
             this.PutControlsHerePanel.Controls.Add(this.LinearFitStdErrorHeader);
-            this.PutControlsHerePanel.Controls.Add(this.repeatabilityErrorOut);
-            this.PutControlsHerePanel.Controls.Add(this.repeatabilityErrorLabel);
+            this.PutControlsHerePanel.Controls.Add(this.rSquaredValueOut);
+            this.PutControlsHerePanel.Controls.Add(this.rSqauredLabel);
             this.PutControlsHerePanel.Controls.Add(this.TestColorMap);
             this.PutControlsHerePanel.Controls.Add(this.equalVarianceTestOut);
             this.PutControlsHerePanel.Controls.Add(this.equalVarianceTestLabel);
@@ -1055,43 +1055,43 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.TestColorMap.Size = new System.Drawing.Size(140, 20);
             this.TestColorMap.TabIndex = 14;
             // 
-            // repeatabilityErrorLabel
+            // rSqauredLabel
             // 
-            this.repeatabilityErrorLabel.AutoSize = true;
-            this.repeatabilityErrorLabel.Location = new System.Drawing.Point(4, 263);
-            this.repeatabilityErrorLabel.Name = "repeatabilityErrorLabel";
-            this.repeatabilityErrorLabel.Size = new System.Drawing.Size(67, 13);
-            this.repeatabilityErrorLabel.TabIndex = 15;
-            this.repeatabilityErrorLabel.Text = "Repeat Error";
+            this.rSqauredLabel.AutoSize = true;
+            this.rSqauredLabel.Location = new System.Drawing.Point(4, 263);
+            this.rSqauredLabel.Name = "RSquaredLabel";
+            this.rSqauredLabel.Size = new System.Drawing.Size(67, 13);
+            this.rSqauredLabel.TabIndex = 15;
+            this.rSqauredLabel.Text = "R-Squared";
             // 
-            // repeatabilityErrorOut
+            // rSquaredValueOut
             // 
-            this.repeatabilityErrorOut.AutoSize = true;
-            this.repeatabilityErrorOut.DecimalPlaces = 3;
-            this.repeatabilityErrorOut.Increment = new decimal(new int[] {
+            this.rSquaredValueOut.AutoSize = true;
+            this.rSquaredValueOut.DecimalPlaces = 3;
+            this.rSquaredValueOut.Increment = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            this.repeatabilityErrorOut.InterceptArrowKeys = false;
-            this.repeatabilityErrorOut.Location = new System.Drawing.Point(6, 279);
-            this.repeatabilityErrorOut.Maximum = new decimal(new int[] {
+            this.rSquaredValueOut.InterceptArrowKeys = false;
+            this.rSquaredValueOut.Location = new System.Drawing.Point(6, 279);
+            this.rSquaredValueOut.Maximum = new decimal(new int[] {
             100,
             0,
             0,
             0});
-            this.repeatabilityErrorOut.Minimum = new decimal(new int[] {
+            this.rSquaredValueOut.Minimum = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            this.repeatabilityErrorOut.Name = "repeatabilityErrorOut";
-            this.repeatabilityErrorOut.PartType = POD.ChartPartType.Undefined;
-            this.repeatabilityErrorOut.ReadOnly = true;
-            this.repeatabilityErrorOut.Size = new System.Drawing.Size(120, 20);
-            this.repeatabilityErrorOut.TabIndex = 11;
-            this.repeatabilityErrorOut.TooltipForNumeric = "";
-            this.repeatabilityErrorOut.Value = new decimal(new int[] {
+            this.rSquaredValueOut.Name = "rSquaredValueOut";
+            this.rSquaredValueOut.PartType = POD.ChartPartType.Undefined;
+            this.rSquaredValueOut.ReadOnly = true;
+            this.rSquaredValueOut.Size = new System.Drawing.Size(120, 20);
+            this.rSquaredValueOut.TabIndex = 11;
+            this.rSquaredValueOut.TooltipForNumeric = "";
+            this.rSquaredValueOut.Value = new decimal(new int[] {
             0,
             0,
             0,
@@ -1315,7 +1315,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             ((System.ComponentModel.ISupportInitialize)(this.normalityTestOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lackOfFitTestOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.equalVarianceTestOut)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repeatabilityErrorOut)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rSquaredValueOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SigmaOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MuOut)).EndInit();
             this.ResumeLayout(false);
@@ -1365,8 +1365,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private PODRatedNumericUpDown lackOfFitTestOut;
         private Label lackOfFitTestLabel;
         private ColorMap TestColorMap;
-        private Label repeatabilityErrorLabel;
-        private PODChartNumericUpDown repeatabilityErrorOut;
+        private Label rSqauredLabel;
+        private PODChartNumericUpDown rSquaredValueOut;
         private Label PodModelParametersHeader;
         private Label TestOfAssumptionsHeader;
         private Label LinearFitStdErrorHeader;

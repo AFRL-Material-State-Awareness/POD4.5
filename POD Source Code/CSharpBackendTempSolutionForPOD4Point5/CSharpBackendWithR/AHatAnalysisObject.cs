@@ -31,6 +31,12 @@ namespace CSharpBackendWithR
         //linear model unique metrics
         private double intercept;
         private double slope;
+        //standard errors
+        private double slopeStdErr;
+        private double interceptStdErr;
+        private double residualStdErr;
+        //stored multiple R-squared value (can also add adjusted R-squared if necessary)
+        private double rSquared;
         //store the censored points
         private List<double> flawsCensored;
         private Dictionary<string, List<double>> responsesCensoredLeft;
@@ -111,6 +117,12 @@ namespace CSharpBackendWithR
             //linear model
             this.slope = 0.0;
             this.intercept = 0.0;
+            //r-sqaured
+            this.rSquared = 0.0;
+            //standard errors for the linear model
+            this.slopeStdErr = 0.0;
+            this.interceptStdErr = 0.0;
+            this.residualStdErr = 0.0;
             //used to store the linear dataframe
             this.aHatLinearResults = new DataTable();
             //censored residual Results
@@ -217,6 +229,26 @@ namespace CSharpBackendWithR
         {
             set { this.intercept=value; }
             get { return this.intercept; }
+        }
+        public double RSqaured
+        {
+            set { this.rSquared = value; }
+            get { return this.rSquared; }
+        }
+        public double SlopeStdErr
+        {
+            set { this.slopeStdErr = value; }
+            get { return this.slopeStdErr; }
+        }
+        public double InterceptStdErr
+        {
+            set { this.interceptStdErr = value; }
+            get { return this.interceptStdErr; }
+        }
+        public double ResidualStdErr
+        {
+            set { this.residualStdErr = value; }
+            get { return this.residualStdErr; }
         }
         public DataTable AHatResultsLinear
         {

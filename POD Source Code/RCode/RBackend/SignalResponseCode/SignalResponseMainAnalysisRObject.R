@@ -4,6 +4,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         varCovarMatrix="matrix",
                                                                         keyAValues="list",
                                                                         linearModel="data.frame",
+                                                                        rSqaured="numeric",
+                                                                        regressionStdErrs="list",
                                                                         linearTestResults="list",
                                                                         aVPOD="matrix",
                                                                         ResultsPOD="data.frame",
@@ -59,6 +61,18 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     },
                                     getModelSlope=function(){
                                       return(modelSlope)
+                                    },
+                                    setRSquared=function(psRSqaured){
+                                      rSqaured<<-psRSqaured
+                                    },
+                                    getRSquared=function(){
+                                      return(rSqaured)
+                                    },
+                                    setRegressionStdErrs=function(psRegStdErrs){
+                                      regressionStdErrs<<-psRegStdErrs
+                                    },
+                                    getRegressionStdErrs=function(){
+                                      return(regressionStdErrs)
                                     },
                                     setCritPts=function(psCritPts){
                                       critPts<<-psCritPts
@@ -128,6 +142,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         names(ResidualDF)[names(ResidualDF) == 'residuals'] <- 't_diff'
                                         setResidualTable(ResidualDF)
                                       }
+                                      #get the value of R-squared(TODO: check if this changes with censored data)
+                                      setRSquared(summary(linearModel_lm)$r.squared)
+                                      #calculate the standard errors for regression
+                                      calcStandardErrs(ahatvACensored)
                                       #find the key a values and the covariance matrix
                                       genAvaluesAndMatrix(ahatvACensored)
                                       #generates the thesholds table for UI
@@ -168,6 +186,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
                                       # Here's the linear model.
                                       a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x,
+                                                                     dist = "gaussian", data = a.hat.censor.df)
+                                      a.hat.vs.a.censored_Null <<- survreg(formula = censored.a.hat ~ 0+as.factor(x),
                                                                      dist = "gaussian", data = a.hat.censor.df)
                                       #a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
@@ -248,27 +268,34 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       }
                                       setThresholdDF(threshDataFrame)
                                     },
+                                    calcStandardErrs=function(myLinFit){
+                                      df=2
+                                      y_residualsSq=c()
+                                      x_residualsSq=c()
+                                      for(i in 1:nrow(signalRespDF)){
+                                        if(class(myLinFit)=="lm"){
+                                          thisResid_y= signalRespDF$y[i] - myLinFit$fitted.values[i]
+                                        }
+                                        else{
+                                          thisResid_y=  signalRespDF$y[i] - myLinFit$linear.predictors[i]
+                                        }
+                                        thisResid_x= signalRespDF$x[i]-mean(signalRespDF$x)
+                                        y_residualsSq=c(y_residualsSq, thisResid_y^2)
+                                        x_residualsSq=c(x_residualsSq, thisResid_x^2)
+                                      }
+                                      #global<<-y_residualsSq
+                                      slopeStdError=summary(myLinFit)$table[2,2]
+                                      interceptStdError=summary(myLinFit)$table[1,2]
+                                      residualError=sqrt(sum(y_residualsSq)/(nrow(signalRespDF)-df))
+                                      #stored as: slope std error, slope intercept std error, and residual error
+                                      stdErrors=list(slopeStdError, interceptStdError, residualError)
+                                      setRegressionStdErrs(stdErrors)
+                                    },
                                     # Inverse function of f_a. Uncomment 1
                                     f_a_i=function(a){ return(a) # exp(a)#log(a) #sqrt(a)
                                     },
                                     # Function transforming the flaw size. Uncomment 1
                                     f_a=function(a){return(a) #log(a) #exp(a) #a^2
-                                    },
-                                    #USED FOR DEBUGGING ONLY
-                                    plotPOD=function(plotPoints, criticalPoints){
-                                      # POD Plot  
-                                      ggplot()+theme_bw()+
-                                        geom_line(aes(plotPoints$flaw,plotPoints$POD),colour="blue",size=1.5)+
-                                        geom_line(aes(plotPoints$confidence,plotPoints$POD),linetype=2,colour="darkcyan",size=1)+
-                                        #    geom_point(aes(criticalPoints$a_50_50,0.5),colour=index,shape=1)+
-                                        geom_hline(yintercept=0.9, colour="red")+
-                                        geom_vline(xintercept=criticalPoints$a_90_50, colour="red",linetype=2)+
-                                        geom_vline(xintercept=criticalPoints$a_90_95, colour="darkturquoise",linetype=2)+
-                                        geom_point(aes(criticalPoints$a_90_50,0.9),shape=18,size=2, colour="red")+
-                                        geom_point(aes(criticalPoints$a_90_95,0.9),shape=18,size=2, colour="darkturquoise")+
-                                        xlim(min(na.exclude(plotPoints$flaw)),max(na.exclude(plotPoints$flaw)))+
-                                        ylab("Probability of Detection, POD(a)")+
-                                        xlab("Defect Size, a")
                                     },
                                     #used for Debugging ONLY
                                     plotSimdata=function(df){
