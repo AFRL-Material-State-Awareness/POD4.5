@@ -89,7 +89,7 @@ GenPODSignalResponse<-setRefClass("GenPODSignalResponse", fields=list(
                                      for(i in defect_sizes){
                                        #findRoot=uniroot(standardWald, interval=c(-100,100), aMu= .113276,
                                        #                  aSigma= .1380718, covarMatrix=a.V_POD, a_p_q=i)
-                                       findRoot = tryCatch(uniroot(standardWald, interval=c(-100,100), aMu= aMu,
+                                       findRoot = tryCatch(uniroot(standardWald, interval=c(-10,10), aMu= aMu,
                                                       aSigma= aSigma, covarMatrix=a.V_POD, a_p_q=i), error = function(e) NaN)
                                        thisConfInt =pnorm(findRoot[[1]])
                                        confident_interval=c(confident_interval, c(thisConfInt))

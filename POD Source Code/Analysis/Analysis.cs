@@ -1156,13 +1156,13 @@ namespace POD.Analyze
                 //replaced normality test with shapiro-wilk
                 OutTestNormality_p = _aHatAnalysisObject.ShapiroPValue;
                 OutTestNormality = _aHatAnalysisObject.ShapiroTestStat;
-                //OutTestNormalityRating
+                OutTestNormalityRating = _python.GetPValueDecision(OutTestNormality_p);
                 //OutTestLackOfFit_p
                 //OutTestLackOfFit
                 //OutTestLackOfFitRating
                 OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
                 OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
-                //OutTestEqualVarianceRating
+                OutTestEqualVarianceRating= _python.GetPValueDecision(OutTestEqualVariance_p);
                 //A Values and sigma
                 OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
                 OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
@@ -1240,7 +1240,8 @@ namespace POD.Analyze
                 OutPODMu = _hmAnalysisObject.Muhat;
                 OutPODSigma = _hmAnalysisObject.Sighat;
                 OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
-                OutTestNormalityRating = ;
+                //OutTestNormalityRating = _python.GetPValueDecision(OutTestLackOfFit);
+                OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit);
             }
 
             Data.UpdateOutput();

@@ -89,7 +89,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
-                                      linearModel_lm <- lm(y ~ x, data = signalRespDF, na.action=na.omit)
+                                      linearModel_lm <<- lm(y ~ x, data = signalRespDF, na.action=na.omit)
                                       setModelIntercept(linearModel_lm$coefficients[[1]])
                                       setModelSlope(linearModel_lm$coefficients[[2]])
                                       #set the linear model so it can be returned
@@ -104,10 +104,30 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
                                       names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
                                       setResidualTable(ResidualDF)
-                                      #peformTests
-                                      linearTests(linearM=linearModel_lm)
                                       #generate ahat versus acensored
-                                      ahatvACensored=genAhatVersusACensored()
+                                      ahatvACensored<<-genAhatVersusACensored()
+                                      #update paramters if any points are censored
+                                      if(0 %in% signalRespDF$event ||  2 %in% signalRespDF$event){
+                                        setModelIntercept(ahatvACensored$coefficients[[1]])
+                                        setModelSlope(ahatvACensored$coefficients[[2]])
+                                        #set the linear model so it can be returned
+                                        linearModDF=data.frame(
+                                          #Index= 1:length(linearModel_lm$fitted.values),
+                                          x=signalRespDF$x,
+                                          y=signalRespDF$y,
+                                          fit=ahatvACensored$linear.predictors
+                                        )
+                                        setLinearModel(linearModDF)
+                                        residuals=c()
+                                        for(i in 1:nrow(linearModDF)){
+                                          thisResid=signalRespDF$y[i]-ahatvACensored$linear.predictors[i]
+                                          residuals=c(residuals, thisResid)
+                                        }
+                                        ##create the residual dataframe
+                                        ResidualDF=cbind(linearModDF, residuals)
+                                        names(ResidualDF)[names(ResidualDF) == 'residuals'] <- 't_diff'
+                                        setResidualTable(ResidualDF)
+                                      }
                                       #find the key a values and the covariance matrix
                                       genAvaluesAndMatrix(ahatvACensored)
                                       #generates the thesholds table for UI
@@ -119,6 +139,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       newPODSR$genPODCurve()
                                       setResults(newPODSR$getPODSR())
                                       setCritPts(newPODSR$getCriticalPoints())
+                                      #peformTests
+                                      linearTests(linearM=linearModel_lm)
                                     },
                                     performTransforms=function(){
                                       signalRespDF$x.trans<<-f_a(signalRespDF$x)
@@ -139,15 +161,15 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       setLinearTestResults(list(shapiro,nonConst,durbinWTest))
                                     },
                                     genAhatVersusACensored=function(){
-                                      # # It expects a censored object; this data is not censored but we can still use it.
-                                      # # Note, we are using the Box Cox transformed y and f_a (log) transformed x
-                                      # censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$y.trans, type = "interval2")
-                                      # #censored.a.hat <- Surv(time = signalRespDF$y, time2 = signalRespDF$y, type = "interval2")
-                                      # a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
-                                      # # Here's the linear model. 
-                                      # a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x, 
-                                      #                                dist = "gaussian", data = a.hat.censor.df)
-                                      a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
+                                      # It expects a censored object; this data is not censored but we can still use it.
+                                      # Note, we are using the Box Cox transformed y and f_a (log) transformed x
+                                      censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event)#, type = "interval2")
+                                      #censored.a.hat <- Surv(time = signalRespDF$y, time2 = signalRespDF$y, type = "interval2")
+                                      a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
+                                      # Here's the linear model.
+                                      a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x,
+                                                                     dist = "gaussian", data = a.hat.censor.df)
+                                      #a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
                                     },
                                     genAvaluesAndMatrix=function(a.hat.vs.a.censored){

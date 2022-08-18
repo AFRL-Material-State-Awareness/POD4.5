@@ -3922,7 +3922,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 5;
+            int limit = 10;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

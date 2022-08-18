@@ -22,12 +22,6 @@ namespace POD
 
     public class IPy4C
     {
-        //count the number of tables ********USED FOR DEBUGGING
-        public int tableNum = 0;
-        //ScriptEngine _pyEngine;
-        List<string> _modules;
-        //Dictionary<string, ScriptScope> _pyScopes;
-        Dictionary<string, dynamic> _cpDocs;
         Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
         Dictionary<string, AHatAnalysisObject> _ahatAnalyses;
         MemoryStream _outputStream;
@@ -55,17 +49,11 @@ namespace POD
         {
             get
             {
-                //if (_statusBar != null)
-                //    return _statusBar.ProgressValue;
-                //else
-                    return _simpleProgress;
+                return _simpleProgress;
             }
             set
             {
-                //if (_statusBar != null)
-                //    _statusBar.ProgressValue = value;
-                //else
-                    _simpleProgress = value;
+                _simpleProgress = value;
 
                 if (OnProgressUpdate != null)
                 {
@@ -78,17 +66,11 @@ namespace POD
         {
             get
             {
-                //if (_statusBar != null)
-                //    return _statusBar.ProgressText;
-                //else
-                    return _simpleStatus;
+                return _simpleStatus;
             }
             set
             {
-                //if (_statusBar != null)
-                //    _statusBar.ProgressText = value;
-               // else
-                    _simpleStatus = value;
+                _simpleStatus = value;
             }
         }
 
@@ -102,7 +84,7 @@ namespace POD
 
         public void AddErrorText(string myError)
         {
-                _simpleError = _simpleError + "; " + myError;
+             _simpleError = _simpleError + "; " + myError;
 
             if(OnAnalysisError != null)
             {
@@ -112,10 +94,7 @@ namespace POD
 
         public void ClearErrorText()
         {
-            //if (_statusBar != null)
-            //    _statusBar.ResetErrorText();
-            //else
-                _simpleError = "";
+            _simpleError = "";
         }
 
         public EventRaisingStreamWriter ErrorWriter
@@ -123,7 +102,7 @@ namespace POD
             get { return _errorWriter; }
         }
 
-        public IPy4C(PyTypeEnum myType, bool myDebug)//, PODStatusBar myBar)
+        public IPy4C()//, PODStatusBar myBar)
         {
             _outputStream = new MemoryStream();
             _errorStream = new MemoryStream();
@@ -131,41 +110,12 @@ namespace POD
             _outputWriter = new EventRaisingStreamWriter(_outputStream);
             _errorWriter = new EventRaisingStreamWriter(_errorStream);
 
-            //if (myBar != null)
-            //    _statusBar = myBar;
-
-            //string assembly = Path.GetFullPath("IronPython.dll");
-            //Assembly ptrAssembly = Assembly.LoadFile(assembly);
-
-            Dictionary<string, object> options = new Dictionary<string, object>();
-            options["Debug"] = myDebug;
-            //_pyEngine = Python.CreateEngine(options);
-            //_pyEngine = Python.CreateEngine();
-
-            //_pyEngine.Runtime.IO.SetOutput(_outputStream, _outputWriter);
-            //_pyEngine.Runtime.IO.SetErrorOutput(_errorStream, _errorWriter);
-
-            _modules = new List<string>();
-            //_pyScopes = new Dictionary<string, ScriptScope>();
-            
-
-            _cpDocs = new Dictionary<string, dynamic>();
+            //_cpDocs = new Dictionary<string, dynamic>();
             //used to store the hitmiss analyses
             _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
             //used to store ahat analyses
             _ahatAnalyses = new Dictionary<string, AHatAnalysisObject>();
         }
-        /*
-        public dynamic CInfo()
-        {
-            dynamic CInfo = _pyScopes["CPodDoc"].GetVariable("CInfo");
-            dynamic cinfo = CInfo();
-
-            cinfo.row = 10;
-
-            return cinfo;
-        }
-        */
         //object used for hit miss analyses
         public HMAnalysisObject HitMissAnalsysis(string myAnalysisName)
         {
@@ -272,13 +222,46 @@ namespace POD
 
             return modelType;
         }
+        //used to output the decision value
+        //self.choices = ["P > 0.1", "0.05 < P <= 0.1", ".025 < P <= 0.05",
+        //                "0.01 < P <= .025", ".005 < P <= 0.01", "P <= .005", "Undefined"]
+        public string GetPValueDecision(double myValue)
+        {
+            string decisionString = "";
+            if(myValue > 0.1)
+            {
+                decisionString = "P > 0.1";
+            }
+            else if(myValue <= 0.1 && myValue > .05)
+            {
+                decisionString = "0.05 < P <= 0.1";
+            }
+            else if(myValue <= .05 && myValue > .025)
+            {
+                decisionString = ".025 < P <= 0.05";
+            }
+            else if(myValue <= .025 && myValue > .01)
+            {
+                decisionString = "0.01 < P <= .025";
+            }
+            else if (myValue <= .01 && myValue > .005)
+            {
+                decisionString = ".005 < P <= 0.01";
+            }
+            else if (myValue <= .005)
+            {
+                decisionString = "P <= .005";
+            }
+            else
+            {
+                decisionString = "Undefined";
+            }
+            return decisionString;
+        }
         //convert c# dictionary to python dictionary
         //my dictionary is the c# dictionary
         public void Close()
         {
-            _modules.Clear();
-            //_pyScopes.Clear();
-            _cpDocs.Clear();
             _hitMissAnalyses.Clear();
             try
             {

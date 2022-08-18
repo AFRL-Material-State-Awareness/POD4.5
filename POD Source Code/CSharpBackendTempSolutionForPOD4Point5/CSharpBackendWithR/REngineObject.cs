@@ -32,18 +32,35 @@ namespace CSharpBackendWithR
         
         private REngine initializeRDotNet()
         {
+            string rPath;
+            string homePath;
+            REngine engine;
             //initialize the R engine
+            try
+            {
+                rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
+                homePath = this.applicationPath + @"\R-3.5.3\";
+                REngine.SetEnvironmentVariables(rPath, homePath);
+                engine = REngine.GetInstance();
+            }
+            catch(Exception e)
+            {
+                rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
+                homePath = this.applicationPath + @"\R-3.5.3\";
+                REngine.SetEnvironmentVariables(rPath, homePath);
+                engine = REngine.GetInstance();
+            }
+
             //string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
             //string homePath = this.applicationPath + @"\R-3.5.3\";
-            string rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
-            string homePath = this.applicationPath + @"\R-3.5.3\";
-            //string rPath = this.applicationPath + @"\R-4.1.2\bin\x64";
-            //string homePath = this.applicationPath + @"\R-4.1.2\";
+            //string rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
+            //string homePath = this.applicationPath + @"\R-3.5.3\";
+            //string rPath = this.applicationPath + @"C:\Program Files\R\R-3.5.3\bin\x64";
+            //string homePath = this.applicationPath + @"C:\Program Files\R\R-3.5.3\";
             //string rPath = this.applicationPath;
             //string homePath = this.applicationPath;
-
-            REngine.SetEnvironmentVariables(rPath, homePath);
-            REngine engine = REngine.GetInstance();
+            //REngine.SetEnvironmentVariables(rPath, homePath);
+            //REngine engine = REngine.GetInstance();
             engine.Initialize();
             //ensure the REngine global environment is cleared when the program starts
             engine.ClearGlobalEnvironment();
@@ -128,7 +145,7 @@ namespace CSharpBackendWithR
             //this.rEngine.Evaluate("library(logistf)");
             this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
-            //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+            this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
             //this.rEngine.Evaluate("print(packageVersion('reticulate'))");
             //the following libraries are used for signal response
             this.rEngine.Evaluate("library(gridExtra)");
@@ -146,7 +163,8 @@ namespace CSharpBackendWithR
         private void SetUsePython()
         {
             //this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
-            this.rEngine.Evaluate("use_python('C:/ProgramData/Anaconda3')");
+            //this.rEngine.Evaluate("use_python('C:/ProgramData/Anaconda3')");
+            this.rEngine.Evaluate("use_condaenv('C:/ProgramData/Anaconda3')");
         }
         //used to initialize helper python scripts
         private void InitializePythonScripts()

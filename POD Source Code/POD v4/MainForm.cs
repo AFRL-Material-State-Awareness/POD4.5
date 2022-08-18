@@ -90,11 +90,11 @@ namespace POD
 
             initialForm = new InitialSelectionForm();
 
-            BackgroundWorker loadPython = new BackgroundWorker();
+            BackgroundWorker load_R = new BackgroundWorker();
 
-            loadPython.DoWork += Load_IronPython;
+            load_R.DoWork += Load_RDotNet;
 
-            loadPython.RunWorkerAsync();
+            load_R.RunWorkerAsync();
 
             _loader.Visible = false;
 
@@ -231,7 +231,7 @@ namespace POD
             }
         }
 
-        private void Load_IronPython(object sender, DoWorkEventArgs e)
+        private void Load_RDotNet(object sender, DoWorkEventArgs e)
         {
             
 
@@ -242,7 +242,7 @@ namespace POD
                 Stopwatch newTimer = new Stopwatch();
                 newTimer.Start();
                 //initialize the iron python engine either by .dll or by importing the .py modules
-                py = new IPy4C(PyTypeEnum.PyFiles, true);
+                py = new IPy4C();
                 newTimer.Stop();
                 //MessageBox.Show("Total time was:" + newTimer.ElapsedMilliseconds);
                 //py = new IPy4C(PyTypeEnum.DLLFiles, false);

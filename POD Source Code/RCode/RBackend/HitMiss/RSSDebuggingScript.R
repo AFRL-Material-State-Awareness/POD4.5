@@ -1,5 +1,5 @@
 library(ggplot2)
-#library(reticulate)
+library(reticulate)
 library(MASS)
 library(mcprofile)
 library(parallel)
@@ -8,7 +8,8 @@ library(logistf)
 #flag used for genNormFitClassR
 isLog=FALSE
 #Sys.which("python")
-use_python('C:/ProgramData/Anaconda3')
+#use_python('C:/ProgramData/Anaconda3')
+use_condaenv('C:/ProgramData/Anaconda3')
 filepath=dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(filepath,"/../PythonRankedSetSampling/RSSRowSorter.py", sep=""))
 source_python(paste(filepath,"/../PythonRankedSetSampling/CyclesArrayGenerator.py", sep=""))
@@ -29,14 +30,14 @@ source(paste(filepath,"/GenNormFitClassR.R", sep = ""))
 source(paste(filepath,"/GenAValuesOnPODCurveRObject.R", sep = ""))
 source(paste(filepath,"/LRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/MLRConfIntRObject.R", sep = ""))
-#testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Good.csv")
+testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Good.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Bad.csv")
-testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissInfo_BadLL.csv")
+#testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissInfo_BadLL.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/newHitMissRSSTest.csv")
 #testData <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
 
 
-options(warn=-1)
+#options(warn=-1)
 #set the number of resamples here(usually 30 is sufficient)
 #used for modified wald
 
@@ -46,7 +47,7 @@ regression="Logistic Regression"
 normSamp=500
 resamplesMax=30
 #conf int type
-ciType="StandardWald"
+ciType="ModifiedWald"
 start.time <- Sys.time()
 set_m=6
 
