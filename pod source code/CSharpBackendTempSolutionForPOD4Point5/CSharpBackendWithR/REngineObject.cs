@@ -186,8 +186,8 @@ namespace CSharpBackendWithR
         //used to clear the global environment for the rEngine objects and recalls all scripts
         public void clearGlobalIInREngineObject()
         {
-            this.rEngine.ClearGlobalEnvironment();
-            InitializeRScripts();
+            //this.rEngine.ClearGlobalEnvironment();
+            //InitializeRScripts();
             //InitializePythonScripts();
         }    
     }

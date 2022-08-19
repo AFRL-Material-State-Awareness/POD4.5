@@ -28,7 +28,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private SamplingTypeBox _sampleTypeBox;
         private Label _sampleTypeLabel;
         //private TransformBox _yTransformBox;
-
+        //use to indicate if a known error was found
+        private bool _errorFound;
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
         {
             InitializeComponent();
@@ -281,12 +282,35 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void SamplingTypeBox_ValueChanged(object sender, EventArgs e)
         {
             Analysis.InSamplingType = _sampleTypeBox.SelectedSamplingType;
-            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-            mainChart.SetAMaxBoundary(x, false);
-            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-            mainChart.SetAMinBoundary(x, false);
+            //dialog will be yes by default in case the user uses either standard wald or modified wald with ranked set sampling
+            DialogResult dialogResult= DialogResult.Yes;
+            if (_confIntBox.SelectedConfInt.ToString()=="LR" && _sampleTypeBox.SelectedSamplingType.ToString()== "RankedSetSampling")
+            {
+                dialogResult=MessageBox.Show("WARNING: You've selected Likelihood Ratio (LR) confidence interval " +
+                    "with Ranked Set Sampling. This process" +
+                    "could take anywhere from 5-10min to complete." + '\n' +
+                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo); 
+            }
+            else if(_confIntBox.SelectedConfInt.ToString() == "LR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            {
+                dialogResult = MessageBox.Show("WARNING: You've selected Modified Likelihood Ratio (MLR) confidence interval " +
+                    "with Ranked Set Sampling. This process" +
+                    "could take anywhere from 10-20min to complete." + '\n' +
+                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo);
+            }
+            if(dialogResult == DialogResult.Yes)
+            {
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
 
-            ForceUpdateAfterTransformChange();
+                ForceUpdateAfterTransformChange();
+            }
+            else
+            {
+                _sampleTypeBox.SelectedSamplingType = SamplingTypeEnum.SimpleRandomSampling;
+            }
         }
 
         /// <summary>
@@ -400,8 +424,18 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             catch
             {
-                //MessageBox.Show("Analysis Error caused invalid output values that are out of range.");
-                Source.Python.AddErrorText("Output values out of range.");
+                //ADD click to continue? in order to ensure the user doesn't think the program is broken
+                _errorFound = false;
+                if (Analysis.AnalysisDataType.ToString() == "HitMiss")
+                {
+                    SearhForHitMissErrors(a9095Original);
+                }
+                if (!_errorFound)
+                {
+                    //Source.Python.AddErrorText("Output values out of range.");
+                    Source.Python.AddErrorText("DEFAULT UKNOWN ERROR: Contact support or a Statistician if Necessary");
+                }
+                
 
                 MainChart.ClearEverythingButPoints();
                 linearityChart.ClearEverythingButPoints();
@@ -432,8 +466,39 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
             linearityChart.ChartToolTip = StepToolTip;
         }
-        
-            
+        public void SearhForHitMissErrors(double a9095Original) {
+            //get the info for the current stats of the hit miss object
+            CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
+            if (Analysis.FailToConverge)
+            {
+                _errorFound = true;
+                Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge. " + '\n' +
+                    "Try the Firth Logistic Regression Model Type Instead");
+            }
+            else if (currHitMissSettings.RegressionType == "Firth Logistic Regression" && Double.IsNaN(a9095Original))
+            {
+                _errorFound = true;
+                if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
+                {
+                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! You could try" + '\n' +
+                        "to combine Ranked Set Sampling with the current Confidence Interval" + '\n' +
+                        "(WARNING: can take anywhere from 5-20min)");
+                }
+                else if (currHitMissSettings.SrsOrRSS == 1 && (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR"))
+                {
+                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful" + '\n' +
+                        "Try switching between LR and MLR with the current settings." + '\n' +
+                        "Otherwise, it is likely impossible for PODv4.5 to produce better results " +'\n' +
+                        "Data's sample size may be too small and/or the data does not have enough overlap");
+                }
+                else
+                {
+                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! Try Likelihood Ratio (LR) or" + '\n' +
+                        "Modified Likelihood Ratio (MLR) Confidence Intervals for best results.");
+                }
+
+            }
+        }
 
         public int LinearityIndex
         {

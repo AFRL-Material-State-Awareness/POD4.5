@@ -1625,7 +1625,7 @@ namespace POD.Data
                         _originalData.Rows[i][0] = Math.Exp(Convert.ToDouble(_originalData.Rows[i][0]));
                     }
                 }
-                //printDT(_originalData);
+                printDT(_originalData);
             }
             
             catch (Exception exp)
@@ -1684,7 +1684,7 @@ namespace POD.Data
                     }
                 }
                 //Debug.WriteLine("POD curve table");
-                //printDT(_podCurveTable);
+                printDT(_podCurveTable);
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1727,7 +1727,7 @@ namespace POD.Data
                 _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 //Debug.WriteLine("Residual Table");
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                //printDT(_residualUncensoredTable);
+                printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1783,7 +1783,7 @@ namespace POD.Data
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
-                //printDT(_fitResidualsTable);
+                printDT(_fitResidualsTable);
             }
             catch(Exception exp)
             {
@@ -3936,7 +3936,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 1000;
+            int limit = 10;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

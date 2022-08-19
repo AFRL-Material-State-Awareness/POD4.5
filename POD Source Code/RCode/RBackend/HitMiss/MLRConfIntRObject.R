@@ -32,6 +32,6 @@ ModifiedLikelihoodRatioConfInt <- setRefClass("ModifiedLikelihoodRatioConfInt", 
                                             #if(!is.numeric(a9095_profile.mlr)){a9095_profile.mlr=NA}
                                           }else{a9095_profile.mlr=NA}
                                           #disp("profile.mlr")
-                                          setCIDataFrame( profile.mlr.int)
+                                          setCIDataFrame(profile.mlr.int)
                                         }
                                       ))

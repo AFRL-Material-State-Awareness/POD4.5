@@ -26,8 +26,9 @@ namespace CSharpBackendWithR
         //tables
         private DataTable logitFitTable;
         private DataTable residualTable;
-        //flag used for separated Data
+        //flag used for separated Data and whether or not the alogrithm converged
         private bool isSeparated;
+        private bool failureToConverge;
         public HMAnalysisObject(string nameInput="")
         {
             //original HMDataframe
@@ -75,8 +76,8 @@ namespace CSharpBackendWithR
             Npts = 0;
 
             //variable used for determining if the logit is solvable
-            isSeparated = false;
-
+            this.isSeparated = false;
+            this.failureToConverge = false;
             //key a values
             A25 = 0.0;
             A50 = 0.0;
@@ -169,6 +170,11 @@ namespace CSharpBackendWithR
         {
             set { this.isSeparated = value; }
             get { return this.isSeparated; }
+        }
+        public bool Failed_To_Converge
+        {
+            set { this.failureToConverge = value; }
+            get { return this.failureToConverge; }
         }
         public new int Count { set; get; }
         public new double Crckmax { set; get; }

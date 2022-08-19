@@ -52,6 +52,8 @@ namespace POD.Analyze
         private bool _isFrozen = false;
         //used to notify the user if separated data exists
         private bool _isSeparatedFlag;
+        //used to notify the user the algorithm failed to converge
+        private bool _failedToConverge;
         public bool AnalysisRunning
         {
             get
@@ -1236,6 +1238,8 @@ namespace POD.Analyze
 
                 //separated flag
                 _isSeparatedFlag = _hmAnalysisObject.Is_Separated;
+                //failure to converge flag
+                _failedToConverge = _hmAnalysisObject.Failed_To_Converge;
             }
 
             Data.UpdateOutput();
@@ -2444,6 +2448,15 @@ namespace POD.Analyze
             myWriter.SetCellValue(1, 2, Name);
         }
 
+        public bool SeparatedFlag
+        {
+            get { return _isSeparatedFlag; }
+        }
+        public bool FailToConverge
+        {
+            get { return _failedToConverge; }
+        }
+
         public double OutPFCovarianceV11 { get; set; }
 
         public double OutPFCovarianceV12 { get; set; }
@@ -2467,10 +2480,7 @@ namespace POD.Analyze
         public double OutPODMu { get; set; }
 
         public double OutPODSigma { get; set; }
-        public bool SeparatedFlag
-        {
-            get { return _isSeparatedFlag; }
-        }
+        
         private TransformTypeEnum _xAxisTransformIn;
 
         public TransformTypeEnum InFlawTransform

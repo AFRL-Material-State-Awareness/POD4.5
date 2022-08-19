@@ -14,7 +14,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         rankedSetSampleObject="RSSComponents",
                                         covarianceMatrix="matrix",
                                         goodnessOfFit="numeric",
-                                        separation="numeric"),
+                                        separation="numeric",
+                                        convergeFailLogit="numeric"),
                           methods = list(
                             getHitMissDF = function(){
                               #modify table for clean excel output later
@@ -102,6 +103,12 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             },
                             getSeparation=function(){
                               return(separation)
+                            },
+                            setConvergedFail=function(psConverged){
+                              convergeFailLogit<<-psConverged
+                            },
+                            getConvergedFail=function(){
+                              return(convergeFailLogit)
                             },
                             #this is the entry point from c# if the user wants to do ranked set sampling
                             initializeRSS=function(){
@@ -257,12 +264,16 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               newLogitModel$calcLogitResults()
                               #get the separated flag in case data is separated
                               setSeparation(newLogitModel$getSeparatedFlag())
+                              setConvergedFail(newLogitModel$getConvergedFailFlag())
                               return(newLogitModel$getLogitResults())
                             },
                             executeFirthHM=function(){
                               newFirth=HMFirthApproximation$new()
                               newFirth$initialize(inputDataFrameFirthInput = hitMissDF)
                               newFirth$calcFirthResults()
+                              #might need change this later if there are cases when firth logistic regression doesn't converge
+                              setSeparation(0)
+                              setConvergedFail(0)
                               return(newFirth$getFirthResults())
                             },
                             #used for Debugging ONLY

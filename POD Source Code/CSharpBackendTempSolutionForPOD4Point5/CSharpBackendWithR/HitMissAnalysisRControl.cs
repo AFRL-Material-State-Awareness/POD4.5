@@ -166,6 +166,18 @@ namespace CSharpBackendWithR
                 return false;
             }
         }
+        public bool GetConvergenceFlag()
+        {
+            int separated = Convert.ToInt32(myREngine.Evaluate("newAnalysis$getConvergedFail()").AsNumeric()[0]);
+            if (separated == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public DataTable GetOrigHitMissDF()
         {
             //myREngine.Evaluate("hitMissDF$index=NULL");

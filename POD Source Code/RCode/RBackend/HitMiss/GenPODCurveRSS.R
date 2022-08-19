@@ -205,6 +205,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                               },
                               genPODMLR=function(){
                                 print("starting MLR RSS")
+                                options(warn=-1)
                                 ##TODO: apply parallel processing to speed things up
                                 #generate the Lr conf interval with RSS(WARNING: VERY SLOW)
                                 #Initialize the K matrix
