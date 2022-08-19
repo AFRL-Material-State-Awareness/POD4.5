@@ -50,7 +50,8 @@ namespace POD.Analyze
         /// Created this state to allow UI to be sync'd with the analysis values after being loaded from file.
         /// </summary>
         private bool _isFrozen = false;
-
+        //used to notify the user if separated data exists
+        private bool _isSeparatedFlag;
         public bool AnalysisRunning
         {
             get
@@ -953,19 +954,11 @@ namespace POD.Analyze
                 //entry point for pod caluclation in PODv4 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    //watch.Start();
-                    //_podDoc.anasis();
-                    //watch.Stop();
-                    //Debug.WriteLine("Python:"+watch.ElapsedMilliseconds);
-                    //MessageBox.Show("Python: " + watch.ElapsedMilliseconds);
-                    //watch.Restart();
                     watch.Start();
                     AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
                     newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
                     watch.Stop();
-                    //Debug.WriteLine("R"+watch.ElapsedMilliseconds);
-                    //MessageBox.Show("R: " + watch.ElapsedMilliseconds);
 
                 }
                 //entry point for pod calculate in PODv4 ahat
@@ -974,8 +967,6 @@ namespace POD.Analyze
                     AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
                     newAnalysisControl.ExecuteAnalysisAHat();
                     _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;
-                    //_podDoc.OnFullAnalysis();
-
                 }
                     
             }
@@ -1087,7 +1078,7 @@ namespace POD.Analyze
         {
             //if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
             //    _podDoc.DeregisterUpdateProgressEvent(this);
-
+            
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
             try
@@ -1242,6 +1233,9 @@ namespace POD.Analyze
                 OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
                 //OutTestNormalityRating = _python.GetPValueDecision(OutTestLackOfFit);
                 OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit);
+
+                //separated flag
+                _isSeparatedFlag = _hmAnalysisObject.Is_Separated;
             }
 
             Data.UpdateOutput();
@@ -2473,7 +2467,10 @@ namespace POD.Analyze
         public double OutPODMu { get; set; }
 
         public double OutPODSigma { get; set; }
-
+        public bool SeparatedFlag
+        {
+            get { return _isSeparatedFlag; }
+        }
         private TransformTypeEnum _xAxisTransformIn;
 
         public TransformTypeEnum InFlawTransform
@@ -2773,11 +2770,26 @@ namespace POD.Analyze
             var inputTime = watch.ElapsedMilliseconds;
 
             watch.Restart();
-
+            //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
+            if (_hmAnalysisObject != null)
+            {
+                if (_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null)
+                {
+                    _hmAnalysisObject = _data.DataHitMissObject;
+                }
+            }
+            //ditto for ahat versus a, signal response
+            if (_aHatAnalysisObject != null)
+            {
+                if (_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null)
+                {
+                    _aHatAnalysisObject = _data.DataAHatObject;
+                }
+            }
             try
             {
+                
                 //for the case of hit/miss data and ahat, this is where the program first enters the python program
-               
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
@@ -2814,6 +2826,7 @@ namespace POD.Analyze
             //RaiseAnalysisDone();
             //TRB removing this also since there is no good reason to display errors on chart for fits
             //_python.NotifyFinishAnalysis();  
+
 
             stillRunningAnalysis = false;
 

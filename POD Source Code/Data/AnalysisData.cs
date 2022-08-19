@@ -1625,7 +1625,7 @@ namespace POD.Data
                         _originalData.Rows[i][0] = Math.Exp(Convert.ToDouble(_originalData.Rows[i][0]));
                     }
                 }
-                printDT(_originalData);
+                //printDT(_originalData);
             }
             
             catch (Exception exp)
@@ -1661,7 +1661,11 @@ namespace POD.Data
                 //    _podCurveTable.Columns["t_fit"].ColumnName = "pod";
 
                 //}
-                _podCurveTable.Columns.Remove("transformFlaw");
+                if (_podCurveTable.Columns.Contains("transformFlaw"))
+                {
+                    _podCurveTable.Columns.Remove("transformFlaw");
+                }
+                /*
                 if (_hmAnalysisObject.ModelType == 1)
                 {
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
@@ -1669,7 +1673,8 @@ namespace POD.Data
                         //_podCurveTable.Rows[i][1] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                 }
-                else if (_hmAnalysisObject.ModelType == 2)
+                */
+                if (_hmAnalysisObject.ModelType == 2)
                 {
                     //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i=0; i < _podCurveTable.Rows.Count; i++)
@@ -1679,7 +1684,7 @@ namespace POD.Data
                     }
                 }
                 //Debug.WriteLine("POD curve table");
-                printDT(_podCurveTable);
+                //printDT(_podCurveTable);
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1722,7 +1727,7 @@ namespace POD.Data
                 _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 //Debug.WriteLine("Residual Table");
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                printDT(_residualUncensoredTable);
+                //printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1736,7 +1741,7 @@ namespace POD.Data
                 //TODO: will end up removing this table later
                 //_iterationsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFSolveIterationTable());
                 _iterationsTable = _hmAnalysisObject.IterationTable;
-                printDT(_iterationsTable);
+                //printDT(_iterationsTable);
             }
             catch (Exception exp)
             {
@@ -2687,6 +2692,15 @@ namespace POD.Data
                 //return _podDoc.GetFlawCountUncensored();
                 return -1;
             }
+        }
+        //*********************************
+        public HMAnalysisObject DataHitMissObject
+        {
+            get { return _hmAnalysisObject; }
+        }
+        public AHatAnalysisObject DataAHatObject
+        {
+            get { return _aHatAnalysisObject; }
         }
         /*
         public void UpdateActivatedResponses()
@@ -3922,7 +3936,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 10;
+            int limit = 1000;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

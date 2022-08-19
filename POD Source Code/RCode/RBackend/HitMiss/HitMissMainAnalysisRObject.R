@@ -13,7 +13,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         a_values="list",
                                         rankedSetSampleObject="RSSComponents",
                                         covarianceMatrix="matrix",
-                                        goodnessOfFit="numeric"),
+                                        goodnessOfFit="numeric",
+                                        separation="numeric"),
                           methods = list(
                             getHitMissDF = function(){
                               #modify table for clean excel output later
@@ -95,6 +96,12 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             },
                             getGoodnessOfFit=function(){
                               return(goodnessOfFit)
+                            },
+                            setSeparation=function(psSeparated){
+                              separation<<-psSeparated
+                            },
+                            getSeparation=function(){
+                              return(separation)
                             },
                             #this is the entry point from c# if the user wants to do ranked set sampling
                             initializeRSS=function(){
@@ -246,8 +253,10 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             #the LReg.mod list
                             executeLogitHM=function(){
                               #execute logit regression with original dataset
-                              newLogitModel=HMLogitApproximation$new(inputDataFrameLogistic=hitMissDF)
+                              newLogitModel=HMLogitApproximation$new(inputDataFrameLogistic=hitMissDF, separated=0)
                               newLogitModel$calcLogitResults()
+                              #get the separated flag in case data is separated
+                              setSeparation(newLogitModel$getSeparatedFlag())
                               return(newLogitModel$getLogitResults())
                             },
                             executeFirthHM=function(){

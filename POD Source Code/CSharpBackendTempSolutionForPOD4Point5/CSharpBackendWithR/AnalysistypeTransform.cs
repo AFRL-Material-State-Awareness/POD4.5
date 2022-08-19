@@ -77,6 +77,8 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.CovarianceMatrix = newHitMissControl.GetCovarianceMatrixValues();
             //get the goodness of fit
             this.newPFAnalysisObject.GoodnessOfFit = newHitMissControl.GetGoodnessOfFit();
+            //set the separated flag to warn user if necessary
+            this.newPFAnalysisObject.Is_Separated = newHitMissControl.GetSeparationFlag();
             //clear all contents in R and restart the global environment
             this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");

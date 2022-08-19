@@ -189,7 +189,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                 xAxisIndex++;
             }
-
+            if (Analysis.SeparatedFlag)
+            {
+                MessageBox.Show("Warning: Hit Miss data has total separation!"+'\n'+ "Please consider using the following metrics: Firth Logistic Regression," +
+                    "Likelihood Ratio(LR), Modified Likelihood Ratio (MLR), Ranked Set Sampling, or a combination of these.");
+            }
             this.Invoke((MethodInvoker)delegate()
             {
                 Parent.Cursor = Cursors.Default;

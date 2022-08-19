@@ -26,6 +26,8 @@ namespace CSharpBackendWithR
         //tables
         private DataTable logitFitTable;
         private DataTable residualTable;
+        //flag used for separated Data
+        private bool isSeparated;
         public HMAnalysisObject(string nameInput="")
         {
             //original HMDataframe
@@ -73,7 +75,7 @@ namespace CSharpBackendWithR
             Npts = 0;
 
             //variable used for determining if the logit is solvable
-            bool Is_solvableHitMiss = false;
+            isSeparated = false;
 
             //key a values
             A25 = 0.0;
@@ -163,6 +165,11 @@ namespace CSharpBackendWithR
         public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
         public new int Nsets { set; get; }
+        public bool Is_Separated
+        {
+            set { this.isSeparated = value; }
+            get { return this.isSeparated; }
+        }
         public new int Count { set; get; }
         public new double Crckmax { set; get; }
         public new double Crckmin { set; get; }
@@ -170,7 +177,6 @@ namespace CSharpBackendWithR
         public new double Xmin { set; get; }
         public new double Xmax { set; get; }
         public double Npts { set; get; }
-        public bool Is_solvableHitMiss { set; get; }
         public new double A25 { set; get; }
         public new double A50 { set; get; }
         public new double A90 { set; get; }

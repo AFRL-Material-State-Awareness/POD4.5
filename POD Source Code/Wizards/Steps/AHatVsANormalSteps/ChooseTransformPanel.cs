@@ -214,6 +214,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 xAxisIndex++;
             }
 
+            var vaariable=1;
+
             this.Invoke((MethodInvoker)delegate()
             {
                 Parent.Cursor = Cursors.Default;

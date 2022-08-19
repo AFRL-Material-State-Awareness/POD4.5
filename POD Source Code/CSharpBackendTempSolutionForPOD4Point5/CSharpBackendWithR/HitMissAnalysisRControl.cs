@@ -154,6 +154,18 @@ namespace CSharpBackendWithR
             double goodFit=Convert.ToDouble(myREngine.Evaluate("newAnalysis$getGoodnessOfFit()").AsNumeric()[0]);
             return goodFit;
         }
+        public bool GetSeparationFlag()
+        {
+            int separated= Convert.ToInt32(myREngine.Evaluate("newAnalysis$getSeparation()").AsNumeric()[0]);
+            if (separated == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public DataTable GetOrigHitMissDF()
         {
             //myREngine.Evaluate("hitMissDF$index=NULL");

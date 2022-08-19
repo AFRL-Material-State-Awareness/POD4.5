@@ -47,4 +47,5 @@ newSRAnalysis$plotCI(results)
 #  thisError=data_obs$y[i]-mean(data_obs$y)
 #  residualError=c(residualError, thisError^2)
 #}
-
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=1)
+slope<-newSRAnalysis$getModelSlope()

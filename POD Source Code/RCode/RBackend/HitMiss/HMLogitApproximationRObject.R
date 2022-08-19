@@ -1,7 +1,7 @@
 #this class is used for logit approximation when dealing with hitMiss Data
 HMLogitApproximation <- setRefClass("HMLogitApproximation", fields = list(inputDataFrameLogistic="data.frame",
-                                                                          logitResults="glm", 
-                                                                          separated="numeric"), methods = list(
+                                                                          separated="numeric",
+                                                                          logitResults="glm"), methods = list(
                                                                         #establish getters and setters for logit results and separation flag
                                                                         setLogitResults=function(psLogitResults){
                                                                           logitResults <<- psLogitResults
