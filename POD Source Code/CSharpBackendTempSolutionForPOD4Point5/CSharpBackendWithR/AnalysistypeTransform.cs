@@ -158,6 +158,11 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.Slope = linearMetrics[1];
             //get r-squared value
             this.newAHatAnalysisObject.RSqaured = newAHatControl.GetRSquaredValue();
+            //get lambda from box-cox if applicable
+            if (this.newAHatAnalysisObject.ModelType >= 5)
+            {
+                this.newAHatAnalysisObject.Lambda = newAHatControl.GetBoxCoxLamda();
+            }
             //get standard errors for linear model
             Dictionary<string, double> standardErrors = newAHatControl.GetLinearModelStdErrors();
             this.newAHatAnalysisObject.SlopeStdErr = standardErrors["slopeStdError"];

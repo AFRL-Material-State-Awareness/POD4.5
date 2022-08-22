@@ -41,13 +41,20 @@ namespace CSharpBackendWithR
         private List<double> flawsCensored;
         private Dictionary<string, List<double>> responsesCensoredLeft;
         private Dictionary<string, List<double>> responsesCensoredRight;
+        //box cox
+        private double lambda;
         public AHatAnalysisObject(string nameInput = "")
         {
             //name of the analysis
             Name = nameInput;
             Flaw_name = ""; //holds the name of the flaw in the datatable
             Info_row = 0;
-            this.modelType = 1; //1=no transform, 2=x-axis only transform, 3=y-axis only transform, 4=both axis tranform
+            //1=no transform,
+            //2=x-axis only transform,
+            //3=y-axis only transform,
+            //4=both axis tranform, 
+            //5= Box-cox tranform with linear x;
+            this.modelType = 1; 
             //stores the max and min signal reponses
             Signalmin = -1.0;
             Signalmax = -1.0;
@@ -101,6 +108,8 @@ namespace CSharpBackendWithR
 
             A_transform = 1; //1=no transform, 2=log transform
             Ahat_transform = 1; //1=no transform, 2=log transform, 3= box-cox transform
+            //lambda is used for box cox transformation only(normalizes the y-values)
+            this.lambda = 0.0;
             //ahat tests
             shapiroTestStat = 0.0;//Shapiro-Wilk normality test
             shapiroPValue = 0.0;
@@ -175,7 +184,11 @@ namespace CSharpBackendWithR
         public new double A9095 { set; get; }
         public new int A_transform { set; get; }
         public new int Ahat_transform { set; get; }
-
+        public double Lambda
+        {
+            set { this.lambda = value; }
+            get { return this.lambda; }
+        }
         public double ShapiroTestStat {
             set { this.shapiroTestStat = value; }
             get { return this.shapiroTestStat; }

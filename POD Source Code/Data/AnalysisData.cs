@@ -2003,7 +2003,7 @@ namespace POD.Data
                         _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
                     }
                 }
-                if (_aHatAnalysisObject.ModelType == 3)
+                else if (_aHatAnalysisObject.ModelType == 3)
                 {
                     //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
@@ -2011,7 +2011,7 @@ namespace POD.Data
                         _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
                     }
                 }
-                if (_aHatAnalysisObject.ModelType == 4)
+                else if (_aHatAnalysisObject.ModelType == 4)
                 {
                     //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
@@ -2022,6 +2022,10 @@ namespace POD.Data
                         _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
 
                     }
+                }
+                else if (_aHatAnalysisObject.ModelType == 5)
+                {
+
                 }
                 //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";

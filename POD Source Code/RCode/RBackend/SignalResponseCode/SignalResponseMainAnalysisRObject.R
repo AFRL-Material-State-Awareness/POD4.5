@@ -1,6 +1,7 @@
 AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame", 
                                                                         y_dec="numeric", 
                                                                         modelType="numeric",
+                                                                        lambda="numeric",
                                                                         varCovarMatrix="matrix",
                                                                         keyAValues="list",
                                                                         linearModel="data.frame",
@@ -67,6 +68,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     },
                                     getRSquared=function(){
                                       return(rSqaured)
+                                    },
+                                    getLambda=function(){
+                                      return(lambda)
                                     },
                                     setRegressionStdErrs=function(psRegStdErrs){
                                       regressionStdErrs<<-psRegStdErrs
@@ -185,7 +189,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     genAhatVersusACensored=function(){
                                       # It expects a censored object; this data is not censored but we can still use it.
                                       # Note, we are using the Box Cox transformed y and f_a (log) transformed x
-                                      censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event)#, type = "interval2")
+                                      censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event, event=signalRespDF$event, type="interval")#, type = "interval2")
                                       #censored.a.hat <- Surv(time = signalRespDF$y, time2 = signalRespDF$y, type = "interval2")
                                       a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
                                       # Here's the linear model.
@@ -200,6 +204,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       a.hat.decision = y_dec 
                                       if(modelType==3 || modelType==4){
                                         a.hat.decision=log(a.hat.decision)
+                                      }
+                                      else if(modelType==5){
+                                        a.hat.decision=(a.hat.decision^lambda-1)/lambda
                                       }
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])

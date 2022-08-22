@@ -69,7 +69,6 @@ namespace POD
         [NonSerialized]
         IPy4C _py;
         #endregion
-        ///Ask Tom about nonserialized
         ///create a private variable for the Rengine
         [NonSerialized]
         REngineObject _r;

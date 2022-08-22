@@ -49,7 +49,7 @@ namespace CSharpBackendWithR
                     {
                         if (SignalResponse[i] == j)
                         {
-                            this.myREngine.Evaluate("event<- c(event, 0)");
+                            this.myREngine.Evaluate("event<- c(event, 2)");
                             updatedEvent = true;
                             break;
                         }
@@ -150,6 +150,31 @@ namespace CSharpBackendWithR
 
                     }
                     break;
+                case 5:
+                    //create index column for dataframe
+                    for (int i = 1; i <= cracks.Count; i++)
+                    {
+                        indices.Add(i);
+                    }
+                    //initialize the matrices used to create the input dataframe
+                    this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
+                    this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
+                    this.myREngine.Evaluate("y<-c(" + SignalResponse[0].ToString() + ")");
+                    //acumulate r matrices in order to create the dataframe
+                    for (int i = 1; i < cracks.Count; i++)
+                    {
+                        this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
+                        this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
+                        this.myREngine.Evaluate("y<-c(y, " + SignalResponse[i].ToString() + ")");
+
+                    }
+                    //box-cox tranform has been selected. Find the optimal value for lambda!
+                    this.myREngine.Evaluate("bc<-boxcox(y~x)");
+                    //get the value of lambda
+                    this.myREngine.Evaluate("lambda<-bc[which.max(bc$y)]");
+                    //tranform y-axis with lambda
+                    this.myREngine.Evaluate("y<-(y^lambda-1)/lambda");
+                    break;
                 default:
                     throw new Exception("model type not found exception for AHAT!");
             }
@@ -206,6 +231,11 @@ namespace CSharpBackendWithR
         {
             double rSqaured= this.myREngine.Evaluate("newSRAnalysis$getRSquared()").AsNumeric()[0];
             return rSqaured;
+        }
+        public double GetBoxCoxLamda()
+        {
+            double lambda = Convert.ToDouble(myREngine.Evaluate("lambda").AsNumeric()[0]);
+            return lambda;
         }
         public Dictionary<string, double> GetLinearModelStdErrors()
         {
@@ -269,6 +299,7 @@ namespace CSharpBackendWithR
             AllLinearTestResults.Add(durbinPValue);
             return AllLinearTestResults;
         }
+        
         public void ShowResults()
         {
             myREngine.Evaluate("newSRAnalysis$plotSimdata(newSRAnalysis$getLinearModel())");

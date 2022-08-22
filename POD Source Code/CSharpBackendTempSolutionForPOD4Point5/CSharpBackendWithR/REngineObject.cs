@@ -130,6 +130,7 @@ namespace CSharpBackendWithR
             }
             catch(RDotNet.EvaluationException tryADifferentPath)
             {
+                this.forwardSlashAppPath = this.forwardSlashAppPath + "/..";
                 //this may get used instead of the platform target is purely x86
                 //import necessary R classes for analysis
                 this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
@@ -222,8 +223,8 @@ namespace CSharpBackendWithR
         //used to clear the global environment for the rEngine objects and recalls all scripts
         public void clearGlobalIInREngineObject()
         {
-            this.rEngine.ClearGlobalEnvironment();
-            InitializeRScripts();
+            //this.rEngine.ClearGlobalEnvironment();
+            //InitializeRScripts();
             //InitializePythonScripts();
         }    
     }
