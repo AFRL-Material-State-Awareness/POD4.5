@@ -128,7 +128,7 @@ namespace CSharpBackendWithR
                 //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
                 //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
             }
-            catch
+            catch(RDotNet.EvaluationException tryADifferentPath)
             {
                 //this may get used instead of the platform target is purely x86
                 //import necessary R classes for analysis
@@ -222,8 +222,8 @@ namespace CSharpBackendWithR
         //used to clear the global environment for the rEngine objects and recalls all scripts
         public void clearGlobalIInREngineObject()
         {
-            //this.rEngine.ClearGlobalEnvironment();
-            //InitializeRScripts();
+            this.rEngine.ClearGlobalEnvironment();
+            InitializeRScripts();
             //InitializePythonScripts();
         }    
     }
