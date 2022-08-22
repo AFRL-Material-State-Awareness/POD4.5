@@ -49,7 +49,7 @@ namespace CSharpBackendWithR
                     {
                         if (SignalResponse[i] == j)
                         {
-                            this.myREngine.Evaluate("event<- c(event, 2)");
+                            this.myREngine.Evaluate("event<- c(event, 0)");
                             updatedEvent = true;
                             break;
                         }

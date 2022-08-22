@@ -47,7 +47,7 @@ regression="Firth Logistic Regression"
 normSamp=500
 resamplesMax=30
 #conf int type
-ciType="LR"
+ciType="MLR"
 start.time <- Sys.time()
 set_m=6
 

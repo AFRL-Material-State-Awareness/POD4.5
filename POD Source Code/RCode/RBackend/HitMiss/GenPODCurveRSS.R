@@ -159,10 +159,15 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 finalConfInt=list()
                                 print("no parallel")
                                 for(i in 1:length(logitResultsPOD)){
+                                  print("step 1")
                                   calcLinearCombo=unclass(genLinearCombosRSS(logitResultsPOD[[i]], K))
+                                  print("step 2")
                                   newLRConfInt=LikelihoodRatioConfInt$new(LogisticRegressionResult=logitResultsPOD[[i]])
+                                  print("step 3")
                                   newLRConfInt$setLinCombo(unclass(calcLinearCombo))
+                                  print("step 4")
                                   newLRConfInt$executeLR()
+                                  print("step 5")
                                   finalConfInt=append(finalConfInt, data.frame(newLRConfInt$getCIDataFrame()))
                                 }
                                 #finalConfIntGlobal<<-finalConfInt
@@ -198,8 +203,10 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 
                               },
                               genLinearCombosRSS=function(LogisticRegressionResult, KMatrix){
+                                print("combo time!")
                                 ptm <- proc.time()
                                 linearCombo<-mcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
+                                print("combo done!")
                                 print(proc.time() - ptm)
                                 return(linearCombo)
                               },

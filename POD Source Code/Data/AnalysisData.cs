@@ -1625,6 +1625,14 @@ namespace POD.Data
                         _originalData.Rows[i][0] = Math.Exp(Convert.ToDouble(_originalData.Rows[i][0]));
                     }
                 }
+                else if (_hmAnalysisObject.ModelType == 3)
+                {
+                    for (int i = 0; i < _originalData.Rows.Count; i++)
+                    {
+                        _originalData.Rows[i][1] = Convert.ToDouble(_originalData.Rows[i][0]);
+                        _originalData.Rows[i][0] = 1.0/Convert.ToDouble(_originalData.Rows[i][0]);
+                    }
+                }
                 printDT(_originalData);
             }
             
@@ -1683,6 +1691,15 @@ namespace POD.Data
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                 }
+                if (_hmAnalysisObject.ModelType == 3)
+                {
+                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
+                    for (int i = 0; i < _podCurveTable.Rows.Count; i++)
+                    {
+                        //_podCurveTable.Rows[i][1] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
+                        _podCurveTable.Rows[i][0] = 1.0/Convert.ToDouble(_podCurveTable.Rows[i][0]);
+                    }
+                }
                 //Debug.WriteLine("POD curve table");
                 printDT(_podCurveTable);
                 //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
@@ -1721,6 +1738,14 @@ namespace POD.Data
                     {
                         _residualUncensoredTable.Rows[i][1] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
                         _residualUncensoredTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
+                    }
+                }
+                else if (_hmAnalysisObject.ModelType == 3)
+                {
+                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
+                    {
+                        _residualUncensoredTable.Rows[i][1] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
+                        _residualUncensoredTable.Rows[i][0] = 1.0/Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
                     }
                 }
                 //_residualUncensoredTable.DefaultView.Sort = "t_flaw" + " " + "ASC";

@@ -120,6 +120,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       setResidualTable(ResidualDF)
                                       #generate ahat versus acensored
                                       ahatvACensored<<-genAhatVersusACensored()
+                                      #attach necessary attributes of the lm object to the survival censored object
+                                      #ahatvACensored$rank=linearModel_lm$rank
+                                      #ahatvACensored$qr=linearModel_lm$qr
                                       #update paramters if any points are censored
                                       if(0 %in% signalRespDF$event ||  2 %in% signalRespDF$event){
                                         setModelIntercept(ahatvACensored$coefficients[[1]])
@@ -141,6 +144,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         ResidualDF=cbind(linearModDF, residuals)
                                         names(ResidualDF)[names(ResidualDF) == 'residuals'] <- 't_diff'
                                         setResidualTable(ResidualDF)
+                                        #add residuals to the censored object
                                       }
                                       #get the value of R-squared(TODO: check if this changes with censored data)
                                       setRSquared(summary(linearModel_lm)$r.squared)

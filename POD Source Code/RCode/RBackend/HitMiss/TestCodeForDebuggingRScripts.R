@@ -12,9 +12,11 @@ library(splines)
 library(parallel)
 library(roxygen2)
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
-#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
-hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
+hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
+#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
+#hitMissDF$x<-1/hitMissDF$x
+hitMissDF$y.1=NULL
 #hitMissDF<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")
@@ -32,7 +34,7 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
-CItype0="ModifiedWald"
+CItype0="StandardWald"
 #type="Firth Logistic Regression"
 type="Logistic Regression"
 #for(i in 1:10){

@@ -284,14 +284,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             Analysis.InSamplingType = _sampleTypeBox.SelectedSamplingType;
             //dialog will be yes by default in case the user uses either standard wald or modified wald with ranked set sampling
             DialogResult dialogResult= DialogResult.Yes;
-            if (_confIntBox.SelectedConfInt.ToString()=="LR" && _sampleTypeBox.SelectedSamplingType.ToString()== "RankedSetSampling")
+            if(_confIntBox.SelectedConfInt.ToString()=="StandardWald" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            {
+                MessageBox.Show("WARNING: Using standard wald with ranked set sampling can produce wacky results." + '\n' +
+                    "It is recommended to use modified wald instead.");
+            }
+            else if (_confIntBox.SelectedConfInt.ToString()=="LR" && _sampleTypeBox.SelectedSamplingType.ToString()== "RankedSetSampling")
             {
                 dialogResult=MessageBox.Show("WARNING: You've selected Likelihood Ratio (LR) confidence interval " +
                     "with Ranked Set Sampling. This process" +
                     "could take anywhere from 5-10min to complete." + '\n' +
                     "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo); 
             }
-            else if(_confIntBox.SelectedConfInt.ToString() == "LR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            else if(_confIntBox.SelectedConfInt.ToString() == "MLR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
             {
                 dialogResult = MessageBox.Show("WARNING: You've selected Modified Likelihood Ratio (MLR) confidence interval " +
                     "with Ranked Set Sampling. This process" +
@@ -469,7 +474,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         public void SearhForHitMissErrors(double a9095Original) {
             //get the info for the current stats of the hit miss object
             CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
-            if (Analysis.FailToConverge)
+            if(!(Analysis.FailToConverge) && Double.IsNaN(a9095Original))
+            {
+                _errorFound = true;
+                Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity. " + '\n' +
+                    "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n'+ "Confidence intervals and/or Ranked Set Sampling");
+            }
+            else if (Analysis.FailToConverge)
             {
                 _errorFound = true;
                 Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge. " + '\n' +

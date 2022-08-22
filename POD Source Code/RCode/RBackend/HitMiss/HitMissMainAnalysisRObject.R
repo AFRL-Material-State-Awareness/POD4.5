@@ -284,7 +284,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             },
                             plotCI=function(df){
                               myPlot=ggplot(data=df, mapping=aes(x=flaw, y=Confidence_Interval))+geom_point()+
-                                ggtitle(paste("Confidence interval:", CIType," model type:", modelType))+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
+                                ggtitle(paste("Confidence interval:", CIType," model type:", modelType))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
                               print(myPlot)
                             }
                           ))

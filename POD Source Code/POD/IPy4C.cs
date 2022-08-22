@@ -170,10 +170,10 @@ namespace POD
                     transform = 2;
                     break;
                 case TransformTypeEnum.Inverse:
-                    transform = 4;
+                    transform = 3;
                     break;
                 case TransformTypeEnum.Exponetial:
-                    transform = 3;
+                    transform = 4;
                     break;
                 default:
                     transform = 1;

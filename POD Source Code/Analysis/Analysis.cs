@@ -237,18 +237,6 @@ namespace POD.Analyze
             }
         }
 
-        /*{ 
-            get
-            {
-                return _podDoc.GetInvtransformedFlawValue(_inFlawMin);
-            }
-            
-            set
-            {
-                _inFlawMin = _podDoc.GetTransformedFlawValue(value);
-            }
-        }*/
-
         /// <summary>
         ///     Name of the flaw size.
         /// </summary>
@@ -1227,6 +1215,17 @@ namespace POD.Analyze
                     OutResponseDecisionPODA50Value = Math.Exp(_hmAnalysisObject.A50);
                     OutResponseDecisionPODLevelValue = Math.Exp(_hmAnalysisObject.A90);
                     OutResponseDecisionPODConfidenceValue = Math.Exp(_hmAnalysisObject.A9095);
+                }
+                else if (InFlawTransform == TransformTypeEnum.Inverse)
+                {
+                    OutResponseDecisionPODSigma = 1/(_hmAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = 1 / (_hmAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = 1 / (_hmAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = 1 / (_hmAnalysisObject.A9095);
+                }
+                else
+                {
+                    throw new Exception("OOPS something went wrong with tranforming the a values back to linear space");
                 }
                 //OutPODMu = _podDoc.GetPODMu();
                 //OutPODSigma = _podDoc.GetPODSigma();
@@ -2565,9 +2564,7 @@ namespace POD.Analyze
             try
             {
                 //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
-                //Debug.WriteLine(value);
                 value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
-                //Debug.WriteLine(value);
             }
             catch(OverflowException overflow)
             {
@@ -2594,7 +2591,6 @@ namespace POD.Analyze
             {
                 try
                 {
-                    //return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                     return Convert.ToDecimal(TransformAValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                 }
                 catch (OverflowException overflow)
@@ -2640,7 +2636,6 @@ namespace POD.Analyze
             {
                 if (_python != null)
                 {
-                    //value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
                     value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
                 }
                 else
@@ -2669,7 +2664,6 @@ namespace POD.Analyze
             {
                 if (_python != null)
                 {
-                    //value = Convert.ToDecimal(_podDoc.GetInvtTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
                     value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
                 }    
                 else
@@ -2853,6 +2847,9 @@ namespace POD.Analyze
                 case 2:
                     transformValue = Math.Log(myValue);
                     break;
+                case 3:
+                    transformValue = 1 / myValue;
+                    break;
                 default:
                     transformValue = myValue;
                     break;
@@ -2870,6 +2867,9 @@ namespace POD.Analyze
                     break;
                 case 2:
                     transformValue = Math.Exp(myValue);
+                    break;
+                case 3:
+                    transformValue = 1 / myValue;
                     break;
                 default:
                     transformValue = myValue;
