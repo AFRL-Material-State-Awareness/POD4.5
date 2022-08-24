@@ -11,10 +11,11 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 using System.ComponentModel;
 using System.Diagnostics;
-
+using CSharpBackendWithR;
 namespace POD.Wizards.Steps.HitMissNormalSteps
 {
     using System.Data;
+    using System.Threading;
     using System.Windows.Forms.DataVisualization.Charting;
 
     using POD.Analyze;
@@ -119,6 +120,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             Stopwatch watch = new Stopwatch();
 
             _analysis.IsBusy = true;
+
+            //_analysis.SetREngine(new CSharpBackendWithR.REngineObject());
                         
             var xAxisIndex = 0;
             var yAxisIndex = 0;
@@ -136,8 +139,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             //var fixList = new List<FixPoint>();
             //_analysis.Data.UpdateIncludedPointsBasedFlawRange(_analysis.InFlawMax, _analysis.InFlawMin, fixList);
-
-
+            REngineObject.REngineRunning = true;
+            
             foreach (var xTrans in AllXTransforms)
             {
                 yAxisIndex = 0;
@@ -181,6 +184,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
                         });
+
                     }
 
 
@@ -194,6 +198,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 MessageBox.Show("Warning: Hit Miss data has total(or almost total) separation!"+'\n'+ "Please consider using the following metrics:"+'\n' +"-Firth Logistic Regression" +'\n' +
                     "-Likelihood Ratio(LR)" + '\n' + "-Modified Likelihood Ratio (MLR)" + '\n' + "-Ranked Set Sampling" + '\n' + "-Or a combination of these.");
             }
+            REngineObject.REngineRunning = false;
             this.Invoke((MethodInvoker)delegate()
             {
                 Parent.Cursor = Cursors.Default;

@@ -585,7 +585,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 normalityTestOut.Value = Convert.ToDecimal(normality);
                 lackOfFitTestOut.Value = Convert.ToDecimal(lackOfFit);
                 equalVarianceTestOut.Value = Convert.ToDecimal(equalVariance);
-
+                
             }
             catch
             {
@@ -651,7 +651,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             StepToolTip.SetToolTip(thresholdChart, thresholdChart.TooltipText);
             thresholdChart.ChartToolTip = StepToolTip;
-
+            CSharpBackendWithR.REngineObject.REngineRunning = false;
             //RefreshValues();
         }        
 

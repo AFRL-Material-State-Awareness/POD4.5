@@ -85,7 +85,7 @@ namespace CSharpBackendWithR
             //used for error if the alogrithm doesn't converge
             this.newPFAnalysisObject.Failed_To_Converge = newHitMissControl.GetConvergenceFlag();
             //clear all contents in R and restart the global environment
-            this.analysisEngine.clearGlobalIInREngineObject();
+            //this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
             //Console.WriteLine(newPFAnalysisObject);
             //finish analysis
@@ -122,7 +122,7 @@ namespace CSharpBackendWithR
             //get the goodness of fit
             this.newPFAnalysisObject.GoodnessOfFit = newHitMissControl.GetGoodnessOfFit();
             //clear all contents in R and restart the global environment
-            this.analysisEngine.clearGlobalIInREngineObject();
+            //this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
             //Console.WriteLine(newPFAnalysisObject);
             return this.newPFAnalysisObject;
@@ -187,7 +187,7 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.DurbinWatsonDW = linTestResults[6];
             this.newAHatAnalysisObject.DurbinWatsonPValue = linTestResults[7];
             //clear all contents in R and restart the global environment
-            analysisEngine.clearGlobalIInREngineObject();
+            //analysisEngine.clearGlobalIInREngineObject();
             //return the completed aHatAnalysisObject
             return this.newAHatAnalysisObject;
         }

@@ -9,7 +9,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-
+using CSharpBackendWithR;
 namespace POD.Docks
 {
     public enum HelpView
@@ -23,7 +23,7 @@ namespace POD.Docks
     {
         QuickHelpDock _quickHelpDock;
         HelpView _helpView = HelpView.Small;
-
+        private WizardDock previousDoc;
         public QuickHelpDock QuickHelpDock
         {
             get { return _quickHelpDock; }
@@ -502,12 +502,29 @@ namespace POD.Docks
 
         private void myWizard_VisibleChanged(object sender, EventArgs e)
         {
+            
             WizardDock dock = sender as WizardDock;
-
+            
             if (dock != null && dock.IsHidden && HasNoWizardsLeft)
             {
                 RaiseAllWizardsClosed(dock);
             }
+
+            if (dock.Visible)
+            {
+                if (dock == previousDoc)
+                {
+                    return;
+                }
+                else if (dock != previousDoc && REngineObject.REngineRunning)
+                {
+                    MessageBox.Show("Cannot change tabs while analyis is running!");
+                    previousDoc.Activate();
+                }
+
+                previousDoc = dock;
+            }
+
         }
 
         private void RaiseAllWizardsClosed(WizardDock dock)

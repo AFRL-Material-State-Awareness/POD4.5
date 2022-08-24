@@ -643,6 +643,11 @@ namespace POD
 
         void Tree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            if (REngineObject.REngineRunning)
+            {
+                MessageBox.Show("Cannot open another tab while current analysis is running");
+                return;
+            }
             string nodeLabel = e.Node.Text;
             
             string wizardLabel = string.Empty;
@@ -749,10 +754,27 @@ namespace POD
                 if (control.AutoOpen(node.Text) == true)
                 {
                     Tree_NodeMouseDoubleClick(node, new TreeNodeMouseClickEventArgs(node, MouseButtons.Left, 2, 0, 0));
+                    break;
                 }
-
             }
+
+            foreach (TreeNode node in top.Nodes[1].Nodes)
+            {
+                control.RemoveAutoOpen(node.Text);
+            }
+
+
+            //if (top.Nodes[1].Nodes.Count > 0)
+            //{
+            //    var node = top.Nodes[1].Nodes[0];
+
+            //    if (control.AutoOpen(node.Text) == true)
+            //    {
+            //        Tree_NodeMouseDoubleClick(node, new TreeNodeMouseClickEventArgs(node, MouseButtons.Left, 2, 0, 0));
+            //    }
             //}
+
+
 
             //if (control.Project.Name.Length > 0)
             //    OpenWizardByName(control.Project.Name);

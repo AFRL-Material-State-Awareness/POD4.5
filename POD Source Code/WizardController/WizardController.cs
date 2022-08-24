@@ -1003,6 +1003,11 @@ namespace POD
             return _wizards[myName].Analysis.AutoOpen;
         }
 
+        public void RemoveAutoOpen(string myName)
+        {
+            _wizards[myName].Analysis.AutoOpen = false;
+        }
+
         public void WriteToExcel(ExcelExport myWriter)
         {
             Application.UseWaitCursor = true;

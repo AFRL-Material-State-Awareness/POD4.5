@@ -1172,6 +1172,7 @@ namespace POD
         Linear,
         Inverse,        
         Exponetial,
+        BoxCox,
         Custom
     }
     public enum ConfidenceIntervalTypeEnum

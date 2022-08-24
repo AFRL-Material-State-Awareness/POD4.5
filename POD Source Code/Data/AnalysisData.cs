@@ -1789,7 +1789,7 @@ namespace POD.Data
                 {
                     _fitResidualsTable.Columns.Add("transformFlaw", typeof(System.Double));
                 }
-                if (_aHatAnalysisObject.ModelType == 1 || _aHatAnalysisObject.ModelType == 3)
+                if (_aHatAnalysisObject.ModelType == 1 || _aHatAnalysisObject.ModelType == 3 || _aHatAnalysisObject.ModelType==5)
                 {
 
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
@@ -1808,7 +1808,7 @@ namespace POD.Data
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
-                printDT(_fitResidualsTable);
+                //printDT(_fitResidualsTable);
             }
             catch(Exception exp)
             {
@@ -1860,6 +1860,15 @@ namespace POD.Data
                         //_residualUncensoredTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][2]));
                     }
                 }
+                else if (_aHatAnalysisObject.ModelType == 5)
+                {
+                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
+                    {
+                        //_residualUncensoredTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
+                        //_residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
+                        //_residualUncensoredTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][2]));
+                    }
+                }
                 _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
                 for(int i = _residualUncensoredTable.Rows.Count-1; i >=0; i--)
@@ -1874,7 +1883,7 @@ namespace POD.Data
                         }
                     }
                 }
-                printDT(_residualUncensoredTable);
+                //printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1949,7 +1958,7 @@ namespace POD.Data
 
                 }
                 //printDT(_podCurveTable);
-                if (_aHatAnalysisObject.ModelType == 1 || _aHatAnalysisObject.ModelType == 3)
+                if (_aHatAnalysisObject.ModelType == 1 || _aHatAnalysisObject.ModelType == 3 || _aHatAnalysisObject.ModelType==5)
                 {
 
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
@@ -2025,7 +2034,13 @@ namespace POD.Data
                 }
                 else if (_aHatAnalysisObject.ModelType == 5)
                 {
-
+                    double currThreshold;
+                    double lambda = _aHatAnalysisObject.Lambda;
+                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                    {
+                        currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
+                        _thresholdPlotTable.Rows[i][0] = IPy4C.NthRoot(currThreshold*lambda+1, lambda);
+                    }
                 }
                 //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
@@ -2050,9 +2065,6 @@ namespace POD.Data
                         _thresholdPlotTable_All.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][1]));
                         _thresholdPlotTable_All.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][2]));
                         _thresholdPlotTable_All.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][3]));
-                        //_thresholdPlotTable_All.Rows[i][4] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][4]));
-                        //_thresholdPlotTable_All.Rows[i][5] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][5]));
-                        //_thresholdPlotTable_All.Rows[i][6] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][6]));
                     }
                 }
                 else if (_aHatAnalysisObject.ModelType == 4)
@@ -2064,9 +2076,6 @@ namespace POD.Data
                         _thresholdPlotTable_All.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][1]));
                         _thresholdPlotTable_All.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][2]));
                         _thresholdPlotTable_All.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][3]));
-                        //_thresholdPlotTable_All.Rows[i][4] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][4]));
-                        //_thresholdPlotTable_All.Rows[i][5] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][5]));
-                        //_thresholdPlotTable_All.Rows[i][6] = Math.Exp(Convert.ToDouble(_thresholdPlotTable_All.Rows[i][6]));
                     }
                 }
                 //_thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";

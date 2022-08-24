@@ -921,7 +921,7 @@ namespace POD.Analyze
 
             analysisLauncher.WorkerSupportsCancellation = true;
             analysisLauncher.WorkerReportsProgress = true;
-
+            //REngineObject.REngineRunning = true;
             analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
             analysisLauncher.ProgressChanged += new ProgressChangedEventHandler(Background_AnalysisProgressChanged);
             analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
@@ -1249,6 +1249,10 @@ namespace POD.Analyze
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.ClearMetrics();
+            }
+            else
+            {
+                _aHatAnalysisObject.ClearMetrics();
             }
         }
 
@@ -1619,9 +1623,10 @@ namespace POD.Analyze
         /// </summary>
         public void RunAnalysis()
         {
+            
             if (IsFrozen)
                 return;
-
+            //REngineObject.REngineRunning = true;
             if (analysisLauncher == null)
             {
                 SetupAnalysisLauncher();
@@ -1786,14 +1791,14 @@ namespace POD.Analyze
 
             double value = 0.0;
             double inc = (InResponseDecisionMax - InResponseDecisionMin) / (InResponseDecisionIncCount);
-
+            /*
             for (int i = 0; i <= InResponseDecisionIncCount; i++)
             {
                 value = InResponseDecisionMin + (inc * i);
 
                 thresholds.Add(value);
             }
-
+            */
             //_podDoc.SetDecisionThresholds(thresholds);
             
         }
@@ -1838,6 +1843,10 @@ namespace POD.Analyze
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
             {
                 _aHatAnalysisObject.ModelType = 4;
+            }
+            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 5)
+            {
+                _aHatAnalysisObject.ModelType = 5;
             }
         }
 
@@ -2850,6 +2859,10 @@ namespace POD.Analyze
                 case 3:
                     transformValue = 1 / myValue;
                     break;
+                case 5:
+                    transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
+                    break;
+
                 default:
                     transformValue = myValue;
                     break;
@@ -2871,6 +2884,9 @@ namespace POD.Analyze
                 case 3:
                     transformValue = 1 / myValue;
                     break;
+                case 5:
+                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda+1, _aHatAnalysisObject.Lambda);
+                    break;
                 default:
                     transformValue = myValue;
                     break;
@@ -2878,6 +2894,63 @@ namespace POD.Analyze
             return transformValue;
 
         }
+        /// <summary>
+        /// /MAY remove this later
+        /// </summary>
+        /// <param name="myValue"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        ///
+        /*
+        public double TransformAHatValue(double myValue, int transform)
+        {
+            double transformValue = 0.0;
+            switch (transform)
+            {
+                case 1:
+                    transformValue = myValue;
+                    break;
+                case 2:
+                    transformValue = Math.Log(myValue);
+                    break;
+                case 3:
+                    transformValue = 1 / myValue;
+                    break;
+                case 5:
+                    transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
+                    break;
+                default:
+                    transformValue = myValue;
+                    break;
+            }
+            return transformValue;
+
+        }
+        public double TransformBackAHatValue(double myValue, int transform)
+        {
+            double transformValue = 0.0;
+            switch (transform)
+            {
+                case 1:
+                    transformValue = myValue;
+                    break;
+                case 2:
+                    transformValue = Math.Exp(myValue);
+                    break;
+                case 3:
+                    transformValue = 1 / myValue;
+                    break;
+                case 5:
+                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda);
+                    break;
+                default:
+                    transformValue = myValue;
+                    break;
+            }
+            return transformValue;
+
+        }
+        */
 
         public void ClearInitialGuesses()
         {
@@ -3041,6 +3114,7 @@ namespace POD.Analyze
 
 
         }
+
 
         public void RaiseCreatedAnalysis(Analysis clone)
         {

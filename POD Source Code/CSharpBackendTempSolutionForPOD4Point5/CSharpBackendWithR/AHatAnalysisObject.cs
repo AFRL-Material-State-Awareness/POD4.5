@@ -288,10 +288,24 @@ namespace CSharpBackendWithR
             set { this.aHatResultsPOD=value; }
             get { return this.aHatResultsPOD; }
         }
-        //public double YDecision
-        //{
-        //    set { this.y_decision = value; }
-        //    get { return this.y_decision; }
-        //}
+        public void ClearMetrics()
+        {
+
+            A25 = -1;
+            A50 = -1;
+            A90 = -1;
+            A9095 = -1;
+            CovarianceMatrix = null;
+            this.residualStdErr = -1;
+            this.durbinWatsonDW = -1;
+            this.shapiroTestStat = -1;
+            this.shapiroPValue = -1;
+            this.rSquared = -1;
+
+            this.aHatThresholdsTable = null;
+            this.aHatLinearResults = null;
+            this.aHatResidualResults = null;
+            this.aHatResultsPOD = null;
+        }
     }
 }

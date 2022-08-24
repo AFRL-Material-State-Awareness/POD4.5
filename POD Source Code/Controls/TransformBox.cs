@@ -20,6 +20,7 @@ namespace POD.Controls
             Items.Add(new TransformObj(TransformTypeEnum.Log));
             //Items.Add(new TransformObj(TransformTypeEnum.Exponetial));
             Items.Add(new TransformObj(TransformTypeEnum.Inverse));
+            //Items.Add(new TransformObj(TransformTypeEnum.BoxCox));
             DropDownStyle = ComboBoxStyle.DropDownList;
 
             
@@ -67,6 +68,9 @@ namespace POD.Controls
 
             switch (TransformType)
             {
+               // case TransformTypeEnum.BoxCox:
+               //     _label = "Box-Cox";
+               //     break;
                 case TransformTypeEnum.Log:
                     _label = "Log";
                     break;

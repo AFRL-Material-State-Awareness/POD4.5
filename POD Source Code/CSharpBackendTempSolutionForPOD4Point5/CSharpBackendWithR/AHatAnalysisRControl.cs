@@ -70,6 +70,9 @@ namespace CSharpBackendWithR
                     this.myREngine.Evaluate("event<- c(event, 1)");
                 }
             }
+            //set lambda as 0 by default 
+            this.myREngine.Evaluate("lambdaInput<-0");
+            //create the appropriate dataframe based on the transform type
             switch (newAHatAnalysis.ModelType)
             {
                 case 1:
@@ -169,11 +172,11 @@ namespace CSharpBackendWithR
 
                     }
                     //box-cox tranform has been selected. Find the optimal value for lambda!
-                    this.myREngine.Evaluate("bc<-boxcox(y~x)");
+                    this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
                     //get the value of lambda
-                    this.myREngine.Evaluate("lambda<-bc[which.max(bc$y)]");
+                    this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
                     //tranform y-axis with lambda
-                    this.myREngine.Evaluate("y<-(y^lambda-1)/lambda");
+                    this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
                     break;
                 default:
                     throw new Exception("model type not found exception for AHAT!");
@@ -192,7 +195,8 @@ namespace CSharpBackendWithR
             //System.Diagnostics.Debug.WriteLine(this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')").ToString());
             //this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')");
             //execute class with appropriate parameters
-            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+newTranformAnalysis.ModelType+")");
+            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", " +
+                "modelType="+newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
         }
         public DataTable GetLinearFitTableForUI()
@@ -234,7 +238,7 @@ namespace CSharpBackendWithR
         }
         public double GetBoxCoxLamda()
         {
-            double lambda = Convert.ToDouble(myREngine.Evaluate("lambda").AsNumeric()[0]);
+            double lambda = Convert.ToDouble(myREngine.Evaluate("newSRAnalysis$getLambda()").AsNumeric()[0]);
             return lambda;
         }
         public Dictionary<string, double> GetLinearModelStdErrors()

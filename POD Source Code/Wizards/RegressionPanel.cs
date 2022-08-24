@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using POD.Controls;
-
+using CSharpBackendWithR;
 namespace POD.Wizards
 {
     using System.Data;
@@ -238,7 +238,7 @@ namespace POD.Wizards
                 MainChart.PickBestAxisRange();
                 MainChart.ForceIncludedPointsUpdate();
             }
-
+            
             if(!Analysis.IsFrozen)
                 RunAnalysis();
         }
@@ -273,7 +273,7 @@ namespace POD.Wizards
         public virtual void RunAnalysis()
         {
             //ResumeDrawing();
-
+            REngineObject.REngineRunning = true;
             var analysis = (Analysis)_source;
 
             analysis.AnalysisDone -= ProcessAnalysisOutput;

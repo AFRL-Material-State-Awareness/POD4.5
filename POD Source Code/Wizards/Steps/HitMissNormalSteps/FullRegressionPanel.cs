@@ -30,6 +30,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         //private TransformBox _yTransformBox;
         //use to indicate if a known error was found
         private bool _errorFound;
+        //use to keep track of the previously selected confidence interval
+        private ConfidenceIntervalTypeEnum previousConfInt= ConfidenceIntervalTypeEnum.StandardWald;
+        //flags used to prevent the analysis from running again if the user selects NO
+        private bool noConfIntRepeat = false;
+        private bool noSamplingRepeat = false;
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
         {
             InitializeComponent();
@@ -270,41 +275,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         private void ConfIntBox_ValueChanged(object sender, EventArgs e)
         {
-            Analysis.InConfIntervalType = _confIntBox.SelectedConfInt;
-            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-            mainChart.SetAMaxBoundary(x, false);
-            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-            mainChart.SetAMinBoundary(x, false);
 
-            ForceUpdateAfterTransformChange();
-        }
-
-        private void SamplingTypeBox_ValueChanged(object sender, EventArgs e)
-        {
-            Analysis.InSamplingType = _sampleTypeBox.SelectedSamplingType;
-            //dialog will be yes by default in case the user uses either standard wald or modified wald with ranked set sampling
-            DialogResult dialogResult= DialogResult.Yes;
-            if(_confIntBox.SelectedConfInt.ToString()=="StandardWald" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            DialogResult confIntDialogResults = CheckLongRuntime();
+            if (confIntDialogResults == DialogResult.Yes && !(noConfIntRepeat))
             {
-                MessageBox.Show("WARNING: Using standard wald with ranked set sampling can produce wacky results." + '\n' +
-                    "It is recommended to use modified wald instead.");
-            }
-            else if (_confIntBox.SelectedConfInt.ToString()=="LR" && _sampleTypeBox.SelectedSamplingType.ToString()== "RankedSetSampling")
-            {
-                dialogResult=MessageBox.Show("WARNING: You've selected Likelihood Ratio (LR) confidence interval " +
-                    "with Ranked Set Sampling. This process" +
-                    "could take anywhere from 5-10min to complete." + '\n' +
-                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo); 
-            }
-            else if(_confIntBox.SelectedConfInt.ToString() == "MLR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
-            {
-                dialogResult = MessageBox.Show("WARNING: You've selected Modified Likelihood Ratio (MLR) confidence interval " +
-                    "with Ranked Set Sampling. This process" +
-                    "could take anywhere from 10-20min to complete." + '\n' +
-                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo);
-            }
-            if(dialogResult == DialogResult.Yes)
-            {
+                Analysis.InConfIntervalType = _confIntBox.SelectedConfInt;
                 var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
                 mainChart.SetAMaxBoundary(x, false);
                 x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
@@ -312,10 +287,69 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                 ForceUpdateAfterTransformChange();
             }
+            else if (noConfIntRepeat == true)
+            {
+                noConfIntRepeat = false;
+            }
             else
             {
+                noConfIntRepeat = true;
+                _confIntBox.SelectedConfInt = previousConfInt;
+                
+            }
+            previousConfInt = _confIntBox.SelectedConfInt;
+        }
+
+        private void SamplingTypeBox_ValueChanged(object sender, EventArgs e)
+        {
+            
+            DialogResult samplingDialogResult = CheckLongRuntime();
+            
+            if(samplingDialogResult == DialogResult.Yes && !(noSamplingRepeat))
+            {
+                Analysis.InSamplingType = _sampleTypeBox.SelectedSamplingType;
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
+
+                ForceUpdateAfterTransformChange();
+                
+            }
+            else if (noSamplingRepeat==true)
+            {
+                noSamplingRepeat = false;
+            }
+            else
+            {
+                noSamplingRepeat = true;
                 _sampleTypeBox.SelectedSamplingType = SamplingTypeEnum.SimpleRandomSampling;
             }
+        }
+        public DialogResult CheckLongRuntime()
+        {
+            //dialog will be yes by default in case the user uses either standard wald or modified wald with ranked set sampling
+            DialogResult dialogResult = DialogResult.Yes;
+            if (_confIntBox.SelectedConfInt.ToString() == "StandardWald" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            {
+                MessageBox.Show("WARNING: Using standard wald with ranked set sampling can produce wacky results." + '\n' +
+                    "It is recommended to use modified wald instead.");
+            }
+            else if (_confIntBox.SelectedConfInt.ToString() == "LR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            {
+                dialogResult = MessageBox.Show("WARNING: You've selected Likelihood Ratio (LR) confidence interval " +
+                    "with Ranked Set Sampling. This process" +
+                    "could take anywhere from 5-10min to complete." + '\n' +
+                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo);
+            }
+            else if (_confIntBox.SelectedConfInt.ToString() == "MLR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+            {
+                dialogResult = MessageBox.Show("WARNING: You've selected Modified Likelihood Ratio (MLR) confidence interval " +
+                    "with Ranked Set Sampling. This process" +
+                    "could take anywhere from 10-20min to complete." + '\n' +
+                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo);
+            }
+            return dialogResult;
         }
 
         /// <summary>
@@ -470,6 +504,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             linearityChart.FillChart(Analysis.Data, Analysis.OutPODMu, Analysis.OutPODSigma);
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
             linearityChart.ChartToolTip = StepToolTip;
+
+            CSharpBackendWithR.REngineObject.REngineRunning = false;
         }
         public void SearhForHitMissErrors(double a9095Original) {
             //get the info for the current stats of the hit miss object

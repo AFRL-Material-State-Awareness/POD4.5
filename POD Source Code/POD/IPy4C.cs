@@ -175,6 +175,9 @@ namespace POD
                 case TransformTypeEnum.Exponetial:
                     transform = 4;
                     break;
+                case TransformTypeEnum.BoxCox:
+                    transform = 5;
+                    break;
                 default:
                     transform = 1;
                     break;
@@ -257,6 +260,11 @@ namespace POD
                 decisionString = "Undefined";
             }
             return decisionString;
+        }
+        //used to calcualte the nth root
+        public static double NthRoot(double A, double root)
+        {
+            return Math.Pow(A, 1.0 / root);
         }
         //convert c# dictionary to python dictionary
         //my dictionary is the c# dictionary
