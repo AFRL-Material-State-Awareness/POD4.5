@@ -1811,7 +1811,12 @@ namespace POD.Data
                 }
                 else if ( _aHatAnalysisObject.ModelType == 5)
                 {
+                    double lambda = _aHatAnalysisObject.Lambda;
                     //transform back box cox here;
+                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                    {
+                        _fitResidualsTable.Rows[i][2] = IPy4C.NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * lambda + 1, lambda);
+                    }
                 }
 
                 _fitResidualsTable.DefaultView.RowFilter = "";
@@ -1883,9 +1888,12 @@ namespace POD.Data
                 {
                     for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
                     {
+                        double lambda = _aHatAnalysisObject.Lambda;
                         //FIX this later
                         _residualUncensoredTable.Rows[i][2] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
                         _residualUncensoredTable.Rows[i][3] = Convert.ToDouble(_residualUncensoredTable.Rows[i][1]);
+                        _residualUncensoredTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]) * lambda + 1, lambda);
+
                         //_residualUncensoredTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
                         //_residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
                         //_residualUncensoredTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][2]));
@@ -1965,9 +1973,11 @@ namespace POD.Data
                 {
                     for (int i = 0; i < _residualRawTable.Rows.Count; i++)
                     {
+                        double lambda = _aHatAnalysisObject.Lambda;
                         //FIX this later
                         _residualRawTable.Rows[i][2] = Convert.ToDouble(_residualRawTable.Rows[i][0]);
                         _residualRawTable.Rows[i][3] = Convert.ToDouble(_residualRawTable.Rows[i][1]);
+                        _residualRawTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(_residualRawTable.Rows[i][1]) * lambda + 1, lambda);
                         //_residualUncensoredTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
                         //_residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
                         //_residualUncensoredTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][2]));
@@ -1990,7 +2000,7 @@ namespace POD.Data
                 {
                     _residualCensoredTable.Rows.Clear();
                 }
-                //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                
                 _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
                 if (_aHatAnalysisObject.FlawsCensored.Count() != 0)
                 {
@@ -2014,7 +2024,7 @@ namespace POD.Data
 
                     }
                 }
-                
+                //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 if (printDTFlag)
                     printDT(_residualCensoredTable);
             }
@@ -2632,7 +2642,6 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetUncensoredFlawRangeMax();
 
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 {
@@ -2668,7 +2677,6 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetFlawRangeMax();
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     return _hmAnalysisObject.Flaws.Max();
@@ -3141,6 +3149,9 @@ namespace POD.Data
                 case 2:
                     transformValue = Math.Log(myValue);
                     break;
+                case 5:
+                    transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
+                    break;
                 default:
                     transformValue = myValue;
                     break;
@@ -3158,6 +3169,9 @@ namespace POD.Data
                     break;
                 case 2:
                     transformValue = Math.Exp(myValue);
+                    break;
+                case 5:
+                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda + 1, _aHatAnalysisObject.Lambda);
                     break;
                 default:
                     transformValue = myValue;

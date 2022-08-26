@@ -34,9 +34,10 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
-CItype0="Modified Wald"
+CItype0="ModifiedWald"
 #type="Firth Logistic Regression"
 type="Logistic Regression"
+begin=Sys.time()
 #for(i in 1:10){
   newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
   newAnalysis$detAnalysisApproach()
@@ -52,7 +53,9 @@ type="Logistic Regression"
   newAnalysis$plotSimdata(results)
   newAnalysis$plotCI(results)
 #}
-
+end=Sys.time()
+print("execution time")
+print(end-begin)
 # if(CItype0== "Standard Wald"){
 #   a9095Wald=aValues[[5]]
 # }

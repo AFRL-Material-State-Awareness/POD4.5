@@ -22,7 +22,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
     {
         private TransformBox _xTransformBox;
         private Label _xTransformLabel;
-        private TransformBox _yTransformBox;
+        private TransformBoxYHat _yTransformBox;
         private Label _yTransformLabel;
         SimpleActionBar _tableBar;
         PODButton _updateButton;
@@ -654,7 +654,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private void IntitalizeTransformBoxes()
         {
             PrepareLabelBoxPair(ref _xTransformLabel, "Flaw", ref _xTransformBox);
-            PrepareLabelBoxPair(ref _yTransformLabel, "Response", ref _yTransformBox);
+            PrepareLabelBoxPairYHat(ref _yTransformLabel, "Response", ref _yTransformBox);
 
             _xTransformBox.SelectedIndex = 0;
             _yTransformBox.SelectedIndex = 0;

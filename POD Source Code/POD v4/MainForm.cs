@@ -248,7 +248,11 @@ namespace POD
                 //py = new IPy4C(PyTypeEnum.DLLFiles, false);
                 //initialize the REngine Object to create an instance with the R.Net engine
                 REngineInstance = new REngineObject();
-
+                //give a notification to the user if python enhancements fail to load
+                if (REngineObject.PythonLoaded == false)
+                {
+                    MessageBox.Show("Python engine could not be loaded! Application will continue without optimization.");
+                }
                 //forcing assemblies to load while the user is picking out a file to load    
                 var wizard = new WizardActionBar();
                 var export = new ExcelExport();

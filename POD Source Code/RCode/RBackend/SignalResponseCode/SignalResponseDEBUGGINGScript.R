@@ -1,3 +1,4 @@
+options(warn=-1)
 library(ggplot2) # gorgeous plots
 library(gridExtra) # useful for plotting in grids
 library(MASS) #contains boxcox and much more

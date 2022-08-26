@@ -297,6 +297,12 @@
     <Compile Include="SimpleActionBar.Designer.cs">
       <DependentUpon>SimpleActionBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="TransformBoxYHat.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TransformBoxYHat.Designer.cs">
+      <DependentUpon>TransformBoxYHat.cs</DependentUpon>
+    </Compile>
     <Compile Include="TransformBox.cs">
       <SubType>Component</SubType>
     </Compile>
