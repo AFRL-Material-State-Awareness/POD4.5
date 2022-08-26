@@ -1571,7 +1571,7 @@ namespace POD.Controls
                 }
                 else
                 {
-                    fitLine.Points.DataBindXY(view, "flaw", view, "fit");
+                    fitLine.Points.DataBindXY(view, "transformFlaw", view, "fit");
                 }
                 /*
                 try

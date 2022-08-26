@@ -114,13 +114,22 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       linearModDF=data.frame(
                                         #Index= 1:length(linearModel_lm$fitted.values),
                                         x=signalRespDF$x,
-                                        y=signalRespDF$y,
-                                        fit=linearModel_lm$fitted.values
+                                        fit=linearModel_lm$fitted.values,
+                                        y=signalRespDF$y
+                                        
                                       )
                                       setLinearModel(linearModDF)
                                       ##create the residual dataframe
-                                      ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
-                                      names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
+                                      #ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
+                                      #names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
+                                      ResidualDF=data.frame(
+                                        flaw=signalRespDF$x,
+                                        y=signalRespDF$y,
+                                        transformFlaw=rep(0, nrow(signalRespDF)),
+                                        transformResponse=rep(0, nrow(signalRespDF)),
+                                        fit=linearModel_lm$fitted.values,
+                                        t_diff=linearModel_lm$residuals
+                                      )
                                       setResidualTable(ResidualDF)
                                       #generate ahat versus acensored
                                       ahatvACensored<<-genAhatVersusACensored()
@@ -135,8 +144,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         linearModDF=data.frame(
                                           #Index= 1:length(linearModel_lm$fitted.values),
                                           x=signalRespDF$x,
-                                          y=signalRespDF$y,
-                                          fit=ahatvACensored$linear.predictors
+                                          fit=ahatvACensored$linear.predictors,
+                                          y=signalRespDF$y
                                         )
                                         setLinearModel(linearModDF)
                                         residuals=c()
@@ -147,6 +156,14 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         ##create the residual dataframe
                                         ResidualDF=cbind(linearModDF, residuals)
                                         names(ResidualDF)[names(ResidualDF) == 'residuals'] <- 't_diff'
+                                        ResidualDF=data.frame(
+                                          flaw=signalRespDF$x,
+                                          y=signalRespDF$y,
+                                          transformFlaw=rep(0, nrow(signalRespDF)),
+                                          transformResponse=rep(0, nrow(signalRespDF)),
+                                          fit=ahatvACensored$linear.predictors,
+                                          t_diff=residuals
+                                        )
                                         setResidualTable(ResidualDF)
                                         #add residuals to the censored object
                                       }

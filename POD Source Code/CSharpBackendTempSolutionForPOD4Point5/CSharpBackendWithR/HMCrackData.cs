@@ -38,4 +38,45 @@ namespace CSharpBackendWithR
         public double CrkfControl => this.crkf;
     }
 }
+for (int i = _residualRawTable.Rows.Count - 1; i >= 0; i--)
+                {
+                    coordinateFound = false;
+                    for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
+                    {
+                        if (coordinateFound == false)
+                        {
+                            if (Convert.ToDouble(_residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
+                            {
+                                //the for loops are necessary in case their are two different crack sizes with different responses
+                                List<double> responesLeft = _aHatAnalysisObject.ResponsesCensoredLeft[_aHatAnalysisObject.SignalResponseName];
+                                List<double> responesRight = _aHatAnalysisObject.ResponsesCensoredRight[_aHatAnalysisObject.SignalResponseName];
+
+                                for (int k = 0; k < responesLeft.Count(); i++)
+                                {
+                                    if (Convert.ToDouble(_residualRawTable.Rows[i][1]) == responesLeft[i])
+                                    {
+                                        _residualCensoredTable.Rows.Add(_residualRawTable.Rows[i].ItemArray);
+                                        coordinateFound = true;
+                                        break;
+                                    }
+                                }
+                                for (int k = 0; k < responesRight.Count(); i++)
+                                {
+                                    if (Convert.ToDouble(_residualRawTable.Rows[i][1]) == responesRight[i])
+                                    {
+                                        _residualCensoredTable.Rows.Add(_residualRawTable.Rows[i].ItemArray);
+                                        coordinateFound = true;
+                                        break;
+                                    }
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
 */

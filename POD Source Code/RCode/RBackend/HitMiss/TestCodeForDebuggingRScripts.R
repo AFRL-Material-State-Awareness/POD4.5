@@ -34,7 +34,7 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
-CItype0="StandardWald"
+CItype0="Modified Wald"
 #type="Firth Logistic Regression"
 type="Logistic Regression"
 #for(i in 1:10){

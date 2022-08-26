@@ -14,6 +14,7 @@ namespace CSharpBackendWithR
         private string applicationPathScripts;
         private string applicationPath;
         private string forwardSlashAppPath;
+        
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
@@ -63,7 +64,7 @@ namespace CSharpBackendWithR
             //REngine engine = REngine.GetInstance();
             engine.Initialize();
             //ensure the REngine global environment is cleared when the program starts
-            engine.ClearGlobalEnvironment();
+            //engine.ClearGlobalEnvironment();
             return engine;
         }
         /// <summary>
@@ -226,6 +227,7 @@ namespace CSharpBackendWithR
             //this.rEngine.ClearGlobalEnvironment();
             //InitializeRScripts();
             //InitializePythonScripts();
-        }    
+        }
+        public static bool REngineRunning=false;
     }
 }
