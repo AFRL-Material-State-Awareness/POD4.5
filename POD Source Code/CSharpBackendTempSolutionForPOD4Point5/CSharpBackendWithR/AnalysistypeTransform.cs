@@ -186,7 +186,7 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.DurbinWatson_r = linTestResults[5];
             this.newAHatAnalysisObject.DurbinWatsonDW = linTestResults[6];
             this.newAHatAnalysisObject.DurbinWatsonPValue = linTestResults[7];
-            //clear all contents in R and restart the global environment
+            //clear all contents in R and restart the global environment/////Removed this for improved performance
             //analysisEngine.clearGlobalIInREngineObject();
             //return the completed aHatAnalysisObject
             return this.newAHatAnalysisObject;

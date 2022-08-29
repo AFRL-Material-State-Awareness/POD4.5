@@ -23,7 +23,7 @@ namespace CSharpBackendWithR
             List<double> cracks = newAHatAnalysis.Flaws;
             List<double> cracksCensored = newAHatAnalysis.FlawsCensored;
             
-            List<double> SignalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
+            List<double> signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
             //needed for the r code 
             //this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());
@@ -38,7 +38,7 @@ namespace CSharpBackendWithR
                     updatedEvent = false;
                     foreach (double j in responsesRightCensored)
                     {
-                        if (SignalResponse[i] == j)
+                        if (signalResponse[i] == j)
                         {
                             this.myREngine.Evaluate("event<- c(event, 0)");
                             updatedEvent = true;
@@ -47,7 +47,7 @@ namespace CSharpBackendWithR
                     }
                     foreach (double j in responsesLeftCensored)
                     {
-                        if (SignalResponse[i] == j)
+                        if (signalResponse[i] == j)
                         {
                             this.myREngine.Evaluate("event<- c(event, 2)");
                             updatedEvent = true;
@@ -85,13 +85,13 @@ namespace CSharpBackendWithR
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
                     this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(" + SignalResponse[0].ToString() + ")");
+                    this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
                     {
                         this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
                         this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        this.myREngine.Evaluate("y<-c(y," + SignalResponse[i].ToString() + ")");
+                        this.myREngine.Evaluate("y<-c(y," + signalResponse[i].ToString() + ")");
                     }
                     break;
                 case 2:
@@ -103,13 +103,13 @@ namespace CSharpBackendWithR
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
                     this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
-                    this.myREngine.Evaluate("y<-c(" + SignalResponse[0].ToString() + ")");
+                    this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
                     {
                         this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
                         this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
-                        this.myREngine.Evaluate("y<-c(y," + SignalResponse[i].ToString() + ")");
+                        this.myREngine.Evaluate("y<-c(y," + signalResponse[i].ToString() + ")");
                     }
                     break;
                 case 3:
@@ -121,13 +121,13 @@ namespace CSharpBackendWithR
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
                     this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(log(" + SignalResponse[0].ToString() + "))");
+                    this.myREngine.Evaluate("y<-c(log(" + signalResponse[0].ToString() + "))");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
                     {
                         this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
                         this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        this.myREngine.Evaluate("y<-c(y, log(" + SignalResponse[i].ToString() + "))");
+                        this.myREngine.Evaluate("y<-c(y, log(" + signalResponse[i].ToString() + "))");
                     }
                     break;
                 case 4:
@@ -139,17 +139,17 @@ namespace CSharpBackendWithR
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
                     this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
-                    this.myREngine.Evaluate("y<-c(log(" + SignalResponse[0].ToString() + "))");
+                    this.myREngine.Evaluate("y<-c(log(" + signalResponse[0].ToString() + "))");
                     //this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    //this.myREngine.Evaluate("y<-c(" + SignalResponse[0].ToString() + ")");
+                    //this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
                     {
                         this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
                         this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
-                        this.myREngine.Evaluate("y<-c(y, log(" + SignalResponse[i].ToString() + "))");
+                        this.myREngine.Evaluate("y<-c(y, log(" + signalResponse[i].ToString() + "))");
                         //this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        //this.myREngine.Evaluate("y<-c(y," + SignalResponse[i].ToString() + ")");
+                        //this.myREngine.Evaluate("y<-c(y," + signalResponse[i].ToString() + ")");
 
                     }
                     break;
@@ -162,13 +162,13 @@ namespace CSharpBackendWithR
                     //initialize the matrices used to create the input dataframe
                     this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
                     this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(" + SignalResponse[0].ToString() + ")");
+                    this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
                     //acumulate r matrices in order to create the dataframe
                     for (int i = 1; i < cracks.Count; i++)
                     {
                         this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
                         this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        this.myREngine.Evaluate("y<-c(y, " + SignalResponse[i].ToString() + ")");
+                        this.myREngine.Evaluate("y<-c(y, " + signalResponse[i].ToString() + ")");
 
                     }
                     //box-cox tranform has been selected. Find the optimal value for lambda!
@@ -188,6 +188,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("rm(x)");
             this.myREngine.Evaluate("rm(y)");
             this.myREngine.Evaluate("rm(event)");
+            this.myREngine.Evaluate("rm(bc)");
         }
         public void ExecuteAnalysis(AHatAnalysisObject newTranformAnalysis)
         {
@@ -197,6 +198,7 @@ namespace CSharpBackendWithR
             //execute class with appropriate parameters
             this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", " +
                 "modelType="+newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
+            this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
         }
         public DataTable GetLinearFitTableForUI()

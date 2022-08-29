@@ -185,6 +185,7 @@ namespace POD
 
             return transform;
         }
+        /*
         //returns the value for the respective data analyis type
         public int AnalysisDataTypeEnumToInt(AnalysisDataTypeEnum myAnalysisDataType)
         {
@@ -225,6 +226,7 @@ namespace POD
 
             return modelType;
         }
+        */
         //used to output the decision value
         //self.choices = ["P > 0.1", "0.05 < P <= 0.1", ".025 < P <= 0.05",
         //                "0.01 < P <= .025", ".005 < P <= 0.01", "P <= .005", "Undefined"]
@@ -261,7 +263,7 @@ namespace POD
             }
             return decisionString;
         }
-        //used to calcualte the nth root
+        //used to calculate the nth root
         public static double NthRoot(double A, double root)
         {
             return Math.Pow(A, 1.0 / root);

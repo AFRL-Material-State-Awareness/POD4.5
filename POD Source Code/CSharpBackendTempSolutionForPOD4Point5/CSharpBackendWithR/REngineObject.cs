@@ -26,9 +26,21 @@ namespace CSharpBackendWithR
             this.rEngine = initializeRDotNet();
             InitializeRLibraries();
             InitializeRScripts();
-            //add back in later
-            //SetUsePython();
-            //InitializePythonScripts();
+            PythonLoaded = true;
+            /*
+            try
+            {
+                //add back in later
+                SetUsePython();
+                InitializePythonScripts();
+                PythonLoaded = true;
+            }
+            catch
+            {
+                PythonLoaded = false;
+            }
+            */
+
         }
         
         private REngine initializeRDotNet()
@@ -37,31 +49,43 @@ namespace CSharpBackendWithR
             string homePath;
             REngine engine;
             //initialize the R engine
-            try
+            if (true)
             {
-                rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
-                homePath = this.applicationPath + @"\R-3.5.3\";
-                REngine.SetEnvironmentVariables(rPath, homePath);
-                engine = REngine.GetInstance();
+                try
+                {
+                    rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
+                    homePath = this.applicationPath + @"\R-3.5.3\";
+                    REngine.SetEnvironmentVariables(rPath, homePath);
+                    engine = REngine.GetInstance();
+                }
+                catch (Exception e)
+                {
+                    rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
+                    homePath = this.applicationPath + @"\R-3.5.3\";
+                    REngine.SetEnvironmentVariables(rPath, homePath);
+                    engine = REngine.GetInstance();
+                }
             }
-            catch(Exception e)
+            else
             {
-                rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
-                homePath = this.applicationPath + @"\R-3.5.3\";
-                REngine.SetEnvironmentVariables(rPath, homePath);
-                engine = REngine.GetInstance();
-            }
+                try
+                {
+                    rPath = this.applicationPath + @"\R-4.1.2\bin\i386";
+                    homePath = this.applicationPath + @"\R-4.1.2\";
+                    REngine.SetEnvironmentVariables(rPath, homePath);
+                    engine = REngine.GetInstance();
+                }
+                catch (Exception e)
+                {
+                    rPath = this.applicationPath + @"\R-4.1.2\bin\x64";
+                    homePath = this.applicationPath + @"\R-4.1.2\";
+                    REngine.SetEnvironmentVariables(rPath, homePath);
+                    engine = REngine.GetInstance();
+                }
 
-            //string rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
-            //string homePath = this.applicationPath + @"\R-3.5.3\";
-            //string rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
-            //string homePath = this.applicationPath + @"\R-3.5.3\";
-            //string rPath = this.applicationPath + @"C:\Program Files\R\R-3.5.3\bin\x64";
-            //string homePath = this.applicationPath + @"C:\Program Files\R\R-3.5.3\";
-            //string rPath = this.applicationPath;
-            //string homePath = this.applicationPath;
-            //REngine.SetEnvironmentVariables(rPath, homePath);
-            //REngine engine = REngine.GetInstance();
+            }
+            
+
             engine.Initialize();
             //ensure the REngine global environment is cleared when the program starts
             //engine.ClearGlobalEnvironment();
@@ -229,5 +253,6 @@ namespace CSharpBackendWithR
             //InitializePythonScripts();
         }
         public static bool REngineRunning=false;
+        public static bool PythonLoaded { get; set; }
     }
 }

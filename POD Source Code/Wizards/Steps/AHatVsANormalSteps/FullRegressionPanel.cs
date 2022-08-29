@@ -8,7 +8,7 @@ using POD.Controls;
 using POD.Analyze;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
-
+using CSharpBackendWithR;
 namespace POD.Wizards.Steps.AHatVsANormalSteps
 {
     using System.Data;
@@ -380,7 +380,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _yTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
             
         }
-
+        
         private void TransformBox_ValueChanged(object sender, EventArgs e)
         {
             Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
@@ -403,6 +403,17 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
             {
+                //get temporary lambda if box-cox is selected
+                if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+                {
+                    double lambdaTemp;
+                    AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
+                    List<double> tempFlaws = currAnalysis.Flaws;
+                    List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
+                    TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
+                    lambdaTemp= TempLambda.CalcTempLambda();
+                    Analysis.SetTempLambda = lambdaTemp;
+                }
                 var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
                 mainChart.SetLeftCensorBoundary(y, false);
                 y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
@@ -422,6 +433,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             ForceUpdateAfterTransformChange();
         }
+        /*
+        private void GetTempLambda()
+        {
+            //need to set the value of lambda beforehand in boxcox or bounds will be incorrect
+            List<double> tempflaws=Analysis._finalAnalysisAHat.Flaws;
+            List<double> tempResponses = Analysis._finalAnalysisAHat.Responses[Analysis._finalAnalysisAHat.SignalResponseName];
+            Analysis.RDotNet.RDotNetEngine.Evaluate("");
+        }
+        */
 
         protected override void SetupNumericControlPrecision()
         {
@@ -651,7 +671,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             StepToolTip.SetToolTip(thresholdChart, thresholdChart.TooltipText);
             thresholdChart.ChartToolTip = StepToolTip;
-            CSharpBackendWithR.REngineObject.REngineRunning = false;
+            REngineObject.REngineRunning = false;
             //RefreshValues();
         }        
 

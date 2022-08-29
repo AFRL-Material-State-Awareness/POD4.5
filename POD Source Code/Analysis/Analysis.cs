@@ -2505,7 +2505,10 @@ namespace POD.Analyze
                 }
             }
         }
-
+        public double SetTempLambda
+        {
+            set { _aHatAnalysisObject.Lambda = value; }
+        }
         
 
         private double _inFlawCalcMax = 0.0;
@@ -2601,6 +2604,7 @@ namespace POD.Analyze
                 try
                 {
                     return Convert.ToDecimal(TransformAValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
+                    //return Convert.ToDecimal(TransformAValue(myValue / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                 }
                 catch (OverflowException overflow)
                 {
@@ -2611,9 +2615,22 @@ namespace POD.Analyze
                     value = 0;
                 }
             }
-
-            
-
+            else if (myValue <= 0.0M && InResponseTransform == TransformTypeEnum.BoxCox)
+            {
+                try
+                {
+                    // this will set the signal response to -1 by default if the bottom slider becomes negative
+                    return Convert.ToDecimal(TransformAValue(Convert.ToDouble(0), _python.TransformEnumToInt(InResponseTransform)) * _aHatAnalysisObject.Lambda);
+                }
+                catch (OverflowException overflow)
+                {
+                    value = 0.0M;
+                }
+                catch (DivideByZeroException divide)
+                {
+                    value = 0;
+                }
+            }
             try
             {
                 //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
