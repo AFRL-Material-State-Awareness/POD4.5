@@ -1051,7 +1051,7 @@ namespace POD.Data
 
                     toTable.Columns.Add(newCol);
                 }
-
+                var stop = 0.0;
                 toTable.Load(fromTable.CreateDataReader());
             }
         }
@@ -1776,49 +1776,52 @@ namespace POD.Data
             watch.Start();
 
             bool printDTFlag = false;
-
+            double lambda;
             try
             {      
-                //_fitResidualsTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetFitTable());
                 _fitResidualsTable = _aHatAnalysisObject.AHatResultsLinear;
                 //used to transform the POD curve back to linear space
-                if (_aHatAnalysisObject.ModelType == 1)
+                switch (_aHatAnalysisObject.ModelType)
                 {
-                   
+                    case 1:
+                        break;
+                    case 2:
+                        for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                        {
+                            _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                        {
+                            _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
+                        }
+                        break;
+                    case 4:
+                        for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                        {
+                            _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
+                            _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
+                        }
+                        break;
+                    case 5:
+                        lambda = _aHatAnalysisObject.Lambda;
+                        //transform back box cox here;
+                        for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                        {
+                            _fitResidualsTable.Rows[i][2] = IPy4C.NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * lambda + 1, lambda);
+                        }
+                        break;
+                    case 6:
+                        lambda = _aHatAnalysisObject.Lambda;
+                        //transform back box cox here;
+                        for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
+                        {
+                            _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
+                            _fitResidualsTable.Rows[i][2] = IPy4C.NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * lambda + 1, lambda);
+                        }
+                        break;
                 }
-                else if (_aHatAnalysisObject.ModelType == 2)
-                {
-                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
-                    {
-                        _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 3)
-                {
-
-                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
-                    {
-                        _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 4)
-                {
-                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
-                    {
-                        _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
-                        _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
-                    }
-                }
-                else if ( _aHatAnalysisObject.ModelType == 5)
-                {
-                    double lambda = _aHatAnalysisObject.Lambda;
-                    //transform back box cox here;
-                    for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
-                    {
-                        _fitResidualsTable.Rows[i][2] = IPy4C.NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * lambda + 1, lambda);
-                    }
-                }
-
                 _fitResidualsTable.DefaultView.RowFilter = "";
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
@@ -1832,78 +1835,11 @@ namespace POD.Data
             //printDT(_fitResidualsTable);
             try
             {
-                //_residualUncensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetResidualTable());
-                //_residualUncensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualUncensoredTable = _aHatAnalysisObject.AHatResultsResidUncensored;
-                //used to transform the POD curve back to linear space
-                //if (_residualUncensoredTable.Columns.Contains("transformFlaw") == false)
-                //{
-                //    _residualUncensoredTable.Columns.Add("transformFlaw", typeof(System.Double));
-                //}
-                if (_aHatAnalysisObject.ModelType == 1)
-                {
-
-                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
-                    {
-                        _residualUncensoredTable.Rows[i][2] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
-                        _residualUncensoredTable.Rows[i][3] = Convert.ToDouble(_residualUncensoredTable.Rows[i][1]);
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 2)
-                {
-                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
-                    {
-                        //copy over transform values
-                        _residualUncensoredTable.Rows[i][2] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
-                        _residualUncensoredTable.Rows[i][3] = Convert.ToDouble(_residualUncensoredTable.Rows[i][1]);
-                        //tranform back orginal flaws and/or reponses
-                        _residualUncensoredTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 3)
-                {
-                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
-                    {
-                        //copy over transform values
-                        _residualUncensoredTable.Rows[i][2] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
-                        _residualUncensoredTable.Rows[i][3] = Convert.ToDouble(_residualUncensoredTable.Rows[i][1]);
-                        //tranform back orginal flaws and/or reponses
-                        _residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 4)
-                {
-                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
-                    {
-                        //copy over transform values
-                        _residualUncensoredTable.Rows[i][2] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
-                        _residualUncensoredTable.Rows[i][3] = Convert.ToDouble(_residualUncensoredTable.Rows[i][1]);
-                        //tranform back orginal flaws and/or reponses
-                        _residualUncensoredTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
-                        _residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 5)
-                {
-                    for (int i = 0; i < _residualUncensoredTable.Rows.Count; i++)
-                    {
-                        double lambda = _aHatAnalysisObject.Lambda;
-                        //FIX this later
-                        _residualUncensoredTable.Rows[i][2] = Convert.ToDouble(_residualUncensoredTable.Rows[i][0]);
-                        _residualUncensoredTable.Rows[i][3] = Convert.ToDouble(_residualUncensoredTable.Rows[i][1]);
-                        _residualUncensoredTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]) * lambda + 1, lambda);
-
-                        //_residualUncensoredTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
-                        //_residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
-                        //_residualUncensoredTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][2]));
-                    }
-                }
-                _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
-                _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
+                _residualUncensoredTable = TransformBackColResidualTables(_residualUncensoredTable);
+                
                 for(int i = _residualUncensoredTable.Rows.Count-1; i >=0; i--)
                 {
-                    //Console.WriteLine(_residualUncensoredTable.Rows[i][0]);
                     for(int j=0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
                     {
                         if(Convert.ToDouble(_residualUncensoredTable.Rows[i][0])== _aHatAnalysisObject.FlawsCensored[j])
@@ -1913,6 +1849,8 @@ namespace POD.Data
                         }
                     }
                 }
+                _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
+                _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_residualUncensoredTable);
             }
@@ -1922,67 +1860,8 @@ namespace POD.Data
             }
             try
             {
-                //_residualRawTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetRawResidualTable());
-                //_residualRawTable.DefaultView.Sort = "t_flaw, t_response" + " " + "ASC";
                 _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
-                if (_aHatAnalysisObject.ModelType == 1)
-                {
-
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        _residualRawTable.Rows[i][2] = Convert.ToDouble(_residualRawTable.Rows[i][0]);
-                        _residualRawTable.Rows[i][3] = Convert.ToDouble(_residualRawTable.Rows[i][1]);
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 2)
-                {
-                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        //copy over transform values
-                        _residualRawTable.Rows[i][2] = Convert.ToDouble(_residualRawTable.Rows[i][0]);
-                        _residualRawTable.Rows[i][3] = Convert.ToDouble(_residualRawTable.Rows[i][1]);
-                        //tranform back orginal flaws and/or reponses
-                        _residualRawTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_residualRawTable.Rows[i][0]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 3)
-                {
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        //copy over transform values
-                        _residualRawTable.Rows[i][2] = Convert.ToDouble(_residualRawTable.Rows[i][0]);
-                        _residualRawTable.Rows[i][3] = Convert.ToDouble(_residualRawTable.Rows[i][1]);
-                        //tranform back orginal flaws and/or reponses
-                        _residualRawTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualRawTable.Rows[i][1]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 4)
-                {
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        //copy over transform values
-                        _residualRawTable.Rows[i][2] = Convert.ToDouble(_residualRawTable.Rows[i][0]);
-                        _residualRawTable.Rows[i][3] = Convert.ToDouble(_residualRawTable.Rows[i][1]);
-                        //tranform back orginal flaws and/or reponses
-                        _residualRawTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_residualRawTable.Rows[i][0]));
-                        _residualRawTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualRawTable.Rows[i][1]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 5)
-                {
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        double lambda = _aHatAnalysisObject.Lambda;
-                        //FIX this later
-                        _residualRawTable.Rows[i][2] = Convert.ToDouble(_residualRawTable.Rows[i][0]);
-                        _residualRawTable.Rows[i][3] = Convert.ToDouble(_residualRawTable.Rows[i][1]);
-                        _residualRawTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(_residualRawTable.Rows[i][1]) * lambda + 1, lambda);
-                        //_residualUncensoredTable.Rows[i][4] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][0]));
-                        //_residualUncensoredTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][1]));
-                        //_residualUncensoredTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_residualUncensoredTable.Rows[i][2]));
-                    }
-                }
+                _residualRawTable = TransformBackColResidualTables(_residualRawTable);
                 _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualRawTable = _residualRawTable.DefaultView.ToTable();
                 if (printDTFlag)
@@ -1994,7 +1873,6 @@ namespace POD.Data
             }
             try
             {
-                //_residualCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetCensoredTable());
                 _residualCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 if (_residualCensoredTable.Rows.Count != 0)
                 {
@@ -2049,9 +1927,9 @@ namespace POD.Data
 
             try
             {
-                //_residualPartialCensoredTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPartialCensoredTable());
                 _residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
                 //_residualPartialCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                _residualPartialCensoredTable.DefaultView.Sort = "transformFlaw, transformResponse" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_residualPartialCensoredTable);
@@ -2063,14 +1941,7 @@ namespace POD.Data
 
             try 
             { 
-
-                //_podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable());
                 _podCurveTable = _aHatAnalysisObject.AHatResultsPOD;
-                //used to transform the POD curve back to linear space
-                //if (_podCurveTable.Columns.Contains("transformFlaw") == false)
-                //{
-                //    _podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                //}
                 if (_podCurveTable.Columns.Contains("t_fit"))
                 {
                     _podCurveTable.Columns["t_fit"].ColumnName = "pod";
@@ -2084,15 +1955,14 @@ namespace POD.Data
                         _podCurveTable.Rows[i][0] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                 }
-                else if (_aHatAnalysisObject.ModelType == 2 || _aHatAnalysisObject.ModelType == 4)
+                else if (_aHatAnalysisObject.ModelType == 2 || _aHatAnalysisObject.ModelType == 4 || _aHatAnalysisObject.ModelType == 6)
                 {
-                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                 }
-                //printDT(_podCurveTable);
+                printDT(_podCurveTable);
                 if (printDTFlag)
                     printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
@@ -2105,12 +1975,9 @@ namespace POD.Data
             //printDT(PodCurveTable);
             try
             {
-                //_podCurveTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPODTable_All());
-                //_podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All = _podCurveTable;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
-                //printDT(_podCurveTable_All);
                 if (printDTFlag)
                     printDT(_podCurveTable_All);
             }
@@ -2121,50 +1988,57 @@ namespace POD.Data
 
             try
             {
-                //_thresholdPlotTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable());
                 _thresholdPlotTable = _aHatAnalysisObject.AHatThresholdsTable;
+                double currThreshold;
+                lambda = _aHatAnalysisObject.Lambda;
+                switch (_aHatAnalysisObject.ModelType)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                        {
+                            _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
+                            _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
+                            _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                        {
+                            _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
+                        }
+                        break;
+                    case 4:
+                        for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                        {
+                            _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
+                            _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
+                            _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
+                            _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
 
-                if (_aHatAnalysisObject.ModelType == 2)
-                {
-                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
-                    {
-                        _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
-                        _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
-                        _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
-                    }
+                        }
+                        break;
+                    case 5:
+                        for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                        {
+                            currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
+                            _thresholdPlotTable.Rows[i][0] = IPy4C.NthRoot(currThreshold * lambda + 1, lambda);
+                        }
+                        break;
+                    case 6:
+                        for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
+                        {
+                            //transform back y thresholds
+                            currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
+                            _thresholdPlotTable.Rows[i][0] = IPy4C.NthRoot(currThreshold * lambda + 1, lambda);
+                            //transform back 'a' flaw sizes
+                            _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
+                            _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
+                            _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
+                        }
+                        break;
                 }
-                else if (_aHatAnalysisObject.ModelType == 3)
-                {
-                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
-                    {
-                        _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 4)
-                {
-                    //_podCurveTable.Columns.Add("transformFlaw", typeof(System.Double));
-                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
-                    {
-                        _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
-                        _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
-                        _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
-                        _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
-
-                    }
-                }
-                else if (_aHatAnalysisObject.ModelType == 5)
-                {
-                    double currThreshold;
-                    double lambda = _aHatAnalysisObject.Lambda;
-                    for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
-                    {
-                        currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
-                        _thresholdPlotTable.Rows[i][0] = IPy4C.NthRoot(currThreshold*lambda+1, lambda);
-                    }
-                }
-                //_thresholdPlotTable.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
                 if (printDTFlag)
@@ -2177,11 +2051,7 @@ namespace POD.Data
             //printDT(_thresholdPlotTable);
             try
             {
-                //_thresholdPlotTable_All = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetThresholdTable_All());
-                //_thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
                 _thresholdPlotTable_All = _thresholdPlotTable;
-
-                //_thresholdPlotTable_All.DefaultView.Sort = "threshold, level" + " " + "ASC";
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
                 if (printDTFlag)
@@ -2195,8 +2065,56 @@ namespace POD.Data
             watch.Stop();
 
             var sortTime = watch.ElapsedMilliseconds;
-
-            //MessageBox.Show("DATA COPY TIME: " + sortTime);
+        }
+        private DataTable TransformBackColResidualTables(DataTable myResidTable)
+        {
+            //copy over transform values
+            for (int i = 0; i < myResidTable.Rows.Count; i++)
+            {
+                myResidTable.Rows[i][2] = Convert.ToDouble(myResidTable.Rows[i][0]);
+                myResidTable.Rows[i][3] = Convert.ToDouble(myResidTable.Rows[i][1]);
+            }
+            double lambda = _aHatAnalysisObject.Lambda;
+            switch (_aHatAnalysisObject.ModelType)
+            {
+                case 1:
+                    break;
+                case 2:
+                    for (int i = 0; i < myResidTable.Rows.Count; i++)
+                    {
+                        myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < myResidTable.Rows.Count; i++)
+                    {
+                        //tranform back orginal flaws and/or reponses
+                        myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
+                    }
+                    break;
+                case 4:
+                    for (int i = 0; i < myResidTable.Rows.Count; i++)
+                    {
+                        //tranform back orginal flaws and/or reponses
+                        myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
+                        myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
+                    }
+                    break;
+                case 5:
+                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
+                    {
+                        myResidTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * lambda + 1, lambda);
+                    }
+                    break;
+                case 6:
+                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
+                    {
+                        myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
+                        myResidTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * lambda + 1, lambda);
+                    }
+                    break;
+            }
+            return myResidTable;
         }
 
         private List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames)
@@ -4083,7 +4001,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 10;
+            int limit = 1000;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

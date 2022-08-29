@@ -1848,6 +1848,10 @@ namespace POD.Analyze
             {
                 _aHatAnalysisObject.ModelType = 5;
             }
+            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 5)
+            {
+                _aHatAnalysisObject.ModelType = 6;
+            }
         }
 
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
