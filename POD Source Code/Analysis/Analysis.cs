@@ -1065,10 +1065,7 @@ namespace POD.Analyze
         }
 
         private void CopyOutputFromR()
-        {
-            //if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
-            //    _podDoc.DeregisterUpdateProgressEvent(this);
-            
+        {  
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
             try
@@ -1164,8 +1161,6 @@ namespace POD.Analyze
                     OutResponseDecisionPODLevelValue = Math.Exp(_aHatAnalysisObject.A90);
                     OutResponseDecisionPODConfidenceValue = Math.Exp(_aHatAnalysisObject.A9095);
                 }
-                //OutPODMu = _podDoc.GetPODMu();
-                //OutPODSigma = _podDoc.GetPODSigma();
                 OutPODMu = _aHatAnalysisObject.Muhat;
                 OutPODSigma = _aHatAnalysisObject.Sighat;
                 //OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;

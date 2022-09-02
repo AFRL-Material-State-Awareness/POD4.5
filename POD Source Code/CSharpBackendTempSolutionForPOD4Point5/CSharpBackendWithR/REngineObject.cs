@@ -49,7 +49,7 @@ namespace CSharpBackendWithR
             string homePath;
             REngine engine;
             //initialize the R engine
-            if (false)
+            if (true)
             {
                 try
                 {

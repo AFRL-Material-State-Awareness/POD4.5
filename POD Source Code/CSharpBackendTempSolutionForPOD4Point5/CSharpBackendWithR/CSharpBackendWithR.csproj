@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{910FE8F4-2CAE-4A5B-8D9E-F5F3C099F80F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>CSharpBackendWithR</RootNamespace>
     <AssemblyName>CSharpBackendWithR</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -70,9 +70,7 @@
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="DynamicInterop, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DynamicInterop.0.9.1\lib\netstandard2.0\DynamicInterop.dll</HintPath>
@@ -113,17 +111,17 @@
     <Compile Include="AnalysistypeTransform.cs" />
     <Compile Include="AHatAnalysisObject.cs" />
     <Compile Include="AHatAnalysisRControl.cs" />
-    <Compile Include="TransformBackCSharpTables.cs" />
+    <Compile Include="TransformBackCSharpTablesAHAT.cs" />
     <Compile Include="GenerateRTransformDF_AHAT.cs" />
     <Compile Include="TemporaryLambdaCalc.cs" />
     <Compile Include="HitMissAnalysisRControl.cs" />
     <Compile Include="HMAnalysisObject.cs" />
-    <Compile Include="HMCrackData.cs" />
     <Compile Include="MaxAndMinClass.cs" />
     <Compile Include="ParentAnalysisObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REngineObject.cs" />
+    <Compile Include="TransformBackCSharpTablesHITMISS.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
