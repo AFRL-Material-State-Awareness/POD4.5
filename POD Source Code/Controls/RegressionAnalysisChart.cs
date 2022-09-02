@@ -1567,7 +1567,14 @@ namespace POD.Controls
             {
                 if (_analysisData.DataType.ToString() == "HitMiss")
                 {
-                    fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
+                    if(_analysisData.FlawTransform.ToString() == "Inverse")
+                    {
+                        fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+                    }
+                    else
+                    {
+                        fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
+                    }  
                 }
                 else
                 {

@@ -1875,58 +1875,6 @@ namespace POD.Data
 
             var sortTime = watch.ElapsedMilliseconds;
         }
-        /*
-        private DataTable TransformBackColResidualTables(DataTable myResidTable)
-        {
-            //copy over transform values
-            for (int i = 0; i < myResidTable.Rows.Count; i++)
-            {
-                myResidTable.Rows[i][2] = Convert.ToDouble(myResidTable.Rows[i][0]);
-                myResidTable.Rows[i][3] = Convert.ToDouble(myResidTable.Rows[i][1]);
-            }
-            double lambda = _aHatAnalysisObject.Lambda;
-            switch (_aHatAnalysisObject.ModelType)
-            {
-                case 1:
-                    break;
-                case 2:
-                    for (int i = 0; i < myResidTable.Rows.Count; i++)
-                    {
-                        myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
-                    }
-                    break;
-                case 3:
-                    for (int i = 0; i < myResidTable.Rows.Count; i++)
-                    {
-                        //tranform back orginal flaws and/or reponses
-                        myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
-                    }
-                    break;
-                case 4:
-                    for (int i = 0; i < myResidTable.Rows.Count; i++)
-                    {
-                        //tranform back orginal flaws and/or reponses
-                        myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
-                        myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
-                    }
-                    break;
-                case 5:
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        myResidTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * lambda + 1, lambda);
-                    }
-                    break;
-                case 6:
-                    for (int i = 0; i < _residualRawTable.Rows.Count; i++)
-                    {
-                        myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
-                        myResidTable.Rows[i][1] = IPy4C.NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * lambda + 1, lambda);
-                    }
-                    break;
-            }
-            return myResidTable;
-        }
-        */
 
         private List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames)
         {
@@ -2922,6 +2870,9 @@ namespace POD.Data
                 case 2:
                     transformValue = Math.Log(myValue);
                     break;
+                case 3:
+                    transformValue = myValue;
+                    break;
                 case 5:
                     transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
                     break;
@@ -2942,6 +2893,9 @@ namespace POD.Data
                     break;
                 case 2:
                     transformValue = Math.Exp(myValue);
+                    break;
+                case 3:
+                    transformValue = myValue;
                     break;
                 case 5:
                     transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda + 1, _aHatAnalysisObject.Lambda);
@@ -3055,6 +3009,9 @@ namespace POD.Data
                         break;
                     case TransformTypeEnum.Inverse:
                         yText = "1/ahat";
+                        break;
+                    case TransformTypeEnum.BoxCox:
+                        yText = "[(ahat)^(lambda)-1]/lambda";
                         break;
                     default:
                         yText = "Custom";
@@ -3856,7 +3813,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 1000;
+            int limit = 5;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

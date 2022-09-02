@@ -1237,7 +1237,7 @@ namespace POD.Analyze
             }
 
             Data.UpdateOutput();
-
+            
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
 
@@ -2901,7 +2901,8 @@ namespace POD.Analyze
                     transformValue = Math.Log(myValue);
                     break;
                 case 3:
-                    transformValue = 1 / myValue;
+                    //transformValue = 1 / myValue;
+                    transformValue = myValue;
                     break;
                 case 5:
                     transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
@@ -2926,7 +2927,7 @@ namespace POD.Analyze
                     transformValue = Math.Exp(myValue);
                     break;
                 case 3:
-                    transformValue = 1 / myValue;
+                    transformValue = myValue;
                     break;
                 case 5:
                     transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda+1, _aHatAnalysisObject.Lambda);

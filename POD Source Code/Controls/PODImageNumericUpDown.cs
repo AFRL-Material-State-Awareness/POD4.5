@@ -18,7 +18,6 @@ namespace POD.Controls
             InitializeComponent();
 
             UpdateImage();
-
             NumericUpDown.KeyDown += NumericUpDown.TextBox_KeyDown;
         }
 
