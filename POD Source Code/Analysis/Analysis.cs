@@ -1853,7 +1853,35 @@ namespace POD.Analyze
                 _aHatAnalysisObject.ModelType = 6;
             }
         }
-
+        /*
+        private void AHatModelUpdate()
+        {
+            switch (_aHatAnalysisObject.Ahat_transform)
+            {
+                case 1 when _aHatAnalysisObject.Ahat_transform == 1:
+                    _aHatAnalysisObject.ModelType = 1;
+                    break;
+                case 1 when _aHatAnalysisObject.Ahat_transform == 2:
+                    _aHatAnalysisObject.ModelType = 3;
+                    break;
+                case 1 when _aHatAnalysisObject.Ahat_transform == 5:
+                    _aHatAnalysisObject.ModelType = 5;
+                    break;
+                case 2 when _aHatAnalysisObject.Ahat_transform == 1:
+                    _aHatAnalysisObject.ModelType = 2;
+                    break;
+                case 2 when _aHatAnalysisObject.Ahat_transform == 2:
+                    _aHatAnalysisObject.ModelType = 4;
+                    break;
+                case 2 when _aHatAnalysisObject.Ahat_transform == 5:
+                    _aHatAnalysisObject.ModelType = 6;
+                    break;
+                default:
+                    _aHatAnalysisObject.ModelType = 1;
+                    break;
+            }
+        }
+        */
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
         {
             _python.AddErrorText(e.Value);

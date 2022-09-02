@@ -11,6 +11,7 @@ namespace CSharpBackendWithR
     {
         private REngineObject myREngineObject;
         private REngine myREngine;
+        private GenerateRTransformDF_AHAT GenerateDataFrameInR;
         public AHatAnalysisRControl(REngineObject myREngineObject)
         {
             this.myREngineObject = myREngineObject;
@@ -22,7 +23,6 @@ namespace CSharpBackendWithR
             //create private variable names to shorten length
             List<double> cracks = newAHatAnalysis.Flaws;
             List<double> cracksCensored = newAHatAnalysis.FlawsCensored;
-            
             List<double> signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
             //needed for the r code 
@@ -70,117 +70,8 @@ namespace CSharpBackendWithR
                     this.myREngine.Evaluate("event<- c(event, 1)");
                 }
             }
-            //set lambda as 0 by default 
-            this.myREngine.Evaluate("lambdaInput<-0");
-            //create the appropriate dataframe based on the transform type
-            switch (newAHatAnalysis.ModelType)
-            {
-                case 1:
-                    this.myREngine.Evaluate("isLog=FALSE");
-                    //create index column for dataframe
-                    for (int i = 1; i <= cracks.Count; i++)
-                    {
-                        indices.Add(i);
-                    }
-                    //initialize the matrices used to create the input dataframe
-                    this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
-                    //acumulate r matrices in order to create the dataframe
-                    for (int i = 1; i < cracks.Count; i++)
-                    {
-                        this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                        this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        this.myREngine.Evaluate("y<-c(y," + signalResponse[i].ToString() + ")");
-                    }
-                    break;
-                case 2:
-                    //create index column for dataframe
-                    for (int i = 1; i <= cracks.Count; i++)
-                    {
-                        indices.Add(i);
-                    }
-                    //initialize the matrices used to create the input dataframe
-                    this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
-                    this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
-                    //acumulate r matrices in order to create the dataframe
-                    for (int i = 1; i < cracks.Count; i++)
-                    {
-                        this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                        this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
-                        this.myREngine.Evaluate("y<-c(y," + signalResponse[i].ToString() + ")");
-                    }
-                    break;
-                case 3:
-                    //create index column for dataframe
-                    for (int i = 1; i <= cracks.Count; i++)
-                    {
-                        indices.Add(i);
-                    }
-                    //initialize the matrices used to create the input dataframe
-                    this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(log(" + signalResponse[0].ToString() + "))");
-                    //acumulate r matrices in order to create the dataframe
-                    for (int i = 1; i < cracks.Count; i++)
-                    {
-                        this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                        this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        this.myREngine.Evaluate("y<-c(y, log(" + signalResponse[i].ToString() + "))");
-                    }
-                    break;
-                case 4:
-                    //create index column for dataframe
-                    for (int i = 1; i <= cracks.Count; i++)
-                    {
-                        indices.Add(i);
-                    }
-                    //initialize the matrices used to create the input dataframe
-                    this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
-                    this.myREngine.Evaluate("y<-c(log(" + signalResponse[0].ToString() + "))");
-                    //this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    //this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
-                    //acumulate r matrices in order to create the dataframe
-                    for (int i = 1; i < cracks.Count; i++)
-                    {
-                        this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                        this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
-                        this.myREngine.Evaluate("y<-c(y, log(" + signalResponse[i].ToString() + "))");
-                        //this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        //this.myREngine.Evaluate("y<-c(y," + signalResponse[i].ToString() + ")");
-
-                    }
-                    break;
-                case 5:
-                    //create index column for dataframe
-                    for (int i = 1; i <= cracks.Count; i++)
-                    {
-                        indices.Add(i);
-                    }
-                    //initialize the matrices used to create the input dataframe
-                    this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
-                    //acumulate r matrices in order to create the dataframe
-                    for (int i = 1; i < cracks.Count; i++)
-                    {
-                        this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                        this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                        this.myREngine.Evaluate("y<-c(y, " + signalResponse[i].ToString() + ")");
-
-                    }
-                    //box-cox tranform has been selected. Find the optimal value for lambda!
-                    this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
-                    //get the value of lambda
-                    this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
-                    //tranform y-axis with lambda
-                    this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
-                    break;
-                default:
-                    throw new Exception("model type not found exception for AHAT!");
-            }
+            this.GenerateDataFrameInR = new GenerateRTransformDF_AHAT(this.myREngineObject, newAHatAnalysis);
+            this.GenerateDataFrameInR.GenerateTransformDataframe();
             //build the dataframe in the global environment
             //this dataframe will remain in the global environment
             this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y, event)");

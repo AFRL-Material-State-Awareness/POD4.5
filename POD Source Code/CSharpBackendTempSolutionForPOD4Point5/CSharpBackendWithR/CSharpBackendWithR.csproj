@@ -113,6 +113,8 @@
     <Compile Include="AnalysistypeTransform.cs" />
     <Compile Include="AHatAnalysisObject.cs" />
     <Compile Include="AHatAnalysisRControl.cs" />
+    <Compile Include="TransformBackCSharpTables.cs" />
+    <Compile Include="GenerateRTransformDF_AHAT.cs" />
     <Compile Include="TemporaryLambdaCalc.cs" />
     <Compile Include="HitMissAnalysisRControl.cs" />
     <Compile Include="HMAnalysisObject.cs" />

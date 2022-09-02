@@ -19,10 +19,10 @@ LinearComboGenerator <- setRefClass("LinearComboGenerator", fields = list(Logist
                                                               K = matrix(c(rep(1,length(a_i_2)),a_i_2),ncol=2)
                                                               ptm <- proc.time()
                                                               linearCombo<-minimcprofile(object = LogisticRegressionResult, CM = K)# Calculate -2log(Lambda)
+                                                              #linearCombo<-mcprofile(object = LogisticRegressionResult, CM = K)# Calculate -2log(Lambda)
                                                               #print("mcprofile time calc parallel")
                                                               p=proc.time() - ptm
                                                               print(p)
-                                                              #linearCombo<-mcprofile(object = LogisticRegressionResult, CM = K)# Calculate -2log(Lambda)
                                                               #linearComboGlobal<<-linearCombo
                                                               return(linearCombo)
                                                             },

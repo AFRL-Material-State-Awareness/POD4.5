@@ -1962,7 +1962,7 @@ namespace POD.Data
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                 }
-                printDT(_podCurveTable);
+                //printDT(_podCurveTable);
                 if (printDTFlag)
                     printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
@@ -1975,7 +1975,8 @@ namespace POD.Data
             //printDT(PodCurveTable);
             try
             {
-                _podCurveTable_All = _podCurveTable;
+                //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
+                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
                 if (printDTFlag)
@@ -2051,7 +2052,7 @@ namespace POD.Data
             //printDT(_thresholdPlotTable);
             try
             {
-                _thresholdPlotTable_All = _thresholdPlotTable;
+                _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
                 if (printDTFlag)
@@ -3017,21 +3018,65 @@ namespace POD.Data
         }
         private void AHatModelUpdate()
         {
+            //linear- linear
             if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 1)
             {
                 _aHatAnalysisObject.ModelType = 1;
             }
+            //log - linear
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 1)
             {
                 _aHatAnalysisObject.ModelType = 2;
             }
+            //linear- log
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 2)
             {
                 _aHatAnalysisObject.ModelType = 3;
             }
+            // log - log
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
             {
                 _aHatAnalysisObject.ModelType = 4;
+            }
+            // linear - box-cox
+            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 5)
+            {
+                _aHatAnalysisObject.ModelType = 5;
+            }
+            // log - boxcox
+            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 5)
+            {
+                _aHatAnalysisObject.ModelType = 6;
+            }
+            // inverse - boxcox
+            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 5)
+            {
+                _aHatAnalysisObject.ModelType = 7;
+            }
+            // linear - inverse
+            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 3)
+            {
+                _aHatAnalysisObject.ModelType = 8;
+            }
+            // log - inverse
+            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 3)
+            {
+                _aHatAnalysisObject.ModelType = 9;
+            }
+            // inverse - linear
+            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 1)
+            {
+                _aHatAnalysisObject.ModelType = 10;
+            }
+            // inverse - log
+            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 2)
+            {
+                _aHatAnalysisObject.ModelType = 11;
+            }
+            // inverse x - inverse y
+            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 3)
+            {
+                _aHatAnalysisObject.ModelType = 12;
             }
         }
         public AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed)

@@ -49,11 +49,19 @@ namespace CSharpBackendWithR
             Name = nameInput;
             Flaw_name = ""; //holds the name of the flaw in the datatable
             Info_row = 0;
+            //KEY:
             //1=no transform,
             //2=x-axis only transform,
             //3=y-axis only transform,
             //4=both axis tranform, 
             //5= Box-cox tranform with linear x;
+            //6= Box-cox tranform with log x
+            //7= Box-cox transform with inverse x
+            //8= linear x with inverse y
+            //9= log x with inverse y
+            //10= inverse x with linear y
+            //11= inverse x with log y
+            //12= inverse x with inverse y
             this.modelType = 1; 
             //stores the max and min signal reponses
             Signalmin = -1.0;

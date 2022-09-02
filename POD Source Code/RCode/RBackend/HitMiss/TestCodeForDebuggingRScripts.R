@@ -1,6 +1,6 @@
 # #Test Code
 #flag used for genNormFitClassR
-isLog=FALSE
+#isLog=FALSE
 #import necessary libraries
 library(methods)
 #dependencies from original R code
