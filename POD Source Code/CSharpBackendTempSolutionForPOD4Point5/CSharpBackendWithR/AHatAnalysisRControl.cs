@@ -27,6 +27,8 @@ namespace CSharpBackendWithR
             List<int> indices = new List<int>();
             //needed for the r code 
             //this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());
+            //if (newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName].Count() != 0 || 
+            //    newAHatAnalysis.ResponsesCensoredRight[newAHatAnalysis.SignalResponseName].Count() != 0)
             if (newAHatAnalysis.ResponsesCensoredLeft.Count() != 0 || newAHatAnalysis.ResponsesCensoredRight.Count() != 0)
             {
                 List<double> responsesLeftCensored = newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName];

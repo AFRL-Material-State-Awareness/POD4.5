@@ -299,9 +299,15 @@ namespace POD.Controls
         {
             var view = data.ResidualRawTable.AsDataView();
 
-            //Original.Points.DataBindXY(view, "t_flaw", view, "t_response");
-            //Original.Points.DataBindXY(view, "transformFlaw", view, "y");
-            Original.Points.DataBindXY(view, "transformFlaw", view, "transformResponse");
+            int modelType = data.AHATAnalysisObject.ModelType;
+            if (modelType == 7 || modelType==8 || modelType == 9 || modelType == 12)
+            {
+                Original.Points.DataBindXY(view, "flaw", view, "transformResponse");
+            }
+            else
+            {
+                Original.Points.DataBindXY(view, "transformFlaw", view, "transformResponse");
+            }
             Original.Enabled = false;
 
             //var index = 0;
@@ -570,8 +576,14 @@ namespace POD.Controls
             DataView view = data.ResidualUncensoredTable.DefaultView;
 
             //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
-            fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
-
+            if (data.HMAnalysisObject.ModelType == 3)
+            {
+                fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+            }
+            else
+            {
+                fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
+            }
         }
 
         private void AddFitSeries(AnalysisData data)

@@ -225,6 +225,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       else if(modelType==5){
                                         a.hat.decision=(a.hat.decision^lambda-1)/lambda
                                       }
+                                      else if(modelType==8 || modelType==9 || modelType==12){
+                                        a.hat.decision= 1/a.hat.decision
+                                      }
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma

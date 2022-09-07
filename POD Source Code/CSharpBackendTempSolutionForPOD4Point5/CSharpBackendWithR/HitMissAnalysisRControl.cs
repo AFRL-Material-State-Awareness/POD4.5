@@ -10,6 +10,7 @@ namespace CSharpBackendWithR
     {
         private REngineObject myREngineObject;
         private REngine myREngine;
+        private GenerateRTransformDF_HitMiss GenerateDataFrameInR;
         public HitMissAnalysisRControl(REngineObject myREngineObject)
         {
             this.myREngineObject = myREngineObject;
@@ -25,90 +26,15 @@ namespace CSharpBackendWithR
             List<int> indices = new List<int>();
             //needed for the r code 
             this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());
-            if (newTranformAnalysis.ModelType == 1)
-            {
-                this.myREngine.Evaluate("isLog=FALSE");
-                //create index column for dataframe
-                for (int i = 1; i <= cracks.Count; i++)
-                {
-                    indices.Add(i);
-                }
-                //initialize the matrices used to create the input dataframe
-                this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(" + hitMiss[0].ToString() + ")");
-                //acumulate r matrices in order to create the dataframe
-                for (int i = 1; i < cracks.Count; i++)
-                {
-                    this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(x," + cracks[i].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(y," + hitMiss[i].ToString() + ")");
-                };
-                //build the dataframe in the global environment
-                //this dataframe will remain in the global environment
-                this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
-                this.myREngine.Evaluate("rm(Index)");
-                this.myREngine.Evaluate("rm(x)");
-                this.myREngine.Evaluate("rm(y)");
-            }
-            else if (newTranformAnalysis.ModelType == 2)
-            {
-                this.myREngine.Evaluate("isLog=TRUE");
-                //create index column for dataframe
-                for (int i = 1; i <= cracks.Count; i++)
-                {
-                    indices.Add(i);
-                }
-                //initialize the matrices used to create the input dataframe
-                this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(" + hitMiss[0].ToString() + ")");
-                //acumulate r matrices in order to create the dataframe
-                for (int i = 1; i < cracks.Count; i++)
-                {
-                    this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(x,log(" + cracks[i].ToString() + "))");
-                    this.myREngine.Evaluate("y<-c(y," + hitMiss[i].ToString() + ")");
-                };
-                //build the dataframe in the global environment
-                //this dataframe will remain in the global environment
-                this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
-                this.myREngine.Evaluate("rm(Index)");
-                this.myREngine.Evaluate("rm(x)");
-                this.myREngine.Evaluate("rm(y)");
-            }
-            else if(newTranformAnalysis.ModelType == 3)
-            {
-                this.myREngine.Evaluate("isLog=FALSE");
-                //create index column for dataframe
-                for (int i = 1; i <= cracks.Count; i++)
-                {
-                    indices.Add(i);
-                }
-                //initialize the matrices used to create the input dataframe
-                this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(1/" + cracks[0].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(" + hitMiss[0].ToString() + ")");
-                //acumulate r matrices in order to create the dataframe
-                for (int i = 1; i < cracks.Count; i++)
-                {
-                    this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                    this.myREngine.Evaluate("x<-c(x,1/" + cracks[i].ToString() + ")");
-                    this.myREngine.Evaluate("y<-c(y," + hitMiss[i].ToString() + ")");
-                };
-                //build the dataframe in the global environment
-                //this dataframe will remain in the global environment
-                this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
-                this.myREngine.Evaluate("rm(Index)");
-                this.myREngine.Evaluate("rm(x)");
-                this.myREngine.Evaluate("rm(y)");
-            }
-            else
-            {
-                throw new Exception("model type not found exception! (currently only supports linear and log)");
-            }
-            
-            
+            this.GenerateDataFrameInR = new GenerateRTransformDF_HitMiss(this.myREngineObject, newTranformAnalysis);
+            this.GenerateDataFrameInR.GenerateTransformDataframe();
+            //build the dataframe in the global environment
+            //this dataframe will remain in the global environment
+            this.myREngine.Evaluate("hitMissDF<-data.frame(Index,x,y)");
+            this.myREngine.Evaluate("rm(Index)");
+            this.myREngine.Evaluate("rm(x)");
+            this.myREngine.Evaluate("rm(y)");
+
         }
         public void ExecuteAnalysis(HMAnalysisObject newTranformAnalysis)
         {
@@ -135,7 +61,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType='" + newTranformAnalysis.RegressionType + "',"
                 + "CIType='" + newTranformAnalysis.CIType +
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize, rankedSetSampleObject= newRSSComponent)");
-            //Thread.Sleep(1000);
+            this.myREngine.Evaluate("rm(normSampleSize)");
             this.myREngine.Evaluate("newAnalysis$initializeRSS()");
         }
         public DataTable GetLogitFitTableForUI()

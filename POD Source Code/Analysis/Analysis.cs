@@ -1559,6 +1559,7 @@ namespace POD.Analyze
         }
         public void UpdateCensoredData()
         {
+            //hitmiss analysis
             if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 List<double> hmInludedFlaws = new List<double>();
@@ -1584,6 +1585,7 @@ namespace POD.Analyze
                 //_hmAnalysisObject.Responses["y"] = hmIncludedResponses;
                 _hmAnalysisObject.Responses[_hmAnalysisObject.HitMiss_name] = hmIncludedResponses;
             }
+            //ahat analysis
             else
             {
                 //used for storing the excluded flaws
@@ -1604,7 +1606,6 @@ namespace POD.Analyze
                         aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
                     }
                     */
-
                     if (flaw >= InFlawMin && flaw <= InFlawMax)
                     {
                         aHatIncludedFlaws.Add(flaw);
@@ -1620,7 +1621,10 @@ namespace POD.Analyze
                             censoredResponsesR.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
                         }
                     }
-                    
+                    else
+                    {
+                        _aHatAnalysisObject.ExcludedFlaws.Add(flaw);
+                    }
                 }
                 //overwrite the temporary flaw variables in HitMiss object
                 _aHatAnalysisObject.Flaws = aHatIncludedFlaws;
@@ -1760,15 +1764,22 @@ namespace POD.Analyze
             {
                 //try
                 //{
-                    if (_data.HMAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-                    {
-                        _fileLoadHitMiss = true;
-                    }
+                if (_data.HMAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    _fileLoadHitMiss = true;
+                }
                 //}
                 //catch
                 //{
                 //    _fileLoadHitMiss = false;
                 //}
+            }
+            if(_aHatAnalysisObject != null)
+            {
+                if (_data.AHATAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                {
+                    _fileLoadHitMiss = true;
+                }
             }
             if (!_fileLoadHitMiss)
             {
@@ -2909,7 +2920,7 @@ namespace POD.Analyze
             {
                 if (_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null)
                 {
-                    _hmAnalysisObject = _data.DataHitMissObject;
+                    _hmAnalysisObject = _data.HMAnalysisObject;
                 }
             }
             //ditto for ahat versus a, signal response
@@ -2917,7 +2928,7 @@ namespace POD.Analyze
             {
                 if (_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null)
                 {
-                    _aHatAnalysisObject = _data.DataAHatObject;
+                    _aHatAnalysisObject = _data.AHATAnalysisObject;
                 }
             }
             try
@@ -2978,7 +2989,7 @@ namespace POD.Analyze
                     transformValue = Math.Log(myValue);
                     break;
                 case 3:
-                    //transformValue = 1 / myValue;
+                    //transformValue = 1.0 / myValue;
                     transformValue = myValue;
                     break;
                 case 5:
@@ -3004,6 +3015,7 @@ namespace POD.Analyze
                     transformValue = Math.Exp(myValue);
                     break;
                 case 3:
+                    //transformValue = 1.0/ myValue;
                     transformValue = myValue;
                     break;
                 case 5:

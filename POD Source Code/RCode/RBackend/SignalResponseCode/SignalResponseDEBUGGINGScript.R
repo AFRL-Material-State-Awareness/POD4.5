@@ -19,11 +19,11 @@ source(paste(folderLocation, "/SignalResponseMainAnalysisRObject.R", sep=""))
 data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TRUE)
 data_obs=na.omit(data_obs)
 begin<-proc.time()
-bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
+#bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
 lambda<-0
-lambda<-bc$x[which.max(bc$y)]
-data_obs$y<-(data_obs$y^lambda-1)/lambda
-
+#lambda<-bc$x[which.max(bc$y)]
+#data_obs$y<-(data_obs$y^lambda-1)/lambda
+data_obs$x=1/data_obs$x
 #data_obs$y=log(data_obs$y)
 #$y^1.11-1/1.11
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
@@ -31,7 +31,7 @@ data_obs$y<-(data_obs$y^lambda-1)/lambda
 data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 #perform signal response analysis
 #usually 40% of the highest signal response value
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=5, lambda=lambda)
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=6, lambda=lambda)
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()

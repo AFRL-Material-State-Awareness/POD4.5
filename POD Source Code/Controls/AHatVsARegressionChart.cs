@@ -338,6 +338,9 @@ namespace POD.Controls
                     case TransformTypeEnum.Inverse:
                         yText = "1/y";
                         break;
+                    case TransformTypeEnum.BoxCox:
+                        yText = "(y^(lambda)-1)/lambda";
+                        break;
                     default:
                         yText = "Custom";
                         break;

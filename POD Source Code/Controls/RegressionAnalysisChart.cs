@@ -1578,20 +1578,15 @@ namespace POD.Controls
                 }
                 else
                 {
-                    fitLine.Points.DataBindXY(view, "transformFlaw", view, "fit");
+                    if(_analysisData.FlawTransform.ToString()== "Inverse")
+                    {
+                        fitLine.Points.DataBindXY(view, "flaw", view, "fit");
+                    }
+                    else
+                    {
+                        fitLine.Points.DataBindXY(view, "transformFlaw", view, "fit");
+                    }
                 }
-                /*
-                try
-                {
-                    fitLine.Points.DataBindXY(view, "flaw", view, "fit");
-                }
-                catch(Exception fixme) {
-                    System.Diagnostics.Debug.WriteLine("This One!");
-                    fitLine.Points.DataBindXY(view, "tranformFlaw", view, "t_fit");
-                }
-                */
-                //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
-                //fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
             });
             
         }

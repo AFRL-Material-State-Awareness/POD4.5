@@ -395,25 +395,21 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             }
             else
             {
+                /*
                 var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
                 mainChart.SetAMinBoundary(x, false);
                 x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
                 mainChart.SetAMaxBoundary(x, false);
+                */
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
             }
 
             if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
             {
-                //get temporary lambda if box-cox is selected
-                if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
-                {
-                    double lambdaTemp;
-                    AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
-                    List<double> tempFlaws = currAnalysis.Flaws;
-                    List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
-                    TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
-                    lambdaTemp= TempLambda.CalcTempLambda();
-                    Analysis.SetTempLambda = lambdaTemp;
-                }
+               
                 var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
                 mainChart.SetLeftCensorBoundary(y, false);
                 y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
@@ -423,12 +419,31 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             }
             else
             {
+                /*
                 var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
                 mainChart.SetRightCensorBoundary(y, false);
                 y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
                 mainChart.SetLeftCensorBoundary(y, false);
                 y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
                 mainChart.SetThresholdBoundary(y, false);
+                */
+                var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
+                mainChart.SetLeftCensorBoundary(y, false);
+                y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
+                mainChart.SetRightCensorBoundary(y, false);
+                y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
+                mainChart.SetThresholdBoundary(y, false);
+            }
+            //get temporary lambda if box-cox is selected
+            if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+            {
+                double lambdaTemp;
+                AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
+                List<double> tempFlaws = currAnalysis.Flaws;
+                List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
+                TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
+                lambdaTemp = TempLambda.CalcTempLambda();
+                Analysis.SetTempLambda = lambdaTemp;
             }
 
             ForceUpdateAfterTransformChange();
@@ -819,11 +834,18 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             }
             else
             {
+                /*
                 if (mainChart.FindValue(ControlLine.AMax, ref value))
                     this.aMinControl.Value = Analysis.InvertTransformValueForXAxis(Convert.ToDecimal(value));
 
                 if (mainChart.FindValue(ControlLine.AMin, ref value))
                     this.aMaxControl.Value = Analysis.InvertTransformValueForXAxis(Convert.ToDecimal(value));
+                */
+                if (mainChart.FindValue(ControlLine.AMax, ref value))
+                    this.aMaxControl.Value = Analysis.InvertTransformValueForXAxis(Convert.ToDecimal(value));
+
+                if (mainChart.FindValue(ControlLine.AMin, ref value))
+                    this.aMinControl.Value = Analysis.InvertTransformValueForXAxis(Convert.ToDecimal(value));
             }
 
             if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
@@ -839,11 +861,21 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             }
             else
             {
+                /*
                 if (mainChart.FindValue(ControlLine.LeftCensor, ref value))
                     this.rightCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
 
                 if (mainChart.FindValue(ControlLine.RightCensor, ref value))
                     this.leftCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
+
+                if (mainChart.FindValue(ControlLine.Threshold, ref value))
+                    this.thresholdControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
+                */
+                if (mainChart.FindValue(ControlLine.LeftCensor, ref value))
+                    this.leftCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
+
+                if (mainChart.FindValue(ControlLine.RightCensor, ref value))
+                    this.rightCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
 
                 if (mainChart.FindValue(ControlLine.Threshold, ref value))
                     this.thresholdControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));

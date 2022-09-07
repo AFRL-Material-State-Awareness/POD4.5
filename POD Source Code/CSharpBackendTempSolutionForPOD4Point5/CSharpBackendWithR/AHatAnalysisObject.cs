@@ -74,12 +74,13 @@ namespace CSharpBackendWithR
             //holds the flaw sizes
             Flaws = new List<double>();
             Flaws_All = new List<double>();
+            ExcludedFlaws = new List<double>();
             ////////////////////
             this.flawsCensored = new List<double> ();
             this.responsesCensoredLeft = new Dictionary<string, List<double>>();
             this.responsesCensoredRight = new Dictionary<string, List<double>>();
             ///this.uncensoredFlaws = new List<double>();
-            Responses = new Dictionary<string, List<double>>();
+            //Responses = new Dictionary<string, List<double>>();
             Responses_all = new Dictionary<string, List<double>>();
             Nsets = 0;
             Count = 0; //the original number of data points in a given analysis
@@ -164,6 +165,7 @@ namespace CSharpBackendWithR
         public new double Signalmax { set; get; }
         public new List<double> Flaws { set; get; }
         public new List<double> Flaws_All { set; get; }
+        public new List<double> ExcludedFlaws { set; get; }
         public new List<double> LogFlaws_All { set; get; }
         public List<double> FlawsCensored
         {

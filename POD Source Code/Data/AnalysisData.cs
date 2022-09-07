@@ -1860,7 +1860,7 @@ namespace POD.Data
             try
             {
                 //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
-                _podCurveTable_All = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
+                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
                 if (printDTFlag)
@@ -1886,7 +1886,8 @@ namespace POD.Data
             //printDT(_thresholdPlotTable);
             try
             {
-                _thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
+                //_thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
+                _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
                 if (printDTFlag)
@@ -2538,6 +2539,7 @@ namespace POD.Data
             }
         }
         //*********************************
+        /*
         public HMAnalysisObject DataHitMissObject
         {
             get { return _hmAnalysisObject; }
@@ -2546,6 +2548,7 @@ namespace POD.Data
         {
             get { return _aHatAnalysisObject; }
         }
+        */
         /*
         public void UpdateActivatedResponses()
         {
@@ -3818,6 +3821,10 @@ namespace POD.Data
         public HMAnalysisObject HMAnalysisObject
         {
             get { return _hmAnalysisObject; }
+        }
+        public AHatAnalysisObject AHATAnalysisObject
+        {
+            get { return _aHatAnalysisObject; }
         }
         //This method is for debugging purpose
         //should be removed in the final product
