@@ -1450,7 +1450,7 @@ namespace POD.Data
             }
         }
         //pass datatables from c# into the 
-        public void UpdateData()
+        public void UpdateData(/*bool fileLoad=false*/)
         {
             //only update python data when appropriate
             if (_updatePythonData == true && _python != null && (_hmAnalysisObject!=null || _aHatAnalysisObject!=null))
@@ -1467,39 +1467,43 @@ namespace POD.Data
                     //store the flaws in the list
                     flaws.Add((double)row[0]);
                 }
-                //for each loop is used for more than one response column (such as multiple inspectors)
-                foreach (DataColumn col in _calculatedResponseTable.Columns)
-                {
-                    List<double> list = new List<double>();
-
-                    foreach (DataRow row in _calculatedResponseTable.Rows)
+                //if (_dataType == AnalysisDataTypeEnum.HitMiss)
+                //{
+                    //for each loop is used for more than one response column (such as multiple inspectors)
+                    foreach (DataColumn col in _calculatedResponseTable.Columns)
                     {
-                        list.Add((double)row[col]);
+                        List<double> list = new List<double>();
+
+                        foreach (DataRow row in _calculatedResponseTable.Rows)
+                        {
+                            list.Add((double)row[col]);
+                        }
+
+                        responses.Add(col.ColumnName, list);
                     }
 
-                    responses.Add(col.ColumnName, list);
-                }
-
-                foreach (DataColumn col in _activatedResponseTable.Columns)
-                {
-                    List<double> list = new List<double>();
-
-                    foreach (DataRow row in _activatedResponseTable.Rows)
+                    foreach (DataColumn col in _activatedResponseTable.Columns)
                     {
-                        list.Add((double)row[col]);
-                    }
+                        List<double> list = new List<double>();
 
-                    allResponses.Add(col.ColumnName, list);
-                    if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                    {
-                        _hmAnalysisObject.HitMiss_name = col.ColumnName;
+                        foreach (DataRow row in _activatedResponseTable.Rows)
+                        {
+                            list.Add((double)row[col]);
+                        }
+
+                        allResponses.Add(col.ColumnName, list);
+                        if (_dataType == AnalysisDataTypeEnum.HitMiss)
+                        {
+                            _hmAnalysisObject.HitMiss_name = col.ColumnName;
+                        }
+                        else if (_dataType == AnalysisDataTypeEnum.AHat)
+                        {
+                            _aHatAnalysisObject.SignalResponseName = col.ColumnName;
+                        }
+
                     }
-                    else if(_dataType == AnalysisDataTypeEnum.AHat)
-                    {
-                        _aHatAnalysisObject.SignalResponseName = col.ColumnName;
-                    }
-                    
-                }
+                //}
+                
                 //convert the two c# dictionaries to python dictionaries
                 //dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
                 //dynamic pyAllResponses = _python.DotNetToPythonDictionary(allResponses);
@@ -1526,10 +1530,32 @@ namespace POD.Data
                     {
                         _hmAnalysisObject.Responses_all = allResponses;
                     }
+                    /*
+                    //check for any excluded flaws (mainly used if user is loading a project) *****
+                    if (_hmAnalysisObject.ExcludedFlaws.Count > 0)
+                    {
+                        for (int i = 0; i < flaws.Count; i++)
+                        {
+                            foreach (double excludedFlaw in _hmAnalysisObject.ExcludedFlaws)
+                            {
+                                if (flaws[i] == excludedFlaw)
+                                {
+                                    flaws.Remove(flaws[i]);
+                                    responses.Remove(responses);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    */
+                    //if(!fileLoad)
+                    //{
                     //used for the hit miss analysis object for RDotNet
                     _hmAnalysisObject.Flaws = flaws;
-                    //string[] names = _hmAnalysisObject.Name.Split('.');
-                    _hmAnalysisObject.Responses = responses;  
+                        //string[] names = _hmAnalysisObject.Name.Split('.');
+                    _hmAnalysisObject.Responses = responses;
+                    //}
+                      
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
                 {
@@ -3788,6 +3814,10 @@ namespace POD.Data
             }
 
             return values;
+        }
+        public HMAnalysisObject HMAnalysisObject
+        {
+            get { return _hmAnalysisObject; }
         }
         //This method is for debugging purpose
         //should be removed in the final product

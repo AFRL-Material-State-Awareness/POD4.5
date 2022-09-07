@@ -266,10 +266,16 @@ namespace POD.Controls
         private void addOriginalHitMissSeries(AnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
         {
             var view = data.OriginalData.AsDataView();
-
+            
             //Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
-            Original.Points.DataBindXY(view, "transformFlaw", view, "hitrate");
-
+            if(data.HMAnalysisObject.ModelType == 3)
+            {
+                Original.Points.DataBindXY(view, "flaw", view, "hitrate");
+            }
+            else
+            {
+                Original.Points.DataBindXY(view, "transformFlaw", view, "hitrate");
+            }
             Original.Enabled = false;
 
             //var index = 0;

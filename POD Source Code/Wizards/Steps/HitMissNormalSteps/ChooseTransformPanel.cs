@@ -172,7 +172,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                         {
                             MessageBox.Show(eProblem.ToString());
                         }
-
                         this.Invoke((MethodInvoker)delegate()
                         {
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];

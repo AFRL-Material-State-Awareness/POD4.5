@@ -376,6 +376,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">
+      <Project>{910fe8f4-2cae-4a5b-8d9e-f5f3c099f80f}</Project>
+      <Name>CSharpBackendWithR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{BEE41D1E-EBA8-4D3E-B297-4C1CA6FFF8DB}</Project>
       <Name>Data</Name>

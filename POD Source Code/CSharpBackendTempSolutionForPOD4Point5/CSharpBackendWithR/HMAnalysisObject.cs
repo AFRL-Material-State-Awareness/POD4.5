@@ -42,19 +42,23 @@ namespace CSharpBackendWithR
             //name of the analysis
             Name = nameInput;
             Info_row = 0;
-            this.modelType = 1; //becomes 1 if using log transform
+            //becomes 1 if linear
+            // 2 if log
+            // 3 if inverse
+            this.modelType = 1; 
             this.regressionType = "Logistic Regression";//becomes logit, firth, or lasso (logit by default)
             Flaw_name = ""; //holds the name of the flaw in the datatable
             HitMiss_name = "";
             //TODO: these may not be necessary
             HitMissMin = 0;
             HitMissMax = 1;
-
             //decision_thesholds = .5; //this was its value in PODv4 whenever hit/miss is used
             Titles = new List<string>();
             //holds the flaw sizes
             Flaws_All = new List<double>();
             Flaws = new List<double>();
+            ExcludedFlaws = new List<double>();
+            //ExcludedFlaws= new List<double>()
             //current crack size list to be sent to r(can be either normal or log transformed
             //List<double> currFlawsAnalysis;
             //TODO: temporary varaible used to store flaws array until the class is working
@@ -159,9 +163,7 @@ namespace CSharpBackendWithR
         public new List<double> Flaws { set; get; }
         public new List<double> Flaws_All { set; get; }
         public new List<double> LogFlaws_All { set; get; }
-        //    set { this.uncensoredFlaws = value; }
-        //     get { return this.uncensoredFlaws; } 
-        //}
+        public new List<double> ExcludedFlaws { set; get; }
         //TODO: FIX THIS TO MAKE THIS ONLY integers since this object controls hitmiss data only
         public new Dictionary<string, List<double>> Responses { set; get; }
         public new Dictionary<string, List<double>> Responses_all { set; get; }
@@ -225,7 +227,7 @@ namespace CSharpBackendWithR
             set { this.goodnessOfFit = value; }
             get { return this.goodnessOfFit; }
         } 
-
+        
         public void ClearMetrics()
         {
             /*
