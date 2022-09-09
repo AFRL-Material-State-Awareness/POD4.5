@@ -163,6 +163,7 @@ namespace CSharpBackendWithR
         public new List<double> Flaws { set; get; }
         public new List<double> Flaws_All { set; get; }
         public new List<double> LogFlaws_All { set; get; }
+        public new List<double> InverseFlaws_All { set; get; }
         public new List<double> ExcludedFlaws { set; get; }
         //TODO: FIX THIS TO MAKE THIS ONLY integers since this object controls hitmiss data only
         public new Dictionary<string, List<double>> Responses { set; get; }

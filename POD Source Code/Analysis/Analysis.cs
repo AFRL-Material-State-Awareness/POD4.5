@@ -1559,12 +1559,16 @@ namespace POD.Analyze
         }
         public void UpdateCensoredData()
         {
+            
             //hitmiss analysis
             if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 List<double> hmInludedFlaws = new List<double>();
                 List<double> hmIncludedResponses = new List<double>();
-
+                if (_hmAnalysisObject.ModelType==3)
+                {
+                    InFlawMax = _hmAnalysisObject.Flaws_All.Max();
+                }
                 foreach (double flaw in _hmAnalysisObject.Flaws_All)
                 {
                     if(flaw >= InFlawMin && flaw <= InFlawMax)
@@ -2989,8 +2993,15 @@ namespace POD.Analyze
                     transformValue = Math.Log(myValue);
                     break;
                 case 3:
-                    //transformValue = 1.0 / myValue;
-                    transformValue = myValue;
+                    if (myValue == 0)
+                    {
+                        transformValue =0.0;
+                    }
+                    else
+                    {
+                        transformValue = 1.0 / myValue;
+                    }
+                    //transformValue = myValue;
                     break;
                 case 5:
                     transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
@@ -3015,8 +3026,8 @@ namespace POD.Analyze
                     transformValue = Math.Exp(myValue);
                     break;
                 case 3:
-                    //transformValue = 1.0/ myValue;
-                    transformValue = myValue;
+                    transformValue = 1.0/ myValue;
+                    //transformValue = myValue;
                     break;
                 case 5:
                     transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda+1, _aHatAnalysisObject.Lambda);
@@ -3092,7 +3103,11 @@ namespace POD.Analyze
             _initialResponseMaxGuess = Double.MaxValue;
             _initialResponseMinGuess = Double.MaxValue;
         }
-
+        //get the min flaw size for inverse
+        public double MinFlawSize
+        {
+            get { return _hmAnalysisObject.Flaws_All.Min(); }
+        }
         //quick analysis units
         public string Operator { get; set; }
 

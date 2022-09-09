@@ -1061,7 +1061,15 @@ namespace POD.Controls
 
             RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
                               _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
-
+            if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                if (ChartAreas[0].AxisX.Maximum < ChartAreas[0].AxisX.Minimum)
+                {
+                    ChartAreas[0].AxisX.Maximum = 1.0 / (_analysisData.HMAnalysisObject.Flaws_All.Min()- (.02)* _analysisData.HMAnalysisObject.Flaws_All.Min());
+                    ChartAreas[0].AxisX.Minimum = 0;
+                }
+            }
+            
             //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
             //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
 
@@ -1567,14 +1575,14 @@ namespace POD.Controls
             {
                 if (_analysisData.DataType.ToString() == "HitMiss")
                 {
-                    if(_analysisData.FlawTransform.ToString() == "Inverse")
-                    {
-                        fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
-                    }
-                    else
-                    {
+                    //if(_analysisData.FlawTransform.ToString() == "Inverse")
+                    //{
+                    //    fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+                    //}
+                    //else
+                    //{
                         fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
-                    }  
+                    //}  
                 }
                 else
                 {

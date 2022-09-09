@@ -268,7 +268,7 @@ namespace POD.Controls
             var view = data.OriginalData.AsDataView();
             
             //Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
-            if(data.HMAnalysisObject.ModelType == 3)
+            if(data.HMAnalysisObject.ModelType == 99)
             {
                 Original.Points.DataBindXY(view, "flaw", view, "hitrate");
             }
@@ -576,7 +576,7 @@ namespace POD.Controls
             DataView view = data.ResidualUncensoredTable.DefaultView;
 
             //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
-            if (data.HMAnalysisObject.ModelType == 3)
+            if (data.HMAnalysisObject.ModelType == 99)
             {
                 fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
             }

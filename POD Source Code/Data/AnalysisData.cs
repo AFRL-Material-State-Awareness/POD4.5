@@ -1450,7 +1450,7 @@ namespace POD.Data
             }
         }
         //pass datatables from c# into the 
-        public void UpdateData(/*bool fileLoad=false*/)
+        public void UpdateData()
         {
             //only update python data when appropriate
             if (_updatePythonData == true && _python != null && (_hmAnalysisObject!=null || _aHatAnalysisObject!=null))
@@ -1525,6 +1525,12 @@ namespace POD.Data
                             logOfFlaws.Add(Math.Log(flaws[i]));
                         }
                         _hmAnalysisObject.LogFlaws_All = logOfFlaws;
+                        List<double> inverseOfFlaws = new List<double>();
+                        for(int i=0; i<flaws.Count(); i++)
+                        {
+                            inverseOfFlaws.Add(1.0 / flaws[i]);
+                        }
+                        _hmAnalysisObject.InverseFlaws_All = inverseOfFlaws;
                     }
                     if (_hmAnalysisObject.Responses_all.Count() == 0)
                     {
@@ -1637,7 +1643,9 @@ namespace POD.Data
             {
 
                 _originalData = BackwardsTransform.TransformBackOrigData(_hmAnalysisObject.HitMissDataOrig);
-                if(printDTFlag)
+                _originalData.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                _originalData = _originalData.DefaultView.ToTable();
+                if (printDTFlag)
                     printDT(_originalData);
             }
             
@@ -1656,16 +1664,13 @@ namespace POD.Data
 
             try
             {
-                //first table to be passed back for the transformations window in pass fail (it is empty at first)
-                //_podCurveTable = _python.PythonDictionaryToDotNetNumericTable(_podDoc.GetPFPODTable());
-                //_podCurveTable = temp;
+                //table to be passed back for the transformations window in pass fail
+                
                 _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_hmAnalysisObject.LogitFitTable);
                 if (_podCurveTable.Columns.Contains("transformFlaw"))
                 {
                     _podCurveTable.Columns.Remove("transformFlaw");
                 }
-                //Debug.WriteLine("POD curve table");
-                //_podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
                 if(printDTFlag)
@@ -1678,8 +1683,7 @@ namespace POD.Data
             try
             {
                 _residualUncensoredTable = BackwardsTransform.TransformBackResidualUncensoredTable(_hmAnalysisObject.ResidualTable);              
-                _residualUncensoredTable.DefaultView.Sort = "flaw" + " " + "ASC";
-                //Debug.WriteLine("Residual Table");
+                _residualUncensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_residualUncensoredTable);
@@ -2296,9 +2300,13 @@ namespace POD.Data
                     {
                         return _hmAnalysisObject.Flaws_All.Min();
                     }
-                    else
+                    else if(_flawTransform == TransformTypeEnum.Log)
                     {
                         return _hmAnalysisObject.LogFlaws_All.Min();
+                    }
+                    else
+                    {
+                        return _hmAnalysisObject.InverseFlaws_All.Min();
                     }
                 }
                 else
@@ -2353,10 +2361,14 @@ namespace POD.Data
                     {
                         return _hmAnalysisObject.Flaws_All.Max();
                     }
-                    else
+                    else if (_flawTransform == TransformTypeEnum.Log)
                     {
                         return _hmAnalysisObject.LogFlaws_All.Max();
-                    }   
+                    }
+                    else
+                    {
+                        return _hmAnalysisObject.InverseFlaws_All.Max();
+                    }
                 }
                 else
                 {
@@ -2402,7 +2414,7 @@ namespace POD.Data
         /// <returns></returns>
         public double InvertTransformedFlaw(double myValue)
         {
-            if (/*_podDoc != null*/ _hmAnalysisObject!=null || _aHatAnalysisObject != null)
+            if (_hmAnalysisObject!=null || _aHatAnalysisObject != null)
             {
                 //return _podDoc.GetInvtransformedFlawValue(myValue);
 
@@ -2900,7 +2912,7 @@ namespace POD.Data
                     transformValue = Math.Log(myValue);
                     break;
                 case 3:
-                    transformValue = myValue;
+                    transformValue = 1.0/myValue;
                     break;
                 case 5:
                     transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
@@ -2924,7 +2936,7 @@ namespace POD.Data
                     transformValue = Math.Exp(myValue);
                     break;
                 case 3:
-                    transformValue = myValue;
+                    transformValue = 1.0/myValue;
                     break;
                 case 5:
                     transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda + 1, _aHatAnalysisObject.Lambda);
@@ -3850,7 +3862,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 5;
+            int limit = 10;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

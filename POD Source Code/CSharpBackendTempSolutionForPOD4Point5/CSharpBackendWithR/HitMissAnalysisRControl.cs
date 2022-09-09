@@ -67,22 +67,22 @@ namespace CSharpBackendWithR
         public DataTable GetLogitFitTableForUI()
         {
             //ShowResults();
-            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getResults()").AsDataFrame();
-            DataTable LogitFitDataTable= myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            RDotNet.DataFrame returnDataFrame = this.myREngine.Evaluate("newAnalysis$getResults()").AsDataFrame();
+            DataTable LogitFitDataTable= this.myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return LogitFitDataTable;
         }
         public DataTable GetResidualFitTableForUI()
         {
-            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getResidualTable()").AsDataFrame();
-            DataTable residualDataTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            RDotNet.DataFrame returnDataFrame = this.myREngine.Evaluate("newAnalysis$getResidualTable()").AsDataFrame();
+            DataTable residualDataTable = this.myREngineObject.rDataFrameToDataTable(returnDataFrame);
             //residualDataTable.Columns["pod"].ColumnName = "t_fit";
             return residualDataTable;
             
         }
         public DataTable GetIterationTableForUI()
         {
-            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newAnalysis$getIterationTable()").AsDataFrame();
-            DataTable IterationDatatable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            RDotNet.DataFrame returnDataFrame = this.myREngine.Evaluate("newAnalysis$getIterationTable()").AsDataFrame();
+            DataTable IterationDatatable = this.myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return IterationDatatable;
         }
         public List<double> GetCovarianceMatrixValues()

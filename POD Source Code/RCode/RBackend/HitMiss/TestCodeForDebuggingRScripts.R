@@ -1,6 +1,6 @@
 # #Test Code
 #flag used for genNormFitClassR
-#isLog=FALSE
+isLog=FALSE
 #import necessary libraries
 library(methods)
 #dependencies from original R code
@@ -21,6 +21,8 @@ hitMissDF$y.1=NULL
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")
 #get the working directory, used for debugging only
+names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
+#hitMissDF$x= 1/hitMissDF$x
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
 source(paste(codeLocation,"/RSSComponentsObject.R",sep=""))
 source(paste(codeLocation,"/RankedSetSamplingMainRObject.R",sep=""))
@@ -34,7 +36,7 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
-CItype0="LR"
+CItype0="ModifiedWald"
 #type="Firth Logistic Regression"
 type="Logistic Regression"
 begin=Sys.time()

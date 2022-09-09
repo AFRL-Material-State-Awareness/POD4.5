@@ -250,6 +250,12 @@ namespace POD.Wizards
                 MainChart.ForceRefillSortList();
                 MainChart.PickBestAxisRange();
                 MainChart.ForceIncludedPointsUpdate();
+                //if (MainChart.ChartAreas[0].AxisX.Maximum< MainChart.ChartAreas[0].AxisX.Minimum)
+                //{
+                //    //MainChart.ChartAreas[0].AxisX.Maximum = MainChart.ChartAreas[0].AxisX.Minimum;
+                //    MainChart.ChartAreas[0].AxisX.Maximum = 1.0/Analysis.MinFlawSize;
+                //    MainChart.ChartAreas[0].AxisX.Minimum = 0;
+                //}
             }
             
             if(!Analysis.IsFrozen)

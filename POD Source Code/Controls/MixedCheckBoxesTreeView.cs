@@ -83,7 +83,7 @@ namespace POD.Controls
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-
+            
             // trap TVM_SETITEM message
             if (m.Msg == TVM_SETITEM || m.Msg == TVM_SETITEMA || m.Msg == TVM_SETITEMW)
                 // check if CheckBoxes are turned on
@@ -93,8 +93,23 @@ namespace POD.Controls
                     TV_ITEM tv_item = (TV_ITEM)m.GetLParam(typeof(TV_ITEM));
                     HideCheckBox(tv_item);
                 }
+            
         }
-
+        //used to go through the search tree and remove any duplicate checkmarks
+        protected void TraverseTree(TreeNodeCollection nodes, TreeViewCancelEventArgs e)
+        {
+            foreach (TreeNode child in nodes)
+            {
+                //System.Diagnostics.Debug.WriteLine(child);
+                if (child != e.Node && child.Checked == true){
+                    child.Checked = false;
+                }
+                if (child.Nodes.Count > 0)
+                {
+                    TraverseTree(child.Nodes, e);
+                }
+            }
+        }
         protected void HideCheckBox(TV_ITEM tv_item)
         {
             if (tv_item.ItemHandle != IntPtr.Zero)
@@ -138,11 +153,14 @@ namespace POD.Controls
         protected override void OnBeforeCheck(TreeViewCancelEventArgs e)
         {
             base.OnBeforeCheck(e);
-
+            
             // prevent checking/unchecking of HiddenCheckBoxTreeNode,
             // otherwise, we will have to repeat checkbox hiding
             if (e.Node is HiddenCheckBoxTreeNode && ((HiddenCheckBoxTreeNode)e.Node).IsHidden == true)
                 e.Cancel = true;
+            //since parallelization does not work well with R.NET
+            //automatically uncheck any boxes the user didn't just click to ensure only one box can be check at a time
+            TraverseTree(base.Nodes, e);
         }
     }
 

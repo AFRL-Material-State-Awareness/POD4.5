@@ -55,6 +55,7 @@ namespace CSharpBackendWithR
         protected List<double> Flaws;
         protected List<double> Flaws_All;
         protected List<double> LogFlaws_All;
+        protected List<double> InverseFlaws_All;
         protected List<double> ExcludedFlaws;
         ////////////////////////
         protected List<double> Flaws_reload; //used for POD when no points are missing

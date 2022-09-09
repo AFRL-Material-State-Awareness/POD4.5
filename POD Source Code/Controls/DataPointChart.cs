@@ -1061,6 +1061,18 @@ namespace POD.Controls
                                   _xRelabel.CenterAtZero, _yRelabel.CenterAtZero,
                                   _xRelabel.TransformType, _yRelabel.TransformType,
                                   _xRelabel.TransformFunc, _yRelabel.TransformFunc);
+                
+                /*
+                if (.DataType == AnalysisDataTypeEnum.HitMiss) 
+                {
+                    if (ChartAreas[0].AxisX.Maximum < ChartAreas[0].AxisX.Minimum)
+                    {
+                        ChartAreas[0].AxisX.Maximum = 1.0 / (_analysisData.HMAnalysisObject.Flaws_All.Min() - (.02) * _analysisData.HMAnalysisObject.Flaws_All.Min());
+                        ChartAreas[0].AxisX.Minimum = 0;
+                    }
+                }
+                */
+
             }
         }
 
@@ -1118,6 +1130,7 @@ namespace POD.Controls
             }
 
             ChartAreas[0].AxisX.LabelAutoFitMinFontSize = 5;
+
         }
 
         private void StoreLabelingParameters(AxisObject xAxis, AxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 

@@ -252,12 +252,20 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void XTransformBox_ValueChanged(object sender, EventArgs e)
         {
             Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
-
-            var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-            mainChart.SetAMaxBoundary(x, false);
-            x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-            mainChart.SetAMinBoundary(x, false);
-
+            if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
+            {
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
+            }
+            else
+            {
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(Analysis.MinFlawSize- (.02)*Analysis.MinFlawSize));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
+            }
             ForceUpdateAfterTransformChange();
         }
 
@@ -421,6 +429,18 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             MainChart.SetAMinBoundary(Analysis.TransformValueForXAxis(Analysis.InFlawMin), false);
             aMaxControl.Value = Convert.ToDecimal(Analysis.InFlawMax);
             aMinControl.Value = Convert.ToDecimal(Analysis.InFlawMin);
+            /*
+            if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
+            {
+                aMaxControl.Value = Convert.ToDecimal(Analysis.InFlawMax);
+                aMinControl.Value = Convert.ToDecimal(Analysis.InFlawMin);
+            }
+            else
+            {
+                aMaxControl.Value = Convert.ToDecimal(1.0 / Analysis.MinFlawSize);
+                aMinControl.Value = Convert.ToDecimal(Analysis.InFlawMin);
+            }
+            */
 
             Analysis.IsFrozen = false;
         }
@@ -472,7 +492,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 if (!_errorFound)
                 {
                     //Source.Python.AddErrorText("Output values out of range.");
-                    Source.Python.AddErrorText("DEFAULT UKNOWN ERROR: Contact support or a Statistician if Necessary");
+                    Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a Statistician if Necessary");
                 }
                 
 
@@ -577,7 +597,14 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             //controlValueChanged = true;
 
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-            mainChart.SetAMaxBoundary(x, true);
+            //if(Analysis.InFlawTransform == TransformTypeEnum.Inverse)
+            //{
+            //    mainChart.SetAMaxBoundary(1/Analysis.MinFlawSize, true);
+            //}
+            //else
+            //{
+                mainChart.SetAMaxBoundary(x, true);
+            //}
 
             RunAnalysis();
 

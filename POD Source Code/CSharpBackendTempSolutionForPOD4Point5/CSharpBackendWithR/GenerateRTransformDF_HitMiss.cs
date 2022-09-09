@@ -29,8 +29,6 @@ namespace CSharpBackendWithR
             GenerateIndices();
             //set lambda as 0 by default - for boxcox tranformations only
             this.myREngine.Evaluate("lambdaInput<-0");
-            //don't think this is needed
-            this.myREngine.Evaluate("isLog=FALSE");
             //needed for the r code 
             this.myREngine.Evaluate("normSampleSize<-" + newHMAnalysis.A_x_n.ToString());
             //create the appropriate dataframe based on the transform type
@@ -59,6 +57,8 @@ namespace CSharpBackendWithR
         }
         private void NoTransformDF()
         {
+            //used when generate normal crack distributions
+            this.myREngine.Evaluate("isLog=FALSE");
             //initialize the matrices used to create the input dataframe
             this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
             this.myREngine.Evaluate("x<-c(" + cracks[0].ToString() + ")");
@@ -73,6 +73,8 @@ namespace CSharpBackendWithR
         }
         private void LogXTransform()
         {
+            //used when generate normal crack distributions
+            this.myREngine.Evaluate("isLog=TRUE");
             //initialize the matrices used to create the input dataframe
             this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
             this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
@@ -87,16 +89,18 @@ namespace CSharpBackendWithR
         }
         private void InverseXTransform()
         {
+            //used when generate normal crack distributions
+            this.myREngine.Evaluate("isLog=FALSE");
             //initialize the matrices used to create the input dataframe
             this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(" + this.cracks[0].ToString() + ")");
-            this.myREngine.Evaluate("y<-c(log(" + this.hitMiss[0].ToString() + "))");
+            this.myREngine.Evaluate("x<-c(1.0/" + this.cracks[0].ToString() + ")");
+            this.myREngine.Evaluate("y<-c(" + this.hitMiss[0].ToString() + ")");
             //acumulate r matrices in order to create the dataframe
             for (int i = 1; i < this.cracks.Count; i++)
             {
                 this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x," + this.cracks[i].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(y, log(" + this.hitMiss[i].ToString() + "))");
+                this.myREngine.Evaluate("x<-c(x, 1.0/" + this.cracks[i].ToString() + ")");
+                this.myREngine.Evaluate("y<-c(y, " + this.hitMiss[i].ToString() + ")");
             }
         }
     }
