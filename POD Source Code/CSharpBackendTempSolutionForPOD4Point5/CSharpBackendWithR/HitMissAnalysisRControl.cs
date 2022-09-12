@@ -103,12 +103,12 @@ namespace CSharpBackendWithR
         }
         public double GetGoodnessOfFit()
         {
-            double goodFit=Convert.ToDouble(myREngine.Evaluate("newAnalysis$getGoodnessOfFit()").AsNumeric()[0]);
+            double goodFit = Convert.ToDouble(myREngine.Evaluate("newAnalysis$getGoodnessOfFit()").AsNumeric()[0]);
             return goodFit;
         }
         public bool GetSeparationFlag()
         {
-            int separated= Convert.ToInt32(myREngine.Evaluate("newAnalysis$getSeparation()").AsNumeric()[0]);
+            int separated = Convert.ToInt32(myREngine.Evaluate("newAnalysis$getSeparation()").AsNumeric()[0]);
             if (separated == 1)
             {
                 return true;
@@ -120,8 +120,8 @@ namespace CSharpBackendWithR
         }
         public bool GetConvergenceFlag()
         {
-            int separated = Convert.ToInt32(myREngine.Evaluate("newAnalysis$getConvergedFail()").AsNumeric()[0]);
-            if (separated == 1)
+            int convergedFail = Convert.ToInt32(myREngine.Evaluate("newAnalysis$getConvergedFail()").AsNumeric()[0]);
+            if (convergedFail == 1)
             {
                 return true;
             }

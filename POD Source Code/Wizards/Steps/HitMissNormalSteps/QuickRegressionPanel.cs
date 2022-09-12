@@ -357,7 +357,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                 this.Cursor = Cursors.WaitCursor;
 
-                Analysis.RunAnalysis();
+                Analysis.RunAnalysis(true);
 
                 this.Cursor = Cursors.Default;
             }
@@ -666,20 +666,16 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             double covV12 = Analysis.OutPFCovarianceV12;
             double covV22 = Analysis.OutPFCovarianceV22;
             double lackOfFit = Analysis.OutTestLackOfFit;
-            
-
-
-            /*HandleNaN(ref a90Transformed, 0.0);
-            HandleNaN(ref a9095Transformed, 0.0);
-            HandleNaN(ref a50Transformed, 0.0);
-            HandleNaN(ref a90Original, 0.0);
-            HandleNaN(ref a9095Original, 0.0);
-            HandleNaN(ref a50Original, 0.0);
-            HandleNaN(ref podMu, 0.0);
-            HandleNaN(ref podSigma, 0.0);
-            HandleNaN(ref covV11, 0.0);
-            HandleNaN(ref covV12, 0.0);
-            HandleNaN(ref covV22, 0.0);*/
+            //in case the user accidently puts signal response into the quick analysis-hitMiss
+            if((a50Original==-1 && a90Original == -1 && a9095Original == -1) || (a50Original ==Math.Exp(-1) && a90Original == Math.Exp(-1) && a9095Original == Math.Exp(-1)))
+            {
+                Source.Python.AddErrorText("Invalid data was used! Please make sure that the data being entered is HitMiss." + '\n' +
+                    "If you intended a signal response analysis, switch Signal Reponse quick analysis");
+                MainChart.ClearEverythingButPoints();
+                linearityChart.ClearEverythingButPoints();
+                podChart.ClearEverythingButPoints();
+                return;
+            }
 
             try
             {
@@ -700,7 +696,18 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             catch
             {
                 //MessageBox.Show("Analysis Error caused invalid output values that are out of range.");
-                Source.Python.AddErrorText("Output values out of range.");
+                //Source.Python.AddErrorText("Output values out of range.");
+                //ADD click to continue? in order to ensure the user doesn't think the program is broken
+                _errorFound = false;
+                if (Analysis.AnalysisDataType.ToString() == "HitMiss")
+                {
+                    SearhForHitMissErrors(a9095Original);
+                }
+                if (!_errorFound)
+                {
+                    //Source.Python.AddErrorText("Output values out of range.");
+                    Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a Statistician if Necessary");
+                }
 
                 MainChart.ClearEverythingButPoints();
                 linearityChart.ClearEverythingButPoints();

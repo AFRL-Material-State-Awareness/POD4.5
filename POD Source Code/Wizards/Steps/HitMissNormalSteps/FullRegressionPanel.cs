@@ -27,9 +27,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         private SamplingTypeBox _sampleTypeBox;
         private Label _sampleTypeLabel;
-        //private TransformBox _yTransformBox;
-        //use to indicate if a known error was found
-        private bool _errorFound;
         //use to keep track of the previously selected confidence interval
         private ConfidenceIntervalTypeEnum previousConfInt= ConfidenceIntervalTypeEnum.StandardWald;
         //flags used to prevent the analysis from running again if the user selects NO
@@ -527,6 +524,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             CSharpBackendWithR.REngineObject.REngineRunning = false;
         }
+        /*
         public void SearhForHitMissErrors(double a9095Original) {
             //get the info for the current stats of the hit miss object
             CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
@@ -566,6 +564,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             }
         }
+        */
 
         public int LinearityIndex
         {

@@ -17,6 +17,31 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         separation="numeric",
                                         convergeFailLogit="numeric"),
                           methods = list(
+                            # initialize = function(){
+                            #   #hitMissDF<<-data.frame(
+                            #   #  flaw=c(0,0,0,0,0),
+                            #   #  transformFlaw=c(0,0,0,0,0),
+                            #   #  hitrate=c(0,0,0,0,0)
+                            #   #)
+                            #   covarianceMatrix<<-matrix(0, nrow=2, ncol=2)
+                            #   if(CIType=="StandardWald"){
+                            #     retResidualTable=data.frame(
+                            #       flaw=c(0,0,0,0,0),
+                            #       transformFlaw=c(0,0,0,0,0),
+                            #       hitrate=c(0,0,0,0,0),
+                            #       t_trans= c(0,0,0,0,0),
+                            #       diff=c(0,0,0,0,0)
+                            #     )
+                            #   }
+                            #   else{
+                            #     retResidualTable=data.frame(
+                            #       flaw=c(0,0,0,0,0),
+                            #       transformFlaw= c(0,0,0,0,0),
+                            #       t_trans=c(0,0,0,0,0),
+                            #       Confidence_Interval=c(0,0,0,0,0)
+                            #     )
+                            #   }
+                            # },
                             getHitMissDF = function(){
                               #modify table for clean excel output later
                               hitMissDF_trans=data.frame(
@@ -37,16 +62,35 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               results <<- psResults
                             },
                             getResults = function(){
-                              results$Index <<- NULL
-                              names(results)[names(results) == 'x'] <<- 'flaw'
-                              names(results)[names(results) == 't_trans'] <<- 'pod'
-                              names(results)[names(results) == 'y'] <<- 'hitrate'
+                              if(nrow(results!=0)){
+                                results$Index <<- NULL
+                                names(results)[names(results) == 'x'] <<- 'flaw'
+                                names(results)[names(results) == 't_trans'] <<- 'pod'
+                                names(results)[names(results) == 'y'] <<- 'hitrate'
+                              }
+                              #return dataframe with 0's to prevent erros in c#
+                              else{
+                                results <<- data.frame(
+                                  flaw= c(0,0,0,0,0),
+                                  pod=c(0,0,0,0,0),
+                                  confidence=c(0,0,0,0,0)
+                                )
+                              }
                               return(results)
                             },
                             setResidualTable=function(psResidTable){
                               residualTable<<-psResidTable
                             },
                             getResidualTable=function(){
+                              if(nrow(residualTable)==0){
+                                retResidualTable=data.frame(
+                                  flaw=c(0,0,0,0,0),
+                                  transformFlaw=c(0,0,0,0,0),
+                                  t_trans= c(0,0,0,0,0),
+                                  Confidence_Interval=c(0,0,0,0,0)
+                                )
+                                return(retResidualTable)
+                              }
                               if(CIType=="StandardWald"){
                                 retResidualTable=data.frame(
                                   flaw=residualTable$x,
@@ -70,6 +114,16 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               iterationTable<<-psiterTable
                             },
                             getIterationTable=function(){
+                              if(nrow(iterationTable)==0){
+                                iterationTable<<-data.frame(
+                                  trial=0,
+                                  indexiteration=0,
+                                  indexmu=0,
+                                  sigma=0,
+                                  fnorm=0,
+                                  damping=0
+                                )
+                              }
                               return(iterationTable)
                             },
                             setKeyAValues=function(psAValues){
@@ -80,13 +134,16 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               a_values<<-psAValues
                             },
                             getKeyAValues=function(){
+                              if(length(a_values)==0){
+                                a_values<<-list(-1,-1,-1,-1,-1)
+                              }
                               return(a_values)
                             },
                             setCovMatrix=function(psMatrix){
                               covarianceMatrix<<-psMatrix
                             },
                             getCovMatrix=function(){
-                              if(is.null(covarianceMatrix)){
+                              if(length(covarianceMatrix)==0){
                                 #return an empty matrix of negative ones if empty
                                 covarianceMatrix<<-matrix(0, nrow=2, ncol=2)
                               }
@@ -96,18 +153,27 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               goodnessOfFit<<-psGOF
                             },
                             getGoodnessOfFit=function(){
+                              if(length(goodnessOfFit)==0){
+                                return(0.0)
+                              }
                               return(goodnessOfFit)
                             },
                             setSeparation=function(psSeparated){
                               separation<<-psSeparated
                             },
                             getSeparation=function(){
+                              if(length(separation)==0){
+                                return(0)
+                              }
                               return(separation)
                             },
                             setConvergedFail=function(psConverged){
                               convergeFailLogit<<-psConverged
                             },
                             getConvergedFail=function(){
+                              if(length(convergeFailLogit)==0){
+                                return(0)
+                              }
                               return(convergeFailLogit)
                             },
                             #this is the entry point from c# if the user wants to do ranked set sampling

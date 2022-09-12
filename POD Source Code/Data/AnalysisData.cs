@@ -1450,7 +1450,7 @@ namespace POD.Data
             }
         }
         //pass datatables from c# into the 
-        public void UpdateData()
+        public void UpdateData(bool quickFlag = false)
         {
             //only update python data when appropriate
             if (_updatePythonData == true && _python != null && (_hmAnalysisObject!=null || _aHatAnalysisObject!=null))
@@ -1502,19 +1502,9 @@ namespace POD.Data
                         }
 
                     }
-                //}
-                
-                //convert the two c# dictionaries to python dictionaries
-                //dynamic pyResponses = _python.DotNetToPythonDictionary(responses);
-                //dynamic pyAllResponses = _python.DotNetToPythonDictionary(allResponses);
-
-                //_podDoc.SetFlawData(flaws, _python.TransformEnumToInt(FlawTransform));
-                //_podDoc.SetResponseData(pyResponses, _python.TransformEnumToInt(ResponseTransform));
-
-                //_podDoc.SetAllMissingData(flaws, pyResponses, pyAllResponses);
                 if(_dataType== AnalysisDataTypeEnum.HitMiss)
                 {
-                    if (_hmAnalysisObject.Flaws_All.Count()==0)
+                    if (_hmAnalysisObject.Flaws_All.Count()==0 || quickFlag)
                     {
                         _hmAnalysisObject.Flaws_All = flaws;
                         //set the dataset size
@@ -1532,7 +1522,7 @@ namespace POD.Data
                         }
                         _hmAnalysisObject.InverseFlaws_All = inverseOfFlaws;
                     }
-                    if (_hmAnalysisObject.Responses_all.Count() == 0)
+                    if (_hmAnalysisObject.Responses_all.Count() == 0 || quickFlag)
                     {
                         _hmAnalysisObject.Responses_all = allResponses;
                     }
@@ -1565,7 +1555,7 @@ namespace POD.Data
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
                 {
-                    if (_aHatAnalysisObject.Flaws_All.Count() == 0)
+                    if (_aHatAnalysisObject.Flaws_All.Count() == 0 || quickFlag)
                     {
 
                         _aHatAnalysisObject.Flaws_All = flaws;
@@ -1576,7 +1566,7 @@ namespace POD.Data
                         }
                         _aHatAnalysisObject.LogFlaws_All = logOfFlaws;
                     }
-                    if (_aHatAnalysisObject.Responses_all.Count() == 0)
+                    if (_aHatAnalysisObject.Responses_all.Count() == 0 || quickFlag)
                     {
                         _aHatAnalysisObject.Responses_all = allResponses;
                         List<double> logOfResponses = new List<double>();
@@ -3862,7 +3852,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 10;
+            int limit = 5;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

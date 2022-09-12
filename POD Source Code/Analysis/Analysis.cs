@@ -56,6 +56,8 @@ namespace POD.Analyze
         private bool _failedToConverge;
         //used to check if previous analyis is being loaded (used to handle when a saved file as exluded points
         private bool _fileLoadHitMiss=false;
+        //used to update quick analysis
+        private bool _quickAnalysis=false;
         public bool AnalysisRunning
         {
             get
@@ -941,13 +943,23 @@ namespace POD.Analyze
             BackgroundWorker worker = sender as BackgroundWorker;
             Stopwatch watch = new Stopwatch();
             IsBusy = true;
+            AnalysistypeTransform newAnalysisControl;
+            if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+            }
+            else
+            {
+                newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+
+            }
             try
             {
                 //entry point for pod caluclation in PODv4 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     watch.Start();
-                    AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+                    //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
                     newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
                     watch.Stop();
@@ -956,16 +968,17 @@ namespace POD.Analyze
                 //entry point for pod calculate in PODv4 ahat
                 else
                 {
-                    AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+                    //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
                     newAnalysisControl.ExecuteAnalysisAHat();
                     _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;
                 }
                     
             }
+            //TODO: add exception handling here to ensure the value in the c# datatables are not null
             catch (Exception exp)
             {
                 var moreInfo = string.Empty;
-
+                
                 try
                 {
                     //MessageBox.Show("Analysis Error:" + Environment.NewLine + Environment.NewLine + exp.Message);
@@ -1018,11 +1031,15 @@ namespace POD.Analyze
 
                 _python.AddErrorText("Analysis Error: " + exp.Message);
 
-                //_python.ProgressText = exp.Message;
+                //used to keep the program from breaking completely if an error occurs
+                if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    newAnalysisControl.ReturnHitMissObjects();
+                }
             }
             finally
             {
-
+                
             }
 
                         
@@ -1643,9 +1660,9 @@ namespace POD.Analyze
         /// <summary>
         ///     Run analysis with current settings and data. Output data will be overwritten.
         /// </summary>
-        public void RunAnalysis()
+        public void RunAnalysis(bool quickAnalysis=false)
         {
-            
+            _quickAnalysis = quickAnalysis;
             if (IsFrozen)
                 return;
             //REngineObject.REngineRunning = true;
@@ -1743,6 +1760,7 @@ namespace POD.Analyze
             //    InResponseDecision = Math.Log(InResponseDecision);
             //}
             //used to store the current transformation the program is performing in the 'choose transform' window
+            //TODO: rename this
             UpdatePythonTransforms();
             //change the model type of logistic regression to firth logistical regression if using log odds
             if (InHitMissModel.ToString() == "Normal" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
@@ -1787,7 +1805,7 @@ namespace POD.Analyze
             }
             if (!_fileLoadHitMiss)
             {
-                Data.UpdateData();
+                Data.UpdateData(_quickAnalysis);
             }
             _fileLoadHitMiss = false;
             //_fileLoadHitMiss = false;
@@ -2908,17 +2926,9 @@ namespace POD.Analyze
 
         public void RunOnlyFitAnalysis()
         {
-            var watch = new Stopwatch();
-
-            watch.Start();
 
             CopyInputToR();
 
-            watch.Stop();
-
-            var inputTime = watch.ElapsedMilliseconds;
-
-            watch.Restart();
             //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
             if (_hmAnalysisObject != null)
             {
@@ -2958,17 +2968,7 @@ namespace POD.Analyze
                 Debug.WriteLine(executeProblemAnalysis.ToString());
             }
 
-            watch.Stop();
-
-            var runTime = watch.ElapsedMilliseconds;
-
-            watch.Restart();
-
             CopyOutputFromR();
-
-            watch.Stop();
-
-            var outputTime = watch.ElapsedMilliseconds;
 
             //TRB removed because it kept causing regression analysis panel to update causing cross thread violation
             //despite the fact that I removed the event handler everytime I switched between steps

@@ -200,7 +200,6 @@ namespace CSharpBackendWithR
             //dependency for logistf
             this.rEngine.Evaluate("library(logistf)");
             this.rEngine.Evaluate("library(methods)");
-            //this.rEngine.Evaluate("library('RSSampling')");//LICENSED UNDER GPLv2 only ***RESOLVED: Replaced with python scripts
             this.rEngine.Evaluate("library(MASS)");
             this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
             //this.rEngine.Evaluate("library(glmnet)"); //LICENSED UNDER GPLv2 only, may end up not using this

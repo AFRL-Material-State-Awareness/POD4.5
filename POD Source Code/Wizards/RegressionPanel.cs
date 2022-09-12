@@ -21,7 +21,8 @@ namespace POD.Wizards
     {
         protected int _nineCharWidth = 100;
         protected Control _activeControl;
-
+        //use to indicate if a known error was found - current only for hitmiss
+        protected bool _errorFound;
         public RegressionPanel()
             : base()
         {
@@ -356,12 +357,13 @@ namespace POD.Wizards
             if(_activeControl != null)
                 _activeControl.Focus();
         }
-
+        /*
         protected void HandleNaN(ref double myValue, double mySafeValue)
         {
             if (Double.IsNaN(myValue))
                 myValue = mySafeValue;
-        }    
+        } 
+        */
 
         protected virtual void Panel_Resize(object sender, EventArgs e)
         {
@@ -587,6 +589,47 @@ namespace POD.Wizards
         private void Panel_Paint(object sender, PaintEventArgs e)
         {
             
+        }
+        //get specific hit miss analysis error if possible
+        public void SearhForHitMissErrors(double a9095Original)
+        {
+            //get the info for the current stats of the hit miss object
+            CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
+            if (!(Analysis.FailToConverge) && Double.IsNaN(a9095Original))
+            {
+                _errorFound = true;
+                Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity. " + '\n' +
+                    "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n' + "Confidence intervals and/or Ranked Set Sampling");
+            }
+            else if (Analysis.FailToConverge)
+            {
+                _errorFound = true;
+                Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge. " + '\n' +
+                    "Try the Firth Logistic Regression Model Type Instead");
+            }
+            else if (currHitMissSettings.RegressionType == "Firth Logistic Regression" && Double.IsNaN(a9095Original))
+            {
+                _errorFound = true;
+                if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
+                {
+                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! You could try" + '\n' +
+                        "to combine Ranked Set Sampling with the current Confidence Interval" + '\n' +
+                        "(WARNING: can take anywhere from 5-20min)");
+                }
+                else if (currHitMissSettings.SrsOrRSS == 1 && (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR"))
+                {
+                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful" + '\n' +
+                        "Try switching between LR and MLR with the current settings." + '\n' +
+                        "Otherwise, it is likely impossible for PODv4.5 to produce better results " + '\n' +
+                        "Data's sample size may be too small and/or the data does not have enough overlap");
+                }
+                else
+                {
+                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! Try Likelihood Ratio (LR) or" + '\n' +
+                        "Modified Likelihood Ratio (MLR) Confidence Intervals for best results.");
+                }
+
+            }
         }
     }
 }
