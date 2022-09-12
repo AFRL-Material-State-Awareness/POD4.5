@@ -1693,12 +1693,12 @@ namespace POD.Analyze
 
                 if(_python.FailedRunCount >= 4)
                 {
-                    ShowPythonCodeStuckMessage();                    
+                    Show_R_CodeStuckMessage();                    
                 }
             }
         }
 
-        private void ShowPythonCodeStuckMessage()
+        private void Show_R_CodeStuckMessage()
         {
             var result = MessageBox.Show("POD v4 analysis code has not terminated.  " +
                             "Please contact UDRI for further assistance.  " +

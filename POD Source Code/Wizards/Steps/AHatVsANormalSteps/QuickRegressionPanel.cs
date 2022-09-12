@@ -395,9 +395,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                 if (dataGridView1.RowCount > 1)
                 {
+                    //used to fix null reference exception
+                    //Analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+                    //Analysis.Data.DataType= AnalysisDataTypeEnum.AHat;
+                    //***********
                     Analysis.Data.RecreateTables();
                     Analysis.ForceUpdateInputsFromData(true, AnalysisDataTypeEnum.AHat);
-
+                    //Analysis.Data.RecreateTables();
                     MainChart.LoadChartData(Analysis.Data);
                     Analysis.Data.ForceRefillSortListAndClearPoints();
 

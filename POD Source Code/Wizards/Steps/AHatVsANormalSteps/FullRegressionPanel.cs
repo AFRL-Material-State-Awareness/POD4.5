@@ -23,13 +23,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private Label _xTransformLabel;
         private TransformBoxYHat _yTransformBox;
         private Label _yTransformLabel;
-        //used for confidence intervals
-        
+        //used to set lambda for box-cox transformation
+        private Label _labelForLamdaInput;
+        private NumericUpDown _boxCoxLambda;
 
         private List<Control> _inputWithLabels = new List<Control>();
         private List<Control> _outputWithLabels = new List<Control>();
         private int _tabIndex;
-
+        //used to keep track of the previous value of lambda in case the user tries to enter 0 into the numeric text box
+        private decimal _previousLambda = 1.0m;
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
         {
             InitializeComponent();
@@ -123,7 +125,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 AMaxInputLabel,
                 thresholdLabel,
                 _xTransformLabel,
-                _yTransformLabel
+                _yTransformLabel,
+                _labelForLamdaInput
             };
 
             foreach(Label label in labels)
@@ -170,6 +173,17 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             thresholdControl.Value = Convert.ToDecimal(Analysis.InResponseDecision);
             leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin);
             rightCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMax);
+
+            if(_yTransformBox.SelectedIndex.ToString() != "Boxcox")
+            {
+                _labelForLamdaInput.Enabled = false;
+                _boxCoxLambda.Enabled = false;
+            }
+            else
+            {
+                _labelForLamdaInput.Enabled = true;
+                _boxCoxLambda.Enabled = true;
+            }
 
             Analysis.IsFrozen = false;
         }
@@ -309,12 +323,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             inputTablePanel.Controls.Clear();
 
             IntitalizeTransformBoxes();
-            //InitializeCITypeBox();
+            InitializeNumericLambda();
             _inputWithLabels = new List<Control>
             {
                 AxisTransformsHeader,
                 _xTransformLabel, _xTransformBox,
                 _yTransformLabel, _yTransformBox,
+                _labelForLamdaInput, _boxCoxLambda,
                 FlawRangeHeader,
                 AMaxInputLabel, aMaxControl,
                 AMinInputLabel, aMinControl,
@@ -353,6 +368,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             StepToolTip.SetToolTip(_xTransformBox, Globals.SplitIntoLines("Transform to apply to the flaws."));
             StepToolTip.SetToolTip(_yTransformBox, Globals.SplitIntoLines("Transform to apply to the responses."));
+            StepToolTip.SetToolTip(_boxCoxLambda, Globals.SplitIntoLines("Set Lamda value for Box-cox (Used only when reponse is set to Box-Cox"));
             aMaxControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's maximum range.");
             aMinControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's minimum range.");
             rightCensorControl.TooltipForNumeric = Globals.SplitIntoLines("Maximum response of the inspection system. Used to censor data.");
@@ -368,6 +384,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _xTransformBox.SelectedIndex = 0;
             _yTransformBox.SelectedIndex = 0;
         }
+        private void InitializeNumericLambda()
+        {
+            PrepareLabelNumericPair(ref _labelForLamdaInput, "Lambda Value", ref _boxCoxLambda);
+        }
         
         protected override void SetupNumericControlEvents()
         {
@@ -378,9 +398,9 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             thresholdControl.NumericUpDown.ValueChanged += this.thresholdControl_ValueChanged;
             _xTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
             _yTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
-            
+            _boxCoxLambda.ValueChanged += this.NumericUpDown_ValueChanged;
         }
-        
+
         private void TransformBox_ValueChanged(object sender, EventArgs e)
         {
             Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
@@ -444,6 +464,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
                 lambdaTemp = TempLambda.CalcTempLambda();
                 Analysis.SetTempLambda = lambdaTemp;
+
+                _labelForLamdaInput.Enabled = true;
+                _boxCoxLambda.Enabled = true;
+                _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
+            }
+            else
+            {
+                _labelForLamdaInput.Enabled = false;
+                _boxCoxLambda.Enabled = false;
             }
 
             ForceUpdateAfterTransformChange();
@@ -784,7 +813,22 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             //controlValueChanged = false;
         }
+        private void NumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            
+            if (_boxCoxLambda.Value==0.0m)
+            {
+                MessageBox.Show("Lambda cannot be set as 0! If lambda is already close to 0, use log transform instead.");
+                _boxCoxLambda.Value = _previousLambda;
+                return;
+            }
+            double customLambda = Convert.ToDouble(_boxCoxLambda.Value);
+            Analysis.SetTempLambda = customLambda;
 
+
+            ForceUpdateAfterTransformChange();
+            _previousLambda = _boxCoxLambda.Value;
+        }
         protected override void DisableInputControls()
         {
             //foreach (Annotation anno in MainChart.Annotations)

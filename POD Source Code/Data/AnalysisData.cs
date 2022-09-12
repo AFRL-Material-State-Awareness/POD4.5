@@ -577,6 +577,7 @@ namespace POD.Data
         /// </summary>
         public AnalysisDataTypeEnum DataType
         {
+            set { _dataType = value; }
             get { return _dataType; }
         }
 

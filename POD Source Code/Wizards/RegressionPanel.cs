@@ -132,6 +132,22 @@ namespace POD.Wizards
         {
 
         }
+        public static void PrepareLabelNumericPair(ref Label myLabel, string myName, ref NumericUpDown myNumeric)
+        {
+            myLabel = new Label();
+
+            myNumeric = new NumericUpDown();
+
+            myLabel.Text = myName;
+            myLabel.AutoSize = true;
+            myLabel.Dock = DockStyle.Fill;
+
+            myNumeric.Dock = DockStyle.Fill;
+            myNumeric.DecimalPlaces = 3;
+            myNumeric.Minimum = -100;
+            myNumeric.Maximum = 100;
+            myNumeric.Value = .99m;
+        }
 
         public static void PrepareLabelBoxPair(ref Label myLabel, string myName, ref TransformBox myBox)
         {
