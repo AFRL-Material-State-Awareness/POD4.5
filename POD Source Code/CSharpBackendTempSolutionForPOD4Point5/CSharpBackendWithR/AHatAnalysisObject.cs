@@ -18,6 +18,9 @@ namespace CSharpBackendWithR
         private double durbinWatson_r; //durbin watson test for auto-correlation
         private double durbinWatsonDW;
         private double durbinWatsonPValue;
+        private double lackOfFitDegFreedom;
+        private double lackOfFitFVal;
+        private double lackOfFitPValue;
         //y decision theshold
         //private double y_decision;
         //private string xAxisName;
@@ -120,16 +123,19 @@ namespace CSharpBackendWithR
             //lambda is used for box cox transformation only(normalizes the y-values)
             this.lambda = 0.0;
             //ahat tests
-            shapiroTestStat = 0.0;//Shapiro-Wilk normality test
-            shapiroPValue = 0.0;
-            chiSqValue = 0.0; //non-constant variance test (the null hypothesis is constant variance)
-            chiSqDF = -1;
-            chiSqPValue = 0.0;
-            durbinWatson_r = 0.0; //durbin watson test for auto-correlation
-            durbinWatsonDW = 0.0;
-            durbinWatsonPValue = 0.0;
+            this.shapiroTestStat = 0.0;//Shapiro-Wilk normality test
+            this.shapiroPValue = 0.0;
+            this.chiSqValue = 0.0; //non-constant variance test (the null hypothesis is constant variance)
+            this.chiSqDF = -1;
+            this.chiSqPValue = 0.0;
+            this.durbinWatson_r = 0.0; //durbin watson test for auto-correlation
+            this.durbinWatsonDW = 0.0;
+            this.durbinWatsonPValue = 0.0;
+            this.lackOfFitDegFreedom = 0.0; //lack of fit test. Tests how well the model fits the data with and without the slope
+            this.lackOfFitFVal = 0.0;
+            this.lackOfFitPValue = 0.0;
             //used to store the signal response name
-            signalResponseName = "";
+            this.signalResponseName = "";
             //default theshold is zero(will be determined by the user)
             //this.y_decision = 0.0;
             //linear model
@@ -237,6 +243,21 @@ namespace CSharpBackendWithR
         {
             set { this.durbinWatsonPValue = value; }
             get { return this.durbinWatsonPValue; }
+        }
+        public double LackOfFitDegFreedom
+        {
+            set { this.lackOfFitDegFreedom = value; }
+            get { return this.lackOfFitDegFreedom; }
+        }
+        public double LackOfFitFCalc
+        {
+            set { this.lackOfFitFVal = value; }
+            get { return this.lackOfFitFVal; }
+        }
+        public double LackOfFitPValue
+        {
+            set { this.lackOfFitPValue = value; }
+            get { return this.lackOfFitPValue; }
         }
         public string SignalResponseName
         {

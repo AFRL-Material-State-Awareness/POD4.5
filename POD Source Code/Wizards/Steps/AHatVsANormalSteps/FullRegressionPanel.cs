@@ -226,6 +226,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 normalityTestLabel, normalityTestOut,
                 equalVarianceTestLabel, equalVarianceTestOut,
                 lackOfFitTestLabel, lackOfFitTestOut,
+                //autoCorrelationTestLabel, autoCorrelationTestOut,
                 TestColorMap
             };
 
@@ -279,6 +280,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             normalityTestOut.TooltipForNumeric = Globals.SplitIntoLines("Normality hypothesis test for the model fit. High p values indicate data compatible with assumption.");
             equalVarianceTestOut.TooltipForNumeric = Globals.SplitIntoLines("Equal variance hypothesis test for the model fit. High p values indicate data compatible with assumption.");
             lackOfFitTestOut.TooltipForNumeric = Globals.SplitIntoLines("Lack of fit hypothesis test for the model fit. High p values indicate data compatible with assumption.");
+            //autoCorrelationTestOut.TooltipForNumeric = Globals.SplitIntoLines("Durbin Watson test for auto-correlation. High p values indicate there is auto-correlation in the data.");
         }
 
         public void CycleTransforms()
@@ -368,7 +370,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             StepToolTip.SetToolTip(_xTransformBox, Globals.SplitIntoLines("Transform to apply to the flaws."));
             StepToolTip.SetToolTip(_yTransformBox, Globals.SplitIntoLines("Transform to apply to the responses."));
-            StepToolTip.SetToolTip(_boxCoxLambda, Globals.SplitIntoLines("Set Lamda value for Box-cox (Used only when reponse is set to Box-Cox"));
+            StepToolTip.SetToolTip(_boxCoxLambda, Globals.SplitIntoLines("Set Lamda value for Box-cox (Used only when reponse is set to Box-Cox)"));
             aMaxControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's maximum range.");
             aMinControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's minimum range.");
             rightCensorControl.TooltipForNumeric = Globals.SplitIntoLines("Maximum response of the inspection system. Used to censor data.");
@@ -469,7 +471,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _boxCoxLambda.Enabled = true;
                 _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
                 //keep from running the analyis twice
-                return;
+                //return;
             }
             else
             {
@@ -495,7 +497,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                                                     rightCensorControl.NumericUpDown, thresholdControl.NumericUpDown,
                                                     modelMOut.NumericUpDown, modelMStdErrOut.NumericUpDown, modelBOut.NumericUpDown, modelBStdErrOut.NumericUpDown, 
                                                     modelErrorOut.NumericUpDown, modelErrorStdErrOut.NumericUpDown, 
-                                                    normalityTestOut.NumericUpDown, equalVarianceTestOut.NumericUpDown, lackOfFitTestOut.NumericUpDown, 
+                                                    normalityTestOut.NumericUpDown, equalVarianceTestOut.NumericUpDown, lackOfFitTestOut.NumericUpDown,  //autoCorrelationTestOut.NumericUpDown,
                                                     rSquaredValueOut.NumericUpDown, MuOut.NumericUpDown, SigmaOut.NumericUpDown};
 
 
@@ -590,6 +592,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             double normality = Analysis.OutTestNormality_p;
             double lackOfFit = Analysis.OutTestLackOfFit_p;
             double equalVariance = Analysis.OutTestEqualVariance_p;
+            //double autoCorrelation = Analysis.OutTestAutoCorrelation_p;
             double mu = Analysis.OutResponseDecisionPODA50Value;
             double sigma = Analysis.OutResponseDecisionPODSigma;
             bool lackOfFitCalculated = Analysis.OutTestLackOfFitCalculated;
@@ -647,11 +650,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 rSquaredValueOut.Value = Convert.ToDecimal(rSquaredValue);
                 SigmaOut.Value = Convert.ToDecimal(sigma);
                 MuOut.Value = Convert.ToDecimal(mu);
-
                 normalityTestOut.Value = Convert.ToDecimal(normality);
                 lackOfFitTestOut.Value = Convert.ToDecimal(lackOfFit);
                 equalVarianceTestOut.Value = Convert.ToDecimal(equalVariance);
-                
+                //autoCorrelationTestOut.Value = Convert.ToDecimal(autoCorrelation);
+
             }
             catch
             {
@@ -670,11 +673,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             TestRating normalityRating = Analysis.GetTestRatingFromLabel(Analysis.OutTestNormalityRating);
             TestRating equalVarianceRating = Analysis.GetTestRatingFromLabel(Analysis.OutTestEqualVarianceRating);
             TestRating lackOfFitRating = Analysis.GetTestRatingFromLabel(Analysis.OutTestLackOfFitRating);
-
+            //TestRating autoCorrelationRating = Analysis.GetTestRatingFromLabel(Analysis.OutTestAutoCorrelationRating);
             normalityTestOut.Rating = normalityRating;
             lackOfFitTestOut.Rating = lackOfFitRating;
             equalVarianceTestOut.Rating = equalVarianceRating;
-            
+            //autoCorrelationTestOut.Rating = autoCorrelationRating;
             if (!lackOfFitCalculated)
             {
                 lackOfFitTestOut.Rating = TestRating.Undefined;
@@ -820,7 +823,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             
             if (_boxCoxLambda.Value==0.0m)
             {
-                MessageBox.Show("Lambda cannot be set as 0! If lambda is already close to 0, use log transform instead.");
+                MessageBox.Show("Setting lambda as 0 is the same as taking a log transform of y! If lambda is already close to 0, use log transform instead.");
                 _boxCoxLambda.Value = _previousLambda;
                 return;
             }

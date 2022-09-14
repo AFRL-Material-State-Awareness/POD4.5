@@ -16,7 +16,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 {
     using System.Data;
     using System.Windows.Forms.DataVisualization.Charting;
-
+    //using CSharpBackendWithR;
     using POD.Analyze;
     using POD.Data;
 
@@ -52,12 +52,6 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _colors[1] = _colors[2];
                 _colors[2] = temp;
             }
-
-            /*if (!DesignMode)
-            {
-                InitializeAxisList(XAxisTransformList);
-                InitializeAxisList(YAxisTransformList);
-            }*/
 
             Paint += ChooseTransformPanel_Paint;
 
@@ -172,13 +166,17 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                 foreach (var yTrans in AllYTransforms)
                 {
-                    ///while (_analysis.AnalysisRunning) ;
-
+                    ///while (_analysis.AnalysisRunning) ;                   
                     if (yAxisIndex < _topY && xAxisIndex < _topX)
                     {
                         //_analysis.Data.FilterTransformedDataByRanges = true;
                         _analysis.InFlawTransform = xTrans.TransformType;
                         _analysis.InResponseTransform = yTrans.TransformType;
+
+                        if (_analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+                        {
+                            _analysis.SetUpLambda();
+                        }
 
                         var yColumnIndex = yAxisIndex;
                         var xColumnIndex = xAxisIndex;
@@ -213,7 +211,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                 xAxisIndex++;
             }
-
+            
             //var vaariable=1;
 
             this.Invoke((MethodInvoker)delegate()
@@ -748,6 +746,18 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 row.Cells[1].Value = Properties.Resources.question;
                 row.Cells[1].ToolTipText = Column1ToolTip(listBox);
                 listBox.Rows.Add(row);
+                /*
+                if (listBox == YAxisTransformList)
+                {
+                    row = listBox.CreateNewCloneRow(listBox.Columns.Count);
+                    row.Cells[0].Value = new TransformObj(TransformTypeEnum.BoxCox);
+                    row.Cells[0].ToolTipText = Column0ToolTip(listBox);
+                    row.Cells[1].Value = Properties.Resources.question;
+                    row.Cells[1].ToolTipText = Column1ToolTip(listBox);
+                    listBox.Rows.Add(row);
+                }
+                */
+
 
                 listBox.Rows[0].Selected = true;
                 listBox.Rows[1].Selected = true;

@@ -58,7 +58,7 @@ namespace CSharpBackendWithR
                     REngine.SetEnvironmentVariables(rPath, homePath);
                     engine = REngine.GetInstance();
                 }
-                catch (Exception e)
+                catch
                 {
                     rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
                     homePath = this.applicationPath + @"\R-3.5.3\";
@@ -153,7 +153,7 @@ namespace CSharpBackendWithR
                 //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
                 //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
             }
-            catch(RDotNet.EvaluationException tryADifferentPath)
+            catch
             {
                 this.forwardSlashAppPath = this.forwardSlashAppPath + "/..";
                 //this may get used instead of the platform target is purely x86

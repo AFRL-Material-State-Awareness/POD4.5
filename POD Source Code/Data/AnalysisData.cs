@@ -1610,6 +1610,8 @@ namespace POD.Data
             {
                 _aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
             }
+            //_hmAnalysisObject = _python.HitMissAnalsysis(myAnalysisName);
+            //_aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
         }
 
         public void UpdateOutput()

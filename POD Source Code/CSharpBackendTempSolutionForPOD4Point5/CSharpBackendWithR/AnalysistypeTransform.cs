@@ -16,17 +16,20 @@ namespace CSharpBackendWithR
         private AHatAnalysisObject resultsAHatAnalysis;
         //controls
         private HitMissAnalysisRControl newHitMissControl;
-        public AnalysistypeTransform(REngineObject analysisEngine, HMAnalysisObject newPFAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
+        private AHatAnalysisRControl newAHatControl;
+        public AnalysistypeTransform(REngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
         {
             this.analysisEngine = analysisEngine;
-            this.newPFAnalysisObject = newPFAnalysisObjectInput;
-            if (newPFAnalysisObjectInput != null)
+            this.newPFAnalysisObject = newHitMissAnalysisObjectInput;
+            if (newHitMissAnalysisObjectInput != null)
             {
-                this.srsOrRSS = newPFAnalysisObjectInput.SrsOrRSS;
-                this.resultsHMAnalysis = newPFAnalysisObjectInput;
+                this.srsOrRSS = newHitMissAnalysisObjectInput.SrsOrRSS;
+                this.resultsHMAnalysis = newHitMissAnalysisObjectInput;
                 this.newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
+                
             }
             this.newAHatAnalysisObject = newAhatAnalysisObjectInput;
+            this.newAHatControl = new AHatAnalysisRControl(analysisEngine);
             this.resultsAHatAnalysis = newAhatAnalysisObjectInput;
         }
         public void ExecuteReqSampleAnalysisTypeHitMiss()
@@ -82,23 +85,7 @@ namespace CSharpBackendWithR
             //create the class for hitMissControl
             //HitMissAnalysisRControl this.newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
             this.newHitMissControl.ExecuteRSS(this.newPFAnalysisObject);
-            this.newPFAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
-            this.newPFAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
-            this.newPFAnalysisObject.IterationTable = this.newHitMissControl.GetIterationTableForUI();
-            //store the original dataframe in the HM analysis object
-            this.newPFAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
-            //normal tranformation finished! Start log tranformation table
-            Dictionary<string, double> finalAValuesDict = newHitMissControl.GetKeyA_Values();
-            this.newPFAnalysisObject.A25 = finalAValuesDict["a25"];
-            this.newPFAnalysisObject.A50 = finalAValuesDict["a50"];
-            this.newPFAnalysisObject.A90 = finalAValuesDict["a90"];
-            this.newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
-            this.newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
-            this.newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
-            //store the covariance matrix values to return to UI
-            this.newPFAnalysisObject.CovarianceMatrix = newHitMissControl.GetCovarianceMatrixValues();
-            //get the goodness of fit
-            this.newPFAnalysisObject.GoodnessOfFit = newHitMissControl.GetGoodnessOfFit();
+            ReturnHitMissObjects();
             //clear all contents in R and restart the global environment
             //this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
@@ -109,14 +96,9 @@ namespace CSharpBackendWithR
         private AHatAnalysisObject ExecuteaHatAnalysis()
         {
             //create the class for A Hat Control
-            AHatAnalysisRControl newAHatControl = new AHatAnalysisRControl(analysisEngine);
+            //AHatAnalysisRControl newAHatControl = new AHatAnalysisRControl(analysisEngine);
             //pass in the pfobject intance with the parameters set from the UI
-
-            //passfailCensorClass -- doesn't apply to pass fail
-            //TODO: will create a class that marks which flaws are being included in the analysis in the event that the user censors the data
-
             //Get crack max and min class
-            //create a for loop here to do both the standard and log transform for the graph
             //overwrite the max and min class each iteration
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
             //write the max and min crack size to the ahatAnalysis object
@@ -124,46 +106,8 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
             this.newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             //execute analysis and return parameters
-            newAHatControl.ExecuteAnalysis(this.newAHatAnalysisObject);
-            this.newAHatAnalysisObject.AHatResultsPOD = newAHatControl.GetLogitFitTableForUI();
-            this.newAHatAnalysisObject.AHatResultsLinear = newAHatControl.GetLinearFitTableForUI();
-            this.newAHatAnalysisObject.AHatResultsResidUncensored = newAHatControl.GetResidualUncensoredTableForUI();
-            this.newAHatAnalysisObject.AHatResultsResid = newAHatControl.GetResidualTableForUI();
-            this.newAHatAnalysisObject.AHatThresholdsTable = newAHatControl.GetThresholdsTableForUI();
-            //get slope and intercept (need to add the errors for each as well)
-            List<double> linearMetrics = newAHatControl.GetLinearModelMetrics();
-            this.newAHatAnalysisObject.Intercept = linearMetrics[0];
-            this.newAHatAnalysisObject.Slope = linearMetrics[1];
-            //get r-squared value
-            this.newAHatAnalysisObject.RSqaured = newAHatControl.GetRSquaredValue();
-            //get lambda from box-cox if applicable
-            if (this.newAHatAnalysisObject.ModelType >= 5)
-            {
-                this.newAHatAnalysisObject.Lambda = newAHatControl.GetBoxCoxLamda();
-            }
-            //get standard errors for linear model
-            Dictionary<string, double> standardErrors = newAHatControl.GetLinearModelStdErrors();
-            this.newAHatAnalysisObject.SlopeStdErr = standardErrors["slopeStdError"];
-            this.newAHatAnalysisObject.InterceptStdErr = standardErrors["interceptStdError"];
-            this.newAHatAnalysisObject.ResidualStdErr = standardErrors["residualStdError"];
-            //normal tranformation finished! Start log tranformation table
-            Dictionary<string, double> finalAValuesDict = newAHatControl.GetKeyA_Values();
-            this.newAHatAnalysisObject.A25 = finalAValuesDict["a25"];
-            this.newAHatAnalysisObject.A50 = finalAValuesDict["a50"];
-            this.newAHatAnalysisObject.A90 = finalAValuesDict["a90"];
-            this.newAHatAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
-            this.newAHatAnalysisObject.A9095 = finalAValuesDict["a9095"];
-            this.newAHatAnalysisObject.Muhat = finalAValuesDict["a50"];
-            //get linear test results
-            List<double> linTestResults = newAHatControl.GetLinearTestMetrics();
-            this.newAHatAnalysisObject.ShapiroTestStat = linTestResults[0];
-            this.newAHatAnalysisObject.ShapiroPValue = linTestResults[1];
-            this.newAHatAnalysisObject.ChiSqValue = linTestResults[2];
-            this.newAHatAnalysisObject.ChiSqDF = Convert.ToInt32(linTestResults[3]);
-            this.newAHatAnalysisObject.ChiSqPValue = linTestResults[4];
-            this.newAHatAnalysisObject.DurbinWatson_r = linTestResults[5];
-            this.newAHatAnalysisObject.DurbinWatsonDW = linTestResults[6];
-            this.newAHatAnalysisObject.DurbinWatsonPValue = linTestResults[7];
+            this.newAHatControl.ExecuteAnalysis(this.newAHatAnalysisObject);
+            ReturnSignalResponseObjects();
             //clear all contents in R and restart the global environment/////Removed this for improved performance
             //analysisEngine.clearGlobalIInREngineObject();
             //return the completed aHatAnalysisObject
@@ -196,7 +140,51 @@ namespace CSharpBackendWithR
             //used for error if the alogrithm doesn't converge
             this.newPFAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
         }
-
+        public void ReturnSignalResponseObjects()
+        {
+            this.newAHatAnalysisObject.AHatResultsPOD = this.newAHatControl.GetLogitFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsLinear = this.newAHatControl.GetLinearFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsResidUncensored = this.newAHatControl.GetResidualUncensoredTableForUI();
+            this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
+            this.newAHatAnalysisObject.AHatThresholdsTable = this.newAHatControl.GetThresholdsTableForUI();
+            //get slope and intercept (need to add the errors for each as well)
+            List<double> linearMetrics = this.newAHatControl.GetLinearModelMetrics();
+            this.newAHatAnalysisObject.Intercept = linearMetrics[0];
+            this.newAHatAnalysisObject.Slope = linearMetrics[1];
+            //get r-squared value
+            this.newAHatAnalysisObject.RSqaured = this.newAHatControl.GetRSquaredValue();
+            //get lambda from box-cox if applicable
+            if (this.newAHatAnalysisObject.ModelType >= 5 && this.newAHatAnalysisObject.ModelType <= 7)
+            {
+                this.newAHatAnalysisObject.Lambda = this.newAHatControl.GetBoxCoxLamda();
+            }
+            //get standard errors for linear model
+            Dictionary<string, double> standardErrors = this.newAHatControl.GetLinearModelStdErrors();
+            this.newAHatAnalysisObject.SlopeStdErr = standardErrors["slopeStdError"];
+            this.newAHatAnalysisObject.InterceptStdErr = standardErrors["interceptStdError"];
+            this.newAHatAnalysisObject.ResidualStdErr = standardErrors["residualStdError"];
+            //normal tranformation finished! Start log tranformation table
+            Dictionary<string, double> finalAValuesDict = this.newAHatControl.GetKeyA_Values();
+            this.newAHatAnalysisObject.A25 = finalAValuesDict["a25"];
+            this.newAHatAnalysisObject.A50 = finalAValuesDict["a50"];
+            this.newAHatAnalysisObject.A90 = finalAValuesDict["a90"];
+            this.newAHatAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
+            this.newAHatAnalysisObject.A9095 = finalAValuesDict["a9095"];
+            this.newAHatAnalysisObject.Muhat = finalAValuesDict["a50"];
+            //get linear test results
+            List<double> linTestResults = this.newAHatControl.GetLinearTestMetrics();
+            this.newAHatAnalysisObject.ShapiroTestStat = linTestResults[0];
+            this.newAHatAnalysisObject.ShapiroPValue = linTestResults[1];
+            this.newAHatAnalysisObject.ChiSqValue = linTestResults[2];
+            this.newAHatAnalysisObject.ChiSqDF = Convert.ToInt32(linTestResults[3]);
+            this.newAHatAnalysisObject.ChiSqPValue = linTestResults[4];
+            this.newAHatAnalysisObject.DurbinWatson_r = linTestResults[5];
+            this.newAHatAnalysisObject.DurbinWatsonDW = linTestResults[6];
+            this.newAHatAnalysisObject.DurbinWatsonPValue = linTestResults[7];
+            this.newAHatAnalysisObject.LackOfFitDegFreedom = linTestResults[8];
+            this.newAHatAnalysisObject.LackOfFitFCalc = linTestResults[9];
+            this.newAHatAnalysisObject.LackOfFitPValue = linTestResults[10];
+        } 
         public HMAnalysisObject HMAnalsysResults
         {
             set { this.resultsHMAnalysis = value; }

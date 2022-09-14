@@ -68,9 +68,11 @@ namespace POD.Controls
 
             switch (TransformType)
             {
-               // case TransformTypeEnum.BoxCox:
-               //     _label = "Box-Cox";
-               //     break;
+                //box cox label only used in choose transform panel. X does not have a box-cox transform in the
+                //User interface
+                case TransformTypeEnum.BoxCox:
+                    _label = "Box-Cox";
+                    break;
                 case TransformTypeEnum.Log:
                     _label = "Log";
                     break;

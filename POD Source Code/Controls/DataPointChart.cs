@@ -1131,6 +1131,13 @@ namespace POD.Controls
 
             ChartAreas[0].AxisX.LabelAutoFitMinFontSize = 5;
 
+            //used to keep inverse from breaking if the user selected it in the transform panel
+            if(ChartAreas[0].AxisX.Minimum> ChartAreas[0].AxisX.Maximum)
+            {
+                var temp = ChartAreas[0].AxisX.Maximum;
+                ChartAreas[0].AxisX.Maximum = ChartAreas[0].AxisX.Minimum;
+                ChartAreas[0].AxisX.Minimum = temp;
+            }
         }
 
         private void StoreLabelingParameters(AxisObject xAxis, AxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 

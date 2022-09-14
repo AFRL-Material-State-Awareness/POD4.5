@@ -1,4 +1,4 @@
-options(warn=-1)
+#options(warn=-1)
 library(ggplot2) # gorgeous plots
 library(gridExtra) # useful for plotting in grids
 library(MASS) #contains boxcox and much more
@@ -21,10 +21,11 @@ data_obs=na.omit(data_obs)
 begin<-proc.time()
 #bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
 lambda<-0
+#data_obs$x=log(data_obs$x)
 #lambda<-bc$x[which.max(bc$y)]
 #data_obs$y<-(data_obs$y^lambda-1)/lambda
-data_obs$x=1/data_obs$x
-#data_obs$y=log(data_obs$y)
+#data_obs$x=1/data_obs$x
+#data_obs$y=data_obs$y3
 #$y^1.11-1/1.11
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0)
@@ -54,8 +55,22 @@ newSRAnalysis$plotCI(results)
 #  thisError=data_obs$y[i]-mean(data_obs$y)
 #  residualError=c(residualError, thisError^2)
 #}
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=5, lambda=lambda)
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=4.0, modelType=1, lambda=lambda)
 slope<-newSRAnalysis$getModelSlope()
 
-boxCoxTEst<-boxcox(data_obs$y~data_obs$x)
-lambda <-boxCoxTEst$x[which.max(boxCoxTEst$y)]
+
+
+# full<-lm(y~x, data=data_obs)
+# #constVector=rep(linearModel_lm$coefficients[[1]], nrow(data_obs))
+# #partial<-lm(constVector~x, data= data_obs)
+# #partial<-lm(1~x, data= data_obs)
+# #partial$coefficients[[2]]=0
+# #partial<-lm(y~poly(x, 2), data= data_obs)
+# partial<-lm(y~1, data= data_obs)
+# ANOVATable<-Anova(full, partial)
+# pValue=1-ANOVATable$`Pr(>F)`[1]
+
+
+
+#boxCoxTEst<-boxcox(data_obs$y~data_obs$x)
+#lambda <-boxCoxTEst$x[which.max(boxCoxTEst$y)]

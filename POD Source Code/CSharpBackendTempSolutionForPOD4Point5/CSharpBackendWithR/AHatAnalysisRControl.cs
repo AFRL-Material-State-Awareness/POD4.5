@@ -196,6 +196,13 @@ namespace CSharpBackendWithR
             AllLinearTestResults.Add(durbinDW);
             double durbinPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[3]]").AsNumeric()[0];
             AllLinearTestResults.Add(durbinPValue);
+            //lack of fit test
+            double lackOfFitDegFreedom = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[2]]").AsNumeric()[0];
+            AllLinearTestResults.Add(lackOfFitDegFreedom);
+            double lackOfFitFCalc = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[3]]").AsNumeric()[0];
+            AllLinearTestResults.Add(lackOfFitFCalc);
+            double lackOfFitPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[4]]").AsNumeric()[0];
+            AllLinearTestResults.Add(lackOfFitPValue);
             return AllLinearTestResults;
         }
         

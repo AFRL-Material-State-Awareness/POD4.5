@@ -143,8 +143,8 @@ namespace CSharpBackendWithR
         protected float EV_Bartlett_p;
         protected string barlettRating;
         */
-        protected double Fcalc;
-        protected double Fcalc_p;
+        //protected double Fcalc;
+        //protected double Fcalc_p;
         protected string LackOfFitRating;
         //protected int lackOfFitDegFrdm;
         //protected bool lackOffitCalcualted;

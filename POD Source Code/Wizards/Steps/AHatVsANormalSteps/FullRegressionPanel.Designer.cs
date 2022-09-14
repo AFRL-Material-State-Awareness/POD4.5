@@ -1364,6 +1364,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private Label equalVarianceTestLabel;
         private PODRatedNumericUpDown lackOfFitTestOut;
         private Label lackOfFitTestLabel;
+        private PODRatedNumericUpDown autoCorrelationTestOut;
+        private Label autoCorrelationTestLabel;
         private ColorMap TestColorMap;
         private Label rSqauredLabel;
         private PODChartNumericUpDown rSquaredValueOut;

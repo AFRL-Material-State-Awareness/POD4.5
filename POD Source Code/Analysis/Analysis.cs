@@ -572,7 +572,7 @@ namespace POD.Analyze
         double _outTestEqualVariance;
 
         /// <summary>
-        ///     Bartlett value for Equal Variance test
+        ///    Non-constant variance test value for Equal Variance test
         /// </summary>
         public double OutTestEqualVariance
         {
@@ -591,7 +591,7 @@ namespace POD.Analyze
         double _outTestEqualVariance_p;
 
         /// <summary>
-        ///     Bartlett value for Equal Variance test
+        ///     Non-constant variance test p value
         /// </summary>
         public double OutTestEqualVariance_p
         {
@@ -676,11 +676,35 @@ namespace POD.Analyze
             get { return _outTestLackOfFitCalculated; }
             set { if (!IsFrozen) _outTestLackOfFitCalculated = value; }
         }
+        /// <summary>
+        /// p value for autocorrelation using durbin watson test
+        /// </summary>
+        double _outTestAutoCorrelation_p;
+        public double OutTestAutoCorrelation_p
+        {
+            get
+            {
+                return NoBigNumbers(_outTestAutoCorrelation_p);
+            }
+
+            private set
+            {
+                if (!IsFrozen)
+                    _outTestAutoCorrelation_p = value;
+            }
+        }
+        string _outTestAutoCorrelationRating = "";
+
+        public string OutTestAutoCorrelationRating
+        {
+            get { return _outTestAutoCorrelationRating; }
+            set { if (!IsFrozen) _outTestAutoCorrelationRating = value; }
+        }
 
         double _outTestNormality;
 
         /// <summary>
-        ///     Anderson-Darling value for Normality test
+        ///     Shapiro-Wilk test value for Normality test
         /// </summary>
         public double OutTestNormality
         {
@@ -699,7 +723,7 @@ namespace POD.Analyze
         double _outTestNormality_p;
 
         /// <summary>
-        ///     p-Value for the Anderson-Darling value for Normality test
+        ///     p-Value for the Shapiro-Wilk value for Normality test
         /// </summary>
         public double OutTestNormality_p
         {
@@ -1154,14 +1178,16 @@ namespace POD.Analyze
                 OutTestNormality_p = _aHatAnalysisObject.ShapiroPValue;
                 OutTestNormality = _aHatAnalysisObject.ShapiroTestStat;
                 OutTestNormalityRating = _python.GetPValueDecision(OutTestNormality_p);
-                //OutTestLackOfFit_p
-                //OutTestLackOfFit
-                //OutTestLackOfFitRating
+                OutTestLackOfFit_p = _aHatAnalysisObject.LackOfFitPValue;
+                OutTestLackOfFit = _aHatAnalysisObject.LackOfFitFCalc;
+                OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit_p);
                 OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
                 OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
                 OutTestEqualVarianceRating= _python.GetPValueDecision(OutTestEqualVariance_p);
-                //A Values and sigma
-                OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
+                OutTestAutoCorrelation_p = _aHatAnalysisObject.DurbinWatsonPValue;
+                OutTestAutoCorrelationRating = _python.GetPValueDecision(OutTestAutoCorrelation_p);
+                 //A Values and sigma
+                 OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
                 OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
                 OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
                 OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
@@ -1280,7 +1306,16 @@ namespace POD.Analyze
                 _aHatAnalysisObject.ClearMetrics();
             }
         }
-
+        public void SetUpLambda()
+        {
+            double lambdaTemp;
+            AHatAnalysisObject currAnalysis = _aHatAnalysisObject;
+            List<double> tempFlaws = currAnalysis.Flaws;
+            List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
+            TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, _rDotNet);
+            lambdaTemp = TempLambda.CalcTempLambda();
+            SetTempLambda= lambdaTemp;
+        }
         public void UpdateProgress(Object sender, int myProgressOutOf100)
         {
             _python.ProgressOutOf100 = myProgressOutOf100;
@@ -2957,6 +2992,7 @@ namespace POD.Analyze
                 }
                 else
                 {
+
                     AnalysistypeTransform newAnalysisControlAHat = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
                     newAnalysisControlAHat.ExecuteAnalysisAHat();
                     _aHatAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;

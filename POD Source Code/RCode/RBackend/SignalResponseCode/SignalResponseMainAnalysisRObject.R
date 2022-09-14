@@ -107,7 +107,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
-                                      linearModel_lm <<- lm(y ~ x, data = signalRespDF, na.action=na.omit)
+                                      linearModel_lm <- lm(y ~ x, data = signalRespDF, na.action=na.omit)
                                       setModelIntercept(linearModel_lm$coefficients[[1]])
                                       setModelSlope(linearModel_lm$coefficients[[2]])
                                       #set the linear model so it can be returned
@@ -201,7 +201,14 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       # Test for auto-correlation (ie, a pattern in the data due to "time," or in this case, order)
                                       # Data does not have auto-correlation. 
                                       durbinWTest=durbinWatsonTest(linearM)
-                                      setLinearTestResults(list(shapiro,nonConst,durbinWTest))
+                                      #test for lack of fit (compare the models when using slope and without)
+                                      full<-lm(y~x, data=signalRespDF)
+                                      partial<-lm(y~1, data= signalRespDF)
+                                      lackOfFitTest<-Anova(full, partial)
+                                      #lackOfFitTest[1,4]= 1-lackOfFitTest[1,4]
+                                      #lackOfFitTest<-Anova(partial, full)
+                                      #lackOfFitTest=1-ANOVATable$`Pr(>F)`[1]
+                                      setLinearTestResults(list(shapiro,nonConst,durbinWTest,lackOfFitTest[1,]))
                                     },
                                     genAhatVersusACensored=function(){
                                       # It expects a censored object; this data is not censored but we can still use it.
@@ -212,7 +219,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       # Here's the linear model.
                                       a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x,
                                                                      dist = "gaussian", data = a.hat.censor.df)
-                                      a.hat.vs.a.censored_Null <<- survreg(formula = censored.a.hat ~ 0+as.factor(x),
+                                      a.hat.vs.a.censored_Null <- survreg(formula = censored.a.hat ~ 0+as.factor(x),
                                                                      dist = "gaussian", data = a.hat.censor.df)
                                       #a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
