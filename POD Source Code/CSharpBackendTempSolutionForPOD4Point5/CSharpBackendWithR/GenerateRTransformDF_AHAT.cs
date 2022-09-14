@@ -11,6 +11,7 @@ namespace CSharpBackendWithR
         private REngineObject myREngineObject;
         private REngine myREngine;
         private AHatAnalysisObject newAHatAnalysis;
+        private double lambda;
         private List<double> cracks;
         private List<double> cracksCensored;
         private List<double> signalResponse;
@@ -20,6 +21,7 @@ namespace CSharpBackendWithR
             this.myREngineObject = myREngineObjectInput;
             this.myREngine = this.myREngineObject.RDotNetEngine;
             this.newAHatAnalysis = newAHatAnalysisInput;
+            this.lambda = newAHatAnalysisInput.Lambda;
             this.cracks = newAHatAnalysis.Flaws;
             this.cracksCensored = newAHatAnalysis.FlawsCensored;
             this.signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
@@ -150,12 +152,15 @@ namespace CSharpBackendWithR
                 this.myREngine.Evaluate("x<-c(x," + this.cracks[i].ToString() + ")");
                 this.myREngine.Evaluate("y<-c(y, " + this.signalResponse[i].ToString() + ")");
             }
+            SetLambdaValueInR();
+            /*
             //box-cox tranform has been selected. Find the optimal value for lambda!
             this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
             //get the value of lambda
             this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
             //tranform y-axis with lambda
             this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
+            */
         }
         private void LogXBoxcox()
         {
@@ -170,12 +175,15 @@ namespace CSharpBackendWithR
                 this.myREngine.Evaluate("x<-c(x, log(" + cracks[i].ToString() + "))");
                 this.myREngine.Evaluate("y<-c(y, " + signalResponse[i].ToString() + ")");
             }
+            SetLambdaValueInR();
+            /*
             //box-cox tranform has been selected. Find the optimal value for lambda!
             this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
             //get the value of lambda
             this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
             //tranform y-axis with lambda
             this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
+            */
         }
         private void InverseXBoxcox()
         {
@@ -190,12 +198,15 @@ namespace CSharpBackendWithR
                 this.myREngine.Evaluate("x<-c(x, 1/(" + cracks[i].ToString() + "))");
                 this.myREngine.Evaluate("y<-c(y, " + signalResponse[i].ToString() + ")");
             }
+            SetLambdaValueInR();
+            /*
             //box-cox tranform has been selected. Find the optimal value for lambda!
             this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
             //get the value of lambda
             this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
             //tranform y-axis with lambda
             this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
+            */
         }
         private void LinearXInverseY()
         {
@@ -266,6 +277,13 @@ namespace CSharpBackendWithR
                 this.myREngine.Evaluate("x<-c(x,1/(" + this.cracks[i].ToString() + "))");
                 this.myREngine.Evaluate("y<-c(y,1/(" + this.signalResponse[i].ToString() + "))");
             }
+        }
+        private void SetLambdaValueInR()
+        {
+            //get the value of lambda
+            this.myREngine.Evaluate("lambdaInput <-"+ this.lambda.ToString());
+            //tranform y-axis with lambda
+            this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
         }
     }
     

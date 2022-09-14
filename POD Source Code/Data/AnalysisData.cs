@@ -1052,7 +1052,6 @@ namespace POD.Data
 
                     toTable.Columns.Add(newCol);
                 }
-                var stop = 0.0;
                 toTable.Load(fromTable.CreateDataReader());
             }
         }

@@ -16,6 +16,7 @@ namespace POD.Wizards
 
     using POD.Analyze;
     using POD.Data;
+    using POD.Wizards.Steps.AHatVsANormalSteps;
 
     public partial class RegressionPanel : SideChartPanel
     {
@@ -132,11 +133,11 @@ namespace POD.Wizards
         {
 
         }
-        public static void PrepareLabelNumericPair(ref Label myLabel, string myName, ref NumericUpDown myNumeric)
+        public static void PrepareLabelNumericPair(ref Label myLabel, string myName, ref LambdaNumericUpDown myNumeric)
         {
             myLabel = new Label();
 
-            myNumeric = new NumericUpDown();
+            myNumeric = new LambdaNumericUpDown();
 
             myLabel.Text = myName;
             myLabel.AutoSize = true;

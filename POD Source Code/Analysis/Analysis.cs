@@ -1823,6 +1823,7 @@ namespace POD.Analyze
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 _aHatAnalysisObject.Pod_threshold = InResponseDecision;
+                //_aHatAnalysisObject.Lambda = SetTempLambda;
             }
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
@@ -1858,7 +1859,6 @@ namespace POD.Analyze
             }
             List<double> thresholds = new List<double>();
 
-            double value = 0.0;
             double inc = (InResponseDecisionMax - InResponseDecisionMin) / (InResponseDecisionIncCount);
             /*
             for (int i = 0; i <= InResponseDecisionIncCount; i++)
@@ -2704,7 +2704,7 @@ namespace POD.Analyze
                 {
                     value = 0.0M;
                 }
-                catch (DivideByZeroException divide)
+                catch (DivideByZeroException)
                 {
                     value = 0;
                 }
@@ -2743,11 +2743,11 @@ namespace POD.Analyze
                     return Convert.ToDecimal(TransformAValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                     //return Convert.ToDecimal(TransformAValue(myValue / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                 }
-                catch (OverflowException overflow)
+                catch (OverflowException)
                 {
                     value = 0.0M;
                 }
-                catch (DivideByZeroException divide)
+                catch (DivideByZeroException)
                 {
                     value = 0;
                 }

@@ -25,7 +25,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private Label _yTransformLabel;
         //used to set lambda for box-cox transformation
         private Label _labelForLamdaInput;
-        private NumericUpDown _boxCoxLambda;
+        private LambdaNumericUpDown _boxCoxLambda;
 
         private List<Control> _inputWithLabels = new List<Control>();
         private List<Control> _outputWithLabels = new List<Control>();
@@ -468,6 +468,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _labelForLamdaInput.Enabled = true;
                 _boxCoxLambda.Enabled = true;
                 _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
+                //keep from running the analyis twice
+                return;
             }
             else
             {

@@ -112,6 +112,9 @@
     <Compile Include="Steps\AHatVsANormalSteps\AHatVsACompareStep.Designer.cs">
       <DependentUpon>AHatVsACompareStep.cs</DependentUpon>
     </Compile>
+    <Compile Include="Steps\AHatVsANormalSteps\LambdaNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Steps\AHatVsANormalSteps\DocumentRemovedTitle.cs">
       <SubType>UserControl</SubType>
     </Compile>
