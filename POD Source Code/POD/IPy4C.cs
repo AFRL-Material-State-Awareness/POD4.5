@@ -185,6 +185,26 @@ namespace POD
 
             return transform;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RCalcTypeEnumToInt(RCalculationType myType)
+        {
+            int type = 0;
+            switch (myType)
+            {
+                case RCalculationType.Full:
+                    type = 1;
+                    break;
+                case RCalculationType.ThresholdChange:
+                    type = 2;
+                    break;
+                case RCalculationType.Transform:
+                    type = 3;
+                    break;
+            }
+            return type;
+        }
         /*
         //returns the value for the respective data analyis type
         public int AnalysisDataTypeEnumToInt(AnalysisDataTypeEnum myAnalysisDataType)

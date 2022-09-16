@@ -94,6 +94,22 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
         }
+        public void ExecutethresholdChange(AHatAnalysisObject newTranformAnalysis)
+        {
+            this.createDataFrameinGlobalEnvr(newTranformAnalysis);
+            //System.Diagnostics.Debug.WriteLine(this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')").ToString());
+            //this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')");
+            //execute class with appropriate parameters
+            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold + ", " +
+                "modelType=" + newTranformAnalysis.ModelType + ", lambda=lambdaInput)");
+            this.myREngine.Evaluate("newSRAnalysis$performTransforms()");
+            this.myREngine.Evaluate("ahatvACensored<-newSRAnalysis$genAhatVersusACensored()");
+            this.myREngine.Evaluate("newSRAnalysis$genAvaluesAndMatrix(ahatvACensored)");
+            this.myREngine.Evaluate("newSRAnalysis$genPODCurve()");
+            //remove misc variables from the global environment
+            this.myREngine.Evaluate("rm(lambdaInput)");
+            this.myREngine.Evaluate("rm(ahatvACensored)");
+        }
         public DataTable GetLinearFitTableForUI()
         {
             RDotNet.DataFrame returnDataFrameLinear = myREngine.Evaluate("newSRAnalysis$getLinearModel()").AsDataFrame();

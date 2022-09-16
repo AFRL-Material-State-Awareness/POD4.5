@@ -807,20 +807,21 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         private void thresholdControl_ValueChanged(object sender, EventArgs e)
         {
+            //System.Diagnostics.Stopwatch myWatch = new System.Diagnostics.Stopwatch();
+            //myWatch.Start();
             //controlValueChanged = true;
 
             _activeControl = thresholdControl;
 
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
             mainChart.SetThresholdBoundary(y, true);
-
+            //set to calculate threshold change only
+            Analysis.AnalysisCalculationType = RCalculationType.ThresholdChange;
             RunAnalysis();
-
-            //controlValueChanged = false;
         }
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             if (_boxCoxLambda.Value==0.0m)
             {
                 MessageBox.Show("Setting lambda as 0 is the same as taking a log transform of y! If lambda is already close to 0, use log transform instead.");

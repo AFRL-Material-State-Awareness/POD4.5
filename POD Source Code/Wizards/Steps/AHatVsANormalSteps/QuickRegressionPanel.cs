@@ -1101,14 +1101,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         private void thresholdControl_ValueChanged(object sender, EventArgs e)
         {
-            //controlValueChanged = true;
-
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
             mainChart.SetThresholdBoundary(y, true);
-
+            //set to calculate threshold change only
+            Analysis.AnalysisCalculationType = RCalculationType.ThresholdChange;
             RunAnalysis();
-
-            //controlValueChanged = false;
         }
 
         protected override void MainChart_LinesChanged(object sender, EventArgs e)

@@ -50,6 +50,10 @@ namespace CSharpBackendWithR
             this.resultsAHatAnalysis = ExecuteaHatAnalysis();
 
         }
+        public void ExecuteThresholdChange()
+        {
+            this.resultsAHatAnalysis = UpdateThresholdChange();
+        }
         private HMAnalysisObject ExecutePFAnalysisTrans()
         {
             //create the class for hitMissControl
@@ -108,6 +112,26 @@ namespace CSharpBackendWithR
             //execute analysis and return parameters
             this.newAHatControl.ExecuteAnalysis(this.newAHatAnalysisObject);
             ReturnSignalResponseObjects();
+            //clear all contents in R and restart the global environment/////Removed this for improved performance
+            //analysisEngine.clearGlobalIInREngineObject();
+            //return the completed aHatAnalysisObject
+            return this.newAHatAnalysisObject;
+        }
+        private AHatAnalysisObject UpdateThresholdChange()
+        {
+            //create the class for A Hat Control
+            //AHatAnalysisRControl newAHatControl = new AHatAnalysisRControl(analysisEngine);
+            //pass in the pfobject intance with the parameters set from the UI
+            //Get crack max and min class
+            //overwrite the max and min class each iteration
+            MaxAndMinClass newMaxMin = new MaxAndMinClass();
+            //write the max and min crack size to the ahatAnalysis object
+            newMaxMin.calcCrackRange(this.newAHatAnalysisObject.Flaws);
+            this.newAHatAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            this.newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            //execute analysis and return parameters
+            this.newAHatControl.ExecutethresholdChange(this.newAHatAnalysisObject);
+            ReturnThresholdChangeAValues();
             //clear all contents in R and restart the global environment/////Removed this for improved performance
             //analysisEngine.clearGlobalIInREngineObject();
             //return the completed aHatAnalysisObject
@@ -184,7 +208,21 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.LackOfFitDegFreedom = linTestResults[8];
             this.newAHatAnalysisObject.LackOfFitFCalc = linTestResults[9];
             this.newAHatAnalysisObject.LackOfFitPValue = linTestResults[10];
-        } 
+        }
+        public void ReturnThresholdChangeAValues()
+        {
+            //store the new POD curve table
+            this.newAHatAnalysisObject.AHatResultsPOD = this.newAHatControl.GetLogitFitTableForUI();
+            //normal tranformation finished! Start log tranformation table
+            Dictionary<string, double> finalAValuesDict = this.newAHatControl.GetKeyA_Values();
+            this.newAHatAnalysisObject.A25 = finalAValuesDict["a25"];
+            this.newAHatAnalysisObject.A50 = finalAValuesDict["a50"];
+            this.newAHatAnalysisObject.A90 = finalAValuesDict["a90"];
+            this.newAHatAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
+            this.newAHatAnalysisObject.A9095 = finalAValuesDict["a9095"];
+            this.newAHatAnalysisObject.Muhat = finalAValuesDict["a50"];
+            
+        }
         public HMAnalysisObject HMAnalsysResults
         {
             set { this.resultsHMAnalysis = value; }

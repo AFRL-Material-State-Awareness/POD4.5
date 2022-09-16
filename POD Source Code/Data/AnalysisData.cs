@@ -1615,11 +1615,18 @@ namespace POD.Data
             //_aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
         }
 
-        public void UpdateOutput()
+        public void UpdateOutput(RCalculationType myCalculationType=RCalculationType.Full)
         {
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
-                UpdateAHatOutput();
+                if (myCalculationType == RCalculationType.Full)
+                {
+                    UpdateAHatOutput();
+                }
+                else if(myCalculationType == RCalculationType.ThresholdChange)
+                {
+                    UpdateAHatThresholdChangeOuput();
+                }
             }
             else
             {
@@ -1899,7 +1906,40 @@ namespace POD.Data
 
             var sortTime = watch.ElapsedMilliseconds;
         }
+        //this method is used if the user changes the threshold for optimization
+        private void UpdateAHatThresholdChangeOuput()
+        {
+            TransformBackCSharpTablesAHAT BackwardsTransform = new TransformBackCSharpTablesAHAT(_aHatAnalysisObject);
+            bool printDTFlag = false;
+            try
+            {
+                _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
+                //printDT(_podCurveTable);
+                if (printDTFlag)
+                    printDT(_podCurveTable);
+                _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable = _podCurveTable.DefaultView.ToTable();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
+            }
+            //printDT(PodCurveTable);
+            try
+            {
+                //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
+                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
+                _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_podCurveTable_All);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
+            }
 
+        }
         private List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames)
         {
             var oldNames = new List<string>();
@@ -2433,7 +2473,7 @@ namespace POD.Data
         /// <returns></returns>
         public double InvertTransformedResponse(double myValue)
         {
-            if (/*_podDoc != null*/ _hmAnalysisObject != null || _aHatAnalysisObject != null)
+            if (_hmAnalysisObject != null || _aHatAnalysisObject != null)
             {
                 //return _podDoc.GetInvtransformedResponseValue(myValue);
 

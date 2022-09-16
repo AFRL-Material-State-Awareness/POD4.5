@@ -178,9 +178,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       genAvaluesAndMatrix(ahatvACensored)
                                       #generates the thesholds table for UI
                                       genThresholdsTable(ahatvACensored)
+                                      #function that generates the POD curve and stores the results
+                                      genPODCurve()
+                                    },
+                                    genPODCurve=function(){
                                       #calculate POD dataframe
                                       newPODSR=GenPODSignalResponse$new()
-                                      #print(keyAValues)
                                       newPODSR$initialize(a.V_POD=aVPOD, aMu=keyAValues[[2]], aSigma=keyAValues[[4]])
                                       newPODSR$genPODCurve()
                                       setResults(newPODSR$getPODSR())
@@ -214,7 +217,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     genAhatVersusACensored=function(){
                                       # It expects a censored object; this data is not censored but we can still use it.
                                       # Note, we are using the Box Cox transformed y and f_a (log) transformed x
-                                      censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event, event=signalRespDF$event, type="interval")#, type = "interval2")
+                                      censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event, event=signalRespDF$event, type="interval")
                                       #censored.a.hat <- Surv(time = signalRespDF$y, time2 = signalRespDF$y, type = "interval2")
                                       a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
                                       # Here's the linear model.

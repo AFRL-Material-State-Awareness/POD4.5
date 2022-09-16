@@ -29,10 +29,14 @@ lambda<-0
 #$y^1.11-1/1.11
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0)
-#data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 #perform signal response analysis
 #usually 40% of the highest signal response value
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=6, lambda=lambda)
+#newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=6, lambda=lambda)
+#newSRAnalysis$performTransforms()
+#ahatvACensored<-newSRAnalysis$genAhatVersusACensored()
+#newSRAnalysis$genAvaluesAndMatrix(ahatvACensored)
+#newSRAnalysis$genPODCurve()
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()
@@ -46,9 +50,12 @@ stdErrors<-newSRAnalysis$getRegressionStdErrs()
 covarMatrix<-newSRAnalysis$getCovarianceMatrix()
 resDF<-newSRAnalysis$getResidualTable()
 threshDF<-newSRAnalysis$getThresholdDF()
-print(proc.time()-begin)
+end<-proc.time()
+print("total time:")
+print(end-begin)
 newSRAnalysis$plotSimdata(results)
 newSRAnalysis$plotCI(results)
+
 #newSRAnalysis$plotSimdata(linResults)
 #residualError=c()
 #for(i in 1:nrow(data_obs)){

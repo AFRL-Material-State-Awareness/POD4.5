@@ -1192,7 +1192,12 @@ namespace POD
         Normal,
         Odds
     }
-
+    public enum RCalculationType
+    {
+        Full,
+        Transform,
+        ThresholdChange
+    }
     public static class RangeNames
     {
         public static string SpecID = "Specimen ID";

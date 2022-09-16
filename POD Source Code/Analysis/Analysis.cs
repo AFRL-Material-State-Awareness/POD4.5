@@ -50,14 +50,26 @@ namespace POD.Analyze
         /// Created this state to allow UI to be sync'd with the analysis values after being loaded from file.
         /// </summary>
         private bool _isFrozen = false;
-        //used to notify the user if separated data exists
+        /// <summary>
+        /// used to notify the user if separated data exists
+        /// </summary>
         private bool _isSeparatedFlag;
-        //used to notify the user the algorithm failed to converge
+        /// <summary>
+        /// used to notify the user the algorithm failed to converge
+        /// </summary>
         private bool _failedToConverge;
-        //used to check if previous analyis is being loaded (used to handle when a saved file as exluded points
+        /// <summary>
+        /// used to check if previous analyis is being loaded (used to handle when a saved file as exluded points
+        /// </summary>
         private bool _fileLoadHitMiss=false;
-        //used to update quick analysis
+        /// <summary>
+        /// used to update quick analysis (when the user adds or removes rows the chart updates
+        /// </summary>
         private bool _quickAnalysis=false;
+        /// <summary>
+        /// Used to indicate that the run analysis a threshold change in the main regression panel
+        /// </summary>
+        private RCalculationType _analysisCalculationType = RCalculationType.Full;
         public bool AnalysisRunning
         {
             get
@@ -993,7 +1005,15 @@ namespace POD.Analyze
                 else
                 {
                     //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
-                    newAnalysisControl.ExecuteAnalysisAHat();
+                    if (_analysisCalculationType == RCalculationType.Full)
+                    {
+                        newAnalysisControl.ExecuteAnalysisAHat();
+
+                    }
+                    else if (_analysisCalculationType == RCalculationType.ThresholdChange)
+                    {
+                        newAnalysisControl.ExecuteThresholdChange();
+                    }
                     _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;
                 }
                     
@@ -1105,6 +1125,8 @@ namespace POD.Analyze
             _analysisDate = DateTime.Now;
 
             IsBusy = false;
+            //reset the calculation type after analysis is complete
+            _analysisCalculationType = RCalculationType.Full;
         }
 
         private void CopyOutputFromR()
@@ -1292,18 +1314,18 @@ namespace POD.Analyze
                 _failedToConverge = _hmAnalysisObject.Failed_To_Converge;
             }
 
-            Data.UpdateOutput();
+            Data.UpdateOutput(_analysisCalculationType);
             
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.ClearMetrics();
+                //_hmAnalysisObject.ClearMetrics();
             }
             else
             {
-                _aHatAnalysisObject.ClearMetrics();
+                //_aHatAnalysisObject.ClearMetrics();
             }
         }
         public void SetUpLambda()
@@ -2683,7 +2705,11 @@ namespace POD.Analyze
         {
             set { _aHatAnalysisObject.Lambda = value; }
         }
-        
+        public RCalculationType AnalysisCalculationType
+        {
+            set { _analysisCalculationType = value; }
+            get { return _analysisCalculationType; }
+        }
 
         private double _inFlawCalcMax = 0.0;
 
