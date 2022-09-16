@@ -29,7 +29,7 @@ lambda<-0
 #$y^1.11-1/1.11
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0)
-data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+#data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 #perform signal response analysis
 #usually 40% of the highest signal response value
 newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=6, lambda=lambda)
@@ -69,8 +69,14 @@ slope<-newSRAnalysis$getModelSlope()
 # partial<-lm(y~1, data= data_obs)
 # ANOVATable<-Anova(full, partial)
 # pValue=1-ANOVATable$`Pr(>F)`[1]
-
-
-
+# newSignalDF_Fit<-data.frame(x= data_obs$x, y=a.hat.vs.a.censored$linear.predictors)
+# newCensoredLMObject<-lm(y~x, data=newSignalDF_Fit,na.action=na.omit)
+# newCensoredLMObject$model$y=data_obs$y
+# newResiduals=c()
+# for(i in 1:length(newCensoredLMObject$fitted.values)){
+#   residual=newCensoredLMObject$model$y[i]-newCensoredLMObject$fitted.values[i]
+#   newResiduals=c(newResiduals, residual)
+# }
+# newCensoredLMObject$residuals=newResiduals
 #boxCoxTEst<-boxcox(data_obs$y~data_obs$x)
 #lambda <-boxCoxTEst$x[which.max(boxCoxTEst$y)]

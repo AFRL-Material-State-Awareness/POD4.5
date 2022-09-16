@@ -1701,6 +1701,10 @@ namespace POD.Analyze
             if (IsFrozen)
                 return;
             //REngineObject.REngineRunning = true;
+            if (_quickAnalysis)
+            {
+                CheckForLoadedFile();
+            }
             if (analysisLauncher == null)
             {
                 SetupAnalysisLauncher();
@@ -1713,7 +1717,7 @@ namespace POD.Analyze
                 CopyInputToR();
                 UpdateCensoredData();
                 _python.FailedRunCount = 0;
-
+                
                 //The analysis is run with parallelization. Use the 'threads' window to see what each worker is computing
                 analysisLauncher.RunWorkerAsync();
 
@@ -1817,27 +1821,8 @@ namespace POD.Analyze
             //{
             //    _fileLoadHitMiss = true;
             //}
-            if(_hmAnalysisObject != null)
-            {
-                //try
-                //{
-                if (_data.HMAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    _fileLoadHitMiss = true;
-                }
-                //}
-                //catch
-                //{
-                //    _fileLoadHitMiss = false;
-                //}
-            }
-            if(_aHatAnalysisObject != null)
-            {
-                if (_data.AHATAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.AHat)
-                {
-                    _fileLoadHitMiss = true;
-                }
-            }
+            CheckForLoadFileWithCensoredData();
+            
             if (!_fileLoadHitMiss)
             {
                 Data.UpdateData(_quickAnalysis);
@@ -1906,7 +1891,24 @@ namespace POD.Analyze
             //_podDoc.SetDecisionThresholds(thresholds);
             
         }
-
+        //this function checks to see if the user is loading a saved file in which data was censored. If so, the flag is turned on
+        public void CheckForLoadFileWithCensoredData()
+        {
+            if (_hmAnalysisObject != null)
+            {
+                if (_data.HMAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    _fileLoadHitMiss = true;
+                }
+            }
+            if (_aHatAnalysisObject != null)
+            {
+                if (_data.AHATAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                {
+                    _fileLoadHitMiss = true;
+                }
+            }
+        }
         public void UpdatePythonTransforms()
         {
             Data.FlawTransform = InFlawTransform;
@@ -2735,7 +2737,7 @@ namespace POD.Analyze
                     return Convert.ToDecimal(TransformAValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
                     //return Convert.ToDecimal(_data.SmallestFlaw / 2.0)
                 }
-                catch (OverflowException overflow)
+                catch (OverflowException)
                 {
                     value = 0.0M;
                 }
@@ -2750,11 +2752,11 @@ namespace POD.Analyze
                 //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
                 value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
             }
-            catch(OverflowException overflow)
+            catch(OverflowException)
             {
                 value = myValue;
             }
-            catch (DivideByZeroException divide)
+            catch (DivideByZeroException)
             {
                 value = 0;
             }
@@ -2964,22 +2966,7 @@ namespace POD.Analyze
 
             CopyInputToR();
 
-            //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
-            if (_hmAnalysisObject != null)
-            {
-                if (_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null)
-                {
-                    _hmAnalysisObject = _data.HMAnalysisObject;
-                }
-            }
-            //ditto for ahat versus a, signal response
-            if (_aHatAnalysisObject != null)
-            {
-                if (_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null)
-                {
-                    _aHatAnalysisObject = _data.AHATAnalysisObject;
-                }
-            }
+            CheckForLoadedFile();
             try
             {
                 
@@ -3016,6 +3003,25 @@ namespace POD.Analyze
             stillRunningAnalysis = false;
 
             //MessageBox.Show("IN: " + inputTime + " OUT: " + outputTime + " RUN: " + runTime);
+        }
+        public void CheckForLoadedFile()
+        {
+            //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
+            if (_hmAnalysisObject != null)
+            {
+                if (_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null)
+                {
+                    _hmAnalysisObject = _data.HMAnalysisObject;
+                }
+            }
+            //ditto for ahat versus a, signal response
+            if (_aHatAnalysisObject != null)
+            {
+                if (_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null)
+                {
+                    _aHatAnalysisObject = _data.AHATAnalysisObject;
+                }
+            }
         }
         public double TransformAValue(double myValue, int transform)
         {

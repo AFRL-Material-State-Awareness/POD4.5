@@ -119,6 +119,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         
                                       )
                                       setLinearModel(linearModDF)
+                                      #peformTests
+                                      linearTests(linearM=linearModel_lm)
                                       ##create the residual dataframe
                                       #ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
                                       #names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
@@ -132,7 +134,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       )
                                       setResidualTable(ResidualDF)
                                       #generate ahat versus acensored
-                                      ahatvACensored<<-genAhatVersusACensored()
+                                      ahatvACensored<-genAhatVersusACensored()
                                       #attach necessary attributes of the lm object to the survival censored object
                                       #ahatvACensored$rank=linearModel_lm$rank
                                       #ahatvACensored$qr=linearModel_lm$qr
@@ -165,7 +167,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                           t_diff=residuals
                                         )
                                         setResidualTable(ResidualDF)
-                                        #add residuals to the censored object
+                                        #update the linear regression tests with the censored data
+                                        updateLinearTestsCensored(ahatvACensored)
                                       }
                                       #get the value of R-squared(TODO: check if this changes with censored data)
                                       setRSquared(summary(linearModel_lm)$r.squared)
@@ -182,8 +185,6 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       newPODSR$genPODCurve()
                                       setResults(newPODSR$getPODSR())
                                       setCritPts(newPODSR$getCriticalPoints())
-                                      #peformTests
-                                      linearTests(linearM=linearModel_lm)
                                     },
                                     performTransforms=function(){
                                       signalRespDF$x.trans<<-f_a(signalRespDF$x)
@@ -219,10 +220,23 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       # Here's the linear model.
                                       a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x,
                                                                      dist = "gaussian", data = a.hat.censor.df)
-                                      a.hat.vs.a.censored_Null <- survreg(formula = censored.a.hat ~ 0+as.factor(x),
-                                                                     dist = "gaussian", data = a.hat.censor.df)
                                       #a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
+                                    },
+                                    ##converts the survreg object into a lm object in order to run the linear tests on the censored data
+                                    ##TODO: ask christie about this to see if it's valid
+                                    updateLinearTestsCensored=function(ahatvACensored){
+                                      newSignalDF_Fit<-data.frame(x= signalRespDF$x, y=ahatvACensored$linear.predictors)
+                                      newCensoredLMObject<-lm(y~x, data=newSignalDF_Fit,na.action=na.omit)
+                                      newCensoredLMObject$model$y=signalRespDF$y
+                                      newResiduals=c()
+                                      for(i in 1:length(newCensoredLMObject$fitted.values)){
+                                        residual=newCensoredLMObject$model$y[i]-newCensoredLMObject$fitted.values[i]
+                                        newResiduals=c(newResiduals, residual)
+                                      }
+                                      newCensoredLMObject$residuals=newResiduals
+                                      #global<<-newCensoredLMObject
+                                      linearTests(newCensoredLMObject)
                                     },
                                     genAvaluesAndMatrix=function(a.hat.vs.a.censored){
                                       a.hat.decision = y_dec 
