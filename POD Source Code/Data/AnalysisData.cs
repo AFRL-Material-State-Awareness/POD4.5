@@ -1452,6 +1452,7 @@ namespace POD.Data
         //pass datatables from c# into the 
         public void UpdateData(bool quickFlag = false)
         {
+            //_aHatAnalysisObject = new AHatAnalysisObject("quick analysis");
             //only update python data when appropriate
             if (_updatePythonData == true && _python != null && (_hmAnalysisObject!=null || _aHatAnalysisObject!=null))
             {

@@ -368,9 +368,9 @@ namespace POD
 
             if (!isHitMiss)
             {
-                _analysis.Data.ResponseTransform = TransformTypeEnum.Log;
+                _analysis.Data.ResponseTransform = TransformTypeEnum.Linear;
                 _analysis.InFlawTransform = _analysis.Data.ResponseTransform;
-                _analysis.Data.FlawTransform = TransformTypeEnum.Log;
+                _analysis.Data.FlawTransform = TransformTypeEnum.Linear;
                 _analysis.InResponseTransform = _analysis.Data.FlawTransform;
             }
 
@@ -380,8 +380,15 @@ namespace POD
 
             _dockMgr.ProjectDock.Hide();
             _dockMgr.WizardProgressDock.Hide();
+            if (isHitMiss)
+            {
+                _controller.AddAnalysis(_analysis);
 
-            _controller.AddAnalysis(_analysis);
+            }
+            else
+            {
+                _controller.AddAnalysis(_analysis, 1);
+            }
             var aDock = _controller.CreateWizardDock("QuickAnalysis").Dock;
 
             _dockToShow = aDock;

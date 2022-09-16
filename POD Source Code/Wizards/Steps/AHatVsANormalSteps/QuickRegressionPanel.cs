@@ -397,7 +397,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 {
                     //used to fix null reference exception
                     //Analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
-                    //Analysis.Data.DataType= AnalysisDataTypeEnum.AHat;
+                    Analysis.Data.DataType= AnalysisDataTypeEnum.AHat;
                     //***********
                     Analysis.Data.RecreateTables();
                     Analysis.ForceUpdateInputsFromData(true, AnalysisDataTypeEnum.AHat);

@@ -108,9 +108,13 @@ namespace POD
         /// Add a new analysis to the project.
         /// </summary>
         /// <param name="myAnalysis">the analysis to add</param>
-        public void AddAnalysis(Analysis myAnalysis)
-        {            
-            AddAnalysis(myAnalysis, null);            
+        public void AddAnalysis(Analysis myAnalysis, int isQuickAHat=0)
+        {
+            if (isQuickAHat==1)
+            {
+                myAnalysis.Data.DataType = AnalysisDataTypeEnum.AHat;
+            }
+            AddAnalysis(myAnalysis, null);
         }
 
         // <summary>
