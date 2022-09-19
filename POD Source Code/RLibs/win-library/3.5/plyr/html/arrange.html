@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Order a data frame by its colums.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for arrange {plyr}"><tr><td>arrange {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Order a data frame by its colums.</h2>
+
+<h3>Description</h3>
+
+<p>This function completes the subsetting, transforming and ordering triad
+with a function that works in a similar way to <code><a href="../../base/html/subset.html">subset</a></code> and
+<code><a href="../../base/html/transform.html">transform</a></code> but for reordering a data frame by its columns.
+This saves a lot of typing!
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+arrange(df, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>data frame to reorder</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>expressions evaluated in the context of <code>df</code> and then fed
+to <code><a href="../../base/html/order.html">order</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/order.html">order</a></code> for sorting function in the base package
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# sort mtcars data by cylinder and displacement
+mtcars[with(mtcars, order(cyl, disp)), ]
+# Same result using arrange: no need to use with(), as the context is implicit
+# NOTE: plyr functions do NOT preserve row.names
+arrange(mtcars, cyl, disp)
+# Let's keep the row.names in this example
+myCars = cbind(vehicle=row.names(mtcars), mtcars)
+arrange(myCars, cyl, disp)
+# Sort with displacement in descending order
+arrange(myCars, cyl, desc(disp))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

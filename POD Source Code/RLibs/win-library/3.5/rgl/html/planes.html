@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add planes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for planes3d {rgl}"><tr><td>planes3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add planes</h2>
+
+<h3>Description</h3>
+
+<p><code>planes3d</code> adds mathematical planes 
+to a scene.  Their intersection with the current
+bounding box will be drawn.  <code>clipplanes3d</code> 
+adds clipping planes to a scene.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+planes3d(a, b = NULL, c = NULL, d = 0, ...)
+clipplanes3d(a, b = NULL, c = NULL, d = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a, b, c</code></td>
+<td>
+
+<p>Coordinates of the normal to the plane.  Any reasonable way of defining the
+coordinates is acceptable.  See the function <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code>
+for details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>d</code></td>
+<td>
+
+<p>Coordinates of the &quot;offset&quot;.  See the details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Material properties. See <code><a href="material.html">rgl.material</a></code> for details.  
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>planes3d</code> draws planes using the parametrization
+<i>a x + b y + c z + d = 0</i>.  Multiple planes may be specified
+by giving multiple values for any of <code>a, b, c, d</code>; the other 
+values will be recycled as necessary.
+</p>
+<p><code>clipplanes3d</code> defines clipping planes
+using the same equations.  Clipping planes suppress the display of
+other objects (or parts of them) in the subscene, based on their coordinates.
+Points (or parts of lines or surfaces) where the coordinates <code>x, y, z</code>
+satisfy <i>a x + b y + c z + d &lt; 0</i> will be suppressed.
+</p>
+<p>The number of clipping planes
+supported by the OpenGL driver is implementation dependent; use
+<code>par3d("maxClipPlanes")</code> to find the limit.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A shape ID of the planes or clipplanes object is returned invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="abclines.html">abclines3d</a></code> for mathematical lines.
+</p>
+<p><code><a href="3dobjects.html">triangles3d</a></code> or the corresponding
+functions for quadrilaterals may be used to draw sections of planes that
+do not adapt to the bounding box.
+</p>
+<p>The example in <a href="subscene3d.html">subscene3d</a> shows how to combine clipping planes
+to suppress complex shapes.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# Show regression plane with z as dependent variable
+
+open3d()
+x &lt;- rnorm(100)
+y &lt;- rnorm(100)
+z &lt;- 0.2*x - 0.3*y + rnorm(100, sd = 0.3)
+fit &lt;- lm(z ~ x + y)
+plot3d(x, y, z, type = "s", col = "red", size = 1)
+
+coefs &lt;- coef(fit)
+a &lt;- coefs["x"]
+b &lt;- coefs["y"]
+c &lt;- -1
+d &lt;- coefs["(Intercept)"]
+planes3d(a, b, c, d, alpha = 0.5)
+
+open3d()
+ids &lt;- plot3d(x, y, z, type = "s", col = "red", size = 1, forceClipregion = TRUE) 
+oldid &lt;- useSubscene3d(ids["clipregion"])
+clipplanes3d(a, b, c, d)
+useSubscene3d(oldid)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

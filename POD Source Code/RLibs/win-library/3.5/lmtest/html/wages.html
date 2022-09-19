@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Wages</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for wages {lmtest}"><tr><td>wages {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Wages</h2>
+
+<h3>Description</h3>
+
+<p>Wages Data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>data(wages)</pre>
+
+
+<h3>Format</h3>
+
+<p>A multivariate yearly time series from 1960 to 1979 with variables
+</p>
+
+<dl>
+<dt>w</dt><dd><p>wages,</p>
+</dd>
+<dt>CPI</dt><dd><p>consumer price index,</p>
+</dd>
+<dt>u</dt><dd><p>unemployment,</p>
+</dd>
+<dt>mw</dt><dd><p>minimum wage.</p>
+</dd>
+</dl>
+
+
+
+<h3>Source</h3>
+
+<p>The data was originally studied by Nicols (1983), the data set is given
+in Krämer and Sonnberger (1986). Below we replicate a few examples from their
+book.
+Some of these results differ more or less seriously and are sometimes
+parameterized differently.
+</p>
+
+
+<h3>References</h3>
+
+<p>D.A. Nicols (1983),
+Macroeconomic Determinants of Wage Adjustments in White Collar Occupations.
+<em>Review of Economics and Statistics</em> <b>65</b>, 203&ndash;213
+</p>
+<p>W. Krämer &amp; H. Sonnberger (1986),
+<em>The Linear Regression Model under Test</em>. Heidelberg: Physica
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(wages)
+
+## data transformation to include lagged series
+mywages &lt;- cbind(wages, lag(wages[,2], k = -1), lag(wages[,2], k = -2))
+colnames(mywages) &lt;- c(colnames(wages), "CPI2", "CPI3")
+mywages &lt;- window(mywages, start=1962, end=1979)
+
+## page 142, fit Nichols OLS model
+## equation (6.10)
+
+modelNichols &lt;- w ~ CPI + CPI2 + CPI3 + u + mw
+lm(modelNichols, data = mywages)
+
+## page 143, fit test statistics in table 6.11
+##############################################
+
+if(require(strucchange, quietly = TRUE)) {
+## Chow 1972
+sctest(modelNichols, point=c(1971,1), data=mywages, type="Chow") }
+
+## Breusch-Pagan
+bptest(modelNichols, data=mywages, studentize=FALSE)
+bptest(modelNichols, data=mywages)
+
+## RESET (a)-(b)
+reset(modelNichols, data=mywages)
+reset(modelNichols, power=2, type="regressor", data=mywages)
+
+## Harvey-Collier
+harvtest(modelNichols, order.by = ~ CPI, data=mywages)
+harvtest(modelNichols, order.by = ~ CPI2, data=mywages)
+harvtest(modelNichols, order.by = ~ CPI3, data=mywages)
+harvtest(modelNichols, order.by = ~ u, data=mywages)
+
+## Rainbow
+raintest(modelNichols, order.by = "mahalanobis", data=mywages)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

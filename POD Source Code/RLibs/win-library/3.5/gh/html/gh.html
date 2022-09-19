@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Query the GitHub API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gh {gh}"><tr><td>gh {gh}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Query the GitHub API</h2>
+
+<h3>Description</h3>
+
+<p>This is an extremely minimal client. You need to know the API
+to be able to use this client. All this function does is:
+</p>
+
+<ul>
+<li><p> Try to substitute each listed parameter into <code>endpoint</code>, using the
+<code>{parameter}</code> notation.
+</p>
+</li>
+<li><p> If a GET request (the default), then add all other listed parameters
+as query parameters.
+</p>
+</li>
+<li><p> If not a GET request, then send the other parameters in the request
+body, as JSON.
+</p>
+</li>
+<li><p> Convert the response to an R list using <code><a href="../../jsonlite/html/fromJSON.html">jsonlite::fromJSON()</a></code>.
+</p>
+</li></ul>
+
+
+
+<h3>Usage</h3>
+
+<pre>
+gh(
+  endpoint,
+  ...,
+  per_page = NULL,
+  .token = NULL,
+  .destfile = NULL,
+  .overwrite = FALSE,
+  .api_url = NULL,
+  .method = "GET",
+  .limit = NULL,
+  .accept = "application/vnd.github.v3+json",
+  .send_headers = NULL,
+  .progress = TRUE,
+  .params = list()
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>endpoint</code></td>
+<td>
+<p>GitHub API endpoint. Must be one of the following forms:
+</p>
+
+<ul>
+<li> <p><code style="white-space: pre;">METHOD path</code>, e.g. <code>GET /rate_limit</code>,
+</p>
+</li>
+<li> <p><code>path</code>, e.g. <code style="white-space: pre;">/rate_limit</code>,
+</p>
+</li>
+<li> <p><code style="white-space: pre;">METHOD url</code>, e.g. <code style="white-space: pre;">GET https://api.github.com/rate_limit</code>,
+</p>
+</li>
+<li> <p><code>url</code>, e.g. <code style="white-space: pre;">https://api.github.com/rate_limit</code>.
+</p>
+</li></ul>
+
+<p>If the method is not supplied, will use <code>.method</code>, which defaults
+to <code>"GET"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Name-value pairs giving API parameters. Will be matched into
+<code>endpoint</code> placeholders, sent as query parameters in GET requests, and as a
+JSON body of POST requests. If there is only one unnamed parameter, and it
+is a raw vector, then it will not be JSON encoded, but sent as raw data, as
+is. This can be used for example to add assets to releases. Named <code>NULL</code>
+values are silently dropped. For GET requests, named <code>NA</code> values trigger an
+error. For other methods, named <code>NA</code> values are included in the body of the
+request, as JSON <code>null</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>per_page</code></td>
+<td>
+<p>Number of items to return per page. If omitted,
+will be substituted by <code>max(.limit, 100)</code> if <code>.limit</code> is set,
+otherwise determined by the API (never greater than 100).</p>
+</td></tr>
+<tr valign="top"><td><code>.token</code></td>
+<td>
+<p>Authentication token. Defaults to <code>GITHUB_PAT</code> or
+<code>GITHUB_TOKEN</code> environment variables, in this order if any is set.
+See <code><a href="gh_token.html">gh_token()</a></code> if you need more flexibility, e.g. different tokens
+for different GitHub Enterprise deployments.</p>
+</td></tr>
+<tr valign="top"><td><code>.destfile</code></td>
+<td>
+<p>Path to write response to disk. If <code>NULL</code> (default),
+response will be processed and returned as an object. If path is given,
+response will be written to disk in the form sent.</p>
+</td></tr>
+<tr valign="top"><td><code>.overwrite</code></td>
+<td>
+<p>If <code>.destfile</code> is provided, whether to overwrite an
+existing file.  Defaults to <code>FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>.api_url</code></td>
+<td>
+<p>Github API url (default: <a href="https://api.github.com">https://api.github.com</a>). Used
+if <code>endpoint</code> just contains a path. Defaults to <code>GITHUB_API_URL</code>
+environment variable if set.</p>
+</td></tr>
+<tr valign="top"><td><code>.method</code></td>
+<td>
+<p>HTTP method to use if not explicitly supplied in the
+<code>endpoint</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>.limit</code></td>
+<td>
+<p>Number of records to return. This can be used
+instead of manual pagination. By default it is <code>NULL</code>,
+which means that the defaults of the GitHub API are used.
+You can set it to a number to request more (or less)
+records, and also to <code>Inf</code> to request all records.
+Note, that if you request many records, then multiple GitHub
+API calls are used to get them, and this can take a potentially
+long time.</p>
+</td></tr>
+<tr valign="top"><td><code>.accept</code></td>
+<td>
+<p>The value of the <code>Accept</code> HTTP header. Defaults to
+<code>"application/vnd.github.v3+json"</code> . If <code>Accept</code> is given in
+<code>.send_headers</code>, then that will be used. This parameter can be used to
+provide a custom media type, in order to access a preview feature of
+the API.</p>
+</td></tr>
+<tr valign="top"><td><code>.send_headers</code></td>
+<td>
+<p>Named character vector of header field values
+(except <code>Authorization</code>, which is handled via <code>.token</code>). This can be
+used to override or augment the default <code>User-Agent</code> header:
+<code>"https://github.com/r-lib/gh"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>.progress</code></td>
+<td>
+<p>Whether to show a progress indicator for calls that
+need more than one HTTP request.</p>
+</td></tr>
+<tr valign="top"><td><code>.params</code></td>
+<td>
+<p>Additional list of parameters to append to <code>...</code>.
+It is easier to use this than <code>...</code> if you have your parameters in
+a list already.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Answer from the API as a <code>gh_response</code> object, which is also a
+<code>list</code>. Failed requests will generate an R error. Requests that
+generate a raw response will return a raw vector.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gh_gql.html">gh_gql()</a></code> if you want to use the GitHub GraphQL API,
+<code><a href="gh_whoami.html">gh_whoami()</a></code> for details on GitHub API token management.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## Repositories of a user, these are equivalent
+gh("/users/hadley/repos")
+gh("/users/{username}/repos", username = "hadley")
+
+## Starred repositories of a user
+gh("/users/hadley/starred")
+gh("/users/{username}/starred", username = "hadley")
+
+
+## Create a repository, needs a token in GITHUB_PAT (or GITHUB_TOKEN)
+## environment variable
+gh("POST /user/repos", name = "foobar")
+
+
+## Issues of a repository
+gh("/repos/hadley/dplyr/issues")
+gh("/repos/{owner}/{repo}/issues", owner = "hadley", repo = "dplyr")
+
+## Automatic pagination
+users &lt;- gh("/users", .limit = 50)
+length(users)
+
+
+## Access developer preview of Licenses API (in preview as of 2015-09-24)
+gh("/licenses") # used to error code 415
+gh("/licenses", .accept = "application/vnd.github.drax-preview+json")
+
+
+## Access Github Enterprise API
+## Use GITHUB_API_URL environment variable to change the default.
+gh("/user/repos", type = "public", .api_url = "https://github.foobar.edu/api/v3")
+
+
+## Use I() to force body part to be sent as an array, even if length 1
+## This works whether assignees has length 1 or &gt; 1
+assignees &lt;- "gh_user"
+assignees &lt;- c("gh_user1", "gh_user2")
+gh("PATCH /repos/OWNER/REPO/issues/1", assignees = I(assignees))
+
+
+## There are two ways to send JSON data. One is that you supply one or
+## more objects that will be converted to JSON automatically via
+## jsonlite::toJSON(). In this case sometimes you need to use
+## jsonlite::unbox() because fromJSON() creates lists from scalar vectors
+## by default. The Content-Type header is automatically added in this
+## case. For example this request turns on GitHub Pages, using this
+## API: https://docs.github.com/v3/repos/pages/#enable-a-pages-site
+
+gh::gh(
+  "POST /repos/{owner}/{repo}/pages",
+  owner = "gaborcsardi",
+  repo = "playground",
+  source = list(
+    branch = jsonlite::unbox("master"),
+    path = jsonlite::unbox("/docs")
+  ),
+  .send_headers = c(Accept = "application/vnd.github.switcheroo-preview+json")
+)
+
+## The second way is to handle the JSON encoding manually, and supply it
+## as a raw vector in an unnamed argument, and also a Content-Type header:
+
+body &lt;- '{ "source": { "branch": "master", "path": "/docs" } }'
+gh::gh(
+  "POST /repos/{owner}/{repo}/pages",
+  owner = "gaborcsardi",
+  repo = "playground",
+  charToRaw(body),
+  .send_headers = c(
+    Accept = "application/vnd.github.switcheroo-preview+json",
+    "Content-Type" = "application/json"
+  )
+)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gh</em> version 1.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Geometric and Harmonic Mean (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for geomean, harmmean {pracma}"><tr><td>geomean, harmmean {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Geometric and Harmonic Mean (Matlab Style)
+</h2>
+
+<h3>Description</h3>
+
+<p>Geometric and harmonic mean along a dimension of a vector, matrix, or
+array.<br />
+<code>trimmean</code> is almost the same as <code>mean</code> in R.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+geomean(x, dim = 1)
+harmmean(x, dim = 1)
+
+trimmean(x, percent = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector, matrix, or array.</p>
+</td></tr>
+<tr valign="top"><td><code>dim</code></td>
+<td>
+<p>dimension along which to take the mean; <code>dim=1</code> means
+along columns, <code>dim=2</code> along rows, the result will still
+be a row vector, not a column vector as in Matlab.</p>
+</td></tr>
+<tr valign="top"><td><code>percent</code></td>
+<td>
+<p>percentage, between 0 and 100, of trimmed values.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>trimmean</code> does not call <code>mean</code> with the <code>trim</code> option, but
+rather calculates <code>k&lt;-round(n*percent/100/2)</code> and leaves out <code>k</code>
+values at the beginning and end of the sorted <code>x</code> vector (or row or
+column of a matrix).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a scalar or vector (or array) of geometric or harmonic means:
+For <code>dim=1</code> the mean of columns, <code>dim=2</code> the mean of rows, etc.
+</p>
+
+
+<h3>Note</h3>
+
+<p>To have an exact analogue of <code>mean(x)</code> in Matlab,
+apply <code>trimmean(x)</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/mean.html">mean</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- matrix(1:12, 3, 4)
+geomean(A, dim = 1)
+## [1]  1.817121  4.932424  7.958114 10.969613
+harmmean(A, dim = 2)
+## [1] 2.679426 4.367246 5.760000
+
+x &lt;- c(-0.98, -0.90, -0.68, -0.61, -0.61, -0.38, -0.37, -0.32, -0.20, -0.16,
+        0.00,  0.05,  0.12,  0.30,  0.44,  0.77,  1.37,  1.64,  1.72,  2.80)
+trimmean(x); trimmean(x, 20)    # 0.2  0.085
+mean(x); mean(x, 0.10)          # 0.2  0.085
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

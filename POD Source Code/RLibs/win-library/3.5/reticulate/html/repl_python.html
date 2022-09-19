@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Run a Python REPL</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for repl_python {reticulate}"><tr><td>repl_python {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Run a Python REPL</h2>
+
+<h3>Description</h3>
+
+<p>This function provides a Python REPL in the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session, which can be used
+to interactively run Python code. All code executed within the REPL is
+run within the Python main module, and any generated Python objects will
+persist in the Python session after the REPL is detached.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+repl_python(
+  module = NULL,
+  quiet = getOption("reticulate.repl.quiet", default = FALSE),
+  input = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>module</code></td>
+<td>
+<p>An (optional) Python module to be imported before
+the REPL is launched.</p>
+</td></tr>
+<tr valign="top"><td><code>quiet</code></td>
+<td>
+<p>Boolean; print a startup banner when launching the REPL? If
+<code>TRUE</code>, the banner will be suppressed.</p>
+</td></tr>
+<tr valign="top"><td><code>input</code></td>
+<td>
+<p>Python code to be run within the REPL. Setting this can be
+useful if you'd like to drive the Python REPL programmatically.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>When working with R and Python scripts interactively, one can activate
+the Python REPL with <code>repl_python()</code>, run Python code, and later run <code>exit</code>
+to return to the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> console.
+</p>
+
+
+<h3>Magics</h3>
+
+<p>A handful of magics are supported in <code>repl_python()</code>:
+</p>
+<p>Lines prefixed with <code>!</code> are executed as system commands:
+</p>
+
+<ul>
+<li> <p><code>!cmd --arg1 --arg2</code>: Execute arbitrary system commands
+</p>
+</li></ul>
+
+<p>Magics start with a <code style="white-space: pre;">%</code> prefix. Supported magics include:
+</p>
+
+<ul>
+<li> <p><code style="white-space: pre;">%conda ...</code> executes a conda command in the active conda environment
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%pip ...</code> executes pip for the active python.
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%load</code>, <code style="white-space: pre;">%loadpy</code>, <code style="white-space: pre;">%run</code> executes a python file.
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%system</code>, <code style="white-space: pre;">!!</code> executes a system command and capture output
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%env</code>: read current environment variables.
+</p>
+
+<ul>
+<li> <p><code style="white-space: pre;">%env name</code>: read environment variable 'name'.
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%env name=val</code>, <code style="white-space: pre;">%env name val</code>: set environment variable 'name' to 'val'.
+<code>val</code> elements in <code>{}</code> are interpolated using f-strings (required Python &gt;= 3.6).
+</p>
+</li></ul>
+
+</li>
+<li> <p><code style="white-space: pre;">%cd &lt;dir&gt;</code> change working directory.
+</p>
+
+<ul>
+<li> <p><code style="white-space: pre;">%cd -</code>: change to previous working directory (as set by <code style="white-space: pre;">%cd</code>).
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%cd -3</code>: change to 3rd most recent working directory (as set by <code style="white-space: pre;">%cd</code>).
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%cd -foo/bar</code>: change to most recent working directory matching <code>"foo/bar"</code> regex
+(in history of directories set via <code style="white-space: pre;">%cd</code>).
+</p>
+</li></ul>
+
+</li>
+<li> <p><code style="white-space: pre;">%pwd</code>: print current working directory.
+</p>
+</li>
+<li> <p><code style="white-space: pre;">%dhist</code>: print working directory history.
+</p>
+</li></ul>
+
+<p>Additionally, the output of system commands can be captured in a variable, e.g.:
+</p>
+
+<ul>
+<li> <p><code>x = !ls</code>
+</p>
+</li></ul>
+
+<p>where <code>x</code> will be a list of strings, consisting of
+stdout output split in <code>"\n"</code> (stderr is not captured).
+</p>
+
+
+<h3>Example</h3>
+
+<pre>
+# enter the Python REPL, create a dictionary, and exit
+repl_python()
+dictionary = {'alpha': 1, 'beta': 2}
+exit
+
+# access the created dictionary from R
+py$dictionary
+# $alpha
+# [1] 1
+#
+# $beta
+# [1] 2
+
+</pre>
+
+
+<h3>See Also</h3>
+
+<p><a href="py.html">py</a>, for accessing objects created using the Python REPL.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

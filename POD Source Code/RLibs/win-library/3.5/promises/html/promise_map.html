@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Promise-aware lapply/map</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for promise_map {promises}"><tr><td>promise_map {promises}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Promise-aware lapply/map</h2>
+
+<h3>Description</h3>
+
+<p>Similar to <code><a href="../../base/html/lapply.html">base::lapply()</a></code> or <code><a href="../../purrr/html/map.html">purrr::map</a></code>, but promise-aware: the <code>.f</code>
+function is permitted to return promises, and while <code>lapply</code> returns a list,
+<code>promise_map</code> returns a promise that resolves to a similar list (of resolved
+values only, no promises).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+promise_map(.x, .f, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.x</code></td>
+<td>
+<p>A vector (atomic or list) or an expression object (but not a
+promise). Other objects (including classed objects) will be coerced by
+base::as.list.</p>
+</td></tr>
+<tr valign="top"><td><code>.f</code></td>
+<td>
+<p>The function to be applied to each element of <code>.x</code>. The function is
+permitted, but not required, to return a promise.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Optional arguments to <code>.f</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>promise_map</code> processes elements of <code>.x</code> serially; that is, if <code>.f(.x[[1]])</code>
+returns a promise, then <code>.f(.x[[2]])</code> will not be invoked until that promise
+is resolved. If any such promise rejects (errors), then the promise returned
+by <code>promise_map</code> immediately rejects with that err.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A promise that resolves to a list (of values, not promises).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Waits x seconds, then returns x*10
+wait_this_long &lt;- function(x) {
+  promise(~later::later(~{
+    resolve(x*10)
+  }, delay = x))
+}
+
+promise_map(list(A=1, B=2, C=3), wait_this_long) %...&gt;%
+  print()
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>promises</em> version 1.2.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

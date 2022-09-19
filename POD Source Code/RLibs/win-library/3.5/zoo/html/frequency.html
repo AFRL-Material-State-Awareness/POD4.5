@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Replacing the Index of Objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for frequency&amp;lt;- {zoo}"><tr><td>frequency&lt;- {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Replacing the Index of Objects</h2>
+
+<h3>Description</h3>
+
+<p>Generic function for replacing the frequency of an object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+frequency(x) &lt;- value
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>a frequency.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>frequency&lt;-</code> is a generic function for replacing (or assigning)
+the frequency of an object. Currently, there is a <code>"zooreg"</code> and
+a <code>"zoo"</code> method. In both cases, the <code>value</code> is assigned
+to the <code>"frequency"</code> of the object if it complies with the
+<code>index(x)</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zooreg.html">zooreg</a></code>, <code><a href="index.html">index</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+z &lt;- zooreg(1:5)
+z
+as.ts(z)
+frequency(z) &lt;- 3
+z
+as.ts(z)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

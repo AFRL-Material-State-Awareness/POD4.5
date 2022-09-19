@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add a single grob, possibly spanning multiple rows or...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable_add_grob {gtable}"><tr><td>gtable_add_grob {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add a single grob, possibly spanning multiple rows or columns.</h2>
+
+<h3>Description</h3>
+
+<p>This only adds grobs into the table - it doesn't affect the table layout in
+any way.  In the gtable model, grobs always fill up the complete table
+cell.  If you want custom justification you might need to define the grob
+dimension in absolute units, or put it into another gtable that can then be
+added to the gtable instead of the grob.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable_add_grob(x, grobs, t, l, b = t, r = l, z = Inf, clip = "on",
+  name = x$name)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a <code><a href="gtable.html">gtable()</a></code> object</p>
+</td></tr>
+<tr valign="top"><td><code>grobs</code></td>
+<td>
+<p>a single grob or a list of grobs</p>
+</td></tr>
+<tr valign="top"><td><code>t</code></td>
+<td>
+<p>a numeric vector giving the top extent of the grobs</p>
+</td></tr>
+<tr valign="top"><td><code>l</code></td>
+<td>
+<p>a numeric vector giving the left extent of the grobs</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>a numeric vector giving the bottom extent of the grobs</p>
+</td></tr>
+<tr valign="top"><td><code>r</code></td>
+<td>
+<p>a numeric vector giving the right extent of the grobs</p>
+</td></tr>
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p>a numeric vector giving the order in which the grobs should be
+plotted.  Use <code>Inf</code> (the default) to plot above or <code>-Inf</code>
+below all existing grobs. By default positions are on the integers,
+giving plenty of room to insert new grobs between existing grobs.</p>
+</td></tr>
+<tr valign="top"><td><code>clip</code></td>
+<td>
+<p>should drawing be clipped to the specified cells
+(<code>"on"</code>), the entire table (<code>"inherit"</code>), or not at all
+(<code>"off"</code>)</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>name of the grob - used to modify the grob name before it's
+plotted.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable object with the new grob(s) added
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other gtable manipulation: <code><a href="gtable_add_cols.html">gtable_add_cols</a></code>,
+<code><a href="gtable_add_padding.html">gtable_add_padding</a></code>,
+<code><a href="gtable_add_rows.html">gtable_add_rows</a></code>,
+<code><a href="gtable_add_space.html">gtable_add_space</a></code>,
+<code><a href="gtable_filter.html">gtable_filter</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+
+gt &lt;- gtable(widths = unit(c(1, 1), 'null'), heights = unit(c(1, 1), 'null'))
+pts &lt;- pointsGrob(x = runif(5), y = runif(5))
+
+# Add a grob to a single cell (top-right cell)
+gt &lt;- gtable_add_grob(gt, pts, t = 1, l = 2)
+
+# Add a grob spanning multiple cells
+gt &lt;- gtable_add_grob(gt, pts, t = 1, l = 1, b = 2)
+
+plot(gt)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a function to spin a scene at a fixed rate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for spin3d {rgl}"><tr><td>spin3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Create a function to spin a scene at a fixed rate </h2>
+
+<h3>Description</h3>
+
+<p>This creates a function to use with <code><a href="play3d.html">play3d</a></code> to
+spin an RGL scene at a fixed rate.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+spin3d(axis = c(0, 0, 1), rpm = 5,
+       dev = cur3d(), subscene = par3d("listeners", dev = dev))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>axis</code></td>
+<td>
+<p> The desired axis of rotation </p>
+</td></tr>
+<tr valign="top"><td><code>rpm</code></td>
+<td>
+<p> The rotation speed in rotations per minute </p>
+</td></tr>
+<tr valign="top"><td><code>dev</code></td>
+<td>
+<p> Which RGL device to use </p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+<p> Which subscene to use </p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A function with header <code>function(time, base = M)</code>, where <code>M</code>
+is the result of <code>par3d("userMatrix")</code> at the time the function
+is created.  This function
+calculates and returns a list containing <code>userMatrix</code> updated by
+spinning the base matrix for <code>time</code> seconds at <code>rpm</code> revolutions per
+minute about the specified <code>axis</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Prior to <span class="pkg">rgl</span> version 0.95.1476, the
+<code>subscene</code> argument defaulted to the
+current subscene, and any additional entries would
+be ignored by <code><a href="play3d.html">play3d</a></code>.  The current
+default value of <code>par3d("listeners", dev = dev)</code> means that all subscenes that share 
+mouse responses will also share modifications
+by this function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch </p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="play3d.html">play3d</a></code> to play the animation </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Spin one object
+open3d()
+plot3d(oh3d(col = "lightblue", alpha = 0.5))
+if (!rgl.useNULL())
+  play3d(spin3d(axis = c(1, 0, 0), rpm = 30), duration = 2)
+
+# Show spinning sprites, and rotate the whole view
+open3d()
+spriteid &lt;- NULL
+
+spin1 &lt;- spin3d(rpm = 4.5 ) # the scene spinner
+spin2 &lt;- spin3d(rpm = 9 ) # the sprite spinner
+
+f &lt;- function(time) {
+    par3d(skipRedraw = TRUE) # stops intermediate redraws
+    on.exit(par3d(skipRedraw = FALSE)) # redraw at the end
+
+    pop3d(id = spriteid) # delete the old sprite
+    cubeid &lt;- shade3d(cube3d(), col = "red")
+    spriteid &lt;&lt;- sprites3d(0:1, 0:1, 0:1, shape = cubeid,
+                   userMatrix = spin2(time, 
+                     base = spin1(time)$userMatrix)$userMatrix)
+    spin1(time)
+}
+if (!rgl.useNULL())
+  play3d(f, duration = 2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

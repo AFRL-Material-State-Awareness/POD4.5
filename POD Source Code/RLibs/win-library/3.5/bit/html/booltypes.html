@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Boolean types</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for booltypes {bit}"><tr><td>booltypes {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Boolean types</h2>
+
+<h3>Description</h3>
+
+<p>The <code><a href="../../base/html/factor.html">ordered</a></code> factor <code>booltypes</code> ranks the boolean types.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+booltypes
+</pre>
+
+
+<h3>Format</h3>
+
+<p>An object of class <code>ordered</code> (inherits from <code>factor</code>) of length 6.
+</p>
+
+
+<h3>Details</h3>
+
+<p>There are currently six boolean types, <code>booltypes</code> is an <code><a href="../../base/html/factor.html">ordered</a></code> vector with the following ordinal <code><a href="../../base/html/levels.html">levels</a></code> </p>
+
+<dl>
+<dt>nobool</dt><dd><p>non-boolean types</p>
+</dd>
+<dt><code><a href="../../base/html/logical.html">logical</a></code></dt><dd><p>for representing any boolean data including <code>NA</code> </p>
+</dd>
+<dt><code><a href="bit.html">bit</a></code></dt><dd><p>for representing dense boolean data </p>
+</dd>
+<dt><code><a href="bitwhich.html">bitwhich</a></code></dt><dd><p>for representing sparse (skewed) boolean data  </p>
+</dd>
+<dt><code><a href="../../base/html/which.html">which</a></code></dt><dd><p>for representing sparse boolean data with few <code>TRUE</code></p>
+</dd>
+<dt><code><a href="ri.html">ri</a></code></dt><dd><p>range-indexing, for representing sparse boolean data with a single range of <code>TRUE</code> </p>
+</dd>
+</dl>
+
+<p><code>booltypes</code> has a <code><a href="../../base/html/names.html">names</a></code> attribute such that elements can be selected by name.
+</p>
+
+
+<h3>Note</h3>
+
+<p>do not rely on the internal integer codes of these levels, we might add-in <code><a href="../../ff/html/hi.html">hi</a></code> later
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="booltype.html">booltype</a></code>, <code><a href="is.booltype.html">is.booltype</a></code>, <code><a href="as.booltype.html">as.booltype</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Use base graphics for RGL background</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bgplot3d {rgl}"><tr><td>bgplot3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Use base graphics for RGL background</h2>
+
+<h3>Description</h3>
+
+<p>Add a 2D plot or a legend in the background of an RGL window.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bgplot3d(expression, bg.color = getr3dDefaults("bg", "color"), 
+         magnify = 1, ...)
+legend3d(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>expression</code></td>
+<td>
+
+<p>Any plotting commands to produce a plot.
+</p>
+</td></tr>
+<tr valign="top"><td><code>bg.color</code></td>
+<td>
+
+<p>The color to use for the background.
+</p>
+</td></tr>
+<tr valign="top"><td><code>magnify</code></td>
+<td>
+
+<p>Multiplicative factor to apply to size of window when producing background 
+plot.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>For <code>legend3d</code>, arguments to pass to <code>bgplot3d</code>
+or <code><a href="../../graphics/html/legend.html">legend</a></code>; for <code>bgplot3d</code>, 
+arguments to pass to <code><a href="bg.html">bg3d</a></code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>bgplot3d</code> function opens a <code><a href="../../grDevices/html/png.html">png</a></code> device and executes <code>expression</code>,
+producing a plot there.  This plot is then used as a bitmap background for the current
+RGL subscene.
+</p>
+<p>The <code>legend3d</code> function draws a standard 2D legend to the background of the current
+subscene by calling <code>bgplot3d</code> to open a device, and setting up a plot region there 
+to fill the whole display.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>bgplot3d</code> function invisibly returns the ID of the background object that was created,
+with attribute <code>"value"</code> holding the value returned when the <code>expression</code> was
+evaluated.
+</p>
+<p>The <code>legend3d</code> function does similarly.  The <code>"value"</code> attribute is the result
+of the call to <code><a href="../../graphics/html/legend.html">legend</a></code>.   The scaling of the coordinates runs from 0 to 1 
+in X and Y.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Because the background plots are drawn as bitmaps, they do not resize very gracefully.
+It's best to size your window first, then draw the background at that size.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="bg.html">bg3d</a></code> for other background options.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- rnorm(100)
+y &lt;- rnorm(100)
+z &lt;- rnorm(100)
+open3d()
+# Needs to be a bigger window than the default
+par3d(windowRect = c(100, 100, 612, 612))
+parent &lt;- currentSubscene3d()
+mfrow3d(2, 2)
+plot3d(x, y, z)
+next3d(reuse = FALSE)
+bgplot3d(plot(y, z))
+next3d(reuse = FALSE)
+bgplot3d(plot(x, z))
+next3d(reuse = FALSE)
+legend3d("center", c("2D Points", "3D Points"), pch = c(1, 16))
+useSubscene3d(parent)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

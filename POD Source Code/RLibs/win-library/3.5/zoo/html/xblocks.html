@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot contiguous blocks along x axis.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xblocks {zoo}"><tr><td>xblocks {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Plot contiguous blocks along x axis.
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot contiguous blocks along x axis. A typical use would be to
+highlight events or periods of missing data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xblocks(x, ...)
+
+## Default S3 method:
+xblocks(x, y, ..., col = NULL, border = NA, 
+        ybottom = par("usr")[3], ytop = ybottom + height,
+        height = diff(par("usr")[3:4]),
+        last.step = median(diff(tail(x))))
+
+## S3 method for class 'zoo'
+xblocks(x, y = x, ...)
+
+## S3 method for class 'ts'
+xblocks(x, y = x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+
+<p>In the default method, <code>x</code> gives the ordinates along the x axis and
+must be in increasing order. <code>y</code> gives the color values to plot as
+contiguous blocks. If <code>y</code> is numeric, data coverage is plotted,
+by converting it into a logical (<code>!is.na(y)</code>). Finally, if
+<code>y</code> is a function, it is applied to <code>x</code> (<code>time(x)</code> in
+the time series methods). 
+</p>
+<p>If <code>y</code> has character (or factor) values, these are interpreted
+as colors &ndash; and should therefore be color names or hex
+codes. Missing values in <code>y</code> are not plotted. The default color
+is taken from <code>palette()[1]</code>. If <code>col</code> is given, this
+over-rides the block colors given as <code>y</code>.
+</p>
+<p>The <code>ts</code> and <code>zoo</code> methods plot the <code>coredata(y)</code>
+values against the time index <code>index(x)</code>. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>In the default method, further arguments are graphical parameters
+passed on to <code><a href="../../grid/html/gpar.html">gpar</a></code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+
+<p>if <code>col</code> is specified, it determines the colors of the blocks
+defined by <code>y</code>. If multiple colors are specified they will be
+repeated to cover the total number of blocks.
+</p>
+</td></tr>
+<tr valign="top"><td><code>border</code></td>
+<td>
+
+<p>border color.
+</p>
+</td></tr>
+<tr valign="top"><td><code>ybottom, ytop, height</code></td>
+<td>
+
+<p>y axis position of the blocks. The default it to fill the whole plot
+region, but by setting these values one can draw blocks along the
+top of bottom of the plot. Note that <code>height</code> is not used
+directly, it only sets the default value of <code>ytop</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>last.step</code></td>
+<td>
+
+<p>width (in native units) of the final block. Defaults to the median of
+the last 5 time steps (assuming steps are regular).
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Blocks are drawn forward in &quot;time&quot; from the specified x locations,
+up until the following value. Contiguous blocks are calculated using
+<code><a href="../../base/html/rle.html">rle</a></code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Felix Andrews <a href="mailto:felix@nfrac.org">felix@nfrac.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../graphics/html/rect.html">rect</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## example time series:
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(0)
+flow &lt;- ts(filter(rlnorm(200, mean = 1), 0.8, method = "r"))
+
+## highlight values above and below thresholds.
+## this draws on top using semi-transparent colors.
+rgb &lt;- hcl(c(0, 0, 260), c = c(100, 0, 100), l = c(50, 90, 50), alpha = 0.3)
+plot(flow)
+xblocks(flow &gt; 30, col = rgb[1]) ## high values red
+xblocks(flow &lt; 15, col = rgb[3]) ## low value blue
+xblocks(flow &gt;= 15 &amp; flow &lt;= 30, col = rgb[2]) ## the rest gray
+
+## same thing:
+plot(flow)
+xblocks(time(flow), cut(flow, c(0,15,30,Inf), labels = rev(rgb)))
+
+## another approach is to plot blocks underneath without transparency.
+plot(flow)
+## note that 'ifelse' keeps its result as class 'ts'
+xblocks(ifelse(flow &lt; mean(flow), hcl(0, 0, 90), hcl(0, 80, 70)))
+## need to redraw data series on top:
+lines(flow)
+box()
+
+## for single series only: plot.default has a panel.first argument
+plot(time(flow), flow, type = "l",
+  panel.first = xblocks(flow &gt; 20, col = "lightgray"))
+## (see also the 'panel' argument for use with multiple series, below)
+
+## insert some missing values
+flow[c(1:10, 50:80, 100)] &lt;- NA
+
+## the default plot shows data coverage
+## (most useful when displaying multiple series, see below)
+plot(flow)
+xblocks(flow)
+
+## can also show gaps:
+plot(flow, type = "s")
+xblocks(time(flow), is.na(flow), col = "gray")
+
+## Example of alternating colors, here showing calendar months
+flowdates &lt;- as.Date("2000-01-01") + as.numeric(time(flow))
+flowz &lt;- zoo(coredata(flow), flowdates)
+plot(flowz)
+xblocks(flowz, months, ## i.e. months(time(flowz)),
+  col = gray.colors(2, start = 0.7), border = "slategray")
+lines(flowz)
+
+## Example of multiple series.
+## set up example data
+z &lt;- ts(cbind(A = 0:5, B = c(6:7, NA, NA, 10:11), C = c(NA, 13:17)))
+
+## show data coverage only (highlighting gaps)
+plot(z, panel = function(x, ...)
+  xblocks(x, col = "darkgray"))
+
+## draw gaps in darkgray
+plot(z, type = "s", panel = function(x, ...) {
+  xblocks(time(x), is.na(x), col = "darkgray")
+  lines(x, ...); points(x)
+})
+
+## Example of overlaying blocks from a different series.
+## Are US presidential approval ratings linked to sunspot activity?
+## Set block height to plot blocks along the bottom.
+plot(presidents)
+xblocks(sunspot.year &gt; 50, height = 2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

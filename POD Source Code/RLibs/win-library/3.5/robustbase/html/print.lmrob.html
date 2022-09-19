@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Print Method for Objects of Class &quot;lmrob&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for print.lmrob {robustbase}"><tr><td>print.lmrob {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Print Method for Objects of Class &quot;lmrob&quot;</h2>
+
+<h3>Description</h3>
+
+<p>Print method for elements of class <code>"lmrob"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'lmrob'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object of class <code>lmrob</code>, typically created by
+<code><a href="lmrob.html">lmrob</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>number of digits for printing, see <code>digits</code> in
+<code><a href="../../base/html/options.html">options</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>potentially more arguments passed to methods.</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmrob.html">lmrob</a></code>, <code><a href="summary.lmrob.html">summary.lmrob</a></code>,
+<code><a href="../../base/html/print.html">print</a></code> and <code><a href="../../base/html/summary.html">summary</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(coleman)
+( m1 &lt;- lmrob(Y ~ ., data=coleman) ) # -&gt; print.lmrob() method
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

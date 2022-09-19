@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Functions for integration of RGL widgets into Shiny app</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for shiny {rgl}"><tr><td>shiny {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Functions for integration of RGL widgets into
+Shiny app
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions allow an RGL scene to be embedded
+in a Shiny app.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rglwidgetOutput(outputId, width = "512px", height = "512px")
+renderRglwidget(expr, env = parent.frame(), quoted = FALSE, outputArgs = list())
+
+playwidgetOutput(outputId, width = "0px", height = "0px")
+renderPlaywidget(expr, env = parent.frame(), quoted = FALSE, outputArgs = list())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>outputId</code></td>
+<td>
+
+<p>The name for the control.
+</p>
+</td></tr>
+<tr valign="top"><td><code>width, height</code></td>
+<td>
+
+<p>Width and height to display the control.
+</p>
+</td></tr>
+<tr valign="top"><td><code>expr</code></td>
+<td>
+<p>An R expression returning
+a <code><a href="rglwidget.html">rglwidget</a></code> (for <code>renderRglwidget</code>) or a <code><a href="playwidget.html">playwidget</a></code> (for <code>renderPlaywidget</code>) as output.</p>
+</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>The environment in which to evaluate <code>expr</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>quoted</code></td>
+<td>
+<p>Is the expression already quoted?</p>
+</td></tr>
+<tr valign="top"><td><code>outputArgs</code></td>
+<td>
+<p>A list containing arguments; see details below.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Use <code>rglwidgetOutput</code> or <code>playwidgetOutput</code> as an output
+object in a Shiny user
+interface section; use <code>renderRglwidget</code> or <code>renderPlaywidget</code>
+as the render
+function in the server section.
+</p>
+<p>In a dynamic R Markdown document with <code>runtime: shiny</code>, you 
+only call the render function, and may optionally pass <code>width</code>
+and <code>height</code> to the output function by putting them in
+a list in <code>outputArgs</code>.  See the example below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Used internally by Shiny.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# This could be used in a dynamic R Markdown document.  See
+# demo("shinyDemo") and demo("simpleShinyRgl") for Shiny apps.
+
+inputPanel(
+  sliderInput("n", label = "n", min = 10, max = 100, value = 10, step = 10)
+)
+
+renderRglwidget({
+    n &lt;- input$n
+    try(close3d())
+    plot3d(rnorm(n), rnorm(n), rnorm(n))
+    rglwidget()
+  }, outputArgs = list(width = "auto", height = "300px"))
+
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

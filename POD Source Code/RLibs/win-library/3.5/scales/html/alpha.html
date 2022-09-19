@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Modify colour transparency</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for alpha {scales}"><tr><td>alpha {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Modify colour transparency</h2>
+
+<h3>Description</h3>
+
+<p>Vectorised in both colour and alpha.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+alpha(colour, alpha = NA)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>colour</code></td>
+<td>
+<p>colour</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>new alpha level in [0,1].  If alpha is <code>NA</code>,
+existing alpha values are preserved.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+alpha("red", 0.1)
+alpha(colours(), 0.5)
+alpha("red", seq(0, 1, length.out = 10))
+alpha(c("first" = "gold", "second" = "lightgray", "third" = "#cd7f32"), .5)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

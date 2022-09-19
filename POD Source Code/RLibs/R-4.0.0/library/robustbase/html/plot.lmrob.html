@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot Method for &quot;lmrob&quot; Objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.lmrob {robustbase}"><tr><td>plot.lmrob {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot Method for &quot;lmrob&quot; Objects</h2>
+
+<h3>Description</h3>
+
+<p>Diagnostic plots for elements of class lmrob
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'lmrob'
+plot(x, which = 1:5,
+     caption = c("Standardized residuals vs. Robust Distances",
+   "Normal Q-Q vs. Residuals", "Response vs. Fitted Values",
+   "Residuals vs. Fitted Values" , "Sqrt of abs(Residuals) vs. Fitted Values"),
+   panel = if(add.smooth) panel.smooth else points,
+   sub.caption = deparse(x$call), main = "",
+   compute.MD = TRUE,
+   ask = prod(par("mfcol")) &lt; length(which) &amp;&amp; dev.interactive(),
+   id.n = 3, labels.id = names(residuals(x)), cex.id = 0.75,
+   label.pos = c(4,2), qqline = TRUE, add.smooth = getOption("add.smooth"),
+   ..., p=0.025)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> an object as created by <code>lmrob</code> </p>
+</td></tr>
+<tr valign="top"><td><code>which</code></td>
+<td>
+<p> integer number between 1 and 5 to specify which
+plot is desired </p>
+</td></tr>
+<tr valign="top"><td><code>caption</code></td>
+<td>
+<p>Caption for the different plots</p>
+</td></tr>
+<tr valign="top"><td><code>panel</code></td>
+<td>
+<p>panel function.  The useful alternative to
+<code><a href="../../graphics/html/points.html">points</a></code>, <code><a href="../../graphics/html/panel.smooth.html">panel.smooth</a></code> can be chosen
+by <code>add.smooth = TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>main</code></td>
+<td>
+<p>main title</p>
+</td></tr>
+<tr valign="top"><td><code>sub.caption</code></td>
+<td>
+<p>sub titles</p>
+</td></tr>
+<tr valign="top"><td><code>compute.MD</code></td>
+<td>
+<p>logical indicating if the robust Mahalanobis
+distances should be recomputed, using <code><a href="covMcd.html">covMcd</a>()</code> when
+needed, i.e., if <code>which</code> contains <code>1</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>ask</code></td>
+<td>
+<p>waits for user input before displaying each plot </p>
+</td></tr>
+<tr valign="top"><td><code>id.n</code></td>
+<td>
+<p>number of points to be labelled in each plot, starting
+with the most extreme.</p>
+</td></tr>
+<tr valign="top"><td><code>labels.id</code></td>
+<td>
+<p>vector of labels, from which the labels for extreme
+points will be chosen.  <code>NULL</code> uses observation numbers.</p>
+</td></tr>
+<tr valign="top"><td><code>cex.id</code></td>
+<td>
+<p>magnification of point labels.</p>
+</td></tr>
+<tr valign="top"><td><code>label.pos</code></td>
+<td>
+<p>positioning of labels, for the left half and right
+half of the graph respectively.</p>
+</td></tr></table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>qqline</code></td>
+<td>
+<p>logical indicating if a <code><a href="../../stats/html/qqnorm.html">qqline</a>()</code> should be
+added to the normal Q-Q plot.</p>
+</td></tr>
+<tr valign="top"><td><code>add.smooth</code></td>
+<td>
+<p>logical indicating if a smoother should be added to
+most plots; see also <code>panel</code> above.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional arguments for <code><a href="../../graphics/html/par.html">par</a></code>,
+<code><a href="../../graphics/html/title.html">title</a></code>, etc.</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>threshold for distance-distance plot</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>if <code>compute.MD = TRUE</code> and the robust Mahalanobis distances need
+to be computed, they are stored (&ldquo;cached&rdquo;) with the object
+<code>x</code> when this function has been called from top-level.
+</p>
+
+
+<h3>References</h3>
+
+<p>Robust diagnostic plots as in Rousseeuw and van Zomeren (1990), see
+&lsquo;References&rsquo; in <code><a href="ltsPlot.html">ltsPlot</a></code>.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="lmrob.html">lmrob</a></code>, also for examples, <code><a href="../../stats/html/plot.lm.html">plot.lm</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(starsCYG)
+## Plot simple data and fitted lines
+plot(starsCYG)
+ lmST &lt;-    lm(log.light ~ log.Te, data = starsCYG)
+RlmST &lt;- lmrob(log.light ~ log.Te, data = starsCYG)
+RlmST
+abline(lmST, col = "red")
+abline(RlmST, col = "blue")
+
+op &lt;- par(mfrow = c(2,2), mgp = c(1.5, 0.6, 0), mar= .1+c(3,3,3,1))
+plot(RlmST, which = c(1:2, 4:5))
+par(op)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

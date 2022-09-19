@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Render TeX in a plotly graph using MathJax</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for TeX {plotly}"><tr><td>TeX {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Render TeX in a plotly graph using MathJax</h2>
+
+<h3>Description</h3>
+
+<p>This function makes it slightly easier to render TeX in a plotly graph &ndash;
+it ensures that MathJax is included with the final result and also
+ensures the provided string is surrounded with <code>$</code> (this is what plotly.js
+uses to declare a string as TeX).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+TeX(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a character vector</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><a href="config.html">config</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+plot_ly(x = c(1, 2, 3, 4), y = c(1, 4, 9, 16)) %&gt;%
+  layout(title = TeX("\\text{Some mathjax: }\\alpha+\\beta x")) %&gt;%
+  config(mathjax = "cdn")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

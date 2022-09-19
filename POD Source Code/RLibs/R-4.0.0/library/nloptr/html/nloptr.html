@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: R interface to NLopt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nloptr {nloptr}"><tr><td>nloptr {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>R interface to NLopt</h2>
+
+<h3>Description</h3>
+
+<p>nloptr is an R interface to NLopt, a free/open-source library for nonlinear
+optimization started by Steven G. Johnson, providing a common interface for
+a number of different free optimization routines available online as well as
+original implementations of various other algorithms. The NLopt library is
+available under the GNU Lesser General Public License (LGPL), and the
+copyrights are owned by a variety of authors. Most of the information here
+has been taken from <a href="https://nlopt.readthedocs.io/en/latest/">the NLopt website</a>,
+where more details are available.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nloptr(
+  x0,
+  eval_f,
+  eval_grad_f = NULL,
+  lb = NULL,
+  ub = NULL,
+  eval_g_ineq = NULL,
+  eval_jac_g_ineq = NULL,
+  eval_g_eq = NULL,
+  eval_jac_g_eq = NULL,
+  opts = list(),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>vector with starting values for the optimization.</p>
+</td></tr>
+<tr valign="top"><td><code>eval_f</code></td>
+<td>
+<p>function that returns the value of the objective function. It
+can also return gradient information at the same time in a list with
+elements &quot;objective&quot; and &quot;gradient&quot; (see below for an example).</p>
+</td></tr>
+<tr valign="top"><td><code>eval_grad_f</code></td>
+<td>
+<p>function that returns the value of the gradient of the
+objective function. Not all of the algorithms require a gradient.</p>
+</td></tr>
+<tr valign="top"><td><code>lb</code></td>
+<td>
+<p>vector with lower bounds of the controls (use -Inf for controls
+without lower bound), by default there are no lower bounds for any of the
+controls.</p>
+</td></tr>
+<tr valign="top"><td><code>ub</code></td>
+<td>
+<p>vector with upper bounds of the controls (use Inf for controls
+without upper bound), by default there are no upper bounds for any of the
+controls.</p>
+</td></tr>
+<tr valign="top"><td><code>eval_g_ineq</code></td>
+<td>
+<p>function to evaluate (non-)linear inequality constraints
+that should hold in the solution.  It can also return gradient information
+at the same time in a list with elements &quot;constraints&quot; and &quot;jacobian&quot; (see
+below for an example).</p>
+</td></tr>
+<tr valign="top"><td><code>eval_jac_g_ineq</code></td>
+<td>
+<p>function to evaluate the jacobian of the (non-)linear
+inequality constraints that should hold in the solution.</p>
+</td></tr>
+<tr valign="top"><td><code>eval_g_eq</code></td>
+<td>
+<p>function to evaluate (non-)linear equality constraints that
+should hold in the solution.  It can also return gradient information at the
+same time in a list with elements &quot;constraints&quot; and &quot;jacobian&quot; (see below for
+an example).</p>
+</td></tr>
+<tr valign="top"><td><code>eval_jac_g_eq</code></td>
+<td>
+<p>function to evaluate the jacobian of the (non-)linear
+equality constraints that should hold in the solution.</p>
+</td></tr>
+<tr valign="top"><td><code>opts</code></td>
+<td>
+<p>list with options. The option &quot;algorithm&quot; is required. Check the
+<a href="https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/">NLopt website</a>
+for a full list of available algorithms. Other options control the
+termination conditions (minf_max, ftol_rel, ftol_abs, xtol_rel, xtol_abs,
+maxeval, maxtime). Default is xtol_rel = 1e-4. More information
+<a href="https://nlopt.readthedocs.io/en/latest/NLopt_Introduction/#termination-conditions">here</a>.
+A full description of all options is shown by the function
+<code>nloptr.print.options()</code>.
+</p>
+<p>Some algorithms with equality constraints require the option local_opts,
+which contains a list with an algorithm and a termination condition for the
+local algorithm. See ?<code>nloptr-package</code> for an example.
+</p>
+<p>The option print_level controls how much output is shown during the
+optimization process. Possible values: </p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;"> 0 (default) </td><td style="text-align: left;"> no
+output </td>
+</tr>
+<tr>
+ <td style="text-align: left;"> 1 </td><td style="text-align: left;"> show iteration number and value of objective function </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+2 </td><td style="text-align: left;"> 1 + show value of (in)equalities </td>
+</tr>
+<tr>
+ <td style="text-align: left;"> 3 </td><td style="text-align: left;"> 2 + show value of
+controls </td>
+</tr>
+
+</table>
+
+<p>The option check_derivatives (default = FALSE) can be used to run to compare
+the analytic gradients with finite difference approximations.  The option
+check_derivatives_print ('all' (default), 'errors', 'none') controls the
+output of the derivative checker, if it is run, showing all comparisons,
+only those that resulted in an error, or none.  The option
+check_derivatives_tol (default = 1e-04), determines when a difference
+between an analytic gradient and its finite difference approximation is
+flagged as an error.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments that will be passed to the user-defined objective and
+constraints functions.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>NLopt addresses general nonlinear optimization problems of the form:
+</p>
+<p>min f(x) x in R^n
+</p>
+<p>s.t.  g(x) &lt;= 0 h(x) = 0 lb &lt;= x &lt;= ub
+</p>
+<p>where f is the objective function to be minimized and x represents the n
+optimization parameters. This problem may optionally be subject to the bound
+constraints (also called box constraints), lb and ub. For partially or
+totally unconstrained problems the bounds can take -Inf or Inf. One may also
+optionally have m nonlinear inequality constraints (sometimes called a
+nonlinear programming problem), which can be specified in g(x), and equality
+constraints that can be specified in h(x). Note that not all of the
+algorithms in NLopt can handle constraints.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The return value contains a list with the inputs, and additional
+elements
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>the call that was made to solve</p>
+</td></tr>
+<tr valign="top"><td><code>status</code></td>
+<td>
+<p>integer value with the status of the optimization (0 is
+success)</p>
+</td></tr>
+<tr valign="top"><td><code>message</code></td>
+<td>
+<p>more informative message with the status of the optimization</p>
+</td></tr>
+<tr valign="top"><td><code>iterations</code></td>
+<td>
+<p>number of iterations that were executed</p>
+</td></tr>
+<tr valign="top"><td><code>objective</code></td>
+<td>
+<p>value if the objective function in the solution</p>
+</td></tr>
+<tr valign="top"><td><code>solution</code></td>
+<td>
+<p>optimal value of the controls</p>
+</td></tr>
+<tr valign="top"><td><code>version</code></td>
+<td>
+<p>version of NLopt that was used</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>See ?<code>nloptr-package</code> for an extended example.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steven G. Johnson and others (C code) <br /> Jelmer Ypma (R interface)
+</p>
+
+
+<h3>References</h3>
+
+<p>Steven G. Johnson, The NLopt nonlinear-optimization package,
+<a href="https://nlopt.readthedocs.io/en/latest/">https://nlopt.readthedocs.io/en/latest/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="nloptr.print.options.html">nloptr.print.options</a></code>
+<code><a href="check.derivatives.html">check.derivatives</a></code>
+<code><a href="../../stats/html/optim.html">optim</a></code>
+<code><a href="../../stats/html/nlm.html">nlm</a></code>
+<code><a href="../../stats/html/nlminb.html">nlminb</a></code>
+<code>Rsolnp::Rsolnp</code>
+<code>Rsolnp::solnp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+library('nloptr')
+
+## Rosenbrock Banana function and gradient in separate functions
+eval_f &lt;- function(x) {
+    return( 100 * (x[2] - x[1] * x[1])^2 + (1 - x[1])^2 )
+}
+
+eval_grad_f &lt;- function(x) {
+    return( c( -400 * x[1] * (x[2] - x[1] * x[1]) - 2 * (1 - x[1]),
+                200 * (x[2] - x[1] * x[1])) )
+}
+
+
+# initial values
+x0 &lt;- c( -1.2, 1 )
+
+opts &lt;- list("algorithm"="NLOPT_LD_LBFGS",
+             "xtol_rel"=1.0e-8)
+
+# solve Rosenbrock Banana function
+res &lt;- nloptr( x0=x0,
+               eval_f=eval_f,
+               eval_grad_f=eval_grad_f,
+               opts=opts)
+print( res )
+
+
+## Rosenbrock Banana function and gradient in one function
+# this can be used to economize on calculations
+eval_f_list &lt;- function(x) {
+    return( list( "objective" = 100 * (x[2] - x[1] * x[1])^2 + (1 - x[1])^2,
+                  "gradient"  = c( -400 * x[1] * (x[2] - x[1] * x[1]) - 2 * (1 - x[1]),
+                                    200 * (x[2] - x[1] * x[1])) ) )
+}
+
+# solve Rosenbrock Banana function using an objective function that
+# returns a list with the objective value and its gradient
+res &lt;- nloptr( x0=x0,
+               eval_f=eval_f_list,
+               opts=opts)
+print( res )
+
+
+
+# Example showing how to solve the problem from the NLopt tutorial.
+#
+# min sqrt( x2 )
+# s.t. x2 &gt;= 0
+#      x2 &gt;= ( a1*x1 + b1 )^3
+#      x2 &gt;= ( a2*x1 + b2 )^3
+# where
+# a1 = 2, b1 = 0, a2 = -1, b2 = 1
+#
+# re-formulate constraints to be of form g(x) &lt;= 0
+#      ( a1*x1 + b1 )^3 - x2 &lt;= 0
+#      ( a2*x1 + b2 )^3 - x2 &lt;= 0
+
+library('nloptr')
+
+
+# objective function
+eval_f0 &lt;- function( x, a, b ){
+    return( sqrt(x[2]) )
+}
+
+# constraint function
+eval_g0 &lt;- function( x, a, b ) {
+    return( (a*x[1] + b)^3 - x[2] )
+}
+
+# gradient of objective function
+eval_grad_f0 &lt;- function( x, a, b ){
+    return( c( 0, .5/sqrt(x[2]) ) )
+}
+
+# jacobian of constraint
+eval_jac_g0 &lt;- function( x, a, b ) {
+    return( rbind( c( 3*a[1]*(a[1]*x[1] + b[1])^2, -1.0 ),
+                   c( 3*a[2]*(a[2]*x[1] + b[2])^2, -1.0 ) ) )
+}
+
+
+# functions with gradients in objective and constraint function
+# this can be useful if the same calculations are needed for
+# the function value and the gradient
+eval_f1 &lt;- function( x, a, b ){
+    return( list("objective"=sqrt(x[2]),
+                 "gradient"=c(0,.5/sqrt(x[2])) ) )
+}
+
+eval_g1 &lt;- function( x, a, b ) {
+    return( list( "constraints"=(a*x[1] + b)^3 - x[2],
+                  "jacobian"=rbind( c( 3*a[1]*(a[1]*x[1] + b[1])^2, -1.0 ),
+                                    c( 3*a[2]*(a[2]*x[1] + b[2])^2, -1.0 ) ) ) )
+}
+
+
+# define parameters
+a &lt;- c(2,-1)
+b &lt;- c(0, 1)
+
+# Solve using NLOPT_LD_MMA with gradient information supplied in separate function
+res0 &lt;- nloptr( x0=c(1.234,5.678),
+                eval_f=eval_f0,
+                eval_grad_f=eval_grad_f0,
+                lb = c(-Inf,0),
+                ub = c(Inf,Inf),
+                eval_g_ineq = eval_g0,
+                eval_jac_g_ineq = eval_jac_g0,
+                opts = list("algorithm"="NLOPT_LD_MMA"),
+                a = a,
+                b = b )
+print( res0 )
+
+# Solve using NLOPT_LN_COBYLA without gradient information
+res1 &lt;- nloptr( x0=c(1.234,5.678),
+                eval_f=eval_f0,
+                lb = c(-Inf,0),
+                ub = c(Inf,Inf),
+                eval_g_ineq = eval_g0,
+                opts = list("algorithm"="NLOPT_LN_COBYLA"),
+                a = a,
+                b = b )
+print( res1 )
+
+
+# Solve using NLOPT_LD_MMA with gradient information in objective function
+res2 &lt;- nloptr( x0=c(1.234,5.678),
+                eval_f=eval_f1,
+                lb = c(-Inf,0),
+                ub = c(Inf,Inf),
+                eval_g_ineq = eval_g1,
+                opts = list("algorithm"="NLOPT_LD_MMA", "check_derivatives"=TRUE),
+                a = a,
+                b = b )
+print( res2 )
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

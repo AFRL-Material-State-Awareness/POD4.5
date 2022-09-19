@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Predictions from a model at new data values</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for predict.merMod {lme4}"><tr><td>predict.merMod {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Predictions from a model at new data values</h2>
+
+<h3>Description</h3>
+
+<p>The <code><a href="../../stats/html/predict.html">predict</a></code> method for <code><a href="merMod-class.html">merMod</a></code>
+objects, i.e. results of <code><a href="lmer.html">lmer</a>()</code>, <code><a href="glmer.html">glmer</a>()</code>, etc.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'merMod'
+predict(object, newdata = NULL, newparams = NULL,
+	re.form = NULL, ReForm, REForm, REform,
+        random.only=FALSE, terms = NULL,
+	type = c("link", "response"), allow.new.levels = FALSE,
+	na.action = na.pass, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>a fitted model object</p>
+</td></tr>
+<tr valign="top"><td><code>newdata</code></td>
+<td>
+<p>data frame for which to evaluate
+predictions.</p>
+</td></tr>
+<tr valign="top"><td><code>newparams</code></td>
+<td>
+<p>new parameters to use in evaluating predictions,
+specified as in the <code>start</code> parameter for <code><a href="lmer.html">lmer</a></code>
+or <code><a href="glmer.html">glmer</a></code> &ndash; a list with components <code>theta</code> and/or
+(for GLMMs) <code>beta</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>re.form</code></td>
+<td>
+<p>(formula, <code>NULL</code>, or <code>NA</code>) specify which random effects to condition on when predicting.  If <code>NULL</code>,
+include all random effects; if <code>NA</code> or <code>~0</code>,
+include no random effects.</p>
+</td></tr>
+<tr valign="top"><td><code>ReForm, REForm, REform</code></td>
+<td>
+<p>allowed for backward compatibility: <code>re.form</code> is
+now the preferred argument name.</p>
+</td></tr>
+<tr valign="top"><td><code>random.only</code></td>
+<td>
+<p>(logical) ignore fixed effects, making predictions
+only using random effects?</p>
+</td></tr>
+<tr valign="top"><td><code>terms</code></td>
+<td>
+<p>a <code><a href="../../stats/html/terms.html">terms</a></code> object - unused at present.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>character string - either <code>"link"</code>, the default, or
+<code>"response"</code> indicating the type of prediction object returned.</p>
+</td></tr>
+<tr valign="top"><td><code>allow.new.levels</code></td>
+<td>
+<p>logical if new levels (or NA values) in
+<code>newdata</code> are allowed. If FALSE (default), such new values in
+<code>newdata</code> will trigger an error; if TRUE, then the prediction
+will use the unconditional (population-level) values for data with
+previously unobserved levels (or NAs).</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p><code><a href="../../base/html/function.html">function</a></code> determining what should be done
+with missing values for fixed effects in <code>newdata</code>.
+The default is to predict <code>NA</code>: see <code><a href="../../stats/html/na.fail.html">na.pass</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional additional parameters.  None are used at present.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<ul>
+<li><p> If any random effects are included in <code>re.form</code>
+(i.e. it is not <code>~0</code> or <code>NA</code>),
+<code>newdata</code> <em>must</em> contain columns
+corresponding to all of the grouping variables and
+random effects used in the original model, even if not all
+are used in prediction; however, they can be safely set to <code>NA</code>
+in this case.
+</p>
+</li>
+<li><p> There is no option for computing standard errors of
+predictions because it is difficult to define an
+efficient method that incorporates uncertainty in the
+variance parameters; we recommend <code><a href="bootMer.html">bootMer</a></code>
+for this task.
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>a numeric vector of predicted values
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+(gm1 &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 |herd), cbpp, binomial))
+str(p0 &lt;- predict(gm1))            # fitted values
+str(p1 &lt;- predict(gm1,re.form=NA))  # fitted values, unconditional (level-0)
+newdata &lt;- with(cbpp, expand.grid(period=unique(period), herd=unique(herd)))
+str(p2 &lt;- predict(gm1,newdata))    # new data, all RE
+str(p3 &lt;- predict(gm1,newdata,re.form=NA)) # new data, level-0
+str(p4 &lt;- predict(gm1,newdata,re.form= ~(1|herd))) # explicitly specify RE
+stopifnot(identical(p2, p4))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

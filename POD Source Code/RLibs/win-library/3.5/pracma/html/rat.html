@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Continuous Fractions (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rat {pracma}"><tr><td>rat {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Continuous Fractions (Matlab Style)
+</h2>
+
+<h3>Description</h3>
+
+<p>Generate continuous fractions for numeric values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rat(x, tol = 1e-06)
+rats(x, tol = 1e-06)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a numeric scalar or vector.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>tolerance; default <code>1e-6</code> to make a nicer appearance for
+<code>pi</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>rat</code> generates continuous fractions, while <code>rats</code> prints the
+the corresponding rational representation and returns the numeric values.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>rat</code> returns a character vector of string representations of
+continuous fractions in the format <code>[b0; b1, ..., b_{n-1}]</code>.
+</p>
+<p><code>rats</code> prints the rational number and returns a numeric vector.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Essentially, these functions apply <code>contfrac</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>numbers::contfrac</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+rat(pi)
+rats(pi)
+rat(sqrt(c(2, 3, 5)),  tol = 1e-15)
+rats(sqrt(c(2, 3, 5)), tol = 1e-15)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

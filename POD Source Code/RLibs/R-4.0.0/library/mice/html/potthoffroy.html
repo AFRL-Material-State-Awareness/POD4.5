@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Potthoff-Roy data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for potthoffroy {mice}"><tr><td>potthoffroy {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Potthoff-Roy data</h2>
+
+<h3>Description</h3>
+
+<p>Data from Potthoff-Roy (1964) with repeated measures on dental fissures.
+</p>
+
+
+<h3>Format</h3>
+
+<p><code>tbs</code> is a data frame with 27 rows and 6 columns:
+</p>
+
+<dl>
+<dt>id</dt><dd><p>Person number</p>
+</dd>
+<dt>sex</dt><dd><p>Sex M/F</p>
+</dd>
+<dt>d8</dt><dd><p>Distance at age 8 years</p>
+</dd>
+<dt>d10</dt><dd><p>Distance at age 10 years</p>
+</dd>
+<dt>d12</dt><dd><p>Distance at age 12 years</p>
+</dd>
+<dt>d14</dt><dd><p>Distance at age 14 years</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>This data set is the famous Potthoff-Roy data, used to demonstrate MANOVA on
+repeated measure data. Potthoff and Roy (1964) published classic data on a
+study in 16 boys and 11 girls, who at ages 8, 10, 12, and 14 had the distance
+(mm) from the center of the pituitary gland to the pteryomaxillary fissure
+measured. Changes in pituitary-pteryomaxillary distances during growth is
+important in orthodontic therapy. The goals of the study were to describe the
+distance in boys and girls as simple functions of age, and then to compare
+the functions for boys and girls. The data have been reanalyzed by many
+authors including Jennrich and Schluchter (1986), Little and Rubin (1987),
+Pinheiro and Bates (2000), Verbeke and Molenberghs (2000) and Molenberghs and
+Kenward (2007). See Chapter 9 of Van Buuren (2012) for a challenging
+exercise using these data.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Potthoff, R. F., Roy, S. N. (1964).  A generalized multivariate
+analysis of variance model usefully especially for growth curve problems.
+<em>Biometrika</em>, <em>51</em>(3), 313-326.
+</p>
+<p>Little, R. J. A., Rubin, D. B. (1987).  <em>Statistical Analysis with
+Missing Data.</em> New York: John Wiley &amp; Sons.
+</p>
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/ex-ch-longitudinal.html"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+### create missing values at age 10 as in Little and Rubin (1987)
+
+phr &lt;- potthoffroy
+idmis &lt;- c(3, 6, 9, 10, 13, 16, 23, 24, 27)
+phr[idmis, 4] &lt;- NA
+phr
+
+md.pattern(phr)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

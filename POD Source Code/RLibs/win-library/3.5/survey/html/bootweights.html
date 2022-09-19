@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute survey bootstrap weights</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bootweights {survey}"><tr><td>bootweights {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute survey bootstrap weights </h2>
+
+<h3>Description</h3>
+
+<p>Bootstrap weights for infinite populations ('with replacement' sampling) are created by sampling with
+replacement from the PSUs in each stratum. <code>subbootweights()</code>
+samples <code>n-1</code> PSUs from the <code>n</code> available (Rao and Wu),
+<code>bootweights</code> samples <code>n</code> (Canty and Davison). 
+</p>
+<p>For multistage designs or those with large sampling fractions,
+<code>mrbweights</code> implements Preston's multistage rescaled
+bootstrap. The multistage rescaled bootstrap is still useful for
+single-stage designs with small sampling fractions, where it reduces
+to a half-sample replicate method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bootweights(strata, psu, replicates = 50, fpc = NULL,
+         fpctype = c("population", "fraction", "correction"),
+         compress = TRUE)
+subbootweights(strata, psu, replicates = 50, compress = TRUE)
+mrbweights(clusters, stratas, fpcs, replicates=50, 
+         multicore=getOption("survey.multicore"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>strata</code></td>
+<td>
+<p>Identifier for sampling strata (top level only)</p>
+</td></tr>
+<tr valign="top"><td><code>stratas</code></td>
+<td>
+<p>data frame of strata for all stages of sampling</p>
+</td></tr>
+<tr valign="top"><td><code>psu</code></td>
+<td>
+<p>Identifier for primary sampling units</p>
+</td></tr>
+<tr valign="top"><td><code>clusters</code></td>
+<td>
+<p>data frame of identifiers for sampling units at each stage</p>
+</td></tr>
+<tr valign="top"><td><code>replicates</code></td>
+<td>
+<p>Number of bootstrap replicates</p>
+</td></tr>
+<tr valign="top"><td><code>fpc</code></td>
+<td>
+<p>Finite population correction (top level only) </p>
+</td></tr>
+<tr valign="top"><td><code>fpctype</code></td>
+<td>
+<p>Is <code>fpc</code> the population size, sampling fraction,
+or 1-sampling fraction?</p>
+</td></tr>
+<tr valign="top"><td><code>fpcs</code></td>
+<td>
+<p><code>survey_fpc</code> object with population and sample size at each stage</p>
+</td></tr>
+<tr valign="top"><td><code>compress</code></td>
+<td>
+<p>Should the replicate weights be compressed?</p>
+</td></tr>
+<tr valign="top"><td><code>multicore</code></td>
+<td>
+<p>Use the <code>multicore</code> package to generate the replicates in parallel</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A set of replicate weights
+</p>
+
+
+<h3>warning</h3>
+
+<p>With <code>multicore=TRUE</code> the resampling procedure does not
+use the current random seed, so the results cannot be exactly
+reproduced even by using <code>set.seed()</code></p>
+
+
+<h3>Note</h3>
+
+<p>These bootstraps are strictly appropriate only when the first stage of
+sampling is a simple or stratified random sample of PSUs with or
+without replacement, and not (eg) for PPS sampling.  The functions
+will not enforce simple random sampling, so they can be used
+(approximately) for data that have had non-response corrections and
+other weight adjustments.  It is preferable to apply these adjustments
+after creating the bootstrap replicate weights, but that may not be
+possible with public-use data.
+</p>
+
+
+<h3>References</h3>
+
+<p>Canty AJ, Davison AC. (1999) Resampling-based variance
+estimation for labour force surveys. The Statistician 48:379-391
+</p>
+<p>Judkins, D. (1990), &quot;Fay's Method for Variance Estimation&quot; Journal of Official Statistics, 6, 223-239.
+</p>
+<p>Preston J. (2009) Rescaled bootstrap for stratified multistage sampling. Survey Methodology 35(2) 227-234
+</p>
+<p>Rao JNK, Wu CFJ. Bootstrap inference for sample surveys. Proc Section
+on Survey Research Methodology. 1993 (866&ndash;871)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="as.svrepdesign.html">as.svrepdesign</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sets or retrieves projection attributes on classes extending...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for is.projected {sp}"><tr><td>is.projected {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Sets or retrieves projection attributes on classes extending
+SpatialData </h2>
+
+<h3>Description</h3>
+
+<p> Sets or retrieves projection attributes on classes extending
+SpatialData; set or retrieve option value for error or warning on exceedance of geographical coordinate range, set or retrieve option value for exceedance tolerance of geographical coordinate range. Note that only &ldquo;+proj=longlat +ellps=WGS84&rdquo; is accepted for geographical coordinates, which must be ordered (eastings, northings); the &ldquo;+ellps=&rdquo; definition must be given (or expanded internally from a given &ldquo;+datum=&rdquo; value) for recent versions of the PROJ library, and should be set to an appropriate value.
+</p>
+<p>From release 6 of the PROJ library, when used in building <span class="pkg">rgdal</span> with GDAL &gt;= 3, the <code>+datum=</code> key in the Proj.4 string CRS representation is deprecated, and the <code>+towgs84=</code> and <code>+nadgrids=</code> keys may be deprecated soon. For this reason, <span class="pkg">sp</span>, <span class="pkg">rgdal</span> and <span class="pkg">sf</span> are starting to use WKT2 (2019) string representations. In <span class="pkg">sp</span>, the <code>"CRS"</code> object in itself remains unchanged, but the content of its <code>"projargs"</code> slot may be degraded. To work around the degradation, a <code>comment</code> is added around the <code>"CRS"</code> object containing a WKT2 (2019) string when <span class="pkg">rgdal</span> is available and built with PROJ &gt;= 6 and GDAL &gt;=3. The <code>wkt()</code> accessor function returns the WKT2 (2019) string comment belonging to the <code>"CRS"</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+is.projected(obj)
+proj4string(obj)
+proj4string(obj) &lt;- value
+wkt(obj)
+get_ll_warn()
+get_ll_TOL()
+get_ReplCRS_warn()
+set_ll_warn(value)
+set_ll_TOL(value)
+set_ReplCRS_warn(value)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>An object of class or extending <a href="Spatial-class.html">Spatial-class</a></p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>For <code>proj4string</code> CRS object, containing a valid proj4 string; attempts to assign an object containing &ldquo;longlat&rdquo; to data extending beyond longitude [-180, 360] or lattitude [-90, 90] will be stopped. For <code>set_ll_warn</code> a single logical value, if FALSE (default) error on range exceedance, if TRUE, warning. For <code>set_ll_TOL</code> the value of the power of <code>.Machine$double.eps</code> (default 0.25) to use as tolerance in testing range exceedance. <code>set_ReplCRS_warn</code> may be used to turn off warnings issued when changing object CRS with the <code>proj4string</code> replacement method (by setting <code>value=FALSE</code>).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p> proj4 strings are operative through CRAN package rgdal. For strings defined as &ldquo;longlat&rdquo;, the minimum longitude should be -180, the maximum longitude 360, the minimum latitude -90, and the maximum latitude 90. Note that the <code>proj4string</code> replacement method does not project spatial data - for this use <code>spTransform</code> methods in the rgdal package.</p>
+
+
+<h3>Value</h3>
+
+ <p><code>is.projected</code> returns a logical that may be <code>NA</code>; 
+<code>proj4string</code> returns a character vector of length 1.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a>
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><a href="CRS-class.html">CRS</a> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+o &lt;- new("Spatial")
+proj4string(o) &lt;- CRS("+init=epsg:27700")
+if (!is.null(comment(slot(o, "proj4string")))) {
+  cat(strsplit(wkt(o), "\n")[[1]], sep="\n")
+  cat(strsplit(wkt(slot(o, "proj4string")), "\n")[[1]], sep="\n")
+}
+is.projected(CRS("+proj=longlat"))
+is.projected(CRS("+proj=geocent"))
+is.projected(CRS("+proj=geocent +units=km"))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

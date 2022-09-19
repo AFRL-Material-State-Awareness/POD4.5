@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Long-Run Variance of the Mean</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lrvar {sandwich}"><tr><td>lrvar {sandwich}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Long-Run Variance of the Mean</h2>
+
+<h3>Description</h3>
+
+<p>Convenience function for computing the long-run variance (matrix) of a
+(possibly multivariate) series of observations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lrvar(x, type = c("Andrews", "Newey-West"), prewhite = TRUE, adjust = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector, matrix, or time series.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>character specifying the type of estimator, i.e., whether
+<code><a href="weightsAndrews.html">kernHAC</a></code> for the Andrews quadratic spectral kernel HAC estimator
+is used or <code><a href="NeweyWest.html">NeweyWest</a></code> for the Newey-West Bartlett HAC
+estimator.</p>
+</td></tr>
+<tr valign="top"><td><code>prewhite</code></td>
+<td>
+<p>logical or integer. Should the series be prewhitened?
+Passed to <code><a href="weightsAndrews.html">kernHAC</a></code> or <code><a href="NeweyWest.html">NeweyWest</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>adjust</code></td>
+<td>
+<p>logical.  Should a finite sample adjustment be made?
+Passed to <code><a href="weightsAndrews.html">kernHAC</a></code> or <code><a href="NeweyWest.html">NeweyWest</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed on to <code><a href="weightsAndrews.html">kernHAC</a></code> or
+<code><a href="NeweyWest.html">NeweyWest</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>lrvar</code> is a simple wrapper function for computing the long-run variance
+(matrix) of a (possibly multivariate) series <code>x</code>. First, this simply fits
+a linear regression model <code>x ~ 1</code> by <code><a href="../../stats/html/lm.html">lm</a></code>. Second,
+the corresponding variance of the mean(s) is estimated either by <code><a href="weightsAndrews.html">kernHAC</a></code>
+(Andrews quadratic spectral kernel HAC estimator) or by <code><a href="NeweyWest.html">NeweyWest</a></code>
+(Newey-West Bartlett HAC estimator).
+</p>
+
+
+<h3>Value</h3>
+
+<p>For a univariate series <code>x</code> a scalar variance is computed. For a
+multivariate series <code>x</code> the covariance matrix is computed.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="weightsAndrews.html">kernHAC</a></code>, <code><a href="NeweyWest.html">NeweyWest</a></code>, <code><a href="vcovHAC.html">vcovHAC</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+## iid series (with variance of mean 1/n)
+## and Andrews kernel HAC (with prewhitening)
+x &lt;- rnorm(100)
+lrvar(x)
+
+## analogous multivariate case with Newey-West estimator (without prewhitening)
+y &lt;- matrix(rnorm(200), ncol = 2)
+lrvar(y, type = "Newey-West", prewhite = FALSE)
+
+## AR(1) series with autocorrelation 0.9
+z &lt;- filter(rnorm(100), 0.9, method = "recursive")
+lrvar(z)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sandwich</em> version 3.0-2 <a href="00Index.html">Index</a>]</div>
+</body></html>

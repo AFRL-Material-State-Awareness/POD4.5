@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Visualizing sequences of quantile regressions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.rqs {quantreg}"><tr><td>plot.rqs {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Visualizing sequences of quantile regressions</h2>
+
+<h3>Description</h3>
+
+<p>A sequence of coefficient estimates for quantile
+regressions with varying <code>tau</code> parameters is visualized.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'rqs'
+plot(x, parm = NULL, ols = TRUE,
+  mfrow = NULL, mar = NULL, ylim = NULL, main = NULL, col = 1:2, lty = 1:2,
+  cex = 0.5, pch = 20, type = "b", xlab = "", ylab = "", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class <code>"rqs"</code> as produce by <code><a href="rq.html">rq</a></code>
+(with a vector of <code>tau</code> values).</p>
+</td></tr>
+<tr valign="top"><td><code>parm</code></td>
+<td>
+<p>a specification of which parameters are to be plotted,
+either a vector of numbers or a vector of names.  By default, all
+parameters are considered.</p>
+</td></tr>
+<tr valign="top"><td><code>ols</code></td>
+<td>
+<p>logical. Should a line for the OLS coefficient (as estimated
+by <code><a href="../../stats/html/lm.html">lm</a></code>) be added?</p>
+</td></tr>
+<tr valign="top"><td><code>mfrow, mar, ylim, main</code></td>
+<td>
+<p>graphical parameters. Suitable defaults are chosen
+based on the coefficients to be visualized.</p>
+</td></tr>
+<tr valign="top"><td><code>col, lty</code></td>
+<td>
+<p>graphical parameters. For each parameter, the first
+element corresponds to the <code>rq</code> coefficients and the second to
+the <code>lm</code> coefficients.</p>
+</td></tr>
+<tr valign="top"><td><code>cex, pch, type, xlab, ylab, ...</code></td>
+<td>
+<p>further graphical parameters
+passed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>plot</code> method for <code>"rqs"</code> objects visualizes the
+coefficients only, confidence bands can be added by using the <code>plot</code>
+method for the associated <code>"summary.rqs"</code> object.</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with all coefficients visualized is returned invisibly.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.html">rq</a></code>, <code><a href="plot.summary.rqs.html">plot.summary.rqs</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## fit Engel models (in levels) for tau = 0.1, ..., 0.9
+data("engel")
+fm &lt;- rq(foodexp ~ income, data = engel, tau = 1:9/10)
+
+## visualizations
+plot(fm)
+plot(fm, parm = 2, mar = c(5.1, 4.1, 2.1, 2.1), main = "", xlab = "tau", 
+  ylab = "income coefficient", cex = 1, pch = 19)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

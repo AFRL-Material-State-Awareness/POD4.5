@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Hadamard Matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hadamard {pracma}"><tr><td>hadamard {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Hadamard Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Generate Hadamard matrix of a certain size.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hadamard(n)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>An integer of the form 2^e, 12*2^e, or 20*2^e</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>An <code>n</code>-by-<code>n</code> Hadamard matrix with <code>n&gt;2</code> exists only if
+<code>rem(n,4)=0</code>. This function handles only the cases where <code>n</code>,
+<code>n/12</code>, or <code>n/20</code> is a power of 2.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix of size <code>n</code>-by-<code>n</code> of orthogonal columns consisting of
+1 and -1 only.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Hadamard matrices have applications in combinatorics, signal processing,
+and numerical analysis.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="hankel.html">hankel</a></code>, <code><a href="toeplitz.html">Toeplitz</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+hadamard(4)
+H &lt;- hadamard(8)
+t(H) 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

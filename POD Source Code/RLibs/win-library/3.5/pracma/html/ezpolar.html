@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Easy Polar Plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ezpolar {pracma}"><tr><td>ezpolar {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Easy Polar Plot
+</h2>
+
+<h3>Description</h3>
+
+<p>Easy function plot w/o the need to define <code>x, y</code> coordinates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ezpolar(fun, interv = c(0, 2*pi))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>function to be plotted.</p>
+</td></tr>
+<tr valign="top"><td><code>interv</code></td>
+<td>
+<p>left and right endpoint for the plot.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calculates the <code>x, y</code> coordinates of points to be plotted and
+calls the <code>polar</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Plots the function graph and invisibly returns <code>NULL</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Mimick the Matlab function of the same name.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="ezplot.html">ezplot</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+fun &lt;- function(x) 1 + cos(x)
+ezpolar(fun)
+  
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

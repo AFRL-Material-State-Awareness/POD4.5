@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Colour Brewer palette (discrete)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for brewer_pal {scales}"><tr><td>brewer_pal {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Colour Brewer palette (discrete)</h2>
+
+<h3>Description</h3>
+
+<p>Colour Brewer palette (discrete)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+brewer_pal(type = "seq", palette = 1, direction = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>One of &quot;seq&quot; (sequential), &quot;div&quot; (diverging) or &quot;qual&quot;
+(qualitative)</p>
+</td></tr>
+<tr valign="top"><td><code>palette</code></td>
+<td>
+<p>If a string, will use that named palette. If a number, will
+index into the list of palettes of appropriate <code>type</code></p>
+</td></tr>
+<tr valign="top"><td><code>direction</code></td>
+<td>
+<p>Sets the order of colours in the scale. If 1, the default,
+colours are as output by <code><a href="../../RColorBrewer/html/ColorBrewer.html">RColorBrewer::brewer.pal()</a></code>. If -1, the
+order of colours is reversed.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p><a href="https://colorbrewer2.org">https://colorbrewer2.org</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+show_col(brewer_pal()(10))
+show_col(brewer_pal("div")(5))
+show_col(brewer_pal(palette = "Greens")(5))
+
+# Can use with gradient_n to create a continuous gradient
+cols &lt;- brewer_pal("div")(5)
+show_col(gradient_n_pal(cols)(seq(0, 1, length.out = 30)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

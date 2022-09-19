@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extracting/Replacing the Core Data of Objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for coredata {zoo}"><tr><td>coredata {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extracting/Replacing the Core Data of Objects</h2>
+
+<h3>Description</h3>
+
+<p>Generic functions for extracting the core data contained in
+a (more complex) object and replacing it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+coredata(x, ...)
+coredata(x) &lt;- value
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to methods.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>a suitable value object for use with <code>x</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>In <code>zoo</code>, there are currently <code>coredata</code> methods for time series
+objects of class <code>"zoo"</code>, <code>"ts"</code>, <code>"its"</code>, <code>"irts"</code>, all of
+which strip off the index/time attributes and return only the observations.
+The are also corresponding replacement methods for these classes.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+
+x.date &lt;- as.Date(paste(2003, rep(1:4, 4:1), seq(1,20,2), sep = "-"))
+x &lt;- zoo(matrix(rnorm(20), ncol = 2), x.date)
+
+## the full time series
+x
+## and only matrix of observations
+coredata(x)
+
+## change the observations
+coredata(x) &lt;- matrix(1:20, ncol = 2)
+x
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

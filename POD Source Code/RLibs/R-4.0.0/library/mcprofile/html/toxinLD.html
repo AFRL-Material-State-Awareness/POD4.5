@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Identifying the lethal dose of a crop protection product.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for toxinLD {mcprofile}"><tr><td>toxinLD {mcprofile}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Identifying the lethal dose of a crop protection product.</h2>
+
+<h3>Description</h3>
+
+<p>Increasing dose levels of a toxin, used as a pesticide for crop protection, is applied to non-target species. The lethal dose should be identified in this experiment. The dataset represents simulated data based on a real experiment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+toxinLD
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 6 observations on the following 3 variables.
+</p>
+
+<dl>
+<dt><code>dose</code></dt><dd><p>a numeric vector denoting the toxin concentration levels</p>
+</dd>
+<dt><code>dead</code></dt><dd><p>a numeric vector with the number of dead insects.</p>
+</dd>
+<dt><code>alive</code></dt><dd><p>a numeric vector with the number of surviving insects.</p>
+</dd>
+</dl>
+
+
+<h3>Examples</h3>
+
+<pre>
+str(toxinLD)
+
+###############################################
+# logistic regression on the logarithmic dose #
+###############################################
+
+toxinLD$logdose &lt;- log(toxinLD$dose)
+fm &lt;- glm(cbind(dead, alive) ~ logdose, data=toxinLD, family=binomial(link="logit"))
+
+#############
+# profiling #
+#############
+
+# contrast matrix
+pdose &lt;- seq(-1,2.3, length=7)
+CM &lt;- model.matrix(~ pdose)
+
+# user defined grid to construct profiles
+mcpgrid &lt;- matrix(seq(-11,8,length=15), nrow=15, ncol=nrow(CM))
+mc &lt;- mcprofile(fm, CM, grid=mcpgrid)
+
+####################################
+## confidence interval calculation #
+####################################
+
+# srdp profile
+ci &lt;- confint(mc)
+ppdat &lt;- data.frame(logdose=pdose)
+ppdat$estimate &lt;- fm$family$linkinv(ci$estimate$Estimate)
+ppdat$lower &lt;- fm$family$linkinv(ci$confint$lower)
+ppdat$upper &lt;- fm$family$linkinv(ci$confint$upper)
+ppdat$method &lt;- "profile"
+
+# wald profile
+wci &lt;- confint(wald(mc))
+wpdat &lt;- ppdat
+wpdat$estimate &lt;- fm$family$linkinv(wci$estimate$Estimate)
+wpdat$lower &lt;- fm$family$linkinv(wci$confint$lower)
+wpdat$upper &lt;- fm$family$linkinv(wci$confint$upper)
+wpdat$method &lt;- "wald"
+
+# higher order approximation
+hci &lt;- confint(hoa(mc))
+hpdat &lt;- ppdat
+hpdat$estimate &lt;- fm$family$linkinv(hci$estimate$Estimate)
+hpdat$lower &lt;- fm$family$linkinv(hci$confint$lower)
+hpdat$upper &lt;- fm$family$linkinv(hci$confint$upper)
+hpdat$method &lt;- "hoa"
+
+# combine results
+pdat &lt;- rbind(ppdat, wpdat, hpdat)
+
+
+#####################################
+# estimating the lethal dose LD(25) #
+#####################################
+
+ld &lt;- 0.25
+pspf &lt;- splinefun(ppdat$upper, pdose)
+pll &lt;- pspf(ld)
+wspf &lt;- splinefun(wpdat$upper, pdose)
+wll &lt;- wspf(ld)
+hspf &lt;- splinefun(hpdat$upper, pdose)
+hll &lt;- hspf(ld)
+
+ldest &lt;- data.frame(limit=c(pll, wll, hll), method=c("profile","wald", "hoa"))
+
+################################
+# plot of intervals and LD(25) #
+################################
+
+ggplot(toxinLD, aes(x=logdose, y=dead/(dead+alive))) + 
+  geom_ribbon(data=pdat, aes(y=estimate, ymin=lower, ymax=upper, 
+                             fill=method, colour=method, linetype=method), 
+              alpha=0.1, size=0.95) +
+  geom_line(data=pdat, aes(y=estimate, linetype=method), size=0.95) +
+  geom_point(size=3) +
+  geom_hline(yintercept=ld, linetype=2) +
+  geom_segment(data=ldest, aes(x=limit, xend=limit, y=0.25, yend=-0.05, 
+                               linetype=method), size=0.6, colour="grey2") +
+  ylab("Mortality rate")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mcprofile</em> version 1.0-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

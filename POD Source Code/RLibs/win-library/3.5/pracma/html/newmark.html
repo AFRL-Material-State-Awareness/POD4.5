@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Newmark Method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for newmark {pracma}"><tr><td>newmark {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Newmark Method
+</h2>
+
+<h3>Description</h3>
+
+<p>Newmark's is a method to solve higher-order differential equations
+without passing through the equivalent first-order system.
+It generalizes the so-called &lsquo;leap-frog&rsquo; method.
+Here it is restricted to second-order equations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+newmark(f, t0, t1, y0, ..., N = 100, zeta = 0.25, theta = 0.5)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function in the differential equation <i>y'' = f(x, y, y')</i>;<br />
+defined as a function <i>R \times R^2 \rightarrow R</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>t0, t1</code></td>
+<td>
+<p>start and end points of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>y0</code></td>
+<td>
+<p>starting values as row or column vector;
+<code>y0</code> needs to be a vector of length 2, the first component
+representing <code>y(t0)</code>, the second <code>dy/dt(t0)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>N</code></td>
+<td>
+<p>number of steps.</p>
+</td></tr>
+<tr valign="top"><td><code>zeta, theta</code></td>
+<td>
+<p>two non-negative real numbers.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Solves second order differential equations using the Newmark method
+on an equispaced grid of <code>N</code> steps.
+</p>
+<p>Function <code>f</code> must return a vector, whose elements hold the evaluation
+of <code>f(t,y)</code>, of the same dimension as <code>y0</code>. Each row in the
+solution array Y corresponds to a time returned in <code>t</code>.
+</p>
+<p>The method is &lsquo;implicit&rsquo; unless <code>zeta=theta=0</code>, second order if
+<code>theta=1/2</code> and first order accurate if <code>theta!=1/2</code>.
+<code>theta&gt;=1/2</code> ensures stability.
+The condition set <code>theta=1/2; zeta=1/4</code> (the defaults) is a popular
+approach that is unconditionally stable, but introduces oscillatory
+spurious solutions on long time intervals.
+(For these simulations it is preferable to use <code>theta&gt;1/2</code> and
+<code>zeta&gt;(theta+1/2)^(1/2)</code>.)
+</p>
+<p>No attempt is made to catch any errors in the root finding functions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>t</code> for grid (or &lsquo;time&rsquo;) points between <code>t0</code>
+and <code>t1</code>, and <code>y</code> an n-by-2 matrix with solution variables in
+columns, i.e. each row contains one time stamp.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This is for demonstration purposes only; for real problems or applications
+please use <code>ode23</code> or <code>rk4sys</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., R. Sacco, and F. Saleri (2007). Numerical Mathematics.
+Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="ode.html">ode23</a></code>, <code><a href="cranknic.html">cranknic</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Mathematical pendulum  m l y'' + m g sin(y) = 0
+pendel &lt;- function(t, y)  -sin(y[1])
+sol &lt;- newmark(pendel, 0, 4*pi, c(pi/4, 0))
+
+## Not run: 
+plot(sol$t, sol$y[, 1], type="l", col="blue",
+     xlab="Time", ylab="Elongation/Speed", main="Mathematical Pendulum")
+lines(sol$t, sol$y[, 2], col="darkgreen")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

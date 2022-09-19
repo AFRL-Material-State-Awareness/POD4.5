@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Bootstrapping Censored Quantile Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for boot.crq {quantreg}"><tr><td>boot.crq {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Bootstrapping Censored Quantile Regression</h2>
+
+<h3>Description</h3>
+
+<p>Functions used to estimated standard errors, confidence
+intervals and tests of hypotheses for censored quantile regression models
+using the Portnoy and Peng-Huang methods.  </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+boot.crq(x, y, c, taus, method, ctype = "right", R = 100, mboot, bmethod = "jack", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> The regression design matrix</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p> The regression response vector</p>
+</td></tr>
+<tr valign="top"><td><code>c</code></td>
+<td>
+<p> The censoring indicator</p>
+</td></tr>
+<tr valign="top"><td><code>taus</code></td>
+<td>
+<p> The quantiles of interest</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p> The fitting method: either &quot;P&quot; for Portnoy or &quot;PH&quot; for Peng and Huang.</p>
+</td></tr>
+<tr valign="top"><td><code>ctype</code></td>
+<td>
+<p> Either &quot;right&quot; or &quot;left&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>R</code></td>
+<td>
+<p> The number of bootstrap replications</p>
+</td></tr>
+<tr valign="top"><td><code>bmethod</code></td>
+<td>
+<p> The bootstrap method to be employed.  There are (as yet) three
+options:  method  = &quot;jack&quot; uses the delete-d jackknife method
+described by Portnoy (2013), method = &quot;xy-pair&quot; uses the xy-pair method, 
+that is the usual multinomial resampling of xy-pairs, while  method
+= &quot;Bose&quot; uses the Bose and Chatterjee (2003) weighted resampling
+method with exponential weights.  The &quot;jack&quot; method is now the default.</p>
+</td></tr>
+<tr valign="top"><td><code>mboot</code></td>
+<td>
+<p> optional argument for the bootstrap method:  for bmethod = &quot;jack&quot;
+it specifies the number, d, of the delete-d jackknife, for 
+method = &quot;xy-pair&quot; it specifies the size of the bootstrap samples,
+that permits subsampling (m out of n) bootstrap.  By default in the
+former case it is set to 2 [sqrt(n)], for the latter the default is
+n.  Obviously mboot should be substantially larger than the column dimension 
+of x, and should be less than the sample size in both cases.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> Optional further arguments to control bootstrapping</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>There are several refinements that are still unimplemented.  Percentile
+methods should be incorporated, and extensions of the methods to be used 
+in anova.rq should be made.  Note that bootstrapping for the Powell 
+method &quot;Powell&quot; is done via <code><a href="boot.rq.html">boot.rq</a></code>.  For problems with
+<code>n &gt; 3000</code> a message is printed indicated progress in the resampling.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of dimension R by p is returned with the R resampled
+estimates of the vector of quantile regression parameters. When
+mofn &lt; n for the &quot;xy&quot; method this matrix has been deflated by
+the factor sqrt(m/n)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Koenker </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Bose, A. and S. Chatterjee, (2003) Generalized bootstrap for estimators
+of minimizers of convex functions, <em>J. Stat. Planning and Inf</em>, 117,
+225-239.
+Portnoy, S. (2013) The Jackknife's Edge:  Inference for Censored Quantile Regression,
+<em>CSDA</em>, forthcoming.
+</p>
+
+
+<h3>See Also</h3>
+
+  <p><code><a href="summary.crq.html">summary.crq</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

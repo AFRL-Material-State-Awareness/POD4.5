@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot a munsell colour</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot_mnsl {munsell}"><tr><td>plot_mnsl {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot a munsell colour</h2>
+
+<h3>Description</h3>
+
+<p>Takes munsell text specifications and plots colour squares of them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plot_mnsl(cols, back.col = "white", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>cols</code></td>
+<td>
+<p>character vector specifying colours in Munsell form</p>
+</td></tr>
+<tr valign="top"><td><code>back.col</code></td>
+<td>
+<p>specification of background colour of display</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>passed to <code><a href="check_mnsl.html">check_mnsl</a></code>. Add fix = TRUE to fix &quot;bad&quot; colours()</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A ggplot object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+plot_mnsl("5R 5/6")
+plot_mnsl("5R 5/6",  back.col = "grey40")
+p &lt;- plot_mnsl(c("5R 6/6", "5Y 6/6", "5G 6/6", "5B 6/6", "5P 6/6"),
+ back.col = "grey40")
+p
+# returned object is a ggplot object so we can alter the layout
+summary(p)
+p + ggplot2::facet_wrap(~ num, nrow = 1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

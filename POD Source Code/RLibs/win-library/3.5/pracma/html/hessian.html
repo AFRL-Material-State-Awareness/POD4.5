@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Hessian Matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hessian {pracma}"><tr><td>hessian {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Hessian Matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>Numerically compute the Hessian matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hessian(f, x0, h = .Machine$double.eps^(1/4), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>univariate function of several variables.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>point in <i>R^n</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>h</code></td>
+<td>
+<p>step size.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>variables to be passed to <code>f</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the hessian matrix based on the three-point central difference
+formula, expanded to two variables.
+</p>
+<p>Assumes that the function has continuous partial derivatives.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An n-by-n matrix with <i>\frac{\partial^2 f}{\partial x_i \partial x_j}</i>
+as (i, j) entry.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fausett, L. V. (2007). Applied Numerical Analysis Using Matlab.
+Second edition, Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="laplacian.html">laplacian</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- function(x) cos(x[1] + x[2])
+x0 &lt;- c(0, 0)
+hessian(f, x0)
+
+f &lt;- function(u) {
+    x &lt;- u[1]; y &lt;- u[2]; z &lt;- u[3]
+    return(x^3 + y^2 + z^2 +12*x*y + 2*z)
+}
+x0 &lt;- c(1,1,1)
+hessian(f, x0)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

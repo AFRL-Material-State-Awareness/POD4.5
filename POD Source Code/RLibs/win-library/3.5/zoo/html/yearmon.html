@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: An Index Class for Monthly Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for yearmon {zoo}"><tr><td>yearmon {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>An Index Class for Monthly Data</h2>
+
+<h3>Description</h3>
+
+<p><code>"yearmon"</code> is a class for representing monthly data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+yearmon(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric (interpreted as being &ldquo;in years&rdquo;).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>"yearmon"</code> class is used to represent monthly data. Internally it holds
+the data as year plus 0 for January, 1/12 for February, 2/12 for March
+and so on in order that its internal representation is the same as 
+<code>ts</code> class with <code>frequency = 12</code>. If <code>x</code> is not in this
+format it is rounded via <code>floor(12*x + .0001)/12</code>.
+</p>
+<p>There are coercion methods available for various classes including:
+default coercion to <code>"yearmon"</code> (which coerces to <code>"numeric"</code> first)
+and coercions to and from <code>"yearmon"</code> to <code>"Date"</code> (see below), 
+<code>"POSIXct"</code>,
+<code>"POSIXlt"</code>, <code>"numeric"</code>, <code>"character"</code> and <code>"jul"</code>.  
+The last one is from the <code>"tis"</code> package available on CRAN.
+In the case of <code>as.yearmon.POSIXt</code> the conversion is with respect to
+GMT.  (Use <code>as.yearmon(format(...))</code> for other time zones.)
+In the case of
+<code>as.yearmon.character</code> the <code>format</code> argument uses the same
+percent code as 
+<code>"Date"</code>.   These are described in <code><a href="../../base/html/strptime.html">strptime</a></code>.  Unlike
+<code>"Date"</code> one can specify a year and month with no day.  
+Default formats of <code>"%Y-%m"</code>, <code>"%Y-%m-%d"</code> and <code>"%b %Y"</code>.
+</p>
+<p>There is an <code>is.numeric</code> method which returns <code>FALSE</code>.
+</p>
+<p><code>as.Date.yearmon</code> and <code>as.yearmon.yearqtr</code> 
+each has an optional
+second argument of <code>"frac"</code> which is a number between 0 and 1 inclusive
+that indicates the fraction of the way through the period that the result
+represents.  The default is 0 which means the beginning of the period.
+</p>
+<p>There is also a <code>date</code> method for <code>as.yearmon</code> usable with objects
+created with package <code>date</code>.
+</p>
+<p><code>Sys.yearmon()</code> returns the current year/month and methods for
+<code>min</code>, <code>max</code> and <code>range</code> are defined (by defining 
+a method for <code>Summary</code>).
+</p>
+<p>A <code>yearmon</code> <code>mean</code> method is also defined.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns its argument converted to class <code>yearmon</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="yearqtr.html">yearqtr</a></code>, <code><a href="zoo.html">zoo</a></code>, <code><a href="zooreg.html">zooreg</a></code>, <code><a href="../../stats/html/ts.html">ts</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+Sys.setenv(TZ = "GMT")
+
+x &lt;- as.yearmon(2000 + seq(0, 23)/12)
+x
+
+as.yearmon("mar07", "%b%y")
+as.yearmon("2007-03-01")
+as.yearmon("2007-12")
+
+# returned Date is the fraction of the way through
+# the period given by frac (= 0 by default)
+as.Date(x)
+as.Date(x, frac = 1)
+as.POSIXct(x)
+
+# given a Date, x, return the Date of the next Friday
+nextfri &lt;- function(x) 7 * ceiling(as.numeric(x - 1)/7) + as.Date(1)
+
+# given a Date, d, return the same Date in the following month
+# Note that as.Date.yearmon gives first Date of the month.
+d &lt;- as.Date("2005-1-1") + seq(0,90,30)
+next.month &lt;- function(d) as.Date(as.yearmon(d) + 1/12) + 
+	as.numeric(d - as.Date(as.yearmon(d)))
+next.month(d)
+
+# 3rd Friday in last month of the quarter of Date x
+as.Date(as.yearmon(as.yearqtr(x)) + 2/12) + 14
+
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+
+z &lt;- zoo(rnorm(24), x, frequency = 12)
+z
+as.ts(z)
+
+## convert data fram to multivariate monthly "ts" series
+## 1.read raw data
+Lines.raw &lt;- "ID Date Count
+123 20 May 1999 1
+123 21 May 1999 3
+222 1 Feb 2000 2
+222 3 Feb 2000 4
+"
+DF &lt;- read.table(text = Lines.raw, skip = 1,
+ col.names = c("ID", "d", "b", "Y", "Count"))
+## 2. fix raw date
+DF$yearmon &lt;- as.yearmon(paste(DF$b, DF$Y), "%b %Y")
+## 3. aggregate counts over months, convert to zoo and merge over IDs
+ag &lt;- function(DF) aggregate(zoo(DF$Count), DF$yearmon, sum)
+z &lt;- do.call("merge.zoo", lapply(split(DF, DF$ID), ag))
+## 4. convert to "zooreg" and then to "ts"
+frequency(z) &lt;- 12
+as.ts(z)
+
+xx &lt;- zoo(seq_along(x), x)
+
+## aggregating over year 
+as.year &lt;- function(x) as.numeric(floor(as.yearmon(x)))
+aggregate(xx, as.year, mean)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

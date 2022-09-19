@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Brent-Dekker Root Finding Algorithm</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for brentDekker {pracma}"><tr><td>brentDekker {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Brent-Dekker Root Finding Algorithm
+</h2>
+
+<h3>Description</h3>
+
+<p>Find root of continuous function of one variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+brentDekker(fun, a, b, maxiter = 500, tol = 1e-12, ...)
+brent(fun, a, b, maxiter = 500, tol = 1e-12, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>function whose root is to be found.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>left and right end points of an interval;
+function values need to be of different sign at the endpoints.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>brentDekker</code> implements a version of the Brent-Dekker algorithm,
+a well known root finding algorithms for real, univariate, continuous
+functions. The Brent-Dekker approach is a clever combination of secant
+and bisection with quadratic interpolation.
+</p>
+<p><code>brent</code> is simply an alias for <code>brentDekker</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>brent</code> returns a list with
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>root</code></td>
+<td>
+<p>location of the root.</p>
+</td></tr>
+<tr valign="top"><td><code>f.root</code></td>
+<td>
+<p>funtion value at the root.</p>
+</td></tr>
+<tr valign="top"><td><code>f.calls</code></td>
+<td>
+<p>number of function calls.</p>
+</td></tr>
+<tr valign="top"><td><code>estim.prec</code></td>
+<td>
+<p>estimated relative precision.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., R. Sacco, and F. Saleri (2007). Numerical Mathematics.
+Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="ridders.html">ridders</a></code>, <code><a href="newtonRaphson.html">newtonRaphson</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Legendre polynomial of degree 5
+lp5 &lt;- c(63, 0, -70, 0, 15, 0)/8
+f &lt;- function(x) polyval(lp5, x)
+brent(f, 0.6, 1)                # 0.9061798459 correct to 12 places
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Quantile Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq {quantreg}"><tr><td>rq {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Quantile Regression 
+</h2>
+
+<h3>Description</h3>
+
+<p>Returns an object of class <code>"rq"</code> <code>"rqs"</code> 
+or <code>"rq.process"</code> that represents a quantile regression fit. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rq(formula, tau=.5, data, subset, weights, na.action,
+   method="br", model = TRUE, contrasts, ...) 
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+
+<p>a formula object, with the response on the left of a <code>~</code> operator, 
+and the terms, separated by <code>+</code> operators, on the right. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+
+<p>the quantile(s) to be estimated, this is generally a number strictly between 0 and 1, 
+but if specified strictly outside this range, it is presumed that the solutions 
+for all values of <code>tau</code> in (0,1) are desired.  In the former case an
+object of class <code>"rq"</code> is returned, in the latter,
+an object of class <code>"rq.process"</code> is returned.  As of version 3.50,
+tau can also be a vector of values between 0 and 1; in this case an
+object of class <code>"rqs"</code> is returned containing among other things
+a matrix of coefficient estimates at the specified quantiles.
+</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+
+<p>a data.frame in which to interpret the variables 
+named in the formula, or in the subset and the weights argument. 
+If this is missing, then the variables in the formula should be on the 
+search list.  This may also be a single number to handle some special  
+cases &ndash; see below for details.   
+</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+
+<p>an optional vector specifying a subset of observations to be
+used in the fitting process.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+
+<p>vector of observation weights; if supplied, the algorithm fits
+to minimize the sum of the weights multiplied into the
+absolute residuals. The length of weights must be the same as
+the number of observations.  The weights must be nonnegative
+and it is strongly recommended that they be strictly positive,
+since zero weights are ambiguous. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+
+<p>a function to filter missing data. 
+This is applied to the model.frame after any subset argument has been used. 
+The default (with <code>na.fail</code>) is to create an error if any missing values are  
+found.  A possible alternative is <code>na.omit</code>, which 
+deletes observations that contain one or more missing values. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>if TRUE then the model frame is returned.  This is
+essential if one wants to call summary subsequently.
+</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+
+<p>the algorithmic method used to compute the fit.  There are several
+options:   
+</p>
+
+<ol>
+<li> <p><code>"br"</code> The default method is the modified  version of the
+Barrodale and Roberts algorithm for <i>l1</i>-regression,
+used by <code>l1fit</code> in S, and is described in detail in 
+Koenker and d'Orey(1987, 1994),  default = <code>"br"</code>. 
+This is quite efficient for problems up to several thousand observations, 
+and may be used to compute the full quantile regression process.  It 
+also implements a scheme for computing confidence intervals for 
+the estimated parameters, based on inversion of a rank test described 
+in Koenker(1994).  
+</p>
+</li>
+<li> <p><code>"fn"</code> For larger problems it is advantageous to use 
+the Frisch&ndash;Newton interior point method <code>"fn"</code>. 
+This is described in detail in Portnoy and Koenker(1997).
+</p>
+</li>
+<li> <p><code>"pfn"</code> For even larger problems one can use the Frisch&ndash;Newton approach after 
+preprocessing <code>"pfn"</code>.  Also described in detail in Portnoy and Koenker(1997), 
+this method is primarily well-suited for large n, small p problems, that is when the 
+parametric dimension of the model is modest.  
+</p>
+</li>
+<li> <p><code>"sfn"</code>  For large problems with  large
+parametric dimension it is often advantageous to use method <code>"sfn"</code>
+which also uses the Frisch-Newton algorithm, but exploits sparse algebra
+to compute iterates.  This is especially helpful when the model includes
+factor variables that, when expanded, generate design matrices that
+are very sparse.  At present options for inference, i.e. summary methods
+are somewhat limited when using the <code>"sfn"</code> method.  Only the option
+<code>se = "nid"</code> is currently available, but I hope to implement some
+bootstrap options in the near future.
+</p>
+</li>
+<li> <p><code>"fnc"</code>  Another option enables the user to specify
+linear inequality constraints on the fitted coefficients; in this
+case one needs to specify the matrix <code>R</code> and the vector <code>r</code>
+representing the constraints in the form <i>Rb &ge;q r</i>.  See the
+examples below.  
+</p>
+</li>
+<li> <p><code>"conquer"</code>  For very large problems especially those with
+large parametric dimension, this option provides a link to the <span class="pkg">conquer</span>
+of He, Pan, Tan, and Zhou (2020).  Calls to <code>summary</code> when the fitted
+object is computed with this option invoke the multiplier bootstrap percentile
+method of the <span class="pkg">conquer</span> package and can be considerably quicker than other
+options when the problem size is large.  Further options for this fitting
+method are described in the <span class="pkg">conquer</span> package.  Note that this option
+employs a smoothing form of the usual QR objective function so solutions
+may be expected to differ somewhat from those produced with the other options.
+</p>
+</li>
+<li> <p><code>"pfnb"</code> This option is intended for applications with large
+sample sizes and/or moderately fine tau grids.  It uses a form of preprocessing
+to accelerate the solution process.  The loop over taus occurs inside the Fortran
+call and there should be more efficient than other methods in large problems.
+</p>
+</li>
+<li> <p><code>"qfnb"</code> This option is like the preceeding one except that it doesn't
+use the preprocessing option.
+</p>
+</li>
+<li> <p><code>"ppro"</code> This option is an R prototype of the <code>pfnb</code> and is 
+offered for historical/interpretative purposes, but probably should be considered
+deprecated.
+</p>
+</li>
+<li> <p><code>"lasso"</code> There are two penalized methods:  <code>"lasso"</code> 
+and <code>"scad"</code> that implement the lasso penalty and Fan and Li
+smoothly clipped absolute deviation penalty, respectively.  These
+methods should probably be regarded as experimental.  Note:  weights
+are ignored when the method is penalized.
+</p>
+</li></ol>
+
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+
+<p>a list giving contrasts for some or all of the factors 
+default = <code>NULL</code> appearing in the model formula. 
+The elements of the list should have the same name as the variable 
+and should be either a contrast matrix (specifically, any full-rank 
+matrix with as many rows as there are levels in the factor), 
+or else a function to compute such a matrix given the number of levels. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>additional arguments for the fitting routines 
+(see <code><a href="rq.fit.br.html">rq.fit.br</a></code> and <code><a href="rq.fit.fnb.html">rq.fit.fnb</a></code>, etc.
+and the functions they call). 
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For further details see the vignette available from <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> with
+<code> vignette("rq",package="quantreg")</code> and/or the Koenker (2005).
+For estimation of nonlinear (in parameters) quantile regression models
+there is the function <code>nlrq</code> and for nonparametric additive 
+quantile regression there is the function <code>rqss</code>.
+Fitting of quantile regression models with censored data is handled by the
+<code>crq</code> function.</p>
+
+
+<h3>Value</h3>
+
+<p>See <code><a href="rq.object.html">rq.object</a></code> and <code><a href="rq.process.object.html">rq.process.object</a></code> for details. 
+Inferential matters are handled with <code><a href="../../base/html/summary.html">summary</a></code>.  There are
+extractor methods <code>logLik</code> and <code>AIC</code> that are potentially
+relevant for model selection.
+</p>
+
+
+<h3>Method</h3>
+
+<p>The function computes an estimate on the tau-th conditional quantile
+function of the response, given the covariates, as specified by the
+formula argument.  Like <code>lm()</code>, the function presumes a linear
+specification for the quantile regression model, i.e. that the formula
+defines a model that is linear in parameters.  For non-linear (in parameters)
+quantile regression see the package <code>nlrq()</code>.  
+The function minimizes a weighted sum of absolute
+residuals that can be formulated as a linear programming problem.  As
+noted above, there are several different algorithms that can be chosen
+depending on problem size and other characteristics.  For moderate sized
+problems (<i>n &lt;&lt; 5,000, p &lt;&lt; 20</i>) it is recommended 
+that the default <code>"br"</code> method be used. There are several choices of methods for
+computing confidence intervals and associated test statistics.  
+See the documentation for <code><a href="summary.rq.html">summary.rq</a></code> for further details
+and options.  
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Koenker, R. W. and Bassett, G. W. (1978). Regression quantiles, 
+<em>Econometrica</em>, <b>46</b>, 33&ndash;50. 
+</p>
+<p>[2] Koenker, R.W. and d'Orey (1987, 1994). Computing regression quantiles. 
+<em>Applied Statistics</em>, <b>36</b>, 383&ndash;393, and <b>43</b>, 410&ndash;414. 
+</p>
+<p>[3] Gutenbrunner, C. Jureckova, J. (1991). 
+Regression quantile and regression rank score process in the 
+linear model and derived statistics, <em>Annals of Statistics</em>,
+<b>20</b>, 305&ndash;330.
+</p>
+<p>[4] Xuming He and Xiaoou Pan and Kean Ming Tan and Wen-Xin Zhou, (2020)
+conquer: Convolution-Type Smoothed Quantile Regression,
+<a href="https://CRAN.R-project.org/package=conquer">https://CRAN.R-project.org/package=conquer</a>
+</p>
+<p>[4] Koenker, R. W. (1994). Confidence Intervals for regression quantiles, in 
+P. Mandl and M. Huskova (eds.), <em>Asymptotic Statistics</em>, 349&ndash;359,  
+Springer-Verlag, New York.   
+</p>
+<p>[5] Koenker, R. and S. Portnoy (1997) The Gaussian Hare and the Laplacean 
+Tortoise:  Computability of Squared-error vs Absolute Error Estimators, 
+(with discussion).  <em>Statistical Science,</em> <b>12</b>, 279-300.
+</p>
+<p>[6] Koenker, R. W. (2005). <em>Quantile Regression</em>,  Cambridge U. Press.
+</p>
+<p>There is also recent information available at the URL:
+<a href="http://www.econ.uiuc.edu/~roger/">http://www.econ.uiuc.edu/~roger/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="FAQ.html">FAQ</a></code>, 
+<code><a href="summary.rq.html">summary.rq</a></code>, 
+<code><a href="nlrq.html">nlrq</a></code>,
+<code><a href="rq.fit.html">rq.fit</a></code>,
+<code><a href="rq.wfit.html">rq.wfit</a></code>,
+<code><a href="rqss.html">rqss</a></code>,
+<code><a href="rq.object.html">rq.object</a></code>,
+<code><a href="rq.process.object.html">rq.process.object</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(stackloss)
+rq(stack.loss ~ stack.x,.5)  #median (l1) regression  fit for the stackloss data. 
+rq(stack.loss ~ stack.x,.25)  #the 1st quartile, 
+        #note that 8 of the 21 points lie exactly on this plane in 4-space! 
+rq(stack.loss ~ stack.x, tau=-1)   #this returns the full rq process
+rq(rnorm(50) ~ 1, ci=FALSE)    #ordinary sample median --no rank inversion ci
+rq(rnorm(50) ~ 1, weights=runif(50),ci=FALSE)  #weighted sample median 
+#plot of engel data and some rq lines see KB(1982) for references to data
+data(engel)
+attach(engel)
+plot(income,foodexp,xlab="Household Income",ylab="Food Expenditure",type = "n", cex=.5)
+points(income,foodexp,cex=.5,col="blue")
+taus &lt;- c(.05,.1,.25,.75,.9,.95)
+xx &lt;- seq(min(income),max(income),100)
+f &lt;- coef(rq((foodexp)~(income),tau=taus))
+yy &lt;- cbind(1,xx)%*%f
+for(i in 1:length(taus)){
+        lines(xx,yy[,i],col = "gray")
+        }
+abline(lm(foodexp ~ income),col="red",lty = 2)
+abline(rq(foodexp ~ income), col="blue")
+legend(3000,500,c("mean (LSE) fit", "median (LAE) fit"),
+	col = c("red","blue"),lty = c(2,1))
+#Example of plotting of coefficients and their confidence bands
+plot(summary(rq(foodexp~income,tau = 1:49/50,data=engel)))
+#Example to illustrate inequality constrained fitting
+n &lt;- 100
+p &lt;- 5
+X &lt;- matrix(rnorm(n*p),n,p)
+y &lt;- .95*apply(X,1,sum)+rnorm(n)
+#constrain slope coefficients to lie between zero and one
+R &lt;- cbind(0,rbind(diag(p),-diag(p)))
+r &lt;- c(rep(0,p),-rep(1,p))
+rq(y~X,R=R,r=r,method="fnc")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

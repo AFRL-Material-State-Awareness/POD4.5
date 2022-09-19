@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Print and Summary Method Utilities for Mixed Effects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for prt-utilities {lme4}"><tr><td>prt-utilities {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Print and Summary Method Utilities for Mixed Effects</h2>
+
+<h3>Description</h3>
+
+<p>The <code><a href="../../base/html/print.html">print</a></code>, <code><a href="../../base/html/summary.html">summary</a></code> methods (including the
+<code>print</code> for the <code>summary()</code> result) in <span class="pkg">lme4</span> are
+modular, using about ten small utility functions.  Other packages,
+building on <span class="pkg">lme4</span> can use the same utilities for ease of
+programming and consistency of output.
+</p>
+<p>Notably see the Examples.
+</p>
+<p><code>llikAIC()</code> extracts the  log likelihood, AIC, and related
+statics from a Fitted LMM.
+</p>
+<p><code>formatVC()</code> &ldquo;format()&rdquo;s the <code><a href="VarCorr.html">VarCorr</a></code> matrix of the
+random effects &ndash; for <code><a href="../../base/html/print.html">print</a>()</code>ing and
+<code><a href="../../methods/html/show.html">show</a>()</code>ing; it is also the &ldquo;workhorse&rdquo; of
+<code>.prt.VC()</code>, and returns a <code><a href="../../base/html/character.html">character</a></code> matrix.
+</p>
+<p><code>.prt.*()</code> all use <code><a href="../../base/html/cat.html">cat</a></code> and <code><a href="../../base/html/print.html">print</a></code> to
+produce output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+llikAIC(object, devianceFUN = devCrit, chkREML = TRUE,
+        devcomp = object@devcomp)
+
+methTitle(dims)
+
+.prt.methTit(mtit, class)
+.prt.family (famL)
+.prt.resids (resids, digits, title = "Scaled residuals:", ...)
+.prt.call   (call, long = TRUE)
+.prt.aictab (aictab, digits = 1)
+.prt.grps   (ngrps, nobs)
+.prt.warn   (optinfo, summary = FALSE, ...)
+
+.prt.VC (varcor, digits, comp, formatter = format, ...)
+formatVC(varcor, digits = max(3, getOption("digits") - 2),
+         comp = "Std.Dev.", formatter = format,
+         useScale = attr(varcor, "useSc"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>a LMM model fit</p>
+</td></tr>
+<tr valign="top"><td><code>devianceFUN</code></td>
+<td>
+<p>the function to be used for computing the deviance;
+should not be changed for <span class="pkg">lme4</span> created objects.</p>
+</td></tr>
+<tr valign="top"><td><code>chkREML</code></td>
+<td>
+<p>optional logical indicating if <code>object</code> maybe a REML
+fit.</p>
+</td></tr></table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>devcomp</code></td>
+<td>
+<p>for <span class="pkg">lme4</span> always the equivalent of
+<code>object@devcomp</code>; here a <code><a href="../../base/html/list.html">list</a></code></p>
+</td></tr></table>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>dims</code></td>
+<td>
+<p>for <span class="pkg">lme4</span> always the equivalent of
+<code>object@devcomp$dims</code>, a named vector or list with components
+<code>"GLMM"</code>, <code>"NLMM"</code>, <code>"REML"</code>, and <code>"nAGQ"</code> of
+which the first two are <code><a href="../../base/html/logical.html">logical</a></code> scalars, and the latter
+two typically are <code>FALSE</code> or <code><a href="../../base/html/numeric.html">numeric</a></code>.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>mtit</code></td>
+<td>
+<p>the result of <code>methTitle(object)</code></p>
+</td></tr>
+<tr valign="top"><td><code>class</code></td>
+<td>
+<p>typically <code><a href="../../base/html/class.html">class</a>(object)</code>.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>famL</code></td>
+<td>
+<p>a <code><a href="../../base/html/list.html">list</a></code> with components <code>family</code> and
+<code>link</code>, each a <code><a href="../../base/html/character.html">character</a></code> string; note that standard
+<span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> <code><a href="../../stats/html/family.html">family</a></code> objects can be used directly, as well.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>resids</code></td>
+<td>
+<p>numeric vector of model <code><a href="../../stats/html/residuals.html">residuals</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>non-negative integer of (significant) digits to print minimally.</p>
+</td></tr>
+<tr valign="top"><td><code>title</code></td>
+<td>
+<p><code><a href="../../base/html/character.html">character</a></code> string.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional arguments passed on, e.g., to <code><a href="../../stats/html/residuals.html">residuals</a>()</code>.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>the <code><a href="../../base/html/call.html">call</a></code> of the model fit; e.g., available
+via (generic) function <code><a href="../../stats/html/update.html">getCall</a>()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>long</code></td>
+<td>
+<p>logical indicating if the output may be long, e.g.,
+printing the <code>control</code> part of the call if there is one.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>aictab</code></td>
+<td>
+<p>typically the <code>AICtab</code> component of the result of
+<code>llikAIC()</code>.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>varcor</code></td>
+<td>
+<p>typically the result of <code><a href="VarCorr.html">VarCorr</a>()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>comp</code></td>
+<td>
+<p>optional ...</p>
+</td></tr></table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formatter</code></td>
+<td>
+<p>a <code><a href="../../base/html/function.html">function</a></code> used for formatting the numbers.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>ngrps</code></td>
+<td>
+<p>integer (vector), typically the result of
+<code><a href="ngrps.html">ngrps</a>(object)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>nobs</code></td>
+<td>
+<p>integer; the number of observations, e.g., the result
+of <code><a href="merMod-class.html">nobs</a></code>.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>optinfo</code></td>
+<td>
+<p>typically <code>object @ optinfo</code>, the optimization
+infos, including warnings if there were.</p>
+</td></tr>
+<tr valign="top"><td><code>summary</code></td>
+<td>
+<p>logical</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>useScale</code></td>
+<td>
+<p>(logical) whether the parent model estimates a scale
+parameter</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>llikAIC()</code> returns a <code><a href="../../base/html/list.html">list</a></code> with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>logLik</code></td>
+<td>
+<p>which is <code><a href="../../stats/html/logLik.html">logLik</a>(object)</code>, and</p>
+</td></tr>
+<tr valign="top"><td><code>AICtab</code></td>
+<td>
+<p> a &ldquo;table&rdquo; of <code><a href="../../stats/html/AIC.html">AIC</a></code>, <code><a href="../../stats/html/AIC.html">BIC</a></code>,
+<code><a href="../../stats/html/logLik.html">logLik</a></code>, deviance and <code><a href="../../stats/html/df.residual.html">df.residual</a>()</code> values.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Create a few "lme4 standard" models ------------------------------
+fm1 &lt;- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+fmM &lt;- update(fm1, REML=FALSE) # -&gt; Maximum Likelihood
+
+gm1 &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+             data = cbpp, family = binomial)
+gmA &lt;- update(gm1, nAGQ = 5)
+
+
+(lA1 &lt;- llikAIC(fm1))
+(lAM &lt;- llikAIC(fmM))
+(lAg &lt;- llikAIC(gmA))
+
+(m1 &lt;- methTitle(fm1 @ devcomp $ dims))
+(mM &lt;- methTitle(fmM @ devcomp $ dims))
+(mG &lt;- methTitle(gm1 @ devcomp $ dims))
+(mA &lt;- methTitle(gmA @ devcomp $ dims))
+
+.prt.methTit(m1, class(fm1))
+.prt.methTit(mA, class(gmA))
+
+.prt.family(gaussian())
+.prt.family(binomial())
+.prt.family( poisson())
+
+.prt.resids(residuals(fm1), digits = 4)
+.prt.resids(residuals(fmM), digits = 2)
+
+.prt.call(getCall(fm1))
+.prt.call(getCall(gm1))
+
+.prt.aictab ( lA1 $ AICtab ) # REML
+.prt.aictab ( lAM $ AICtab ) # ML --&gt; AIC, BIC, ...
+
+V1 &lt;- VarCorr(fm1)
+m &lt;- formatVC(V1)
+stopifnot(is.matrix(m), is.character(m), ncol(m) == 4)
+print(m, quote = FALSE) ## prints all but the first line of .prt.VC() below:
+.prt.VC( V1, digits = 4, formatter = format)
+## Random effects:
+##  Groups   Name        Std.Dev. Corr
+##  Subject  (Intercept) 24.740
+##           Days         5.922   0.07
+##  Residual             25.592
+
+p1 &lt;- capture.output(V1)
+p2 &lt;- capture.output( print(m, quote=FALSE) )
+pX &lt;- capture.output( .prt.VC(V1, digits = max(3, getOption("digits")-2)) )
+stopifnot(identical(p1, p2),
+          identical(p1, pX[-1])) # [-1] : dropping 1st line
+
+.prt.grps(ngrps = ngrps(fm1),
+          nobs  = nobs (fm1))
+## --&gt; Number of obs: 180, groups:  Subject, 18
+
+.prt.warn(fm1 @ optinfo) # nothing .. had no warnings
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

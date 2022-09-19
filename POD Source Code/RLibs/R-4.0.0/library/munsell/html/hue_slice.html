@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot all colours with the same hue</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hue_slice {munsell}"><tr><td>hue_slice {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot all colours with the same hue</h2>
+
+<h3>Description</h3>
+
+<p>Plots slices of the Munsell colour system where hue is constant.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hue_slice(hue.name = "all", back.col = "white")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>hue.name</code></td>
+<td>
+<p>character vector of the desired hues. Or &quot;all&quot; for all hues.</p>
+</td></tr>
+<tr valign="top"><td><code>back.col</code></td>
+<td>
+<p>colour for the background</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>ggplot object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+hue_slice("5R")
+hue_slice(c("5R", "5P"))
+## Not run: hue_slice("all")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

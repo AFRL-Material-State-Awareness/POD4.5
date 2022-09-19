@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fitter Function for Sparse Linear Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lm.fit.sparse {MatrixModels}"><tr><td>lm.fit.sparse {MatrixModels}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fitter Function for Sparse Linear Models</h2>
+
+<h3>Description</h3>
+
+<p>A basic computing engine for sparse linear least squares regression.
+</p>
+<p>Note that the exact interface (arguments, return value) currently is
+<b>experimental</b>, and is bound to change.  Use at your own risk!
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lm.fit.sparse(x, y, w = NULL, offset = NULL,
+              method = c("qr", "cholesky"),
+              tol = 1e-7, singular.ok = TRUE, order = NULL,
+              transpose = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><em>sparse</em> design matrix of dimension <code>n * p</code>, i.e.,
+an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object of a <code><a href="../../base/html/class.html">class</a></code> extending
+<code><a href="../../Matrix/html/dsparseMatrix-class.html">dsparseMatrix</a></code>; typically the result of
+<code><a href="../../Matrix/html/sparse.model.matrix.html">sparse.model.matrix</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>vector of observations of length <code>n</code>, or a matrix with
+<code>n</code> rows.</p>
+</td></tr>
+<tr valign="top"><td><code>w</code></td>
+<td>
+<p>vector of weights (length <code>n</code>) to be used in the fitting
+process.  Weighted least squares is used with weights <code>w</code>,
+i.e., <code>sum(w * e^2)</code> is minimized.
+</p>
+<p><b>Not yet implemented !</b>
+</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>numeric of length <code>n</code>).  This can be used to
+specify an <em>a priori</em> known component to be included in the
+linear predictor during fitting.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>a character string specifying the (factorization)
+method.  Currently, <code>"qr"</code> or <code>"cholesky"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>[for back-compatibility only; unused:] tolerance for the
+<code><a href="../../Matrix/html/qr-methods.html">qr</a></code> decomposition.  Default is 1e-7.</p>
+</td></tr>
+<tr valign="top"><td><code>singular.ok</code></td>
+<td>
+<p>[for back-compatibility only; unused:] logical. If
+<code>FALSE</code>, a singular model is an error.</p>
+</td></tr>
+<tr valign="top"><td><code>order</code></td>
+<td>
+<p>integer or <code>NULL</code>, for <code>method == "qr"</code>, will
+determine how the fill-reducing ordering (aka permutation) for the
+&ldquo;symbolic&rdquo; part is determined (in <code>cs_amd()</code>), with the
+options 0: natural, 1: Chol, 2: LU, and 3: QR, where
+<code>3</code> is the default.</p>
+</td></tr>
+<tr valign="top"><td><code>transpose</code></td>
+<td>
+
+<p>logical; if true, use the transposed matrix <code>t(x)</code> instead of
+<code>x</code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Either a single numeric vector or a list of four numeric vectors.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="glm4.html">glm4</a></code> is an alternative (much) more general fitting
+function.
+</p>
+<p><code><a href="../../Matrix/html/sparse.model.matrix.html">sparse.model.matrix</a></code> from the <span class="pkg">Matrix</span> package;
+the non-sparse function in standard <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>'s package <span class="pkg">stats</span>:
+<code><a href="../../stats/html/lmfit.html">lm.fit</a>()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+dd &lt;- expand.grid(a = as.factor(1:3),
+                  b = as.factor(1:4),
+                  c = as.factor(1:2),
+                  d= as.factor(1:8))
+n &lt;- nrow(dd &lt;- dd[rep(seq_len(nrow(dd)), each = 10), ])
+set.seed(17)
+dM &lt;- cbind(dd, x = round(rnorm(n), 1))
+## randomly drop some
+n &lt;- nrow(dM &lt;- dM[- sample(n, 50),])
+dM &lt;- within(dM, { A &lt;- c(2,5,10)[a]
+                   B &lt;- c(-10,-1, 3:4)[b]
+                   C &lt;- c(-8,8)[c]
+                   D &lt;- c(10*(-5:-2), 20*c(0, 3:5))[d]
+   Y &lt;- A + B + A*B + C + D + A*D + C*x + rnorm(n)/10
+   wts &lt;- sample(1:10, n, replace=TRUE)
+   rm(A,B,C,D)
+})
+str(dM) # 1870 x 7
+
+X &lt;- Matrix::sparse.model.matrix( ~ (a+b+c+d)^2 + c*x, data = dM)
+dim(X) # 1870 x 69
+X[1:10, 1:20]
+
+## For now, use  'MatrixModels:::'  --- TODO : export once interface is clear!
+
+Xd &lt;- as(X,"matrix")
+system.time(fmDense &lt;- lm.fit(Xd, y = dM[,"Y"]))
+system.time( r1 &lt;- MatrixModels:::lm.fit.sparse(X, y = dM[,"Y"]) ) # *is* faster
+stopifnot(all.equal(r1, unname(fmDense$coeff), tolerance = 1e-12))
+system.time(
+     r2 &lt;- MatrixModels:::lm.fit.sparse(X, y = dM[,"Y"], method = "chol") )
+stopifnot(all.equal(r1, r2$coef, tolerance = 1e-12),
+          all.equal(fmDense$residuals, r2$residuals, tolerance=1e-9)
+         )
+## with weights:
+system.time(fmD.w &lt;- with(dM, lm.wfit(Xd, Y, w = wts)))
+system.time(fm.w1 &lt;- with(dM, MatrixModels:::lm.fit.sparse(X, Y, w = wts)))
+system.time(fm.w2 &lt;- with(dM, MatrixModels:::lm.fit.sparse(X, Y, w = wts,
+                                                     method = "chol") ))
+stopifnot(all.equal(fm.w1, unname(fmD.w$coeff), tolerance = 1e-12),
+          all.equal(fm.w2$coef, fm.w1, tolerance = 1e-12),
+          all.equal(fmD.w$residuals, fm.w2$residuals, tolerance=1e-9)
+          )
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>MatrixModels</em> version 0.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

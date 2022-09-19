@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: invert</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for invert {formula.tools}"><tr><td>invert {formula.tools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>invert</h2>
+
+<h3>Description</h3>
+
+<p>Invert the operators in an object, usually a formula or expression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+invert(x, ...)
+
+## S4 method for signature 'call'
+invert(x)
+
+## S4 method for signature 'expression'
+invert(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>function for invert</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed other functions
+</p>
+<p><code>invert</code> is a S4 generic method for inverting relational
+operators, i.e. 
+</p>
+<p>functions prefixed with a <code>.</code> are not exported and should probably not 
+be called directly</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The operand is returned with the relational operators inverted.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Christopher Brown
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="formula.parts.html">op</a></code>, <code><a href="op.type.html">op.type</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  invert( quote( A &gt;  5 ) )
+  invert( quote( A &gt;= 5 ) )
+  invert( quote( A &lt;  5 ) )
+  invert( quote( A &lt;= 5 ) )
+  invert( quote( A == 5 ) )
+  invert( quote( A != 5 ) )
+  invert( quote( A %in% lettters[1:5] ) )
+  invert( quote( A %!in% letters[1:5] ) )
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>formula.tools</em> version 1.7.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

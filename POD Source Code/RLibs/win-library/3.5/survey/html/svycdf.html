@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Cumulative Distribution Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svycdf {survey}"><tr><td>svycdf {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Cumulative Distribution Function</h2>
+
+<h3>Description</h3>
+
+<p>Estimates the population cumulative distribution function for specified
+variables.  In contrast to <code><a href="svyquantile.html">svyquantile</a></code>, this does not do
+any interpolation: the result is a right-continuous step function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svycdf(formula, design, na.rm = TRUE,...)
+## S3 method for class 'svycdf'
+print(x,...)
+## S3 method for class 'svycdf'
+plot(x,xlab=NULL,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>one-sided formula giving variables from the design object </p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>survey design object </p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>remove missing data (case-wise deletion)?</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments to <code><a href="../../stats/html/plot.stepfun.html">plot.stepfun</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>object of class <code>svycdf</code></p>
+</td></tr>
+<tr valign="top"><td><code>xlab</code></td>
+<td>
+<p>a vector of x-axis labels or <code>NULL</code> for the default labels</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>svycdf</code>, which is a list of step functions (of
+class <code><a href="../../stats/html/stepfun.html">stepfun</a></code>)
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="svyquantile.html">svyquantile</a></code>, <code><a href="svyhist.html">svyhist</a></code>, <code><a href="../../stats/html/plot.stepfun.html">plot.stepfun</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dstrat &lt;- svydesign(id = ~1, strata = ~stype, weights = ~pw, data = apistrat, 
+    fpc = ~fpc)
+cdf.est&lt;-svycdf(~enroll+api00+api99, dstrat)
+cdf.est
+## function
+cdf.est[[1]]
+## evaluate the function
+cdf.est[[1]](800)
+cdf.est[[2]](800)
+
+## compare to population and sample CDFs.
+opar&lt;-par(mfrow=c(2,1))
+cdf.pop&lt;-ecdf(apipop$enroll)
+cdf.samp&lt;-ecdf(apistrat$enroll)
+plot(cdf.pop,main="Population vs sample", xlab="Enrollment")
+lines(cdf.samp,col.points="red")
+
+plot(cdf.pop, main="Population vs estimate", xlab="Enrollment")
+lines(cdf.est[[1]],col.points="red")
+
+par(opar)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

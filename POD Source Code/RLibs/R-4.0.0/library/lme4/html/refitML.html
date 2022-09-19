@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Refit a Model by Maximum Likelihood Criterion</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for refitML {lme4}"><tr><td>refitML {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Refit a Model by Maximum Likelihood Criterion</h2>
+
+<h3>Description</h3>
+
+<p>Refit a (<code>merMod</code>) model using the maximum likelihood criterion.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+refitML(x, ...)
+## S3 method for class 'merMod'
+ refitML(x, optimizer = "bobyqa", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted model, usually of class
+<code>"<a href="merMod-class.html">lmerMod</a>"</code>, to be refit according to the maximum
+likelihood criterion.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional additional parameters.  None are used
+at present.</p>
+</td></tr>
+<tr valign="top"><td><code>optimizer</code></td>
+<td>
+<p>a string indicating the optimizer to be used.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is primarily used to get a maximum likelihood fit of a
+linear mixed-effects model for an <code><a href="../../stats/html/anova.html">anova</a></code> comparison.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object like <code>x</code> but fit by maximum likelihood
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="refit.html">refit</a></code> and <code><a href="merMod-class.html">update.merMod</a></code> for more
+extensive refitting.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

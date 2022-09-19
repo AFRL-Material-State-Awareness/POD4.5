@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Maximum pseudolikelihood estimation in complex surveys</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svymle {survey}"><tr><td>svymle {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Maximum pseudolikelihood estimation in complex surveys</h2>
+
+<h3>Description</h3>
+
+<p>Maximises a user-specified likelihood parametrised by multiple linear
+predictors to data from a complex sample survey and computes the
+sandwich variance estimator of the coefficients. Note that this function
+maximises an estimated population likelihood, it is not the sample MLE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svymle(loglike, gradient = NULL, design, formulas, start = NULL, control
+= list(), na.action="na.fail", method=NULL, lower=NULL,upper=NULL,influence=FALSE,...)
+## S3 method for class 'svymle'
+summary(object, stderr=c("robust", "model"),...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>loglike</code></td>
+<td>
+<p>vectorised loglikelihood function</p>
+</td></tr>
+<tr valign="top"><td><code>gradient</code></td>
+<td>
+<p>Derivative of <code>loglike</code>. Required for variance computation and helpful for fitting</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p> a <code>survey.design</code> object </p>
+</td></tr>
+<tr valign="top"><td><code>formulas</code></td>
+<td>
+<p>A list of formulas specifying the variable and linear predictors: see Details below</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>Starting values for parameters</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>control options for the optimiser: see the help page
+for the optimiser you are using.</p>
+</td></tr>
+<tr valign="top"><td><code>lower,upper</code></td>
+<td>
+<p>Parameter bounds for <code>bobyqa</code></p>
+</td></tr>
+<tr valign="top"><td><code>influence</code></td>
+<td>
+<p>Return the influence functions (primarily for svyby)</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>Handling of <code>NA</code>s</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p><code>"nlm"</code> to use <code>nlm</code>,<code>"uobyqa"</code> or
+<code>"bobyqa"</code> to use those optimisers from the <code>minqa</code>
+package;  otherwise passed to <code><a href="../../stats/html/optim.html">optim</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Arguments to <code>loglike</code> and <code>gradient</code> that are
+not to be optimised over.</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p><code>svymle</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>stderr</code></td>
+<td>
+<p>Choice of standard error estimator. The default is a
+standard sandwich estimator. See Details below.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Optimization is done by <code><a href="../../stats/html/nlm.html">nlm</a></code> by default or if
+<code>method=="nlm"</code>. Otherwise <code><a href="../../stats/html/optim.html">optim</a></code> is used and <code>method</code>
+specifies the method and <code>control</code> specifies control parameters.
+</p>
+<p>The <code>design</code> object contains all the data and design information
+from the survey, so all the formulas refer to variables in this object.
+The <code>formulas</code> argument needs to specify the response variable and
+a linear predictor for each freely varying argument of <code>loglike</code>.
+</p>
+<p>Consider for example the <code><a href="../../stats/html/Normal.html">dnorm</a></code> function, with arguments
+<code>x</code>, <code>mean</code>, <code>sd</code> and <code>log</code>, and suppose we want to
+estimate the mean of <code>y</code> as a linear function of a variable
+<code>z</code>, and to estimate a constant standard deviation.  The <code>log</code>
+argument must be fixed at <code>FALSE</code> to get the loglikelihood.  A
+<code>formulas</code> argument would be <code>list(~y, mean=~z, sd=~1)</code>. Note
+that the data variable <code>y</code> must be the first argument to
+<code>dnorm</code> and the first formula and that all the other formulas are
+labelled.  It is also permitted to have the data variable as the
+left-hand side of one of the formulas: eg <code>list( mean=y~z, sd=~1)</code>.
+</p>
+<p>The two optimisers from the <code>minqa</code> package do not use any
+derivatives to be specified for optimisation, but they do assume
+that the function is smooth enough for a quadratic approximation, ie,
+that two derivatives exist.
+</p>
+<p>The usual variance estimator for MLEs in a survey sample is a &lsquo;sandwich&rsquo;
+variance that requires the score vector and the information matrix. It
+requires only sampling assumptions to be valid (though some model
+assumptions are required for it to be useful). This is the
+<code>stderr="robust"</code> option, which is available only when the <code>gradient</code>
+argument was specified.
+</p>
+<p>If the model is correctly specified and the sampling is at random
+conditional on variables in the model then standard errors based on just
+the information matrix will be approximately valid.  In particular, for
+independent sampling where weights and strata depend on variables in the
+model the <code>stderr="model"</code> should work fairly well.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>svymle</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thomas Lumley</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svydesign.html">svydesign</a></code>, <code><a href="svyglm.html">svyglm</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ data(api)
+
+ dstrat&lt;-svydesign(id=~1, strata=~stype, weight=~pw, fpc=~fpc, data=apistrat)
+
+ ## fit with glm
+ m0 &lt;- svyglm(api00~api99+ell,family="gaussian",design=dstrat)
+ ## fit as mle (without gradient)
+ m1 &lt;- svymle(loglike=dnorm,gradient=NULL, design=dstrat, 
+    formulas=list(mean=api00~api99+ell, sd=~1),
+    start=list(c(80,1,0),c(20)), log=TRUE)
+ ## with gradient
+ gr&lt;- function(x,mean,sd,log){
+	 dm&lt;-2*(x - mean)/(2*sd^2)
+	 ds&lt;-(x-mean)^2*(2*(2 * sd))/(2*sd^2)^2 - sqrt(2*pi)/(sd*sqrt(2*pi))
+         cbind(dm,ds)
+      }
+ m2 &lt;- svymle(loglike=dnorm,gradient=gr, design=dstrat, 
+    formulas=list(mean=api00~api99+ell, sd=~1),
+    start=list(c(80,1,0),c(20)), log=TRUE, method="BFGS")
+
+ summary(m0)
+ summary(m1,stderr="model")
+ summary(m2)
+
+ ## Using offsets
+ m3 &lt;- svymle(loglike=dnorm,gradient=gr, design=dstrat, 
+    formulas=list(mean=api00~api99+offset(ell)+ell, sd=~1),
+    start=list(c(80,1,0),c(20)), log=TRUE, method="BFGS")
+
+
+## demonstrating multiple linear predictors
+
+ m3 &lt;- svymle(loglike=dnorm,gradient=gr, design=dstrat, 
+    formulas=list(mean=api00~api99+offset(ell)+ell, sd=~stype),
+    start=list(c(80,1,0),c(20,0,0)), log=TRUE, method="BFGS")
+
+
+
+ ## More complicated censored lognormal data example
+ ## showing that the response variable can be multivariate
+
+ data(pbc, package="survival")
+ pbc$randomized &lt;- with(pbc, !is.na(trt) &amp; trt&gt;0)
+ biasmodel&lt;-glm(randomized~age*edema,data=pbc)
+ pbc$randprob&lt;-fitted(biasmodel)
+ dpbc&lt;-svydesign(id=~1, prob=~randprob, strata=~edema,
+    data=subset(pbc,randomized))
+
+
+## censored logNormal likelihood
+ lcens&lt;-function(x,mean,sd){
+    ifelse(x[,2]==1,
+           dnorm(log(x[,1]),mean,sd,log=TRUE),
+           pnorm(log(x[,1]),mean,sd,log=TRUE,lower.tail=FALSE)
+           )
+ }
+
+ gcens&lt;- function(x,mean,sd){
+
+        dz&lt;- -dnorm(log(x[,1]),mean,sd)/pnorm(log(x[,1]),mean,sd,lower.tail=FALSE)
+
+        dm&lt;-ifelse(x[,2]==1,
+                   2*(log(x[,1]) - mean)/(2*sd^2),
+                   dz*-1/sd)
+        ds&lt;-ifelse(x[,2]==1,
+                   (log(x[,1])-mean)^2*(2*(2 * sd))/(2*sd^2)^2 - sqrt(2*pi)/(sd*sqrt(2*pi)),
+                   ds&lt;- dz*-(log(x[,1])-mean)/(sd*sd))
+        cbind(dm,ds)      
+ }
+
+m&lt;-svymle(loglike=lcens, gradient=gcens, design=dpbc, method="newuoa",
+      formulas=list(mean=I(cbind(time,status&gt;0))~bili+protime+albumin,
+                    sd=~1),
+         start=list(c(10,0,0,0),c(1)))
+
+summary(m)
+
+## the same model, but now specifying the lower bound of zero on the
+## log standard deviation
+
+mbox&lt;-svymle(loglike=lcens, gradient=gcens, design=dpbc, method="bobyqa",
+      formulas=list(mean=I(cbind(time,status&gt;0))~bili+protime+albumin, sd=~1),
+      lower=list(c(-Inf,-Inf,-Inf,-Inf),0), upper=Inf,
+      start=list(c(10,0,0,0),c(1)))
+
+
+## The censored lognormal model is now available in svysurvreg()
+
+summary(svysurvreg(Surv(time,status&gt;0)~bili+protime+albumin,
+        design=dpbc,dist="lognormal"))
+
+## compare svymle scale value after log transformation
+svycontrast(m, quote(log(`sd.(Intercept)`)))
+
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Jacobian Matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for jacobian {pracma}"><tr><td>jacobian {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Jacobian Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Jacobian matrix of a function R^n &ndash;&gt; R^m .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+jacobian(f, x0, heps = .Machine$double.eps^(1/3), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p><code>m</code> functions of <code>n</code> variables.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>Numeric vector of length <code>n</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>heps</code></td>
+<td>
+<p>This is <code>h</code> in the derivative formula.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>parameters to be passed to f.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the derivative of each funktion <i>f_j</i> by variable <i>x_i</i>
+separately, taking the discrete step <i>h</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric <code>m</code>-by-<code>n</code> matrix <code>J</code> where the entry <code>J[j, i]</code>
+is <i>\frac{\partial f_j}{\partial x_i}</i>, i.e. the derivatives of function
+<i>f_j</i> line up in row <i>i</i> for <i>x_1, &hellip;, x_n</i>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Obviously, this function is <em>not</em> vectorized.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., R. Sacco, and F. Saleri (2007). Numerical Mathematics.
+Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gradient</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Example function from Quarteroni &amp; Saleri
+f &lt;- function(x) c(x[1]^2 + x[2]^2 - 1, sin(pi*x[1]/2) + x[2]^3)
+jf &lt;- function(x) 
+          matrix( c(2*x[1], pi/2 * cos(pi*x[1]/2), 2*x[2], 3*x[2]^2), 2, 2)
+all.equal(jf(c(1,1)), jacobian(f, c(1,1)))
+# TRUE
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Merge RGL mesh objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for merge.mesh3d {rgl}"><tr><td>merge.mesh3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Merge RGL mesh objects
+</h2>
+
+<h3>Description</h3>
+
+<p>Attempts to merge <code>"mesh3d"</code> objects.  Objects need
+to be similar enough; see Details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'mesh3d'
+merge(x, y, ..., attributesMustMatch = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+
+<p><code>"mesh3d"</code> objects to merge.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Optional additional objects.
+</p>
+</td></tr>
+<tr valign="top"><td><code>attributesMustMatch</code></td>
+<td>
+<p> See Details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>To allow objects to be merged, they need to be similar enough
+in terms of having the same list of material properties,
+normals, texture coordinates, etc.  
+</p>
+<p>If <code>attributesMustMatch</code> is <code>TRUE</code>, it is an error
+to have attributes in one mesh but not in another, and 
+those attributes that only specify a single value must have equal
+values in all meshes.
+</p>
+<p>If <code>attributesMustMatch</code> is <code>FALSE</code>, any non-matching
+attributes will be dropped from the final result.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single <code>"mesh3d"</code> object merging the contents
+of the arguments.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+# Notice that the alpha setting for the cube is dropped, because
+# the other shapes don't specify alpha.
+shade3d(merge(cube3d(col="red", alpha = 0.5),
+              translate3d(tetrahedron3d(col="green"), 2, 0, 0),
+              translate3d(octahedron3d(col="blue"), 4, 0, 0)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

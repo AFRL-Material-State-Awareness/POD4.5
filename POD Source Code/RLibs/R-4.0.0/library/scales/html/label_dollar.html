@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Label currencies ($100, $2.50, etc)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for label_dollar {scales}"><tr><td>label_dollar {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Label currencies ($100, $2.50, etc)</h2>
+
+<h3>Description</h3>
+
+<p>Format numbers as currency, rounding values to dollars or cents using
+a convenient heuristic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+label_dollar(
+  accuracy = NULL,
+  scale = 1,
+  prefix = "$",
+  suffix = "",
+  big.mark = ",",
+  decimal.mark = ".",
+  trim = TRUE,
+  largest_with_cents = 1e+05,
+  negative_parens = deprecated(),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>accuracy, largest_with_cents</code></td>
+<td>
+<p>Number to round to. If <code>NULL</code>, the default,
+values will be rounded to the nearest integer, unless any of the
+values has non-zero fractional component (e.g. cents) and the largest
+value is less than <code>largest_with_cents</code> which by default is 100,000.</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>A scaling factor: <code>x</code> will be multiplied by <code>scale</code> before
+formatting. This is useful if the underlying data is very small or very
+large.</p>
+</td></tr>
+<tr valign="top"><td><code>prefix, suffix</code></td>
+<td>
+<p>Symbols to display before and after value.</p>
+</td></tr>
+<tr valign="top"><td><code>big.mark</code></td>
+<td>
+<p>Character used between every 3 digits to separate thousands.</p>
+</td></tr>
+<tr valign="top"><td><code>decimal.mark</code></td>
+<td>
+<p>The character to be used to indicate the numeric
+decimal point.</p>
+</td></tr>
+<tr valign="top"><td><code>trim</code></td>
+<td>
+<p>Logical, if <code>FALSE</code>, values are right-justified to a common
+width (see <code><a href="../../base/html/format.html">base::format()</a></code>).</p>
+</td></tr>
+<tr valign="top"><td><code>negative_parens</code></td>
+<td>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated"><img src="../help/figures/lifecycle-deprecated.svg" alt='[Deprecated]' /></a> Use
+<code>style_negative = "parens"</code> instead.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments passed on to <code><a href="../../base/html/format.html">base::format()</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>All <code>label_()</code> functions return a &quot;labelling&quot; function, i.e. a function that
+takes a vector <code>x</code> and returns a character vector of <code>length(x)</code> giving a
+label for each input value.
+</p>
+<p>Labelling functions are designed to be used with the <code>labels</code> argument of
+ggplot2 scales. The examples demonstrate their use with x scales, but
+they work similarly for all scales, including those that generate legends
+rather than axes.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other labels for continuous scales: 
+<code><a href="label_bytes.html">label_bytes</a>()</code>,
+<code><a href="label_number_auto.html">label_number_auto</a>()</code>,
+<code><a href="label_number_si.html">label_number_si</a>()</code>,
+<code><a href="label_ordinal.html">label_ordinal</a>()</code>,
+<code><a href="label_parse.html">label_parse</a>()</code>,
+<code><a href="label_percent.html">label_percent</a>()</code>,
+<code><a href="label_pvalue.html">label_pvalue</a>()</code>,
+<code><a href="label_scientific.html">label_scientific</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+demo_continuous(c(0, 1), labels = label_dollar())
+demo_continuous(c(1, 100), labels = label_dollar())
+
+# Customise currency display with prefix and suffix
+demo_continuous(c(1, 100), labels = label_dollar(prefix = "USD "))
+euro &lt;- label_dollar(
+  prefix = "",
+  suffix = "\u20ac",
+  big.mark = ".",
+  decimal.mark = ","
+)
+demo_continuous(c(1000, 1100), labels = euro)
+
+# Use negative_parens = TRUE for finance style display
+demo_continuous(c(-100, 100), labels = label_dollar(style_negative = "parens"))
+
+# Use scale_cut to use K/M/B where appropriate
+demo_log10(c(1, 1e16),
+  breaks = log_breaks(7, 1e3),
+  labels = label_dollar(scale_cut = cut_short_scale())
+)
+# cut_short_scale() uses B = one thousand million
+# cut_long_scale() uses B = one million million
+demo_log10(c(1, 1e16),
+  breaks = log_breaks(7, 1e3),
+  labels = label_dollar(scale_cut = cut_long_scale())
+)
+
+# You can also define your own breaks
+gbp &lt;- label_dollar(
+  prefix = "\u00a3",
+  scale_cut = c(0, k = 1e3, m = 1e6, bn = 1e9, tn = 1e12)
+)
+demo_log10(c(1, 1e12), breaks = log_breaks(5, 1e3), labels = gbp)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Interpolate a formula</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for f_interp {lazyeval}"><tr><td>f_interp {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Interpolate a formula</h2>
+
+<h3>Description</h3>
+
+<p>Interpolation replaces sub-expressions of the form <code>uq(x)</code> with
+the evaluated value of <code>x</code>, and inlines sub-expressions of
+the form <code>uqs(x)</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+f_interp(f, data = NULL)
+
+uq(x, data = NULL)
+
+uqf(x)
+
+uqs(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>A one-sided formula.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>When called from inside <code>f_eval</code>, this is used to pass on
+the data so that nested formulas are evaluated in the correct environment.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>For <code>uq</code> and <code>uqf</code>, a formula. For <code>uqs</code>, a
+a vector.</p>
+</td></tr>
+</table>
+
+
+<h3>Theory</h3>
+
+<p>Formally, <code>f_interp</code> is a quasiquote function, <code>uq()</code> is the
+unquote operator, and <code>uqs()</code> is the unquote splice operator.
+These terms have a rich history in LISP, and live on in modern languages
+like <a href="Julia">http://docs.julialang.org/en/release-0.1/manual/metaprogramming/</a>
+and <a href="Racket">https://docs.racket-lang.org/reference/quasiquote.html</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f_interp(x ~ 1 + uq(1 + 2 + 3) + 10)
+
+# Use uqs() if you want to add multiple arguments to a function
+# It must evaluate to a list
+args &lt;- list(1:10, na.rm = TRUE)
+f_interp(~ mean( uqs(args) ))
+
+# You can combine the two
+var &lt;- quote(xyz)
+extra_args &lt;- list(trim = 0.9)
+f_interp(~ mean( uq(var) , uqs(extra_args) ))
+
+foo &lt;- function(n) {
+  ~ 1 + uq(n)
+}
+f &lt;- foo(10)
+f
+f_interp(f)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

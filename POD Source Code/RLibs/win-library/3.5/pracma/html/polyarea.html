@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Area of a Polygon</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for polyarea {pracma}"><tr><td>polyarea {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Area of a Polygon</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the area and length of a polygon given by the vertices in the 
+vectors <code>x</code> and <code>y</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  polyarea(x, y)
+
+  poly_length(x, y)
+  poly_center(x, y)
+
+  poly_crossings(L1, L2)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>x-coordinates of the vertices defining the polygon</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>y-coordinates of the vertices</p>
+</td></tr>
+<tr valign="top"><td><code>L1, L2</code></td>
+<td>
+<p>matrices of type <code>2xn</code> with x- and y-coordinates.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>polyarea</code> calculates the area of a polygon defined by the vertices
+with coordinates <code>x</code> and <code>y</code>. Areas to the left of the vertices
+are positive, those to the right are counted negative.
+</p>
+<p>The computation is based on the Gauss polygon area formula. The polygon
+automatically be closed, that is the last point need not be / should not
+be the same as the first.
+</p>
+<p>If some points of self-intersection of the polygon line are not in the
+vertex set, the calculation will be inexact. The sum of all areas will be
+returned, parts that are circulated in the mathematically negative sense
+will be counted as negative in this sum.
+</p>
+<p>If <code>x</code>, <code>y</code> are matrices of the same size, the areas of all
+polygons defined by corresponding columns are computed.
+</p>
+<p><code>poly_center</code> calculates the center (of mass) of the figure defined by
+the polygon. Self-intersections should be avoided in this case.
+The mathematical orientation of the polygon does not have influence on the
+center coordinates.
+</p>
+<p><code>poly_length</code> calculates the length of the polygon
+</p>
+<p><code>poly_crossings</code> calculates the crossing points of two polygons given
+as matrices with x- and y-coordinates in the first and second row. Can be 
+used for finding the crossing points of parametrizised curves.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Area or length of the polygon resp. sum of the enclosed areas; or the
+coordinates of the center of gravity.
+</p>
+<p><code>poly_crossings</code> returns a matrix with column names <code>x</code> and
+<code>y</code> representing the crossing points.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="trapz.html">trapz</a></code>, <code><a href="arclength.html">arclength</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  # Zu Chongzhi's calculation of pi (China, about 480 A.D.),
+  # approximating the circle from inside by a regular 12288-polygon(!):
+  phi &lt;- seq(0, 2*pi, len=3*2^12+1)
+  x &lt;- cos(phi)
+  y &lt;- sin(phi)
+  pi_approx &lt;- polyarea(x, y)
+  print(pi_approx, digits=8)    #=&gt; 3.1415925 or 355/113
+
+  poly_length(x, y)              #=&gt; 6.2831852 where 2*pi is 6.2831853
+
+  x1 &lt;- x + 0.5; y1 &lt;- y + 0.5
+  x2 &lt;- rev(x1); y2 &lt;- rev(y1)
+  poly_center(x1, y1)            #=&gt; 0.5 0.5
+  poly_center(x2, y2)            #=&gt; 0.5 0.5
+
+  # A simple example
+  L1 &lt;- matrix(c(0, 0.5, 1, 1,   2,
+                0, 1,   1, 0.5, 0), nrow = 2, byrow = TRUE)
+  L2 &lt;- matrix(c(0.5, 0.75, 1.25, 1.25,
+                0,   0.75, 0.75, 0   ), nrow = 2, byrow = TRUE)
+  P &lt;- poly_crossings(L1, L2)
+  P
+  ##         x     y
+  ## [1,] 1.00 0.750
+  ## [2,] 1.25 0.375
+
+## Not run: 
+  # Crossings of Logarithmic and Archimedian spirals
+  # Logarithmic spiral
+  a &lt;- 1; b &lt;- 0.1
+  t &lt;- seq(0, 5*pi, length.out = 200)
+  xl &lt;- a*exp(b*t)*cos(t) - 1
+  yl &lt;- a*exp(b*t)*sin(t)
+  plot(xl, yl, type = "l", lwd = 2, col = "blue",
+       xlim = c(-6, 3), ylim = c(-3, 4), xlab = "", ylab = "",
+       main = "Intersecting Logarithmic and Archimedian spirals")
+  grid()
+
+  # Archimedian spiral
+  a &lt;- 0; b &lt;- 0.25
+  r &lt;- a + b*t
+  xa &lt;- r * cos(t)
+  ya &lt;- r*sin(t)
+  lines(xa, ya, type = "l", lwd = 2, col = "red")
+  legend(-6.2, -1.0, c("Logarithmic", "Archimedian"),
+         lwd = 2, col = c("blue", "red"), bg = "whitesmoke")
+
+  L1 &lt;- rbind(xl, yl)
+  L2 &lt;- rbind(xa, ya)
+  P &lt;- poly_crossings(L1, L2)
+  points(P)
+  
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

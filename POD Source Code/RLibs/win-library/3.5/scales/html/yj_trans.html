@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Yeo-Johnson transformation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for yj_trans {scales}"><tr><td>yj_trans {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Yeo-Johnson transformation</h2>
+
+<h3>Description</h3>
+
+<p>The Yeo-Johnson transformation is a flexible transformation that is similiar
+to Box-Cox, <code><a href="boxcox_trans.html">boxcox_trans()</a></code>, but does not require input values to be greater
+than zero.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+yj_trans(p)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Transformation exponent, <i>&lambda;</i>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The transformation takes one of four forms depending on the values of <code>y</code> and <i>&lambda;</i>.
+</p>
+
+<ul>
+<li> <p><i>y &ge; 0</i> and <i>&lambda; != 0</i> :
+<i>y^(&lambda;) = ((y + 1)^&lambda; - 1)/&lambda;</i>
+</p>
+</li>
+<li> <p><i>y &ge; 0</i> and <i>&lambda; = 0</i>:
+<i>y^(&lambda;) = ln(y + 1)</i>
+</p>
+</li>
+<li> <p><i>y &lt; 0</i> and <i>&lambda; != 2</i>:
+<i>y^(&lambda;) = -((-y + 1)^(2 - &lambda;) - 1)/(2 - &lambda;)</i>
+</p>
+</li>
+<li> <p><i>y &lt; 0</i> and <i>&lambda; = 2</i>:
+<i>y^(&lambda;) = -ln(-y + 1)</i>
+</p>
+</li></ul>
+
+
+
+<h3>References</h3>
+
+<p>Yeo, I., &amp; Johnson, R. (2000).
+A New Family of Power Transformations to Improve Normality or Symmetry. Biometrika, 87(4), 954-959.
+<a href="http://www.jstor.org/stable/2673623">http://www.jstor.org/stable/2673623</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+plot(yj_trans(-1), xlim = c(-10, 10))
+plot(yj_trans(0), xlim = c(-10, 10))
+plot(yj_trans(1), xlim = c(-10, 10))
+plot(yj_trans(2), xlim = c(-10, 10))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

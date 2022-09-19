@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: String Comparison</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for strcmp {pracma}"><tr><td>strcmp {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>String Comparison</h2>
+
+<h3>Description</h3>
+
+<p>Compare two strings or character vectors for equality.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+strcmp(s1, s2)
+strcmpi(s1, s2)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>s1, s2</code></td>
+<td>
+<p>character strings or vectors</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For <code>strcmp</code> comparisons are case-sensitive, while for <code>strcmpi</code>
+the are case-insensitive. Leading and trailing blanks do count.
+</p>
+
+
+<h3>Value</h3>
+
+<p>logical, i.e. <code>TRUE</code> if <code>s1</code> and <code>s2</code> have the same length
+as character vectors and all elements are equal as character strings, else
+<code>FALSE</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="strcat.html">strcat</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+strcmp(c("yes", "no"), c("yes", "no"))
+strcmpi(c("yes", "no"), c("Yes", "No"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reshape Matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Reshape {pracma}"><tr><td>Reshape {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reshape Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Reshape matrix or vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Reshape(a, n, m)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>matrix or vector</p>
+</td></tr>
+<tr valign="top"><td><code>n, m</code></td>
+<td>
+<p>size of the result</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>Reshape(a, n, m)</code> returns the n-by-m matrix whose elements are taken
+column-wise from <code>a</code>.
+</p>
+<p>An error results if <code>a</code> does not have <code>n*m</code> elements.
+If <code>m</code> is missing, it will be calculated from <code>n</code> and the
+size of <code>a</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns matrix (or array) of the requested size containing the elements
+of <code>a</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+a &lt;- matrix(1:12, nrow=4, ncol=3)
+Reshape(a, 6, 2)
+Reshape(a, 6)     # the same
+Reshape(a, 3, 4)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

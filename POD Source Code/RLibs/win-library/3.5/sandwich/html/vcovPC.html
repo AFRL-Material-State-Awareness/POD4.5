@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Panel-Corrected Covariance Matrix Estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for vcovPC {sandwich}"><tr><td>vcovPC {sandwich}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Panel-Corrected Covariance Matrix Estimation</h2>
+
+<h3>Description</h3>
+
+<p>Estimation of sandwich covariances a la Beck and Katz (1995) for panel data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+vcovPC(x, cluster = NULL, order.by = NULL,
+  pairwise = FALSE, sandwich = TRUE, fix = FALSE, ...)
+
+meatPC(x, cluster = NULL, order.by = NULL,
+  pairwise = FALSE, kronecker = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted model object.</p>
+</td></tr>
+<tr valign="top"><td><code>cluster</code></td>
+<td>
+<p>a single variable indicating the clustering of observations,
+or a <code>list</code> (or <code>data.frame</code>) of one or two variables, or a
+formula specifying which one ore two variables from the fitted model should
+be used (see examples). In case two variables are specified, the second variable
+is assumed to provide the time ordering (instead of using the argument
+<code>order.by</code>).
+By default (<code>cluster = NULL</code>), either <code>attr(x, "cluster")</code> is used
+(if any) or otherwise every observation is assumed to be its own cluster.</p>
+</td></tr>
+<tr valign="top"><td><code>order.by</code></td>
+<td>
+<p>a variable, list/data.frame, or formula indicating the
+aggregation within time periods. By default <code>attr(x, "order.by")</code> is used
+(if any) or specified through the second variable in <code>cluster</code> (see above).
+If neither is available,  observations within clusters are assumed to be ordered.</p>
+</td></tr>
+<tr valign="top"><td><code>pairwise</code></td>
+<td>
+<p>logical. For unbalanced panels. Indicating whether
+the meat should be estimated pair- or casewise.</p>
+</td></tr>
+<tr valign="top"><td><code>sandwich</code></td>
+<td>
+<p>logical. Should the sandwich estimator be computed?
+If set to <code>FALSE</code> only the meat matrix is returned.</p>
+</td></tr>
+<tr valign="top"><td><code>fix</code></td>
+<td>
+<p>logical. Should the covariance matrix be fixed to be
+positive semi-definite in case it is not?</p>
+</td></tr>  
+<tr valign="top"><td><code>kronecker</code></td>
+<td>
+<p>logical. Calculate the meat via the
+Kronecker-product, shortening the computation time for small
+matrices. For large matrices, set <code>kronecker = FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed to the <code>meatPC</code> or <code>estfun</code> function,
+respectively.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>vcovPC</code> is a function for estimating Beck and Katz (1995)
+panel-corrected covariance matrix.
+</p>
+<p>The function <code>meatPC</code> is the work horse for estimating
+the meat of Beck and Katz (1995) covariance matrix estimators.
+<code>vcovPC</code> is a wrapper calling
+<code><a href="sandwich.html">sandwich</a></code> and <code><a href="bread.html">bread</a></code>
+(Zeileis 2006).
+</p>
+<p>Following Bailey and Katz (2011), there are two alternatives to
+estimate the meat for unbalanced panels.
+For <code>pairwise = FALSE</code>, a balanced subset of the panel is used,
+whereas for <code>pairwise = TRUE</code>, a pairwise balanced sample is
+employed.
+</p>
+<p>The <code>cluster</code>/<code>order.by</code> specification can be made in a number of ways:
+Either both can be a single variable or <code>cluster</code> can be a 
+<code>list</code>/<code>data.frame</code> of two variables.
+If <code><a href="../../stats/html/expand.model.frame.html">expand.model.frame</a></code> works for the model object <code>x</code>,
+the <code>cluster</code> (and potentially additionally <code>order.by</code>) can also be
+a <code>formula</code>. By default (<code>cluster = NULL, order.by = NULL</code>),
+<code>attr(x, "cluster")</code> and <code>attr(x, "order.by")</code> are checked and
+used if available. If not, every observation is assumed to be its own cluster,
+and observations within clusters are assumed to be ordered accordingly.
+If the number of observations in the model <code>x</code> is smaller than in the
+original <code>data</code> due to <code>NA</code> processing, then the same <code>NA</code> processing
+can be applied to <code>cluster</code> if necessary (and <code>x$na.action</code> being
+available).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix containing the covariance matrix estimate.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bailey D, Katz JN (2011).
+&ldquo;Implementing Panel-Corrected Standard Errors in R: The pcse Package&rdquo;,
+<em>Journal of Statistical Software, Code Snippets</em>, <b>42</b>(1), 1&ndash;11.
+doi: <a href="http://doi.org/10.18637/jss.v042.c01">10.18637/jss.v042.c01</a>
+</p>
+<p>Beck N, Katz JN (1995).
+&ldquo;What To Do (and Not To Do) with Time-Series-Cross-Section Data in Comparative Politics&rdquo;,
+<em>American Political Science Review</em>, <b>89</b>(3), 634&ndash;647.
+doi: <a href="http://doi.org/10.2307/2082979">10.2307/2082979</a>
+</p>
+<p>Zeileis A (2004).
+&ldquo;Econometric Computing with HC and HAC Covariance Matrix Estimator&rdquo;,
+<em>Journal of Statistical Software</em>, <b>11</b>(10), 1&ndash;17.
+doi: <a href="http://doi.org/10.18637/jss.v011.i10">10.18637/jss.v011.i10</a>
+</p>
+<p>Zeileis A (2006).
+&ldquo;Object-Oriented Computation of Sandwich Estimators&rdquo;,
+<em>Journal of Statistical Software</em>, <b>16</b>(9), 1&ndash;16.
+doi: <a href="http://doi.org/10.18637/jss.v016.i09">10.18637/jss.v016.i09</a>
+</p>
+<p>Zeileis A, Köll S, Graham N (2020).
+&ldquo;Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R.&rdquo;
+<em>Journal of Statistical Software</em>, <b>95</b>(1), 1&ndash;36.
+doi: <a href="http://doi.org/10.18637/jss.v095.i01">10.18637/jss.v095.i01</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="vcovCL.html">vcovCL</a></code>, <code><a href="vcovPL.html">vcovPL</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Petersen's data
+data("PetersenCL", package = "sandwich")
+m &lt;- lm(y ~ x, data = PetersenCL)
+
+## Beck and Katz (1995) standard errors
+## balanced panel
+sqrt(diag(vcovPC(m, cluster = ~ firm + year)))
+
+## unbalanced panel
+PU &lt;- subset(PetersenCL, !(firm == 1 &amp; year == 10))
+pu_lm &lt;- lm(y ~ x, data = PU)
+sqrt(diag(vcovPC(pu_lm, cluster = ~ firm + year, pairwise = TRUE)))
+sqrt(diag(vcovPC(pu_lm, cluster = ~ firm + year, pairwise = FALSE)))
+
+
+## the following specifications of cluster/order.by are equivalent
+vcovPC(m, cluster = ~ firm + year)
+vcovPC(m, cluster = PetersenCL[, c("firm", "year")])
+vcovPC(m, cluster = ~ firm, order.by = ~ year)
+vcovPC(m, cluster = PetersenCL$firm, order.by = PetersenCL$year)
+
+## these are also the same when observations within each
+## cluster are already ordered
+vcovPC(m, cluster = ~ firm)
+vcovPC(m, cluster = PetersenCL$firm)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sandwich</em> version 3.0-2 <a href="00Index.html">Index</a>]</div>
+</body></html>

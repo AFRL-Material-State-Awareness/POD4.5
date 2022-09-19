@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Matrix Diagonal</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Diag {pracma}"><tr><td>Diag {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Matrix Diagonal</h2>
+
+<h3>Description</h3>
+
+<p>Generate diagonal matrices or return diagonal of a matrix
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Diag(x, k = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector or matrix</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>integer indicating a secondary diagonal</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If <code>x</code> is a vector, <code>Diag(x, k)</code> generates a matrix with <code>x</code>
+as the (k-th secondary) diagonal.
+</p>
+<p>If <code>x</code> is a matrix, <code>Diag(x, k)</code> returns the (<code>k</code>-th secondary) diagonal of <code>x</code>.
+</p>
+<p>The <code>k</code>-th secondary diagonal is above the main diagonal for <code>k &gt; 0</code>
+and below the main diagonal for <code>k &lt; 0</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>matrix or vector
+</p>
+
+
+<h3>Note</h3>
+
+<p>In Matlab/Octave this function is called <code>diag()</code> and has a different
+signature than the corresponding function in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/diag.html">diag</a></code>, <code><a href="trace.html">Trace</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+Diag(matrix(1:12,3,4),  1)
+Diag(matrix(1:12,3,4), -1)
+
+Diag(c(1,5,9), 1)
+Diag(c(1,5,9), -1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

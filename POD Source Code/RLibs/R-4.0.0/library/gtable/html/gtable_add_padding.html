@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add padding around edges of table.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable_add_padding {gtable}"><tr><td>gtable_add_padding {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add padding around edges of table.</h2>
+
+<h3>Description</h3>
+
+<p>This is a convenience function for adding an extra row and an extra column at
+each edge of the table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable_add_padding(x, padding)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a <code><a href="gtable.html">gtable()</a></code> object</p>
+</td></tr>
+<tr valign="top"><td><code>padding</code></td>
+<td>
+<p>vector of length 4: top, right, bottom, left.  Normal
+recycling rules apply.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable object
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other gtable manipulation: <code><a href="gtable_add_cols.html">gtable_add_cols</a></code>,
+<code><a href="gtable_add_grob.html">gtable_add_grob</a></code>,
+<code><a href="gtable_add_rows.html">gtable_add_rows</a></code>,
+<code><a href="gtable_add_space.html">gtable_add_space</a></code>,
+<code><a href="gtable_filter.html">gtable_filter</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+gt &lt;- gtable(unit(1, "null"), unit(1, "null"))
+gt &lt;- gtable_add_grob(gt, rectGrob(gp = gpar(fill = "black")), 1, 1)
+
+plot(gt)
+plot(cbind(gt, gt))
+plot(rbind(gt, gt))
+
+pad &lt;- gtable_add_padding(gt, unit(1, "cm"))
+plot(pad)
+plot(cbind(pad, pad))
+plot(rbind(pad, pad))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

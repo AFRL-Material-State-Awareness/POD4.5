@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculate Hessian Matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hessian {numDeriv}"><tr><td>hessian {numDeriv}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculate Hessian Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Calculate a numerical approximation to the Hessian matrix of a 
+function at a parameter value.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+    hessian(func, x, method="Richardson", method.args=list(), ...)
+
+    ## Default S3 method:
+hessian(func, x, method="Richardson",
+        method.args=list(), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>func</code></td>
+<td>
+<p>a function for which the first (vector) argument 
+is used as a parameter vector.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>the parameter vector first argument to func.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>one of <code>"Richardson"</code> or <code>"complex"</code> indicating 
+the method to use for the approximation.</p>
+</td></tr>
+<tr valign="top"><td><code>method.args</code></td>
+<td>
+<p>arguments passed to method.  See <code><a href="grad.html">grad</a></code>. 
+(Arguments not specified remain with their default values.)</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>an additional arguments passed to <code>func</code>.
+WARNING: None of these should have names matching other arguments of this function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function <code>hessian</code> calculates an numerical approximation to 
+the n x n second derivative of a scalar real valued function with n-vector
+argument. 
+</p>
+<p>The argument <code>method</code> can be <code>"Richardson"</code> or <code>"complex"</code>.
+Method <code>"simple"</code> is not supported. 
+</p>
+<p>For method <code>"complex"</code> the Hessian matrix is calculated as the Jacobian
+of the gradient. The function <code>grad</code> with method &quot;complex&quot; is used, 
+and <code>method.args</code> is ignored for this (an <code>eps</code> of 
+<code>.Machine$double.eps</code> is used). 
+However,  <code>jacobian</code> is used in the second step, with method 
+<code>"Richardson"</code> and argument <code>method.args</code> is used for this. 
+The default is
+<code>method.args=list(eps=1e-4, d=0.1, zero.tol=sqrt(.Machine$double.eps/7e-7), 
+   r=4, v=2, show.details=FALSE)</code>. (These are the defaults for <code>hessian</code> 
+with method <code>"Richardson"</code>, which are slightly different from the defaults 
+for <code>jacobian</code> with method <code>"Richardson"</code>.)
+See addition comments in <code><a href="grad.html">grad</a></code> before choosing 
+method <code>"complex"</code>.
+</p>
+<p>Methods <code>"Richardson"</code> uses <code><a href="genD.html">genD</a></code> and extracts the 
+second derivative. For this method 
+<code>method.args=list(eps=1e-4, d=0.1, zero.tol=sqrt(.Machine$double.eps/7e-7), 
+   r=4, v=2, show.details=FALSE)</code> is set as the default. <code>hessian</code> does
+one evaluation of <code>func</code> in order to do some error checking before
+calling <code>genD</code>, so the number of function evaluations will be one more
+than indicated for <code><a href="genD.html">genD</a></code>.
+</p>
+<p>The argument <code>side</code> is not supported for second derivatives and since
+... are passed to <code>func</code> there may be no error message if it is
+specified.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An n by n matrix of the Hessian of the function calculated at the 
+point <code>x</code>.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="jacobian.html">jacobian</a></code>,
+<code><a href="grad.html">grad</a></code>,
+<code><a href="genD.html">genD</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  sc2.f &lt;- function(x){
+    n &lt;- length(x)
+    sum((1:n) * (exp(x) - x)) / n
+    }
+
+  sc2.g &lt;- function(x){
+    n &lt;- length(x)
+    (1:n) * (exp(x) - 1) / n
+    }
+
+  x0 &lt;- rnorm(5)
+  hess &lt;- hessian(func=sc2.f, x=x0)
+  hessc &lt;- hessian(func=sc2.f, x=x0, "complex")
+  all.equal(hess, hessc, tolerance = .Machine$double.eps)
+  
+#  Hessian = Jacobian of the gradient
+  jac  &lt;- jacobian(func=sc2.g, x=x0)
+  jacc &lt;- jacobian(func=sc2.g, x=x0, "complex")
+  all.equal(hess, jac, tolerance = .Machine$double.eps)
+  all.equal(hessc, jacc, tolerance = .Machine$double.eps)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>numDeriv</em> version 2016.8-1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

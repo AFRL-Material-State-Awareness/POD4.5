@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add new rows in specified position.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable_add_rows {gtable}"><tr><td>gtable_add_rows {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add new rows in specified position.</h2>
+
+<h3>Description</h3>
+
+<p>Insert new rows in a gtable and adjust the grob placement accordingly. If
+rows are added in the middle of a grob spanning multiple rows, the grob will
+continue to span them all. If a row is added above or below a grob, the grob
+will not span the new row(s).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable_add_rows(x, heights, pos = -1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a <code><a href="gtable.html">gtable()</a></code> object</p>
+</td></tr>
+<tr valign="top"><td><code>heights</code></td>
+<td>
+<p>a unit vector giving the heights of the new rows</p>
+</td></tr>
+<tr valign="top"><td><code>pos</code></td>
+<td>
+<p>new row will be added below this position. Defaults to
+adding row on bottom. <code>0</code> adds on the top.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable with the new rows added.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other gtable manipulation: <code><a href="gtable_add_cols.html">gtable_add_cols</a></code>,
+<code><a href="gtable_add_grob.html">gtable_add_grob</a></code>,
+<code><a href="gtable_add_padding.html">gtable_add_padding</a></code>,
+<code><a href="gtable_add_space.html">gtable_add_space</a></code>,
+<code><a href="gtable_filter.html">gtable_filter</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+rect &lt;- rectGrob(gp = gpar(fill = "#00000080"))
+tab &lt;- gtable(unit(rep(1, 3), "null"), unit(rep(1, 3), "null"))
+tab &lt;- gtable_add_grob(tab, rect, t = 1, l = 1, r = 3)
+tab &lt;- gtable_add_grob(tab, rect, t = 1, b = 3, l = 1)
+tab &lt;- gtable_add_grob(tab, rect, t = 1, b = 3, l = 3)
+dim(tab)
+plot(tab)
+
+# Grobs will continue to span over new rows if added in the middle
+tab2 &lt;- gtable_add_rows(tab, unit(1, "null"), 1)
+dim(tab2)
+plot(tab2)
+
+# But not when added to top (0) or bottom (-1, the default)
+tab3 &lt;- gtable_add_rows(tab, unit(1, "null"))
+tab3 &lt;- gtable_add_rows(tab3, unit(1, "null"), 0)
+dim(tab3)
+plot(tab3)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

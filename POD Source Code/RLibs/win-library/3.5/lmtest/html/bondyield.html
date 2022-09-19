@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Bond Yield</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bondyield {lmtest}"><tr><td>bondyield {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Bond Yield  </h2>
+
+<h3>Description</h3>
+
+<p>Bond Yield Data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>data(bondyield)</pre>
+
+
+<h3>Format</h3>
+
+<p>A multivariate quarterly time series from 1961(1) to 1975(4) with variables
+</p>
+
+<dl>
+<dt>RAARUS</dt><dd><p>difference of interest rate on government and corporate
+bonds,</p>
+</dd>
+<dt>MOOD</dt><dd><p>measure of consumer sentiment,</p>
+</dd>
+<dt>EPI</dt><dd><p>index of employment pressure,</p>
+</dd>
+<dt>EXP</dt><dd><p>interest rate expectations,</p>
+</dd>
+<dt>Y</dt><dd><p>artificial time series based on RAARUS,</p>
+</dd>
+<dt>K</dt><dd><p>artificial time series based on RAARUS.</p>
+</dd>
+</dl>
+
+
+
+<h3>Source</h3>
+
+<p>The data was originally studied by Cook and Hendershott (1978) and Yawitz and
+Marshall (1981), the data set is given in Krämer and Sonnberger (1986). Below
+we replicate a few examples given in their book. 
+Some of these results differ more or
+less seriously and are sometimes parameterized differently.
+</p>
+
+
+<h3>References</h3>
+
+<p>T.Q. Cook &amp; P.H. Hendershott (1978),
+The Impact of Taxes, Risk and Relative Security Supplies of Interest Rate
+Differentials. <em>The Journal of Finance</em> <b>33</b>, 1173&ndash;1186
+</p>
+<p>J.B. Yawitz &amp; W. J. Marshall (1981),
+Measuring the Effect of Callability on Bond Yields.
+<em>Journal of Money, Credit and Banking</em> <b>13</b>, 60&ndash;71
+</p>
+<p>W. Krämer &amp; H. Sonnberger (1986),
+<em>The Linear Regression Model under Test</em>. Heidelberg: Physica
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(bondyield)
+
+## page 134, fit Cook-Hendershott OLS model and Yawitz-Marshall OLS model
+## third and last line in Table 6.5
+
+modelCH &lt;- RAARUS ~ MOOD + EPI + EXP + RUS
+lm(modelCH, data=bondyield)
+dwtest(modelCH, data=bondyield)
+## wrong sign of RUS coefficient
+
+modelYM &lt;- RAARUS ~ MOOD + Y + K
+lm(modelYM, data=bondyield)
+dwtest(modelYM, data=bondyield)
+## coefficient of Y and K differ by factor 100
+
+
+## page 135, fit test statistics in Table 6.6 b)
+################################################
+
+## Chow 1971(1)
+if(require(strucchange, quietly = TRUE)) {
+sctest(modelCH, point=c(1971,1), data=bondyield, type="Chow") }
+
+## Breusch-Pagan
+bptest(modelCH, data=bondyield, studentize=FALSE)
+bptest(modelCH, data=bondyield)
+
+## Fluctuation test
+if(require(strucchange, quietly = TRUE)) {
+sctest(modelCH, type="fluctuation", data=bondyield, rescale=FALSE)}
+
+## RESET
+reset(modelCH, data=bondyield)
+reset(modelCH, power=2, type="regressor", data=bondyield)
+reset(modelCH, type="princomp", data=bondyield)
+
+## Harvey-Collier
+harvtest(modelCH, order.by= ~ MOOD, data=bondyield)
+harvtest(modelCH, order.by= ~ EPI, data=bondyield)
+harvtest(modelCH, order.by= ~ EXP, data=bondyield)
+harvtest(modelCH, order.by= ~ RUS, data=bondyield)
+
+## Rainbow
+raintest(modelCH, order.by = "mahalanobis", data=bondyield)
+
+
+## page 136, fit test statistics in Table 6.6 d)
+################################################
+
+## Chow 1966(1)
+if(require(strucchange, quietly = TRUE)) {
+sctest(modelYM, point=c(1965,4), data=bondyield, type="Chow") }
+
+## Fluctuation test
+if(require(strucchange, quietly = TRUE)) {
+sctest(modelYM, type="fluctuation", data=bondyield, rescale=FALSE) }
+
+## RESET
+reset(modelYM, data=bondyield)
+reset(modelYM, power=2, type="regressor", data=bondyield)
+reset(modelYM, type="princomp", data=bondyield)
+
+## Harvey-Collier
+harvtest(modelYM, order.by= ~ MOOD, data=bondyield)
+harvtest(modelYM, order.by= ~ Y, data=bondyield)
+harvtest(modelYM, order.by= ~ K, data=bondyield)
+
+## Rainbow
+raintest(modelYM, order.by = "mahalanobis", data=bondyield)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

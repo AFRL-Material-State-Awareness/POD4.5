@@ -1,0 +1,17 @@
+aphidlight              Aphid attraction at different light intensities
+confint.mcprofile       Simultaneous Confidence Intervals for Multiple
+                        Contrast Profiles
+cta                     Cell transformation assay dataset
+exp.mcpCI               exp transformation of Confidence Intervals
+expit.mcpCI             Inverse logit transformation of Confidence
+                        Intervals
+hoa                     Higher order asymptotics using the modified
+                        likelihood root
+mcprofile               Construction of Multiple Contrast Profiles
+mcprofileControl        mcprofile Control Arguments
+orglm.fit               Fitting Order-Restricted Generalized Linear
+                        Models
+summary.mcprofile       Multiple Testing of General Hypotheses
+toxinLD                 Identifying the lethal dose of a crop
+                        protection product.
+wald                    Calculate Wald-Profiles

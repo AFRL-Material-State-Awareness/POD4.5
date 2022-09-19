@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Register and Unregister a Chunk Callback</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for chunk-callbacks {rstudioapi}"><tr><td>chunk-callbacks {rstudioapi}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Register and Unregister a Chunk Callback</h2>
+
+<h3>Description</h3>
+
+<p>Register a callback function to be executed after a chunk within an R
+Markdown document is run.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+registerChunkCallback(callback)
+
+unregisterChunkCallback(id = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>callback</code></td>
+<td>
+<p>A callback function. See <strong>Chunk Callbacks</strong> for more details.</p>
+</td></tr>
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>A unique identifier.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>For <code>registerChunkCallback()</code>, a unique identifier. That identifier
+can be passed to <code>unreigsterChunkCallback()</code> to de-register a
+previously-registered callback.
+</p>
+
+
+<h3>Chunk Callbacks</h3>
+
+<p>The <code>callback</code> argument should be a function accepting two parameters:
+</p>
+
+<ul>
+<li> <p><code>chunkName</code>: The chunk label,
+</p>
+</li>
+<li> <p><code>chunkCode</code>: The code within the chunk.
+</p>
+</li></ul>
+
+<p>The function should return an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> list of HTML outputs, to be displayed after
+that chunk has been executed.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rstudioapi</em> version 0.13 <a href="00Index.html">Index</a>]</div>
+</body></html>

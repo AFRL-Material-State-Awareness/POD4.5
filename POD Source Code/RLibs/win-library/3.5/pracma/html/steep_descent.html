@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Steepest Descent Minimization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for steep_descent {pracma}"><tr><td>steep_descent {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Steepest Descent Minimization
+</h2>
+
+<h3>Description</h3>
+
+<p>Function minimization by steepest descent.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+steep_descent(x0, f, g = NULL, info = FALSE,
+              maxiter = 100, tol = .Machine$double.eps^(1/2))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>start value.</p>
+</td></tr>
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>g</code></td>
+<td>
+<p>gradient function of <code>f</code>;
+if <code>NULL</code>, a numerical gradient will be calculated.</p>
+</td></tr>
+<tr valign="top"><td><code>info</code></td>
+<td>
+<p>logical; shall information be printed on every iteration?</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>max. number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance, to be used as stopping rule.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Steepest descent is a line search method that moves along the downhill
+direction.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>xmin</code></td>
+<td>
+<p>minimum solution found.</p>
+</td></tr>
+<tr valign="top"><td><code>fmin</code></td>
+<td>
+<p>value of <code>f</code> at minimum.</p>
+</td></tr>
+<tr valign="top"><td><code>niter</code></td>
+<td>
+<p>number of iterations performed.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>Used some Matlab code as described in the book &ldquo;Applied Numerical Analysis
+Using Matlab&rdquo; by L. V.Fausett.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nocedal, J., and S. J. Wright (2006). Numerical Optimization.
+Second Edition, Springer-Verlag, New York, pp. 22 ff.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fletcherpowell.html">fletcher_powell</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Rosenbrock function: The flat valley of the Rosenbruck function makes
+##  it infeasible for a steepest descent approach.
+# rosenbrock &lt;- function(x) {
+#     n &lt;- length(x)
+#     x1 &lt;- x[2:n]
+#     x2 &lt;- x[1:(n-1)]
+#     sum(100*(x1-x2^2)^2 + (1-x2)^2)
+# }
+# steep_descent(c(1, 1), rosenbrock)
+# Warning message:
+# In steep_descent(c(0, 0), rosenbrock) :
+#   Maximum number of iterations reached -- not converged.
+
+## Sphere function
+sph &lt;- function(x) sum(x^2)
+steep_descent(rep(1, 10), sph)
+# $xmin   0 0 0 0 0 0 0 0 0 0
+# $fmin   0
+# $niter  2
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: panel and panel utility functions for spplot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for panel.spplot {sp}"><tr><td>panel.spplot {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>panel and panel utility functions for spplot</h2>
+
+<h3>Description</h3>
+
+<p>panel functions for spplot functions, and functions that can be
+useful within these panel functions </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+spplot.key(sp.layout, rows = 1, cols = 1)
+SpatialPolygonsRescale(obj, offset, scale = 1, fill = "black", col = "black",
+	plot.grid = TRUE, ...)
+sp.lines(obj, col = 1, ...)
+sp.points(obj, pch = 3, ...)
+sp.polygons(obj, col = 1, fill = "transparent", ...)
+sp.grid(obj, col = 1, alpha = 1,..., at = pretty(obj[[1]]), col.regions = col)
+sp.text(loc, txt, ...)
+sp.panel.layout(lst, p.number, ...)
+bbexpand(x, fraction)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>sp.layout</code></td>
+<td>
+<p> list; see <a href="spplot.html">spplot</a> for definition </p>
+</td></tr>
+<tr valign="top"><td><code>rows</code></td>
+<td>
+<p> integer; panel row(s) for which the layout should be drawn </p>
+</td></tr>
+<tr valign="top"><td><code>cols</code></td>
+<td>
+<p> integer; panel column(s) for which the layout should be drawn </p>
+</td></tr>
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> object of class <a href="SpatialPolygons-class.html">SpatialPolygons-class</a> for
+<code>SpatialPolygonsRescale</code>; of class <a href="SpatialLines-class.html">SpatialLines-class</a>,
+<a href="Lines-class.html">Lines-class</a> or <a href="Line-class.html">Line-class</a> for <code>sp.lines</code> of a
+class that has a <a href="coordinates-methods.html">coordinates-methods</a> for <code>sp.points</code>; of
+class <a href="SpatialPolygons-class.html">SpatialPolygons-class</a> for <code>sp.polygons</code>.  When obj is
+character, the actual object is retrieved by <code>get(obj)</code> before its
+class is evaluated.  </p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p> offset for shifting a Polygons object </p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p> scale for rescaling </p>
+</td></tr>
+<tr valign="top"><td><code>fill</code></td>
+<td>
+<p> fill color </p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p> line color </p>
+</td></tr>
+<tr valign="top"><td><code>plot.grid</code></td>
+<td>
+<p>logical; plot through grid functions (TRUE), or through
+traditional graphics functions (FALSE)</p>
+</td></tr>
+<tr valign="top"><td><code>pch</code></td>
+<td>
+<p> plotting character </p>
+</td></tr>
+<tr valign="top"><td><code>at</code></td>
+<td>
+<p> numeric; values at which colour breaks should occur </p>
+</td></tr>
+<tr valign="top"><td><code>col.regions</code></td>
+<td>
+<p> colours to fill the grid cells, defaults to col </p>
+</td></tr>
+<tr valign="top"><td><code>loc</code></td>
+<td>
+<p> numeric vector of two elements </p>
+</td></tr>
+<tr valign="top"><td><code>txt</code></td>
+<td>
+<p> text to be plotted </p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p> alpha (transparency) level </p>
+</td></tr>
+<tr valign="top"><td><code>lst</code></td>
+<td>
+<p> sp.layout argument, see <a href="spplot.html">spplot</a></p>
+</td></tr>
+<tr valign="top"><td><code>p.number</code></td>
+<td>
+<p> panel number; in a panel, panel.number() should be
+passed to this argument </p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>length two numeric vector, containing a range</p>
+</td></tr>
+<tr valign="top"><td><code>fraction</code></td>
+<td>
+<p>fraction to expand the range by</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> arguments passed to the underlying panel, lattice or 
+grid functions </p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>The panel functions of <a href="spplot.html">spplot</a>, <code>panel.gridplot</code> for grids,
+<code>panel.pointsplot</code> for points, or <code>panel.polygonsplot</code> for lines
+or polygons can be called with arguments <code>(x,y,...)</code>.
+Customizing spplot plots can be done by extending the panel function,
+or by supplying an sp.layout argument; see the documentation for
+<a href="spplot.html">spplot</a>. Inside these panel functions, <code>sp.panel.layout</code>
+is called to deal with plotting the items in a <code>sp.layout</code> object.
+</p>
+<p><code>SpatialPolygonsRescale</code> scales and shifts an object of class
+<a href="SpatialPolygons-class.html">SpatialPolygons-class</a>; this is useful e.g. for scale bars, or other
+layout items.
+</p>
+<p><code>sp.lines</code>, <code>sp.points</code>, <code>sp.polygons</code> and <code>sp.text</code>
+plot lines, points, polygons or text in a panel.
+</p>
+<p><code>spplot.key</code> draws the <code>sp.layout</code> object at given rows/cols.
+</p>
+<p><code>sp.pagefn</code> can be passed as a <code>page</code> argument, and will
+call function <code>spplot.key</code> for the last panel drawn on a page.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a> </p>
+
+
+<h3>References</h3>
+
+<p><a href="https://edzer.github.io/sp/">https://edzer.github.io/sp/</a> has a graph gallery with
+examples with R code.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="spplot.html">spplot</a>, <a href="spplot.html">spplot-methods</a></p>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

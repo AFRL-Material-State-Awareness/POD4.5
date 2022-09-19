@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Combine multi-dimensional arrays</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for abind {abind}"><tr><td>abind {abind}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Combine multi-dimensional arrays</h2>
+
+<h3>Description</h3>
+
+<p>Combine multi-dimensional arrays.  This is a
+generalization of cbind and rbind.  Takes a sequence of
+vectors, matrices, or arrays and produces a single array of
+the same or higher dimension.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+abind(..., along=N, rev.along=NULL, new.names=NULL, force.array=TRUE,
+      make.names=use.anon.names, use.anon.names=FALSE,
+      use.first.dimnames=FALSE, hier.names=FALSE, use.dnns=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> Any number of vectors, matrices, arrays, or data frames.
+The dimensions of all the arrays must match, except on one dimension
+(specified by <code>along=</code>).  If these arguments are named, the name
+will be used for the name of the dimension along which the arrays are
+joined.  Vectors are treated as having a dim attribute of length one.
+</p>
+<p>Alternatively, there can be one (and only one) list argument supplied,
+whose components are the objects to be bound together.  Names of the
+list components are treated in the same way as argument names.
+</p>
+</td></tr>
+<tr valign="top"><td><code>along</code></td>
+<td>
+<p> (optional) The dimension along which to bind the arrays.
+The default is the last dimension, i.e., the maximum length of the dim
+attribute of the supplied arrays.  <code>along=</code> can take any
+non-negative value up to the minimum length of the dim attribute of
+supplied arrays plus one.  When <code>along=</code> has a fractional value, a
+value less than 1, or a value greater than N (N is the maximum of the
+lengths of the dim attribute of the objects to be bound together), a new
+dimension is created in the result.  In these cases, the dimensions of
+all arguments must be identical.  </p>
+</td></tr>
+<tr valign="top"><td><code>rev.along</code></td>
+<td>
+<p> (optional)
+Alternate way to specify the dimension along which to bind the arrays:
+<code>along = N + 1 - rev.along</code>.  This is provided mainly to allow easy
+specification of <code>along = N + 1</code> (by supplying
+<code>rev.along=0</code>).  If both <code>along</code> and <code>rev.along</code> are
+supplied, the supplied value of <code>along</code> is ignored.
+</p>
+</td></tr>
+<tr valign="top"><td><code>new.names</code></td>
+<td>
+<p> (optional)
+If new.names is a list, it is the first choice for the
+dimnames attribute of the result.  It should have the same
+structure as a dimnames attribute.  If the names for a
+particular dimension are <code>NULL</code>, names for this dimension are
+constructed in other ways.
+</p>
+<p>If <code>new.names</code> is a character vector, it is used for dimension
+names in the same way as argument names are used.  Zero
+length (&quot;&quot;) names are ignored.
+</p>
+</td></tr>
+<tr valign="top"><td><code>force.array</code></td>
+<td>
+<p> (optional) If <code>FALSE</code>, rbind or cbind are
+called when possible, i.e., when the arguments are all vectors, and
+along is not 1, or when the arguments are vectors or matrices or data
+frames and along is 1 or 2.  If rbind or cbind are used, they will
+preserve the data.frame classes (or any other class that r/cbind
+preserve).  Otherwise, abind will convert objects to class array.  Thus,
+to guarantee that an array object is returned, supply the argument
+<code>force.array=TRUE</code>.  Note that the use of rbind or cbind introduces
+some subtle changes in the way default dimension names are constructed:
+see the examples below.  </p>
+</td></tr>
+<tr valign="top"><td><code>make.names</code></td>
+<td>
+<p> (optional)
+If <code>TRUE</code>, the last resort for dimnames for the along
+dimension will be the deparsed versions of anonymous
+arguments.  This can result in cumbersome names when
+arguments are expressions.
+</p>
+<p>&lt;p&gt;The default is <code>FALSE</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>use.anon.names</code></td>
+<td>
+<p> (optional)
+<code>use.anon.names</code>
+is a deprecated synonym for <code>make.names</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>use.first.dimnames</code></td>
+<td>
+<p> (optional)
+When dimension names are present on more than one
+argument, should dimension names for the result be take from
+the first available (the default is to take them from the
+last available, which is the same behavior as
+<code>rbind</code> and <code>cbind</code>.)
+</p>
+</td></tr>
+<tr valign="top"><td><code>hier.names</code></td>
+<td>
+<p> (optional)
+If <code>TRUE</code>, dimension names on the concatenated dimension will be
+composed of the argument name and the dimension names of the objects
+being bound.  If a single list argument is supplied, then the names of
+the components serve as the argument names.  <code>hier.names</code> can
+also have values <code>"before"</code> or <code>"after"</code>; these determine
+the order in which the argument name and the dimension name are put
+together (<code>TRUE</code> has the same effect as <code>"before"</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>use.dnns</code></td>
+<td>
+<p> (default <code>FALSE</code>) Use names on dimensions, e.g.,
+so that <code>names(dimnames(x))</code> is non-empty.  When there are
+multiple possible sources for names of dimnames, the value of
+<code>use.first.dimnames</code> determines the result.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The dimensions of the supplied vectors or arrays do not need
+to be identical, e.g., arguments can be a mixture of vectors
+and matrices.  <code>abind</code> coerces arguments by the addition
+of one dimension in order to make them consistent with other
+arguments and <code>along=</code>.  The extra dimension is
+added in the place specified by <code>along=</code>.
+</p>
+<p>The default action of abind is to concatenate on the last
+dimension, rather than increase the number of dimensions.
+For example, the result of calling abind with vectors is a
+longer vector (see first example below).  This differs from
+the action of <code>rbind</code> and cbind which is to return a matrix when
+called with vectors.  abind can be made to behave like cbind
+on vectors by specifying <code>along=2</code>, and like rbind by
+specifying <code>along=0</code>.
+</p>
+<p>The dimnames of the returned object are pieced together
+from the dimnames of the arguments, and the names of the
+arguments.  Names for each dimension are searched for in the
+following order: new.names, argument name, dimnames (or
+names) attribute of last argument, dimnames (or names)
+attribute of second last argument, etc.  (Supplying the
+argument <code>use.first.dimnames=TRUE</code> changes this to
+cause <code>abind</code> to use dimnames or names from the
+first argument first.  The default behavior is the same as
+for <code>rbind</code> and <code>cbind</code>: use dimnames
+from later arguments.)  If some names are supplied for the
+along dimension (either as argument names or dimnames in
+arguments), names are constructed for anonymous arguments
+unless <code>use.anon.names=FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An array with a dim attribute calculated as follows.
+</p>
+<p>Let <code>rMin=min(sapply(list(...), function(x) length(dim(x))))</code> and
+<code>rMax=max(sapply(list(...), function(x) length(dim(x))))</code> (where
+the length of the dimensions of a vector are taken to be 1).  Then <code>rMax</code> should be
+equal to or one greater than <code>rMin</code>.
+</p>
+<p>If <code>along</code> refers to an existing dimension, then the length of
+the dim attribute of the result is <code>rMax</code>.  If <code>along</code> does
+not refer to an existing dimension, then <code>rMax</code> should equal
+<code>rMin</code> and the length of the dim attribute of the result will be <code>rMax+1</code>.
+</p>
+<p><code>rbind</code> or <code>cbind</code> are
+called to compute the result if (a)
+<code>force.array=FALSE</code>; and (b) the result will be a
+two-dimensional object.
+</p>
+
+
+<h3>Note</h3>
+
+<p>It would be nice to make <code>abind()</code> an S3 generic, but S3 generics
+cannot dispatch off anonymous arguments.
+</p>
+<p>The ability of <code>abind()</code> to accept a single list argument removes
+much of the need for constructs like <code>do.call("abind",
+  list.of.arrays)</code>.  Instead, just do <code>abind(list.of.arrays)</code>.  The
+direct construct is preferred because <code>do.call()</code> construct can
+sometimes consume more memory during evaluation.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tony Plate <a href="mailto:tplate@acm.org">tplate@acm.org</a> and Richard Heiberger </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Five different ways of binding together two matrices
+x &lt;- matrix(1:12,3,4)
+y &lt;- x+100
+dim(abind(x,y,along=0))     # binds on new dimension before first
+dim(abind(x,y,along=1))     # binds on first dimension
+dim(abind(x,y,along=1.5))
+dim(abind(x,y,along=2))
+dim(abind(x,y,along=3))
+dim(abind(x,y,rev.along=1)) # binds on last dimension
+dim(abind(x,y,rev.along=0)) # binds on new dimension after last
+
+# Unlike cbind or rbind in that the default is to bind
+# along the last dimension of the inputs, which for vectors
+# means the result is a vector (because a vector is
+# treated as an array with length(dim(x))==1).
+abind(x=1:4,y=5:8)
+# Like cbind
+abind(x=1:4,y=5:8,along=2)
+abind(x=1:4,matrix(5:20,nrow=4),along=2)
+abind(1:4,matrix(5:20,nrow=4),along=2)
+# Like rbind
+abind(x=1:4,matrix(5:20,nrow=4),along=1)
+abind(1:4,matrix(5:20,nrow=4),along=1)
+# Create a 3-d array out of two matrices
+abind(x=matrix(1:16,nrow=4),y=matrix(17:32,nrow=4),along=3)
+# Use of hier.names
+abind(x=cbind(a=1:3,b=4:6), y=cbind(a=7:9,b=10:12), hier.names=TRUE)
+# Use a list argument
+abind(list(x=x, y=x), along=3)
+# Use lapply(..., get) to get the objects
+an &lt;- c('x','y')
+names(an) &lt;- an
+abind(lapply(an, get), along=3)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>abind</em> version 1.4-5 <a href="00Index.html">Index</a>]</div>
+</body></html>

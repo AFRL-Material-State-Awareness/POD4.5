@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: &quot;Sub[stitute] Bars&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for subbars {lme4}"><tr><td>subbars {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>&quot;Sub[stitute] Bars&quot;</h2>
+
+<h3>Description</h3>
+
+<p>Substitute the '+' function for the '|' function in a mixed-model
+formula, recursively (hence the argument name <code>term</code>).  This
+provides a formula suitable for the current <code><a href="../../stats/html/model.frame.html">model.frame</a></code>
+function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  subbars(term)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>term</code></td>
+<td>
+<p>a mixed-model formula</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>the formula with all | operators replaced by +
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/formula.html">formula</a></code>, <code><a href="../../stats/html/model.frame.html">model.frame</a></code>,
+<code><a href="../../stats/html/model.matrix.html">model.matrix</a></code>.
+</p>
+<p>Other utilities: <code><a href="findbars.html">findbars</a></code>, <code><a href="nobars.html">nobars</a></code>,
+<code><a href="mkRespMod.html">mkRespMod</a></code>, <code><a href="mkReTrms.html">mkReTrms</a></code>,
+<code><a href="nlformula.html">nlformula</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+subbars(Reaction ~ Days + (Days|Subject)) ## =&gt; Reaction ~ Days + (Days + Subject)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

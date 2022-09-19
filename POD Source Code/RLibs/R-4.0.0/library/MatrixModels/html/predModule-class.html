@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;predModule&quot; and SubClasses</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for predModule-class {MatrixModels}"><tr><td>predModule-class {MatrixModels}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;predModule&quot; and SubClasses</h2>
+
+<h3>Description</h3>
+
+<p>The class <code>"predModule"</code> and notably its subclasses
+<code>"dPredModule"</code> and <code>"sPredModule"</code> encapsulate information
+about linear predictors in statistical models.  They incorporate a
+<code><a href="modelMatrix-class.html">modelMatrix</a></code>, the corresponding coefficients and a
+representation of a triangular factor from the, possibly weighted or
+otherwise modified, model matrix.
+</p>
+
+
+<h3>Objects from the Classes</h3>
+
+<p>Objects are typically created by coercion from objects of class
+<code><a href="modelMatrix-class.html">ddenseModelMatrix</a></code> or
+<code><a href="modelMatrix-class.html">dsparseModelMatrix</a></code>.
+</p>
+
+
+<h3>Slots</h3>
+
+<p>The virtual class <code>"predModule"</code> and its two subclasses all have slots
+</p>
+
+<dl>
+<dt><code>X</code>:</dt><dd><p>a <code><a href="modelMatrix-class.html">modelMatrix</a></code>.</p>
+</dd>
+<dt><code>coef</code>:</dt><dd><p><code>"numeric"</code> coefficient vector of length
+<code>ncol(.)</code><i>:= p</i>.</p>
+</dd>
+<dt><code>Vtr</code>:</dt><dd><p><code>"numeric"</code> vector of length <i>p</i>,
+to contain <i>V'r</i> (&ldquo;<b>V</b> <b>t</b>ransposed <b>r</b>&rdquo;).</p>
+</dd>
+<dt><code>fac</code>:</dt><dd><p>a representation of a triangular factor, the
+Cholesky decomposition of <i>V'V</i>.</p>
+</dd></dl>
+
+
+<p>The actual classes <code>"dPredModule"</code> and <code>"sPredModule"</code>
+specify specific (sub) classes for the two non-trivial slots,
+</p>
+
+<dl>
+<dt><code>X</code>:</dt><dd><p>a <code>"<a href="modelMatrix-class.html">ddenseModelMatrix</a>"</code> or
+<code>"<a href="modelMatrix-class.html">dsparseModelMatrix</a>"</code>, respectively.</p>
+</dd>
+<dt><code>fac</code>:</dt><dd><p>For the <code>"dpredModule"</code> class this factor is a
+<code><a href="../../Matrix/html/Cholesky-class.html">Cholesky</a></code> object.  For the <code>"spredModule"</code> class
+it is of class <code><a href="../../Matrix/html/CHMfactor-class.html">CHMfactor</a></code>.</p>
+</dd>
+</dl>
+
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>coerce</dt><dd><p><code>signature(from = "ddenseModelMatrix", to = "predModule")</code>:
+Creates a <code>"dPredModule"</code> object.</p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "dsparseModelMatrix", to = "predModule")</code>:
+Creates an <code>"sPredModule"</code> object.</p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Douglas Bates</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="model.Matrix.html">model.Matrix</a>()</code> which returns a
+<code>"<a href="modelMatrix-class.html">ddenseModelMatrix</a>"</code> or
+<code>"<a href="modelMatrix-class.html">dsparseModelMatrix</a>"</code> object, depending if its
+<code>sparse</code> argument is false or true. In both cases, the resulting
+<code>"modelMatrix"</code> can then be coerced to a sparse or dense
+<code>"predModule"</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+showClass("dPredModule")
+showClass("sPredModule")
+
+## see   example(model.Matrix)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>MatrixModels</em> version 0.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

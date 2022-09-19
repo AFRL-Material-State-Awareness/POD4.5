@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Trigonometric Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for trigApprox {pracma}"><tr><td>trigApprox {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Trigonometric Approximation
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the trigonometric series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+trigApprox(t, x, m)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>t</code></td>
+<td>
+<p>vector of points at which to compute the values of the
+trigonometric approximation.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>data from <code>t=0</code> to <code>t=2*(n-1)*pi/n</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+<p>degree of trigonometric regression.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calls <code>trigPoly</code> to get the trigonometric coefficients and then
+sums the finite series.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of values the same length as <code>t</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>TODO: Return an approximating function instead.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="trigPoly.html">trigPoly</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+##  Example: Gauss' Pallas data (1801)
+asc &lt;- seq(0, 330, by = 30)
+dec &lt;- c(408, 89, -66, 10, 338, 807, 1238, 1511, 1583, 1462, 1183, 804)
+plot(2*pi*asc/360, dec, pch = "+", col = "red", xlim = c(0, 2*pi), ylim = c(-500, 2000),
+     xlab = "Ascension [radians]", ylab = "Declination [minutes]",
+     main = "Gauss' Pallas Data")
+grid()
+points(2*pi*asc/360, dec, pch = "o", col = "red")
+ts &lt;- seq(0, 2*pi, len = 100)
+xs &lt;- trigApprox(ts ,dec, 1)
+lines(ts, xs, col = "black")
+xs &lt;- trigApprox(ts ,dec, 2)
+lines(ts, xs, col = "blue")
+legend(3, 0, c("Trig. Regression of degree 1", "Trig. Regression of degree 2",
+                  "Astronomical position"), col = c("black", "blue", "red"),
+                lty = c(1,1,0), pch = c("", "", "+"))
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

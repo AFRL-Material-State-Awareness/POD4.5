@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Traverse a Python iterator or generator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for iterate {reticulate}"><tr><td>iterate {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Traverse a Python iterator or generator</h2>
+
+<h3>Description</h3>
+
+<p>Traverse a Python iterator or generator
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+iterate(it, f = base::identity, simplify = TRUE)
+
+iter_next(it, completed = NULL)
+
+as_iterator(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>it</code></td>
+<td>
+<p>Python iterator or generator</p>
+</td></tr>
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>Function to apply to each item. By default applies the
+<code>identity</code> function which just reflects back the value of the item.</p>
+</td></tr>
+<tr valign="top"><td><code>simplify</code></td>
+<td>
+<p>Should the result be simplified to a vector if possible?</p>
+</td></tr>
+<tr valign="top"><td><code>completed</code></td>
+<td>
+<p>Sentinel value to return from <code>iter_next()</code> if the iteration
+completes (defaults to <code>NULL</code> but can be any R value you specify).</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Python iterator or iterable</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Simplification is only attempted all elements are length 1 vectors
+of type &quot;character&quot;, &quot;complex&quot;, &quot;double&quot;, &quot;integer&quot;, or &quot;logical&quot;.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>iterate()</code>, A list or vector containing the results of calling
+<code>f</code> on each item in <code>x</code> (invisibly); For <code>iter_next()</code>, the next
+value in the iteration (or the sentinel <code>completed</code> value if the iteration
+is complete).
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Make Random Effect Terms: Create Z, Lambda, Lind, etc.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mkReTrms {lme4}"><tr><td>mkReTrms {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Make Random Effect Terms: Create Z, Lambda, Lind, etc.</h2>
+
+<h3>Description</h3>
+
+<p>From the result of <code><a href="findbars.html">findbars</a></code> applied to a model formula
+and the evaluation frame <code>fr</code>, create the model matrix
+<code>Zt</code>, etc, associated with the random-effects terms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  mkReTrms(bars, fr, drop.unused.levels=TRUE,
+                     reorder.terms=TRUE,
+                     reorder.vars=FALSE)
+  mkNewReTrms(object, newdata, re.form=NULL,
+                     na.action=na.pass,
+                     allow.new.levels=FALSE,
+                     sparse = max(lengths(orig.random.levs)) &gt; 100)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>bars</code></td>
+<td>
+<p>a list of parsed random-effects terms</p>
+</td></tr>
+<tr valign="top"><td><code>fr</code></td>
+<td>
+<p>a model frame in which to evaluate these terms</p>
+</td></tr>
+<tr valign="top"><td><code>drop.unused.levels</code></td>
+<td>
+<p>(logical) drop unused factor levels?</p>
+</td></tr>
+<tr valign="top"><td><code>reorder.terms</code></td>
+<td>
+<p>arrange random effects terms in decreasing order
+of number of groups (factor levels)?</p>
+</td></tr>
+<tr valign="top"><td><code>reorder.vars</code></td>
+<td>
+<p>arrange columns of individual random effects terms
+in alphabetical order?</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>a fitted <code>merMod</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>newdata</code></td>
+<td>
+<p>data frame for which to create
+new RE terms object</p>
+</td></tr>
+<tr valign="top"><td><code>re.form</code></td>
+<td>
+<p>(formula, <code>NULL</code>, or <code>NA</code>) specify which random effects to condition on when predicting.  If <code>NULL</code>,
+include all random effects; if <code>NA</code> or <code>~0</code>,
+include no random effects</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>function determining what should be done
+with missing values for fixed effects in <code>newdata</code></p>
+</td></tr>
+<tr valign="top"><td><code>allow.new.levels</code></td>
+<td>
+<p>(logical) if new levels (or NA values) in
+<code>newdata</code> are allowed. If FALSE (default), such new values in
+<code>newdata</code> will trigger an error; if TRUE, then the prediction
+will use the unconditional (population-level) values for data with
+previously unobserved levels (or NAs)</p>
+</td></tr>
+<tr valign="top"><td><code>sparse</code></td>
+<td>
+<p>generate sparse contrast matrices?</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a <code><a href="../../base/html/list.html">list</a></code> with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>Zt</code></td>
+<td>
+<p>transpose of the sparse model matrix for the random effects</p>
+</td></tr>
+<tr valign="top"><td><code>theta</code></td>
+<td>
+<p>initial values of the covariance parameters</p>
+</td></tr>
+<tr valign="top"><td><code>Lind</code></td>
+<td>
+<p>an integer vector of indices determining the mapping of
+the elements of the <code>theta</code> vector to the <code>"x"</code> slot of
+<code>Lambdat</code></p>
+</td></tr>
+<tr valign="top"><td><code>Gp</code></td>
+<td>
+<p>a vector indexing the association of
+elements of the conditional mode vector
+with random-effect terms; if <code>nb</code> is the vector of numbers
+of conditional modes per term (i.e. number of groups times number
+of effects per group), <code>Gp</code> is <code>c(0,cumsum(nb))</code>
+(and conversely <code>nb</code> is <code>diff(Gp)</code>)</p>
+</td></tr>
+<tr valign="top"><td><code>lower</code></td>
+<td>
+<p>lower bounds on the covariance parameters</p>
+</td></tr>
+<tr valign="top"><td><code>Lambdat</code></td>
+<td>
+<p>transpose of the sparse relative covariance factor</p>
+</td></tr>
+<tr valign="top"><td><code>flist</code></td>
+<td>
+<p>list of grouping factors used in the
+random-effects terms</p>
+</td></tr>
+<tr valign="top"><td><code>cnms</code></td>
+<td>
+<p>a list of column names
+of the random effects according to the grouping factors</p>
+</td></tr>
+<tr valign="top"><td><code>Ztlist</code></td>
+<td>
+<p>list of components of the transpose of the
+random-effects model matrix, separated by random-effects term</p>
+</td></tr>
+<tr valign="top"><td><code>nl</code></td>
+<td>
+<p>names of the terms (in the same order as <code>Zt</code>,
+i.e. reflecting the <code>reorder.terms</code> argument)</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p><code>mkNewReTrms</code> is used in the context of prediction, to
+generate a new &quot;random effects terms&quot; object from an already fitted
+model</p>
+
+
+<h3>See Also</h3>
+
+<p>Other utilities: <code><a href="findbars.html">findbars</a></code>,
+<code><a href="mkRespMod.html">mkRespMod</a></code>, <code><a href="nlformula.html">nlformula</a></code>,
+<code><a href="nobars.html">nobars</a></code>, <code><a href="subbars.html">subbars</a></code>.
+<code><a href="getME.html">getME</a></code> can retrieve these components
+from a fitted model, although their values and/or forms
+may be slightly different in the final fitted model from
+their original values as returned from <code>mkReTrms</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data("Pixel", package="nlme")
+mform &lt;- pixel ~ day + I(day^2) + (day | Dog) + (1 | Side/Dog)
+(bar.f &lt;- findbars(mform)) # list with 3 terms
+mf &lt;- model.frame(subbars(mform),data=Pixel)
+rt &lt;- mkReTrms(bar.f,mf)
+names(rt)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

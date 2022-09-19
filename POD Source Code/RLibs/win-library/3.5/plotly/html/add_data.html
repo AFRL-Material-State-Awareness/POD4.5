@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add data to a plotly visualization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for add_data {plotly}"><tr><td>add_data {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add data to a plotly visualization</h2>
+
+<h3>Description</h3>
+
+<p>Add data to a plotly visualization
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+add_data(p, data = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly visualization</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>a data frame.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+plot_ly() %&gt;% add_data(economics) %&gt;% add_trace(x = ~date, y = ~pce)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Methods for formulas</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot3d.formula {rgl}"><tr><td>plot3d.formula {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Methods for formulas
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions provide a simple formula-based interface
+to <code><a href="plot3d.html">plot3d</a></code> and <code><a href="persp3d.html">persp3d</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'formula'
+plot3d(x, data = NULL, xlab, ylab, zlab, ...)
+## S3 method for class 'formula'
+persp3d(x, data = NULL, xlab, ylab, zlab, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>A formula like <code>z ~ x + y</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+
+<p>An optional dataframe or list in which to find the components
+of the formula.
+</p>
+</td></tr>
+<tr valign="top"><td><code>xlab, ylab, zlab</code></td>
+<td>
+
+<p>Optional axis labels to override the ones automatically
+obtained from the formula.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Additional arguments to pass to the default <code>plot3d</code>
+method, or the <code>persp3d</code> method for <code>"deldir"</code>
+objects.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Only simple formulas (the ones handled by the <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code> function) are supported:  a single variable on the left hand side (which will be plotted on the Z axis),
+and a sum of two variables on the right hand side (which
+will be the X and Y axis variables in the plot.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>These functions are called for the side effect of drawing
+the plots. The <code>plot3d</code> method draws a scatterplot.  The <code>persp3d</code> method draws a surface plot.
+</p>
+<p>Return values are as given by the <code><a href="plot3d.html">plot3d.default</a></code> method or the <code><a href="persp3d.deldir.html">persp3d.deldir</a></code> 
+methods.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>persp3d</code> method requires that the suggested package <span class="pkg">deldir</span> is installed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+mfrow3d(1, 2, sharedMouse = TRUE)
+plot3d(mpg ~ wt + qsec, data = mtcars)
+if (checkDeldir())
+  persp3d(mpg ~ wt + qsec, data = mtcars)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

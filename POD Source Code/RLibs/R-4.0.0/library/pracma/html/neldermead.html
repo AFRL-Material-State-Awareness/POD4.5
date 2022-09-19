@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Nelder-Mead Function Minimization Method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nelder_mead {pracma}"><tr><td>nelder_mead {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Nelder-Mead Function Minimization Method
+</h2>
+
+<h3>Description</h3>
+
+<p>An implementation of the Nelder-Mead algorithm for derivative-free
+optimization / function minimization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nelder_mead(fn, x0, ..., adapt = TRUE,
+            tol = 1e-08, maxfeval = 5000, 
+			step = rep(1.0, length(x0)))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>nonlinear function to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>starting point for the iteration.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to the function.</p>
+</td></tr>
+<tr valign="top"><td><code>adapt</code></td>
+<td>
+<p>logical; adapt to parameter dimension.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>terminating limit for the variance of function values;
+can be made *very* small, like <code>tol=1e-50</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>maxfeval</code></td>
+<td>
+<p>maximum number of function evaluations.</p>
+</td></tr>
+<tr valign="top"><td><code>step</code></td>
+<td>
+<p>size and shape of initial simplex; relative magnitudes of
+its elements should reflect the units of the variables.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Also called a &lsquo;simplex&rsquo; method for finding the local minimum of a function
+of several variables. The method is a pattern search that compares function
+values at the vertices of the simplex. The process generates a sequence of
+simplices with ever reducing sizes.
+</p>
+<p>The simplex function minimisation procedure due to Nelder and Mead (1965),
+as implemented by O'Neill (1971), with subsequent comments by Chambers and 
+Ertel 1974, Benyon 1976, and Hill 1978. For another elaborate implementation 
+of Nelder-Mead in R based on Matlab code by Kelley see package &lsquo;dfoptim&rsquo;.
+</p>
+<p><code>nelder_mead</code> can be used up to 20 dimensions (then &lsquo;tol&rsquo; and &lsquo;maxfeval&rsquo;
+need to be increased). With <code>adapt=TRUE</code> it applies adaptive
+coefficients for the simplicial search, depending on the problem dimension
+&ndash; see Fuchang and Lixing (2012). This approach especially reduces the
+number of function calls.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>xmin</code></td>
+<td>
+<p>minimum solution found.</p>
+</td></tr>
+<tr valign="top"><td><code>fmin</code></td>
+<td>
+<p>value of <code>f</code> at minimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fcount</code></td>
+<td>
+<p>number of iterations performed.</p>
+</td></tr>
+<tr valign="top"><td><code>restarts</code></td>
+<td>
+<p>number of restarts.</p>
+</td></tr>
+<tr valign="top"><td><code>errmess</code></td>
+<td>
+<p>error message</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>Original FORTRAN77 version by R O'Neill; MATLAB version by John Burkardt
+under LGPL license. Re-implemented in R by Hans W. Borchers.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nelder, J., and R. Mead (1965). A simplex method for function minimization.
+Computer Journal, Volume 7, pp. 308-313.
+</p>
+<p>O'Neill, R. (1971). Algorithm AS 47: Function Minimization Using a Simplex 
+Procedure. Applied Statistics, Volume 20(3), pp. 338-345.
+</p>
+<p>J. C. Lagarias et al. (1998). Convergence properties of the Nelder-Mead
+simplex method in low dimensions. SIAM Journal for Optimization, Vol. 9,
+No. 1, pp 112-147.
+</p>
+<p>Fuchang Gao and Lixing Han (2012). Implementing the Nelder-Mead simplex
+algorithm with adaptive parameters. Computational Optimization and
+Applications, Vol. 51, No. 1, pp. 259-277.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="hookejeeves.html">hooke_jeeves</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Classical tests as in the article by Nelder and Mead
+# Rosenbrock's parabolic valley
+rpv &lt;- function(x) 100*(x[2] - x[1]^2)^2 + (1 - x[1])^2
+x0 &lt;- c(-2, 1)
+nelder_mead(rpv, x0)                     #  1 1
+
+# Fletcher and Powell's helic valley
+fphv &lt;- function(x)
+    100*(x[3] - 10*atan2(x[2], x[1])/(2*pi))^2 + 
+        (sqrt(x[1]^2 + x[2]^2) - 1)^2 +x[3]^2
+x0 &lt;- c(-1, 0, 0)
+nelder_mead(fphv, x0)                    #  1 0 0
+
+# Powell's Singular Function (PSF)
+psf &lt;- function(x)  (x[1] + 10*x[2])^2 + 5*(x[3] - x[4])^2 + 
+                    (x[2] - 2*x[3])^4 + 10*(x[1] - x[4])^4
+x0 &lt;- c(3, -1, 0, 1)
+# needs maximum number of function calls
+nelder_mead(psf, x0, maxfeval=30000)         #  0 0 0 0
+
+## Not run: 
+# Can run Rosenbrock's function in 30 dimensions in one and a half minutes:
+nelder_mead(fnRosenbrock, rep(0, 30), tol=1e-20, maxfeval=10^7)
+# $xmin
+#  [1]  0.9999998 1.0000004 1.0000000 1.0000001 1.0000000 1.0000001
+#  [7]  1.0000002 1.0000001 0.9999997 0.9999999 0.9999997 1.0000000
+# [13]  0.9999999 0.9999994 0.9999998 0.9999999 0.9999999 0.9999999
+# [19]  0.9999999 1.0000001 0.9999998 1.0000000 1.0000003 0.9999999
+# [25]  1.0000000 0.9999996 0.9999995 0.9999990 0.9999973 0.9999947
+# $fmin
+# [1] 5.617352e-10
+# $fcount
+# [1] 1426085
+# elapsed time is 96.008000 seconds 
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

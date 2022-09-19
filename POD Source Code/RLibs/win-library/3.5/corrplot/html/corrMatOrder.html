@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reorder a correlation matrix.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for corrMatOrder {corrplot}"><tr><td>corrMatOrder {corrplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reorder a correlation matrix.</h2>
+
+<h3>Description</h3>
+
+<p>Draw rectangle(s) around the chart of corrrlation matrix based on the number
+of each cluster's members.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+corrMatOrder(
+  corr,
+  order = c("AOE", "FPC", "hclust", "alphabet"),
+  hclust.method = c("complete", "ward", "ward.D", "ward.D2", "single", "average",
+    "mcquitty", "median", "centroid")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>corr</code></td>
+<td>
+<p>Correlation matrix to reorder.</p>
+</td></tr>
+<tr valign="top"><td><code>order</code></td>
+<td>
+<p>Character, the ordering method for the correlation matrix.
+</p>
+
+<ul>
+<li><p><code>'AOE'</code> for the angular order of the eigenvectors.
+It is calculated from the order of the angles, <i>a_i</i>:
+</p>
+<p style="text-align: center;"><i> a_i = arctan (e_{i2} / e_{i1}), if e_{i1} &gt; 0</i></p>
+
+<p style="text-align: center;"><i> a_i = arctan (e_{i2} / e_{i1}) + &pi;, otherwise.</i></p>
+
+<p>where <i>e_1</i> and <i>e_2</i> are the largest two eigenvalues
+of matrix <code>corr</code>.
+See Michael Friendly (2002) for details.
+</p>
+</li>
+<li><p><code>'FPC'</code> for the first principal component order.
+</p>
+</li>
+<li><p><code>'hclust'</code> for hierarchical clustering order.
+</p>
+</li>
+<li><p><code>'alphabet'</code> for alphabetical order.
+</p>
+</li></ul>
+</td></tr>
+<tr valign="top"><td><code>hclust.method</code></td>
+<td>
+<p>Character, the agglomeration method to be used when
+<code>order</code> is <code>hclust</code>. This should be one of <code>'ward'</code>,
+<code>'ward.D'</code>, <code>'ward.D2'</code>, <code>'single'</code>, <code>'complete'</code>,
+<code>'average'</code>, <code>'mcquitty'</code>, <code>'median'</code> or <code>'centroid'</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Returns a single permutation vector.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Taiyun Wei
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Package <code>seriation</code> offers more methods to reorder matrices,
+such as ARSA, BBURCG, BBWRCG, MDS, TSP, Chen and so forth.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+M = cor(mtcars)
+
+(order.AOE = corrMatOrder(M, order = 'AOE'))
+(order.FPC = corrMatOrder(M, order = 'FPC'))
+(order.hc = corrMatOrder(M, order = 'hclust'))
+(order.hc2 = corrMatOrder(M, order = 'hclust', hclust.method = 'ward.D'))
+
+M.AOE = M[order.AOE, order.AOE]
+M.FPC = M[order.FPC, order.FPC]
+M.hc  = M[order.hc, order.hc]
+M.hc2 = M[order.hc2, order.hc2]
+
+
+
+par(ask = TRUE)
+corrplot(M)
+corrplot(M.AOE)
+corrplot(M.FPC)
+corrplot(M.hc)
+
+corrplot(M.hc)
+corrRect.hclust(corr = M.hc, k = 2)
+
+corrplot(M.hc)
+corrRect.hclust(corr = M.hc, k = 3)
+
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 2, method = 'ward.D')
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>corrplot</em> version 0.92 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw a 2D plot on a rectangle in a 3D scene</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for show2d {rgl}"><tr><td>show2d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Draw a 2D plot on a rectangle in a 3D scene
+</h2>
+
+<h3>Description</h3>
+
+<p>This function uses a bitmap of a standard 2D graphics plot
+as a texture on a quadrilateral.  Default arguments are
+set up so that it will appear on the face of the bounding
+box of the current 3D plot, but optional arguments allow
+it to be placed anywhere in the scene.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+show2d(expression, 
+  face = "z-", line = 0, 
+  reverse = FALSE, rotate = 0, 
+  x = NULL, y = NULL, z = NULL, 
+  width = 480, height = 480, 
+  filename = NULL, 
+  ignoreExtent = TRUE, 
+  color = "white", specular = "black", lit = FALSE, 
+  texmipmap = TRUE, texminfilter = "linear.mipmap.linear",
+  expand = 1.03,
+  texcoords = matrix(c(0, 1, 1, 0, 0, 0, 1, 1), ncol = 2),  ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>expression</code></td>
+<td>
+
+<p>Any plotting commands to produce a plot in standard graphics.
+Ignored if <code>filename</code> is not <code>NULL</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>face</code></td>
+<td>
+
+<p>A character string defining which face of the bounding
+box to use.  See Details below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>line</code></td>
+<td>
+
+<p>How far out from the bounding box should the quadrilateral
+be placed?  Uses same convention as <code><a href="axes3d.html">mtext3d</a></code>:
+not lines of text, but fraction of the bounding box size.
+</p>
+</td></tr>
+<tr valign="top"><td><code>reverse, rotate</code></td>
+<td>
+ 
+<p>Should the image be reversed or rotated?  See Details below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+
+<p>Specific values to use to override <code>face</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>width,height</code></td>
+<td>
+
+<p>Parameters to pass to <code><a href="../../grDevices/html/png.html">png</a></code> when creating the
+bitmap.  See Details below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>filename</code></td>
+<td>
+
+<p>A &lsquo;<span class="file">.png</span>&rsquo; file image to use as the texture.
+</p>
+</td></tr>
+<tr valign="top"><td><code>ignoreExtent</code></td>
+<td>
+
+<p>Whether the quadrilateral should be ignored when computing
+the bounding box of the scene.
+</p>
+</td></tr>
+<tr valign="top"><td><code>color, specular, lit, texmipmap, texminfilter, ...</code></td>
+<td>
+
+<p>Material properties to use for the quadrilateral.
+</p>
+</td></tr>
+<tr valign="top"><td><code>expand</code></td>
+<td>
+<p>Amount by which the quadrilateral is 
+expanded outside the bounding box of the data.
+</p>
+</td></tr>
+<tr valign="top"><td><code>texcoords</code></td>
+<td>
+<p>Coordinates on the image.  Lower left
+of the bitmap is <code>c(0,0)</code>, upper right is <code>c(1,1)</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The default arguments are chosen to make it easy to place
+a 2D image on the face of the bounding box.  If <code>x</code>, 
+<code>y</code> and <code>z</code> are <code>NULL</code> (the defaults),
+<code>face</code> will be used as a code for one of the
+six faces of the bounding box.  The first letter should
+be <code>"x"</code>, <code>"y"</code> or <code>"z"</code>; this defines 
+the axis perpendicular to the desired face.  If the
+second letter is <code>"-"</code> or is missing, the face
+will be chosen to be the face with the lower value 
+on that axis.  Any other letter will use the opposite 
+face.
+</p>
+<p>If any of  <code>x</code>, <code>y</code> or <code>z</code> is given, the
+specified value will be used to replace the value calculated 
+above.  Usually four values should be given, corresponding to
+the coordinates of the lower left, lower right, upper right
+and upper left of the destination for the image before
+<code>reverse</code> and <code>rotate</code> are used.  Fewer values
+can be used for one or two coordinates; <code><a href="../../base/html/cbind.html">cbind</a></code>
+will be used to put together all 3 coordinates into
+a 4 by 3 matrix (which will be returned as an attribute
+of the result).
+</p>
+<p>The bitmap plot will by default be oriented so that it is
+properly oriented when viewed from the
+direction of the higher values of the perpendicular coordinate,
+and its lower left corner is at the lower value of the two
+remaining coordinates.  The argument <code>reverse</code> causes
+the orientation to be mirrored, and <code>rotate</code> causes it
+to be rotated by multiples of 90 degrees.  <code>rotate</code> should be an integer,
+with <code>0</code> for no rotation, <code>1</code> for a 90 degree
+counter-clockwise rotation, etc.
+</p>
+<p>The <code>width</code> and <code>height</code> arguments control the shape
+and resolution of the bitmap.  The defaults give a square
+bitmap, which is appropriate with the usual <code>c(1,1,1)</code>
+aspect ratios (see <code>aspect3d</code>).  Some tuning may be 
+needed to choose the resolution.  The plot will look best when
+displayed at its original size; shrinking it smaller tends to make
+it look faded, while expanding it bigger will make it look 
+blurry.  If <code>filename</code> is given, the width and height
+will be taken from the file, and <code>width</code> and <code>height</code>
+arguments will be ignored.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns the id value of the quadrilateral,
+with the following attributes:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>The value returned by <code>expression</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>xyz</code></td>
+<td>
+<p>A 4 by 3 matrix giving the coordinates of the corners
+as used in plotting.</p>
+</td></tr>
+<tr valign="top"><td><code>texcoords</code></td>
+<td>
+<p>A 4 by 2 matrix giving the texture coordinates
+of the image.</p>
+</td></tr>
+<tr valign="top"><td><code>filename</code></td>
+<td>
+<p>The filename for the temporary file holding
+the bitmap image.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="bgplot3d.html">bgplot3d</a></code> uses a plot as the background for the window.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+example(plot3d, ask = FALSE)
+show2d({
+  par(mar=c(0,0,0,0))
+  plot(x, y, col = rainbow(1000), axes=FALSE)
+  })
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

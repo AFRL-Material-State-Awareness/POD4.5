@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Break polygons at meridian for recentering</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nowrapRecenter {maptools}"><tr><td>nowrapRecenter {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Break polygons at meridian for recentering</h2>
+
+<h3>Description</h3>
+
+<p>When recentering a world map, say to change an &quot;Atlantic&quot; view with longitude range -180 to 180, to a &quot;Pacific&quot; view, with longitude range 0 to 360, polygons crossed by the new offset, here 0/360, need to be clipped into left and right sub.polygons to avoid horizontal scratches across the map. The <code>nowrapSpatialPolygons</code> function performs this operation using polygon intersection, and <code>nowrapRecenter</code> recenters the output SpatialPolygons object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nowrapRecenter(obj, offset = 0, eps = rep(.Machine$double.eps^(1/2.5), 2),
+ avoidGEOS = FALSE)
+nowrapSpatialPolygons(obj, offset = 0, eps=rep(.Machine$double.eps^(1/2.5), 2),
+ avoidGEOS = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> A SpatialPolygons object </p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p> offset from the Greenwich meridian </p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+<p>vector of two (left and right) fuzz factors to retract the ring from the offset (2.5 root to accommodate <span class="pkg">rgeos</span> precision rules)</p>
+</td></tr>
+<tr valign="top"><td><code>avoidGEOS</code></td>
+<td>
+<p>default FALSE; use <span class="pkg">polyclip</span> or <span class="pkg">gpclib</span> code even if <span class="pkg">rgeos</span> is available</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A SpatialPolygons object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Bivand</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../sp/html/recenter-methods.html">recenter-methods</a></code>, <code><a href="nowrapSpatialLines.html">nowrapSpatialLines</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+run &lt;- FALSE
+if (require(maps)) run &lt;- TRUE
+## Not run: 
+if (run) {
+world &lt;- map("world", fill=TRUE, col="transparent", plot=FALSE)
+worldSpP &lt;- map2SpatialPolygons(world, world$names, CRS("+proj=longlat +ellps=WGS84"))
+worldSpP &lt;- worldSpP[-grep("Antarctica", row.names(worldSpP)),]
+# incomplete polygons
+worldSpP &lt;- worldSpP[-grep("Ghana", row.names(worldSpP)),]
+# self-intersection mouth of Volta
+worldSpP &lt;- worldSpP[-grep("UK:Great Britain", row.names(worldSpP)),]
+# self-intersection Humber estuary
+worldSpPr &lt;- recenter(worldSpP)
+plot(worldSpPr)
+title("Pacific view without polygon splitting")
+}
+if (run) {
+worldSpPnr &lt;- nowrapRecenter(worldSpP)
+plot(worldSpPnr)
+title("Pacific view with polygon splitting")
+}
+
+## End(Not run)
+if (!rgeosStatus()) run &lt;- FALSE
+if (run) {
+crds &lt;- matrix(c(-1, 1, 1, -1, 50, 50, 52, 52), ncol=2)
+rcrds &lt;- rbind(crds, crds[1,])
+SR &lt;- SpatialPolygons(list(Polygons(list(Polygon(rcrds)), ID="r1")),
+ proj4string=CRS("+proj=longlat +ellps=WGS84"))
+bbox(SR)
+}
+if (run) {
+SRr &lt;- recenter(SR)
+bbox(SRr)
+}
+if (run) {
+SRnr &lt;- nowrapRecenter(SR)
+bbox(SRnr)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

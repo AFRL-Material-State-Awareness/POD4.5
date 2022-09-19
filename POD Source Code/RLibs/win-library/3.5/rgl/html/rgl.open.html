@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Low level window interface</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rgl.open {rgl}"><tr><td>rgl.open {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Low level window interface</h2>
+
+<h3>Description</h3>
+
+<p>3D real-time rendering system.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rgl.open(useNULL = rgl.useNULL())     # open new device
+rgl.close()    # close current device
+rgl.cur()      # returns active device ID
+rgl.dev.list() # returns all device IDs
+rgl.set(which, silent = FALSE) # set device as active
+rgl.quit()     # shutdown RGL device system
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>useNULL</code></td>
+<td>
+<p>whether to open the &ldquo;null&rdquo; device</p>
+</td></tr>
+<tr valign="top"><td><code>which</code></td>
+<td>
+<p>device ID</p>
+</td></tr>
+<tr valign="top"><td><code>silent</code></td>
+<td>
+<p>whether to suppress update of window titles</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The RGL device design is oriented towards the R device metaphor. If you send
+scene management instructions, and there's no device open, it will be opened
+automatically.
+Opened devices automatically get the current device focus. The focus may be
+changed by using <code>rgl.set()</code>.
+<code>rgl.quit()</code> shuts down the RGL subsystem and all open devices, 
+detaches the package including the shared library and additional system libraries.
+</p>
+<p>The <code>rgl.open()</code> function attempts to open a new RGL window.
+If the <code>"rgl.antialias"</code> option is set, it will be used to
+select the requested antialiasing.  (See <code><a href="open3d.html">open3d</a></code> for
+more description of antialiasing and an alternative way to set the
+value.)
+</p>
+<p>If <code>useNULL</code> is <code>TRUE</code>, RGL will use a &ldquo;null&rdquo;
+device.  This device records objects as they are plotted, but 
+displays nothing. It is intended for use with <code><a href="rglwidget.html">rglwidget</a></code>
+and similar functions.
+</p>
+<p>If <code>rgl.open()</code> fails (e.g. because X windows is not running, or its
+<code>DISPLAY</code> variable is not set properly), then you can retry the initialization
+by calling <code><a href="rgl.init.html">rgl.init</a>()</code>.  Do not do this when windows have 
+already been successfully opened:  they will be orphaned, with no way to 
+remove them other than closing R.  In fact, it's probably a good idea not to do this
+at all:  quitting R and restarting it is a better solution.
+</p>
+<p>This package also includes a higher level interface which is described
+in the <a href="r3d.html">r3d</a> help topic.  That interface is designed to act more like
+classic 2D R graphics.  We recommend that you avoid mixing
+<code>rgl.*</code> and <code>*3d</code> calls.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>rgl.open</code>, <code>rgl.close</code> and <code>rgl.set</code> are called for their side effects
+and return no useful value.  Similarly <code>rgl.quit</code> is not designed
+to return useful values; in fact, users shouldn't call it at all!
+</p>
+<p><code>rgl.cur</code> returns the currently active devices, or <code>0</code> if none is
+active; <code>rgl.dev.list</code> returns a vector of all open devices.  Both functions name
+the items according to the type of device:  <code>null</code> for a hidden null device, 
+<code>wgl</code> for a Windows device, and <code>glX</code> for an X windows device.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="r3d.html">r3d</a>,
+<code><a href="rgl.init.html">rgl.init</a></code>,
+<code><a href="rgl.fns.html">rgl.clear</a></code>, 
+<code><a href="rgl.fns.html">rgl.pop</a></code>,
+<code><a href="viewpoint.html">rgl.viewpoint</a></code>,
+<code><a href="light.html">rgl.light</a></code>,
+<code><a href="bg.html">rgl.bg</a></code>,
+<code><a href="bbox.html">rgl.bbox</a></code>,
+<code><a href="primitive.html">rgl.points</a></code>,
+<code><a href="primitive.html">rgl.lines</a></code>,
+<code><a href="primitive.html">rgl.triangles</a></code>,
+<code><a href="primitive.html">rgl.quads</a></code>,
+<code><a href="rgl.texts.html">rgl.texts</a></code>,
+<code><a href="surface.html">rgl.surface</a></code>,
+<code><a href="rgl.fns.html">rgl.spheres</a></code>,
+<code><a href="rgl.fns.html">rgl.sprites</a></code>,
+<code><a href="snapshot.html">rgl.snapshot</a></code>,
+<code><a href="rgl.useNULL.html">rgl.useNULL</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

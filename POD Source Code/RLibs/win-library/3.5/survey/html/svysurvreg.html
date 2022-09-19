@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fit accelerated failure models to survey data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svysurvreg {survey}"><tr><td>svysurvreg {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Fit accelerated failure models to survey data
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calls <code>survreg</code> from the 'survival' package to fit accelerated failure (accelerated life) models to complex survey data, and then computes correct standard errors by linearisation.  It has the same arguments as <code>survreg</code>, except that the second argument is <code>design</code> rather than <code>data</code>.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'survey.design'
+svysurvreg(formula, design, weights=NULL, subset=NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+
+<p>Model formula
+</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+
+<p>Survey design object, including two-phase designs
+</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+
+<p>Additional weights to multiply by the sampling weights. No, I don't know why you'd want to do that.
+</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+
+<p>subset to use in fitting (if needed)
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Other arguments of <code>survreg</code>
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>svysurvreg</code>, with the same structure as a <code>survreg</code> object but with <code>NA</code> for the loglikelihood.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>residuals</code> method is identical to that for <code>survreg</code> objects except the <code>weighted</code> option defaults to <code>TRUE</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ data(pbc, package="survival")
+ pbc$randomized &lt;- with(pbc, !is.na(trt) &amp; trt&gt;0)
+ biasmodel&lt;-glm(randomized~age*edema,data=pbc)
+ pbc$randprob&lt;-fitted(biasmodel)
+ dpbc&lt;-svydesign(id=~1, prob=~randprob, strata=~edema,
+    data=subset(pbc,randomized))
+
+ model &lt;- svysurvreg(Surv(time, status&gt;0)~bili+protime+albumin, design=dpbc, dist="weibull")
+summary(model)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

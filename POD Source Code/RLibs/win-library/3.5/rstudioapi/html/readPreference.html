@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Read Preference</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for readPreference {rstudioapi}"><tr><td>readPreference {rstudioapi}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Read Preference</h2>
+
+<h3>Description</h3>
+
+<p>Reads a user preference, useful to remember preferences across different R
+sessions for the same user.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+readPreference(name, default)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>The name of the preference.</p>
+</td></tr>
+<tr valign="top"><td><code>default</code></td>
+<td>
+<p>The default value to use when the preference is not
+available.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>User preferences can have arbitrary names and values. You must write the
+preference with <code><a href="writePreference.html">writePreference</a></code> before it can be read
+(otherwise its default value will be returned).
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>readPreference</code> function was added in version 1.1.67 of
+RStudio.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="readRStudioPreference.html">readRStudioPreference</a></code>, which reads RStudio IDE
+preferences.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rstudioapi</em> version 0.13 <a href="00Index.html">Index</a>]</div>
+</body></html>

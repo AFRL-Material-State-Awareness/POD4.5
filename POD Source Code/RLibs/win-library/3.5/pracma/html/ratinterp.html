@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Rational Interpolation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ratinterp {pracma}"><tr><td>ratinterp {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Rational Interpolation
+</h2>
+
+<h3>Description</h3>
+
+<p>Burlisch-Stoer rational interpolation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ratinterp(x, y, xs = x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector; points on the x-axis; needs to be sorted;
+at least three points required.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>numeric vector; values of the assumed underlying function;
+<code>x</code> and <code>y</code> must be of the same length.</p>
+</td></tr>
+<tr valign="top"><td><code>xs</code></td>
+<td>
+<p>numeric vector; points at which to compute the interpolation;
+all points must lie between <code>min(x)</code> and <code>max(x)</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Burlisch-Stoer approach to rational interpolation is a recursive
+procedure (similar to the Newton form of polynomial interpolation) that
+produces a &ldquo;diagonal&rdquo; rational function, that is the degree of the
+numerator is either the same or one less than the degree of the denominator.
+</p>
+<p>Polynomial interpolation will have difficulties if some kind of singularity
+exists in the neighborhood, even if the pole occurs in the complex plane.
+For instance, Runge's function has a pole at <i>z = 0.2 i</i>, quite close
+to the interval <i>[-1, 1]</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric vector representing values at points <code>xs</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The algorithm does not yield a simple algebraic expression for the
+rational function found.
+</p>
+
+
+<h3>References</h3>
+
+<p>Stoer, J., and R. Bulirsch (2002). Introduction to Numerical Analysis.
+Third Edition, Springer-Verlag, New York.
+</p>
+<p>Fausett, L. V. (2008). Applied Numerical Analysis Using Matlab.
+Second Edition, Pearson Education.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rationalfit.html">rationalfit</a></code>, <code><a href="pade.html">pade</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Rational interpolation of Runge's function
+x &lt;- c(-1, -0.5, 0, 0.5, 1.0)
+y &lt;- runge(x)
+xs &lt;- linspace(-1, 1)
+ys &lt;- runge(xs)
+yy &lt;- ratinterp(x, y, xs)  # returns exactly the Runge function
+
+## Not run: 
+plot(xs, ys, type="l", col="blue", lty = 2, lwd = 3)
+points(x, y)
+yy &lt;- ratinterp(x, y, xs)
+lines(xs, yy, col="red")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Runge-Kutta-Fehlberg</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rkf54 {pracma}"><tr><td>rkf54 {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Runge-Kutta-Fehlberg
+</h2>
+
+<h3>Description</h3>
+
+<p>Runge-Kutta-Fehlberg with adaptive step size.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rkf54(f, a, b, y0, tol = .Machine$double.eps^0.5,
+                   control = list(), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function in the differential equation <i>y' = f(x, y)</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>endpoints of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>y0</code></td>
+<td>
+<p>starting values at <code>a</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance, used for determining the step size.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>list for influencing the step size with components<br />
+<code>hmin, hmax</code>, the minimal, maximal step size<br />
+<code>jmax</code>, the maximally allowed number of steps.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Runge-Kutta-Fehlberg is a kind of Runge-Kutta method of solving ordinary
+differential equations of order (5, 4) with variable step size.
+</p>
+<p>&ldquo;At each step, two different approximations for the solution are made and
+compared.  If the two answers are in close agreement, the approximation is
+accepted. If the two answers do not agree to a specified accuracy, the step
+size is reduced.  If the answers agree to more significant digits than
+required, the step size is increased.&rdquo;
+</p>
+<p>Some textbooks promote the idea to use the five-order formula as the
+accepted value instead of using it for error estimation. This approach
+is taken here, that is why the function is called <code>rkf54</code>. The idea
+is still debated as the accuracy determinations appears to be diminished.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>x</code> for grid points between <code>a</code> and <code>b</code>
+and <code>y</code> the function values of the numerical solution.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function serves demonstration purposes only.
+</p>
+
+
+<h3>References</h3>
+
+<p>Stoer, J., and R. Bulirsch (2002). Introduction to Numerical Analysis.
+Third Edition, Springer-Verlag, New York.
+</p>
+<p>Mathematica code associated with the book:<br />
+Mathews, J. H., and K. D. Fink (2004). Numerical Methods Using Matlab.
+Fourth Edition, Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rk4.html">rk4</a></code>, <code><a href="ode.html">ode23</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Example: y' = 1 + y^2
+f1 &lt;- function(x, y)  1 + y^2
+sol11 &lt;- rkf54(f1, 0, 1.1, 0.5, control = list(hmin = 0.01))
+sol12 &lt;- rkf54(f1, 0, 1.1, 0.5, control = list(jmax =  250))
+
+# Riccati equation: y' = x^2 + y^2
+f2 &lt;- function(x, y)  x^2 + y^2
+sol21 &lt;- rkf54(f2, 0, 1.5, 0.5, control = list(hmin = 0.01))
+sol22 &lt;- rkf54(f2, 0, 1.5, 0.5, control = list(jmax =  250))
+
+## Not run: 
+plot(0, 0, type = "n", xlim = c(0, 1.5), ylim = c(0, 20),
+     main = "Riccati", xlab = "", ylab = "")
+points(sol11$x, sol11$y, pch = "*", col = "darkgreen")
+lines(sol12$x, sol12$y)
+points(sol21$x, sol21$y, pch = "*", col = "blue")
+lines(sol22$x, sol22$y)
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

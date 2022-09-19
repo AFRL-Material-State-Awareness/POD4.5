@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: RStudio version information</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for versionInfo {rstudioapi}"><tr><td>versionInfo {rstudioapi}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>RStudio version information</h2>
+
+<h3>Description</h3>
+
+<p>Query information about the currently running instance of RStudio.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+versionInfo()
+</pre>
+
+
+<h3>Value</h3>
+
+<p>An <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> list with the following elements:
+</p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;">
+<code>version</code> </td><td style="text-align: left;"> The version of RStudio. </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>mode</code> </td><td style="text-align: left;"> <code>"desktop"</code> for RStudio Desktop, or <code>"server"</code> for RStudio Server. </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>citation</code> </td><td style="text-align: left;"> Information on how RStudio can be cited in academic publications. </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+</td>
+</tr>
+
+</table>
+
+
+
+<h3>Note</h3>
+
+<p>The <code>versionInfo</code> function was added in version 0.97.124 of
+RStudio.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## Not run: 
+info &lt;- rstudioapi::versionInfo()
+
+# check what version of RStudio is in use
+if (info$version &gt;= "1.4") {
+  # code specific to versions of RStudio 1.4 and newer
+}
+
+# check whether RStudio Desktop or RStudio Server is being used
+if (info$mode == "desktop") {
+  # code specific to RStudio Desktop
+}
+
+# Get the citation
+info$citation
+
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rstudioapi</em> version 0.13 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: specify spatial data as being gridded, or find out whether...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gridded-methods {sp}"><tr><td>gridded-methods {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> specify spatial data as being gridded, or find out whether they are </h2>
+
+<h3>Description</h3>
+
+<p>returns logical (TRUE or FALSE) telling whether the object is gridded
+or not; in assignment promotes a non-gridded structure to a gridded
+one, or demotes a gridded structure back to a non-structured one.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+	gridded(obj)
+	gridded(obj) &lt;- value
+	fullgrid(obj)
+	fullgrid(obj) &lt;- value
+	gridparameters(obj)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> object deriving from class &quot;Spatial&quot; (for gridded), or
+object of class <a href="SpatialGridDataFrame-class.html">SpatialGridDataFrame-class</a> (for fullgrid and gridparameters)</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>logical replacement values, TRUE or FALSE</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> if obj derives from class Spatial, gridded(object) will tell
+whether it is has topology on a regular grid; if assigned TRUE, if the
+object derives from SpatialPoints and has gridded topology,
+grid topology will be added to object, and the class of the object
+will be promoted to <a href="SpatialGrid-class.html">SpatialGrid-class</a> or 
+<a href="SpatialGridDataFrame-class.html">SpatialGridDataFrame-class</a>
+</p>
+<p><code>fullgrid</code> returns a logical, telling whether the grid is full
+and ordered (i.e., in full matrix form), or whether it is not full
+or unordered (i.e. a list of points that happen to lie on a grid. If
+assigned, the way the points are stored may be changed. Changing a set
+of points to full matrix form and back may change the original order of
+the points, and will remove duplicate points if they were present.
+</p>
+<p><code>gridparameters</code> returns, if <code>obj</code> inherits from
+SpatialGridDataFrame its grid parameters, else it returns numeric(0).  The
+returned value is a data.frame with three columns, named cellcentre.offset
+(&quot;lower left cell centre coordinates&quot;), cellsize, and cells.dim (cell
+dimension); the rows correspond to the spatial dimensions.
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>obj = &quot;Spatial&quot;</dt><dd><p> object deriving from class &quot;Spatial&quot; </p>
+</dd>
+</dl>
+
+
+<h3>Examples</h3>
+
+<pre>
+# just 9 points on a grid:
+x &lt;- c(1,1,1,2,2,2,3,3,3)
+y &lt;- c(1,2,3,1,2,3,1,2,3)
+xy &lt;- cbind(x,y)
+S &lt;- SpatialPoints(xy)
+class(S)
+plot(S)
+gridded(S) &lt;- TRUE
+gridded(S)
+class(S)
+summary(S)
+plot(S)
+gridded(S) &lt;- FALSE
+gridded(S)
+class(S)
+
+# data.frame
+data(meuse.grid)
+coordinates(meuse.grid) &lt;- ~x+y
+gridded(meuse.grid) &lt;- TRUE
+plot(meuse.grid) # not much good
+summary(meuse.grid)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

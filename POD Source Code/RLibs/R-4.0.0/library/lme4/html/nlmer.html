@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fitting Nonlinear Mixed-Effects Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nlmer {lme4}"><tr><td>nlmer {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fitting Nonlinear Mixed-Effects Models</h2>
+
+<h3>Description</h3>
+
+<p>Fit a nonlinear mixed-effects model (NLMM) to data, via maximum
+likelihood.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nlmer(formula, data = NULL, control = nlmerControl(),
+      start = NULL, verbose = 0L, nAGQ = 1L, subset, weights, na.action,
+      offset, contrasts = NULL, devFunOnly = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a three-part &ldquo;nonlinear mixed model&rdquo; formula, of
+the form <code>resp ~ Nonlin(...) ~ fixed + random</code>, where the third
+part is similar to the RHS formula of, e.g., <code><a href="lmer.html">lmer</a></code>.
+
+Currently, the <code>Nonlin(..)</code> formula part must not only return a
+numeric vector, but also must have a <code>"gradient"</code> attribute, a
+<code><a href="../../base/html/matrix.html">matrix</a></code>.  The functions <code><a href="../../stats/html/SSbiexp.html">SSbiexp</a></code>,
+<code><a href="../../stats/html/SSlogis.html">SSlogis</a></code>, etc, see <code><a href="../../stats/html/selfStart.html">selfStart</a></code>, provide
+this (and more).  Alternatively, you can use <code><a href="../../stats/html/deriv.html">deriv</a>()</code>
+to automatically produce such functions or expressions.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables named in
+<code>formula</code>.  By default the variables are taken from the
+environment from which <code>lmer</code> is called.  While <code>data</code> is
+optional, the package authors <em>strongly</em> recommend its use,
+especially when later applying methods such as <code><a href="../../stats/html/update.html">update</a></code>
+and <code><a href="../../stats/html/add1.html">drop1</a></code> to the fitted model (<em>such methods are
+not guaranteed to work properly if <code>data</code> is omitted</em>).  If
+<code>data</code> is omitted, variables will be taken from the environment
+of <code>formula</code> (if specified as a formula) or from the parent
+frame (if specified as a character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a list (of correct class, resulting from
+<code><a href="lmerControl.html">lmerControl</a>()</code> or <code><a href="lmerControl.html">glmerControl</a>()</code>
+respectively) containing control parameters, including the nonlinear
+optimizer to be used and parameters to be passed through to the
+nonlinear optimizer, see the <code>*lmerControl</code> documentation for
+details.</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>starting estimates for the nonlinear model parameters, as
+a named numeric vector or as a list with components
+</p>
+
+<dl>
+<dt>nlpars</dt><dd><p>required numeric vector of starting values for the
+nonlinear model parameters</p>
+</dd>
+<dt>theta</dt><dd><p>optional numeric vector of starting values for the
+covariance parameters</p>
+</dd>
+</dl>
+
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>integer scalar.  If <code>&gt; 0</code> verbose output is
+generated during the optimization of the parameter estimates.  If
+<code>&gt; 1</code> verbose output is generated during the individual PIRLS steps
+(PIRLS aka PRSS, e.g. in the C++ sources).</p>
+</td></tr>
+<tr valign="top"><td><code>nAGQ</code></td>
+<td>
+<p>integer scalar - the number of points per axis for
+evaluating the adaptive Gauss-Hermite approximation to the
+log-likelihood.  Defaults to 1, corresponding to the Laplace
+approximation.  Values greater than 1 produce greater accuracy in
+the evaluation of the log-likelihood at the expense of speed.  A
+value of zero uses a faster but less exact form of parameter
+estimation for GLMMs by optimizing the random effects and the
+fixed-effects coefficients in the penalized iteratively reweighted
+least squares (PIRLS) step.</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>an optional expression indicating the subset of the rows
+of <code>data</code> that should be used in the fit.  This can be a
+logical vector, or a numeric vector indicating which observation
+numbers are to be included, or a character vector of the row names
+to be included.  All observations are included by default.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of &lsquo;prior weights&rsquo; to be used
+in the fitting process.  Should be <code>NULL</code> or a numeric vector.</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>a function that indicates what should happen when the
+data contain <code>NA</code>s.  The default action (<code>na.omit</code>,
+inherited from the &lsquo;factory fresh&rsquo; value of
+<code><a href="../../base/html/options.html">getOption</a>("na.action")</code>) strips any observations with
+any missing values in any variables.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>this can be used to specify an <em>a priori</em> known
+component to be included in the linear predictor during fitting.
+This should be <code>NULL</code> or a numeric vector of length equal to
+the number of cases.  One or more <code><a href="../../stats/html/offset.html">offset</a></code> terms can be
+included in the formula instead or as well, and if more than one is
+specified their sum is used.  See <code><a href="../../stats/html/model.extract.html">model.offset</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+<p>an optional <code><a href="../../base/html/list.html">list</a></code>.  See the
+<code>contrasts.arg</code> of <code><a href="../../stats/html/model.matrix.html">model.matrix.default</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>devFunOnly</code></td>
+<td>
+<p>logical - return only the deviance evaluation
+function.  Note that because the deviance function operates on
+variables stored in its environment, it may not return
+<em>exactly</em> the same values on subsequent calls (but the results
+should always be within machine tolerance).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Fit nonlinear mixed-effects models, such as those used in
+population pharmacokinetics.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Adaptive Gauss-Hermite quadrature (<code>nAGQ &gt; 1</code>) is not
+currently implemented for <code>nlmer</code>.  Several other
+methods, such as simulation or prediction with new data,
+are unimplemented or very lightly tested.
+</p>
+<p>A <code>method</code> argument was used in earlier versions of the <span class="pkg">lme4</span>
+package.  Its functionality has been replaced by the <code>nAGQ</code> argument.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## nonlinear mixed models --- 3-part formulas ---
+## 1. basic nonlinear fit. Use stats::SSlogis for its
+## implementation of the 3-parameter logistic curve.
+## "SS" stands for "self-starting logistic", but the
+## "self-starting" part is not currently used by nlmer ... 'start' is
+## necessary
+startvec &lt;- c(Asym = 200, xmid = 725, scal = 350)
+(nm1 &lt;- nlmer(circumference ~ SSlogis(age, Asym, xmid, scal) ~ Asym|Tree,
+             Orange, start = startvec))
+## 2. re-run with "quick and dirty" PIRLS step
+(nm1a &lt;- update(nm1, nAGQ = 0L))
+
+## 3. Fit the same model with a user-built function:
+## a. Define formula
+nform &lt;- ~Asym/(1+exp((xmid-input)/scal))
+## b. Use deriv() to construct function:
+nfun &lt;- deriv(nform,namevec=c("Asym","xmid","scal"),
+              function.arg=c("input","Asym","xmid","scal"))
+nm1b &lt;- update(nm1,circumference ~ nfun(age, Asym, xmid, scal)  ~ Asym | Tree)
+
+## 4. User-built function without using derivs():
+##    derivatives could be computed more efficiently
+##    by pre-computing components, but these are essentially
+##    the gradients as one would derive them by hand
+nfun2 &lt;- function(input, Asym, xmid, scal) {
+    value &lt;- Asym/(1+exp((xmid-input)/scal))
+    grad &lt;- cbind(Asym=1/(1+exp((xmid-input)/scal)),
+              xmid=-Asym/(1+exp((xmid-input)/scal))^2*1/scal*
+                    exp((xmid-input)/scal),
+              scal=-Asym/(1+exp((xmid-input)/scal))^2*
+                     -(xmid-input)/scal^2*exp((xmid-input)/scal))
+    attr(value,"gradient") &lt;- grad
+    value
+}
+stopifnot(all.equal(attr(nfun(2,1,3,4),"gradient"),
+                    attr(nfun(2,1,3,4),"gradient")))
+nm1c &lt;- update(nm1,circumference ~ nfun2(age, Asym, xmid, scal)  ~ Asym | Tree)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

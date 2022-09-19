@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Unit labels</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for unit_format {scales}"><tr><td>unit_format {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Unit labels</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#superseded"><img src="../help/figures/lifecycle-superseded.svg" alt='[Superseded]' /></a>
+</p>
+<p>This function is kept for backward compatiblity; you should either use
+<code><a href="label_number.html">label_number()</a></code> or <code><a href="label_number_si.html">label_number_si()</a></code> instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+unit_format(
+  accuracy = NULL,
+  scale = 1,
+  prefix = "",
+  unit = "m",
+  sep = " ",
+  suffix = paste0(sep, unit),
+  big.mark = " ",
+  decimal.mark = ".",
+  trim = TRUE,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>accuracy</code></td>
+<td>
+<p>A number to round to. Use (e.g.) <code>0.01</code> to show 2 decimal
+places of precision. If <code>NULL</code>, the default, uses a heuristic that should
+ensure breaks have the minimum number of digits needed to show the
+difference between adjacent values.
+</p>
+<p>Applied to rescaled data.</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>A scaling factor: <code>x</code> will be multiplied by <code>scale</code> before
+formatting. This is useful if the underlying data is very small or very
+large.</p>
+</td></tr>
+<tr valign="top"><td><code>prefix</code></td>
+<td>
+<p>Additional text to display before the number. The suffix is
+applied to absolute value before <code>style_positive</code> and <code>style_negative</code> are
+processed so that <code>prefix = "$"</code> will yield (e.g.) <code style="white-space: pre;">-$1</code> and <code style="white-space: pre;">($1)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>unit</code></td>
+<td>
+<p>The units to append.</p>
+</td></tr>
+<tr valign="top"><td><code>sep</code></td>
+<td>
+<p>The separator between the number and the unit label.</p>
+</td></tr>
+<tr valign="top"><td><code>suffix</code></td>
+<td>
+<p>Additional text to display after the number.</p>
+</td></tr>
+<tr valign="top"><td><code>big.mark</code></td>
+<td>
+<p>Character used between every 3 digits to separate thousands.</p>
+</td></tr>
+<tr valign="top"><td><code>decimal.mark</code></td>
+<td>
+<p>The character to be used to indicate the numeric
+decimal point.</p>
+</td></tr>
+<tr valign="top"><td><code>trim</code></td>
+<td>
+<p>Logical, if <code>FALSE</code>, values are right-justified to a common
+width (see <code><a href="../../base/html/format.html">base::format()</a></code>).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments passed on to <code><a href="../../base/html/format.html">base::format()</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Label with units
+demo_continuous(c(0, 1), labels = unit_format(unit = "m"))
+# Labels in kg, but original data in g
+km &lt;- unit_format(unit = "km", scale = 1e-3, digits = 2)
+demo_continuous(c(0, 2500), labels = km)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

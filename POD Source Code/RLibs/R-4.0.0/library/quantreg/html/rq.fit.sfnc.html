@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sparse Constrained Regression Quantile Fitting</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq.fit.sfnc {quantreg}"><tr><td>rq.fit.sfnc {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Sparse Constrained Regression Quantile Fitting</h2>
+
+<h3>Description</h3>
+
+<p>Fit constrained regression quantiles using a sparse implementation of
+the Frisch-Newton Interior-point algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rq.fit.sfnc(x, y, R, r, tau = 0.5,
+            rhs = (1-tau)*c(t(x) %*% rep(1,length(y))),control)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>structure of the design matrix X stored in csr format</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>response vector</p>
+</td></tr>
+<tr valign="top"><td><code>R</code></td>
+<td>
+<p>constraint matrix stored in csr format</p>
+</td></tr>
+<tr valign="top"><td><code>r</code></td>
+<td>
+<p>right-hand-side of the constraint</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+<p>desired quantile</p>
+</td></tr>
+<tr valign="top"><td><code>rhs</code></td>
+<td>
+<p>the right-hand-side of the dual problem; regular users
+shouldn't need to specify this.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>control paramters for fitting see <code>sfn.control</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is a sparse implementation of the Frisch-Newton algorithm for
+constrained quantile regression described in Koenker and Portnoy (1996).
+The sparse matrix linear algebra is implemented through the functions
+available in the R package <span class="pkg">SparseM</span>.
+</p>
+
+
+<h3>Value</h3>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>coef</code></td>
+<td>
+<p>Regression quantile coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>ierr</code></td>
+<td>
+<p>Error code for the internal Fortran routine <code>srqfn</code>:
+</p>
+
+<dl>
+<dt>1:</dt><dd><p> insufficient work space in call to <code>extract</code></p>
+</dd>
+<dt>3:</dt><dd><p> insufficient storage in iwork when calling ordmmd</p>
+</dd>
+<dt>4:</dt><dd><p> insufficient storage in iwork when calling sfinit</p>
+</dd>
+<dt>5:</dt><dd><p> nnzl &gt; nnzlmax when calling sfinit</p>
+</dd>
+<dt>6:</dt><dd><p> nsub &gt; nsubmax when calling sfinit</p>
+</dd>
+<dt>7:</dt><dd><p> insufficient work space in iwork when calling symfct</p>
+</dd>
+<dt>8:</dt><dd><p> inconsistancy in input when calling symfct</p>
+</dd>
+<dt>9:</dt><dd><p> tmpsiz &gt; tmpmax when calling symfct; increase tmpmax</p>
+</dd>
+<dt>10:</dt><dd><p> nonpositive diagonal encountered when calling blkfct</p>
+</dd>
+<dt>11:</dt><dd><p> insufficient work storage in tmpvec when calling blkfct</p>
+</dd>
+<dt>12:</dt><dd><p> insufficient work storage in iwork when calling blkfct</p>
+</dd>
+<dt>13:</dt><dd><p> nnzd &gt; nnzdmax in e,je when calling amub</p>
+</dd>
+<dt>14:</dt><dd><p> nnzd &gt; nnzdmax in g,jg when calling amub</p>
+</dd>
+<dt>15:</dt><dd><p> nnzd &gt; nnzdmax in h,jh when calling aplb</p>
+</dd>
+<dt>15:</dt><dd><p> tiny diagonals replaced with Inf when calling blkfct</p>
+</dd>
+</dl>
+
+</td></tr>
+<tr valign="top"><td><code>it</code></td>
+<td>
+<p>Iteration count</p>
+</td></tr>
+<tr valign="top"><td><code>time</code></td>
+<td>
+<p>Amount of time used in the computation</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Pin Ng</p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R and Ng, P. (2002).  SparseM:  A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>; 
+<a href="https://CRAN.R-project.org/package=SparseM">https://CRAN.R-project.org/package=SparseM</a>
+</p>
+<p>Koenker, R. and P. Ng(2005).
+Inequality Constrained Quantile Regression, <em>Sankya</em>, 418-440.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.fit.sfn.html">rq.fit.sfn</a></code> for the unconstrained version,
+<span class="pkg">SparseM</span> for the underlying sparse matrix <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## An artificial example :
+n &lt;- 200
+p &lt;- 50
+set.seed(17)
+X &lt;- rnorm(n*p)
+X[abs(X) &lt; 2.0] &lt;- 0
+X &lt;- cbind(1,matrix(X,n,p))
+y &lt;- 0.5 * apply(X,1,sum) + rnorm(n) ## true beta = (0.5, 0.5, ...)
+R &lt;- rbind(diag(p+1), -diag(p+1))
+r &lt;- c(rep( 0, p+1), rep(-1, p+1))
+
+sX &lt;- as.matrix.csr(X)
+sR &lt;- as.matrix.csr(R)
+try(rq.o &lt;- rq.fit.sfnc(sX, y, sR, r)) #-&gt; not enough tmp memory
+
+(tmpmax &lt;- floor(1e5 + exp(-12.1)*(sX@ia[p+1]-1)^2.35))
+## now ok:
+rq.o &lt;- rq.fit.sfnc(sX, y, sR, r, control = list(tmpmax = tmpmax))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

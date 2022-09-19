@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Checks for valid Munsell colours</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for check_mnsl {munsell}"><tr><td>check_mnsl {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Checks for valid Munsell colours</h2>
+
+<h3>Description</h3>
+
+<p>Checks user supplied munsell specification for validity.  
+I.e. colour is of form &quot;h v/c&quot; and h,  v and c take valid values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+check_mnsl(col)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>a character vector representing Munsell colours.</p>
+</td></tr>
+<tr valign="top"><td><code>fix</code></td>
+<td>
+<p>passed on to <code><a href="fix_mnsl.html">fix_mnsl</a></code>. Use <code>fix = TRUE</code> to
+fix &quot;bad&quot; colours</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a character vector containing the input colours.  If any colours
+were outside the gamut they will be represented by NA.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+check_mnsl(c("5R 5/8","2.5R 9/28"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

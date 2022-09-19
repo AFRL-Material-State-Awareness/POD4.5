@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Play animation of RGL scene</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for play3d {rgl}"><tr><td>play3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Play animation of RGL scene </h2>
+
+<h3>Description</h3>
+
+<p><code>play3d</code> calls a function repeatedly, passing it the elapsed
+time in seconds, and using the result of the function to
+reset the viewpoint.  <code>movie3d</code> does the same, but
+records each frame to a file to make a movie.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+play3d(f, duration = Inf, dev = cur3d(), ..., startTime = 0)
+movie3d(f, duration, dev = cur3d(), ..., fps = 10, 
+                    movie = "movie", frames = movie, dir = tempdir(), 
+                    convert = NULL, clean = TRUE, verbose = TRUE,
+                    top = !rgl.useNULL(), type = "gif", startTime = 0,
+                    webshot = TRUE) 
+
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p> A function returning a list that may be passed to <code><a href="par3d.html">par3d</a></code> </p>
+</td></tr>
+<tr valign="top"><td><code>duration</code></td>
+<td>
+<p> The duration of the animation </p>
+</td></tr>    
+<tr valign="top"><td><code>dev</code></td>
+<td>
+<p> Which RGL device to select </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> Additional parameters to pass to <code>f</code>. </p>
+</td></tr>
+<tr valign="top"><td><code>startTime</code></td>
+<td>
+<p> Initial time at which to start the animation </p>
+</td></tr>
+<tr valign="top"><td><code>fps</code></td>
+<td>
+<p> Number of frames per second </p>
+</td></tr>
+<tr valign="top"><td><code>movie</code></td>
+<td>
+<p> The base of the output filename, not including .gif </p>
+</td></tr>
+<tr valign="top"><td><code>frames</code></td>
+<td>
+<p> The base of the name for each frame </p>
+</td></tr>
+<tr valign="top"><td><code>dir</code></td>
+<td>
+<p> A directory in which to create temporary files for each frame of the movie </p>
+</td></tr>  
+<tr valign="top"><td><code>convert</code></td>
+<td>
+<p> How to convert to a GIF movie; see Details </p>
+</td></tr>
+<tr valign="top"><td><code>clean</code></td>
+<td>
+<p> If <code>convert</code> is <code>NULL</code> or <code>TRUE</code>, whether to delete the individual frames </p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p> Whether to report the <code>convert</code> command and the output filename </p>
+</td></tr>
+<tr valign="top"><td><code>top</code></td>
+<td>
+<p> Whether to call <code><a href="rgl.bringtotop.html">rgl.bringtotop</a></code> before each frame </p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p> What type of movie to create.  See Details. </p>
+</td></tr>
+<tr valign="top"><td><code>webshot</code></td>
+<td>
+<p> Whether to use the <span class="pkg">webshot2</span> package
+for snapshots of frames. See <code><a href="snapshot.html">snapshot3d</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function <code>f</code> will be called in a loop with the first argument
+being the <code>startTime</code> plus the time in seconds since the start 
+(where the start is measured after all arguments have been evaluated).
+</p>
+<p><code>play3d</code> is likely to place a high load
+on the CPU; if this is a problem, calls to <code><a href="../../base/html/Sys.sleep.html">Sys.sleep</a></code>
+should be made within the function to release time to other processes.
+</p>
+<p><code>play3d</code> will run for the specified <code>duration</code> (in seconds), but
+can be interrupted by pressing <code>ESC</code> while the RGL window has the focus.
+</p>
+<p><code>movie3d</code> saves each frame to disk in a filename of the form &lsquo;<span class="file">framesXXX.png</span>&rsquo;, where
+XXX is the frame number, starting from 0.  
+If <code>convert</code> is <code>NULL</code> (the default) and the
+<span class="pkg"><a href="../../magick/html/magick.html">magick</a></span> package is installed, it will be used
+to convert the frames to a GIF movie (or other format if supported).  If 
+<span class="pkg"><a href="../../magick/html/magick.html">magick</a></span> is not installed or 
+<code>convert</code> is <code>TRUE</code>, <code>movie3d</code> will attempt
+to use the external <code>ImageMagick</code> program to convert the
+frames to a movie.  
+The newer <code>magick</code> executable is tried
+first, then <code>convert</code> if that fails.
+The <code>type</code> argument will be passed to <code>ImageMagick</code> to use as a file extension
+to choose the file type.
+</p>
+<p>Finally, <code>convert</code> can be a template for a command to
+execute in the standard shell (wildcards are allowed). The template is
+converted to a command using <br />
+<code><a href="../../base/html/sprintf.html">sprintf</a>(convert, fps, frames, movie, type, duration, dir)</code> <br />
+For example, <code>convert = TRUE</code>
+uses the template <code>"magick -delay 1x%d %s*.png %s.%s"</code>. All work
+is done in the directory <code>dir</code>, so paths should not be needed in
+the command.  (Note that <code><a href="../../base/html/sprintf.html">sprintf</a></code> does not require all
+arguments to be used, and supports formats that use them in an
+arbitrary order.)
+</p>
+<p>The <code>top = TRUE</code> default is designed to work around an OpenGL limitation:
+in some implementations, <code><a href="snapshot.html">rgl.snapshot</a></code> will fail if the window
+is not topmost.
+</p>
+<p>As of <span class="pkg">rgl</span> version 0.94, the <code>dev</code> argument is not needed:  the
+function <code>f</code> can specify its device, as <code><a href="spin3d.html">spin3d</a></code> does, 
+for example.  However, if <code>dev</code> is specified, it will be selected
+as the current device as each update is played.
+</p>
+<p>As of <span class="pkg">rgl</span> version 0.95.1476, <code>f</code> can 
+include multiple values in a <code>"subscene"</code>
+component, and <code>par3d()</code> will be called
+for each of them.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>play3d</code> is called for the side effect of its repeated calls to <code>f</code>.
+It returns <code>NULL</code> invisibly.
+</p>
+<p><code>movie3d</code> is also normally called for the side effect
+of producing the output movie.  It invisibly returns
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch, based on code by Michael Friendly </p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="spin3d.html">spin3d</a></code> and <code><a href="par3dinterp.html">par3dinterp</a></code> return functions suitable 
+to use as <code>f</code>. See <code>demo(flag)</code> for an example that modifies the
+scene in <code>f</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+plot3d( cube3d(col = "green") )
+M &lt;- par3d("userMatrix")
+if (!rgl.useNULL())
+  play3d( par3dinterp(times = (0:2)*0.5, userMatrix = list(M,
+                                     rotate3d(M, pi/2, 1, 0, 0),
+                                     rotate3d(M, pi/2, 0, 1, 0) ) ), 
+        duration = 2 )
+## Not run: 
+movie3d( spin3d(), duration = 5 )
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

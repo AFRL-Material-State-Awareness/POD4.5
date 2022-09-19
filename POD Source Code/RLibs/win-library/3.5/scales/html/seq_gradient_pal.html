@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sequential colour gradient palette (continuous)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for seq_gradient_pal {scales}"><tr><td>seq_gradient_pal {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Sequential colour gradient palette (continuous)</h2>
+
+<h3>Description</h3>
+
+<p>Sequential colour gradient palette (continuous)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+seq_gradient_pal(low = mnsl("10B 4/6"), high = mnsl("10R 4/6"), space = "Lab")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>low</code></td>
+<td>
+<p>colour for low end of gradient.</p>
+</td></tr>
+<tr valign="top"><td><code>high</code></td>
+<td>
+<p>colour for high end of gradient.</p>
+</td></tr>
+<tr valign="top"><td><code>space</code></td>
+<td>
+<p>colour space in which to calculate gradient. Must be &quot;Lab&quot; -
+other values are deprecated.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- seq(0, 1, length.out = 25)
+show_col(seq_gradient_pal()(x))
+show_col(seq_gradient_pal("white", "black")(x))
+
+library(munsell)
+show_col(seq_gradient_pal("white", mnsl("10R 4/6"))(x))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

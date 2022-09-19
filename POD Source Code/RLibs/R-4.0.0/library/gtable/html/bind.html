@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Row and column binding for gtables.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bind {gtable}"><tr><td>bind {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Row and column binding for gtables.</h2>
+
+<h3>Description</h3>
+
+<p>These functions are the parallels of the <code>matrix</code>/<code>data.frame</code> row and
+column bindings. As such they work in the same way, except they have to take
+care of additional attributes within the gtables. Most importantly it needs
+to take care of the sizing of the final gtable, as the different gtables
+going in may have different widths or heights. By default it tries to
+calculate the maximum width/height among the supplied gtables, but other
+options exists. Further, the relative layering of the grobs in each gtable
+can be modified or left as-is.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'gtable'
+rbind(..., size = "max", z = NULL)
+
+## S3 method for class 'gtable'
+cbind(..., size = "max", z = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>gtables to combine (<code>x</code> and <code>y</code>)</p>
+</td></tr>
+<tr valign="top"><td><code>size</code></td>
+<td>
+<p>How should the widths (for rbind) and the heights (for cbind)
+be combined across the gtables: take values from <code>first</code>,
+or <code>last</code> gtable, or compute the <code>min</code> or <code>max</code> values.
+Defaults to <code>max</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p>A numeric vector indicating the relative z values of each gtable.
+The z values of each object in the resulting gtable will be modified
+to fit this order. If <code>NULL</code>, then the z values of obects within
+each gtable will not be modified.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+a &lt;- rectGrob(gp = gpar(fill = "red"))
+b &lt;- circleGrob()
+c &lt;- linesGrob()
+
+row &lt;- matrix(list(a, b), nrow = 1)
+col &lt;- matrix(list(a, b), ncol = 1)
+mat &lt;- matrix(list(a, b, c, nullGrob()), nrow = 2)
+
+row_gt &lt;- gtable_matrix("demo", row, unit(c(1, 1), "null"), unit(1, "null"))
+col_gt &lt;- gtable_matrix("demo", col, unit(1, "null"), unit(c(1, 1), "null"))
+mat_gt &lt;- gtable_matrix("demo", mat, unit(c(1, 1), "null"), unit(c(1, 1), "null"))
+
+# cbind
+c_binded &lt;- cbind(mat_gt, col_gt, size = "first")
+plot(c_binded)
+
+# rbind
+r_binded &lt;- rbind(mat_gt, row_gt, size = "last")
+plot(r_binded)
+
+# Dimensions must match along bind direction
+try(cbind(mat_gt, row_gt))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

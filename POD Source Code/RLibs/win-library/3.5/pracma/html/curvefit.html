@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Parametric Curve Fit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for curvefit {pracma}"><tr><td>curvefit {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Parametric Curve Fit
+</h2>
+
+<h3>Description</h3>
+
+<p>Polynomial fitting of parametrized points on 2D curves, also
+requiring to meet some points exactly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+curvefit(u, x, y, n, U = NULL, V = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>u</code></td>
+<td>
+<p>the parameter vector.</p>
+</td></tr>
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>x-, y-coordinates for each parameter value.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>order of the polynomials, the same in x- and y-dirction.</p>
+</td></tr>
+<tr valign="top"><td><code>U</code></td>
+<td>
+<p>parameter values where points will be fixed.</p>
+</td></tr>
+<tr valign="top"><td><code>V</code></td>
+<td>
+<p>matrix with two columns and <code>lemgth(U)</code> rows;
+first column contains the x-, the second the y-values of those
+points kept fixed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function will attempt to fit two polynomials to parametrized curve 
+points using the linear least squares approach with linear equality 
+constraints in <code>lsqlin</code>. The requirement to meet exactly some fixed 
+points is interpreted as a linear equality constraint.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with 4 components, <code>xp</code> and <code>yp</code> coordinates of 
+the fitted points, and <code>px</code> and <code>py</code> the coefficients of the
+fitting polynomials in x- and y-direction.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In the same manner, derivatives/directions could be prescribed at certain
+points.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="circlefit.html">circlefit</a></code>, <code><a href="lsqlin.html">lsqlin</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Approximating half circle arc with small perturbations
+N &lt;- 50
+u &lt;- linspace(0, pi, N)
+x &lt;- cos(u) + 0.05 * randn(1, N)
+y &lt;- sin(u) + 0.05 * randn(1, N)
+n &lt;- 8
+cfit1 &lt;- curvefit(u, x, y, n)
+## Not run: 
+plot(x, y, col = "darkgray", pch = 19, asp = 1)
+xp &lt;- cfit1$xp; yp &lt;- cfit1$yp
+lines(xp, yp, col="blue")
+grid()
+## End(Not run)
+
+##  Fix the end points at t = 0 and t = pi
+U &lt;- c(0, pi)
+V &lt;- matrix(c(1, 0, -1, 0), 2, 2, byrow = TRUE)
+cfit2 &lt;- curvefit(u, x, y, n, U, V)
+## Not run: 
+xp &lt;- cfit2$xp; yp &lt;- cfit2$yp
+lines(xp, yp, col="red")
+## End(Not run)
+
+## Not run: 
+##  Archimedian spiral
+n &lt;- 8
+u &lt;- linspace(0, 3*pi, 50)
+a &lt;- 1.0
+x &lt;- as.matrix(a*u*cos(u))
+y &lt;- as.matrix(a*u*sin(u))
+plot(x, y, type = "p", pch = 19, col = "darkgray", asp = 1)
+lines(x, y, col = "darkgray", lwd = 3)
+cfit &lt;- curvefit(u, x, y, n)
+px &lt;- c(cfit$px); py &lt;- c(cfit$py)
+v &lt;- linspace(0, 3*pi, 200)
+xs &lt;- polyval(px, v)
+ys &lt;- polyval(py, v)
+lines(xs, ys, col = "navy")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert character vector to DMS-class object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for char2dms {sp}"><tr><td>char2dms {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert character vector to DMS-class object</h2>
+
+<h3>Description</h3>
+
+<p>These two helper functions convert character vectors and decimal degree vectors to the DMS-class representation of degrees, minutes, and decimal seconds. &quot;DMS&quot; objects cannot contain NAs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+char2dms(from, chd = "d", chm = "'", chs = "\"")
+dd2dms(dd, NS = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>from</code></td>
+<td>
+<p>character vector of degree, minute, decimal second data</p>
+</td></tr>
+<tr valign="top"><td><code>chd</code></td>
+<td>
+<p>degree character terminator</p>
+</td></tr>
+<tr valign="top"><td><code>chm</code></td>
+<td>
+<p>minute character terminator</p>
+</td></tr>
+<tr valign="top"><td><code>chs</code></td>
+<td>
+<p>second character terminator</p>
+</td></tr>
+<tr valign="top"><td><code>dd</code></td>
+<td>
+<p>numeric vector of decimal degrees</p>
+</td></tr>
+<tr valign="top"><td><code>NS</code></td>
+<td>
+<p>logical, TRUE for north/south decimal degrees, FALSE for east/west decimal degrees</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>In char2dms, the input data vector should use a regular format, such as that used in the PROJ.4 library, with a trailing capital (NSWE) indicating compass direction.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Both functions return a &quot;DMS&quot; object.
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>from = &quot;DMS&quot;, to = &quot;numeric&quot;</dt><dd><p>coerce a <code>"DMS"</code> object to a <code>"numeric"</code> vector</p>
+</dd>
+<dt>from = &quot;DMS&quot;, to = &quot;character&quot;</dt><dd><p>coerce a <code>"DMS"</code> object to a <code>"character"</code> vector (the <code>as.character.DMS</code> S3 method is also available)</p>
+</dd>
+</dl>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Bivand <a href="mailto:Roger.Bivand@nhh.no">Roger.Bivand@nhh.no</a> </p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="DMS-class.html">DMS-class</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(state)
+str(state.center$y)
+stateN &lt;- dd2dms(state.center$y, NS=TRUE)
+str(attributes(stateN))
+ch.stateN &lt;- as.character(stateN)
+str(ch.stateN)
+stateNa &lt;- char2dms(ch.stateN)
+str(attributes(stateNa))
+ch.stateN &lt;- as(stateN, "character")
+str(ch.stateN)
+stateNa &lt;- char2dms(ch.stateN)
+str(attributes(stateNa))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

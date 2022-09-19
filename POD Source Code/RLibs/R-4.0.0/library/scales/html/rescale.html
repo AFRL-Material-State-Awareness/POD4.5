@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Rescale continuous vector to have specified minimum and...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rescale {scales}"><tr><td>rescale {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Rescale continuous vector to have specified minimum and maximum</h2>
+
+<h3>Description</h3>
+
+<p>Rescale continuous vector to have specified minimum and maximum
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rescale(x, to, from, ...)
+
+## S3 method for class 'numeric'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE), ...)
+
+## S3 method for class 'dist'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE), ...)
+
+## S3 method for class 'logical'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE), ...)
+
+## S3 method for class 'POSIXt'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE), ...)
+
+## S3 method for class 'Date'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE), ...)
+
+## S3 method for class 'integer64'
+rescale(x, to = c(0, 1), from = range(x, na.rm = TRUE), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>continuous vector of values to manipulate.</p>
+</td></tr>
+<tr valign="top"><td><code>to</code></td>
+<td>
+<p>output range (numeric vector of length two)</p>
+</td></tr>
+<tr valign="top"><td><code>from</code></td>
+<td>
+<p>input range (vector of length two).  If not given, is
+calculated from the range of <code>x</code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed on to methods</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+rescale(1:100)
+rescale(runif(50))
+rescale(1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

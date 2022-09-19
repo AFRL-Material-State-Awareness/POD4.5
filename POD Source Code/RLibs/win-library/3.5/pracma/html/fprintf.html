@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Formatted Printing (Matlab style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fprintf {pracma}"><tr><td>fprintf {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Formatted Printing (Matlab style)
+</h2>
+
+<h3>Description</h3>
+
+<p>Formatted printing to stdout or a file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fprintf(fmt, ..., file = "", append = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fmt</code></td>
+<td>
+<p>a character vector of format strings.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>values passed to the format string.</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>a connection or a character string naming the file to
+print to; default is &quot;&quot; which means standard output.</p>
+</td></tr>
+<tr valign="top"><td><code>append</code></td>
+<td>
+<p>logical; shall the output be appended to the file;
+default is <code>FALSE</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>fprintf</code> applies the format string <code>fmt</code> to all input
+data <code>...</code> and writes the result to standard output or a file.
+The usual C-style string formatting commands are used-
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns invisibly the number of bytes printed (using <code>nchar</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/sprintf.html">sprintf</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Examples:
+nbytes &lt;- fprintf("Results are:\n", file = "")
+for (i in 1:10) {
+    fprintf("%4d  %15.7f\n", i, exp(i), file = "")
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Survey statistics on subsets</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyby {survey}"><tr><td>svyby {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Survey statistics on subsets</h2>
+
+<h3>Description</h3>
+
+<p>Compute survey statistics on subsets of a survey defined by factors. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyby(formula, by ,design,...)
+## Default S3 method:
+svyby(formula, by, design, FUN, ..., deff=FALSE,keep.var = TRUE,
+keep.names = TRUE,verbose=FALSE, vartype=c("se","ci","ci","cv","cvpct","var"),
+ drop.empty.groups=TRUE, covmat=FALSE, return.replicates=FALSE,
+ na.rm.by=FALSE, na.rm.all=FALSE,
+multicore=getOption("survey.multicore"))
+## S3 method for class 'survey.design2'
+svyby(formula, by, design, FUN, ..., deff=FALSE,keep.var = TRUE,
+keep.names = TRUE,verbose=FALSE, vartype=c("se","ci","ci","cv","cvpct","var"),
+ drop.empty.groups=TRUE, covmat=FALSE, influence=covmat,
+ na.rm.by=FALSE, na.rm.all=FALSE, multicore=getOption("survey.multicore"))
+
+## S3 method for class 'svyby'
+SE(object,...)
+## S3 method for class 'svyby'
+deff(object,...)
+## S3 method for class 'svyby'
+coef(object,...)
+## S3 method for class 'svyby'
+confint(object,  parm, level = 0.95,df =Inf,...)
+unwtd.count(x, design, ...)
+svybys(formula,  bys,  design, FUN, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula,x</code></td>
+<td>
+<p>A formula specifying the variables to pass to
+<code>FUN</code> (or a matrix, data frame, or vector)</p>
+</td></tr>
+<tr valign="top"><td><code>by</code></td>
+<td>
+<p>A formula specifying factors that define subsets, or a list
+of factors.</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>A <code>svydesign</code> or <code>svrepdesign</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+<p>A function taking a formula and survey design object as its
+first two arguments.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments to <code>FUN</code>. NOTE: if any of the
+names of these are partial matches to <code>formula</code>,<code>by</code>,
+or <code>design</code>, you must specify the  <code>formula</code>,<code>by</code>,
+or <code>design</code> argument by name, not just by position.
+</p>
+</td></tr>
+<tr valign="top"><td><code>deff</code></td>
+<td>
+<p>Request a design effect from <code>FUN</code></p>
+</td></tr>
+<tr valign="top"><td><code>keep.var</code></td>
+<td>
+<p>If <code>FUN</code> returns a <code>svystat</code> object, extract
+standard errors from it</p>
+</td></tr>
+<tr valign="top"><td><code>keep.names</code></td>
+<td>
+<p>Define row names based on the subsets</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>If <code>TRUE</code>, print a label for each subset as it is
+processed.</p>
+</td></tr>
+<tr valign="top"><td><code>vartype</code></td>
+<td>
+<p>Report variability as one or more of
+standard error, confidence interval, coefficient of
+variation,  percent coefficient of variation, or variance</p>
+</td></tr>
+<tr valign="top"><td><code>drop.empty.groups</code></td>
+<td>
+<p>If <code>FALSE</code>, report <code>NA</code> for empty
+groups, if <code>TRUE</code> drop them from the output</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm.by</code></td>
+<td>
+<p>If true, omit groups defined by <code>NA</code> values of the
+<code>by</code> variables</p>
+</td></tr></table>
+<p>.
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>na.rm.all</code></td>
+<td>
+<p>If true, check for groups with no non-missing
+observations for variables defined by <code>formula</code> and treat these groups
+as empty</p>
+</td></tr>
+<tr valign="top"><td><code>covmat</code></td>
+<td>
+<p>If <code>TRUE</code>, compute covariances between estimates for
+different subsets. Allows <code><a href="svycontrast.html">svycontrast</a></code> to be used on
+output. Requires that <code>FUN</code> supports either
+<code>return.replicates=TRUE</code> or <code>influence=TRUE</code></p>
+</td></tr>
+<tr valign="top"><td><code>return.replicates</code></td>
+<td>
+<p>Only for replicate-weight designs. If
+<code>TRUE</code>, return all the replicates as the &quot;replicates&quot; attribute of the result</p>
+</td></tr>
+<tr valign="top"><td><code>influence</code></td>
+<td>
+<p>Return the influence functions of the result</p>
+</td></tr>
+<tr valign="top"><td><code>multicore</code></td>
+<td>
+<p>Use <code>multicore</code> package to distribute subsets over
+multiple processors?</p>
+</td></tr>
+<tr valign="top"><td><code>parm</code></td>
+<td>
+<p>a specification of which parameters are to be given
+confidence intervals, either a vector of numbers or a vector of
+names. If missing, all parameters are considered.</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>the confidence level required.</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>degrees of freedom for t-distribution in confidence
+interval, use <code>degf(design)</code> for number of PSUs minus number of
+strata</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class <code>"svyby"</code></p>
+</td></tr>
+<tr valign="top"><td><code>bys</code></td>
+<td>
+<p>one-sided formula with each term specifying a grouping
+(rather than being combined to give a grouping </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The variance type &quot;ci&quot; asks for confidence intervals, which are produced
+by <code>confint</code>. In some cases additional options to <code>FUN</code> will
+be needed to produce confidence intervals, for example,
+<code>svyquantile</code> needs <code>ci=TRUE</code> or <code>keep.var=FALSE</code>.
+</p>
+<p><code>unwtd.count</code> is designed to be passed to <code>svyby</code> to report
+the number of non-missing observations in each subset. Observations
+with exactly zero weight will also be counted as missing, since that's
+how subsets are implemented for some designs.
+</p>
+<p>Parallel processing with <code>multicore=TRUE</code> is useful only for
+fairly large problems and on computers with sufficient memory. The
+<code>multicore</code> package is incompatible with some GUIs, although the
+Mac Aqua GUI appears to be safe.
+</p>
+<p>The variant <code>svybys</code> creates a separate table for each term in
+<code>bys</code> rather than creating a joint table. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"svyby"</code>: a data frame showing the factors and the results of <code>FUN</code>.
+</p>
+<p>For <code>unwtd.count</code>, the unweighted number of non-missing observations in the data matrix specified by <code>x</code> for the design. 
+</p>
+
+
+<h3>Note</h3>
+
+<p>The function works by making a lot of calls of the form
+<code>FUN(formula, subset(design, by==i))</code>, where <code>formula</code> is
+re-evaluated in each subset, so it is unwise to use data-dependent
+terms in <code>formula</code>.  In particular, <code>svyby(~factor(a), ~b,
+    design=d, svymean)</code>, will create factor variables whose levels are
+only those values of <code>a</code>  present in each subset.  Either use
+<code><a href="update.survey.design.html">update.survey.design</a></code> to add variables to the design
+object instead or specify the levels explicitly in the call to <code>factor</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p> Asking for a design effect (<code>deff=TRUE</code>) from a function
+that does not produce one will cause an error or incorrect formatting
+of the output. The same will occur with <code>keep.var=TRUE</code> if the
+function does not compute a standard error.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svychisq.html">svytable</a></code> and <code><a href="ftable.svystat.html">ftable.svystat</a></code> for
+contingency tables, <code><a href="ftable.svystat.html">ftable.svyby</a></code> for pretty-printing of <code>svyby</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+
+svyby(~api99, ~stype, dclus1, svymean)
+svyby(~api99, ~stype, dclus1, svyquantile, quantiles=0.5,ci=TRUE,vartype="ci")
+## without ci=TRUE svyquantile does not compute standard errors
+svyby(~api99, ~stype, dclus1, svyquantile, quantiles=0.5, keep.var=FALSE)
+svyby(~api99, list(school.type=apiclus1$stype), dclus1, svymean)
+svyby(~api99+api00, ~stype, dclus1, svymean, deff=TRUE,vartype="ci")
+svyby(~api99+api00, ~stype+sch.wide, dclus1, svymean, keep.var=FALSE)
+## report raw number of observations
+svyby(~api99+api00, ~stype+sch.wide, dclus1, unwtd.count, keep.var=FALSE)
+
+rclus1&lt;-as.svrepdesign(dclus1)
+
+svyby(~api99, ~stype, rclus1, svymean)
+svyby(~api99, ~stype, rclus1, svyquantile, quantiles=0.5)
+svyby(~api99, list(school.type=apiclus1$stype), rclus1, svymean, vartype="cv")
+svyby(~enroll,~stype, rclus1,svytotal, deff=TRUE)
+svyby(~api99+api00, ~stype+sch.wide, rclus1, svymean, keep.var=FALSE)
+##report raw number of observations
+svyby(~api99+api00, ~stype+sch.wide, rclus1, unwtd.count, keep.var=FALSE)
+
+## comparing subgroups using covmat=TRUE
+mns&lt;-svyby(~api99, ~stype, rclus1, svymean,covmat=TRUE)
+vcov(mns)
+svycontrast(mns, c(E = 1, M = -1))
+
+str(svyby(~api99, ~stype, rclus1, svymean,return.replicates=TRUE))
+
+tots&lt;-svyby(~enroll, ~stype, dclus1, svytotal,covmat=TRUE)
+vcov(tots)
+svycontrast(tots, quote(E/H))
+
+
+## comparing subgroups uses the delta method unless replicates are present
+meanlogs&lt;-svyby(~log(enroll),~stype,svymean, design=rclus1,covmat=TRUE)
+svycontrast(meanlogs, quote(exp(E-H)))
+meanlogs&lt;-svyby(~log(enroll),~stype,svymean, design=rclus1,covmat=TRUE,return.replicates=TRUE)
+svycontrast(meanlogs, quote(exp(E-H)))
+
+
+## extractor functions
+(a&lt;-svyby(~enroll, ~stype, rclus1, svytotal, deff=TRUE, verbose=TRUE, 
+  vartype=c("se","cv","cvpct","var")))
+deff(a)
+SE(a)
+cv(a)
+coef(a)
+confint(a, df=degf(rclus1))
+
+## ratio estimates
+svyby(~api.stu, by=~stype, denominator=~enroll, design=dclus1, svyratio)
+
+ratios&lt;-svyby(~api.stu, by=~stype, denominator=~enroll, design=dclus1, svyratio,covmat=TRUE)
+vcov(ratios)
+
+## empty groups
+svyby(~api00,~comp.imp+sch.wide,design=dclus1,svymean)
+svyby(~api00,~comp.imp+sch.wide,design=dclus1,svymean,drop.empty.groups=FALSE)
+
+## Multiple tables
+svybys(~api00,~comp.imp+sch.wide,design=dclus1,svymean)
+
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Recursively join a list of data frames.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for join_all {plyr}"><tr><td>join_all {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Recursively join a list of data frames.</h2>
+
+<h3>Description</h3>
+
+<p>Recursively join a list of data frames.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+join_all(dfs, by = NULL, type = "left", match = "all")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>dfs</code></td>
+<td>
+<p>A list of data frames.</p>
+</td></tr>
+<tr valign="top"><td><code>by</code></td>
+<td>
+<p>character vector of variable names to join by. If omitted, will
+match on all common variables.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of join: left (default), right, inner or full.  See
+details for more information.</p>
+</td></tr>
+<tr valign="top"><td><code>match</code></td>
+<td>
+<p>how should duplicate ids be matched? Either match just the
+<code>"first"</code> matching row, or match <code>"all"</code> matching rows. Defaults
+to <code>"all"</code> for compatibility with merge, but <code>"first"</code> is
+significantly faster.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+dfs &lt;- list(
+  a = data.frame(x = 1:10, a = runif(10)),
+  b = data.frame(x = 1:10, b = runif(10)),
+  c = data.frame(x = 1:10, c = runif(10))
+)
+join_all(dfs)
+join_all(dfs, "x")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

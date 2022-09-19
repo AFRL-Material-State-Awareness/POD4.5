@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: ClientValue object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ClientValue {crosstalk}"><tr><td>ClientValue {crosstalk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>ClientValue object</h2>
+
+<h3>Description</h3>
+
+<p>An object that can be used in a <a href="https://shiny.rstudio.com/">Shiny</a> server
+function to get or set a crosstalk variable that exists on the client. The
+client copy of the variable is the canonical copy, so there is no direct
+&quot;set&quot; method that immediately changes the value; instead, there is a
+'sendUpdate' method that sends a request to the browser to change the value,
+which will then cause the new value to be relayed back to the server.
+</p>
+<p>This object is used to implement <code><a href="SharedData.html">SharedData</a></code> and should not need
+to be used directly by users.
+</p>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-new"><code>ClientValue$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-get"><code>ClientValue$get()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-sendUpdate"><code>ClientValue$sendUpdate()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-clone"><code>ClientValue$clone()</code></a>
+</p>
+</li></ul>
+
+
+<hr>
+<a id="method-new"></a>
+
+
+
+<h4>Method <code>new()</code></h4>
+
+<p>Creates a new ClientValue object to reflect the crosstalk variable
+specified by 'group' and 'name'.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ClientValue$new(
+  name,
+  group = "default",
+  session = shiny::getDefaultReactiveDomain()
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt><dd><p>The name of the crosstalk variable.</p>
+</dd>
+<dt><code>group</code></dt><dd><p>The name of the crosstalk variable group.</p>
+</dd>
+<dt><code>session</code></dt><dd><p>The Shiny session to connect to; defaults to the current
+session.</p>
+</dd>
+</dl>
+
+</div>
+
+
+<hr>
+<a id="method-get"></a>
+
+
+
+<h4>Method <code>get()</code></h4>
+
+<p>Read the value. This is a reactive operation akin to reading a reactive
+value, and so can only be done in a reactive context (e.g. in a
+'shiny::reactive()', 'shiny::observe()', or 'shiny::isolate()' block).
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ClientValue$get()</pre></div>
+
+
+<hr>
+<a id="method-sendUpdate"></a>
+
+
+
+<h4>Method <code>sendUpdate()</code></h4>
+
+<p>Send a message to the browser asking it to update the crosstalk var to
+the given value. This update does not happen synchronously, that is, a
+call to 'get()' immediately following 'sendUpdate(value)' will not
+reflect the new value.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ClientValue$sendUpdate(value)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>value</code></dt><dd><p>The new value for the crosstalk variable. Must be
+serializable as JSON using 'jsonlite'.</p>
+</dd>
+</dl>
+
+</div>
+
+
+<hr>
+<a id="method-clone"></a>
+
+
+
+<h4>Method <code>clone()</code></h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>ClientValue$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre>
+library(shiny)
+
+server &lt;- function(input, output, session) {
+  cv &lt;- ClientValue$new("var1", "group1")
+
+  r &lt;- reactive({
+    # Don't proceed unless cv$get() is a non-NULL value
+    validate(need(cv$get(), message = FALSE))
+
+    runif(cv$get())
+  })
+
+  observeEvent(input$click, {
+    cv$sendUpdate(NULL)
+  })
+}
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>crosstalk</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot or print an object of class limdil</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.limdil {statmod}"><tr><td>plot.limdil {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot or print an object of class limdil</h2>
+
+<h3>Description</h3>
+
+<p>Plot or print the results of a limiting dilution analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'limdil'
+print(x, ...)
+## S3 method for class 'limdil'
+plot(x, col.group=NULL, cex=1, lwd=1, legend.pos="bottomleft", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>object of class <code>limdil</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>col.group</code></td>
+<td>
+<p>vector of colors for the groups of the same length as <code>levels(x$group)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cex</code></td>
+<td>
+<p>relative symbol size</p>
+</td></tr>
+<tr valign="top"><td><code>lwd</code></td>
+<td>
+<p>relative line width</p>
+</td></tr>
+<tr valign="top"><td><code>legend.pos</code></td>
+<td>
+<p>positioning on plot of legend when there are multiple groups</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments to be passed to <code>plot</code> or <code>print</code>.
+Note that <code>pch</code> and <code>lty</code> are reserved arguments for the plot method.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The print method formats results similarly to a regression or anova summary in R.
+</p>
+<p>The plot method produces a plot of a limiting dilution experiment similar to that in Bonnefoix et al (2001). 
+The basic design of the plot was made popular by Lefkovits and Waldmann (1979).
+</p>
+<p>The plot shows frequencies and confidence intervals for the multiple groups. 
+A novel feature is that assays with 100% successes are included in the plot and are represented by down-pointing triangles. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yifang Hu and Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Bonnefoix, T, Bonnefoix, P, Callanan, M, Verdiel, P, and Sotto, JJ (2001).
+Graphical representation of a generalized linear model-based statistical test estimating the fit of the single-hit poisson model to limiting
+dilution assays.
+<em>The Journal of Immunology</em> 167, 5725-5730.
+</p>
+<p>Lefkovits, I, and Waldmann, H (1979).
+<em>Limiting dilution analysis of cells in the immune system</em>.
+Cambridge University Press, Cambridge.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="elda.html">limdil</a> describes the <code>limdil</code> class.</p>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

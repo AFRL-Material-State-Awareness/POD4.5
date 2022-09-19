@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Value Matching</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for MATCH {zoo}"><tr><td>MATCH {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Value Matching</h2>
+
+<h3>Description</h3>
+
+<p><code>MATCH</code> is a generic function for value matching.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+MATCH(x, table, nomatch = NA, ...)
+## S3 method for class 'times'
+MATCH(x, table, nomatch = NA, units = "sec", eps = 1e-10, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object.</p>
+</td></tr>
+<tr valign="top"><td><code>table</code></td>
+<td>
+<p>the values to be matched against.</p>
+</td></tr>
+<tr valign="top"><td><code>nomatch</code></td>
+<td>
+<p>the value to be returned in the case when no match is
+found.  Note that it is coerced to <code>integer</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>units</code></td>
+<td>
+<p>See <code><a href="../../chron/html/trunc.times.html">trunc.times</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+<p>See <code><a href="../../chron/html/trunc.times.html">trunc.times</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments to be passed to methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>MATCH</code> is a new generic function which aims at providing
+the functionality of the non-generic base function <code><a href="../../base/html/match.html">match</a></code>
+for arbitrary objects. Currently, there is only a default method which
+simply calls <code><a href="../../base/html/match.html">match</a></code>.
+</p>
+<p><code>MATCH.times</code> is used for <code>chron</code> objects. <code>x</code> will
+match any time in <code>table</code> less than <code>units</code> away.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/match.html">match</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+MATCH(1:5, 2:3)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

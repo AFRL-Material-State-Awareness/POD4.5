@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Disk usage statistics, per partition</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ps_disk_usage {ps}"><tr><td>ps_disk_usage {ps}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Disk usage statistics, per partition</h2>
+
+<h3>Description</h3>
+
+<p>The output is similar to the Unix <code>df</code> command.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ps_disk_usage(paths = ps_disk_partitions()$mountpoint)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>paths</code></td>
+<td>
+<p>The mounted file systems to list. By default all file
+systems returned by <code><a href="ps_disk_partitions.html">ps_disk_partitions()</a></code> is listed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Note that on Unix a small percentage of the disk space (5% typically)
+is reserved for the superuser. <code>ps_disk_usage()</code> returns the space
+available to the calling user.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with columns <code>mountpoint</code>, <code>total</code>, <code>used</code>,
+<code>available</code> and <code>capacity</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other disk functions: 
+<code><a href="ps_disk_partitions.html">ps_disk_partitions</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ps_disk_usage()
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ps</em> version 1.7.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

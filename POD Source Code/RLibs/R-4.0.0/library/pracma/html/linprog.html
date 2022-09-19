@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Linear Programming Solver</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for linprog {pracma}"><tr><td>linprog {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Linear Programming Solver
+</h2>
+
+<h3>Description</h3>
+
+<p>Solves simple linear programming problems, allowing for inequality and
+equality constraints as well as lower and upper bounds.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+linprog(cc, A = NULL, b = NULL, Aeq = NULL, beq = NULL,
+        lb = NULL, ub = NULL, x0 = NULL, I0 = NULL,
+        bigM = 100, maxiter = 20, maximize = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>cc</code></td>
+<td>
+<p>defines the linear objective function.</p>
+</td></tr>
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>matrix representing the inequality constraints <code>A x &lt;= b</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>vector, right hand side of the inequalities.</p>
+</td></tr>
+<tr valign="top"><td><code>Aeq</code></td>
+<td>
+<p>matrix representing the equality constraints <code>Aeq x &lt;= beq</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>beq</code></td>
+<td>
+<p>vector, right hand side of the inequalities.</p>
+</td></tr>
+<tr valign="top"><td><code>lb</code></td>
+<td>
+<p>lower bounds, if not <code>NULL</code> must all be greater or equal 0.</p>
+</td></tr>
+<tr valign="top"><td><code>ub</code></td>
+<td>
+<p>upper bounds, if not <code>NULL</code> must all be greater or equal <code>lb</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>feasible base vector, will not be used at the moment.</p>
+</td></tr>
+<tr valign="top"><td><code>I0</code></td>
+<td>
+<p>index set of <code>x0</code>, will not be used at the moment.</p>
+</td></tr>
+<tr valign="top"><td><code>bigM</code></td>
+<td>
+<p>big-M constant, will be used for finding a base vector.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>maximize</code></td>
+<td>
+<p>logical; shall the objective be minimized or maximized?</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Solves linear programming problems of the form <i>min cc' * x</i>
+such that
+</p>
+<p style="text-align: center;"><i>A * x &le; b</i></p>
+
+<p style="text-align: center;"><i>A_{eq} * x = b_{eq}</i></p>
+
+<p style="text-align: center;"><i>lb &le; x &le; ub</i></p>
+
+
+
+<h3>Value</h3>
+
+<p>List with
+</p>
+
+<ul>
+<li><p><code>x</code> the solution vector.
+</p>
+</li>
+<li><p><code>fval</code> the value at the optimal solution.
+</p>
+</li>
+<li><p><code>errno</code>, <code>mesage</code> the error number and message.
+</p>
+</li></ul>
+
+
+
+<h3>Note</h3>
+
+<p>This is a first version that will be unstable at times. For real linear
+programming problems use package <code>lpSolve</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>HwB &lt;hwborchers@googlemail.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Vanderbei, R. J. (2001). Linear Programming: Foundations and Extensions.
+Princeton University Press.
+</p>
+<p>Eiselt, H. A., and C.-L. Sandblom (2012). Operations Research: 
+A Model-based Approach. Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>linprog::solveLP</code>, <code>lpSolve::lp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Examples from the book "Operations research - A Model-based Approach"
+#-- production planning
+cc &lt;- c(5, 3.5, 4.5)
+Ain &lt;- matrix(c(3, 5, 4,
+                6, 1, 3), 2, 3, byrow=TRUE)
+bin &lt;- c(540, 480)
+linprog(cc, A = Ain, b = bin, maximize = TRUE)
+# $x     20   0 120
+# $fval  640
+
+#-- diet problem
+cc &lt;- c(1.59, 2.19, 2.99)
+Ain &lt;- matrix(c(-250, -380, -257,
+                 250,  380,  257,
+                  13,   31,   28), 3, 3, byrow = TRUE)
+bin &lt;- c(-1800, 2200, 100)
+linprog(cc, A = Ain, b = bin)
+
+#-- employee scheduling
+cc &lt;- c(1, 1, 1, 1, 1, 1)
+A &lt;- (-1)*matrix(c(1, 0, 0, 0, 0, 1,
+                   1, 1, 0, 0, 0, 0,
+                   0, 1, 1, 0, 0, 0,
+                   0, 0, 1, 1, 0, 0,
+                   0, 0, 0, 1, 1, 0,
+                   0, 0, 0, 0, 1, 1), 6, 6, byrow = TRUE)
+b &lt;- -c(17, 9, 19, 12, 5, 8)
+linprog(cc, A, b)
+
+#-- inventory models
+cc &lt;- c(1, 1.1, 1.2, 1.25, 0.05, 0.15, 0.15)
+Aeq &lt;- matrix(c(1, 0, 0, 0, -1,  0,  0,
+                0, 1, 0, 0,  1, -1,  0,
+                0, 0, 1, 0,  0,  1, -1,
+                0, 0, 0, 1,  0,  0,  1), 4, 7, byrow = TRUE)
+beq &lt;- c(60, 70, 130, 150)
+ub &lt;- c(120, 140, 150, 140, Inf, Inf, Inf)
+linprog(cc, Aeq = Aeq, beq = beq, ub = ub)
+
+#-- allocation problem
+cc &lt;- c(1, 1, 1, 1, 1)
+A &lt;- matrix(c(-5,    0,    0,    0,    0,
+               0, -4.5,    0,    0,    0,
+               0,    0, -5.5,    0,    0,
+               0,    0,    0, -3.5,    0,
+               0,    0,    0,    0, -5.5,
+               5,    0,    0,    0,    0,
+               0,  4.5,    0,    0,    0,
+               0,    0,  5.5,    0,    0,
+               0,    0,    0,  3.5,    0,
+               0,    0,    0,    0,  5.5,
+              -5, -4.5, -5.5, -3.5, -5.5,
+              10, 10.0, 10.0, 10.0, 10.0,
+              0.2, 0.2,  0.2, -1.0,  0.2), 13, 5, byrow = TRUE)
+b &lt;- c(-50, -55, -60, -50, -50, rep(100, 5), -5*64, 700, 0)
+# linprog(cc, A = A, b = b)
+lb &lt;- b[1:5] / diag(A[1:5, ])
+ub &lt;- b[6:10] / diag(A[6:10, ])
+A1 &lt;- A[11:13, ]
+b1 &lt;- b[11:13]
+linprog(cc, A1, b1, lb = lb, ub = ub)
+
+#-- transportation problem
+cc &lt;- c(1, 7, 4, 2, 3, 5)
+Aeq &lt;- matrix(c(1, 1, 1, 0, 0, 0,
+                0, 0, 0, 1, 1, 1,
+                1, 0, 0, 1, 0, 0,
+                0, 1, 0, 0, 1, 0,
+                0, 0, 1, 0, 0, 1), 5, 6, byrow = TRUE)
+beq &lt;- c(30, 20, 15, 25, 10)
+linprog(cc, Aeq = Aeq, beq = beq)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

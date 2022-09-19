@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Cohen's kappa for agreement</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svykappa {survey}"><tr><td>svykappa {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Cohen's kappa for agreement</h2>
+
+<h3>Description</h3>
+
+<p>Computes the unweighted kappa measure of agreement between two raters
+and the standard error. The measurements must both be factor variables
+in the survey design object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svykappa(formula, design, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>one-sided formula giving two measurements</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>survey design object</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>passed to <code>svymean</code> internally
+(such as <code>return.replicates</code> or <code>influence</code>)</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>svystat</code>
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="svycontrast.html">svycontrast</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+svykappa(~comp.imp+sch.wide, dclus1)
+
+dclus1&lt;-update(dclus1, stypecopy=stype)
+svykappa(~stype+stypecopy,dclus1)
+
+
+(kappas&lt;-svyby(~comp.imp+sch.wide,~stype,design=dclus1, svykappa, covmat=TRUE))
+svycontrast(kappas, quote(E/H))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

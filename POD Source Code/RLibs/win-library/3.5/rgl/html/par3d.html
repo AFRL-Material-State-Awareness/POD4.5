@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Set or query RGL parameters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for par3d {rgl}"><tr><td>par3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Set or query RGL parameters</h2>
+
+<h3>Description</h3>
+
+<p><code>par3d</code> can be used to set or query graphical parameters in RGL.
+Parameters can be set by specifying them as arguments to <code>par3d</code> in
+<code>name = value</code> form, or by passing them as a list of named
+values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+par3d(..., no.readonly = FALSE, dev = cur3d(), 
+      subscene = currentSubscene3d(dev))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments in <code>name = value</code> form, or a list of tagged
+values.  The names must come from the graphical parameters described
+below.</p>
+</td></tr>
+<tr valign="top"><td><code>no.readonly</code></td>
+<td>
+<p>logical; if <code>TRUE</code> and there are no other
+arguments, only those parameters which can be set by a
+subsequent <code>par3d()</code> call are returned.</p>
+</td></tr>
+<tr valign="top"><td><code>dev</code></td>
+<td>
+<p>integer; the RGL device.</p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+<p>integer; the subscene.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Parameters are queried by giving one or more character vectors to
+<code>par3d</code>.
+</p>
+<p><code>par3d()</code> (no arguments) or <code>par3d(no.readonly = TRUE)</code> is used to
+get <em>all</em> the graphical parameters (as a named list).  
+</p>
+<p>By default, queries and modifications apply to the current subscene
+on the current device; specify <code>dev</code> and/or <code>subscene</code> to 
+change this.  Some parameters apply to the device as a whole;
+these are marked in the list below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>When parameters are set, their former values are returned in an
+invisible named list.  Such a list can be passed as an argument to
+<code>par3d</code> to restore the parameter values.
+Use <code>par3d(no.readonly = TRUE)</code> for the full list of parameters
+that can be restored.
+</p>
+<p>When just one parameter is queried, its value is returned directly.
+When two or more parameters are queried, the result is a list of
+values, with the list names giving the parameters.
+</p>
+<p>Note the inconsistency: setting one parameter returns a list, but
+querying one parameter returns an object.
+</p>
+
+
+<h3>Parameters</h3>
+
+<p><em><b>R.O.</b></em> indicates <em><b>read-only arguments</b></em>: These
+may only be used in queries, i.e., they do <em>not</em> set anything.
+</p>
+
+<dl>
+<dt><code>activeSubscene</code></dt><dd><p><em><b>R.O.</b></em> integer.  Used
+with <code><a href="callbacks.html">rgl.setMouseCallbacks</a></code>:  during a 
+callback, indicates the id of the subscene that was clicked.</p>
+</dd>
+<dt><code>antialias</code></dt><dd><p><em><b>R.O.</b></em> in <code>par3d</code>, may be
+set in <code>open3d</code>. The (requested) number of hardware
+antialiasing planes to use (with multisample antialiasing).  The
+OpenGL driver may not support the requested number, in which case
+<code>par3d("antialias")</code> will report what was actually set. Applies to the whole device.</p>
+</dd>    
+<dt><code>cex</code></dt><dd><p>real.  The default size for text.</p>
+</dd>
+<dt><code>family</code></dt><dd><p>character.  The default device independent family name; see <code><a href="rgl.texts.html">rgl.texts</a></code>.
+Applies to the whole device.</p>
+</dd>
+<dt><code>font</code></dt><dd><p>integer.  The default font number (from 1 to 4; see <code><a href="rgl.texts.html">rgl.texts</a></code>).
+Applies to the whole device.</p>
+</dd>
+<dt><code>useFreeType</code></dt><dd><p>logical.  Should FreeType fonts be used?
+Applies to the whole device.</p>
+</dd>
+<dt><code>fontname</code></dt><dd><p><em><b>R.O.</b></em>; the system-dependent name of the current font.
+Applies to the whole device.</p>
+</dd>
+<dt><code>FOV</code></dt><dd><p>real.  The field of view, from 0 to 179 degrees.  This controls
+the degree of parallax in the perspective view.
+Isometric perspective corresponds to <code>FOV = 0</code>.</p>
+</dd>
+<dt><code>ignoreExtent</code></dt><dd><p>logical.  Set to <code>TRUE</code> so that subsequently plotted objects
+will be ignored in calculating the bounding box of the scene.  Applies to the
+whole device.</p>
+</dd>
+<dt><code>maxClipPlanes</code></dt><dd><p><em><b>R.O.</b></em>; an integer giving the maximum
+number of clip planes that can be defined in the current system. Applies to the whole device.</p>
+</dd>
+<dt><code>modelMatrix</code></dt><dd><p><em><b>R.O.</b></em>; a 4 by 4 matrix describing the position
+of the user data.  See the Note below.</p>
+</dd>
+<dt><code>listeners</code></dt><dd><p>integer.  A vector of subscene id values.  If a subscene receives
+a mouse event (see <code>mouseMode</code> just below), the same action will be carried out
+on all subscenes in this list.  (The subscene itself is normally listed as a listener.
+If it is not listed, it will not respond to its own mouse events.)</p>
+</dd>
+<dt><code>mouseMode</code></dt><dd><p>character.  A vector of 5 strings describing
+mouse actions. The 5 entries are named
+<code>c("none", "left", "right", "middle", "wheel")</code>, corresponding to actions for no button, 
+the left, right or middle button, and the 
+mouse wheel.
+Partial matching to action names is used.  Possible values for the actions are:
+</p>
+
+<dl>
+<dt><code>"none"</code></dt><dd><p>No action for this button.</p>
+</dd>
+<dt><code>"trackball"</code></dt><dd><p>Mouse acts as a virtual trackball, rotating the scene.</p>
+</dd>
+<dt><code>"xAxis"</code></dt><dd><p>Similar to <code>"trackball"</code>, but restricted to X axis rotation.</p>
+</dd>
+<dt><code>"yAxis"</code></dt><dd><p>Y axis rotation.</p>
+</dd>
+<dt><code>"zAxis"</code></dt><dd><p>Z axis rotation.</p>
+</dd>
+<dt><code>"polar"</code></dt><dd><p>Mouse rotates the scene by moving in polar coordinates.</p>
+</dd>
+<dt><code>"selecting"</code></dt><dd><p>Mouse is used for selection.  This is not normally set by the
+user, but is used internally by the <code><a href="select3d.html">select3d</a></code> function.</p>
+</dd>
+<dt><code>"zoom"</code></dt><dd><p>Mouse is used to zoom the display.</p>
+</dd>
+<dt><code>"fov"</code></dt><dd><p>Mouse changes the field of view of the display.</p>
+</dd>
+<dt><code>"user"</code></dt><dd><p>Used  when a user handler is set by 
+<code><a href="callbacks.html">rgl.setMouseCallbacks</a></code>.</p>
+</dd>
+</dl>
+
+<p>Possible values for the last entry corresponding to the mouse wheel also include
+</p>
+
+<dl>
+<dt><code>"pull"</code></dt><dd><p>Pulling on the mouse wheel increases magnification, i.e. &ldquo;pulls the scene closer&rdquo;.</p>
+</dd>
+<dt><code>"push"</code></dt><dd><p>Pulling on the mouse wheel decreases magnification, i.e. &ldquo;pushes the scene away&rdquo;.</p>
+</dd>
+<dt><code>"user2"</code></dt><dd><p>Used when a user handler is set by 
+<code><a href="callbacks.html">rgl.setWheelCallback</a></code>.</p>
+</dd>
+</dl>
+
+<p>A common default on Mac OSX is to convert a two finger drag on a trackpad to a mouse wheel rotation.
+</p>
+<p>The first entry is for actions to take when
+no mouse button is pressed.  Legal values are the same
+as for the mouse buttons.
+</p>
+<p>The first entry was added after <span class="pkg">rgl</span> version 0.106.8.  For back compatibility, if the vector
+of actions is less than 5 entries, <code>"none"</code>
+will be added at the start of it.
+</p>
+</dd>
+<dt><code>observer</code></dt><dd><p><em><b>R.O.</b></em>; the position of the observer relative to
+the model.  Set by <code><a href="observer3d.html">observer3d</a></code>.  See the Note below.</p>
+</dd>
+<dt><code>projMatrix</code></dt><dd><p><em><b>R.O.</b></em>; a 4 by 4 matrix describing the current
+projection of the scene.</p>
+</dd>
+<dt><code>scale</code></dt><dd><p>real.  A vector of 3 values indicating the amount by which to
+rescale each axis before display.  Set by <code><a href="aspect3d.html">aspect3d</a></code>.</p>
+</dd>
+<dt><code>skipRedraw</code></dt><dd><p>whether to update the display.  Set to <code>TRUE</code> to suspend
+updating while making multiple changes to the scene.  See <code>demo(hist3d)</code> for an example.
+Applies to the whole device.</p>
+</dd>
+<dt><code>userMatrix</code></dt><dd><p>a 4 by 4 matrix describing user actions to
+display the scene.</p>
+</dd>
+<dt><code>userProjection</code></dt><dd><p>a 4 by 4 matrix describing
+changes to the projection.</p>
+</dd>
+<dt><code>viewport</code></dt><dd><p>real.  A vector giving the dimensions of the
+window in pixels.  The entries are taken to be <code>c(x, y, width, height)</code> where
+<code>c(x, y)</code> are the coordinates in pixels of the lower left corner within the window.</p>
+</dd>
+<dt><code>zoom</code></dt><dd><p>real. A positive value indicating the current
+magnification of the scene.</p>
+</dd>
+<dt><code>bbox</code></dt><dd><p><em><b>R.O.</b></em>; real. A vector of six values indicating the current values of the
+bounding box of the scene (xmin, xmax, ymin, ymax, zmin, zmax)</p>
+</dd>
+<dt><code>windowRect</code></dt><dd><p>integer.  A vector of four values indicating the left, top, right and 
+bottom of the displayed window (in pixels).  Applies to the whole device.</p>
+</dd>
+</dl>
+
+
+
+<h3>Rendering</h3>
+
+<p>The parameters returned by <code>par3d</code> are sufficient to determine where RGL would render
+a point on the screen.  Given a column vector <code>(x, y, z)</code> in a subscene <code>s</code>, 
+it performs the equivalent of 
+the following operations:
+</p>
+
+<ol>
+<li><p> It converts the point to homogeneous coordinates by appending <code>w = 1</code>, giving
+the vector <code>v = (x, y, z, 1)</code>.
+</p>
+</li>
+<li><p> It calculates the <code>M = par3d("modelMatrix")</code> as a product from right to left
+of several matrices:
+</p>
+  
+<ul>
+<li><p> A matrix to translate the centre of the bounding box to the origin.
+</p>
+</li>
+<li><p> A matrix to rescale according to <code>par3d("scale")</code>.
+</p>
+</li>
+<li><p> The <code>par3d("userMatrix")</code> as set by the user.
+</p>
+</li>
+<li><p> A matrix which may be set by mouse movements.
+</p>
+</li>
+<li><p> The description above applies to the usual case where there 
+is just one subscene, or where the subscene's <code>"model"</code> is set to
+<code>"replace"</code>.  If it is set to <code>"modify"</code>, the first step is
+skipped, and at the end the procedure is followed for the parent subscene.  If it is set to <code>"inherit"</code> only the parent settings
+are used.
+</p>
+</li></ul>
+
+</li>
+<li><p> It multiplies the point by <code>M</code> giving <code>u = M %*% v</code>. 
+</p>
+</li>
+<li><p> It multiplies that point by a matrix based on the observer position
+to translate the origin to the centre of the viewing region.
+</p>
+</li>
+<li><p> Using this location and information on the
+normals (which have been similarly transformed), it performs lighting calculations. 
+</p>
+</li>
+<li><p> It obtains the projection matrix <code>P = par3d("projMatrix")</code> based on the bounding box and field of view
+or observer location, multiplies that by the <code>userProjection</code> matrix to give <code>P</code>.  It multiplies the point
+by it giving <code>P %*% u = (x2, y2, z2, w2)</code>.
+</p>
+</li>
+<li><p> It converts back to Euclidean coordinates by dividing the first 3 coordinates by <code>w2</code>.
+</p>
+</li>
+<li><p> The new value <code>z2/w2</code> represents the depth into the scene of the point.  Depending
+on what has already been plotted, this depth might be obscured, in which case nothing more is plotted.
+</p>
+</li>
+<li><p> If the point is not culled due to depth, the <code>x2</code> and <code>y2</code> values are used
+to determine the point in the image.  The <code>par3d("viewport")</code> values are used to translate
+from the range <code>(-1, 1)</code> to pixel locations, and the point is plotted.
+</p>
+</li>
+<li><p> If hardware antialiasing is enabled, then the whole process is
+repeated multiple times (at least conceptually) with different
+locations in each pixel sampled to determine what is plotted there,
+and then the images are combined into what is displayed.
+</p>
+</li></ol>
+
+<p>See ?<a href="matrices.html">matrices</a> for more information on homogeneous and Euclidean coordinates.
+</p>
+<p>Note that many of these calculations are done on the graphics card using single precision;
+you will likely see signs of rounding error if your scene requires more than 4 or 5 
+digit precision to distinguish values in any coordinate.  
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>"xAxis"</code>, <code>"yAxis"</code> and <code>"zAxis"</code> mouse modes rotate 
+relative to the coordinate system of the data, regardless of the current 
+orientation of the scene.
+</p>
+<p>When multiple parameters are set, they are set in the order given.  In some 
+cases this may lead to warnings and ignored values; for example, some font 
+families only support <code>cex = 1</code>, so changing both <code>cex</code> and 
+<code>family</code> needs to be done in the right order.  For example, when using the
+<code>"bitmap"</code> family on Windows, <code>par3d(family = "sans", cex = 2)</code>
+will work, but <code>par3d(cex = 2, family = "sans")</code> will leave <code>cex</code>
+at 1 (with a warning that the <code>"bitmap"</code> family only supports that size).
+</p>
+<p>Although <code>par3d("viewport")</code> names the entries of the reported vector,
+names are ignored when setting the viewport and entries must be specified
+in the standard order.
+</p>
+<p>In <span class="pkg">rgl</span> versions 0.94.x the <code>modelMatrix</code> entry had a changed meaning; 
+before and after that it contains a copy of the OpenGL MODELVIEW matrix. 
+</p>
+<p>As of version 0.100.32, when changing the <code>"windowRect"</code> parameter, the 
+<code>"viewport"</code> for the root (or specified) subscene
+is changed immediately.  This fixes a bug where in earlier
+versions it would only be changed when the window was redrawn, potentially after another command making use of the value.
+</p>
+<p>Default values are not described here, as several of them
+are changed by the <code><a href="open3d.html">r3dDefaults</a></code> variable when
+the window is opened by <code><a href="open3d.html">open3d</a></code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>OpenGL Architecture Review Board (1997).  OpenGL Programming Guide.  Addison-Wesley.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="viewpoint.html">rgl.viewpoint</a></code> to set <code>FOV</code> and <code>zoom</code>.
+</p>
+<p><code><a href="open3d.html">open3d</a></code> for how to open a new window
+with default settings for these parameters.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+    open3d()
+    shade3d(cube3d(color = rainbow(6), meshColor = "faces"))
+    save &lt;- par3d(userMatrix = rotationMatrix(90*pi/180, 1, 0, 0))
+    highlevel()  # To trigger display
+    save
+    par3d("userMatrix")    
+    par3d(save)
+    highlevel()
+    par3d("userMatrix")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

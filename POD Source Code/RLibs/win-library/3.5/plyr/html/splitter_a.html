@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Split an array by .margins.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for splitter_a {plyr}"><tr><td>splitter_a {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Split an array by .margins.</h2>
+
+<h3>Description</h3>
+
+<p>Split a 2d or higher data structure into lower-d pieces based
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+splitter_a(data, .margins = 1L, .expand = TRUE, .id = NA)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>&gt;1d data structure (matrix, data.frame or array)</p>
+</td></tr>
+<tr valign="top"><td><code>.margins</code></td>
+<td>
+<p>a vector giving the subscripts to split up <code>data</code> by.</p>
+</td></tr>
+<tr valign="top"><td><code>.expand</code></td>
+<td>
+<p>if splitting a dataframe by row, should output be 1d
+(expand = FALSE), with an element for each row; or nd (expand = TRUE),
+with a dimension for each variable.</p>
+</td></tr>
+<tr valign="top"><td><code>.id</code></td>
+<td>
+<p>names of the split label.
+Pass <code>NULL</code> to avoid creation of split labels.
+Omit or pass <code>NA</code> to use the default names
+<code>"X1"</code>, <code>"X2"</code>, ....
+Otherwise, this argument must have the same length as
+<code>.margins</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is the workhorse of the <code>a*ply</code> functions.  Given a &gt;1 d
+data structure (matrix, array, data.frame), it splits it into pieces
+based on the subscripts that you supply.  Each piece is a lower dimensional
+slice.
+</p>
+<p>The margins are specified in the same way as <code><a href="../../base/html/apply.html">apply</a></code>, but
+<code>splitter_a</code> just splits up the data, while <code>apply</code> also
+applies a function and combines the pieces back together.  This function
+also includes enough information to recreate the split from attributes on
+the list of pieces.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list of lower-d slices, with attributes that record split details
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other splitter functions: 
+<code><a href="splitter_d.html">splitter_d</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+plyr:::splitter_a(mtcars, 1)
+plyr:::splitter_a(mtcars, 2)
+
+plyr:::splitter_a(ozone, 2)
+plyr:::splitter_a(ozone, 3)
+plyr:::splitter_a(ozone, 1:2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

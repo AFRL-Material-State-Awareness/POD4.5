@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Huberization - Bringing Outliers In</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for huberize {robustbase}"><tr><td>huberize {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Huberization &ndash; Bringing Outliers In</h2>
+
+<h3>Description</h3>
+
+<p>Huberization (named after Peter Huber's M-estimation algorithm for
+location originally) replaces outlying values in a sample <code>x</code> by
+their respective boundary: when <i>x_j &lt; c_1</i> it is replaced by <i>c_1</i>
+and when <i>x_j &gt; c_2</i>  it is replaced by <i>c_2</i>.  Consequently,
+values inside the interval <i>[c_1, c_2]</i> remain unchanged.
+</p>
+<p>Here, <i>c1,c2 = M +/- c*s</i> where <i>s := s(x)</i> is
+the <em>robust</em> scale estimate <code><a href="Qn.html">Qn</a>(x)</code> if that is positive,
+and by default, <i>M</i> is the robust huber estimate of location
+<i>&mu;</i> (with tuning constant <i>k</i>).
+</p>
+<p>In the degenerate case where <code><a href="Qn.html">Qn</a>(x) == 0</code>, trimmed means of
+<code>abs(x - M)</code> are tried as scale estimate <i>s</i>, with decreasing
+trimming proportions specified by the decreasing <code>trim</code> vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+huberize(x, M = huberM(x, k = k)$mu, c = k,
+         trim = (5:1)/16,
+         k = 1.5,
+         warn0 = getOption("verbose"), saveTrim = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector which is to be huberized.</p>
+</td></tr>
+<tr valign="top"><td><code>M</code></td>
+<td>
+<p>a number; defaulting to <code><a href="huberM.html">huberM</a>(x, k)</code>, the robust
+Huber M-estimator of location.</p>
+</td></tr>
+<tr valign="top"><td><code>c</code></td>
+<td>
+<p>a positive number, the tuning constant for huberization of the
+sample <code>x</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>trim</code></td>
+<td>
+<p>a <em>decreasing</em> vector of trimming proportions in
+<i>[0, 0.5]</i>, only used to trim the absolute deviations from <code>M</code>
+in case <code><a href="Qn.html">Qn</a>(x)</code> is zero.
+</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>used if <code>M</code> is not specified as huberization center
+<code>M</code>, and so, by default is taken as Huber's M-estimate
+<code><a href="huberM.html">huberM</a>(x, k)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>warn0</code></td>
+<td>
+<p><code><a href="../../base/html/logical.html">logical</a></code> indicating if a warning should be
+signalled in case <code><a href="Qn.html">Qn</a>(x)</code> is zero and the trimmed means for
+all trimming proportions <code>trim</code> are zero as well.</p>
+</td></tr>
+<tr valign="top"><td><code>saveTrim</code></td>
+<td>
+<p>a <code><a href="../../base/html/logical.html">logical</a></code> indicating if the last tried
+<code>trim[j]</code> value should be stored if <code><a href="Qn.html">Qn</a>(x)</code> was zero.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<ul>
+<li><p> In regular cases, <code>s = <a href="Qn.html">Qn</a>(x)</code> is positive and used to
+huberize values of <code>x</code> outside <code>[M - c*s, M + c*s]</code>.
+</p>
+</li>
+<li><p> In degenerate cases where <code><a href="Qn.html">Qn</a>(x) == 0</code>, we search for
+an <i>s &gt; 0</i> by trying the trimmed mean <code>s := mean(abs(x-M), trim =
+      trim[j])</code> with less and less trimming (as the trimming
+proportions <code>trim[]</code> must decrease).
+If even the last, <code>trim[length(trim)]</code>, leads to <i>s = 0</i>, a
+warning is printed when <code>warn0</code> is true.
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>a numeric vector as <code>x</code>; in case <code><a href="Qn.html">Qn</a>(x)</code> was zero and
+<code>saveTrim</code> is true, also containing the (last) <code>trim</code>
+proportion used (to compute the scale <i>s</i>) as attribute <code>"trim"</code>
+(see <code><a href="../../base/html/attr.html">attr</a>()</code>, <code><a href="../../base/html/attributes.html">attributes</a></code>).
+</p>
+
+
+<h3>Note</h3>
+
+<p>For the use in <code><a href="mc.html">mc</a>()</code> and similar cases where mainly numerical
+stabilization is necessary, a large <code>c = 1e12</code> will lead to <em>no</em>
+huberization, i.e., all <code>y == x</code> for <code>y &lt;- huberize(x, c)</code>
+for typical non-degenerate samples.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Martin Maechler</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="huberM.html">huberM</a></code> and <code><a href="mc.html">mc</a></code> which is now stabilized by
+default via something like <code>huberize(*, c=1e11)</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## For non-degenerate data and large c, nothing is huberized,
+## as there are *no* really extreme outliers :
+set.seed(101)
+x &lt;- rnorm(1000)
+stopifnot(all.equal(x, huberize(x, c=100)))
+## OTOH, the "extremes" are shrunken towards the boundaries for smaller c:
+xh &lt;- huberize(x, c = 2)
+table(x != xh)
+## 45 out of a 1000:
+table(xh[x != xh])# 26 on the left boundary -2.098 and 19 on the right = 2.081
+## vizualization:
+stripchart(x); text(0,1, "x {original}", pos=3); yh &lt;- 0.9
+stripchart(xh, at = yh, add=TRUE, col=2)
+text(0, yh, "huberize(x, c=2)",   col=2, pos=1)
+arrows( x[x!=xh], 1,
+       xh[x!=xh], yh, length=1/8, col=adjustcolor("pink", 1/2))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

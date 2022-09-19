@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Axis labeling</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for labeling-package {labeling}"><tr><td>labeling-package {labeling}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Axis labeling</h2>
+
+<h3>Description</h3>
+
+<p>Functions for positioning tick labels on axes
+</p>
+
+
+<h3>Details</h3>
+
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;"> Package: </td><td style="text-align: left;"> labeling</td>
+</tr>
+<tr>
+ <td style="text-align: left;"> Type: </td><td style="text-align: left;">
+  Package</td>
+</tr>
+<tr>
+ <td style="text-align: left;"> Version: </td><td style="text-align: left;"> 0.2</td>
+</tr>
+<tr>
+ <td style="text-align: left;"> Date: </td><td style="text-align: left;"> 2011-04-01</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  License: </td><td style="text-align: left;"> Unlimited</td>
+</tr>
+<tr>
+ <td style="text-align: left;"> LazyLoad: </td><td style="text-align: left;"> yes</td>
+</tr>
+<tr>
+ <td style="text-align: left;"> </td>
+</tr>
+
+</table>
+
+<p>Implements a number of axis labeling schemes, including
+those compared in An Extension of Wilkinson's Algorithm
+for Positioning Tick Labels on Axes by Talbot, Lin, and
+Hanrahan, InfoVis 2010.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Justin Talbot <a href="mailto:justintalbot@gmail.com">justintalbot@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Heckbert, P. S. (1990) Nice numbers for graph labels,
+Graphics Gems I, Academic Press Professional, Inc.
+Wilkinson, L. (2005) The Grammar of Graphics,
+Springer-Verlag New York, Inc. Talbot, J., Lin, S.,
+Hanrahan, P. (2010) An Extension of Wilkinson's Algorithm
+for Positioning Tick Labels on Axes, InfoVis 2010.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="extended.html">extended</a></code>, <code><a href="wilkinson.html">wilkinson</a></code>,
+<code><a href="heckbert.html">heckbert</a></code>, <code><a href="rpretty.html">rpretty</a></code>,
+<code><a href="gnuplot.html">gnuplot</a></code>, <code><a href="matplotlib.html">matplotlib</a></code>,
+<code><a href="nelder.html">nelder</a></code>, <code><a href="sparks.html">sparks</a></code>,
+<code><a href="thayer.html">thayer</a></code>, <code><a href="../../base/html/pretty.html">pretty</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+heckbert(8.1, 14.1, 4)	# 5 10 15
+wilkinson(8.1, 14.1, 4)	# 8 9 10 11 12 13 14 15
+extended(8.1, 14.1, 4)	# 8 10 12 14
+# When plotting, extend the plot range to include the labeling
+# Should probably have a helper function to make this easier
+data(iris)
+x &lt;- iris$Sepal.Width
+y &lt;- iris$Sepal.Length
+xl &lt;- extended(min(x), max(x), 6)
+yl &lt;- extended(min(y), max(y), 6)
+plot(x, y,
+    xlim=c(min(x,xl),max(x,xl)),
+    ylim=c(min(y,yl),max(y,yl)),
+    axes=FALSE, main="Extended labeling")
+axis(1, at=xl)
+axis(2, at=yl)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>labeling</em> version 0.4.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

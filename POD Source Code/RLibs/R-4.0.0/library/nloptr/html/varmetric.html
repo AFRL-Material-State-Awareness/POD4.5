@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Shifted Limited-memory Variable-metric</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for varmetric {nloptr}"><tr><td>varmetric {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Shifted Limited-memory Variable-metric</h2>
+
+<h3>Description</h3>
+
+<p>Shifted limited-memory variable-metric algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+varmetric(
+  x0,
+  fn,
+  gr = NULL,
+  rank2 = TRUE,
+  lower = NULL,
+  upper = NULL,
+  nl.info = FALSE,
+  control = list(),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>initial point for searching the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>objective function to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>gr</code></td>
+<td>
+<p>gradient of function <code>fn</code>; will be calculated numerically if
+not specified.</p>
+</td></tr>
+<tr valign="top"><td><code>rank2</code></td>
+<td>
+<p>logical; if true uses a rank-2 update method, else rank-1.</p>
+</td></tr>
+<tr valign="top"><td><code>lower, upper</code></td>
+<td>
+<p>lower and upper bound constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>nl.info</code></td>
+<td>
+<p>logical; shall the original NLopt info been shown.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>list of control parameters, see <code>nl.opts</code> for help.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Variable-metric methods are a variant of the quasi-Newton methods,
+especially adapted to large-scale unconstrained (or bound constrained)
+minimization.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>the optimal solution found so far.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>the function value corresponding to <code>par</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of (outer) iterations, see <code>maxeval</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>integer code indicating successful completion (&gt; 0)
+or a possible error number (&lt; 0).</p>
+</td></tr>
+<tr valign="top"><td><code>message</code></td>
+<td>
+<p>character string produced by NLopt and giving additional
+information.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>Based on L. Luksan's Fortran implementation of a shifted
+limited-memory variable-metric algorithm.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans W. Borchers
+</p>
+
+
+<h3>References</h3>
+
+<p>J. Vlcek and L. Luksan, &ldquo;Shifted limited-memory variable metric
+methods for large-scale unconstrained minimization,&rdquo; J. Computational Appl.
+Math. 186, p. 365-390 (2006).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lbfgs.html">lbfgs</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+flb &lt;- function(x) {
+    p &lt;- length(x)
+    sum(c(1, rep(4, p-1)) * (x - c(1, x[-p])^2)^2)
+}
+# 25-dimensional box constrained: par[24] is *not* at the boundary
+S &lt;- varmetric(rep(3, 25), flb, lower=rep(2, 25), upper=rep(4, 25),
+           nl.info = TRUE, control = list(xtol_rel=1e-8))
+## Optimal value of objective function:  368.105912874334
+## Optimal value of controls: 2  ...  2  2.109093  4
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

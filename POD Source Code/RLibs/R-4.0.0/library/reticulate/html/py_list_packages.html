@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: List installed Python packages</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_list_packages {reticulate}"><tr><td>py_list_packages {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>List installed Python packages</h2>
+
+<h3>Description</h3>
+
+<p>List the Python packages that are installed in the requested Python
+environment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_list_packages(
+  envname = NULL,
+  type = c("auto", "virtualenv", "conda"),
+  python = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>envname</code></td>
+<td>
+<p>The name of, or path to, a Python virtual environment.
+Ignored when <code>python</code> is non-<code>NULL</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>The virtual environment type. Useful if you have both
+virtual environments and Conda environments of the same name on
+your system, and you need to disambiguate them.</p>
+</td></tr>
+<tr valign="top"><td><code>python</code></td>
+<td>
+<p>The path to a Python executable.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>When <code>envname</code> is <code>NULL</code>, <code>reticulate</code> will use the &quot;default&quot; version
+of Python, as reported by <code><a href="py_exe.html">py_exe()</a></code>. This implies that you
+can call <code>py_list_packages()</code> without arguments in order to list
+the installed Python packages in the version of Python currently
+used by <code>reticulate</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> data.frame, with columns:
+</p>
+
+<dl>
+<dt><code>package</code></dt><dd><p>The package name.</p>
+</dd>
+<dt><code>version</code></dt><dd><p>The package version.</p>
+</dd>
+<dt><code>requirement</code></dt><dd><p>The package requirement.</p>
+</dd>
+<dt><code>channel</code></dt><dd><p>(Conda only) The channel associated with this package.</p>
+</dd>
+</dl>
+
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

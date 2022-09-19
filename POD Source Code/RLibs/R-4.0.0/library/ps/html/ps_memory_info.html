@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Memory usage information</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ps_memory_info {ps}"><tr><td>ps_memory_info {ps}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Memory usage information</h2>
+
+<h3>Description</h3>
+
+<p>Memory usage information
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ps_memory_info(p = ps_handle())
+
+ps_memory_full_info(p = ps_handle())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Process handle.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>ps_memory_info()</code> returns information about memory usage.
+</p>
+<p>It returns a named list. Portable fields:
+</p>
+
+<ul>
+<li> <p><code>rss</code>: &quot;Resident Set Size&quot;, this is the non-swapped physical memory a
+process has used (bytes). On UNIX it matches &quot;top&quot;‘s 'RES' column (see doc). On
+Windows this is an alias for <code>wset</code> field and it matches &quot;Memory&quot;
+column of <code>taskmgr.exe</code>.
+</p>
+</li>
+<li> <p><code>vmem</code>: &quot;Virtual Memory Size&quot;, this is the total amount of virtual
+memory used by the process (bytes). On UNIX it matches &quot;top&quot;‘s 'VIRT' column
+(see doc). On Windows this is an alias for the <code>pagefile</code> field and
+it matches the &quot;Working set (memory)&quot; column of <code>taskmgr.exe</code>.
+</p>
+</li></ul>
+
+<p>Non-portable fields:
+</p>
+
+<ul>
+<li> <p><code>shared</code>: (Linux) memory that could be potentially shared with other
+processes (bytes). This matches &quot;top&quot;‘s 'SHR' column (see doc).
+</p>
+</li>
+<li> <p><code>text</code>: (Linux): aka 'TRS' (text resident set) the amount of memory
+devoted to executable code (bytes). This matches &quot;top&quot;‘s 'CODE' column (see
+doc).
+</p>
+</li>
+<li> <p><code>data</code>: (Linux): aka 'DRS' (data resident set) the amount of physical
+memory devoted to other than executable code (bytes). It matches &quot;top&quot;‘s
+'DATA' column (see doc).
+</p>
+</li>
+<li> <p><code>lib</code>: (Linux): the memory used by shared libraries (bytes).
+</p>
+</li>
+<li> <p><code>dirty</code>: (Linux): the amount of memory in dirty pages (bytes).
+</p>
+</li>
+<li> <p><code>pfaults</code>: (macOS): number of page faults.
+</p>
+</li>
+<li> <p><code>pageins</code>: (macOS): number of actual pageins.
+</p>
+</li></ul>
+
+<p>For the explanation of Windows fields see the
+<a href="https://docs.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex">PROCESS_MEMORY_COUNTERS_EX</a>
+structure.
+</p>
+<p><code>ps_memory_full_info()</code> returns all fields as <code>ps_memory_info()</code>, plus
+additional information, but typically takes slightly longer to run, and
+might not have access to some processes that <code>ps_memory_info()</code> can
+query:
+</p>
+
+<ul>
+<li> <p><code>uss</code>: Unique Set Size, this is the memory which is unique to a
+process and which would be freed if the process was terminated right
+now.
+</p>
+</li>
+<li> <p><code>pss</code> (Linux only): Proportional Set Size, is the amount of memory
+shared with other processes, accounted in a way that the amount is
+divided evenly between the processes that share it. I.e. if a process
+has 10 MBs all to itself and 10 MBs shared with another process its
+PSS will be 15 MBs.
+</p>
+</li>
+<li> <p><code>swap</code> (Linux only): amount of memory that has been swapped out to
+disk.
+</p>
+</li></ul>
+
+<p>They both throw a <code>zombie_process()</code> error for zombie processes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Named real vector.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other process handle functions: 
+<code><a href="ps_children.html">ps_children</a>()</code>,
+<code><a href="ps_cmdline.html">ps_cmdline</a>()</code>,
+<code><a href="ps_connections.html">ps_connections</a>()</code>,
+<code><a href="ps_cpu_times.html">ps_cpu_times</a>()</code>,
+<code><a href="ps_create_time.html">ps_create_time</a>()</code>,
+<code><a href="ps_cwd.html">ps_cwd</a>()</code>,
+<code><a href="ps_descent.html">ps_descent</a>()</code>,
+<code><a href="ps_environ.html">ps_environ</a>()</code>,
+<code><a href="ps_exe.html">ps_exe</a>()</code>,
+<code><a href="ps_handle.html">ps_handle</a>()</code>,
+<code><a href="ps_interrupt.html">ps_interrupt</a>()</code>,
+<code><a href="ps_is_running.html">ps_is_running</a>()</code>,
+<code><a href="ps_kill.html">ps_kill</a>()</code>,
+<code><a href="ps_name.html">ps_name</a>()</code>,
+<code><a href="ps_num_fds.html">ps_num_fds</a>()</code>,
+<code><a href="ps_num_threads.html">ps_num_threads</a>()</code>,
+<code><a href="ps_open_files.html">ps_open_files</a>()</code>,
+<code><a href="ps_pid.html">ps_pid</a>()</code>,
+<code><a href="ps_ppid.html">ps_ppid</a>()</code>,
+<code><a href="ps_resume.html">ps_resume</a>()</code>,
+<code><a href="ps_send_signal.html">ps_send_signal</a>()</code>,
+<code><a href="ps_shared_libs.html">ps_shared_libs</a>()</code>,
+<code><a href="ps_status.html">ps_status</a>()</code>,
+<code><a href="ps_suspend.html">ps_suspend</a>()</code>,
+<code><a href="ps_terminal.html">ps_terminal</a>()</code>,
+<code><a href="ps_terminate.html">ps_terminate</a>()</code>,
+<code><a href="ps_uids.html">ps_uids</a>()</code>,
+<code><a href="ps_username.html">ps_username</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+p &lt;- ps_handle()
+p
+ps_memory_info(p)
+ps_memory_full_info(p)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ps</em> version 1.7.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

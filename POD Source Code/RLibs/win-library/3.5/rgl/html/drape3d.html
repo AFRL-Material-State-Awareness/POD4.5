@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Drape lines over a scene.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for drape3d {rgl}"><tr><td>drape3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Drape lines over a scene.
+</h2>
+
+<h3>Description</h3>
+
+<p>Project a line onto the surface in a scene so that it appears to drape itself
+onto the surface.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+drape3d(obj, ...)
+## S3 method for class 'mesh3d'
+drape3d(obj, x, y = NULL, z = NULL, plot = TRUE,
+                         up = c(0, 0, 1),
+                         P = projectDown(up), ...)
+## Default S3 method:
+drape3d(obj, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+
+<p>The object(s) upon which to drape lines.
+</p>
+</td></tr>
+<tr valign="top"><td><code>x,y,z</code></td>
+<td>
+<p>Coordinates of the line segments
+to be draped.  Any reasonable way of defining the
+coordinates is acceptable.  See the function <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code> for details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+
+<p>Should the result be plotted, or returned as a data frame?
+</p>
+</td></tr>
+<tr valign="top"><td><code>up</code></td>
+<td>
+
+<p>The direction to consider as &ldquo;up&rdquo;.
+</p>
+</td></tr>
+<tr valign="top"><td><code>P</code></td>
+<td>
+
+<p>The projection to use for draping, a 4x4 matrix.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>For the <code>"mesh3d"</code> method, additional parameters to pass to <code><a href="3dobjects.html">segments3d</a></code>
+when drawing the draped lines.
+For the <code>"default"</code> method, additional parameters to pass to the
+<code>"mesh3d"</code> method.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The default method converts <code>obj</code> to a mesh
+using <code><a href="as.mesh3d.default.html">as.mesh3d</a></code>, then uses the <code>"mesh3d"</code>
+method.
+</p>
+<p>The current implementation constructs the segments to drape
+across the surface using the same method as
+<code><a href="3dobjects.html">lines3d</a></code> uses:  each successive point is
+joined to the previous one.  Use <code>NA</code> coordinates to
+indicate breaks in the line.
+</p>
+<p>The <code>P</code> matrix is used to project points to a plane as
+follows:  They are transformed by <code>P</code> in 
+homogeneous coordinates, then only first two (Euclidean)
+coordinates are kept.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>plot = TRUE</code>, 
+plots the result and invisibly returns the object ID of the collection of segments. 
+</p>
+<p>If <code>plot = FALSE</code>, returns a matrix containing &quot;x&quot;, &quot;y&quot; and &quot;z&quot;
+values for the line(s) 
+(for use with <code><a href="3dobjects.html">segments3d</a></code>),
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>George Helffrich and Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="shadow3d.html">shadow3d</a></code>, <code><a href="facing3d.html">facing3d</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#
+# volcano example taken from "persp"
+#
+
+z &lt;- 2 * volcano        # Exaggerate the relief
+
+x &lt;- 10 * (1:nrow(z))   # 10 meter spacing (S to N)
+y &lt;- 10 * (1:ncol(z))   # 10 meter spacing (E to W)
+
+zlim &lt;- range(z)
+zlen &lt;- zlim[2] - zlim[1] + 1
+
+colorlut &lt;- terrain.colors(zlen) # height color lookup table
+
+col &lt;- colorlut[ z - zlim[1] + 1 ] # assign colors to heights for each point
+
+open3d()
+id &lt;- surface3d(x, y, z, color = col, polygon_offset = 1)
+
+segs &lt;- data.frame(x = range(x) + c(100, -100),
+                   y = range(y) + c(150, -100), z = 325)
+drape3d(id, segs, col = 'yellow', lwd = 3)
+lines3d(segs, col='red', lwd=3)
+
+p &lt;- c(350, 205)         # (x,y) of strike &amp; dip reading
+off &lt;- 20*c(-1, +1)      # X-marks-the-spot offset
+segs &lt;- data.frame(
+    x = c(p[1] + off, NA, p[1] + off),
+    y = c(p[2] + off, NA, p[2] - off),
+    z = rep(350, 5)
+    )
+drape3d(id, segs, col = "yellow", lwd = 3)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

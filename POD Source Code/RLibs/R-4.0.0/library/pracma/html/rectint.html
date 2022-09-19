@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Rectangle Intersection Areas</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rectint {pracma}"><tr><td>rectint {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Rectangle Intersection Areas
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the area of intersection of rectangles, specified by position
+vectors <code>x</code> and <code>y</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rectint(x, y)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>both vectors of length 4, or both matrices with 4 columns.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Rectangles are specified as position vectors, that is <code>c(x[1],x[2])</code>
+is the lower left corner, <code>x[3]</code> and <code>x[4]</code> are width and height
+of the rectangle. When <code>x</code> and <code>y</code> are matrices, each row is
+assumed to be a position vector specifying a rectangle.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a scalar if <code>x</code> and <code>y</code> are vectors. If <code>x</code> is
+a <code>n-by-4</code> and <code>y</code> a <code>m-by-4</code> matrix, then it returns
+a <code>n-by-m</code> matrix <code>R</code> with entry <code>(i,j)</code> being the area
+<code>rectint(x[i,], y[j,])</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="polyarea.html">polyarea</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- c(0.5, 0.5, 0.25, 1.00)
+y &lt;- c(0.3, 0.3, 0.35, 0.75)
+rectint(x, y)
+# [1] 0.0825
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

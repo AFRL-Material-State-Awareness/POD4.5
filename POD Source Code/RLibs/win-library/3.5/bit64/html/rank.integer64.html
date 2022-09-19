@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sample Ranks from integer64</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rank.integer64 {bit64}"><tr><td>rank.integer64 {bit64}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Sample Ranks from integer64</h2>
+
+<h3>Description</h3>
+
+<p>Returns the sample ranks of the values in a vector.  Ties (i.e., equal
+values) are averaged and missing values propagated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+	## S3 method for class 'integer64'
+rank(x, method = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a integer64 vector</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+
+<p>NULL for automatic method selection or a suitable low-level method, see details
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>ignored</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function automatically chooses from several low-level functions considering the size of <code>x</code> and the availability of a cache. 
+Suitable methods are <code><a href="sortnut.html">sortorderrnk</a></code> (fast ordering) 
+and <code><a href="sortnut.html">orderrnk</a></code> (memory saving ordering).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of the same length as <code>x</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel &lt;Jens.Oehlschlaegel@truecluster.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="sort.integer64.html">order.integer64</a></code>, <code><a href="bit64S3.html">rank</a></code> and <code><a href="prank.html">prank</a></code> for percent rank.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- as.integer64(sample(c(rep(NA, 9), 1:9), 32, TRUE))
+rank.integer64(x)
+
+stopifnot(identical(rank.integer64(x),  rank(as.integer(x)
+, na.last="keep", ties.method = "average")))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit64</em> version 4.0.5 <a href="00Index.html">Index</a>]</div>
+</body></html>

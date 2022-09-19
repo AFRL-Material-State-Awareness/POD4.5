@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Bernoulli Numbers and Polynomials</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bernoulli {pracma}"><tr><td>bernoulli {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Bernoulli Numbers and Polynomials
+</h2>
+
+<h3>Description</h3>
+
+<p>The Bernoulli numbers are a sequence of rational numbers that play an
+important role for the series expansion of hyperbolic functions, in the
+Euler-MacLaurin formula, or for certain values of Riemann's function at
+negative integers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bernoulli(n, x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>the index, a whole number greater or equal to 0.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>real number or vector of real numbers; if missing, the
+Bernoulli numbers will be given, otherwise the polynomial.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The calculation of the Bernoulli numbers uses the values of the zeta function
+at negative integers, i.e. <i>B_n = -n \, zeta(1-n)</i>. Bernoulli numbers
+<i>B_n</i> for odd <code>n</code> are 0 except <i>B_1</i> which is set to -0.5 on 
+purpose.
+</p>
+<p>The Bernoulli polynomials can be directly defined as
+</p>
+<p style="text-align: center;"><i> B_n(x) = &sum;_{k=0}^n {n \choose k} b_{n-k}\, x^k </i></p>
+
+<p>and it is immediately clear that the Bernoulli numbers are then given as
+<i>B_n = B_n(0)</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the first <code>n+1</code> Bernoulli numbers, if <code>x</code> is missing, or
+the value of the Bernoulli polynomial at point(s) <code>x</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The definition uses <code>B_1 = -1/2</code> in accordance with the definition of
+the Bernoulli polynomials.
+</p>
+
+
+<h3>References</h3>
+
+<p>See the entry on Bernoulli numbers in the Wikipedia.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zeta.html">zeta</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+bernoulli(10)
+# 1.00000000 -0.50000000  0.16666667  0.00000000 -0.03333333
+# 0.00000000  0.02380952  0.00000000 -0.03333333  0.00000000  0.07575758
+                #
+## Not run: 
+x1 &lt;- linspace(0.3, 0.7, 2)
+y1 &lt;- bernoulli(1, x1)
+plot(x1, y1, type='l', col='red', lwd=2,
+     xlim=c(0.0, 1.0), ylim=c(-0.2, 0.2),
+     xlab="", ylab="", main="Bernoulli Polynomials")
+grid()
+xs &lt;- linspace(0, 1, 51)
+lines(xs, bernoulli(2, xs), col="green", lwd=2)
+lines(xs, bernoulli(3, xs), col="blue", lwd=2)
+lines(xs, bernoulli(4, xs), col="cyan", lwd=2)
+lines(xs, bernoulli(5, xs), col="brown", lwd=2)
+lines(xs, bernoulli(6, xs), col="magenta", lwd=2)
+legend(0.75, 0.2, c("B_1", "B_2", "B_3", "B_4", "B_5", "B_6"),
+       col=c("red", "green", "blue", "cyan", "brown", "magenta"),
+       lty=1, lwd=2)
+  
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

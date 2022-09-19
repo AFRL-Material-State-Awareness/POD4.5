@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Introduction to the StatMod Package</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for statmod-package {statmod}"><tr><td>statmod-package {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Introduction to the StatMod Package</h2>
+
+<h3>Description</h3>
+
+<p>This package includes a variety of functions for numerical analysis and statistical modelling.
+The functions are briefly summarized by type of application below.
+</p>
+
+
+<h3>Generalized Linear Models</h3>
+
+<p>The function <code><a href="tweedie.html">tweedie</a></code> defines a large class of generalized linear model families with power variance functions.
+It used in conjunction with the glm function, and widens the class of families that can be fitted.
+</p>
+<p><code><a href="qresiduals.html">qresiduals</a></code> implements randomized quantile residuals for generalized linear models.
+</p>
+<p>The functions
+<code>canonic.digamma</code>,
+<code>unitdeviance.digamma</code>,
+<code>varfun.digamma</code>,
+<code>cumulant.digamma</code>,
+<code>d2cumulant.digamma</code>,
+<code>meanval.digamma</code>
+and <code>logmdigamma</code>
+are used to fit double-generalized models, in which a link-linear model is fitted to the dispersion as well as to the mean.
+Spefically they are used to fit the dispersion submodel associated with a gamma glm.
+</p>
+
+
+<h3>Growth Curves</h3>
+
+<p><code><a href="growthcurve.html">compareGrowthCurves</a></code>,
+<code>compareTwoGrowthCurves</code> and
+<code>meanT</code>
+are functions to test for differences between growth curves with repeated measurements on subjects.
+</p>
+
+
+<h3>Limiting Dilution Analysis</h3>
+
+<p>The <code><a href="elda.html">limdil</a></code> function is used in the analysis of stem cell frequencies.
+It implements limiting dilution analysis using complemenary log-log binomial generalized linear model regression, with some improvements on previous programs.
+</p>
+
+
+<h3>Probability Distributions</h3>
+
+<p>The functions
+<code><a href="invgauss.html">qinvgauss</a></code>,
+<code><a href="invgauss.html">dinvgauss</a></code>,
+<code><a href="invgauss.html">pinvgauss</a></code> and
+<code><a href="invgauss.html">rinvgauss</a></code>
+provide probability calculations for the inverse Gaussian distribution. 
+</p>
+<p><code><a href="gauss.quad.html">gauss.quad</a></code> and
+<code>gauss.quad.prob</code> compute Gaussian Quadrature with probability distributions. 
+</p>
+
+
+<h3>Tests</h3>
+
+<p><code><a href="hommel.test.html">hommel.test</a></code> performs Hommel's multiple comparison tests.
+</p>
+<p><code><a href="power.html">power.fisher.test</a></code> computes the power of Fisher's Exact Test for comparing proportions.
+</p>
+<p><code><a href="sage.test.html">sage.test</a></code> is a fast approximation to Fisher's exact test for each tag for comparing two Serial Analysis of Gene Expression (SAGE) libraries.
+</p>
+<p><code><a href="permp.html">permp</a></code> computes p-values for permutation tests when the permutations are randomly drawn.
+</p>
+
+
+<h3>Variance Models</h3>
+
+<p><code><a href="mixedmodel.html">mixedModel2</a></code>,
+<code><a href="mixedmodel.html">mixedModel2Fit</a></code> and
+<code><a href="glmgam.html">glmgam.fit</a></code> fit mixed linear models.
+</p>
+<p><code><a href="remlscor.html">remlscore</a></code> and <code><a href="remlscorgamma.html">remlscoregamma</a></code> fit heteroscedastic and varying dispersion models by REML.
+<code><a href="welding.html">welding</a></code> is an example data set.
+</p>
+
+
+<h3>Matrix Computations</h3>
+
+<p><code><a href="matvec.html">matvec</a></code> and <code><a href="matvec.html">vecmat</a></code> facilitate multiplying matrices by vectors.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

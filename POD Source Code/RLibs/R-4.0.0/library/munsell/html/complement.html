@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find the complement of a munsell colour</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for complement {munsell}"><tr><td>complement {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Find the complement of a munsell colour</h2>
+
+<h3>Description</h3>
+
+<p>Finds the munsell colour with the same chroma and value but on the opposite
+side of the hue circle. The complement is not defined 
+for greys (hue == &quot;N&quot;), and the function returns the grey untransformed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+complement(col, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>character vector of Munsell colours</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>deprecated</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>character vector of Munsell colours
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+complement("5PB 2/4")
+cols &lt;- c("5PB 2/4", "5Y 7/8")
+plot_mnsl(c(cols, complement(cols)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

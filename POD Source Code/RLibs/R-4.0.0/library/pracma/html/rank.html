@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Matrix Rank</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Rank {pracma}"><tr><td>Rank {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Matrix Rank
+</h2>
+
+<h3>Description</h3>
+
+<p>Provides an estimate of the rank of a matrix <code>M</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Rank(M)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+<p>Numeric matrix; vectors will be considered as column vectors.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Provides an estimate of the number of linearly independent rows or columns
+of a matrix <code>M</code>. Compares an approach using QR-decomposition with one
+counting singular values larger than a certain tolerance (Matlab).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix rank as integer between <code>0</code> and <code>min(ncol(M), nrow(M))</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The corresponding function in Matlab is called <code>rank</code>, but that term
+has a different meaning in R.
+</p>
+
+
+<h3>References</h3>
+
+<p>Trefethen, L. N., and D. Bau III. (1997). Numerical Linear Algebra. SIAM,
+Philadelphia. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="nullspace.html">nullspace</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+Rank(magic(10))   #=&gt; 7
+Rank(magic(100))  #=&gt; 3 (!)
+Rank(hilb(8))     #=&gt; 8 , but qr(hilb(8))$rank says, rank is 7.
+# Warning message:
+# In Rank(hilb(8)) : Rank calculation may be problematic.
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

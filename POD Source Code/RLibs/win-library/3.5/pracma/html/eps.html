@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Floating Point Relative Accuracy</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for eps {pracma}"><tr><td>eps {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Floating Point Relative Accuracy
+</h2>
+
+<h3>Description</h3>
+
+<p>Distance from 1.0 to the next largest double-precision number.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+eps(x = 1.0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>scalar or numerical vector or matrix.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>d=eps(x)</code> is the positive distance from <code>abs(x)</code> to the next 
+larger floating point number in double precision.
+</p>
+<p>If <code>x</code> is an array, <code>eps(x)</code> will return <code>eps(max(abs(x)))</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a scalar.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+for (i in -5:5) cat(eps(10^i), "\n")
+# 1.694066e-21 
+# 1.355253e-20 
+# 2.168404e-19 
+# 1.734723e-18 
+# 1.387779e-17 
+# 2.220446e-16 
+# 1.776357e-15 
+# 1.421085e-14 
+# 1.136868e-13 
+# 1.818989e-12 
+# 1.455192e-11 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

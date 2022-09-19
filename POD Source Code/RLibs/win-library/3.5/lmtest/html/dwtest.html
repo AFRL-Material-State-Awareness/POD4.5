@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Durbin-Watson Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for dwtest {lmtest}"><tr><td>dwtest {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Durbin-Watson Test</h2>
+
+<h3>Description</h3>
+
+<p>Performs the Durbin-Watson test for autocorrelation of disturbances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dwtest(formula, order.by = NULL, alternative = c("greater", "two.sided", "less"),
+       iterations = 15, exact = NULL, tol = 1e-10, data = list())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a symbolic description for the model to be tested
+(or a fitted <code>"lm"</code> object).</p>
+</td></tr>
+<tr valign="top"><td><code>order.by</code></td>
+<td>
+<p>Either a vector <code>z</code> or a formula with a single explanatory
+variable like <code>~ z</code>. The observations in the model
+are ordered by the size of <code>z</code>. If set to <code>NULL</code> (the
+default) the observations are assumed to be ordered (e.g., a
+time series).</p>
+</td></tr>
+<tr valign="top"><td><code>alternative</code></td>
+<td>
+<p>a character string specifying the alternative hypothesis.</p>
+</td></tr>
+<tr valign="top"><td><code>iterations</code></td>
+<td>
+<p>an integer specifying the number of iterations
+when calculating the p-value with the &quot;pan&quot; algorithm.</p>
+</td></tr>
+<tr valign="top"><td><code>exact</code></td>
+<td>
+<p>logical. If set to <code>FALSE</code> a normal approximation
+will be used to compute the p value, if <code>TRUE</code> the &quot;pan&quot;
+algorithm is used. The default is to use &quot;pan&quot; if the sample size
+is &lt; 100.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>tolerance. Eigenvalues computed have to be greater than
+<code>tol</code> to be treated as non-zero.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables in the model.
+By default the variables are taken from the environment which <code>dwtest</code>
+is called from.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Durbin-Watson test has the null hypothesis that the autocorrelation
+of the disturbances is 0. It is possible to test against the alternative that it is
+greater than, not equal to, or less than 0, respectively. This can be specified
+by the <code>alternative</code> argument.
+</p>
+<p>Under the assumption of normally distributed disturbances, the null distribution 
+of the Durbin-Watson statistic is the distribution of a linear
+combination of chi-squared variables. The p-value is computed using the
+Fortran version of Applied Statistics Algorithm AS 153 by Farebrother
+(1980, 1984). This algorithm is called &quot;pan&quot; or &quot;gradsol&quot;. For large sample
+sizes the algorithm might fail to compute the p value; in that case a warning
+is printed and an approximate p value will be given; this p value is computed
+using a normal approximation with mean and variance of the Durbin-Watson test
+statistic.
+</p>
+<p>Examples can not only be found on this page, but also on the help pages of the
+data sets <code><a href="bondyield.html">bondyield</a></code>, <code><a href="currencysubstitution.html">currencysubstitution</a></code>,
+<code><a href="growthofmoney.html">growthofmoney</a></code>, <code><a href="moneydemand.html">moneydemand</a></code>,
+<code><a href="unemployment.html">unemployment</a></code>, <code><a href="wages.html">wages</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"htest"</code> containing:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>statistic</code></td>
+<td>
+<p>the test statistic.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>a character string with the method used.</p>
+</td></tr>
+<tr valign="top"><td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td></tr>
+<tr valign="top"><td><code>p.value</code></td>
+<td>
+<p>the corresponding p-value.</p>
+</td></tr>
+<tr valign="top"><td><code>data.name</code></td>
+<td>
+<p>a character string with the data name.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>J. Durbin &amp; G.S. Watson (1950),
+Testing for Serial Correlation in Least Squares Regression I.
+<em>Biometrika</em> <b>37</b>, 409&ndash;428.
+</p>
+<p>J. Durbin &amp; G.S. Watson (1951),
+Testing for Serial Correlation in Least Squares Regression II.
+<em>Biometrika</em> <b>38</b>, 159&ndash;177.
+</p>
+<p>J. Durbin &amp; G.S. Watson (1971),
+Testing for Serial Correlation in Least Squares Regression III.
+<em>Biometrika</em> <b>58</b>, 1&ndash;19.
+</p>
+<p>R.W. Farebrother (1980),
+Pan's Procedure for the Tail Probabilities of the
+Durbin-Watson Statistic (Corr: 81V30 p189; AS R52: 84V33 p363- 366; AS
+R53: 84V33 p366- 369).
+<em>Applied Statistics</em> <b>29</b>,  224&ndash;227.
+</p>
+<p>R. W. Farebrother (1984),
+[AS R53] A Remark on Algorithms AS 106 (77V26 p92-98), AS 153 (80V29 p224-227)
+and AS 155: The Distribution of a Linear Combination of <i>&chi;^2</i> Random
+Variables (80V29 p323-333)
+<em>Applied Statistics</em> <b>33</b>, 366&ndash;369.
+</p>
+<p>W. Krämer &amp; H. Sonnberger (1986),
+<em>The Linear Regression Model under Test</em>. Heidelberg: Physica.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/lm.html">lm</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## generate two AR(1) error terms with parameter
+## rho = 0 (white noise) and rho = 0.9 respectively
+err1 &lt;- rnorm(100)
+
+## generate regressor and dependent variable
+x &lt;- rep(c(-1,1), 50)
+y1 &lt;- 1 + x + err1
+
+## perform Durbin-Watson test
+dwtest(y1 ~ x)
+
+err2 &lt;- filter(err1, 0.9, method="recursive")
+y2 &lt;- 1 + x + err2
+dwtest(y2 ~ x)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

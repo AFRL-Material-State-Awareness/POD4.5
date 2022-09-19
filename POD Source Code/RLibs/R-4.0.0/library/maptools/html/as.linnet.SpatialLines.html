@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert SpatialLines to Linear Network</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.linnet.SpatialLines {maptools}"><tr><td>as.linnet.SpatialLines {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Convert SpatialLines to Linear Network
+</h2>
+
+<h3>Description</h3>
+
+<p>Convert an object of class <code>SpatialLines</code> or
+<code>SpatialLinesDataFrame</code> (from package <span class="pkg">sp</span>),
+representing a collection of polygonal lines,
+into an object of class <code>linnet</code> (from package <span class="pkg">spatstat</span>),
+representing a network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  as.linnet.SpatialLines(X, ..., fuse = TRUE)
+  ## S4 method for signature 'SpatialLines,linnet'
+coerce(from, to = "linnet", strict = TRUE)
+  ## S4 method for signature 'SpatialLinesDataFrame,linnet'
+coerce(from, to = "linnet",
+    strict = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>X, from</code></td>
+<td>
+
+<p>Object of class <code>SpatialLines</code> or
+<code>SpatialLinesDataFrame</code> to be converted.
+</p>
+</td></tr>
+<tr valign="top"><td><code>to</code></td>
+<td>
+<p>output object of class &ldquo;linnet&rdquo;.</p>
+</td></tr>
+<tr valign="top"><td><code>strict</code></td>
+<td>
+<p>logical flag. If TRUE, the returned object must be strictly from the target class.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Ignored.
+</p>
+</td></tr>
+<tr valign="top"><td><code>fuse</code></td>
+<td>
+
+<p>Logical value indicating whether to join different curves
+which have a common vertex.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function converts an object of class <code>SpatialLines</code>
+or <code>SpatialLinesDataFrame</code> into an object of class <code>linnet</code>.
+It is not a method for the <span class="pkg">spatstat</span> generic function
+<code><a href="../../spatstat.linnet/html/as.linnet.html">as.linnet</a></code>, but like other S4 coercion functions for
+<span class="pkg">sp</span> classes to <span class="pkg">spatstat</span> classes, it may be called directly as a function.
+</p>
+<p>An object of class SpatialLines
+or <code>SpatialLinesDataFrame</code> (from package <span class="pkg">sp</span>) represents
+a list of lists of the coordinates of lines, such as a list of all roads in
+a city. An object of class <code>linnet</code> in the <span class="pkg">spatstat</span> package
+represents a linear network, such as a road network.
+</p>
+<p>If <code>fuse=FALSE</code>, each &ldquo;Line&rdquo; object in <code>X</code>
+will be treated as if it were disconnected from the others.
+The result is a network that consists of many disconnected sub-networks,
+equivalent to the list of &ldquo;Line&rdquo; objects.
+</p>
+<p>If <code>fuse=TRUE</code> (the default), the code will
+search for identical pairs of vertices occurring in different
+&ldquo;Line&rdquo; objects, and will treat them as identical vertices,
+effectively joining the two &ldquo;Line&rdquo; objects at this common
+vertex.
+</p>
+<p>If <code>X</code> belongs to class <code>SpatialLinesDataFrame</code>,
+the associated columns of data in the auxiliary data frame
+<code>slot(X, "data")</code> will be copied to the output as the marks
+attached to the line segments of the network. See the Examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>linnet</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adrian Baddeley.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../spatstat.linnet/html/as.linnet.html">as.linnet</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+run &lt;- FALSE
+if(require("spatstat.geom", quietly=TRUE) &amp;&amp;
+  require("spatstat.linnet", quietly=TRUE)) run &lt;- TRUE
+if (run) {
+   dname &lt;- system.file("shapes", package="maptools")
+   fname &lt;- file.path(dname, "fylk-val.shp")
+   fylk &lt;- readShapeSpatial(fname, proj4string=CRS("+proj=utm +zone=33 +ellps=WGS84"))
+   is.projected(fylk)
+}
+if (run) {
+   L &lt;- as(fylk, "linnet")
+   print(max(vertexdegree(L)))
+}
+if (run) {
+   L0 &lt;- as.linnet.SpatialLines(fylk, fuse=FALSE)
+   print(max(vertexdegree(L0)))
+}
+if (run) {
+   ## extract data associated with each network segment
+   head(marks(as.psp(L)))
+}
+if (run) {
+   fname &lt;- file.path(dname, "fylk-val-ll.shp")
+   fylk &lt;- readShapeSpatial(fname, proj4string=CRS("+proj=longlat +ellps=WGS84"))
+   is.projected(fylk)
+}
+if (run) {
+   try(L &lt;- as(fylk, "linnet"))
+  }
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

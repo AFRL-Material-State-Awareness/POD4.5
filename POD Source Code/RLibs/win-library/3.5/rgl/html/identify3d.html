@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Identify points in plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for identify3d {rgl}"><tr><td>identify3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Identify points in plot
+</h2>
+
+<h3>Description</h3>
+
+<p>Identify points in a plot, similarly to the <code><a href="../../graphics/html/identify.html">identify</a></code> function
+in base graphics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+identify3d(x, y = NULL, z = NULL, labels = seq_along(x), n = length(x), 
+	plot = TRUE, adj = c(-0.1, 0.5), tolerance = 20, 
+	buttons = c("right", "middle"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+<p>coordinates of points in a scatter plot.  Alternatively, any
+object which defines coordinates (see <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code>) 
+can be given as <code>x</code>, and <code>y</code> and <code>z</code> left missing.</p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p>an optional character vector giving labels for the
+points.  Will be coerced using <code><a href="../../base/html/character.html">as.character</a></code>, and
+recycled if necessary to the length of <code>x</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>the maximum number of points to be identified.</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p>logical: if <code>plot</code> is <code>TRUE</code>, the labels are
+printed near the points and if <code>FALSE</code> they are omitted.</p>
+</td></tr>
+<tr valign="top"><td><code>adj</code></td>
+<td>
+<p>numeric vector to use as <code>adj</code> parameter to 
+<code><a href="texts.html">text3d</a></code> when plotting the labels.</p>
+</td></tr>
+<tr valign="top"><td><code>tolerance</code></td>
+<td>
+<p>the maximal distance (in pixels) 
+for the pointer to be &lsquo;close enough&rsquo; to a point.</p>
+</td></tr>
+<tr valign="top"><td><code>buttons</code></td>
+<td>
+<p>a length 1 or 2 character vector giving the buttons
+to use for selection and quitting.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If <code>buttons</code> is length 1, the user can quit by reaching <code>n</code>
+selections, or by hitting the 
+escape key, but the result will be lost if escape is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of selected indices.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../graphics/html/identify.html">identify</a></code> for base graphics, <code><a href="select3d.html">select3d</a></code> for selecting regions.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

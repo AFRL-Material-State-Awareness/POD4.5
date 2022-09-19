@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add a marker file to a project</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for set_here {here}"><tr><td>set_here {here}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add a marker file to a project</h2>
+
+<h3>Description</h3>
+
+<a href='https://www.tidyverse.org/lifecycle/#superseded'><img src='figures/lifecycle-superseded.svg' alt='Superseded lifecycle'></a>
+
+
+<h3>Usage</h3>
+
+<pre>
+set_here(path = ".", verbose = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>path</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+Directory where to create <code>.here</code> file, defaults to the current directory.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p><code style="white-space: pre;">[logical(1)]</code><br />
+Verbose output, defaults to <code>TRUE</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>set_here()</code> creates an empty file named <code>.here</code>, by default
+in the current directory.
+When here encounters such a file, it uses the
+directory that contains this file as root.
+This is useful if none of the default criteria apply.
+You need to restart the R session so that <code>here()</code>
+picks up the newly created file.
+</p>
+
+
+<h3>Life cycle</h3>
+
+<p><code>set_here()</code> should no longer be necessary
+if all scripts and reports in a project call <code><a href="i_am.html">i_am()</a></code>,
+which is now the recommended workflow for declaring the project root.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>here</em> version 1.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract (or &quot;get&quot;) components from a 'KRmodcomp' object.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for getkr {pbkrtest}"><tr><td>getkr {pbkrtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extract (or &quot;get&quot;) components from a <code>KRmodcomp</code> object.</h2>
+
+<h3>Description</h3>
+
+<p>Extract (or &quot;get&quot;) components from a <code>KRmodcomp</code> object,
+which is the result of the <code>KRmodcomp</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+getKR(
+  object,
+  name = c("ndf", "ddf", "Fstat", "p.value", "F.scaling", "FstatU", "p.valueU", "aux")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>A <code>KRmodcomp</code> object, which is the result of the
+<code>KRmodcomp</code> function</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>The available slots. If <code>name</code> is missing or <code>NULL</code>
+then everything is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Søren Højsgaard <a href="mailto:sorenh@math.aau.dk">sorenh@math.aau.dk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Ulrich Halekoh, Søren Højsgaard (2014)., A Kenward-Roger
+Approximation and Parametric Bootstrap Methods for Tests in Linear Mixed
+Models - The R Package pbkrtest., Journal of Statistical Software,
+58(10), 1-30., <a href="https://www.jstatsoft.org/v59/i09/">https://www.jstatsoft.org/v59/i09/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="kr-modcomp.html">KRmodcomp</a></code>, <code><a href="pb-modcomp.html">PBmodcomp</a></code>,
+<code><a href="kr-vcov.html">vcovAdj</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+data(beets, package='pbkrtest')
+lg &lt;- lmer(sugpct ~ block + sow + harvest + (1|block:harvest), 
+              data=beets, REML=FALSE)
+sm &lt;- update(lg, .~. - harvest)
+modcomp &lt;- KRmodcomp(lg, sm)
+getKR(modcomp, "ddf") # get denominator degrees of freedom.
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pbkrtest</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

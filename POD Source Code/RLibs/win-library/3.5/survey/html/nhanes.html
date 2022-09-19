@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Cholesterol data from a US survey</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nhanes {survey}"><tr><td>nhanes {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Cholesterol data from a US survey
+</h2>
+
+<h3>Description</h3>
+
+<p>Data extracted from NHANES 2009-2010 on high cholesterol.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>data(nhanes)</pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 8591 observations on the following 7 variables.
+</p>
+
+<dl>
+<dt><code>SDMVPSU</code></dt><dd><p>Primary sampling units</p>
+</dd>
+<dt><code>SDMVSTRA</code></dt><dd><p>Sampling strata</p>
+</dd>
+<dt><code>WTMEC2YR</code></dt><dd><p>Sampling weights</p>
+</dd>
+<dt><code>HI_CHOL</code></dt><dd><p>Numeric vector: 1 for total cholesterol over
+240mg/dl, 0 under 240mg/dl</p>
+</dd>
+<dt><code>race</code></dt><dd><p>1=Hispanic, 2=non-Hispanic white, 3=non-Hispanic
+black, 4=other</p>
+</dd>
+<dt><code>agecat</code></dt><dd><p>Age group <code>(0,19]</code> <code>(19,39]</code> <code>(39,59]</code> <code>(59,Inf]</code></p>
+</dd>
+<dt><code>RIAGENDR</code></dt><dd><p>Gender: 1=male, 2=female</p>
+</dd>
+</dl>
+
+
+
+<h3>Source</h3>
+
+<p>Previously at  <code style="white-space: pre;">https://wwwn.cdc.gov/nchs/nhanes/search/datapage.aspx?Component=laboratory&amp;CycleBeginYear=2009</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(nhanes)
+design &lt;- svydesign(id=~SDMVPSU, strata=~SDMVSTRA, weights=~WTMEC2YR, nest=TRUE,data=nhanes)
+design
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

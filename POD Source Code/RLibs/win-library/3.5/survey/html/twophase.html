@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Two-phase designs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for twophase {survey}"><tr><td>twophase {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Two-phase designs</h2>
+
+<h3>Description</h3>
+
+<p>In a two-phase design a sample is taken from a population and a
+subsample taken from the sample, typically stratified by variables not
+known for the whole population.  The second phase can use any design 
+supported for single-phase sampling. The first phase must currently
+be one-stage element  or cluster sampling
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+twophase(id, strata = NULL, probs = NULL, weights = NULL, fpc = NULL,
+subset, data, method=c("full","approx","simple"))
+twophasevar(x,design)
+twophase2var(x,design)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>list of two formulas for sampling unit identifiers</p>
+</td></tr>
+<tr valign="top"><td><code>strata</code></td>
+<td>
+<p>list of two formulas (or <code>NULL</code>s) for stratum identifies</p>
+</td></tr>
+<tr valign="top"><td><code>probs</code></td>
+<td>
+<p> list of two formulas (or <code>NULL</code>s) for sampling probabilities</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>Only for <code>method="approx"</code>, list of two formulas (or <code>NULL</code>s) for sampling weights</p>
+</td></tr>
+<tr valign="top"><td><code>fpc</code></td>
+<td>
+<p>list of two formulas (or <code>NULL</code>s) for finite
+population corrections</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>formula specifying which observations are selected in
+phase 2</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>Data frame will all data for phase 1 and 2</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p><code>"full"</code> requires (much) more memory, but gives unbiased
+variance estimates for general multistage designs at both phases.
+<code>"simple"</code> or <code>"approx"</code> uses the standard error calculation from
+version 3.14 and earlier,  which uses much less memory and is correct for designs with simple
+random sampling at phase one and stratified random sampling at phase two.
+</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>probability-weighted estimating functions</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>two-phase design</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The population for the second phase is the first-phase sample. If the
+second phase sample uses stratified (multistage cluster) sampling
+without replacement and all the stratum and sampling unit identifier
+variables are available for the whole first-phase sample it is
+possible to estimate the sampling probabilities/weights and the
+finite population correction. These would then  be specified as
+<code>NULL</code>.
+</p>
+<p>Two-phase case-control and case-cohort studies in biostatistics will
+typically have simple random sampling with replacement as the first
+stage. Variances given here may differ slightly from those in the
+biostatistics literature where a model-based estimator of the
+first-stage variance would typically be used.
+</p>
+<p>Variance computations are based on the conditioning argument in
+Section 9.3 of Sarndal et al. Method <code>"full"</code> corresponds exactly
+to the formulas in that reference. Method <code>"simple"</code> or
+<code>"approx"</code> (the two are the same) uses less time and memory but
+is exact only for some special cases. The most important special case
+is the two-phase epidemiologic designs where phase 1 is simple random
+sampling from an infinite population and phase 2 is stratified random
+sampling.  See the <code>tests</code> directory for a worked example. The
+only disadvantage of method=&quot;simple&quot; in these cases is that
+standardization of margins (<code><a href="marginpred.html">marginpred</a></code>) is not available.
+</p>
+<p>For <code>method="full"</code>, sampling probabilities must be available for
+each stage of sampling, within each phase.  For multistage sampling
+this requires specifying either <code>fpc</code> or <code>probs</code> as a
+formula with a term for each stage of sampling.  If no <code>fpc</code> or
+<code>probs</code> are specified at phase 1 it is treated as simple random
+sampling from an infinite population, and population totals will not
+be correctly estimated, but means, quantiles, and regression models
+will be correct.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>twophase</code> returns an object of class <code>twophase2</code> (for
+<code>method="full"</code>) or <code>twophase</code>.  The structure of
+<code>twophase2</code> objects may change as unnecessary components are removed.
+</p>
+<p><code>twophase2var</code> and <code>twophasevar</code> return a variance matrix with an attribute
+containing the separate phase 1 and phase 2 contributions to the variance.
+</p>
+
+
+<h3>References</h3>
+
+<p>Sarndal CE, Swensson B, Wretman J (1992) &quot;Model Assisted Survey Sampling&quot;
+Springer.
+</p>
+<p>Breslow NE and Chatterjee N, Design and analysis of two-phase
+studies with binary outcome applied to Wilms tumour prognosis.  &quot;Applied
+Statistics&quot;  48:457-68, 1999
+</p>
+<p>Breslow N, Lumley T, Ballantyne CM, Chambless LE, Kulick M. (2009)
+Improved Horvitz-Thompson estimation of model parameters from two-phase
+stratified samples: applications in epidemiology. Statistics in
+Biosciences. doi 10.1007/s12561-009-9001-6
+</p>
+<p>Lin, DY and Ying, Z (1993). Cox regression with incomplete covariate measurements.
+&quot;Journal of the American Statistical Association&quot; 88: 1341-1349.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svydesign.html">svydesign</a></code>, <code><a href="svyrecvar.html">svyrecvar</a></code> for multi*stage*
+sampling
+</p>
+<p><code><a href="calibrate.html">calibrate</a></code> for calibration (GREG) estimators.
+</p>
+<p><code><a href="estweights.html">estWeights</a></code> for two-phase designs for missing data.
+</p>
+<p>The &quot;epi&quot; and &quot;phase1&quot; vignettes for examples and technical details.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ ## two-phase simple random sampling.
+ data(pbc, package="survival")
+ pbc$randomized&lt;-with(pbc, !is.na(trt) &amp; trt&gt;0)
+ pbc$id&lt;-1:nrow(pbc)
+ d2pbc&lt;-twophase(id=list(~id,~id), data=pbc, subset=~randomized)
+ svymean(~bili, d2pbc)
+
+ ## two-stage sampling as two-phase
+ data(mu284)
+ ii&lt;-with(mu284, c(1:15, rep(1:5,n2[1:5]-3)))
+ mu284.1&lt;-mu284[ii,]
+ mu284.1$id&lt;-1:nrow(mu284.1)
+ mu284.1$sub&lt;-rep(c(TRUE,FALSE),c(15,34-15))
+ dmu284&lt;-svydesign(id=~id1+id2,fpc=~n1+n2, data=mu284)
+ ## first phase cluster sample, second phase stratified within cluster
+ d2mu284&lt;-twophase(id=list(~id1,~id),strata=list(NULL,~id1),
+                     fpc=list(~n1,NULL),data=mu284.1,subset=~sub)
+ svytotal(~y1, dmu284)
+ svytotal(~y1, d2mu284)
+ svymean(~y1, dmu284)
+ svymean(~y1, d2mu284)
+
+ ## case-cohort design: this example requires R 2.2.0 or later
+ library("survival")
+ data(nwtco)
+
+ ## stratified on case status
+ dcchs&lt;-twophase(id=list(~seqno,~seqno), strata=list(NULL,~rel),
+         subset=~I(in.subcohort | rel), data=nwtco)
+ svycoxph(Surv(edrel,rel)~factor(stage)+factor(histol)+I(age/12), design=dcchs)
+
+ ## Using survival::cch 
+ subcoh &lt;- nwtco$in.subcohort
+ selccoh &lt;- with(nwtco, rel==1|subcoh==1)
+ ccoh.data &lt;- nwtco[selccoh,]
+ ccoh.data$subcohort &lt;- subcoh[selccoh]
+ cch(Surv(edrel, rel) ~ factor(stage) + factor(histol) + I(age/12), data =ccoh.data,
+        subcoh = ~subcohort, id=~seqno, cohort.size=4028, method="LinYing")
+
+
+ ## two-phase case-control
+ ## Similar to Breslow &amp; Chatterjee, Applied Statistics (1999) but with
+ ## a slightly different version of the data set
+ 
+ nwtco$incc2&lt;-as.logical(with(nwtco, ifelse(rel | instit==2,1,rbinom(nrow(nwtco),1,.1))))
+ dccs2&lt;-twophase(id=list(~seqno,~seqno),strata=list(NULL,~interaction(rel,instit)),
+    data=nwtco, subset=~incc2)
+ dccs8&lt;-twophase(id=list(~seqno,~seqno),strata=list(NULL,~interaction(rel,stage,instit)),
+    data=nwtco, subset=~incc2)
+ summary(glm(rel~factor(stage)*factor(histol),data=nwtco,family=binomial()))
+ summary(svyglm(rel~factor(stage)*factor(histol),design=dccs2,family=quasibinomial()))
+ summary(svyglm(rel~factor(stage)*factor(histol),design=dccs8,family=quasibinomial()))
+
+ ## Stratification on stage is really post-stratification, so we should use calibrate()
+ gccs8&lt;-calibrate(dccs2, phase=2, formula=~interaction(rel,stage,instit))
+ summary(svyglm(rel~factor(stage)*factor(histol),design=gccs8,family=quasibinomial()))
+
+ ## For this saturated model calibration is equivalent to estimating weights.
+ pccs8&lt;-calibrate(dccs2, phase=2,formula=~interaction(rel,stage,instit), calfun="rrz")
+ summary(svyglm(rel~factor(stage)*factor(histol),design=pccs8,family=quasibinomial()))
+
+ ## Since sampling is SRS at phase 1 and stratified RS at phase 2, we
+ ## can use method="simple" to save memory.
+ dccs8_simple&lt;-twophase(id=list(~seqno,~seqno),strata=list(NULL,~interaction(rel,stage,instit)),
+    data=nwtco, subset=~incc2,method="simple")
+ summary(svyglm(rel~factor(stage)*factor(histol),design=dccs8_simple,family=quasibinomial()))
+
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

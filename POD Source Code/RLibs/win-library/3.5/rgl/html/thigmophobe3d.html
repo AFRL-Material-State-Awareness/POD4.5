@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find the direction away from the closest point in a 3d...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for thigmophobe3d {rgl}"><tr><td>thigmophobe3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Find the direction away from the closest point in a 3d projection
+</h2>
+
+<h3>Description</h3>
+
+<p>Jim Lemon's <code><a href="../../plotrix/html/thigmophobe.html">thigmophobe</a></code> function in the 
+<code><a href="../../plotrix/html/plotrix-package.html">plotrix</a></code> package
+computes good directions for labels in a 2D plot.  This function
+does the same for a particular projection in a 3D plot by
+projecting down to 2D and calling his function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+thigmophobe3d(x, y = NULL, z = NULL, 
+              P = par3d("projMatrix"), 
+              M = par3d("modelMatrix"),
+              windowRect = par3d("windowRect"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+<p>point coordinates.  Any reasonable way of defining
+the coordinates is acceptable.  See the function <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code> for details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>P, M, windowRect</code></td>
+<td>
+
+<p>The projection and modelview matrices, and the size and position of 
+the display in pixels.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Since <code>thigmophobe3d</code> projects using fixed <code>P</code> and <code>M</code>,
+it will not necessarily choose good directions if the user rotates
+the display or makes any other change to the projection.</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of values from 1 to 4 to be used as the <code>pos</code> argument
+in <code><a href="texts.html">text3d</a></code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The example
+below shows how to update the directions during an animation; 
+I find that the moving labels are distracting, and prefer to live with 
+fixed ones.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://CRAN.R-project.org/package=plotrix"><span class="pkg">plotrix</span></a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="texts.html">text3d</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if (requireNamespace("plotrix", quietly = TRUE)) {
+  # Simulate some data
+  xyz &lt;- matrix(rnorm(30), ncol = 3)
+  
+  # Plot the data first, to establish the projection
+  plot3d(xyz)
+  
+  # Now thigmophobe3d can choose directions
+  textid &lt;- text3d(xyz, texts = 1:10, pos = thigmophobe3d(xyz))
+  
+  # Update the label positions during an animation
+  if (interactive() &amp;&amp; !rgl.useNULL()) {
+    spin &lt;- spin3d(rpm = 5)
+    f &lt;- function(time) {
+      par3d(skipRedraw = TRUE)
+      on.exit(par3d(skipRedraw = FALSE))
+      pop3d(id = textid)
+      # Need to rotate before thigmophobe3d is called
+      result &lt;- spin(time)
+      par3d(userMatrix = result$userMatrix)
+      textid &lt;&lt;- text3d(xyz, texts = 1:10, pos = thigmophobe3d(xyz))
+      result
+    }
+    play3d(f, duration = 5)
+  } else
+    textid   # just print the static display
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

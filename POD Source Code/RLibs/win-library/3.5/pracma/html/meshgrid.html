@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Generate a Mesh Grid</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for meshgrid {pracma}"><tr><td>meshgrid {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Generate a Mesh Grid
+</h2>
+
+<h3>Description</h3>
+
+<p>Generate two matrices for use in three-dimensional plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+meshgrid(x, y = x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numerical vector, represents points along the x-axis.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>numerical vector, represents points along the y-axis.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The rows of the output array X are copies of the vector x;
+columns of the output array Y are copies of the vector y.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns two matrices as a list with <code>X</code> and <code>Y</code> components.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The three-dimensional variant <code>meshgrid(x, y, z)</code> is not yet implemented.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/outer.html">outer</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+meshgrid(1:5)$X
+meshgrid(c(1, 2, 3), c(11, 12))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

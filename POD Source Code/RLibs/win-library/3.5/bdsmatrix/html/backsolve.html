@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Solve an Upper or Lower Triangular System</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for backsolve {bdsmatrix}"><tr><td>backsolve {bdsmatrix}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Solve an Upper or Lower Triangular System</h2>
+
+<h3>Description</h3>
+
+<p>Solves a system of linear equations where the coefficient matrix is
+upper (or &lsquo;right&rsquo;, &lsquo;R&rsquo;) or lower (&lsquo;left&rsquo;,
+&lsquo;L&rsquo;) triangular.<br /> 
+</p>
+<p><code>x &lt;- backsolve(R, b)</code> solves <i>R x = b</i>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  backsolve(r, ...)
+  ## S4 method for signature 'gchol'
+backsolve(r, x, k=ncol(r), upper.tri=TRUE, ...)
+  ## S4 method for signature 'gchol.bdsmatrix'
+backsolve(r, x, k=ncol(r), upper.tri=TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>r</code></td>
+<td>
+<p>a matrix or matrix-like object</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a vector or a matrix whose columns give the right-hand sides for
+the equations.</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>The number of columns of <code>r</code> and rows of <code>x</code> to use.</p>
+</td></tr>
+<tr valign="top"><td><code>upper.tri</code></td>
+<td>
+<p>logical; if <code>TRUE</code> (default), the <em>upper</em>
+<em>tri</em>angular part of <code>r</code> is used.  Otherwise, the lower
+one.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to other methods</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The generalized Cholesky decompostion of a symmetric matrix A is
+<i>A= LD t(L)</i> where D is diagonal, L is lower triangular,
+and <i>t(L)</i> is the transpose of L.
+These functions solve either <i>L sqrt(D) x=b</i>
+(when <code>upper.tri=FALSE</code>) or <i>sqrt(D) t(L)
+    x=b</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The solution of the triangular system.  The result will be a vector if
+<code>x</code> is a vector and a matrix if <code>x</code> is a matrix.
+</p>
+<p>Note that <code>forwardsolve(L, b)</code> is just a wrapper for
+<code>backsolve(L, b, upper.tri=FALSE)</code>.
+</p>
+
+
+<h3>Methods</h3>
+
+<p>Use <code><a href="../../methods/html/showMethods.html">showMethods</a>(backsolve)</code> to see all the defined methods;
+the two created by the bdsmatrix library are described here:
+</p>
+
+<dl>
+<dt>bdsmatrix</dt><dd><p><code>signature=(r= "gchol")</code> for a generalized
+cholesky decomposition</p>
+</dd>
+<dt>bdsmatrix</dt><dd><p><code>signature=(r= "gchol.bdsmatrix")</code> for the
+generalize cholesky decomposition of a bdsmatrix object</p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p>The <code>bdsmatrix</code> package promotes the base R <code>backsolve</code>
+function to a
+generic.
+To see the full documentation for the default method, view <code>backsolve</code>
+from the <code>base</code> package.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/backsolve.html">forwardsolve</a></code>, <code><a href="gchol.html">gchol</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>bdsmatrix</em> version 1.3-6 <a href="00Index.html">Index</a>]</div>
+</body></html>

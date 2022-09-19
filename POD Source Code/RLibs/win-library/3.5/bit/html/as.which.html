@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coercion to (positive) integer positions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.which.which {bit}"><tr><td>as.which.which {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coercion to (positive) integer positions</h2>
+
+<h3>Description</h3>
+
+<p>Coercing to something like the result of which <code><a href="../../base/html/which.html">which</a></code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'which'
+as.which(x, maxindex = NA_integer_, ...)
+
+## S3 method for class ''NULL''
+as.which(x, ...)
+
+## S3 method for class 'numeric'
+as.which(x, maxindex = NA_integer_, ...)
+
+## S3 method for class 'integer'
+as.which(x, maxindex = NA_integer_, is.unsorted = TRUE, has.dup = TRUE, ...)
+
+## S3 method for class 'logical'
+as.which(x, ...)
+
+## S3 method for class 'ri'
+as.which(x, ...)
+
+## S3 method for class 'bit'
+as.which(x, range = NULL, ...)
+
+## S3 method for class 'bitwhich'
+as.which(x, ...)
+
+as.which(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of classes <code><a href="bit.html">bit</a></code>, <code><a href="bitwhich.html">bitwhich</a></code>,
+<code><a href="ri.html">ri</a></code> or something on which <code><a href="../../base/html/which.html">which</a></code> works</p>
+</td></tr>
+<tr valign="top"><td><code>maxindex</code></td>
+<td>
+<p>the length of the boolean vector which is represented</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments (passed to <code><a href="../../base/html/which.html">which</a></code> for the
+default method, ignored otherwise)</p>
+</td></tr>
+<tr valign="top"><td><code>is.unsorted</code></td>
+<td>
+<p>a logical scalar indicating whether the data may be unsorted</p>
+</td></tr>
+<tr valign="top"><td><code>has.dup</code></td>
+<td>
+<p>a logical scalar indicating whether the data may have duplicates</p>
+</td></tr>
+<tr valign="top"><td><code>range</code></td>
+<td>
+<p>a <code><a href="ri.html">ri</a></code> or an integer vector of length==2 giving a
+range restriction for chunked processing</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>as.which.bit</code> returns a vector of subscripts with class 'which'
+</p>
+
+
+<h3>Value</h3>
+
+<p>a vector of class 'logical' or 'integer'
+</p>
+
+
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>which</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="as.which.html">which</a></code>
+</p>
+</li>
+<li> <p><code>NULL</code>: method to coerce to zero length <code><a href="as.which.html">which</a></code> from <code><a href="../../base/html/NULL.html">NULL</a></code>
+</p>
+</li>
+<li> <p><code>numeric</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="../../base/html/numeric.html">numeric</a></code>
+</p>
+</li>
+<li> <p><code>integer</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="../../base/html/integer.html">integer</a></code>
+</p>
+</li>
+<li> <p><code>logical</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="../../base/html/logical.html">logical</a></code>
+</p>
+</li>
+<li> <p><code>ri</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="ri.html">ri</a></code>
+</p>
+</li>
+<li> <p><code>bit</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="bit.html">bit</a></code>
+</p>
+</li>
+<li> <p><code>bitwhich</code>: method to coerce to <code><a href="as.which.html">which</a></code> from <code><a href="bitwhich.html">bitwhich</a></code>
+</p>
+</li></ul>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="CoercionToStandard.html">CoercionToStandard</a></code>, <code><a href="as.booltype.html">as.booltype</a></code>, <code><a href="as.bit.html">as.bit</a></code>, <code><a href="as.bitwhich.html">as.bitwhich</a></code>
+, <code><a href="as.which.html">as.which</a></code>, <code><a href="as.ri.html">as.ri</a></code>, <code><a href="../../ff/html/as.hi.html">as.hi</a></code>,  <code><a href="../../ff/html/as.ff.html">as.ff</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  r &lt;- ri(5, 20, 100)
+  x &lt;- as.which(r)
+  x
+
+  stopifnot(identical(x, as.which(as.logical(r))))
+  stopifnot(identical(x, as.which(as.bitwhich(r))))
+  stopifnot(identical(x, as.which(as.bit(r))))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

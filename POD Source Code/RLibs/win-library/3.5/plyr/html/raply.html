@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Replicate expression and return results in a array.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for raply {plyr}"><tr><td>raply {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Replicate expression and return results in a array.</h2>
+
+<h3>Description</h3>
+
+<p>Evalulate expression n times then combine results into an array
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+raply(.n, .expr, .progress = "none", .drop = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.n</code></td>
+<td>
+<p>number of times to evaluate the expression</p>
+</td></tr>
+<tr valign="top"><td><code>.expr</code></td>
+<td>
+<p>expression to evaluate</p>
+</td></tr>
+<tr valign="top"><td><code>.progress</code></td>
+<td>
+<p>name of the progress bar to use, see <code><a href="create_progress_bar.html">create_progress_bar</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>.drop</code></td>
+<td>
+<p>should extra dimensions of length 1 be dropped, simplifying the output.  Defaults to <code>TRUE</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function runs an expression multiple times, and combines the
+result into a data frame.  If there are no results, then this function
+returns a vector of length 0 (<code>vector(0)</code>).
+This function is equivalent to <code><a href="../../base/html/lapply.html">replicate</a></code>, but will always
+return results as a vector, matrix or array.
+</p>
+
+
+<h3>Value</h3>
+
+<p>if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)
+</p>
+
+
+<h3>References</h3>
+
+<p>Hadley Wickham (2011). The Split-Apply-Combine Strategy for
+Data Analysis. Journal of Statistical Software, 40(1), 1-29.
+<a href="https://www.jstatsoft.org/v40/i01/">https://www.jstatsoft.org/v40/i01/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+raply(100, mean(runif(100)))
+raply(100, each(mean, var)(runif(100)))
+
+raply(10, runif(4))
+raply(10, matrix(runif(4), nrow=2))
+
+# See the central limit theorem in action
+hist(raply(1000, mean(rexp(10))))
+hist(raply(1000, mean(rexp(100))))
+hist(raply(1000, mean(rexp(1000))))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

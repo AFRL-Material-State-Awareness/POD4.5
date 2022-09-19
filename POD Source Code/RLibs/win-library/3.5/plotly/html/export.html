@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Export a plotly graph to a static file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for export {plotly}"><tr><td>export {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Export a plotly graph to a static file</h2>
+
+<h3>Description</h3>
+
+<p>This function is in the process of being deprecated (use <a href="orca.html">orca</a> instead).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+export(p = last_plot(), file = "plotly.png", selenium = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly or ggplot object.</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>a filename. The file type is inferred from the file extension.
+Valid extensions include 'jpeg' | 'png' | 'webp' | 'svg' | 'pdf'</p>
+</td></tr>
+<tr valign="top"><td><code>selenium</code></td>
+<td>
+<p>used only when <code>p</code> is a WebGL plot or the output
+format is 'webp' or 'svg'. Should be an object of class &quot;rsClientServer&quot;
+returned by <code>RSelenium::rsDriver</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>if <code>p</code> is non-WebGL and the output file format is
+jpeg/png/pdf arguments are passed along to <code>webshot::webshot()</code>.
+Otherwise, they are ignored.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For SVG plots, a screenshot is taken via <code>webshot::webshot()</code>.
+Since <code>phantomjs</code> (and hence <code>webshot</code>) does not support WebGL,
+the RSelenium package is used for exporting WebGL plots.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

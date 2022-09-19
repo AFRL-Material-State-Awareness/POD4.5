@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert an object to a lazy expression or lazy dots.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.lazy {lazyeval}"><tr><td>as.lazy {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert an object to a lazy expression or lazy dots.</h2>
+
+<h3>Description</h3>
+
+<p>Convert an object to a lazy expression or lazy dots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.lazy(x, env = baseenv())
+
+as.lazy_dots(x, env)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An R object. Current methods for <code>as.lazy()</code> convert formulas,
+character vectors, calls and names. Methods for <code>as.lazy_dots()</code>
+convert lists and character vectors (by calling <code><a href="../../base/html/lapply.html">lapply</a>()</code>
+with <code>as.lazy()</code>.)</p>
+</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>Environment to use for objects that don't already have
+associated environment.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+as.lazy(~ x + 1)
+as.lazy(quote(x + 1), globalenv())
+as.lazy("x + 1", globalenv())
+
+as.lazy_dots(list(~x, y = ~z + 1))
+as.lazy_dots(c("a", "b", "c"), globalenv())
+as.lazy_dots(~x)
+as.lazy_dots(quote(x), globalenv())
+as.lazy_dots(quote(f()), globalenv())
+as.lazy_dots(lazy(x))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

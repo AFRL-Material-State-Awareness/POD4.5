@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Newton Method for Nonlinear Systems</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for newtonsys {pracma}"><tr><td>newtonsys {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Newton Method for Nonlinear Systems</h2>
+
+<h3>Description</h3>
+
+<p>Newton's method applied to multivariate nonlinear functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+newtonsys(Ffun, x0, Jfun = NULL, ...,
+    	  maxiter = 100, tol = .Machine$double.eps^(1/2))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Ffun</code></td>
+<td>
+<p><code>m</code> functions of <code>n</code> variables.</p>
+</td></tr>
+<tr valign="top"><td><code>Jfun</code></td>
+<td>
+<p>Function returning a square <code>n</code>-by-<code>n</code> matrix
+(of partial derivatives) or <code>NULL</code>, the default.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>Numeric vector of length <code>n</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>Maximum number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>Tolerance, relative accuracy.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to f.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Solves the system of equations applying Newton's method with the univariate
+derivative replaced by the Jacobian.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components: <code>zero</code> the root found so far, <code>fnorm</code> the
+square root of sum of squares of the values of f, and <code>iter</code> the
+number of iterations needed.
+</p>
+
+
+<h3>Note</h3>
+
+<p>TODO: better error checking, e.g. when the Jacobian is not invertible.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., R. Sacco, and F. Saleri (2007). Numerical Mathematics.
+Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="newtonRaphson.html">newtonRaphson</a></code>, <code><a href="broyden.html">broyden</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Example from Quarteroni &amp; Saleri
+F1 &lt;- function(x) c(x[1]^2 + x[2]^2 - 1, sin(pi*x[1]/2) + x[2]^3)
+newtonsys(F1, x0 = c(1, 1))  # zero: 0.4760958 -0.8793934
+
+##  Find the roots of the complex function sin(z)^2 + sqrt(z) - log(z)
+F2 &lt;- function(x) {
+    z  &lt;- x[1] + x[2]*1i
+    fz &lt;- sin(z)^2 + sqrt(z) - log(z)
+    c(Re(fz), Im(fz))
+}
+newtonsys(F2, c(1, 1))
+# $zero   0.2555197 0.8948303 , i.e.  z0 = 0.2555 + 0.8948i
+# $fnorm  2.220446e-16
+# $niter  8
+
+##  Two more problematic examples
+F3 &lt;- function(x)
+        c(2*x[1] - x[2] - exp(-x[1]), -x[1] + 2*x[2] - exp(-x[2]))
+newtonsys(F3, c(0, 0))
+# $zero   0.5671433 0.5671433
+# $fnorm  0
+# $niter  4
+
+## Not run: 
+F4 &lt;- function(x)  # Dennis Schnabel
+        c(x[1]^2 + x[2]^2 - 2, exp(x[1] - 1) + x[2]^3 - 2)
+newtonsys(F4, c(2.0, 0.5))
+# will result in an error ``missing value in  ... err&lt;tol &amp;&amp; niter&lt;maxiter''
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Obtain data associated with a plotly graph</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plotly_data {plotly}"><tr><td>plotly_data {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Obtain data associated with a plotly graph</h2>
+
+<h3>Description</h3>
+
+<p><code>plotly_data()</code> returns data associated with
+a plotly visualization (if there are multiple data frames, by default,
+it returns the most recent one).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plotly_data(p, id = p$x$cur_data)
+
+## S3 method for class 'plotly'
+groups(x)
+
+## S3 method for class 'plotly'
+ungroup(x, ...)
+
+## S3 method for class 'plotly'
+group_by(.data, ...)
+
+## S3 method for class 'plotly'
+mutate(.data, ...)
+
+## S3 method for class 'plotly'
+do(.data, ...)
+
+## S3 method for class 'plotly'
+summarise(.data, ...)
+
+## S3 method for class 'plotly'
+arrange(.data, ...)
+
+## S3 method for class 'plotly'
+select(.data, ...)
+
+## S3 method for class 'plotly'
+filter(.data, ...)
+
+## S3 method for class 'plotly'
+distinct(.data, ...)
+
+## S3 method for class 'plotly'
+slice(.data, ...)
+
+## S3 method for class 'plotly'
+rename(.data, ...)
+
+## S3 method for class 'plotly'
+transmute(.data, ...)
+
+## S3 method for class 'plotly'
+group_by_(.data, ...)
+
+## S3 method for class 'plotly'
+mutate_(.data, ...)
+
+## S3 method for class 'plotly'
+do_(.data, ...)
+
+## S3 method for class 'plotly'
+summarise_(.data, ...)
+
+## S3 method for class 'plotly'
+arrange_(.data, ...)
+
+## S3 method for class 'plotly'
+select_(.data, ...)
+
+## S3 method for class 'plotly'
+filter_(.data, ...)
+
+## S3 method for class 'plotly'
+distinct_(.data, ...)
+
+## S3 method for class 'plotly'
+slice_(.data, ...)
+
+## S3 method for class 'plotly'
+rename_(.data, ...)
+
+## S3 method for class 'plotly'
+transmute_(.data, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly visualization.</p>
+</td></tr>
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>a character string or number referencing an &quot;attribute layer&quot;.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a plotly visualization.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed onto the relevant method.</p>
+</td></tr>
+<tr valign="top"><td><code>.data</code></td>
+<td>
+<p>a plotly visualization.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# use group_by() to define groups of visual markings
+p &lt;- txhousing %&gt;%
+  group_by(city) %&gt;%
+  plot_ly(x = ~date, y = ~sales)
+p
+
+# plotly objects preserve data groupings 
+groups(p)
+plotly_data(p)
+
+# dplyr verbs operate on plotly objects as if they were data frames
+p &lt;- economics %&gt;%
+  plot_ly(x = ~date, y = ~unemploy / pop) %&gt;%
+  add_lines() %&gt;%
+  mutate(rate = unemploy / pop) %&gt;% 
+  filter(rate == max(rate))
+plotly_data(p)
+add_markers(p)
+layout(p, annotations = list(x = ~date, y = ~rate, text = "peak"))
+
+# use group_by() + do() + subplot() for trellis displays 
+d &lt;- group_by(mpg, drv)
+plots &lt;- do(d, p = plot_ly(., x = ~cty, name = ~drv))
+subplot(plots[["p"]], nrows = 3, shareX = TRUE)
+
+# arrange displays by their mean
+means &lt;- summarise(d, mn = mean(cty, na.rm = TRUE))
+means %&gt;%
+  dplyr::left_join(plots) %&gt;%
+  arrange(mn) %&gt;%
+  subplot(nrows = NROW(.), shareX = TRUE)
+  
+# more dplyr verbs applied to plotly objects
+p &lt;- mtcars %&gt;%
+  plot_ly(x = ~wt, y = ~mpg, name = "scatter trace") %&gt;%
+  add_markers()
+p %&gt;% slice(1) %&gt;% plotly_data()
+p %&gt;% slice(1) %&gt;% add_markers(name = "first observation")
+p %&gt;% filter(cyl == 4) %&gt;% plotly_data()
+p %&gt;% filter(cyl == 4) %&gt;% add_markers(name = "four cylinders")
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

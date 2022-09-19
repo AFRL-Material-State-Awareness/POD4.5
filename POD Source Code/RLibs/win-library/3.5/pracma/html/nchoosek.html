@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Binomial Coefficients</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nchoosek {pracma}"><tr><td>nchoosek {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Binomial Coefficients
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute the Binomial coefficients.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nchoosek(n, k)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n, k</code></td>
+<td>
+<p>integers with <code>k</code> between 0 and <code>n</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Alias for the corresponding R function <code>choose</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>integer, the Binomial coefficient <i>({n \over k})</i>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In Matlab/Octave, if <code>n</code> is a vector all combinations of <code>k</code>
+elements from vector <code>n</code> will be generated. Here, use the function
+<code>combs</code> instead.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/Special.html">choose</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+S &lt;- sapply(0:6, function(k) nchoosek(6, k))  # 1  6 15 20 15  6  1
+
+# Catalan numbers
+catalan &lt;- function(n) choose(2*n, n)/(n+1)
+catalan(0:10)
+# 1  1  2  5  14  42  132  429  1430  4862  16796
+
+# Relations
+n &lt;- 10
+sum((-1)^c(0:n) * sapply(0:n, function(k) nchoosek(n, k)))  # 0
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

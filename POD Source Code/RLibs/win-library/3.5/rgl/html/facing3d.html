@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Subset an object to parts facing in a particular direction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for facing3d {rgl}"><tr><td>facing3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Subset an object to parts facing in a particular direction
+</h2>
+
+<h3>Description</h3>
+
+<p><code>facing3d</code> subsets an object by converting it to a triangle mesh,
+then subsetting to those triangles that are counterclockwise
+(for <code>front = TRUE</code>) when projected into a plane.
+</p>
+<p><code>projectDown</code> computes a projection that &ldquo;looks down&rdquo; the specified direction.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+facing3d(obj, up = c(0, 0, 1), 
+         P = projectDown(up), 
+         front = TRUE, strict = TRUE)
+projectDown(up)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+
+<p>An object that can be converted to a triangular mesh object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>up</code></td>
+<td>
+
+<p>The direction that is to be considered &ldquo;up&rdquo;.  It may
+be either a 3 vector in Euclidean coordinates or a 4 vector in
+homogeneous coordinates.
+</p>
+</td></tr>
+<tr valign="top"><td><code>P</code></td>
+<td>
+
+<p>The projection to use for draping, a 4x4 matrix.  See <code><a href="drape3d.html">drape3d</a></code> for details on how <code>P</code> is used.
+</p>
+</td></tr>
+<tr valign="top"><td><code>front</code></td>
+<td>
+
+<p>If <code>front = TRUE</code>, retains triangles that are counterclockwise after projection by <code>P</code>, otherwise
+retains those that are clockwise.
+</p>
+</td></tr>
+<tr valign="top"><td><code>strict</code></td>
+<td>
+<p>If <code>TRUE</code>, drops indeterminate triangles
+(those that are annihilated by <code>P</code>).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>By default 
+the returned subset will be those triangles whose upper side
+matches <code>front</code>.  Change <code>up</code> or use an
+arbitrary projection for different subsets.
+</p>
+<p><code><a href="drape3d.html">drape3d</a></code> and <code><a href="shadow3d.html">shadow3d</a></code> project objects onto meshes; these functions can be used to
+project only onto the top or front.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>facing3d</code> returns a mesh object made of those triangles which face in the 
+desired direction.
+</p>
+<p><code>projectDown</code> computes a 4x4 matrix.   The first two
+coordinates of <code>asEuclidean(x %*% projectDown(up))</code> 
+give a projection of <code>x</code> from above into a plane, where 
+<code>up</code> determines which direction is taken to be &ldquo;up&rdquo;.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="drape3d.html">drape3d</a></code>, <code><a href="shadow3d.html">shadow3d</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+d &lt;- rnorm(3)
+d &lt;- d/sqrt(sum(d^2))
+shade3d( facing3d( icosahedron3d(), up = d, strict = FALSE), 
+         col = "yellow")
+wire3d( facing3d( icosahedron3d(), up = d, front = FALSE), 
+         col = "black")
+# Show the direction:
+arrow3d(-2*d , -d)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

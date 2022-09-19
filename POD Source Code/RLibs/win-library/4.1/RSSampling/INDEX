@@ -1,0 +1,23 @@
+Drss                    Selecting double (classical or modified) ranked
+                        set sample
+Mrss                    Selecting a ranked set sample (classical or
+                        modified)
+Rrss                    Selecting a robust ranked set sample
+con.Mrss                Selecting a ranked set sample (classical or
+                        modified) with a concomitant variable
+con.Rrss                Selecting a robust ranked set sample with a
+                        concomitant variable
+con.rss                 Selecting ranked set sample with a concomitant
+                        variable
+meanRSS                 Mean estimation based on ranked set sampling
+mwwutestrss             Mann-Whitney-Wilcoxon test with RSS
+obsno.Mrss              observation numbers based on classical and
+                        modified ranked set sampling methods
+rankedsets              Selecting ranked sets
+regRSS                  Regression estimator based on ranked set
+                        sampling
+rss                     Selecting classical ranked set sample
+sign1testrss            Sign Test with RSS
+varRSS                  Variance estimation based on ranked set
+                        sampling
+wsrtestrss              Wilcoxon signed rank test with RSS

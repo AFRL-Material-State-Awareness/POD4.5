@@ -1,0 +1,636 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: 'mice': Multivariate Imputation by Chained Equations</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mice {mice}"><tr><td>mice {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2><span class="pkg">mice</span>: Multivariate Imputation by Chained Equations</h2>
+
+<h3>Description</h3>
+
+<p>The <span class="pkg">mice</span> package implements a method to deal with missing data.
+The package creates multiple imputations (replacement values) for
+multivariate missing data. The method is based on Fully Conditional
+Specification, where each incomplete variable is imputed by a separate
+model. The MICE algorithm can impute mixes of continuous, binary,
+unordered categorical and ordered categorical data. In addition, MICE
+can impute continuous two-level data, and maintain consistency between
+imputations by means of passive imputation. Many diagnostic plots are
+implemented to inspect the quality of the imputations.
+</p>
+<p>Generates Multivariate Imputations by Chained Equations (MICE)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mice(
+  data,
+  m = 5,
+  method = NULL,
+  predictorMatrix,
+  ignore = NULL,
+  where = NULL,
+  blocks,
+  visitSequence = NULL,
+  formulas,
+  blots = NULL,
+  post = NULL,
+  defaultMethod = c("pmm", "logreg", "polyreg", "polr"),
+  maxit = 5,
+  printFlag = TRUE,
+  seed = NA,
+  data.init = NULL,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame or a matrix containing the incomplete data.  Missing
+values are coded as <code>NA</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+<p>Number of multiple imputations. The default is <code>m=5</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>Can be either a single string, or a vector of strings with
+length <code>length(blocks)</code>, specifying the imputation method to be
+used for each column in data. If specified as a single string, the same
+method will be used for all blocks. The default imputation method (when no
+argument is specified) depends on the measurement level of the target column,
+as regulated by the <code>defaultMethod</code> argument. Columns that need
+not be imputed have the empty method <code>""</code>. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>predictorMatrix</code></td>
+<td>
+<p>A numeric matrix of <code>length(blocks)</code> rows
+and <code>ncol(data)</code> columns, containing 0/1 data specifying
+the set of predictors to be used for each target column.
+Each row corresponds to a variable block, i.e., a set of variables
+to be imputed. A value of <code>1</code> means that the column
+variable is used as a predictor for the target block (in the rows).
+By default, the <code>predictorMatrix</code> is a square matrix of <code>ncol(data)</code>
+rows and columns with all 1's, except for the diagonal.
+Note: For two-level imputation models (which have <code>"2l"</code> in their names)
+other codes (e.g, <code>2</code> or <code>-2</code>) are also allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>ignore</code></td>
+<td>
+<p>A logical vector of <code>nrow(data)</code> elements indicating
+which rows are ignored when creating the imputation model. The default
+<code>NULL</code> includes all rows that have an observed value of the variable
+to imputed. Rows with <code>ignore</code> set to <code>TRUE</code> do not influence the
+parameters of the imputation model, but are still imputed. We may use the
+<code>ignore</code> argument to split <code>data</code> into a training set (on which the
+imputation model is built) and a test set (that does not influence the
+imputation model estimates).
+Note: Multivariate imputation methods, like <code>mice.impute.jomoImpute()</code>
+or <code>mice.impute.panImpute()</code>, do not honour the <code>ignore</code> argument.</p>
+</td></tr>
+<tr valign="top"><td><code>where</code></td>
+<td>
+<p>A data frame or matrix with logicals of the same dimensions
+as <code>data</code> indicating where in the data the imputations should be
+created. The default, <code>where = is.na(data)</code>, specifies that the
+missing data should be imputed. The <code>where</code> argument may be used to
+overimpute observed data, or to skip imputations for selected missing values.</p>
+</td></tr>
+<tr valign="top"><td><code>blocks</code></td>
+<td>
+<p>List of vectors with variable names per block. List elements
+may be named to identify blocks. Variables within a block are
+imputed by a multivariate imputation method
+(see <code>method</code> argument). By default each variable is placed
+into its own block, which is effectively
+fully conditional specification (FCS) by univariate models
+(variable-by-variable imputation). Only variables whose names appear in
+<code>blocks</code> are imputed. The relevant columns in the <code>where</code>
+matrix are set to <code>FALSE</code> of variables that are not block members.
+A variable may appear in multiple blocks. In that case, it is
+effectively re-imputed each time that it is visited.</p>
+</td></tr>
+<tr valign="top"><td><code>visitSequence</code></td>
+<td>
+<p>A vector of block names of arbitrary length, specifying the
+sequence of blocks that are imputed during one iteration of the Gibbs
+sampler. A block is a collection of variables. All variables that are
+members of the same block are imputed
+when the block is visited. A variable that is a member of multiple blocks
+is re-imputed within the same iteration.
+The default <code>visitSequence = "roman"</code> visits the blocks (left to right)
+in the order in which they appear in <code>blocks</code>.
+One may also use one of the following keywords: <code>"arabic"</code>
+(right to left), <code>"monotone"</code> (ordered low to high proportion
+of missing data) and <code>"revmonotone"</code> (reverse of monotone).
+<em>Special case</em>: If you specify both <code>visitSequence = "monotone"</code> and
+<code>maxit = 1</code>, then the procedure will edit the <code>predictorMatrix</code>
+to conform to the monotone pattern. Realize that convergence in one
+iteration is only guaranteed if the missing data pattern is actually
+monotone. The procedure does not check this.</p>
+</td></tr>
+<tr valign="top"><td><code>formulas</code></td>
+<td>
+<p>A named list of formula's, or expressions that
+can be converted into formula's by <code>as.formula</code>. List elements
+correspond to blocks. The block to which the list element applies is
+identified by its name, so list names must correspond to block names.
+The <code>formulas</code> argument is an alternative to the
+<code>predictorMatrix</code> argument that allows for more flexibility in
+specifying imputation models, e.g., for specifying interaction terms.</p>
+</td></tr>
+<tr valign="top"><td><code>blots</code></td>
+<td>
+<p>A named <code>list</code> of <code>alist</code>'s that can be used
+to pass down arguments to lower level imputation function. The entries
+of element <code>blots[[blockname]]</code> are passed down to the function
+called for block <code>blockname</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>post</code></td>
+<td>
+<p>A vector of strings with length <code>ncol(data)</code> specifying
+expressions as strings. Each string is parsed and
+executed within the <code>sampler()</code> function to post-process
+imputed values during the iterations.
+The default is a vector of empty strings, indicating no post-processing.
+Multivariate (block) imputation methods ignore the <code>post</code> parameter.</p>
+</td></tr>
+<tr valign="top"><td><code>defaultMethod</code></td>
+<td>
+<p>A vector of length 4 containing the default
+imputation methods for 1) numeric data, 2) factor data with 2 levels, 3)
+factor data with &gt; 2 unordered levels, and 4) factor data with &gt; 2
+ordered levels. By default, the method uses
+<code>pmm</code>, predictive mean matching (numeric data) <code>logreg</code>, logistic
+regression imputation (binary data, factor with 2 levels) <code>polyreg</code>,
+polytomous regression imputation for unordered categorical data (factor &gt; 2
+levels) <code>polr</code>, proportional odds model for (ordered, &gt; 2 levels).</p>
+</td></tr>
+<tr valign="top"><td><code>maxit</code></td>
+<td>
+<p>A scalar giving the number of iterations. The default is 5.</p>
+</td></tr>
+<tr valign="top"><td><code>printFlag</code></td>
+<td>
+<p>If <code>TRUE</code>, <code>mice</code> will print history on console.
+Use <code>print=FALSE</code> for silent computation.</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>An integer that is used as argument by the <code>set.seed()</code> for
+offsetting the random number generator. Default is to leave the random number
+generator alone. Versions later than 3.13.11 reset the random generator to the
+state before calling <code>mice()</code>. This effectively isolates the <code>mice</code>
+random generator from the calling environment.</p>
+</td></tr>
+<tr valign="top"><td><code>data.init</code></td>
+<td>
+<p>A data frame of the same size and type as <code>data</code>,
+without missing data, used to initialize imputations before the start of the
+iterative process.  The default <code>NULL</code> implies that starting imputation
+are created by a simple random draw from the data. Note that specification of
+<code>data.init</code> will start all <code>m</code> Gibbs sampling streams from the same
+imputation.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Named arguments that are passed down to the univariate imputation
+functions.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <span class="pkg">mice</span> package contains functions to
+</p>
+
+<ul>
+<li><p> Inspect the missing data pattern
+</p>
+</li>
+<li><p> Impute the missing data <em>m</em> times, resulting in <em>m</em> completed data sets
+</p>
+</li>
+<li><p> Diagnose the quality of the imputed values
+</p>
+</li>
+<li><p> Analyze each completed data set
+</p>
+</li>
+<li><p> Pool the results of the repeated analyses
+</p>
+</li>
+<li><p> Store and export the imputed data in various formats
+</p>
+</li>
+<li><p> Generate simulated incomplete data
+</p>
+</li>
+<li><p> Incorporate custom imputation methods
+</p>
+</li></ul>
+
+<p>Generates multiple imputations for incomplete multivariate data by Gibbs
+sampling. Missing data can occur anywhere in the data. The algorithm imputes
+an incomplete column (the target column) by generating 'plausible' synthetic
+values given other columns in the data. Each incomplete column must act as a
+target column, and has its own specific set of predictors. The default set of
+predictors for a given target consists of all other columns in the data. For
+predictors that are incomplete themselves, the most recently generated
+imputations are used to complete the predictors prior to imputation of the
+target column.
+</p>
+<p>A separate univariate imputation model can be specified for each column. The
+default imputation method depends on the measurement level of the target
+column. In addition to these, several other methods are provided. You can
+also write their own imputation functions, and call these from within the
+algorithm.
+</p>
+<p>The data may contain categorical variables that are used in a regressions on
+other variables. The algorithm creates dummy variables for the categories of
+these variables, and imputes these from the corresponding categorical
+variable.
+</p>
+<p>Built-in univariate imputation methods are:
+</p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;">
+<code>pmm</code>               </td><td style="text-align: left;"> any     </td><td style="text-align: left;"> Predictive mean matching</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>midastouch</code>        </td><td style="text-align: left;"> any     </td><td style="text-align: left;"> Weighted predictive mean matching</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>sample</code>            </td><td style="text-align: left;"> any     </td><td style="text-align: left;"> Random sample from observed values</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>cart</code>              </td><td style="text-align: left;"> any     </td><td style="text-align: left;"> Classification and regression trees</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>rf</code>                </td><td style="text-align: left;"> any     </td><td style="text-align: left;"> Random forest imputations</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>mean</code>              </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Unconditional mean imputation</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>norm</code>              </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Bayesian linear regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>norm.nob</code>          </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Linear regression ignoring model error</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>norm.boot</code>         </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Linear regression using bootstrap</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>norm.predict</code>      </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Linear regression, predicted values</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>lasso.norm</code>        </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Lasso linear regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>lasso.select.norm</code> </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Lasso select + linear regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>quadratic</code>         </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Imputation of quadratic terms</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>ri</code>                </td><td style="text-align: left;"> numeric </td><td style="text-align: left;"> Random indicator for nonignorable data</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>logreg</code>            </td><td style="text-align: left;"> binary  </td><td style="text-align: left;"> Logistic regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>logreg.boot</code>       </td><td style="text-align: left;"> binary  </td><td style="text-align: left;"> Logistic regression with bootstrap</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>lasso.logreg</code>      </td><td style="text-align: left;"> binary  </td><td style="text-align: left;"> Lasso logistic regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>lasso.select.logreg</code></td><td style="text-align: left;"> binary  </td><td style="text-align: left;"> Lasso select + logistic regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>polr</code>              </td><td style="text-align: left;"> ordered </td><td style="text-align: left;"> Proportional odds model</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>polyreg</code>           </td><td style="text-align: left;"> unordered</td><td style="text-align: left;"> Polytomous logistic regression</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>lda</code>               </td><td style="text-align: left;"> unordered</td><td style="text-align: left;"> Linear discriminant analysis</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2l.norm</code>           </td><td style="text-align: left;"> numeric  </td><td style="text-align: left;"> Level-1 normal heteroscedastic</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2l.lmer</code>           </td><td style="text-align: left;"> numeric  </td><td style="text-align: left;"> Level-1 normal homoscedastic, lmer</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2l.pan</code>            </td><td style="text-align: left;"> numeric  </td><td style="text-align: left;"> Level-1 normal homoscedastic, pan</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2l.bin</code>            </td><td style="text-align: left;"> binary   </td><td style="text-align: left;"> Level-1 logistic, glmer</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2lonly.mean</code>       </td><td style="text-align: left;"> numeric  </td><td style="text-align: left;"> Level-2 class mean</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2lonly.norm</code>       </td><td style="text-align: left;"> numeric  </td><td style="text-align: left;"> Level-2 class normal</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>2lonly.pmm</code>        </td><td style="text-align: left;"> any      </td><td style="text-align: left;"> Level-2 class predictive mean matching
+</td>
+</tr>
+
+</table>
+
+<p>These corresponding functions are coded in the <code>mice</code> library under
+names <code>mice.impute.method</code>, where <code>method</code> is a string with the
+name of the univariate imputation method name, for example <code>norm</code>. The
+<code>method</code> argument specifies the methods to be used.  For the <code>j</code>'th
+column, <code>mice()</code> calls the first occurrence of
+<code>paste('mice.impute.', method[j], sep = '')</code> in the search path.  The
+mechanism allows uses to write customized imputation function,
+<code>mice.impute.myfunc</code>. To call it for all columns specify
+<code>method='myfunc'</code>.  To call it only for, say, column 2 specify
+<code>method=c('norm','myfunc','logreg',...{})</code>.
+</p>
+<p><em>Skipping imputation:</em> The user may skip imputation of a column by
+setting its entry to the empty method: <code>""</code>. For complete columns without
+missing data <code>mice</code> will automatically set the empty method. Setting t
+he empty method does not produce imputations for the column, so any missing
+cells remain <code>NA</code>. If column A contains <code>NA</code>'s and is used as
+predictor in the imputation model for column B, then <code>mice</code> produces no
+imputations for the rows in B where A is missing. The imputed data
+for B may thus contain <code>NA</code>'s. The remedy is to remove column A from
+the imputation model for the other columns in the data. This can be done
+by setting the entire column for variable A in the <code>predictorMatrix</code>
+equal to zero.
+</p>
+<p><em>Passive imputation:</em> <code>mice()</code> supports a special built-in method,
+called passive imputation. This method can be used to ensure that a data
+transform always depends on the most recently generated imputations.  In some
+cases, an imputation model may need transformed data in addition to the
+original data (e.g. log, quadratic, recodes, interaction, sum scores, and so
+on).
+</p>
+<p>Passive imputation maintains consistency among different transformations of
+the same data. Passive imputation is invoked if <code>~</code> is specified as the
+first character of the string that specifies the univariate method.
+<code>mice()</code> interprets the entire string, including the <code>~</code> character,
+as the formula argument in a call to <code>model.frame(formula,
+data[!r[,j],])</code>. This provides a simple mechanism for specifying deterministic
+dependencies among the columns. For example, suppose that the missing entries
+in variables <code>data$height</code> and <code>data$weight</code> are imputed. The body
+mass index (BMI) can be calculated within <code>mice</code> by specifying the
+string <code>'~I(weight/height^2)'</code> as the univariate imputation method for
+the target column <code>data$bmi</code>.  Note that the <code>~</code> mechanism works
+only on those entries which have missing values in the target column. You
+should make sure that the combined observed and imputed parts of the target
+column make sense. An easy way to create consistency is by coding all entries
+in the target as <code>NA</code>, but for large data sets, this could be
+inefficient.  Note that you may also need to adapt the default
+<code>predictorMatrix</code> to evade linear dependencies among the predictors that
+could cause errors like <code>Error in solve.default()</code> or <code>Error:
+system is exactly singular</code>. Though not strictly needed, it is often useful
+to specify <code>visitSequence</code> such that the column that is imputed by the
+<code>~</code> mechanism is visited each time after one of its predictors was
+visited. In that way, deterministic relation between columns will always be
+synchronized.
+</p>
+<p>#'A new argument <code>ls.meth</code> can be parsed to the lower level
+<code>.norm.draw</code> to specify the method for generating the least squares
+estimates and any subsequently derived estimates. Argument <code>ls.meth</code>
+takes one of three inputs: <code>"qr"</code> for QR-decomposition, <code>"svd"</code> for
+singular value decomposition and <code>"ridge"</code> for ridge regression.
+<code>ls.meth</code> defaults to <code>ls.meth = "qr"</code>.
+</p>
+<p><em>Auxiliary predictors in formulas specification: </em>
+For a given block, the <code>formulas</code> specification takes precedence over
+the corresponding row in the <code>predictMatrix</code> argument. This
+precedence is, however, restricted to the subset of variables
+specified in the terms of the block formula. Any
+variables not specified by <code>formulas</code> are imputed
+according to the <code>predictMatrix</code> specification. Variables with
+non-zero <code>type</code> values in the <code>predictMatrix</code> will
+be added as main effects to the <code>formulas</code>, which will
+act as supplementary covariates in the imputation model. It is possible
+to turn off this behavior by specifying the
+argument <code>auxiliary = FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an S3 object of class <code><a href="mids-class.html">mids</a></code>
+(multiply imputed data set)
+</p>
+
+
+<h3>Functions</h3>
+
+<p>The main functions are:
+</p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;">
+  <code>mice()</code> </td><td style="text-align: left;"> Impute the missing data *m* times</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  <code>with()</code> </td><td style="text-align: left;"> Analyze completed data sets</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  <code>pool()</code> </td><td style="text-align: left;"> Combine parameter estimates</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  <code>complete()</code> </td><td style="text-align: left;"> Export imputed data</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  <code>ampute()</code> </td><td style="text-align: left;"> Generate missing data</td>
+</tr>
+
+</table>
+
+
+
+<h3>Vignettes</h3>
+
+<p>There is a detailed series of
+six online vignettes that walk you through solving realistic inference
+problems with mice.
+</p>
+<p>We suggest going through these vignettes in the following order
+</p>
+
+<ol>
+<li> <p><a href="https://www.gerkovink.com/miceVignettes/Ad_hoc_and_mice/Ad_hoc_methods.html">Ad hoc methods and the MICE algorithm</a>
+</p>
+</li>
+<li> <p><a href="https://www.gerkovink.com/miceVignettes/Convergence_pooling/Convergence_and_pooling.html">Convergence and pooling</a>
+</p>
+</li>
+<li> <p><a href="https://www.gerkovink.com/miceVignettes/Missingness_inspection/Missingness_inspection.html">Inspecting how the observed data and missingness are related</a>
+</p>
+</li>
+<li> <p><a href="https://www.gerkovink.com/miceVignettes/Passive_Post_processing/Passive_imputation_post_processing.html">Passive imputation and post-processing</a>
+</p>
+</li>
+<li> <p><a href="https://www.gerkovink.com/miceVignettes/Multi_level/Multi_level_data.html">Imputing multilevel data</a>
+</p>
+</li>
+<li> <p><a href="https://www.gerkovink.com/miceVignettes/Sensitivity_analysis/Sensitivity_analysis.html">Sensitivity analysis with <span class="pkg">mice</span></a>
+</p>
+</li></ol>
+
+<p>#'Van Buuren, S. (2018).
+Boca Raton, FL.: Chapman &amp; Hall/CRC Press.
+The book
+<a href="https://stefvanbuuren.name/fimd/"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+contains a lot of <a href="https://github.com/stefvanbuuren/fimdbook/tree/master/R">example code</a>.
+</p>
+
+
+<h3>Methodology</h3>
+
+<p>The <span class="pkg">mice</span> software was published in the Journal of Statistical Software (Van Buuren and Groothuis-Oudshoorn, 2011). doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+The first application of the method
+concerned missing blood pressure data (Van Buuren et. al., 1999).
+The term <em>Fully Conditional Specification</em> was introduced in 2006 to describe a general class of methods that specify imputations model for multivariate data as a set of conditional distributions (Van Buuren et. al., 2006). Further details on mixes of variables and applications can be found in the book
+<a href="https://stefvanbuuren.name/fimd/"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+
+
+<h3>Enhanced linear algebra</h3>
+
+<p>Updating the BLAS can improve speed of R, sometime considerably. The details
+depend on the operating system. See the discussion in the
+&quot;R Installation and Administration&quot; guide for further information.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren <a href="mailto:stef.vanbuuren@tno.nl">stef.vanbuuren@tno.nl</a>, Karin
+Groothuis-Oudshoorn <a href="mailto:c.g.m.oudshoorn@utwente.nl">c.g.m.oudshoorn@utwente.nl</a>, 2000-2010, with
+contributions of Alexander Robitzsch, Gerko Vink, Shahab Jolani,
+Roel de Jong, Jason Turner, Lisa Doove,
+John Fox, Frank E. Harrell, and Peter Malewski.
+</p>
+
+
+<h3>References</h3>
+
+<p>van Buuren, S., Boshuizen, H.C., Knook, D.L. (1999) Multiple
+imputation of missing blood pressure covariates in survival analysis.
+<em>Statistics in Medicine</em>, <b>18</b>, 681&ndash;694.
+</p>
+<p>van Buuren, S., Brand, J.P.L., Groothuis-Oudshoorn C.G.M., Rubin, D.B. (2006)
+Fully conditional specification in multivariate imputation.  <em>Journal of
+Statistical Computation and Simulation</em>, <b>76</b>, 12, 1049&ndash;1064.
+</p>
+<p>van Buuren, S., Groothuis-Oudshoorn, K. (2011). <code>mice</code>:
+Multivariate Imputation by Chained Equations in <code>R</code>. <em>Journal of
+Statistical Software</em>, <b>45</b>(3), 1&ndash;67. doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+</p>
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+<p>Van Buuren, S., Groothuis-Oudshoorn, K. (2011). <code>mice</code>:
+Multivariate Imputation by Chained Equations in <code>R</code>. <em>Journal of
+Statistical Software</em>, <b>45</b>(3), 1-67.
+doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+</p>
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/sec-FCS.html#sec:MICE"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+<p>Van Buuren, S., Brand, J.P.L., Groothuis-Oudshoorn C.G.M., Rubin, D.B. (2006)
+Fully conditional specification in multivariate imputation.  <em>Journal of
+Statistical Computation and Simulation</em>, <b>76</b>, 12, 1049&ndash;1064.
+</p>
+<p>Van Buuren, S. (2007) Multiple imputation of discrete and continuous data by
+fully conditional specification.  <em>Statistical Methods in Medical
+Research</em>, <b>16</b>, 3, 219&ndash;242.
+</p>
+<p>Van Buuren, S., Boshuizen, H.C., Knook, D.L. (1999) Multiple imputation of
+missing blood pressure covariates in survival analysis.  <em>Statistics in
+Medicine</em>, <b>18</b>, 681&ndash;694.
+</p>
+<p>Brand, J.P.L. (1999) <em>Development, implementation and evaluation of
+multiple imputation strategies for the statistical analysis of incomplete
+data sets.</em> Dissertation. Rotterdam: Erasmus University.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mice.html">mice</a></code>, <code><a href="with.mids.html">with.mids</a></code>,
+<code><a href="pool.html">pool</a></code>, <code><a href="complete.mids.html">complete</a></code>, <code><a href="ampute.html">ampute</a></code>
+</p>
+<p><code><a href="mids-class.html">mids</a></code>, <code><a href="with.mids.html">with.mids</a></code>,
+<code><a href="../../base/html/Random.html">set.seed</a></code>, <code><a href="complete.mids.html">complete</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# do default multiple imputation on a numeric matrix
+imp &lt;- mice(nhanes)
+imp
+
+# list the actual imputations for BMI
+imp$imp$bmi
+
+# first completed data matrix
+complete(imp)
+
+# imputation on mixed data with a different method per column
+mice(nhanes2, meth = c("sample", "pmm", "logreg", "norm"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

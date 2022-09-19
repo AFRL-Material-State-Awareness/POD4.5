@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A sample of categorical variables from the General Social...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gss_cat {forcats}"><tr><td>gss_cat {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A sample of categorical variables from the General Social survey</h2>
+
+<h3>Description</h3>
+
+<p>A sample of categorical variables from the General Social survey
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gss_cat
+</pre>
+
+
+<h3>Format</h3>
+
+
+<dl>
+<dt>year</dt><dd><p>year of survey, 2000&ndash;2014</p>
+</dd>
+<dt>age</dt><dd><p>age. Maximum age truncated to 89.</p>
+</dd>
+<dt>marital</dt><dd><p>marital status</p>
+</dd>
+<dt>race</dt><dd><p>race</p>
+</dd>
+<dt>rincome</dt><dd><p>reported income</p>
+</dd>
+<dt>partyid</dt><dd><p>party affiliation</p>
+</dd>
+<dt>relig</dt><dd><p>religion</p>
+</dd>
+<dt>denom</dt><dd><p>denomination</p>
+</dd>
+<dt>tvhours</dt><dd><p>hours per day watching tv</p>
+</dd>
+</dl>
+
+
+
+<h3>Source</h3>
+
+<p>Downloaded from <a href="https://gssdataexplorer.norc.org/">https://gssdataexplorer.norc.org/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+gss_cat
+
+fct_count(gss_cat$relig)
+fct_count(fct_lump(gss_cat$relig))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: plot the cross-validation curve produced by cv.glmnet</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.cv.glmnet {glmnet}"><tr><td>plot.cv.glmnet {glmnet}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>plot the cross-validation curve produced by cv.glmnet</h2>
+
+<h3>Description</h3>
+
+<p>Plots the cross-validation curve, and upper and lower standard deviation
+curves, as a function of the <code>lambda</code> values used.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'cv.glmnet'
+plot(x, sign.lambda, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>fitted <code>"cv.glmnet"</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>sign.lambda</code></td>
+<td>
+<p>Either plot against <code>log(lambda)</code> (default) or
+its negative if <code>sign.lambda=-1</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other graphical parameters to plot</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>A plot is produced, and nothing is returned.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jerome Friedman, Trevor Hastie and Rob Tibshirani<br />
+Maintainer: Trevor Hastie &lt;hastie@stanford.edu&gt;</p>
+
+
+<h3>References</h3>
+
+<p>Friedman, J., Hastie, T. and Tibshirani, R. (2008)
+<em>Regularization Paths for Generalized Linear Models via Coordinate
+Descent</em></p>
+
+
+<h3>See Also</h3>
+
+<p><code>glmnet</code> and <code>cv.glmnet</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+set.seed(1010)
+n=1000;p=100
+nzc=trunc(p/10)
+x=matrix(rnorm(n*p),n,p)
+beta=rnorm(nzc)
+fx= (x[,seq(nzc)] %*% beta)
+eps=rnorm(n)*5
+y=drop(fx+eps)
+px=exp(fx)
+px=px/(1+px)
+ly=rbinom(n=length(px),prob=px,size=1)
+cvob1=cv.glmnet(x,y)
+plot(cvob1)
+title("Gaussian Family",line=2.5)
+frame()
+set.seed(1011)
+par(mfrow=c(2,2),mar=c(4.5,4.5,4,1))
+cvob2=cv.glmnet(x,ly,family="binomial")
+plot(cvob2)
+title("Binomial Family",line=2.5)
+set.seed(1011)
+cvob3=cv.glmnet(x,ly,family="binomial",type="class")
+plot(cvob3)
+title("Binomial Family",line=2.5)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>glmnet</em> version 2.0-16 <a href="00Index.html">Index</a>]</div>
+</body></html>

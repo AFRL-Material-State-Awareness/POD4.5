@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a single row gtable.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable_row {gtable}"><tr><td>gtable_row {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a single row gtable.</h2>
+
+<h3>Description</h3>
+
+<p>This function puts grobs in a list side-by-side in a single-row gtable from
+left to right witrh the given widths and height.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable_row(name, grobs, height = NULL, widths = NULL, z = NULL,
+  vp = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>a string giving the name of the table. This is used to name
+the layout viewport</p>
+</td></tr>
+<tr valign="top"><td><code>grobs</code></td>
+<td>
+<p>a single grob or a list of grobs</p>
+</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+<p>a unit vector giving the height of this row</p>
+</td></tr>
+<tr valign="top"><td><code>widths</code></td>
+<td>
+<p>a unit vector giving the width of each column</p>
+</td></tr>
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p>a numeric vector giving the order in which the grobs should be
+plotted.  Use <code>Inf</code> (the default) to plot above or <code>-Inf</code>
+below all existing grobs. By default positions are on the integers,
+giving plenty of room to insert new grobs between existing grobs.</p>
+</td></tr>
+<tr valign="top"><td><code>vp</code></td>
+<td>
+<p>a grid viewport object (or NULL).</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable with a single row and the same number of columns as
+elements in the grobs list
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other gtable construction: <code><a href="gtable_col.html">gtable_col</a></code>,
+<code><a href="gtable_matrix.html">gtable_matrix</a></code>, <code><a href="gtable_spacer.html">gtable_spacer</a></code>,
+<code><a href="gtable.html">gtable</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+a &lt;- rectGrob(gp = gpar(fill = "red"))
+b &lt;- circleGrob()
+c &lt;- linesGrob()
+gt &lt;- gtable_row("demo", list(a, b, c))
+gt
+plot(gt)
+gtable_show_layout(gt)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fornberg's Finite Difference Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fornberg {pracma}"><tr><td>fornberg {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Fornberg's Finite Difference Approximation
+</h2>
+
+<h3>Description</h3>
+
+<p>Finite difference approximation using Fornberg's method for the derivatives
+of order 1 to k based on irregulat grid values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fornberg(x, y, xs, k = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>grid points on the x-axis, must be distinct.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>discrete values of the function at the grid points.</p>
+</td></tr>
+<tr valign="top"><td><code>xs</code></td>
+<td>
+<p>point at which to approximate (not vectorized).</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>order of derivative, <code>k&lt;=length(x)-1</code> required.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Compute coefficients for finite difference approximation for the derivative
+of order <code>k</code> at <code>xs</code> based on grid values at points in <code>x</code>.
+For <code>k=0</code> this will evaluate the interpolating polynomial itself, but
+call it with <code>k=1</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a matrix of size <code>(length(xs))</code>, where the (k+1)-th column
+gives the value of the k-th derivative. Especially the first column returns 
+the polynomial interpolation of the function.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Fornberg's method is considered to be numerically more stable than applying
+Vandermonde's matrix.
+</p>
+
+
+<h3>References</h3>
+
+<p>LeVeque, R. J. (2007). Finite Difference Methods for Ordinary and Partial
+Differential Equations. Society for Industrial and Applied Mathematics 
+(SIAM), Philadelphia.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="neville.html">neville</a></code>, <code><a href="newtonInterp.html">newtonInterp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- 2 * pi * c(0.0, 0.07, 0.13, 0.2, 0.28, 0.34, 0.47, 0.5, 0.71, 0.95, 1.0)
+y &lt;- sin(0.9*x)
+xs &lt;- linspace(0, 2*pi, 51)
+fornb &lt;- fornberg(x, y, xs, 10)
+## Not run: 
+matplot(xs, fornb, type="l")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

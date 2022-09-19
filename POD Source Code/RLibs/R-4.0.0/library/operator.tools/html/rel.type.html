@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get the relational type of a relational operator.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rel.type {operator.tools}"><tr><td>rel.type {operator.tools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get the relational type of a relational operator.</h2>
+
+<h3>Description</h3>
+
+<p><code>rel.type</code> gets the relational type of a relational operator. The
+relational type is one of <code>'gt'</code>, <code>'lt'</code>, <code>'eq'</code>,
+<code>'ne'</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rel.type(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An operators expressed as a <code>function</code> or <code>name</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>A relational operator is an operate that relates the relationship between
+arguments. The core relational operators are: &gt;, &gt;=, &lt;, &lt;=, ==, !=, 
+</p>
+<p>The relational.type is a simple roll-up of these operators. &gt; and &gt;= are gt,
+etc. The value is retrieved from .Options$operators[[x]][['rel.type']] and
+can be defined for relational operators using <code><a href="setOperator.html">setOperator</a></code>.
+</p>
+<p>A relational type provides an indication of nature of the relational
+operator.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>character</code> value of the operator.  One of: <code>'gt'</code>,
+<code>'lt'</code>, <code>'eq'</code>, <code>'ne'</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Christopher Brown
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="operators.html">operators</a></code>, <code><a href="setOperator.html">setOperator</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ ## Not run: 
+  rel.type( `==` ) 
+  rel.type( as.name('==') )
+ 
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>operator.tools</em> version 1.6.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

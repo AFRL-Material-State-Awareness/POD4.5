@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Make a call with 'lazy_dots' as arguments.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for make_call {lazyeval}"><tr><td>make_call {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Make a call with <code>lazy_dots</code> as arguments.</h2>
+
+<h3>Description</h3>
+
+<p>In order to exactly replay the original call, the environment must be the
+same for all of the dots. This function circumvents that a little,
+falling back to the <code><a href="../../base/html/environment.html">baseenv</a>()</code> if all environments aren't
+the same.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+make_call(fun, args)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>Function as symbol or quoted call.</p>
+</td></tr>
+<tr valign="top"><td><code>args</code></td>
+<td>
+<p>Arguments to function; must be a <code>lazy_dots</code> object,
+or something <code><a href="as.lazy.html">as.lazy_dots</a>()</code> can coerce..</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A list:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>The common environment for all elements</p>
+</td></tr>
+<tr valign="top"><td><code>expr</code></td>
+<td>
+<p>The expression</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+make_call(quote(f), lazy_dots(x = 1, 2))
+make_call(quote(f), list(x = 1, y = ~x))
+make_call(quote(f), ~x)
+
+# If no known or no common environment, fails back to baseenv()
+make_call(quote(f), quote(x))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

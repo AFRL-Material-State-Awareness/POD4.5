@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Least Trimmed Squares Robust (High Breakdown) Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ltsReg {robustbase}"><tr><td>ltsReg {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Least Trimmed Squares Robust (High Breakdown) Regression</h2>
+
+<h3>Description</h3>
+
+<p>Carries out least trimmed squares (LTS) robust (high breakdown point)
+regression.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ltsReg(x, ...)
+
+## S3 method for class 'formula'
+ltsReg(formula, data, subset, weights, na.action,
+       model = TRUE, x.ret = FALSE, y.ret = FALSE,
+       contrasts = NULL, offset, ...)
+
+## Default S3 method:
+ltsReg(x, y, intercept = TRUE, alpha = , nsamp = , adjust = ,
+       mcd = TRUE, qr.out = FALSE, yname = NULL,
+       seed = , trace = , use.correction = , wgtFUN = , control = rrcov.control(),
+       ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a <code><a href="../../stats/html/formula.html">formula</a></code> of the form <code>y ~ x1 + x2 + ...</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data frame from which variables specified in
+<code>formula</code> are to be taken.</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of observations
+to be used in the fitting process.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of weights to be used
+in the fitting process. <b>NOT USED YET</b>.
+
+
+
+</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>a function which indicates what should happen
+when the data contain <code>NA</code>s.  The default is set by
+the <code>na.action</code> setting of <code><a href="../../base/html/options.html">options</a></code>, and is
+<code><a href="../../stats/html/na.fail.html">na.fail</a></code> if that is unset.  The &ldquo;factory-fresh&rdquo;
+default is <code><a href="../../stats/html/na.fail.html">na.omit</a></code>.  Another possible value is
+<code>NULL</code>, no action.  Value <code><a href="../../stats/html/na.fail.html">na.exclude</a></code> can be useful.</p>
+</td></tr>
+<tr valign="top"><td><code>model, x.ret, y.ret</code></td>
+<td>
+<p><code><a href="../../base/html/logical.html">logical</a></code>s indicating if the
+model frame, the model matrix and the response are to be returned,
+respectively.</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+<p>an optional list.  See the <code>contrasts.arg</code>
+of <code><a href="../../stats/html/model.matrix.html">model.matrix.default</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>this can be used to specify an <em>a priori</em>
+known component to be included in the linear predictor
+during fitting.  An <code><a href="../../stats/html/offset.html">offset</a></code> term can be included in the
+formula instead or as well, and if both are specified their sum is used.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a matrix or data frame containing the explanatory variables.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>the response: a vector of length the number of rows of <code>x</code>.</p>
+</td></tr></table>
+<p>.
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>intercept</code></td>
+<td>
+<p>if true, a model with constant term will be
+estimated; otherwise no constant term will be included.  Default is
+<code>intercept = TRUE</code>  </p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>the percentage (roughly) of squared residuals whose sum will be
+minimized, by default 0.5.  In general, <code>alpha</code> must between
+0.5 and 1.</p>
+</td></tr>
+<tr valign="top"><td><code>nsamp</code></td>
+<td>
+<p>number of subsets used for initial estimates or
+<code>"best"</code> or <code>"exact"</code>.  Default is <code>nsamp = 500</code>.  For
+<code>nsamp="best"</code> exhaustive enumeration is done, as long as the
+number of trials does not exceed 5000.  For <code>"exact"</code>,
+exhaustive enumeration will be attempted however many samples are needed.
+In this case a warning message will be displayed saying that the
+computation can take a very long time. </p>
+</td></tr>
+<tr valign="top"><td><code>adjust</code></td>
+<td>
+<p>whether to perform intercept adjustment at each step.
+Since this can be time consuming, the default is <code>adjust = FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>mcd</code></td>
+<td>
+<p>whether to compute robust distances using Fast-MCD.</p>
+</td></tr>
+<tr valign="top"><td><code>qr.out</code></td>
+<td>
+<p>whether to return the QR decomposition (see
+<code><a href="../../Matrix/html/qr-methods.html">qr</a></code>); defaults to false.</p>
+</td></tr>
+<tr valign="top"><td><code>yname</code></td>
+<td>
+<p>the name of the dependent variable.  Default is <code>yname = NULL</code></p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>initial seed for random generator, like
+<code><a href="../../base/html/Random.html">.Random.seed</a></code>, see <code><a href="rrcov.control.html">rrcov.control</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>trace</code></td>
+<td>
+<p>logical (or integer) indicating if intermediate results
+should be printed; defaults to <code>FALSE</code>; values <i>&gt;= 2</i>
+also produce print from the internal (Fortran) code.</p>
+</td></tr>
+<tr valign="top"><td><code>use.correction</code></td>
+<td>
+<p> whether to use finite sample correction factors.
+Default is <code>use.correction=TRUE</code></p>
+</td></tr>
+<tr valign="top"><td><code>wgtFUN</code></td>
+<td>
+<p>a character string or <code><a href="../../base/html/function.html">function</a></code>, specifying
+how the weights for the reweighting step should be computed.
+Up to April 2013, the only option has been the original proposal in
+(1999), now specified by <code>wgtFUN = "01.original"</code> (or via <code>control</code>).</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a list with estimation options - same as these provided
+in the function specification.  If the control object is supplied, the
+parameters from it will be used.  If parameters are passed also in the
+invocation statement, they will override the corresponding elements of
+the control object.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The LTS regression method minimizes the sum of the <i>h</i> smallest
+squared residuals, where <i>h &gt; n/2</i>, i.e. at least half the number of
+observations must be used.  The default value of <i>h</i> (when
+<code>alpha=1/2</code>) is roughly <i>n / 2</i>, more precisely,
+<code>(n+p+1) %/% 2</code> where <i>n</i> is the
+total number of observations, but by setting <code>alpha</code>, the user
+may choose higher values up to n, where
+<i>h = h(&alpha;,n,p) =</i> <code><a href="h.alpha.n.html">h.alpha.n</a>(alpha,n,p)</code>.  The LTS
+estimate of the error scale is given by the minimum of the objective
+function multiplied by a consistency factor
+and a finite sample correction factor &ndash; see Pison et al. (2002)
+for details.  The rescaling factors for the raw and final estimates are
+returned also in the vectors <code>raw.cnp2</code> and <code>cnp2</code> of
+length 2 respectively.  The finite sample corrections can be suppressed
+by setting <code>use.correction=FALSE</code>.  The computations are performed
+using the Fast LTS algorithm proposed by Rousseeuw and Van Driessen (1999).
+</p>
+<p>As always, the formula interface has an implied intercept term which can be
+removed either by <code>y ~ x - 1</code> or <code>y ~ 0 + x</code>.  See
+<code><a href="../../stats/html/formula.html">formula</a></code> for more details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function <code>ltsReg</code> returns an object of class <code>"lts"</code>.
+The <code><a href="../../base/html/summary.html">summary</a></code> method function is used to obtain (and
+print) a summary table of the results, and <code><a href="ltsPlot.html">plot</a>()</code>
+can be used to plot them, see the the specific help pages.
+</p>
+<p>The generic accessor functions <code><a href="../../stats/html/coef.html">coefficients</a></code>,
+<code><a href="../../stats/html/fitted.values.html">fitted.values</a></code> and <code><a href="../../stats/html/residuals.html">residuals</a></code>
+extract various useful features of the value returned by
+<code>ltsReg</code>.
+</p>
+<p>An object of class <code>lts</code> is a <code><a href="../../base/html/list.html">list</a></code> containing at
+least the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>crit</code></td>
+<td>
+
+<p>the value of the objective function of the LTS regression method,
+i.e., the sum of the <i>h</i> smallest squared raw residuals.
+</p>
+</td></tr>
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+
+<p>vector of coefficient estimates (including the intercept by default when
+<code>intercept=TRUE</code>), obtained after reweighting.
+</p>
+</td></tr>
+<tr valign="top"><td><code>best</code></td>
+<td>
+
+<p>the best subset found and used for computing the raw estimates, with
+<code><a href="../../base/html/length.html">length</a>(best) == quan = <a href="h.alpha.n.html">h.alpha.n</a>(alpha,n,p)</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>fitted.values</code></td>
+<td>
+<p>vector like <code>y</code> containing the fitted values
+of the response after reweighting.</p>
+</td></tr>
+<tr valign="top"><td><code>residuals</code></td>
+<td>
+<p>vector like <code>y</code> containing the residuals from
+the weighted least squares regression.</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>scale estimate of the reweighted residuals.  </p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>same as the input parameter <code>alpha</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>quan</code></td>
+<td>
+<p>the number <i>h</i> of observations which have determined
+the least trimmed squares estimator.</p>
+</td></tr>
+<tr valign="top"><td><code>intercept</code></td>
+<td>
+<p>same as the input parameter <code>intercept</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cnp2</code></td>
+<td>
+<p>a vector of length two containing the consistency
+correction factor and the finite sample correction factor of
+the final estimate of the error scale.</p>
+</td></tr>
+<tr valign="top"><td><code>raw.coefficients</code></td>
+<td>
+<p>vector of raw coefficient estimates (including
+the intercept, when <code>intercept=TRUE</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>raw.scale</code></td>
+<td>
+<p>scale estimate of the raw residuals.</p>
+</td></tr>
+<tr valign="top"><td><code>raw.resid</code></td>
+<td>
+<p>vector like <code>y</code> containing the raw residuals
+from the regression.</p>
+</td></tr>
+<tr valign="top"><td><code>raw.cnp2</code></td>
+<td>
+<p>a vector of length two containing the consistency
+correction factor and the finite sample correction factor of the
+raw estimate of the error scale.</p>
+</td></tr>
+<tr valign="top"><td><code>lts.wt</code></td>
+<td>
+
+<p>vector like y containing weights that can be used in a weighted
+least squares.  These weights are 1 for points with reasonably
+small residuals, and 0 for points with large residuals.
+</p>
+</td></tr>
+<tr valign="top"><td><code>raw.weights</code></td>
+<td>
+
+<p>vector containing the raw weights based on the raw residuals and raw scale.
+</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>character string naming the method (Least Trimmed Squares).</p>
+</td></tr>
+<tr valign="top"><td><code>X</code></td>
+<td>
+<p>the input data as a matrix (including intercept column if
+applicable).</p>
+</td></tr>
+<tr valign="top"><td><code>Y</code></td>
+<td>
+<p>the response variable as a vector.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>We strongly recommend using <code><a href="lmrob.html">lmrob</a>()</code> instead of
+<code>ltsReg</code> (<em>See also</em> below)!
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Valentin Todorov <a href="mailto:valentin.todorov@chello.at">valentin.todorov@chello.at</a>, based on
+work written for S-plus by Peter Rousseeuw and Katrien van Driessen
+from University of Antwerp.
+</p>
+
+
+<h3>References</h3>
+
+<p>Peter J. Rousseeuw (1984), Least Median of Squares Regression.
+<em>Journal of the American Statistical Association</em> <b>79</b>, 871&ndash;881.
+</p>
+<p>P. J. Rousseeuw and A. M. Leroy (1987)
+<em>Robust Regression and Outlier Detection.</em> Wiley.
+</p>
+<p>P. J. Rousseeuw and K. van Driessen (1999)
+A fast algorithm for the minimum covariance determinant estimator.
+<em>Technometrics</em> <b>41</b>, 212&ndash;223.
+</p>
+<p>Pison, G., Van Aelst, S., and Willems, G. (2002)
+Small Sample Corrections for LTS and MCD.
+<em>Metrika</em> <b>55</b>, 111-123.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmrob.S.html">lmrob.S</a>()</code> provides a fast S estimator with similar
+breakdown point as <code>ltsReg()</code> but better efficiency.<br />
+For data analysis, rather use <code><a href="lmrob.html">lmrob</a></code> which is based on
+<code><a href="lmrob.S.html">lmrob.S</a></code>.
+</p>
+<p><code><a href="covMcd.html">covMcd</a></code>;
+<code><a href="summary.lts.html">summary.lts</a></code> for summaries.
+</p>
+<p>The generic functions <code><a href="../../stats/html/coef.html">coef</a></code>, <code><a href="../../stats/html/residuals.html">residuals</a></code>,
+<code><a href="../../stats/html/fitted.values.html">fitted</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(heart)
+## Default method works with 'x'-matrix and y-var:
+heart.x &lt;- data.matrix(heart[, 1:2]) # the X-variables
+heart.y &lt;- heart[,"clength"]
+ltsReg(heart.x, heart.y)
+
+data(stackloss)
+ltsReg(stack.loss ~ ., data = stackloss)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

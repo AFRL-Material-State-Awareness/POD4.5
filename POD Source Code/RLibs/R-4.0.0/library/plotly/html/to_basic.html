@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert a geom to a &quot;basic&quot; geom.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for to_basic {plotly}"><tr><td>to_basic {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert a geom to a &quot;basic&quot; geom.</h2>
+
+<h3>Description</h3>
+
+<p>This function makes it possible to convert ggplot2 geoms that
+are not included with ggplot2 itself. Users shouldn't need to use
+this function. It exists purely to allow other package authors to write
+their own conversion method(s).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+to_basic(data, prestats_data, layout, params, p, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>the data returned by <code>ggplot2::ggplot_build()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>prestats_data</code></td>
+<td>
+<p>the data before statistics are computed.</p>
+</td></tr>
+<tr valign="top"><td><code>layout</code></td>
+<td>
+<p>the panel layout.</p>
+</td></tr>
+<tr valign="top"><td><code>params</code></td>
+<td>
+<p>parameters for the geom, statistic, and 'constant' aesthetics</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a ggplot2 object (the conversion may depend on scales, for instance).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>currently ignored</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

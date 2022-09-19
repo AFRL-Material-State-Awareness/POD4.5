@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: add information to data based on a fitted model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fortify {lme4}"><tr><td>fortify {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>add information to data based on a fitted model</h2>
+
+<h3>Description</h3>
+
+<p><code>fortify</code> adds information to data based on a fitted model;
+<code>getData</code> retrieves data as specified in the <code>data</code>
+argument
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  fortify.merMod(model, data = getData(model),
+    ...)
+## S3 method for class 'merMod'
+getData(object)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>fitted model</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>fitted model</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>original data set, if needed</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<ul>
+<li><p><code>fortify</code> is defined in the
+<a href="https://CRAN.R-project.org/package=ggplot2"><span class="pkg">ggplot2</span></a> package, q.v. for more details.
+<code>fortify</code> is <em>not</em> defined here,
+and <code>fortify.merMod</code> is defined as a function
+rather than an S3 method, to avoid (1) inducing
+a dependency on <span class="pkg">ggplot2</span> or (2) masking
+methods from <span class="pkg">ggplot2</span>.
+This feature is both experimental and semi-deprecated,
+as the help page for <code>fortify</code> itself says:
+&ldquo;Rather than using this function, I now recommend using the
+<code>broom</code> package, which implements a much wider range of
+methods. <code>fortify</code> may be deprecated in the future.&rdquo;
+The <code>broom.mixed</code> package is recommended for mixed models
+in general.
+
+</p>
+</li>
+<li>
+<p><code>getData</code> is a bare-bones implementation; it relies on
+a <code>data</code> argument having been specified and the data being
+available in the environment of the formula. Unlike the functions
+in the <code>nlme</code> package, it does not do anything special with
+<code>na.action</code> or <code>subset</code>.
+
+</p>
+</li></ul>
+
+
+
+<h3>Examples</h3>
+
+<pre>
+  fm1 &lt;- lmer(Reaction~Days+(1|Subject),sleepstudy)
+  names(fortify.merMod(fm1))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

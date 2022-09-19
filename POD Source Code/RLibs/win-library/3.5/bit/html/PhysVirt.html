@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Physical and virtual attributes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for physical.default {bit}"><tr><td>physical.default {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Physical and virtual attributes</h2>
+
+<h3>Description</h3>
+
+<p>Compatibility functions (to package ff) for getting and setting physical and
+virtual attributes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## Default S3 method:
+physical(x)
+
+## Default S3 replacement method:
+physical(x) &lt;- value
+
+## Default S3 method:
+virtual(x)
+
+## Default S3 replacement method:
+virtual(x) &lt;- value
+
+## S3 method for class 'physical'
+print(x, ...)
+
+## S3 method for class 'virtual'
+print(x, ...)
+
+physical(x)
+
+physical(x) &lt;- value
+
+virtual(x)
+
+virtual(x) &lt;- value
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a ff or ram object</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>a list with named elements</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>ff objects have physical and virtual attributes, which have different
+copying semantics: physical attributes are shared between copies of ff
+objects while virtual attributes might differ between copies.
+<code><a href="../../ff/html/as.ff.html">as.ram</a></code> will retain some physical and virtual atrributes in
+the ram clone, such that <code><a href="../../ff/html/as.ff.html">as.ff</a></code> can restore an ff object
+with the same attributes.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>physical</code> and <code>virtual</code> returns a list with named
+elements
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../ff/html/physical.ff.html">physical.ff</a></code>, <code><a href="../../ff/html/physical.ffdf.html">physical.ffdf</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  physical(bit(12))
+  virtual(bit(12))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

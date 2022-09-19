@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: change feature IDs in spatial objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for spChFIDs-methods {sp}"><tr><td>spChFIDs-methods {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>change feature IDs in spatial objects</h2>
+
+<h3>Description</h3>
+
+<p>When the feature IDs need to be changed in SpatialLines* or SpatialPolygons* objects, these methods may be used. The new IDs should be a character vector of unique IDs of the correct length.
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>obj = &quot;SpatialLines&quot;, x = &quot;character&quot;</dt><dd><p>replace IDs in a SpatialLines object</p>
+</dd>
+<dt>obj = &quot;SpatialLinesDataFrame&quot;, x = &quot;character&quot;</dt><dd><p>replace IDs in a SpatialLinesDataFrame object</p>
+</dd>
+<dt>obj = &quot;SpatialPolygons&quot;, x = &quot;character&quot;</dt><dd><p>replace IDs in a SpatialPolygons object</p>
+</dd>
+<dt>obj = &quot;SpatialPolygonsDataFrame&quot;, x = &quot;character&quot;</dt><dd><p>replace IDs in a SpatialPolygonsDataFrame object</p>
+</dd>
+</dl>
+
+
+<h3>Note</h3>
+
+<p>It is usually sensible to keep a copy of the original feature IDs in the object, but this should be done by the user.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Bivand</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../maptools/html/spCbind-methods.html">spCbind-methods</a></code>, <code><a href="../../maptools/html/spRbind-methods.html">spRbind-methods</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+require(maptools)
+xx &lt;- readShapePoly(system.file("shapes/sids.shp", package="maptools")[1], 
+  IDvar="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
+row.names(as(xx, "data.frame"))
+xx1 &lt;- spChFIDs(xx, as.character(xx$CNTY_ID))
+row.names(as(xx1, "data.frame"))
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

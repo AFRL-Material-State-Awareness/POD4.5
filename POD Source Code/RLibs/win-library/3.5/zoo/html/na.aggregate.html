@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Replace NA by Aggregation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for na.aggregate {zoo}"><tr><td>na.aggregate {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Replace NA by Aggregation</h2>
+
+<h3>Description</h3>
+
+<p>Generic function for replacing each <code>NA</code> with aggregated
+values. This allows imputing by the overall mean, by monthly means,
+etc. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+na.aggregate(object, ...)
+## Default S3 method:
+na.aggregate(object, by = 1, ..., FUN = mean,
+             na.rm = FALSE, maxgap = Inf)
+
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>an object.</p>
+</td></tr>
+<tr valign="top"><td><code>by</code></td>
+<td>
+<p>a grouping variable corresponding to <code>object</code>, or a
+function to be applied to <code>time(object)</code> to generate the
+groups.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>by</code> if <code>by</code> is a
+function.</p>
+</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+<p>function to apply to the non-missing values in each group
+defined by <code>by</code>.</p>
+</td></tr> 
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>logical. Should any remaining <code>NA</code>s be removed?</p>
+</td></tr>
+<tr valign="top"><td><code>maxgap</code></td>
+<td>
+<p>maximum number of consecutive <code>NA</code>s to
+fill. Any longer gaps will be left unchanged.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object in which each <code>NA</code> in the input object is replaced
+by the mean (or other function) of its group, defined by
+<code>by</code>. This is done for each series in a multi-column object. Common
+choices for the aggregation group are a year, a month, all calendar
+months, etc.  
+</p>
+<p>If a group has no non-missing values, the default aggregation function
+<code>mean</code> will return <code>NaN</code>. Specify <code>na.rm = TRUE</code> to
+omit such remaining missing values.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+z &lt;- zoo(c(1, NA, 3:9),
+         c(as.Date("2010-01-01") + 0:2,
+           as.Date("2010-02-01") + 0:2,
+           as.Date("2011-01-01") + 0:2))
+## overall mean
+na.aggregate(z)
+## group by months
+na.aggregate(z, as.yearmon)
+## group by calendar months
+na.aggregate(z, months)
+## group by years
+na.aggregate(z, format, "%Y")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

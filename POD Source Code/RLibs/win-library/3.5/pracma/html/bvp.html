@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Boundary Value Problems</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bvp {pracma}"><tr><td>bvp {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Boundary Value Problems
+</h2>
+
+<h3>Description</h3>
+
+<p>Solves boundary value problems of linear second order differential equations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bvp(f, g, h, x, y, n = 50)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f, g, h</code></td>
+<td>
+<p>functions on the right side of the differential equation.
+If <code>f, g</code> or <code>h</code> is a scalar instead of a function, it is
+assumed to be a constant coefficient in the differential equation.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><code>x[1], x[2]</code> are the interval borders where the solution
+shall be computed.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>boundary conditions such that
+<code>y(x[1]) = y[1], y(x[2]) = y[2]</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>number of intermediate grid points; default 50.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Solves the two-point boundary value problem given as a linear differential 
+equation of second order in the form:
+</p>
+<p style="text-align: center;"><i>y'' = f(x) y' + g(x) y + h(x)</i></p>
+
+<p>with the finite element method. The solution <i>y(x)</i> shall exist
+on the interval <i>[a, b]</i> with boundary conditions <i>y(a) = y_a</i> 
+and <i>y(b) = y_b</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list <code>list(xs, ys)</code> with the grid points <code>xs</code> and the
+values <code>ys</code> of the solution at these points, including the boundary
+points.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Uses a tridiagonal equation solver that may be faster then <code>qr.solve</code>
+for large values of <code>n</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kutz, J. N. (2005). Practical Scientific Computing. Lecture Notes 
+98195-2420, University of Washington, Seattle.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="shooting.html">shooting</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Solve y'' = 2*x/(1+x^2)*y' - 2/(1+x^2) * y + 1
+##  with y(0) = 1.25 and y(4) = -0.95 on the interval [0, 4]:
+f1 &lt;- function(x) 2*x / (1 + x^2)
+f2 &lt;- function(x)  -2 / (1 + x^2)
+f3 &lt;- function(x) rep(1, length(x))     # vectorized constant function 1
+x &lt;- c(0.0,   4.0)
+y &lt;- c(1.25, -0.95)
+sol &lt;- bvp(f1, f2, f3, x, y)
+## Not run: 
+plot(sol$xs, sol$ys, ylim = c(-2, 2),
+     xlab = "", ylab = "", main = "Boundary Value Problem")
+# The analytic solution is
+sfun &lt;- function(x) 1.25 + 0.4860896526*x - 2.25*x^2 + 
+                    2*x*atan(x) - 1/2 * log(1+x^2) + 1/2 * x^2 * log(1+x^2)
+xx &lt;- linspace(0, 4)
+yy &lt;- sfun(xx)
+lines(xx, yy, col="red")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

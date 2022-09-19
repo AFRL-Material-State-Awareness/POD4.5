@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot a Delaunay triangulation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for persp3d.deldir {rgl}"><tr><td>persp3d.deldir {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Plot a Delaunay triangulation
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code><a href="../../deldir/html/deldir.html">deldir</a>()</code> function in the <span class="pkg">deldir</span> package computes a Delaunay triangulation of a set
+of points.  These functions display it as a surface.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'deldir'
+plot3d(x, ...)
+## S3 method for class 'deldir'
+persp3d(x, ..., add = FALSE)
+## S3 method for class 'deldir'
+as.mesh3d(x, col = "gray", coords = c("x", "y", "z"), 
+    smooth = TRUE, normals = NULL, texcoords = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>A <code>"deldir"</code> object, produced by the <code><a href="../../deldir/html/deldir.html">deldir</a>()</code> function.  It must contain <code>z</code> values.
+</p>
+</td></tr>
+<tr valign="top"><td><code>add</code></td>
+<td>
+
+<p>Whether to add surface to existing plot (<code>add = TRUE</code>)
+or create a new plot (<code>add = FALSE</code>, the default).
+</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+
+<p>Colors to apply to each vertex in the triangulation.
+Will be recycled as needed.
+</p>
+</td></tr>
+<tr valign="top"><td><code>coords</code></td>
+<td>
+
+<p>See Details below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>smooth</code></td>
+<td>
+
+<p>Whether to average normals at vertices for
+a smooth appearance.
+</p>
+</td></tr>
+<tr valign="top"><td><code>normals</code></td>
+<td>
+
+<p>User-specified normals at each vertex.  Requires <code>smooth = FALSE</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>texcoords</code></td>
+<td>
+
+<p>Texture coordinates at each vertex.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>See Details below.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>These functions construct a <code><a href="mesh3d.html">mesh3d</a></code> object
+corresponding to the triangulation in <code>x</code>.  The
+<code>plot3d</code> and <code>persp3d</code> methods plot it.
+</p>
+<p>The <code>coords</code> parameter allows surfaces to be 
+plotted over any coordinate plane.  It should be
+a permutation of the column names <code>c("x", "y", "z")</code>
+from the <code>"deldir"</code> object.  The first will be used
+as the x coordinate, the second as the y coordinate, 
+and the third as the z coordinate.
+</p>
+<p>The <code>...</code> parameters in <code>plot3d.deldir</code> 
+are passed to <code>persp3d.deldir</code>; in <code>persp3d.deldir</code> they are
+passed to both <code>as.mesh3d.deldir</code> and <code>persp3d.mesh3d</code>; 
+in <code>as.mesh3d.deldir</code> they are used as material parameters
+in a <code><a href="mesh3d.html">tmesh3d</a></code> call.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- rnorm(200, sd = 5)
+y &lt;- rnorm(200, sd = 5)
+r &lt;- sqrt(x^2 + y^2)
+z &lt;- 10 * sin(r)/r
+col &lt;- cm.colors(20)[1 + round(19*(z - min(z))/diff(range(z)))]
+
+save &lt;- options(rgl.meshColorWarning = FALSE)
+
+# This code is awkward:  to work with demo(rglExamples),
+# we need auto-printing of the plots.  This means we
+# have to repeat the test for deldir.
+
+haveDeldir &lt;- checkDeldir()
+              
+if (haveDeldir) {
+  dxyz &lt;- deldir::deldir(x, y, z = z, suppressMsge = TRUE)
+  persp3d(dxyz, col = col)
+}
+
+if (haveDeldir) {
+  open3d()
+  # Do it without smoothing and with a different orientation.
+  persp3d(dxyz, col = col, coords = c("z", "x", "y"), smooth = FALSE)
+}
+
+options(save)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

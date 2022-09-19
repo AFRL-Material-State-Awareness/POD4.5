@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: bit %in%</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bit_in {bit}"><tr><td>bit_in {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>bit %in%</h2>
+
+<h3>Description</h3>
+
+<p>fast <code><a href="../../base/html/match.html">%in%</a></code> for integers
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bit_in(x, table, retFUN = as.bit)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an integer vector of values to be looked-up</p>
+</td></tr>
+<tr valign="top"><td><code>table</code></td>
+<td>
+<p>an integer vector used as lookup-table</p>
+</td></tr>
+<tr valign="top"><td><code>retFUN</code></td>
+<td>
+<p>a function that coerces <code><a href="bit.html">bit</a></code> and <code><a href="../../base/html/logical.html">logical</a></code> vectors</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>determines the range of the integers and checks if the density justifies use 
+of a bit vector; if yes, maps <code>x</code> or <code>table</code> &ndash; whatever is smaller
+&ndash; into a bit vector and searches the other of <code>table</code> or <code>x</code> in
+the it vector; if no, falls back to <code><a href="../../base/html/match.html">%in%</a></code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>a boolean vector coerced to <code>retFUN</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/match.html">%in%</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+bit_in(1:2, 2:3)
+bit_in(1:2, 2:3, retFUN=as.logical)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

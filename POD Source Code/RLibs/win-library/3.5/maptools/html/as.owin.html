@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coercion between sp objects and spatstat owin objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.owin {maptools}"><tr><td>as.owin {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coercion between sp objects and spatstat owin objects</h2>
+
+<h3>Description</h3>
+
+<p>Functions to convert between <span class="pkg">spatstat</span>s observation window (<code>owin</code>)
+format and various <span class="pkg">sp</span> formats. S4-style <code>as()</code> coercion can be used
+as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.owin.SpatialPolygons(W, ..., fatal)
+as.owin.SpatialGridDataFrame(W, ..., fatal)
+as.owin.SpatialPixelsDataFrame(W, ..., fatal)
+as.SpatialPolygons.owin(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>W</code></td>
+<td>
+<p><code>SpatialPolygons</code> object to coerce to <code>owin</code></p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><code>owin</code> object to coerce to <code>SpatialPolygons</code> format</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>ignored</p>
+</td></tr>
+<tr valign="top"><td><code>fatal</code></td>
+<td>
+<p>formal coercion argument; ignored</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>An observation window in <span class="pkg">spatstat</span> defines a planar region. It is
+typically used to represent a sampling region. It comes in three different
+formats: a simple rectangle, a polygon (vector format) or a binary mask (TRUE/FALSE grid; raster format). These can all be coerced to polygonal form internally in
+<span class="pkg">spatstat</span> and then converted to <code>SpatialPolygons</code>, which is what
+<code>as.SpatialPolygons.owin()</code> does. For objects of class
+<code>SpatialPolygons</code> (and <code>SpatialPolygonsDataFrame</code>) the <span class="pkg">sp</span>
+polygons are simply extracted and cast into <span class="pkg">spatstat</span>s polygon format
+inside the <code>owin</code> object. For <code>SpatialPixelsDataFrame</code> and
+<code>SpatialGridDataFrame</code> the grid is extracted and cast into <span class="pkg">spatstat</span>s
+mask format inside the <code>owin</code> object. In all cases any data apart from the
+spatial region itself are discarded.</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>coerce</dt><dd><p><code>signature(from = "SpatialPolygons", to = "owin")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "SpatialPixelsDataFrame", to = "owin")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "SpatialGridDataFrame", to = "owin")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "owin", to = "SpatialPolygons")</code></p>
+</dd>
+</dl>
+
+
+
+<h3>Warning</h3>
+
+<p>In <span class="pkg">spatstat</span> all spatial objects are assumed to be planar. This means
+that <span class="pkg">spatstat</span> is not designed to work directly with geographic
+(longitude and latitude) coordinates. If a <span class="pkg">sp</span> object is declared to
+have geographic (unprojected) coordinates <span class="pkg">maptools</span> refuses to convert
+directly to <span class="pkg">spatstat</span> format. Rather, these should be projected first
+using e.g. <code><a href="../../sp/html/spTransform.html">spTransform</a></code>. If you know what you are doing, and
+really want to force coercion, you can overwrite the <code>proj4string</code> of the
+<span class="pkg">sp</span> object with an empty string, <code>proj4string(x) &lt;- ""</code>, which
+will fool the system to think that the data is in local planar coordinates.
+This is probably not a good idea!
+</p>
+
+
+<h3>Note</h3>
+
+<p>When coercing a SpatialPolygons object to an owin object, full 
+topology checking is enabled by default. To avoid checking, set 
+<code>spatstat.options(checkpolygons=FALSE)</code> (from spatstat (1.14-6)). 
+To perform the checking later, <code>owinpolycheck(W, verbose=TRUE)</code>.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a>, Roger Bivand</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+run &lt;- FALSE
+if (require("spatstat.geom", quietly=TRUE)) run &lt;- TRUE
+if (run) {
+## SpatialPixelsDataFrame -&gt; owin
+data(meuse.grid) # A data.frame
+gridded(meuse.grid) = ~x+y # Now a SpatialPixelsDataFrame
+mg_owin &lt;- as(meuse.grid, "owin")
+mg_owin
+}
+if (run) {
+## SpatialGridDataFrame -&gt; owin
+fullgrid(meuse.grid) &lt;- TRUE # Now a SpatialGridDataFrame
+mg_owin2 &lt;- as(meuse.grid, "owin")
+}
+if (run) {
+## SpatialPolygons region with a hole
+ho_sp &lt;- SpatialPolygons(list(Polygons(list(Polygon(cbind(c(0,1,1,0,0),
+  c(0,0,1,1,0))), Polygon(cbind(c(0.6,0.4,0.4,0.6,0.6), 
+  c(0.2,0.2,0.4,0.4,0.2)), hole=TRUE)), ID="ho")))
+plot(ho_sp, col="red", pbg="pink")
+}
+if (run) {
+## SpatialPolygons -&gt; owin
+ho &lt;- as(ho_sp, "owin")
+plot(ho)
+}
+if (run) {
+## Define owin directly and check they are identical
+ho_orig &lt;- owin(poly=list(list(x=c(0,1,1,0), y=c(0,0,1,1)),
+  list(x=c(0.6,0.4,0.4,0.6), y=c(0.2,0.2,0.4,0.4))))
+identical(ho, ho_orig)
+}
+if (run) {
+## owin -&gt; SpatialPolygons
+ho_sp1 &lt;- as(ho, "SpatialPolygons")
+all.equal(ho_sp, ho_sp1, check.attributes=FALSE)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

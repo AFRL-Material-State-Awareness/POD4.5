@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Default 'odds' in 'ampute()'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ampute.default.odds {mice}"><tr><td>ampute.default.odds {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Default <code>odds</code> in <code>ampute()</code></h2>
+
+<h3>Description</h3>
+
+<p>Defines the default odds matrix for the multivariate amputation function
+<code>ampute</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ampute.default.odds(patterns)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>patterns</code></td>
+<td>
+<p>A matrix of size #patterns by #variables where 0 indicates a
+variable should have missing values and 1 indicates a variable should remain
+complete. Could be the result of <code><a href="ampute.default.patterns.html">ampute.default.patterns</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A matrix where #rows equals #patterns. Default is 4 quantiles with odds
+values 1, 2, 3 and 4, for each pattern, imitating a RIGHT type of missingness.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rianne Schouten, 2016
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="ampute.html">ampute</a></code>, <code><a href="ampute.default.patterns.html">ampute.default.patterns</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

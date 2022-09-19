@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Alternative to 'ggsave()', with better support for...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for save_plot {cowplot}"><tr><td>save_plot {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Alternative to <code>ggsave()</code>, with better support for multi-figure plots.</h2>
+
+<h3>Description</h3>
+
+<p>This function replaces the standard <code><a href="../../ggplot2/html/ggsave.html">ggsave()</a></code> function for saving a plot into a file. It
+has several advantages over <code>ggsave()</code>. First, it uses default sizes that work well with
+the cowplot theme, so that frequently a plot size does not have to be explicitly specified. Second, it
+acknowledges that one often first develops individual plots and then combines them into
+multi-plot figures, and it makes it easy&mdash;in combination with <code><a href="plot_grid.html">plot_grid()</a></code>&mdash;to carry out
+this workflow. Finally, it makes it easy to adjust the aspect ratio of the figure, which is
+frequently necessary to accommodate plots with or without figure legend.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+save_plot(
+  filename,
+  plot,
+  ncol = 1,
+  nrow = 1,
+  base_height = 3.71,
+  base_asp = 1.618,
+  base_width = NULL,
+  ...,
+  cols,
+  rows,
+  base_aspect_ratio,
+  width,
+  height
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>filename</code></td>
+<td>
+<p>Name of the plot file to generate.</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p>Plot to save.</p>
+</td></tr>
+<tr valign="top"><td><code>ncol</code></td>
+<td>
+<p>Number of subplot columns.</p>
+</td></tr>
+<tr valign="top"><td><code>nrow</code></td>
+<td>
+<p>Number of subplot rows.</p>
+</td></tr>
+<tr valign="top"><td><code>base_height</code></td>
+<td>
+<p>The height (in inches) of the plot or of one sub-plot if <code>nrow</code>
+or <code>ncol</code> &gt; 1. Default is 3.71.</p>
+</td></tr>
+<tr valign="top"><td><code>base_asp</code></td>
+<td>
+<p>The aspect ratio (width/height) of the plot or of one sub-plot if <code>nrow</code>
+or <code>ncol</code> &gt; 1. This argument is used if <code>base_width = NULL</code> or if <code>base_height = NULL</code>;
+if both width and height are provided then the aspect ratio is ignored.
+The default is 1.618 (the golden ratio), which works well for figures with a legend.</p>
+</td></tr>
+<tr valign="top"><td><code>base_width</code></td>
+<td>
+<p>The width (in inches) of the plot or of one sub-plot if <code>nrow</code>
+or <code>ncol</code> &gt; 1. Default is <code>NULL</code>, which means that the width is calculated from
+<code>base_height</code> and <code>base_aspect_ratio</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments to be handed to <code><a href="ggsave2.html">ggsave2()</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cols</code></td>
+<td>
+<p>Deprecated. Use <code>ncol</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>rows</code></td>
+<td>
+<p>Deprecated. Use <code>nrow</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>base_aspect_ratio</code></td>
+<td>
+<p>Deprecated. Use <code>base_asp</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>Deprecated. Don't use.</p>
+</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+<p>Deprecated. Don't use.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The key idea for this function is that plots are often grids, with sup-plots at the individual
+grid locations. Therefore, for this function we specify a base width and aspect ratio that apply
+to one sup-plot, and we then specify how many rows and columns of subplots we have. This means that
+if we have code that can save a single figure, it is trivial to adapt this code to save a combination
+of multiple comparable figures. See examples for details.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+library(ggplot2)
+
+# save a single plot with a legend
+p1 &lt;- ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
+  geom_point(size = 2) +
+  theme_half_open()
+
+file1 &lt;- tempfile("file1", fileext = ".png")
+file2 &lt;- tempfile("file2", fileext = ".png")
+save_plot(file1, p1)
+# same as file1 but determine base_width given base_height
+save_plot(file2, p1, base_height = NULL, base_width = 6)
+
+# save a single plot without legend, adjust aspect ratio
+x &lt;- (1:100)/10
+p3 &lt;- ggplot(data.frame(x = x, y = x*sin(x)), aes(x, y)) +
+ geom_line() +
+ theme_minimal_hgrid()
+file3 &lt;- tempfile("file3", fileext = ".pdf")
+save_plot(file3, p3, base_asp = 1.1)
+
+# now combine with a second plot and save
+p3b &lt;- ggplot(data.frame(x = x, y = cos(x)+x), aes(x, y)) +
+ geom_line() +
+ theme_minimal_hgrid()
+p4 &lt;- plot_grid(p3, p3b, labels = "AUTO")
+file4 &lt;- tempfile("file4", fileext = ".pdf")
+save_plot(file4, p4, ncol = 2, base_asp = 1.1)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

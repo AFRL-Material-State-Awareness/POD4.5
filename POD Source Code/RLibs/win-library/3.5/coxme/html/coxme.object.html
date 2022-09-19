@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coxme regression output object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for coxme.object {coxme}"><tr><td>coxme.object {coxme}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coxme regression output object
+</h2>
+
+<h3>Description</h3>
+
+<p>This contains further description of the output object created by a
+<code>coxme</code> call.  Most components can be accessed with extractor
+functions, which is the safer route since details of the object will
+likely change over time.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The structure of each element of the random effects
+coefficients (obtained with <code>ranef</code>) and variances
+(<code>VarCorr</code>) depend on the variance functions, i.e., the functions
+used in the <code>varlist</code> argument.
+Since users can write their own variance functions this format can
+never be completely known.
+</p>
+
+
+<h3>Value</h3>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>the coefficients of the fixed effects.  Use the
+<code>fixef</code> function to extract them.</p>
+</td></tr>
+<tr valign="top"><td><code>frail</code></td>
+<td>
+<p>the coefficients of the random effects.  Use the
+<code>ranef</code> function to extract them.  These are always stored as a
+list with one member per random effect; each parenthesised term in
+the model is a random effect.
+In a linear mixed effects model the fixed effects and the variances
+of the random effects can be obtained without explicitly computing
+the coefficients of the random effects, the latter are called BLUP
+estimates and are computed later if at all.  This is not the case for a
+Cox model, there the random effect coefficients are a required part
+of the iteration process and so are always present in the final model.</p>
+</td></tr>
+<tr valign="top"><td><code>vcoef</code></td>
+<td>
+<p>the variances of the random effects.  Use the
+<code>VarCorr</code> function to extract them.  These are always stored as a
+list with one member per random effect.</p>
+</td></tr>
+<tr valign="top"><td><code>variance</code></td>
+<td>
+<p>the variance-covariance matrix of the coefficient
+vector, including both fixed and random terms.  The random effects
+are listed first.  This will often be a sparse matrix.
+The <code>vcov</code> function
+will extract the fixed effects portion, which is always dense.</p>
+</td></tr>
+<tr valign="top"><td><code>loglik</code></td>
+<td>
+<p>the log-likelihood vector from the fit.  The first
+element is the loglik at the initial values, the second is the
+integrated partial likelihood at the solution (IPL), the third is
+the penalized partial likelihood at the solution(PPL).</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>degrees of freedom for the IPL and the PPL solutions.</p>
+</td></tr>
+<tr valign="top"><td><code>hmat</code></td>
+<td>
+<p>sparse Cholesky factorization of the information matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>outer and inner iterations performed.  For each trial
+value of the variance parameters an Cox model partial likelihood
+must be solved; the outer iterations is the reported number from the
+optim() routine which handles the variance parameters, the inner
+iterations is the cumulative number of partial likelihood
+iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a copy of the <code>coxph.control</code> parameters used in
+the fit.</p>
+</td></tr>
+<tr valign="top"><td><code>ties</code></td>
+<td>
+<p>the computational method used for ties.</p>
+</td></tr>
+<tr valign="top"><td><code>u</code></td>
+<td>
+<p>the vector of first derivatives of the PPL, at the solution.</p>
+</td></tr>
+<tr valign="top"><td><code>means,scale</code></td>
+<td>
+<p>means and scale for each predictor, used internally
+to scale the problem.</p>
+</td></tr>
+<tr valign="top"><td><code>linear.predictor</code></td>
+<td>
+<p>the vector of linear predictors.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>vector containing the number of events and the number of
+observations in the fitting data set.</p>
+</td></tr>
+<tr valign="top"><td><code>terms</code></td>
+<td>
+<p>the terms object from the fixed effects of the model
+formula.  Access using the <code>terms</code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>formulaList</code></td>
+<td>
+<p>the fixed and random portions of the formula,
+separated</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>the missing value attributes of the data, if any</p>
+</td></tr>
+<tr valign="top"><td><code>x,y,model</code></td>
+<td>
+<p>optional: the x matrix, response, for model frame.
+These depend on the corresponding arguments in the call.</p>
+</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>a copy of the call to the routine</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>coxme</em> version 2.2-17 <a href="00Index.html">Index</a>]</div>
+</body></html>

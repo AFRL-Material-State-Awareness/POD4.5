@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add trace(s) to a plotly visualization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for add_trace {plotly}"><tr><td>add_trace {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add trace(s) to a plotly visualization</h2>
+
+<h3>Description</h3>
+
+<p>Add trace(s) to a plotly visualization
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+add_trace(p, ..., data = NULL, inherit = TRUE)
+
+add_markers(p, x = NULL, y = NULL, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_text(
+  p,
+  x = NULL,
+  y = NULL,
+  z = NULL,
+  text = NULL,
+  ...,
+  data = NULL,
+  inherit = TRUE
+)
+
+add_paths(p, x = NULL, y = NULL, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_lines(p, x = NULL, y = NULL, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_segments(
+  p,
+  x = NULL,
+  y = NULL,
+  xend = NULL,
+  yend = NULL,
+  ...,
+  data = NULL,
+  inherit = TRUE
+)
+
+add_polygons(p, x = NULL, y = NULL, ..., data = NULL, inherit = TRUE)
+
+add_sf(p, ..., x = ~x, y = ~y, data = NULL, inherit = TRUE)
+
+add_table(p, ..., rownames = TRUE, data = NULL, inherit = TRUE)
+
+add_ribbons(
+  p,
+  x = NULL,
+  ymin = NULL,
+  ymax = NULL,
+  ...,
+  data = NULL,
+  inherit = TRUE
+)
+
+add_image(p, z = NULL, colormodel = NULL, ..., data = NULL, inherit = TRUE)
+
+add_area(p, r = NULL, theta = NULL, t = NULL, ..., data = NULL, inherit = TRUE)
+
+add_pie(p, values = NULL, labels = NULL, ..., data = NULL, inherit = TRUE)
+
+add_bars(p, x = NULL, y = NULL, ..., data = NULL, inherit = TRUE)
+
+add_histogram(p, x = NULL, y = NULL, ..., data = NULL, inherit = TRUE)
+
+add_histogram2d(
+  p,
+  x = NULL,
+  y = NULL,
+  z = NULL,
+  ...,
+  data = NULL,
+  inherit = TRUE
+)
+
+add_histogram2dcontour(
+  p,
+  x = NULL,
+  y = NULL,
+  z = NULL,
+  ...,
+  data = NULL,
+  inherit = TRUE
+)
+
+add_heatmap(p, x = NULL, y = NULL, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_contour(p, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_boxplot(p, x = NULL, y = NULL, ..., data = NULL, inherit = TRUE)
+
+add_surface(p, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_mesh(p, x = NULL, y = NULL, z = NULL, ..., data = NULL, inherit = TRUE)
+
+add_scattergeo(p, ...)
+
+add_choropleth(p, z = NULL, ..., data = NULL, inherit = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly object</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Arguments (i.e., attributes) passed along to the trace <code>type</code>.
+See <code><a href="schema.html">schema()</a></code> for a list of acceptable attributes for a given trace <code>type</code>
+(by going to <code>traces</code> -&gt; <code>type</code> -&gt; <code>attributes</code>). Note that attributes
+provided at this level may override other arguments
+(e.g. <code>plot_ly(x = 1:10, y = 1:10, color = I("red"), marker = list(color = "blue"))</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame (optional) or <a href="../../crosstalk/html/SharedData.html">crosstalk::SharedData</a> object.</p>
+</td></tr>
+<tr valign="top"><td><code>inherit</code></td>
+<td>
+<p>inherit attributes from <code><a href="plot_ly.html">plot_ly()</a></code>?</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>the x variable.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>the y variable.</p>
+</td></tr>
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p>a numeric matrix (unless <code><a href="add_trace.html">add_image()</a></code>, which wants a raster object, see <code><a href="../../grDevices/html/as.raster.html">as.raster()</a></code>).</p>
+</td></tr>
+<tr valign="top"><td><code>text</code></td>
+<td>
+<p>textual labels.</p>
+</td></tr>
+<tr valign="top"><td><code>xend</code></td>
+<td>
+<p>&quot;final&quot; x position (in this context, x represents &quot;start&quot;)</p>
+</td></tr>
+<tr valign="top"><td><code>yend</code></td>
+<td>
+<p>&quot;final&quot; y position (in this context, y represents &quot;start&quot;)</p>
+</td></tr>
+<tr valign="top"><td><code>rownames</code></td>
+<td>
+<p>whether or not to display the rownames of <code>data</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>ymin</code></td>
+<td>
+<p>a variable used to define the lower boundary of a polygon.</p>
+</td></tr>
+<tr valign="top"><td><code>ymax</code></td>
+<td>
+<p>a variable used to define the upper boundary of a polygon.</p>
+</td></tr>
+<tr valign="top"><td><code>colormodel</code></td>
+<td>
+<p>Sets the colormodel for image traces if <code>z</code> is not a raster object.
+If <code>z</code> is a raster object (see <code><a href="../../grDevices/html/as.raster.html">as.raster()</a></code>), the <code>'rgba'</code> colormodel is always used.</p>
+</td></tr>
+<tr valign="top"><td><code>r</code></td>
+<td>
+<p>Sets the radial coordinates.</p>
+</td></tr>
+<tr valign="top"><td><code>theta</code></td>
+<td>
+<p>Sets the angular coordinates.</p>
+</td></tr>
+<tr valign="top"><td><code>t</code></td>
+<td>
+<p>Deprecated. Use <code>theta</code> instead.</p>
+</td></tr>
+<tr valign="top"><td><code>values</code></td>
+<td>
+<p>the value to associated with each slice of the pie.</p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p>the labels (categories) corresponding to <code>values</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://plotly-r.com/overview.html">https://plotly-r.com/overview.html</a>
+</p>
+<p><a href="https://plotly.com/r/">https://plotly.com/r/</a>
+</p>
+<p><a href="https://plotly.com/r/reference/">https://plotly.com/r/reference/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="plot_ly.html">plot_ly()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# the `plot_ly()` function initiates an object, and if no trace type
+# is specified, it sets a sensible default
+p &lt;- plot_ly(economics, x = ~date, y = ~uempmed)
+p
+
+# some `add_*()` functions are a specific case of a trace type
+# for example, `add_markers()` is a scatter trace with mode of markers
+add_markers(p)
+
+# scatter trace with mode of text
+add_text(p, text = "%")
+
+# scatter trace with mode of lines 
+add_paths(p)
+
+# like `add_paths()`, but ensures points are connected according to `x`
+add_lines(p)
+
+# if you prefer to work with plotly.js more directly, can always
+# use `add_trace()` and specify the type yourself
+add_trace(p, type = "scatter", mode = "markers+lines")
+
+# mappings provided to `plot_ly()` are "global", but can be overwritten
+plot_ly(economics, x = ~date, y = ~uempmed, color = I("red"), showlegend = FALSE) %&gt;% 
+  add_lines() %&gt;%
+  add_markers(color = ~pop)
+
+# a number of `add_*()` functions are special cases of the scatter trace
+plot_ly(economics, x = ~date) %&gt;% 
+  add_ribbons(ymin = ~pce - 1e3, ymax = ~pce + 1e3)
+
+# use `group_by()` (or `group2NA()`) to apply visual mapping
+# once per group (e.g. one line per group)
+txhousing %&gt;% 
+  group_by(city) %&gt;% 
+  plot_ly(x = ~date, y = ~median) %&gt;%
+  add_lines(color = I("black"))
+
+## Not run: 
+# use `add_sf()` or `add_polygons()` to create geo-spatial maps
+# http://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/
+if (requireNamespace("sf", quietly = TRUE)) {
+  nc &lt;- sf::st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
+  plot_ly() %&gt;% add_sf(data = nc)
+}
+
+# univariate summary statistics
+plot_ly(mtcars, x = ~factor(vs), y = ~mpg) %&gt;% 
+  add_boxplot()
+plot_ly(mtcars, x = ~factor(vs), y = ~mpg) %&gt;% 
+  add_trace(type = "violin")
+  
+# `add_histogram()` does binning for you...
+mtcars %&gt;%
+  plot_ly(x = ~factor(vs)) %&gt;%
+  add_histogram()
+  
+# ...but you can 'pre-compute' bar heights in R
+mtcars %&gt;%
+  dplyr::count(vs) %&gt;%
+  plot_ly(x = ~vs, y = ~n) %&gt;%
+  add_bars()
+
+# the 2d analogy of add_histogram() is add_histogram2d()/add_histogram2dcontour()
+library(MASS)
+(p &lt;- plot_ly(geyser, x = ~waiting, y = ~duration))
+add_histogram2d(p)
+add_histogram2dcontour(p)
+
+# the 2d analogy of add_bars() is add_heatmap()/add_contour()
+# (i.e., bin counts must be pre-specified)
+den &lt;- kde2d(geyser$waiting, geyser$duration)
+p &lt;- plot_ly(x = den$x, y = den$y, z = den$z)
+add_heatmap(p)
+add_contour(p)
+
+# `add_table()` makes it easy to map a data frame to the table trace type
+plot_ly(economics) %&gt;% 
+  add_table()
+
+# pie charts!
+ds &lt;- data.frame(labels = c("A", "B", "C"), values = c(10, 40, 60))
+plot_ly(ds, labels = ~labels, values = ~values) %&gt;%
+  add_pie() %&gt;%
+  layout(title = "Basic Pie Chart using Plotly")
+  
+data(wind)
+plot_ly(wind, r = ~r, t = ~t) %&gt;% 
+  add_area(color = ~nms) %&gt;%
+  layout(radialaxis = list(ticksuffix = "%"), orientation = 270)
+
+# ------------------------------------------------------------
+# 3D chart types
+# ------------------------------------------------------------
+plot_ly(z = ~volcano) %&gt;% 
+  add_surface()
+plot_ly(x = c(0, 0, 1), y = c(0, 1, 0), z = c(0, 0, 0)) %&gt;% 
+  add_mesh()
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

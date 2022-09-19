@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: MM-, Tau-, CM-, and MTL- Estimators for Nonlinear Robust...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nlrob-algorithms {robustbase}"><tr><td>nlrob-algorithms {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>MM-, Tau-, CM-, and MTL- Estimators for Nonlinear Robust Regression</h2>
+
+<h3>Description</h3>
+
+
+<dl>
+<dt>&quot;MM&quot;:</dt><dd><p>Compute an MM-estimator for nonlinear robust (constrained)
+regression.</p>
+</dd>
+<dt>&quot;tau&quot;:</dt><dd><p>Compute a Tau-estimator for nonlinear robust (constrained)
+regression.</p>
+</dd>
+<dt>&quot;CM&quot;:</dt><dd><p>Compute a &ldquo;Constrained M&rdquo; (=: CM) estimator for
+nonlinear robust (constrained) regression.</p>
+</dd>
+<dt>&quot;MTL&quot;:</dt><dd><p>Compute a &ldquo;Maximum Trimmed Likelihood&rdquo; (=: MTL)
+estimator for nonlinear robust (constrained) regression.</p>
+</dd>
+</dl>
+
+
+
+<h3>Usage</h3>
+
+<pre>
+## You can *not* call the  nlrob(*, method = &lt;M&gt;) like this ==&gt; see  help(nlrob)
+## ------- ===== ------------------------------------------
+
+nlrob.MM(formula, data, lower, upper,
+	 tol = 1e-06,
+	 psi = c("bisquare", "lqq", "optimal", "hampel"),
+         init = c("S", "lts"),
+	 ctrl = nlrob.control("MM", psi = psi, init = init, fnscale = NULL,
+		       tuning.chi.scale = .psi.conv.cc(psi, .Mchi.tuning.defaults[[psi]]),
+		       tuning.psi.M     = .psi.conv.cc(psi, .Mpsi.tuning.defaults[[psi]]),
+		       optim.control = list(), optArgs = list(...)),
+	 ...)
+
+nlrob.tau(formula, data, lower, upper,
+	  tol = 1e-06, psi = c("bisquare", "optimal"),
+	  ctrl = nlrob.control("tau", psi = psi, fnscale = NULL,
+			tuning.chi.scale = NULL, tuning.chi.tau = NULL,
+			optArgs = list(...)),
+	  ...)
+
+nlrob.CM(formula, data, lower, upper,
+	 tol = 1e-06,
+	 psi = c("bisquare", "lqq", "welsh", "optimal", "hampel", "ggw"),
+	 ctrl = nlrob.control("CM", psi = psi, fnscale = NULL,
+                        tuning.chi = NULL, optArgs = list(...)),
+	 ...)
+
+nlrob.mtl(formula, data, lower, upper,
+	  tol = 1e-06,
+	  ctrl = nlrob.control("mtl", cutoff = 2.5, optArgs = list(...)),
+	  ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>nonlinear regression <code><a href="../../stats/html/formula.html">formula</a></code>, using both
+variable names from <code>data</code> and parameter names from either
+<code>lower</code> or <code>upper</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data to be used, a <code><a href="../../base/html/data.frame.html">data.frame</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>lower, upper</code></td>
+<td>
+<p>bounds aka &ldquo;box constraints&rdquo; for all the
+parameters, in the case &quot;CM&quot; and &quot;mtl&quot; these must include the error
+standard deviation as <code>"sigma"</code>, see <code><a href="nlrob.html">nlrob</a>()</code>
+about its <code><a href="../../base/html/names.html">names</a></code>, etc.
+</p>
+<p>Note that one of these two must be a properly &ldquo;named&rdquo;, e.g.,
+<code>names(lower)</code> being a <code><a href="../../base/html/character.html">character</a></code> vector of parameter names
+(used in <code>formula</code> above).
+</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>numerical convergence tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>psi, init</code></td>
+<td>
+<p>see <code><a href="nlrob.control.html">nlrob.control</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>ctrl</code></td>
+<td>
+<p>a <code><a href="../../base/html/list.html">list</a></code>, typically the result of a call to
+<code><a href="nlrob.control.html">nlrob.control</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tuning.psi.M</code></td>
+<td>
+<p>..</p>
+</td></tr></table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>optim.control</code></td>
+<td>
+<p>..</p>
+</td></tr></table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>optArgs</code></td>
+<td>
+<p>a <code><a href="../../base/html/list.html">list</a></code> of optional arguments for
+optimization, e.g., <code>trace = TRUE</code>, passed to to the optimizer,
+which currently must be <code><a href="../../DEoptimR/html/JDEoptim.html">JDEoptim</a>(.)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>alternative way to pass the <code>optArgs</code> above.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Copyright 2013, Eduardo L. T. Conceicao.  Available under
+the GPL (&gt;= 2)
+</p>
+<p>Currently, all four methods use <code><a href="../../DEoptimR/html/JDEoptim.html">JDEoptim</a>()</code>
+from <a href="https://CRAN.R-project.org/package=DEoptimR"><span class="pkg">DEoptimR</span></a>, which subsamples using <code><a href="../../base/html/sample.html">sample</a>()</code>.
+From <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> version 3.6.0, <code><a href="../../base/html/sample.html">sample</a></code> depends on
+<code><a href="../../base/html/Random.html">RNGkind</a>(*, sample.kind)</code>, such that exact reproducibility of
+results from <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> versions 3.5.3 and earlier requires setting
+<code><a href="../../base/html/Random.html">RNGversion</a>("3.5.0")</code>.
+In any case, do use <code><a href="../../base/html/Random.html">set.seed</a>()</code> additionally for reproducibility!
+</p>
+
+
+<h3>Value</h3>
+
+<p>an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object of <code><a href="../../base/html/class.html">class</a></code> <code>"nlrob.&lt;meth&gt;"</code>, basically a
+list with components
+
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eduardo L. T. Conceicao; compatibility (to <code><a href="nlrob.html">nlrob</a></code>)
+tweaks and generalizations, inference, by Martin Maechler.
+</p>
+
+
+<h3>Source</h3>
+
+<p>For <code>"MTL"</code>:
+Maronna, Ricardo A., Martin, R. Douglas, and Yohai, Victor J. (2006).
+<em>Robust Statistics: Theory and Methods</em> Wiley, Chichester, p. 133.
+</p>
+
+
+<h3>References</h3>
+
+
+<dl>
+<dt>&quot;MM&quot;:</dt><dd>
+<p>Yohai, V.J. (1987)
+High breakdown-point and high efficiency robust estimates for
+regression.
+<em>The Annals of Statistics</em> <b>15</b>, 642&ndash;656.
+</p>
+</dd>
+<dt>&quot;tau&quot;:</dt><dd>
+<p>Yohai, V.J., and Zamar, R.H. (1988).
+High breakdown-point estimates of regression by means of the
+minimization of an efficient scale.
+<em>Journal of the American Statistical Association</em> <b>83</b>,
+406&ndash;413.
+</p>
+</dd>
+<dt>&quot;CM&quot;:</dt><dd>
+<p>Mendes, B.V.M., and Tyler, D.E. (1996)
+Constrained M-estimation for regression.
+</p>
+<p>In: <em>Robust Statistics, Data Analysis and Computer Intensive
+Methods</em>, Lecture Notes in Statistics 109, Springer, New York, 299&ndash;320.
+
+
+
+
+</p>
+</dd>
+<dt>&quot;MTL&quot;:</dt><dd>
+<p>Hadi, Ali S., and Luceno, Alberto (1997).
+Maximum trimmed likelihood estimators: a unified approach,
+examples, and algorithms.
+Computational Statistics &amp; Data Analysis <b>25</b>, 251&ndash;272.
+</p>
+<p>Gervini, Daniel, and Yohai, Victor J. (2002).
+A class of robust and fully efficient regression estimators.
+The Annals of Statistics <b>30</b>, 583&ndash;616.
+</p>
+</dd>
+</dl>
+
+
+
+<h3>Examples</h3>
+
+<pre>
+DNase1 &lt;- DNase[DNase$Run == 1,]
+form &lt;- density ~ Asym/(1 + exp(( xmid -log(conc) )/scal ))
+pnms &lt;- c("Asym", "xmid", "scal")
+set.seed(47) # as these by default use randomized optimization:
+
+fMM &lt;- robustbase:::nlrob.MM(form, data = DNase1,
+           lower = setNames(c(0,0,0), pnms), upper = 3,
+           ## call to nlrob.control to pass 'optim.control':
+           ctrl = nlrob.control("MM", optim.control = list(trace = 1),
+                                optArgs = list(trace = TRUE)))
+
+## The same via nlrob() {recommended; same random seed to necessarily give the same}:
+set.seed(47)
+gMM  &lt;- nlrob(form, data = DNase1, method = "MM",
+              lower = setNames(c(0,0,0), pnms), upper = 3, trace = TRUE)
+gMM
+summary(gMM)
+## and they are the same {apart from 'call' and 'ctrl' and new stuff in gMM}:
+ni &lt;- names(fMM); ni &lt;- ni[is.na(match(ni, c("call","ctrl")))]
+stopifnot(all.equal(fMM[ni], gMM[ni]))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

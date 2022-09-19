@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot methods for spatial data with attributes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for spplot {sp}"><tr><td>spplot {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot methods for spatial data with attributes</h2>
+
+<h3>Description</h3>
+
+<p>Lattice (trellis) plot methods for spatial data with attributes</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+spplot(obj, ...)
+spplot.grid(obj, zcol = names(obj), ..., names.attr, scales = list(draw = FALSE),
+ xlab = NULL, ylab = NULL, aspect = mapasp(obj,xlim,ylim),
+ panel = panel.gridplot, sp.layout = NULL, formula, xlim = bbox(obj)[1, ],
+ ylim = bbox(obj)[2, ], checkEmptyRC = TRUE, col.regions = get_col_regions())
+spplot.polygons(obj, zcol = names(obj), ..., names.attr, scales = list(draw = FALSE),
+ xlab = NULL, ylab = NULL, aspect = mapasp(obj,xlim,ylim),
+ panel = panel.polygonsplot, sp.layout = NULL, formula, xlim = bbox(obj)[1, ],
+ ylim = bbox(obj)[2, ], col.regions = get_col_regions())
+spplot.points(obj, zcol = names(obj), ..., names.attr, scales = list(draw = FALSE),
+ xlab = NULL, ylab = NULL, aspect = mapasp(obj,xlim,ylim),
+ panel = panel.pointsplot, sp.layout = NULL, identify = FALSE, formula,
+ xlim = bbexpand(bbox(obj)[1, ], 0.04), ylim = bbexpand(bbox(obj)[2, ], 0.04),
+ edge.col = "transparent", colorkey = FALSE, col.regions = get_col_regions())
+mapLegendGrob(obj, widths = unit(1, "cm"), heights = unit(1, "cm"),
+	fill = "black", just = "right")
+sp.theme(set = FALSE, regions = list(col = bpy.colors(100)), ...)
+layout.north.arrow(type = 1)
+layout.scale.bar(height = 0.05)
+spplot.locator(n = 512, type = "n", ...)
+set_col_regions(value)
+get_col_regions()
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> object of class extending <a href="Spatial-class.html">Spatial-class</a></p>
+</td></tr> 
+<tr valign="top"><td><code>zcol</code></td>
+<td>
+<p> character; attribute name(s) or column number(s) in attribute table </p>
+</td></tr>
+<tr valign="top"><td><code>names.attr</code></td>
+<td>
+<p> names to use in panel, if different from zcol names </p>
+</td></tr>
+<tr valign="top"><td><code>scales</code></td>
+<td>
+<p> scales argument to be passed to Lattice plots; use
+<code>list(draw = TRUE)</code> to draw axes scales; see <a href="../../lattice/html/xyplot.html">xyplot</a> for full options </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> other arguments passed to <a href="../../lattice/html/levelplot.html">levelplot</a> (grids, polygons) or 
+<a href="../../lattice/html/xyplot.html">xyplot</a> (points) </p>
+</td></tr>
+<tr valign="top"><td><code>xlab</code></td>
+<td>
+<p>label for x-axis </p>
+</td></tr>
+<tr valign="top"><td><code>ylab</code></td>
+<td>
+<p>label for y-axis </p>
+</td></tr>
+<tr valign="top"><td><code>aspect</code></td>
+<td>
+<p>aspect ratio for spatial axes; defaults to &quot;iso&quot; (one unit
+on the x-axis equals one unit on the y-axis) but may be set to more
+suitable values if the data are e.g. if coordinates are latitude/longitude </p>
+</td></tr>
+<tr valign="top"><td><code>panel</code></td>
+<td>
+<p> depending on the class of obj, <a href="panel.html">panel.polygonsplot</a> (for
+polygons or lines), <a href="panel.html">panel.gridplot</a> (grids) or <a href="panel.html">panel.pointsplot</a>
+(points) is used; for further control custom panel functions can be
+supplied that call one of these panel functions, but do read below how the
+argument <code>sp.layout</code> may help </p>
+</td></tr>
+<tr valign="top"><td><code>sp.layout</code></td>
+<td>
+<p>NULL or list; see notes below</p>
+</td></tr>
+<tr valign="top"><td><code>identify</code></td>
+<td>
+<p> if not FALSE, identify plotted objects (currently only working
+for points plots). Labels for identification are the row.names of the
+attribute table <code>row.names(as.data.frame(obj))</code>. If TRUE, identify
+on panel <code>(1,1)</code>; for identifying on panel <code>i,j</code>, pass the
+value <code>c(i,j)</code></p>
+</td></tr>
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>optional; may be useful to plot a transformed value. Defaults
+to <code>z~x+y</code> for single and <code>z~x+y|name</code> for multiple attributes; use
+e.g. <code>exp(x)~x+y|name</code> to plot the exponent of the z-variable</p>
+</td></tr>
+<tr valign="top"><td><code>xlim</code></td>
+<td>
+<p> numeric; x-axis limits </p>
+</td></tr>
+<tr valign="top"><td><code>ylim</code></td>
+<td>
+<p> numeric; y-axis limits </p>
+</td></tr>
+<tr valign="top"><td><code>edge.col</code></td>
+<td>
+<p> color of symbol edge </p>
+</td></tr>
+<tr valign="top"><td><code>colorkey</code></td>
+<td>
+<p> if FALSE, use symbol key; if TRUE, use continuous, levelplot-like colorkey; if list, follow syntax of argument <code>colorkey</code> in <a href="../../lattice/html/interaction.html">levelplot</a> (see below for an example) </p>
+</td></tr>
+<tr valign="top"><td><code>widths</code></td>
+<td>
+<p>width of grob</p>
+</td></tr>
+<tr valign="top"><td><code>heights</code></td>
+<td>
+<p>heights of grob</p>
+</td></tr>
+<tr valign="top"><td><code>fill</code></td>
+<td>
+<p>fill color of grob</p>
+</td></tr>
+<tr valign="top"><td><code>just</code></td>
+<td>
+<p>grob placement justification</p>
+</td></tr>
+<tr valign="top"><td><code>set</code></td>
+<td>
+<p> logical; if TRUE, trellis.par.set is called, else a list is returned
+that can be passed to trellis.par.set() </p>
+</td></tr>
+<tr valign="top"><td><code>regions</code></td>
+<td>
+<p> color ramp for the theme </p>
+</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+<p>height of scale bar; width is 1.0</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>see locator</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>see locator</p>
+</td></tr>
+<tr valign="top"><td><code>checkEmptyRC</code></td>
+<td>
+<p>logical; if TRUE, a check is done to see if
+empty rows or columns are present, and need to be taken care of. Setting
+to FALSE may improve speed. </p>
+</td></tr>
+<tr valign="top"><td><code>col.regions</code></td>
+<td>
+<p> vector with fill colours; in case the variable
+to be plotted is a factor, this vector should have length equal to the
+number of factor levels </p>
+</td></tr> 
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p> vector with color values, default for <code>col.regions</code></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>spplot returns a lattice plot of class &quot;trellis&quot;, if you fail to &quot;see&quot; it,
+explicitly call <code>print(spplot(...))</code>. If <code>identify</code> is TRUE,
+the plot is plotted and the return value is a vector with row names of
+the selected points.
+</p>
+<p><code>spplot.locator</code> returns a matrix with identified point locations;
+use <code>trellis.focus</code> first to focus on a given panel.
+</p>
+<p><code>get_col_regions</code> returns the default value for <code>col.regions</code>
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>obj = &quot;SpatialPixelsDataFrame&quot;</dt><dd><p> see <a href="spplot.html">spplot</a> </p>
+</dd>
+<dt>obj = &quot;SpatialGridDataFrame&quot;</dt><dd><p> see <a href="spplot.html">spplot</a> </p>
+</dd>
+<dt>obj = &quot;SpatialPolygonsDataFrame&quot;</dt><dd><p> see <a href="spplot.html">spplot</a> </p>
+</dd>
+<dt>obj = &quot;SpatialLinesDataFrame&quot;</dt><dd><p> see <a href="spplot.html">spplot</a> </p>
+</dd>
+<dt>obj = &quot;SpatialPointsDataFrame&quot;</dt><dd><p> see <a href="spplot.html">spplot</a> </p>
+</dd>
+</dl>
+
+
+<h3>Note</h3>
+
+<p>Missing values in the attributes are (currently) not allowed.
+</p>
+<p><code>spplot.grid</code>, <code>spplot.polygons</code> and <code>spplot.points</code> are S4
+methods for <code>spplot</code>; see <a href="spplot.html">spplot-methods</a>.
+</p>
+<p>Useful arguments that can be passed as <code>...</code> are: 
+</p>
+
+<dl>
+<dt><code>layout</code></dt><dd><p>integer; for the layout of panels (cols,rows)</p>
+</dd>
+<dt><code>pretty</code></dt><dd><p>logical; choose colour breaks at pretty numbers?</p>
+</dd>
+<dt><code>at</code></dt><dd><p>specify at which values colours change</p>
+</dd>
+<dt><code>as.table</code></dt><dd><p>logical; start drawing panels upper-left instead
+of lower-left</p>
+</dd>
+<dt><code>page</code></dt><dd><p>to add marks to each plotted page</p>
+</dd>
+</dl>
+
+<p>for useful values see the appropriate documentation of <a href="../../lattice/html/xyplot.html">xyplot</a>
+(in case of points), and <a href="../../lattice/html/levelplot.html">levelplot</a> (otherwise).
+</p>
+<p>If <code>obj</code> is of SpatialPointsDataFrame, the following options are
+useful to pass:
+</p>
+
+<dl>
+<dt><code>key.space</code></dt><dd><p> character: &quot;bottom&quot;, &quot;right&quot;, &quot;left&quot; or &quot;right&quot; to denote
+key location, or list: see argument key in the help for <a href="../../lattice/html/xyplot.html">xyplot</a> what
+the options are</p>
+</dd>
+<dt><code>legendEntries</code></dt><dd><p> character; array with key legend (text) entries; 
+suitable defaults obtained from data </p>
+</dd>
+<dt><code>cuts</code></dt><dd><p>number of cuts, or, for objects of class <a href="SpatialPoints.html">SpatialPointsDataFrame</a> only, the actual cuts to use</p>
+</dd>
+<dt><code>do.log</code></dt><dd><p>logical; if TRUE use log-linear scale to divide range in equal cuts,
+else use a linear scale if <code>cuts</code> is only number of cuts </p>
+</dd>
+<dt><code>pch</code></dt><dd><p> integer; plotting character to use; defaults to 16 if fill is TRUE, else 1 </p>
+</dd>
+<dt><code>cex</code></dt><dd><p>numeric; character expansion, proportional to default value of 1</p>
+</dd>
+<dt><code>fill</code></dt><dd><p> logical; use filled circles? </p>
+</dd>
+</dl>
+
+<p><code>layout.north.arrow</code> and <code>layout.scale.bar</code> can be used
+to set a north arrow or scale bar.
+</p>
+<p>The <code>sp.layout</code> argument is either a single layout item, or a list
+with one or more layout items. A layout item is one of
+</p>
+
+<ul>
+<li><p>a list with one or more <code>Spatial*</code> objects, along with
+style arguments like <code>col</code>, <code>lty</code>, <code>pch</code>, <code>fill</code> etc.
+</p>
+</li>
+<li><p>a list with its first argument the layout function or
+the name of the layout function to be called: <code>sp.points</code> for
+SpatialPoints, <code>sp.polygons</code> for SpatialPolygons object, <code>sp.lines</code>
+for a SpatialLines object, and <code>sp.text</code> for text to place. The
+second argument contains the object (or text) to be plotted; remaining
+arguments are passed to the corresponding <code>panel.*</code> functions.</p>
+</li></ul>
+
+<p>The order of items in <code>sp.layout</code> matters; objects are drawn in the
+order they appear. With respect to <code>obj</code>, default plot order and
+precedence of <code>sp.layout</code> items is as follows: for points and
+lines, <code>sp.layout</code> items are drawn over (after) <code>obj</code>; for
+grids and polygons, <code>sp.layout</code> items are drawn behind (before)
+<code>obj</code>.  Transparency may further help making multiple things
+visible. Adding a <code>first</code> argument to a layout item overrides its
+default plotting order with respect to <code>obj</code>:
+</p>
+<p>Special control elements of <code>sp.layout</code> items:
+</p>
+
+<dl>
+<dt><code>first</code></dt><dd><p>logical; should the layout item be drawn before
+the <code>obj</code> (TRUE), or after (FALSE)? This overrides
+the default order (points and lines in front, polygons and grids behind). </p>
+</dd>
+<dt><code>which</code></dt><dd><p>integer; controls to which panel a layout
+item should be added. If <code>which</code> is present in the main,
+top-level list it applies to all layout items; in sub-lists with
+layout items it denotes the (set of) panel(s) in which the layout
+item should be drawn.  Without a <code>which</code> item, layout items
+are drawn in each panel.</p>
+</dd>
+</dl>
+
+<p><code>sp.theme</code> returns a lattice theme; use, after loading package
+<code>lattice</code>, the command <code>trellis.par.set(sp.theme())</code>
+after a device is opened or changed to make this work. Currently, this only
+sets the colors to <a href="bpy.colors.html">bpy.colors</a>.
+</p>
+<p>If the attributes to be plotted are of type factor, spplot tries
+to create a legend that reflects this. In this case, the color ramp
+passed needs to be of the same length as the number of factor levels.
+The factor levels are derived from the first map; subsequent factors
+with different factor levels result in an error.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a>
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://edzer.github.io/sp/">https://edzer.github.io/sp/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="../../lattice/html/xyplot.html">xyplot</a>, <a href="../../lattice/html/levelplot.html">levelplot</a>,
+<a href="../../lattice/html/interaction.html">panel.identify</a> to identify objects </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(lattice)
+trellis.par.set(sp.theme()) # sets bpy.colors() ramp
+demo(meuse, ask = FALSE, echo = FALSE)
+l2 = list("SpatialPolygonsRescale", layout.north.arrow(), offset = c(181300,329800), 
+	scale = 400)
+l3 = list("SpatialPolygonsRescale", layout.scale.bar(), offset = c(180500,329800), 
+	scale = 500, fill=c("transparent","black"))
+l4 = list("sp.text", c(180500,329900), "0")
+l5 = list("sp.text", c(181000,329900), "500 m")
+
+spplot(meuse, c("ffreq"), sp.layout=list(l2,l3,l4,l5), col.regions= "black", 
+	pch=c(1,2,3), key.space=list(x=0.1,y=.95,corner=c(0,1)))
+spplot(meuse, c("zinc", "lead"), sp.layout=list(l2,l3,l4,l5, which = 2),
+	key.space=list(x=0.1,y=.95,corner=c(0,1)))
+# plotting factors:
+meuse$f = factor(sample(letters[6:10], 155, replace=TRUE),levels=letters[1:10])
+meuse$g = factor(sample(letters[1:5], 155, replace=TRUE),levels=letters[1:10])
+spplot(meuse, c("f","g"), col.regions=bpy.colors(10))
+
+if (require(RColorBrewer)) {
+	spplot(meuse, c("ffreq"), sp.layout=list(l2,l3,l4,l5),
+		col.regions=brewer.pal(3, "Set1"))
+}
+
+meuse.grid$g = factor(sample(letters[1:5], 3103, replace=TRUE),
+	levels=letters[1:10])
+meuse.grid$f = factor(sample(letters[6:10], 3103, replace=TRUE),
+	levels=letters[1:10])
+spplot(meuse.grid, c("f","g"), col.regions=bpy.colors(10))
+
+# example modifying colorkey for points:
+spplot(meuse["dist"], colorkey = list(
+	right = list( # see ?levelplot in package trellis, argument colorkey:
+		fun = draw.colorkey, 
+		args = list(
+			key = list(
+				at = seq(0, 1, .1), # colour breaks
+				col = bpy.colors(11), # colours
+				labels = list(
+					at = c(0, .2, .4, .6, .8, 1), 
+					labels = c("0x", "20x", "40x", "60x", "80x", "100x")
+				)
+			)
+		)
+	)
+))
+l6 = list(meuse.grid["dist"], col = grey(seq(.5,.9,length.out=10)))
+spplot(meuse, c("zinc", "lead"), sp.layout = l6)
+spplot(meuse, c("zinc", "lead"), 
+	sp.layout = list(meuse.grid, meuse.riv, col = 'grey'))
+
+#  Custom legend placement, taken from 
+# http://stackoverflow.com/questions/29344692/custom-placement-of-spplot-legend-in-the-map
+s &lt;- spplot(meuse.grid[,'dist'], colorkey = list(space = "left", height = 0.4))
+
+args &lt;- s$legend$left$args$key
+
+## Prepare list of arguments needed by `legend=` argument (as described in ?xyplot)
+library(lattice) # draw.colorkey
+legendArgs &lt;- list(fun = draw.colorkey,
+                   args = list(key = args),
+                   corner = c(0.05,.75))
+
+## Call spplot() again, this time passing in to legend the arguments
+## needed to print a color key
+spplot(meuse.grid[,'dist'], colorkey = FALSE,
+       legend = list(inside = legendArgs))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

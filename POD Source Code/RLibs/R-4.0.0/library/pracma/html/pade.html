@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Pade Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pade {pracma}"><tr><td>pade {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Pade Approximation
+</h2>
+
+<h3>Description</h3>
+
+<p>A Pade approximation is a rational function (of a specified order) whose
+power series expansion agrees with a given function and its derivatives
+to the highest possible order.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+pade(p1, p2 = c(1), d1 = 5, d2 = 5)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p1</code></td>
+<td>
+<p>polynomial representing or approximating the function,
+preferably the Taylor series of the function around some point.</p>
+</td></tr>
+<tr valign="top"><td><code>p2</code></td>
+<td>
+<p>if present, the function is given as <code>p1/p2</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>d1</code></td>
+<td>
+<p>the degree of the numerator of the rational function.</p>
+</td></tr>
+<tr valign="top"><td><code>d2</code></td>
+<td>
+<p>the degree of the denominator of the rational function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The relationship between the coefficients of <code>p1</code> (and <code>p2</code>)
+and <code>r1</code> and <code>r2</code> is determined by a system of linear equations.
+The system is then solved by applying the pseudo-inverse <code>pinv</code> for
+for the left-hand matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>r1</code> and <code>r2</code> for the numerator and 
+denominator polynomials, i.e. <code>r1/r2</code> is the rational approximation
+sought.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In general, errors for Pade approximations are smallest when the degrees
+of numerator and denominator are the same or when the degree of the
+numerator is one larger than that of the denominator.
+</p>
+
+
+<h3>References</h3>
+
+<p>Press, W. H., S. A. Teukolsky, W. T Vetterling, and B. P. Flannery (2007).
+Numerical Recipes: The Art of Numerical Computing. Third Edition,
+Cambridge University Press, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="taylor.html">taylor</a></code>, <code>ratInterp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Exponential function
+p1 &lt;- c(1/24, 1/6, 1/2, 1.0, 1.0)  # Taylor series of exp(x) at x=0
+R  &lt;- pade(p1); r1 &lt;- R$r1; r2 &lt;- R$r2
+f1 &lt;- function(x) polyval(r1, x) / polyval(r2, x)
+## Not run: 
+xs &lt;- seq(-1, 1, length.out=51); ys1 &lt;- exp(xs); ys2 &lt;- f1(xs)
+plot(xs, ys1, type = "l", col="blue")
+lines(xs, ys2, col = "red")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

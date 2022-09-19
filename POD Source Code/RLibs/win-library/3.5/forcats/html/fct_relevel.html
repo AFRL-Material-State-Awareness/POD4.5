@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reorder factor levels by hand</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_relevel {forcats}"><tr><td>fct_relevel {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reorder factor levels by hand</h2>
+
+<h3>Description</h3>
+
+<p>This is a generalisation of <code><a href="../../stats/html/relevel.html">stats::relevel()</a></code> that allows you to move any
+number of levels to any location.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_relevel(.f, ..., after = 0L)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.f</code></td>
+<td>
+<p>A factor (or character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Either a function (or formula), or character levels.
+</p>
+<p>A function will be called with the current levels, and the return
+value (which must be a character vector) will be used to relevel the
+function.
+</p>
+<p>Any levels not mentioned will be left in their existing order, after the
+explicitly mentioned levels. Supports tidy dots.</p>
+</td></tr>
+<tr valign="top"><td><code>after</code></td>
+<td>
+<p>Where should the new values be placed?</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- factor(c("a", "b", "c", "d"), levels = c("b", "c", "d", "a"))
+fct_relevel(f)
+fct_relevel(f, "a")
+fct_relevel(f, "b", "a")
+
+# Move to the third position
+fct_relevel(f, "a", after = 2)
+
+# Relevel to the end
+fct_relevel(f, "a", after = Inf)
+fct_relevel(f, "a", after = 3)
+
+# Relevel with a function
+fct_relevel(f, sort)
+fct_relevel(f, sample)
+fct_relevel(f, rev)
+
+# Using 'Inf' allows you to relevel to the end when the number
+# of levels is unknown or variable (e.g. vectorised operations)
+df  &lt;- forcats::gss_cat[, c("rincome", "denom")]
+lapply(df, levels)
+
+df2 &lt;- lapply(df, fct_relevel, "Don't know", after = Inf)
+lapply(df2, levels)
+
+# You'll get a warning if the levels don't exist
+fct_relevel(f, "e")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

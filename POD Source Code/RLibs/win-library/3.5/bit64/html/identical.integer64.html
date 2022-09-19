@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Identity function for class 'integer64'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for identical.integer64 {bit64}"><tr><td>identical.integer64 {bit64}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Identity function for class 'integer64'
+</h2>
+
+<h3>Description</h3>
+
+<p>This will discover any deviation between objects containing integer64 vectors. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ identical.integer64(x, y, num.eq = FALSE, single.NA = FALSE
+, attrib.as.set = TRUE, ignore.bytecode = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> atomic vector of class 'integer64' </p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p> atomic vector of class 'integer64' </p>
+</td></tr>
+<tr valign="top"><td><code>num.eq</code></td>
+<td>
+<p> see <code><a href="../../base/html/identical.html">identical</a></code> </p>
+</td></tr>
+<tr valign="top"><td><code>single.NA</code></td>
+<td>
+<p> see <code><a href="../../base/html/identical.html">identical</a></code> </p>
+</td></tr>
+<tr valign="top"><td><code>attrib.as.set</code></td>
+<td>
+<p> see <code><a href="../../base/html/identical.html">identical</a></code> </p>
+</td></tr>
+<tr valign="top"><td><code>ignore.bytecode</code></td>
+<td>
+<p> see <code><a href="../../base/html/identical.html">identical</a></code> </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is simply a wrapper to <code><a href="../../base/html/identical.html">identical</a></code> with default arguments <code>num.eq = FALSE, single.NA = FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single logical value, <code>TRUE</code> or <code>FALSE</code>, never <code>NA</code> and never anything other than a single value. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel &lt;Jens.Oehlschlaegel@truecluster.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="xor.integer64.html">==.integer64</a></code> <code><a href="../../base/html/identical.html">identical</a></code> <code><a href="bit64-package.html">integer64</a></code>  </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  i64 &lt;- as.double(NA); class(i64) &lt;- "integer64"
+  identical(i64-1, i64+1)
+  identical.integer64(i64-1, i64+1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit64</em> version 4.0.5 <a href="00Index.html">Index</a>]</div>
+</body></html>

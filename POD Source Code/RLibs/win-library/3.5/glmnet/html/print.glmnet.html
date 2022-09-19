@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: print a glmnet object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for print.glmnet {glmnet}"><tr><td>print.glmnet {glmnet}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>print a glmnet object</h2>
+
+<h3>Description</h3>
+
+<p>Print a summary of the glmnet path at each step along the path.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'glmnet'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>fitted glmnet object</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>significant digits in printout</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional print arguments</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The call that produced the object <code>x</code> is printed, followed by a three-column
+matrix
+with columns <code>Df</code>, <code>%dev</code> and <code>Lambda</code>. The <code>Df</code>
+column is the number of nonzero coefficients (Df is a reasonable
+name only for lasso fits). <code>%dev</code> is the percent deviance
+explained (relative to the null deviance).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The matrix above is silently returned</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jerome Friedman, Trevor Hastie and Rob Tibshirani<br />
+Maintainer: Trevor Hastie &lt;hastie@stanford.edu&gt;</p>
+
+
+<h3>References</h3>
+
+<p>Friedman, J., Hastie, T. and Tibshirani, R. (2008)
+<em>Regularization Paths for Generalized Linear Models via Coordinate
+Descent</em></p>
+
+
+<h3>See Also</h3>
+
+<p><code>glmnet</code>, <code>predict</code> and <code>coef</code> methods.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x=matrix(rnorm(100*20),100,20)
+y=rnorm(100)
+fit1=glmnet(x,y)
+print(fit1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>glmnet</em> version 2.0-16 <a href="00Index.html">Index</a>]</div>
+</body></html>

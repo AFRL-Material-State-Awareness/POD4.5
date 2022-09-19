@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Low-level functions for plotting text</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rgl.texts {rgl}"><tr><td>rgl.texts {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Low-level functions for plotting text
+</h2>
+
+<h3>Description</h3>
+
+<p>This is a low-level function for plotting text.  Users
+should normally use the high-level function <code><a href="texts.html">text3d</a></code> instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rgl.texts(x, y = NULL, z = NULL, text, 
+          adj = 0.5, pos = NULL, offset = 0.5, 
+          family = par3d("family"), font = par3d("font"), 
+          cex = par3d("cex"), useFreeType = par3d("useFreeType"), ...)
+rglFonts(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+<p>point coordinates.  Any reasonable way of defining the
+coordinates is acceptable.  See the function <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code>
+for details.</p>
+</td></tr>
+<tr valign="top"><td><code>text</code></td>
+<td>
+<p>text character vector to draw</p>
+</td></tr>
+<tr valign="top"><td><code>adj</code></td>
+<td>
+<p> one value specifying the horizontal adjustment, or two, 
+specifying horizontal and vertical adjustment respectively, or three, specifying adjustment in all
+three directions.</p>
+</td></tr>
+<tr valign="top"><td><code>pos</code></td>
+<td>
+<p> a position specifier for the text.  If specified, this
+overrides any <code>adj</code> value given. Values of 0, 1, 2, 3, 4, 5 and 6 respectively indicate positions on, below, to the left of, above, to the right of, in front of and behind the specified coordinates.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p> when <code>pos</code> is specified, this value gives the offset of the label from the specified coordinate in fractions of a character width.</p>
+</td></tr>
+<tr valign="top"><td><code> family </code></td>
+<td>
+<p>A device-independent font family name, or &quot;&quot; </p>
+</td></tr>
+<tr valign="top"><td><code> font </code></td>
+<td>
+<p>A numeric font number from 1 to 4 </p>
+</td></tr>
+<tr valign="top"><td><code> cex </code></td>
+<td>
+<p>A numeric character expansion value </p>
+</td></tr>
+<tr valign="top"><td><code> useFreeType </code></td>
+<td>
+<p>logical.  Should FreeType be used to draw text? (See details below.)</p>
+</td></tr>
+<tr valign="top"><td><code> ... </code></td>
+<td>
+<p>In <code>rgl.texts</code>, material properties; see <code><a href="material.html">rgl.material</a></code> for details.  In <code>rglFonts</code>, device dependent font definitions for use with FreeType.</p>
+</td></tr>  
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>adj</code> parameter determines the position of the text relative to the 
+specified coordinate.  Use <code>adj = c(0, 0)</code> to place the left bottom corner at
+<code>(x, y, z)</code>, <code>adj = c(0.5, 0.5)</code> to center the text there, and <code>adj = c(1, 1)</code>
+to put the right top corner there. All coordinates default to <code>0.5</code>.  
+Placement is done using the &quot;advance&quot; of
+the string and the &quot;ascent&quot; of the font relative to the baseline, when these metrics
+are known.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>rgl.texts</code> returns the object ID of the text object (or sprites, in case of <code>usePlotmath = TRUE</code>)
+invisibly.
+</p>
+<p><code>rglFonts</code> returns the current set of font definitions.
+</p>
+
+
+<h3>Fonts</h3>
+
+<p>Fonts are specified using the <code>family</code>, <code>font</code>, <code>cex</code>, 
+and <code>useFreeType</code> arguments.  Defaults for the currently active
+device may be set using <code><a href="par3d.html">par3d</a></code>, or for future devices
+using <code><a href="open3d.html">r3dDefaults</a></code>.
+</p>
+<p>The <code>family</code> specification is the same as for standard graphics, i.e.
+families <br />
+<code>c("serif", "sans", "mono", "symbol")</code> <br />
+are normally
+available, but users may add additional families.  <code>font</code> numbers
+are restricted to the range 1 to 4 for standard, bold, italic and bold italic
+respectively.  Font 5 is recoded as family <code>"symbol"</code>
+font 1, but that is not supported unless specifically
+installed, so should be avoided.
+</p>
+<p>Using an unrecognized value for <code>"family"</code> will result in
+the system standard font as used in RGL up to version 0.76.  That font
+is not resizable and <code>font</code> values are ignored.
+</p>
+<p>If <code>useFreeType</code> is <code>TRUE</code>, then RGL will use the FreeType
+anti-aliased fonts for drawing.  This is generally desirable, and it is the
+default on non-Windows systems if RGL was built to support FreeType.
+</p>
+<p>FreeType fonts are specified using the <code>rglFonts</code> function.  This function
+takes a vector of four filenames of TrueType font files which
+will be used for the four styles regular, bold, italic and bold italic.  The
+vector is passed with a name to be used as the family name, e.g.
+<code>rglFonts(sans = c("/path/to/FreeSans.ttf", ...))</code>.  In order to 
+limit the file size, the <span class="pkg">rgl</span> package ships with just 3 font files, for 
+regular versions of the <code>serif</code>, <code>sans</code> and <code>mono</code> families.  
+Additional free font files were available in the past from the
+Amaya project, though currently the
+<code><a href="rglExtrafonts.html">rglExtrafonts</a></code> function provides an easier way
+to register new fonts.
+</p>
+<p>On Windows the system fonts are acceptable and are used
+when <code>useFreeType = FALSE</code> (the current default in
+<code><a href="open3d.html">r3dDefaults</a></code>).  Mappings to <code>family</code> names
+are controlled by the <code>grDevices::windowsFonts()</code>
+function.
+</p>
+<p>Full pathnames should normally be used to specify font files.  If relative
+paths are used, they are interpreted differently by platform.  Currently
+Windows fonts are looked for in the Windows fonts folder, while other
+platforms use the current working directory.
+</p>
+<p>If FreeType fonts are not used, then bitmapped fonts will be used instead.
+On Windows these will be based on the fonts specified using the 
+<code><a href="../../grDevices/html/windowsFonts.html">windowsFonts</a></code> 
+function, and are resizable.
+Other platforms will use the default bitmapped font which is not
+resizable.  
+</p>
+<p>Bitmapped fonts have a limited number of characters supported; if any
+unsupported characters are used, an error will be thrown.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# These FreeType fonts are available from the Amaya project, and are not shipped
+# with rgl.  You would normally install them to the rgl/fonts directory
+# and use fully qualified pathnames, e.g. 
+# system.file("fonts/FreeSerif.ttf", package = "rgl")
+
+rglFonts(serif = c("FreeSerif.ttf", "FreeSerifBold.ttf", "FreeSerifItalic.ttf",
+                 "FreeSerifBoldItalic.ttf"),
+         sans  = c("FreeSans.ttf", "FreeSansBold.ttf", "FreeSansOblique.ttf",
+                 "FreeSansBoldOblique.ttf"),
+         mono  = c("FreeMono.ttf", "FreeMonoBold.ttf", "FreeMonoOblique.ttf",
+                 "FreeMonoBoldOblique.ttf"),
+         symbol= c("ESSTIX10.TTF", "ESSTIX12.TTF", "ESSTIX9_.TTF", 
+                 "ESSTIX11.TTF"))
+
+## End(Not run) 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

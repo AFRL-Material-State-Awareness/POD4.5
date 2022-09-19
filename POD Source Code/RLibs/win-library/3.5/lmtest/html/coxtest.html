@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Cox Test for Comparing Non-Nested Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for coxtest {lmtest}"><tr><td>coxtest {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Cox Test for Comparing Non-Nested Models</h2>
+
+<h3>Description</h3>
+
+<p><code>coxtest</code> performs the Cox test for comparing two non-nested models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+coxtest(formula1, formula2, data = list())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula1</code></td>
+<td>
+<p>either a symbolic description for the first model to be tested,
+or a fitted object of class <code>"lm"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>formula2</code></td>
+<td>
+<p>either a symbolic description for the second model to be tested,
+or a fitted object of class <code>"lm"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables in the
+model. By default the variables are taken from the environment
+which <code>coxtest</code> is called from.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The idea of the Cox test is the following: if the first model contains
+the correct set of regressors, then a fit of the regressors from the 
+second model to the fitted values from first model should have no further
+explanatory value. But if it has, it can be concluded that model 1 does not
+contain the correct set of regressors.
+</p>
+<p>Hence, to compare both models the fitted values of model
+1 are regressed on model 2 and vice versa. A Cox test statistic is computed
+for each auxiliary model which is asymptotically standard normally distributed.
+</p>
+<p>For further details, see the references.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"anova"</code> which contains the estimate plus corresponding
+standard error, z test statistic and p value for each auxiliary test.
+</p>
+
+
+<h3>References</h3>
+
+<p>R. Davidson &amp; J. MacKinnon (1981). Several Tests for Model Specification in the
+Presence of Alternative Hypotheses. <em>Econometrica</em>, <b>49</b>, 781-793.
+</p>
+<p>W. H. Greene (1993), <em>Econometric Analysis</em>, 2nd ed. Macmillan Publishing Company, New York.
+</p>
+<p>W. H. Greene (2003). <em>Econometric Analysis</em>, 5th ed. New Jersey, Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="jtest.html">jtest</a></code>, <code><a href="encomptest.html">encomptest</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Fit two competing, non-nested models for aggregate 
+## consumption, as in Greene (1993), Examples 7.11 and 7.12
+
+## load data and compute lags
+data(USDistLag)
+usdl &lt;- na.contiguous(cbind(USDistLag, lag(USDistLag, k = -1)))
+colnames(usdl) &lt;- c("con", "gnp", "con1", "gnp1")
+
+## C(t) = a0 + a1*Y(t) + a2*C(t-1) + u
+fm1 &lt;- lm(con ~ gnp + con1, data = usdl)
+
+## C(t) = b0 + b1*Y(t) + b2*Y(t-1) + v
+fm2 &lt;- lm(con ~ gnp + gnp1, data = usdl)
+
+## Cox test in both directions:
+coxtest(fm1, fm2)
+
+## ...and do the same for jtest() and encomptest().
+## Notice that in this particular case they are coincident.
+jtest(fm1, fm2)
+encomptest(fm1, fm2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;SpatialPixels&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SpatialPixels-class {sp}"><tr><td>SpatialPixels-class {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;SpatialPixels&quot; </h2>
+
+<h3>Description</h3>
+
+<p> class for defining a pixels, forming a
+possibly incomplete rectangular grid of arbitrary dimension </p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Objects are created by using e.g. 
+</p>
+<p>SpatialPixels(points)
+</p>
+<p>with points of class <a href="SpatialPoints-class.html">SpatialPoints-class</a>
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>grid</code></dt><dd><p> object of class <a href="GridTopology-class.html">GridTopology-class</a>, defining the
+grid topology (offset, cellsize, dim) </p>
+</dd>
+<dt><code>grid.index</code></dt><dd><p>integer; index of points in full grid</p>
+</dd>
+<dt><code>coords</code></dt><dd><p> coordinates of points, or bbox of grid </p>
+</dd>
+<dt><code>bbox</code>:</dt><dd><p>Object of class <code>"matrix"</code>; bounding box </p>
+</dd>
+<dt><code>proj4string</code>:</dt><dd><p>Object of class <code>"CRS"</code>; projection  </p>
+</dd>
+</dl>
+
+
+
+<h3>Extends</h3>
+
+<p>Class <code>"SpatialPoints"</code> directly;
+Class <code>"Spatial"</code>, by class <code>"SpatialPoints"</code>.
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>coordinates</dt><dd><p><code>signature(x = "SpatialPixels")</code>: calculates coordinates for
+each point on the grid; coordinates are not stored in objects of class SpatialGrid</p>
+</dd>
+<dt>summary</dt><dd><p><code>signature(object = "SpatialPixels")</code>: summarize object</p>
+</dd>
+<dt>plot</dt><dd><p><code>signature(x = "SpatialPixels")</code>: plots cell centers </p>
+</dd>
+<dt>&quot;[&quot;</dt><dd><p><code>signature(x = "SpatialPixels")</code>: select pixel cells; the argument
+<code>drop=FALSE</code> (default) does not recalculate grid topology for the selection, if
+<code>drop=TRUE</code> the grid topology is recomputed, and might change. </p>
+</dd>
+<dt>rbind</dt><dd><p><code>signature(x = "SpatialPixels")</code>: rbind-like method</p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p> Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a> </p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="SpatialPixelsDataFrame-class.html">SpatialPixelsDataFrame-class</a></code>, <code><a href="SpatialGrid-class.html">SpatialGrid-class</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(meuse.grid)
+pts = meuse.grid[c("x", "y")]
+y = SpatialPixels(SpatialPoints(pts))
+class(y)
+y
+summary(y)
+plot(y) # plots grid
+plot(y, grid = FALSE) # plots points
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

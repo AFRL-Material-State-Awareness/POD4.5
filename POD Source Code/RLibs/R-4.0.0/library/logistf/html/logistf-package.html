@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Firth's Bias-Reduced Logistic Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for logistf-package {logistf}"><tr><td>logistf-package {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Firth's Bias-Reduced Logistic Regression</h2>
+
+<h3>Description</h3>
+
+<p>Fits a binary logistic regression model using Firth's bias reduction method, and its modifications FLIC and FLAC, which both ensure that the sum of the predicted
+probabilities equals the number of events. If needed, the bias reduction can be turned off such that ordinary
+maximum likelihood logistic regression is obtained.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The package logistf provides a comprehensive tool to facilitate the application of Firth's correction for
+logistic regression analysis, including its modifications FLIC and FLAC.
+</p>
+<p>The call of the main function of the library follows the structure of the standard functions as lm or glm, requiring a data.frame and a
+formula for the model specification.  The resulting object belongs to the new class logistf, which includes penalized maximum likelihood
+(<code style="white-space: pre;">Firth-Logistic'- or </code>FL'-type) logistic regression parameters, standard errors, confidence limits, p-values, the value of the maximized
+penalized log likelihood, the linear predictors, the number of iterations needed to arrive at the maximum and much more.  Furthermore,
+specific methods for the resulting object are supplied. Additionally, a function to plot profiles of the penalized likelihood function and a
+function to perform penalized likelihood ratio tests have been included.
+</p>
+<p>In explaining the details of the estimation process we follow mainly the description in Heinze &amp; Ploner (2003). In general, maximum likelihood
+estimates are often prone to small sample bias. To reduce this bias, Firth (1993) suggested to maximize the penalized log likelihood
+<i>log L(beta)* = log L(beta) + 1/2 log|I(beta)|</i>, where <i>I(beta)</i> is the
+Fisher information matrix, i. e. minus the second derivative of the log likelihood. Applying this idea to logistic regression, the score
+function <i>U(beta)</i> is replaced by the modified score function
+<i>U(beta)* = U(beta) + a</i>, where <i>a</i> has <i>r</i>th entry
+<i>a_r = 0.5tr{I(beta)^{-1} [d I(beta)/d beta_r]}, r = 1,...,k</i>.
+Heinze and Schemper (2002) give the explicit formulae for <i>I(beta)</i>
+and <i>d I(beta)/d beta_r</i>.
+</p>
+<p>In our programs estimation of <i>beta</i> can be based on a Newton-Raphson
+algorithm or on iteratively reweighted least squares. Parameter values are initialized usually with 0, but in
+general the user can specify arbitrary starting values.
+</p>
+<p>With a starting value of <i>beta^(0)</i>, the penalized maximum
+likelihood estimate <i>beta</i> is obtained iteratively via Newton-Raphson:
+</p>
+<p style="text-align: center;"><i>beta^(s+1)= beta^(s) + I(beta^(s))^{-1} U(beta^(s))* </i></p>
+
+<p>If the penalized log likelihood evaluated at <i>&beta;^{(s+1)}</i> is less
+than that evaluated at <i>beta^(s)</i> , then (<i>beta^(s+1)</i> is
+recomputed by step-halving. For each entry <i>r</i> of <i>beta</i> with
+<i>r = 1,...,k</i> the absolute step size <i>|beta_r^(s+1)-beta_r^s|</i>
+is restricted to a maximal allowed value <code>maxstep</code>. These two means should avoid
+numerical problems during estimation. The iterative process is continued
+until the parameter estimates converge, i. e., until three criteria are met: the change in log likelihood is less than <code>lconv</code>,
+the maximum absolute element of the score vector is less than <code>gconv</code>, the maximum absolute change in beta is less than <code>xconv</code>.
+<code>lconv, gconv, xconv</code> can be controlled by <code>control=logistf.control(lconv=...,</code>
+<code>gconv=..., xconv=...)</code>.
+</p>
+<p>Computation of profile penalized likelihood confidence intervals for
+parameters (<code>logistpl</code>) follows the algorithm of Venzon and
+Moolgavkar (1988). For testing the hypothesis of <i>gamma = gamma_0</i>, let the likelihood ratio statistic
+</p>
+<p style="text-align: center;"><i>LR = 2 [ log L(gamma, delta) - log L(gamma_0,delta_{gamma_0})*]</i></p>
+
+<p>where <i>(gamma, delta)</i>  is the joint penalized maximum likelihood estimate of <i>beta=(gamma,delta)</i>, and <i>delta_{gamma_0}</i> is the penalized maximum
+likelihood estimate of <i>delta</i> when  <i>gamma= gamma_0</i>. The
+profile penalized likelihood confidence interval is the continuous set
+of values <i>gamma_0</i> for which <i>LR</i> does not exceed the <i>(1 - alpha)100</i>th
+percentile of the <i>chi^2_1</i>-distribution. The
+confidence limits can therefore be found iteratively by approximating
+the penalized log likelihood function in a neighborhood of <i>beta</i> by
+the quadratic function
+</p>
+<p style="text-align: center;"><i> l(beta+delta) = l(beta) + delta'U* - 0.5 delta' I delta </i></p>
+
+<p>where <i>U^* = U(beta)*</i> and <i>-I = -I(beta)</i>.
+</p>
+<p>In some situations computation of profile penalized likelihood
+confidence intervals may be time consuming since the iterative procedure
+outlined above has to be repeated for the lower and for the upper
+confidence limits of each of the k parameters. In other problems one may
+not be interested in interval estimation, anyway. In such cases, the
+user can request computation of Wald confidence intervals and P-values,
+which are based on the normal approximation of the parameter estimates
+and do not need any iterative estimation process. Note that from version 1.24.1 on, the variance-covariance matrix
+is based on the second derivative of the likelihood of the augmented data rather than the original data, which proved to be a better approximation if
+the user chooses to set a higher value for <i>&tau;</i>, the penalty strength.
+</p>
+<p>The adequacy of Wald confidence intervals for
+parameter estimates can be verified by plotting the profile penalized
+log likelihood (PPL) function. A symmetric shape of the PPL function
+allows use of Wald intervals, while an asymmetric shape demands profile
+penalized likelihood intervals (<cite>Heinze &amp; Schemper (2002)</cite>).  Further documentation
+can be found in <cite>Heinze &amp; Ploner (2004)</cite>.
+</p>
+<p>The package includes functions to work with multiply imputed data sets, such as generated by the <code><a href="../../mice/html/mice.html">mice</a></code> package.
+Results on individual fits can be pooled to obtain point and interval estimates, as well as profile likelihood confidence intervals and likelihood
+profiles in general (Heinze, Ploner and Beyea, 2013).
+</p>
+<p>Moreover, in the package the modifications FLIC and FLAC have been implemented, which were described in Puhr et al (2017) as solutions to obtain
+accurate predicted probabilities.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Georg Heinze <a href="mailto:georg.heinze@meduniwien.ac.at">georg.heinze@meduniwien.ac.at</a>, Meinhard Ploner and Lena Jiricka.
+</p>
+
+
+<h3>References</h3>
+
+<p>Firth D (1993). Bias reduction of maximum likelihood estimates. <em>Biometrika</em> 80, 27&ndash;38.
+</p>
+<p>Heinze G, Schemper M (2002). A solution to the problem of
+separation in logistic regression. <em>Statistics in Medicine</em> 21: 2409-2419.
+</p>
+<p>Heinze G, Ploner M (2003). Fixing the nonconvergence bug in
+logistic regression with SPLUS and SAS. <em>Computer Methods and Programs in Biomedicine</em> 71: 181-187.
+</p>
+<p>Heinze G, Ploner M (2004). Technical Report 2/2004: A SAS-macro, S-PLUS library and
+R package to perform logistic regression without convergence problems. Section of Clinical Biometrics, Department of
+Medical Computer Sciences, Medical University of Vienna, Vienna, Austria.
+<a href="http://www.meduniwien.ac.at/user/georg.heinze/techreps/tr2_2004.pdf">http://www.meduniwien.ac.at/user/georg.heinze/techreps/tr2_2004.pdf</a>
+</p>
+<p>Heinze G (2006). A comparative investigation of methods for logistic regression
+with separated or nearly separated data. <em>Statistics in Medicine</em> 25: 4216-4226.
+</p>
+<p>Heinze G, Ploner M, Beyea J (2013). Confidence intervals after multiple imputation: combining profile likelihood information from logistic regressions. <em>Statistics in Medicine</em> 32:5062-5076.
+</p>
+<p>Puhr R, Heinze G, Nold M, Lusa L, Geroldinger A (2017). Firth's logistic regression with rare events:
+accurate effect estimates and predictions? <em>Statistics in Medicine</em> 36: 2302-2317.
+</p>
+<p>Venzon DJ, Moolgavkar AH (1988). A method for computing profile-likelihood
+based confidence intervals. <em>Applied Statistics</em> 37:87-94.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.24.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

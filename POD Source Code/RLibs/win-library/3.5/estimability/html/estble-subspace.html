@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find an estimable subspace</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for estble.subspace {estimability}"><tr><td>estble.subspace {estimability}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Find an estimable subspace</h2>
+
+<h3>Description</h3>
+
+<p>Determine a transformation <code>B</code> of the rows of a matrix <code>L</code>
+such that <code>B %*% L</code> is estimable.
+A practical example is in jointly testing a set of contrasts <code>L</code>
+in a linear model, and we need to restrict to the subspace spanned by
+the rows of <code>L</code> that are estimable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+estble.subspace (L, nbasis, tol = 1e-8)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>L</code></td>
+<td>
+<p>A matrix of dimensions <em>k</em> by <em>p</em></p>
+</td></tr>
+<tr valign="top"><td><code>nbasis</code></td>
+<td>
+<p>A <em>k</em> by <em>b</em> matrix whose columns form a
+basis for non-estimable linear functions &ndash; such as is returned 
+by <code><a href="nonest.basis.html">nonest.basis</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>Numeric tolerance for assessing nonestimability. See
+<code><a href="nonest.basis.html">is.estble</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>We require <code>B</code> such that all the rows of <code>M = B %*% L</code>
+are estimable, i.e. orthogonal to the columns of <code>nbasis</code>.
+Thus, we need <code>B %*% L %*% nbasis</code> to be zero, or equivalently,
+<code>t(B)</code> must be in the null space of <code>t(L %*% nbasis)</code>.
+This can be found using <code><a href="nonest.basis.html">nonest.basis</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <em>r</em> by <em>p</em> matrix <code>M = B %*% L</code> 
+whose rows are all orthogonal to the columns of 
+<code>nbasis</code>. The matrix <code>B</code> is attached as <code>attr(M, "B")</code>.
+Note that if any rows of <code>L</code> were non-estimable, then <em>r</em>
+will be less than <em>k</em>. In fact, if there are no estimable functions 
+in the row space of <code>L</code>, then <em>r</em> = 0.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Russell V. Lenth &lt;russell-lenth@uiowa.edu&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+### Find a set of estimable interaction contrasts for a 3 x 4 design 
+### with two empty cells.
+des &lt;- expand.grid(A = factor(1:3), B = factor(1:4))
+des &lt;- des[-c(5, 12), ]  # cells (2,2) and (3,4) are empty
+
+X &lt;- model.matrix(~ A * B, data = des)
+N &lt;- nonest.basis(X)
+
+L &lt;- cbind(matrix(0, nrow = 6, ncol = 6), diag(6))
+# i.e., give nonzero weight only to interaction effects
+
+estble.subspace(L, N)
+
+# Tougher demo: create a variation where all rows of L are non-estimable
+LL &lt;- matrix(rnorm(36), ncol = 6) %*% L
+estble.subspace(LL, N)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>estimability</em> version 1.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

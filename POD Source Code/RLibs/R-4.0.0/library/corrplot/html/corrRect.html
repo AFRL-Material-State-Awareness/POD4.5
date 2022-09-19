@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw rectangle(s) on the correlation matrix graph.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for corrRect {corrplot}"><tr><td>corrRect {corrplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Draw rectangle(s) on the correlation matrix graph.</h2>
+
+<h3>Description</h3>
+
+<p>Draw rectangle(s) after the correlation matrix plotted. SUGGESTION: It's more convenient
+to draw rectangle(s) by using pipe operator '|&gt;' since R 4.1.0.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+corrRect(
+  corrRes = NULL,
+  index = NULL,
+  name = NULL,
+  namesMat = NULL,
+  col = "black",
+  lwd = 2,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>corrRes</code></td>
+<td>
+<p>List of the <code>corrplot()</code> returns.</p>
+</td></tr>
+<tr valign="top"><td><code>index</code></td>
+<td>
+<p>Vector, variable index of diag rect <code>c(Rect1from, Rect2from,
+Rect3from, ..., RectNto)</code> on the correlation matrix graph.
+It works when the colnames are the same as rownames, or both of them is NULL.
+It needs <code>corrRes</code> inputted.</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>Vector, variable name of diag rect <code>c(Rect1from, Rect2from,
+Rect3from, ..., RectNto)</code> on the correlation matrix graph.
+OIt works when the colnames are the same as rownames.
+It needs <code>corrRes</code> inputted.</p>
+</td></tr>
+<tr valign="top"><td><code>namesMat</code></td>
+<td>
+<p>4-length character vector or 4-columns character matrix,
+represents the names of xleft, ybottom, xright, ytop correspondingly.
+It needs <code>corrRes</code> inputted.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>Color of rectangles.</p>
+</td></tr>
+<tr valign="top"><td><code>lwd</code></td>
+<td>
+<p>Line width of rectangles.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments passing to function <code>rect()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>corrRect</code> needs one of <code>index</code>, <code>name</code> and <code>namesMat</code> inputted.
+While <code>corrRect.hclust</code> can get the members in each cluster
+based on hierarchical clustering (<code><a href="../../stats/html/hclust.html">hclust</a></code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>(Invisibly) returns input parameter <code>corrRes</code>,
+usually <code>list(corr, corrTrans, arg)</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Taiyun Wei
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(mtcars)
+M = cor(mtcars)
+
+r = rbind(c('gear', 'wt', 'qsec', 'carb'),
+        c('wt', 'gear', 'carb', 'qsec'))
+corrplot(M, order = 'AOE') -&gt; p
+corrRect(p, namesMat = r)
+
+# same as using pipe operator `|&gt;`
+if(getRversion() &gt;= '4.1.0') {
+  corrplot(M, order = 'AOE') |&gt; corrRect(namesMat = r)
+}
+
+
+r = c('gear', 'carb', 'qsec', 'wt')
+corrplot(M, order = 'AOE', type='lower') -&gt; p
+corrRect(p, namesMat = r)
+
+# same as using pipe operator `|&gt;`
+if(getRversion() &gt;= '4.1.0') {
+  corrplot(M, order = 'AOE', type='lower') |&gt;
+    corrRect(namesMat = r)
+}
+
+
+corrplot(M, order = 'hclust', type = 'upper') -&gt; p
+corrRect(p, index = c(1, 6, 11))
+
+# same as using pipe operator
+if(getRversion() &gt;= '4.1.0') {
+  corrplot(M, order = 'AOE', type='lower') |&gt;
+    corrRect(index = c(1, 6, 11))
+}
+
+
+corrplot(M, order = 'hclust') -&gt; p
+corrRect(p, name = c('carb', 'qsec', 'gear'))
+
+# same as using pipe operator
+if(getRversion() &gt;= '4.1.0') {
+  corrplot(M, order = 'hclust') |&gt;
+    corrRect(name = c('carb', 'qsec', 'gear'))
+}
+
+
+
+
+(order.hc = corrMatOrder(M, order = 'hclust'))
+(order.hc2 = corrMatOrder(M, order = 'hclust', hclust.method = 'ward.D'))
+M.hc  = M[order.hc, order.hc]
+M.hc2 = M[order.hc2, order.hc2]
+
+par(ask = TRUE)
+
+# same as: corrplot(M, order = 'hclust', addrect = 2)
+corrplot(M.hc)
+corrRect.hclust(corr = M.hc, k = 2)
+
+# same as: corrplot(M, order = 'hclust', addrect = 3)
+corrplot(M.hc)
+corrRect.hclust(corr = M.hc, k = 3)
+
+# same as: corrplot(M, order = 'hclust', hclust.method = 'ward.D', addrect = 2)
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 2, method = 'ward.D')
+
+# same as: corrplot(M, order = 'hclust', hclust.method = 'ward.D', addrect = 3)
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 3, method = 'ward.D')
+
+# same as: corrplot(M, order = 'hclust', hclust.method = 'ward.D', addrect = 4)
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 4, method = 'ward.D')
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>corrplot</em> version 0.92 <a href="00Index.html">Index</a>]</div>
+</body></html>

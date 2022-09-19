@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Separate groups with missing values</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for group2NA {plotly}"><tr><td>group2NA {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Separate groups with missing values</h2>
+
+<h3>Description</h3>
+
+<p>This function is used internally by plotly, but may also be useful to some
+power users. The details section explains when and why this function is useful.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+group2NA(
+  data,
+  groupNames = "group",
+  nested = NULL,
+  ordered = NULL,
+  retrace.first = inherits(data, "GeomPolygon")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>a data frame.</p>
+</td></tr>
+<tr valign="top"><td><code>groupNames</code></td>
+<td>
+<p>character vector of grouping variable(s)</p>
+</td></tr>
+<tr valign="top"><td><code>nested</code></td>
+<td>
+<p>other variables that group should be nested
+(i.e., ordered) within.</p>
+</td></tr>
+<tr valign="top"><td><code>ordered</code></td>
+<td>
+<p>a variable to arrange by (within nested &amp; groupNames). This
+is useful primarily for ordering by x</p>
+</td></tr>
+<tr valign="top"><td><code>retrace.first</code></td>
+<td>
+<p>should the first row of each group be appended to the
+last row? This is useful for enclosing polygons with lines.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If a group of scatter traces share the same non-positional characteristics
+(i.e., color, fill, etc), it is more efficient to draw them as a single trace
+with missing values that separate the groups (instead of multiple traces),
+In this case, one should also take care to make sure
+<a href="https://plotly.com/r/reference/#scatter-connectgaps">connectgaps</a>
+is set to <code>FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a data.frame with rows ordered by: <code>nested</code>,
+then <code>groupNames</code>, then <code>ordered</code>. As long as <code>groupNames</code>
+contains valid variable names, new rows will also be inserted to separate
+the groups.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# note the insertion of new rows with missing values 
+group2NA(mtcars, "vs", "cyl")
+
+# need to group lines by city somehow!
+plot_ly(txhousing, x = ~date, y = ~median) %&gt;% add_lines()
+
+# instead of using group_by(), you could use group2NA()
+tx &lt;- group2NA(txhousing, "city")
+plot_ly(tx, x = ~date, y = ~median) %&gt;% add_lines()
+
+# add_lines() will ensure paths are sorted by x, but this is equivalent
+tx &lt;- group2NA(txhousing, "city", ordered = "date")
+plot_ly(tx, x = ~date, y = ~median) %&gt;% add_paths()
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

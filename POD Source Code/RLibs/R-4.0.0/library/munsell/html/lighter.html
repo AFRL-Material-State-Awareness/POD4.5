@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Make a munsell colour lighter</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lighter {munsell}"><tr><td>lighter {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Make a munsell colour lighter</h2>
+
+<h3>Description</h3>
+
+<p>Increases the value of the Munsell colour.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lighter(col, steps = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>character vector of Munsell colours</p>
+</td></tr>
+<tr valign="top"><td><code>steps</code></td>
+<td>
+<p>number of steps to take in increasing value</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>character vector of Munsell colours
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+lighter("5PB 2/4")
+cols &lt;- c("5PB 2/4", "5Y 6/8")
+p &lt;- plot_mnsl(c(cols, lighter(cols), lighter(cols, 2)))
+p + ggplot2::facet_wrap(~ names, ncol = 2)
+# lighter and darker are usually reversible
+lighter(darker("5PB 2/4"))
+# unless you try to pass though white or black
+lighter(darker("5PB 1/4"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Characteristic Polynomial</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for charpoly {pracma}"><tr><td>charpoly {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Characteristic Polynomial
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the characteristic polynomial (and the inverse of the matrix, if
+requested) using the Faddeew-Leverrier method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+charpoly(a, info = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>quadratic matrix; size should not be much larger than 100.</p>
+</td></tr>
+<tr valign="top"><td><code>info</code></td>
+<td>
+<p>logical; if true, the inverse matrix will also be reported.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the characteristic polynomial recursively. In the last step
+the determinant and the inverse matrix can be determined without any
+extra cost (if the matrix is not singular).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either the characteristic polynomial as numeric vector, or a list with
+components <code>cp</code>, the characteristic polynomial, <code>det</code>, the
+determinant, and <code>inv</code>, the inverse matrix, will be returned.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hou, S.-H. (1998). Classroom Note: A Simple Proof of the Leverrier&ndash;Faddeev
+Characteristic Polynomial Algorithm, SIAM Review, 40(3), pp. 706&ndash;709.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+a &lt;- magic(5)
+A &lt;- charpoly(a, info = TRUE)
+A$cp
+roots(A$cp)
+A$det
+zapsmall(A$inv %*% a)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

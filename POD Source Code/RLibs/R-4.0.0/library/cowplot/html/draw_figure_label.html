@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add a label to a figure</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for draw_figure_label {cowplot}"><tr><td>draw_figure_label {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add a label to a figure</h2>
+
+<h3>Description</h3>
+
+<p>The main purpose of this function is to add labels specifying extra information about
+the figure, such as &quot;Figure 1&quot;, or &quot;A&quot; - often useful in cowplots with more than
+one pane. The function is similar to <code>draw_plot_label</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+draw_figure_label(
+  label,
+  position = c("top.left", "top", "top.right", "bottom.left", "bottom", "bottom.right"),
+  size,
+  fontface,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>label</code></td>
+<td>
+<p>Label to be drawn</p>
+</td></tr>
+<tr valign="top"><td><code>position</code></td>
+<td>
+<p>Position of the label, can be one of &quot;top.left&quot;, &quot;top&quot;, &quot;top.right&quot;, &quot;bottom.left&quot;, &quot;bottom&quot;, &quot;bottom.right&quot;. Default is &quot;top.left&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>size</code></td>
+<td>
+<p>(optional) Size of the label to be drawn. Default is the text size of the current theme</p>
+</td></tr>
+<tr valign="top"><td><code>fontface</code></td>
+<td>
+<p>(optional) Font face of the label to be drawn. Default is the font face of the current theme</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>draw_plot_label</code></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Ulrik Stervbo (ulrik.stervbo @ gmail.com)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="draw_plot_label.html">draw_plot_label</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(ggplot2)
+df &lt;- data.frame(
+  x = 1:10, y1 = 1:10, y2 = (1:10)^2, y3 = (1:10)^3, y4 = (1:10)^4
+)
+
+p1 &lt;- ggplot(df, aes(x, y1)) + geom_point()
+p2 &lt;- ggplot(df, aes(x, y2)) + geom_point()
+p3 &lt;- ggplot(df, aes(x, y3)) + geom_point()
+p4 &lt;- ggplot(df, aes(x, y4)) + geom_point()
+
+# Create a simple grid
+p &lt;- plot_grid(p1, p2, p3, p4, align = 'hv')
+
+# Default font size and position
+p + draw_figure_label(label = "Figure 1")
+
+# Different position and font size
+p + draw_figure_label(label = "Figure 1", position = "bottom.right", size = 10)
+
+# Using bold font face
+p + draw_figure_label(label = "Figure 1", fontface = "bold")
+
+# Making the label red and slanted
+p + draw_figure_label(label = "Figure 1", angle = -45, colour = "red")
+
+# Labeling an individual plot
+ggdraw(p2) + draw_figure_label(label = "Figure 1", position = "bottom.right", size = 10)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

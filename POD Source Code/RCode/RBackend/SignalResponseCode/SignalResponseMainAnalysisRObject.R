@@ -209,6 +209,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       # H_0: Normally distributed  VS H_a: Not Normally distributed
                                       # Fail to reject, so normal enough.
                                       shapiro=shapiro.test(studres(linearM))
+                                      # Breusch-Pagan test
                                       # Non-constant variance test... H_0: Constant variance VS H_a: Non-constant variance
                                       # We fail to reject H_0, so non-constant variance isn't a problem. 
                                       nonConst=ncvTest(linearM)

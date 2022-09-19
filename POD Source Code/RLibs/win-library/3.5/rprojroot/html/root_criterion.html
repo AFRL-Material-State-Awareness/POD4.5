@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Is a directory the project root?</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for root_criterion {rprojroot}"><tr><td>root_criterion {rprojroot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Is a directory the project root?</h2>
+
+<h3>Description</h3>
+
+<p>Objects of the <code>root_criterion</code> class decide if a
+given directory is a project root.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+root_criterion(testfun, desc, subdir = NULL)
+
+is_root_criterion(x)
+
+as_root_criterion(x)
+
+## S3 method for class 'character'
+as_root_criterion(x)
+
+## S3 method for class 'root_criterion'
+as_root_criterion(x)
+
+## S3 method for class 'root_criterion'
+x | y
+
+has_file(filepath, contents = NULL, n = -1L, fixed = FALSE)
+
+has_dir(filepath)
+
+has_file_pattern(pattern, contents = NULL, n = -1L, fixed = FALSE)
+
+has_basename(basename, subdir = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>testfun</code></td>
+<td>
+<p><code style="white-space: pre;">[function|list(function)]</code><br />
+A function with one parameter that returns <code>TRUE</code>
+if the directory specified by this parameter is the project root,
+and <code>FALSE</code> otherwise. Can also be a list of such functions.</p>
+</td></tr>
+<tr valign="top"><td><code>desc</code></td>
+<td>
+<p><code style="white-space: pre;">[character]</code><br />
+A textual description of the test criterion, of the same length
+as <code>testfun</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>subdir</code></td>
+<td>
+<p><code style="white-space: pre;">[character]</code><br />
+Subdirectories to start the search in, if found</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><code style="white-space: pre;">[object]</code><br />
+An object.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p><code style="white-space: pre;">[object]</code><br />
+An object.</p>
+</td></tr>
+<tr valign="top"><td><code>filepath</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+File path (can contain directories).</p>
+</td></tr>
+<tr valign="top"><td><code>contents, fixed</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+If <code>contents</code> is <code>NULL</code> (the default), file contents are not checked.
+Otherwise, <code>contents</code> is a regular expression
+(if <code>fixed</code> is <code>FALSE</code>) or a search string (if <code>fixed</code> is <code>TRUE</code>), and
+file contents are checked matching lines.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p><code style="white-space: pre;">[integerish(1)]</code><br />
+Maximum number of lines to read to check file contents.</p>
+</td></tr>
+<tr valign="top"><td><code>pattern</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+Regular expression to match the file name against.</p>
+</td></tr>
+<tr valign="top"><td><code>basename</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+The required name of the root directory.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Construct criteria using <code>root_criterion</code> in a very general fashion
+by specifying a function with a <code>path</code> argument, and a description.
+</p>
+<p>The <code>as_root_criterion()</code> function accepts objects of class
+<code>root_criterion</code>, and character values; the latter will be
+converted to criteria using <code>has_file</code>.
+</p>
+<p>Root criteria can be combined with the <code>|</code> operator. The result is a
+composite root criterion that requires either of the original criteria to
+match.
+</p>
+<p>The <code>has_file()</code> function constructs a criterion that checks for the
+existence of a specific file (which itself can be in a subdirectory of the
+root) with specific contents.
+</p>
+<p>The <code>has_dir()</code> function constructs a criterion that checks for the
+existence of a specific directory.
+</p>
+<p>The <code>has_file_pattern()</code> function constructs a criterion that checks for the
+existence of a file that matches a pattern, with specific contents.
+</p>
+<p>The <code>has_basename()</code> function constructs a criterion that checks if the
+<code><a href="../../base/html/basename.html">base::basename()</a></code> of the root directory has a specific name,
+with support for case-insensitive file systems.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An S3 object of class <code>root_criterion</code> wit the following members:
+</p>
+
+<dl>
+<dt><code>testfun</code></dt><dd><p>The <code>testfun</code> argument</p>
+</dd>
+<dt><code>desc</code></dt><dd><p>The <code>desc</code> argument</p>
+</dd>
+<dt><code>subdir</code></dt><dd><p>The <code>subdir</code> argument</p>
+</dd>
+<dt><code>find_file</code></dt><dd><p>A function with <code>...</code> and <code>path</code> arguments
+that returns a path relative to the root,
+as specified by this criterion.
+The optional <code>path</code> argument specifies the starting directory,
+which defaults to <code>"."</code>.
+The function forwards to <code><a href="find_root_file.html">find_root_file()</a></code>,
+which passes <code>...</code> directly to <code>file.path()</code>
+if the first argument is an absolute path.
+</p>
+</dd>
+<dt><code>make_fix_file</code></dt><dd><p>A function with a <code>path</code> argument that
+returns a function that finds paths relative to the root.  For a
+criterion <code>cr</code>, the result of <code>cr$make_fix_file(".")(...)</code>
+is identical to <code>cr$find_file(...)</code>. The function created by
+<code>make_fix_file()</code> can be saved to a variable to be more independent
+of the current working directory.
+</p>
+</dd>
+</dl>
+
+
+
+<h3>Examples</h3>
+
+<pre>
+root_criterion(function(path) file.exists(file.path(path, "somefile")), "has somefile")
+has_file("DESCRIPTION")
+is_r_package
+## Not run: 
+is_r_package$find_file
+is_r_package$make_fix_file(".")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rprojroot</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

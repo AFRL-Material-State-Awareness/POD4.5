@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Initiate a plotly-geo object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot_geo {plotly}"><tr><td>plot_geo {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Initiate a plotly-geo object</h2>
+
+<h3>Description</h3>
+
+<p>Use this function instead of <code><a href="plot_ly.html">plot_ly()</a></code> to initialize
+a plotly-geo object. This enforces the entire plot so use
+the scattergeo trace type, and enables higher level geometries
+like <code><a href="add_trace.html">add_polygons()</a></code> to work
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plot_geo(data = data.frame(), ..., offline = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame (optional).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed along to <code><a href="plot_ly.html">plot_ly()</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>offline</code></td>
+<td>
+<p>whether or not to include geo assets so that the map
+can be viewed with or without an internet connection. The plotlyGeoAssets
+package is required for this functionality.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="plot_ly.html">plot_ly()</a></code>, <code><a href="plot_mapbox.html">plot_mapbox()</a></code>, <code><a href="ggplotly.html">ggplotly()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+map_data("world", "canada") %&gt;%
+  group_by(group) %&gt;%
+  plot_geo(x = ~long, y = ~lat) %&gt;%
+  add_markers(size = I(1))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

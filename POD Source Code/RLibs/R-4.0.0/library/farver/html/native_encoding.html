@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert to and from the R native colour representation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for native-encoding {farver}"><tr><td>native-encoding {farver}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert to and from the R native colour representation</h2>
+
+<h3>Description</h3>
+
+<p>Colours in R are internally encoded as integers when they are passed around
+to graphics devices. The encoding splits the 32 bit in the integer between
+red, green, blue, and alpha, so that each get 8 bit, equivalent to 256
+values. It is very seldom that an R user is subjected to this representation,
+but it is present in the <code>nativeRaster</code> format which can be obtained from
+e.g. capturing the content of a graphic device (using <code>dev.cap()</code>) or reading
+in PNG files using <code>png::readPNG(native = TRUE)</code>. It is very rare that you
+might need to convert back and forth between this format, but it is provided
+here for completeness.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+encode_native(colour, ...)
+
+decode_native(colour)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>colour</code></td>
+<td>
+<p>For <code>encode_native</code> either a vector of hex-encoded
+colours/colour names or a matrix encoding colours in any of the supported
+colour spaces. If the  latter, the colours will be encoded to a hex string
+using <code><a href="encode_colour.html">encode_colour()</a></code> first. For <code>decode_native</code> it is a vector of
+integers.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Arguments passed on to <code><a href="encode_colour.html">encode_colour()</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>encode_native()</code> returns an integer vector and <code>decode_native()</code>
+returns a character vector, both matching the length of the input.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# Get native representation of navyblue and #228B22
+native_col &lt;- encode_native(c('navyblue', '#228B22'))
+native_col
+
+# Convert back
+decode_native(native_col)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>farver</em> version 2.1.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

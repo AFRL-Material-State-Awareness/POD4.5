@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Modify the arguments of a call.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for call_modify {lazyeval}"><tr><td>call_modify {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Modify the arguments of a call.</h2>
+
+<h3>Description</h3>
+
+<p>Modify the arguments of a call.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+call_modify(call, new_args, env = parent.frame())
+
+call_standardise(call, env = parent.frame())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>A call to modify. It is first standardised with
+<code><a href="call_modify.html">call_standardise</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>new_args</code></td>
+<td>
+<p>A named list of expressions (constants, names or calls)
+used to modify the call. Use <code>NULL</code> to remove arguments.</p>
+</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>Environment in which to look up call value.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+call &lt;- quote(mean(x, na.rm = TRUE))
+call_standardise(call)
+
+# Modify an existing argument
+call_modify(call, list(na.rm = FALSE))
+call_modify(call, list(x = quote(y)))
+
+# Remove an argument
+call_modify(call, list(na.rm = NULL))
+
+# Add a new argument
+call_modify(call, list(trim = 0.1))
+
+# Add an explicit missing argument
+call_modify(call, list(na.rm = quote(expr = )))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

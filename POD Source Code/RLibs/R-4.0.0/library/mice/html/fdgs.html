@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fifth Dutch growth study 2009</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fdgs {mice}"><tr><td>fdgs {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fifth Dutch growth study 2009</h2>
+
+<h3>Description</h3>
+
+<p>Age, height, weight and region of 10030 children measured within the Fifth
+Dutch Growth Study 2009
+</p>
+
+
+<h3>Format</h3>
+
+<p><code>fdgs</code> is a data frame with 10030 rows and 8 columns:
+</p>
+
+<dl>
+<dt>id</dt><dd><p>Person number</p>
+</dd>
+<dt>reg</dt><dd><p>Region (factor, 5 levels)</p>
+</dd>
+<dt>age</dt><dd><p>Age (years)</p>
+</dd>
+<dt>sex</dt><dd><p>Sex (boy, girl)</p>
+</dd>
+<dt>hgt</dt><dd><p>Height (cm)</p>
+</dd>
+<dt>wgt</dt><dd><p>Weight (kg)</p>
+</dd>
+<dt>hgt.z</dt><dd><p>Height Z-score</p>
+</dd>
+<dt>wgt.z</dt><dd><p>Weight Z-score</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>The data set contains data from children of Dutch descent (biological parents
+are born in the Netherlands). Children with growth-related diseases were
+excluded. The data were used to construct new growth charts of children of
+Dutch descent (Schonbeck 2013), and to calculate overweight and obesity
+prevalence (Schonbeck 2011).
+</p>
+<p>Some groups were underrepresented.  Multiple imputation was used to create
+synthetic cases that were used to correct for the nonresponse. See Van Buuren
+(2012), chapter 8 for details.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Schonbeck, Y., Talma, H., van Dommelen, P., Bakker, B., Buitendijk,
+S. E., Hirasing, R. A., van Buuren, S. (2011).  Increase in prevalence of
+overweight in Dutch children and adolescents: A comparison of nationwide
+growth studies in 1980, 1997 and 2009.  <em>PLoS ONE</em>, <em>6</em>(11),
+e27608.
+</p>
+<p>Schonbeck, Y., Talma, H., van Dommelen, P., Bakker, B., Buitendijk, S. E.,
+Hirasing, R. A., \&amp; van Buuren, S. (2013). The world's tallest nation has
+stopped growing taller: the height of Dutch children from 1955 to 2009.
+<em>Pediatric Research</em>, <em>73</em>(3), 371-377.
+</p>
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/sec-nonresponse.html#fifth-dutch-growth-study"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Boca Raton, FL.: Chapman &amp; Hall/CRC Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+
+data &lt;- data(fdgs)
+summary(data)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

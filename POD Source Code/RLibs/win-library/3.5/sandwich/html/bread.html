@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Bread for Sandwiches</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bread {sandwich}"><tr><td>bread {sandwich}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Bread for Sandwiches</h2>
+
+<h3>Description</h3>
+
+<p>Generic function for extracting an estimator for the bread of
+sandwiches.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bread(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted model object.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed to methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A matrix containing an estimator for the expectation of the negative
+derivative of the estimating functions, usually the Hessian.
+Typically, this should be an <i>k x k</i> matrix corresponding
+to <i>k</i> parameters. The rows and columns should be named
+as in <code><a href="../../stats/html/coef.html">coef</a></code> or <code><a href="../../stats/html/terms.html">terms</a></code>, respectively.
+</p>
+<p>The default method tries to extract <code><a href="../../stats/html/vcov.html">vcov</a></code> and <code><a href="../../stats/html/nobs.html">nobs</a></code>
+and simply computes their product.
+</p>
+
+
+<h3>References</h3>
+
+<p>Zeileis A (2006).
+&ldquo;Object-Oriented Computation of Sandwich Estimators.&rdquo;
+<em>Journal of Statistical Software</em>, <b>16</b>(9), 1&ndash;16.
+doi: <a href="http://doi.org/10.18637/jss.v016.i09">10.18637/jss.v016.i09</a>
+</p>
+<p>Zeileis A, Köll S, Graham N (2020).
+&ldquo;Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R.&rdquo;
+<em>Journal of Statistical Software</em>, <b>95</b>(1), 1&ndash;36.
+doi: <a href="http://doi.org/10.18637/jss.v095.i01">10.18637/jss.v095.i01</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/lm.html">lm</a></code>, <code><a href="../../stats/html/glm.html">glm</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## linear regression
+x &lt;- sin(1:10)
+y &lt;- rnorm(10)
+fm &lt;- lm(y ~ x)
+
+## bread: n * (x'x)^{-1}
+bread(fm)
+solve(crossprod(cbind(1, x))) * 10
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sandwich</em> version 3.0-2 <a href="00Index.html">Index</a>]</div>
+</body></html>

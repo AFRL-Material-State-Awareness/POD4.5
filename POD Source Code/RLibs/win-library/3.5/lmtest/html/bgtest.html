@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Breusch-Godfrey Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bgtest {lmtest}"><tr><td>bgtest {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Breusch-Godfrey Test</h2>
+
+<h3>Description</h3>
+
+<p><code>bgtest</code> performs the Breusch-Godfrey test for higher-order
+serial correlation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bgtest(formula, order = 1, order.by = NULL, type = c("Chisq", "F"),
+  data = list(), fill = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a symbolic description for the model to be tested
+(or a fitted <code>"lm"</code> object).</p>
+</td></tr>
+<tr valign="top"><td><code>order</code></td>
+<td>
+<p>integer. maximal order of serial correlation to be tested.</p>
+</td></tr>
+<tr valign="top"><td><code>order.by</code></td>
+<td>
+<p>Either a vector <code>z</code> or a formula with a single explanatory
+variable like <code>~ z</code>. The observations in the model
+are ordered by the size of <code>z</code>. If set to <code>NULL</code> (the
+default) the observations are assumed to be ordered (e.g., a
+time series).</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>the type of test statistic to be returned. Either
+<code>"Chisq"</code> for the Chi-squared test statistic or
+<code>"F"</code> for the F test statistic.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables in the
+model. By default the variables are taken from the environment
+which <code>bgtest</code> is called from.</p>
+</td></tr>
+<tr valign="top"><td><code>fill</code></td>
+<td>
+<p>starting values for the lagged residuals in the auxiliary
+regression. By default <code>0</code> but can also be set to <code>NA</code>.</p>
+</td></tr>   
+</table>
+
+
+<h3>Details</h3>
+
+<p>Under <i>H_0</i> the test statistic is asymptotically Chi-squared with
+degrees of freedom as given in <code>parameter</code>.
+If <code>type</code> is set to <code>"F"</code> the function returns
+a finite sample version of the test statistic, employing an <i>F</i>
+distribution with degrees of freedom as given in <code>parameter</code>.
+</p>
+<p>By default, the starting values for the lagged residuals in the auxiliary
+regression are chosen to be 0 (as in Godfrey 1978) but could also be
+set to <code>NA</code> to omit them.
+</p>
+<p><code>bgtest</code> also returns the coefficients and estimated covariance
+matrix from the auxiliary regression that includes the lagged residuals.
+Hence, <code><a href="coeftest.html">coeftest</a></code> can be used to inspect the results. (Note,
+however, that standard theory does not always apply to the standard errors
+and t-statistics in this regression.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>"bgtest"</code> inheriting from <code>"htest"</code> containing the
+following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>statistic</code></td>
+<td>
+<p>the value of the test statistic.</p>
+</td></tr>
+<tr valign="top"><td><code>p.value</code></td>
+<td>
+<p>the p-value of the test.</p>
+</td></tr>
+<tr valign="top"><td><code>parameter</code></td>
+<td>
+<p>degrees of freedom.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was
+performed.</p>
+</td></tr>
+<tr valign="top"><td><code>data.name</code></td>
+<td>
+<p>a character string giving the name(s) of the data.</p>
+</td></tr>
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>coefficient estimates from the auxiliary regression.</p>
+</td></tr>
+<tr valign="top"><td><code>vcov</code></td>
+<td>
+<p>corresponding covariance matrix estimate.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>David Mitchell &lt;david.mitchell@dotars.gov.au&gt;, Achim Zeileis</p>
+
+
+<h3>References</h3>
+
+<p>Breusch, T.S. (1978): Testing for Autocorrelation in Dynamic Linear
+Models, <em>Australian Economic Papers</em>, 17, 334-355.
+</p>
+<p>Godfrey, L.G. (1978): Testing Against General Autoregressive and
+Moving Average Error Models when the Regressors Include Lagged
+Dependent Variables', <em>Econometrica</em>, 46, 1293-1301.
+</p>
+<p>Wooldridge, J.M. (2013): <em>Introductory Econometrics: A Modern Approach</em>,
+5th edition, South-Western College.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="dwtest.html">dwtest</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+     ## Generate a stationary and an AR(1) series
+     x &lt;- rep(c(1, -1), 50)
+
+     y1 &lt;- 1 + x + rnorm(100)
+
+     ## Perform Breusch-Godfrey test for first-order serial correlation:
+     bgtest(y1 ~ x)
+     ## or for fourth-order serial correlation
+     bgtest(y1 ~ x, order = 4)
+     ## Compare with Durbin-Watson test results:
+     dwtest(y1 ~ x)
+
+     y2 &lt;- filter(y1, 0.5, method = "recursive")
+     bgtest(y2 ~ x)
+     bg4 &lt;- bgtest(y2 ~ x, order = 4)
+     bg4
+     coeftest(bg4)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

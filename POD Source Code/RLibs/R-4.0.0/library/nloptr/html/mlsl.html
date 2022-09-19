@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Multi-level Single-linkage</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mlsl {nloptr}"><tr><td>mlsl {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Multi-level Single-linkage</h2>
+
+<h3>Description</h3>
+
+<p>The &ldquo;Multi-Level Single-Linkage&rdquo; (MLSL) algorithm for global optimization
+searches by a sequence of local optimizations from random starting points.
+A modification of MLSL is included using a low-discrepancy sequence (LDS)
+instead of pseudorandom numbers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mlsl(
+  x0,
+  fn,
+  gr = NULL,
+  lower,
+  upper,
+  local.method = "LBFGS",
+  low.discrepancy = TRUE,
+  nl.info = FALSE,
+  control = list(),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>initial point for searching the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>objective function that is to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>gr</code></td>
+<td>
+<p>gradient of function <code>fn</code>; will be calculated numerically if
+not specified.</p>
+</td></tr>
+<tr valign="top"><td><code>lower, upper</code></td>
+<td>
+<p>lower and upper bound constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>local.method</code></td>
+<td>
+<p>only <code>BFGS</code> for the moment.</p>
+</td></tr>
+<tr valign="top"><td><code>low.discrepancy</code></td>
+<td>
+<p>logical; shall a low discrepancy variation be used.</p>
+</td></tr>
+<tr valign="top"><td><code>nl.info</code></td>
+<td>
+<p>logical; shall the original NLopt info been shown.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>list of options, see <code>nl.opts</code> for help.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>MLSL is a <code style="white-space: pre;">multistart' algorithm: it works by doing a sequence of local optimizations (using some other local optimization algorithm) from random or low-discrepancy starting points.  MLSL is distinguished, however by a </code>clustering' heuristic that helps it to avoid repeated searches of the same
+local optima, and has some theoretical guarantees of finding all local
+optima in a finite number of local minimizations.
+</p>
+<p>The local-search portion of MLSL can use any of the other algorithms in
+NLopt, and in particular can use either gradient-based or derivative-free
+algorithms.  For this wrapper only gradient-based <code>L-BFGS</code> is available
+as local method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>the optimal solution found so far.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>the function value corresponding to <code>par</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of (outer) iterations, see <code>maxeval</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>integer code indicating successful completion (&gt; 0)
+or a possible error number (&lt; 0).</p>
+</td></tr>
+<tr valign="top"><td><code>message</code></td>
+<td>
+<p>character string produced by NLopt and giving additional
+information.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>If you don't set a stopping tolerance for your local-optimization
+algorithm, MLSL defaults to <code>ftol_rel=1e-15</code> and <code>xtol_rel=1e-7</code>
+for the local searches.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans W. Borchers
+</p>
+
+
+<h3>References</h3>
+
+<p>A. H. G. Rinnooy Kan and G. T. Timmer, &ldquo;Stochastic global
+optimization methods&rdquo; Mathematical Programming, vol. 39, p. 27-78 (1987).
+</p>
+<p>Sergei Kucherenko and Yury Sytsko, &ldquo;Application of deterministic
+low-discrepancy sequences in global optimization,&rdquo; Computational
+Optimization and Applications, vol. 30, p. 297-318 (2005).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="direct.html">direct</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+### Minimize the Hartmann6 function
+hartmann6 &lt;- function(x) {
+    n &lt;- length(x)
+    a &lt;- c(1.0, 1.2, 3.0, 3.2)
+    A &lt;- matrix(c(10.0,  0.05, 3.0, 17.0,
+                   3.0, 10.0,  3.5,  8.0,
+                  17.0, 17.0,  1.7,  0.05,
+                   3.5,  0.1, 10.0, 10.0,
+                   1.7,  8.0, 17.0,  0.1,
+                   8.0, 14.0,  8.0, 14.0), nrow=4, ncol=6)
+    B  &lt;- matrix(c(.1312,.2329,.2348,.4047,
+                   .1696,.4135,.1451,.8828,
+                   .5569,.8307,.3522,.8732,
+                   .0124,.3736,.2883,.5743,
+                   .8283,.1004,.3047,.1091,
+                   .5886,.9991,.6650,.0381), nrow=4, ncol=6)
+    fun &lt;- 0.0
+    for (i in 1:4) {
+        fun &lt;- fun - a[i] * exp(-sum(A[i,]*(x-B[i,])^2))
+    }
+    return(fun)
+}
+S &lt;- mlsl(x0 = rep(0, 6), hartmann6, lower = rep(0,6), upper = rep(1,6),
+            nl.info = TRUE, control=list(xtol_rel=1e-8, maxeval=1000))
+## Number of Iterations....: 1000
+## Termination conditions:
+##   stopval: -Inf, xtol_rel: 1e-08, maxeval: 1000, ftol_rel: 0, ftol_abs: 0
+## Number of inequality constraints:  0
+## Number of equality constraints:    0
+## Current value of objective function:  -3.32236801141552
+## Current value of controls:
+##   0.2016895 0.1500107 0.476874 0.2753324 0.3116516 0.6573005
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

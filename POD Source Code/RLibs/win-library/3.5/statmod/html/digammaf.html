@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Digamma generalized linear model family</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Digamma {statmod}"><tr><td>Digamma {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Digamma generalized linear model family</h2>
+
+<h3>Description</h3>
+
+<p>Produces a Digamma generalized linear model family object. The Digamma distribution is the
+distribution of the unit deviance for a gamma response.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Digamma(link = "log")
+unitdeviance.digamma(y, mu)
+cumulant.digamma(theta)
+meanval.digamma(theta)
+d2cumulant.digamma(theta)
+varfun.digamma(mu)
+canonic.digamma(mu)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>link</code></td>
+<td>
+<p>character string, number or expressing specifying the link function. See <code>quasi</code> for specification of this argument.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>numeric vector of (positive) response values</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>numeric vector of (positive) fitted values</p>
+</td></tr>
+<tr valign="top"><td><code>theta</code></td>
+<td>
+<p>numeric vector of values of the canonical variable, equal to <i>-1/&phi;</i> where <i>&phi;</i> is the dispersion parameter of the gamma distribution</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This family is useful for dispersion modelling with gamma generalized linear models.
+The Digamma distribution describes the distribution of the unit deviances for a gamma family, in the same way that the gamma distribution itself describes the distribution of the unit deviances for Gaussian or inverse Gaussian families.
+The Digamma distribution is so named because it is dual to the gamma distribution in the above sense, and because the <code>digamma function</code> appears in its mean function.
+</p>
+<p>Suppose that <i>y</i> follows a gamma distribution with mean <i>&mu;</i> and dispersion parameter <i>&phi;</i>, so the variance of <i>y</i> is <i>&phi; &mu;^2</i>.
+Write <i>d(y,&mu;)</i> for the gamma distribution unit deviance.
+Then <code>meanval.digamma(-1/phi)</code> gives the mean of <i>d(y,&mu;)</i> and <code>2*d2cumulant.digamma(-1/phi)</code> gives the variance.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>Digamma</code> produces a glm family object, which is a list of functions and expressions used by <code>glm</code> in its iteratively reweighted least-squares algorithm. See <code>family</code> for details.
+</p>
+<p>The other functions take vector arguments and produce vector values of the same length and called by <code>Digamma</code>.
+<code>unitdeviance.digamma</code> gives the unit deviances of the family, equal to the squared deviance residuals.
+<code>cumulant.digamma</code> is the cumulant function.  If the dispersion is unity, then successive derivatives of the cumulant function give successive cumulants of the Digamma distribution.  <code>meanvalue.digamma</code> gives the first derivative, which is the expected value.
+<code>d2cumulant.digamma</code> gives the second derivative, which is the variance.
+<code>canonic.digamma</code> is the inverse of <code>meanvalue.digamma</code> and gives the canonical parameter as a function of the mean parameter.
+<code>varfun.digamma</code> is the variance function of the Digamma family, the variance as a function of the mean.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Smyth, G. K. (1989). Generalized linear models with varying dispersion. <em>J. R. Statist. Soc. B</em>, <b>51</b>, 47-61.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/family.html">quasi</a></code>, <code><a href="../../stats/html/make.link.html">make.link</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Test for log-linear dispersion trend in gamma regression
+y &lt;- rchisq(20,df=1)
+x &lt;- 1:20
+out.gam &lt;- glm(y~x,family=Gamma(link="log"))
+d &lt;- residuals(out.gam)^2
+out.dig &lt;- glm(d~x,family=Digamma(link="log"))
+summary(out.dig,dispersion=2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

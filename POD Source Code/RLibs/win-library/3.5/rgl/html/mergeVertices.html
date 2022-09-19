@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Merge duplicate vertices in mesh object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mergeVertices {rgl}"><tr><td>mergeVertices {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Merge duplicate vertices in mesh object
+</h2>
+
+<h3>Description</h3>
+
+<p>A mesh object can have the same vertex listed twice.  Each copy is
+allowed to have separate normals, texture coordinates, and color.
+However, it is more efficient to have just a single copy if those
+differences aren't needed.  For automatic smoothing using 
+<code><a href="addNormals.html">addNormals</a></code>, triangles and quads need to share vertices.
+This function merges identical (or similar) vertices to achieve this.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mergeVertices(mesh, 
+              notEqual = NULL, 
+              attribute = "vertices", 
+              tolerance = sqrt(.Machine$double.eps))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>mesh</code></td>
+<td>
+
+<p>A <code><a href="mesh3d.html">mesh3d</a></code> object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>notEqual</code></td>
+<td>
+
+<p>A logical matrix indicating that certain pairs should not be merged
+even if they appear identical.
+</p>
+</td></tr>
+<tr valign="top"><td><code>attribute</code></td>
+<td>
+
+<p>Which attribute(s) should be considered in comparing vertices? 
+A vector chosen from <code>c("vertices", "colors", "normals", "texcoords"))</code>
+</p>
+</td></tr>
+<tr valign="top"><td><code>tolerance</code></td>
+<td>
+
+<p>When comparing vertices using <code><a href="../../base/html/all.equal.html">all.equal</a></code>, this tolerance
+will be used to ignore rounding error.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A new mesh object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="as.mesh3d.rglId.html">as.mesh3d.rglId</a></code>, which often constructs mesh
+objects containing a lot of duplication.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+(mesh1 &lt;- cuboctahedron3d(col = rainbow(14), meshColor = "face"))
+id &lt;- shade3d(mesh1)
+(mesh2 &lt;- as.mesh3d(id))
+shade3d(translate3d(mesh2, 3, 0, 0))
+(mesh3 &lt;- mergeVertices(mesh2))
+shade3d(translate3d(mesh3, 6, 0, 0))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

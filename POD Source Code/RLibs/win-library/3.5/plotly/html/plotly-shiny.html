@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Shiny bindings for plotly</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plotly-shiny {plotly}"><tr><td>plotly-shiny {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Shiny bindings for plotly</h2>
+
+<h3>Description</h3>
+
+<p>Output and render functions for using plotly within Shiny
+applications and interactive Rmd documents.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plotlyOutput(
+  outputId,
+  width = "100%",
+  height = "400px",
+  inline = FALSE,
+  reportTheme = TRUE
+)
+
+renderPlotly(expr, env = parent.frame(), quoted = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>outputId</code></td>
+<td>
+<p>output variable to read from</p>
+</td></tr>
+<tr valign="top"><td><code>width, height</code></td>
+<td>
+<p>Must be a valid CSS unit (like <code>"100%"</code>,
+<code>"400px"</code>, <code>"auto"</code>) or a number, which will be coerced to a
+string and have <code>"px"</code> appended. Note that, for height, using &quot;auto&quot;
+or &quot;100%&quot; generally will not work as expected, because of how
+height is computed with HTML/CSS.</p>
+</td></tr>
+<tr valign="top"><td><code>inline</code></td>
+<td>
+<p>use an inline (<code>span()</code>) or block container
+(<code>div()</code>) for the output</p>
+</td></tr>
+<tr valign="top"><td><code>reportTheme</code></td>
+<td>
+<p>whether or not to report CSS styles (if a sufficient
+version of shiny and htmlwidgets is available).</p>
+</td></tr>
+<tr valign="top"><td><code>expr</code></td>
+<td>
+<p>An expression that generates a plotly</p>
+</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>The environment in which to evaluate <code>expr</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>quoted</code></td>
+<td>
+<p>Is <code>expr</code> a quoted expression (with <code>quote()</code>)? This
+is useful if you want to save an expression in a variable.</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

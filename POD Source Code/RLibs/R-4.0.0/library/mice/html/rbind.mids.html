@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Combine 'mids' objects by rows</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rbind.mids {mice}"><tr><td>rbind.mids {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Combine <code>mids</code> objects by rows</h2>
+
+<h3>Description</h3>
+
+<p>This function combines two <code>mids</code> objects rowwise into a single
+<code>mids</code> object, or combines a <code>mids</code> object with a vector, matrix,
+factor or dataframe rowwise into a <code>mids</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rbind.mids(x, y = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A <code>mids</code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>A <code>mids</code> object, or a <code>data.frame</code>, <code>matrix</code>, <code>factor</code>
+or <code>vector</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional <code>data.frame</code>, <code>matrix</code>, <code>vector</code> or <code>factor</code>.
+These can be given as named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If <code>y</code> is a
+<code>mids</code> object, then <code>rbind</code> requires that the number of
+multiple imputations in <code>x</code> and <code>y</code> is identical. Also,
+columns of <code>x$data</code> and <code>y$data</code> should match.
+</p>
+<p>If <code>y</code> is not a <code>mids</code> object, the columns of <code>x$data</code>
+and <code>y</code> should match. The <code>where</code> matrix for <code>y</code> is set
+to <code>FALSE</code>, signaling that any missing values
+in <code>y</code> were not imputed. The <code>ignore</code> vector for <code>y</code> is
+set to <code>FALSE</code>, elements of <code>y</code> will therefore influence
+the parameters of the imputation model in future iterations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An S3 object of class <code>mids</code>
+</p>
+
+
+<h3>Note</h3>
+
+<p>The function construct the elements of the new <code>mids</code> object as follows:
+</p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;">
+<code>data</code>     </td><td style="text-align: left;"> Rowwise combination of the (incomplete) data in <code>x</code> and <code>y</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>imp</code>      </td><td style="text-align: left;"> Equals <code>rbind(x$imp[[j]], y$imp[[j]])</code> if <code>y</code> is <code>mids</code> object; otherwise
+the data of <code>y</code> will be copied</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>m</code>        </td><td style="text-align: left;"> Equals <code>x$m</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>where</code>    </td><td style="text-align: left;"> Rowwise combination of <code>where</code> arguments</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>blocks</code>   </td><td style="text-align: left;"> Equals <code>x$blocks</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>call</code>     </td><td style="text-align: left;"> Vector, <code>call[1]</code> creates <code>x</code>, <code>call[2]</code> is call to <code>rbind.mids</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>nmis</code>     </td><td style="text-align: left;"> <code>x$nmis</code> + <code>y$nmis</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>method</code>   </td><td style="text-align: left;"> Taken from <code>x$method</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>predictorMatrix</code> </td><td style="text-align: left;"> Taken from <code>x$predictorMatrix</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>visitSequence</code>   </td><td style="text-align: left;"> Taken from <code>x$visitSequence</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>formulas</code>  </td><td style="text-align: left;"> Taken from <code>x$formulas</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>post</code>      </td><td style="text-align: left;"> Taken from <code>x$post</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>blots</code>     </td><td style="text-align: left;"> Taken from <code>x$blots</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>ignore</code>    </td><td style="text-align: left;"> Concatenate <code>x$ignore</code> and <code>y$ignore</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>seed</code>            </td><td style="text-align: left;"> Taken from <code>x$seed</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>iteration</code>       </td><td style="text-align: left;"> Taken from <code>x$iteration</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>lastSeedValue</code>   </td><td style="text-align: left;"> Taken from <code>x$lastSeedValue</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>chainMean</code>       </td><td style="text-align: left;"> Set to <code>NA</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>chainVar</code>        </td><td style="text-align: left;"> Set to <code>NA</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>loggedEvents</code>    </td><td style="text-align: left;"> Taken from <code>x$loggedEvents</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>version</code>    </td><td style="text-align: left;"> Taken from <code>x$version</code></td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+<code>date</code>       </td><td style="text-align: left;"> Taken from <code>x$date</code>
+</td>
+</tr>
+
+</table>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Karin Groothuis-Oudshoorn, Stef van Buuren
+</p>
+
+
+<h3>References</h3>
+
+<p>van Buuren S and Groothuis-Oudshoorn K (2011). <code>mice</code>:
+Multivariate Imputation by Chained Equations in <code>R</code>. <em>Journal of
+Statistical Software</em>, <b>45</b>(3), 1-67.
+doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="cbind.mids.html">cbind.mids</a></code>, <code><a href="ibind.html">ibind</a></code>, <code><a href="mids-class.html">mids</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+imp1 &lt;- mice(nhanes[1:13, ], m = 2, maxit = 1, print = FALSE)
+imp5 &lt;- mice(nhanes[1:13, ], m = 2, maxit = 2, print = FALSE)
+mylist &lt;- list(age = NA, bmi = NA, hyp = NA, chl = NA)
+
+nrow(complete(rbind(imp1, imp5)))
+nrow(complete(rbind(imp1, mylist)))
+
+nrow(complete(rbind(imp1, data.frame(mylist))))
+nrow(complete(rbind(imp1, complete(imp5))))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

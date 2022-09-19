@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: String Concatenation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for strcat {pracma}"><tr><td>strcat {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>String Concatenation</h2>
+
+<h3>Description</h3>
+
+<p>Concatenate all strings  in a character vector
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+strcat(s1, s2 = NULL, collapse = "")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>s1</code></td>
+<td>
+<p>character string or vectors</p>
+</td></tr>
+<tr valign="top"><td><code>s2</code></td>
+<td>
+<p>character string or vector, or NULL (default)</p>
+</td></tr>
+<tr valign="top"><td><code>collapse</code></td>
+<td>
+<p>character vector of length 1 (at best a single character)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Concatenate all strings  in character vector <code>s1</code>, if <code>s2</code> is
+<code>NULL</code>, or cross-concatenate all string elements in <code>s1</code> and
+<code>s2</code> using <code>collapse</code> as &lsquo;glue&rsquo;.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a character string or character vector
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/paste.html">paste</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+strcat(c("a", "b", "c"))                        #=&gt; "abc"
+strcat(c("a", "b"), c("1", "2"), collapse="x")  #=&gt; "ax1" "ax2" "bx1" "bx2"
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

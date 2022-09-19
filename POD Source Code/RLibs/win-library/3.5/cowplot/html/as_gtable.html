@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert plot or other graphics object into a gtable</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as_gtable {cowplot}"><tr><td>as_gtable {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert plot or other graphics object into a gtable</h2>
+
+<h3>Description</h3>
+
+<p>This function does its best attempt to take whatever you provide it and turn it into a gtable.
+It is primarily meant to convert ggplot plots into gtables, but it will also take any grid
+object (grob), a recorded R base plot, or a function that generates an R base plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as_gtable(plot)
+
+plot_to_gtable(plot)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p>The plot or other graphics object to convert into a gtable. Here, <code>plot</code> can be
+any object handled by <code><a href="as_grob.html">as_grob()</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>To convert ggplot plots, the function needs to use a null graphics device. This can be set
+with <code><a href="set_null_device.html">set_null_device()</a></code>.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

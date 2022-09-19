@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get or (re)set the last Python error encountered.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_clear_last_error {reticulate}"><tr><td>py_clear_last_error {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get or (re)set the last Python error encountered.</h2>
+
+<h3>Description</h3>
+
+<p>Get or (re)set the last Python error encountered.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_clear_last_error()
+
+py_last_error(exception)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>exception</code></td>
+<td>
+<p>A python exception object. If provided, the provided
+exception is set as the last exception.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>For <code>py_last_error()</code>, <code>NULL</code> if no error has yet been encountered.
+Otherwise, a named list with entries:
+</p>
+
+<ul>
+<li> <p><code>"type"</code>: R string, name of the exception class.
+</p>
+</li>
+<li> <p><code>"value"</code>: R string, formatted exception message.
+</p>
+</li>
+<li> <p><code>"traceback"</code>: R character vector, the formatted python traceback,
+</p>
+</li>
+<li> <p><code>"message"</code>: The full formatted raised exception, as it would be printed in
+Python. Includes the traceback, type, and value.
+</p>
+</li></ul>
+
+<p>And attribute <code>"exception"</code>, a <code>'python.builtin.Exception'</code> object.
+</p>
+<p>The named list has <code>class</code> <code>"py_error"</code>, and has a default <code>print</code> method
+that is the equivalent of <code>cat(py_last_error()$message)</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# run python code that might error,
+# without modifying the user-visible python exception
+
+safe_len &lt;- function(x) {
+  last_err &lt;- py_last_error()
+  tryCatch({
+    # this might raise a python exception if x has no `__len__` method.
+    import_builtins()$len(x)
+  }, error = function(e) {
+    # py_last_error() was overwritten, is now "no len method for 'object'"
+    py_last_error(last_err) # restore previous exception
+    -1L
+  })
+}
+
+safe_len(py_eval("object"))
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

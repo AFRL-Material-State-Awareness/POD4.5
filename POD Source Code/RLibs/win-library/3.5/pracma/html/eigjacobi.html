@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Jacobi Eigenvalue Method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for eigjacobi {pracma}"><tr><td>eigjacobi {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Jacobi Eigenvalue Method
+</h2>
+
+<h3>Description</h3>
+
+<p>Jacobi's iteration method for eigenvalues and eigenvectors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+eigjacobi(A, tol = .Machine$double.eps^(2/3))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>a real symmetric matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>requested tolerance.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Jacobi eigenvalue method repeatedly performs (Givens) transformations
+until the matrix becomes almost diagonal.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with components <code>V</code>, a matrix containing the
+eigenvectors as columns, and <code>D</code> a vector of the eigenvalues.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This R implementation works well up to 50x50-matrices. 
+</p>
+
+
+<h3>References</h3>
+
+<p>Mathews, J. H., and K. D. Fink (2004). Numerical Methods Using Matlab.
+Fourth edition, Pearson education, Inc., New Jersey.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="eig.html">eig</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- matrix(c( 1.06, -0.73,  0.77, -0.67,
+              -0.73,  2.64,  1.04,  0.72,
+               0.77,  1.04,  3.93, -2.14,
+              -0.67,  0.72, -2.14,  2.04), 4, 4, byrow = TRUE)
+eigjacobi(A)
+# $V
+#            [,1]       [,2]       [,3]       [,4]
+# [1,] 0.87019414 -0.3151209  0.1975473 -0.3231656
+# [2,] 0.11138094  0.8661855  0.1178032 -0.4726938
+# [3,] 0.07043799  0.1683401  0.8273261  0.5312548
+# [4,] 0.47475776  0.3494040 -0.5124734  0.6244140
+# 
+# $D
+# [1] 0.66335457 3.39813189 5.58753257 0.02098098
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

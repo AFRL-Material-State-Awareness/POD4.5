@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: U.S. Macroeconomic Time Series</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for jocci {lmtest}"><tr><td>jocci {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>U.S. Macroeconomic Time Series</h2>
+
+<h3>Description</h3>
+
+<p>Several macroeconomic time series from the U.S.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data(fyff)
+data(gmdc)
+data(ip)
+data(jocci)
+data(lhur)
+data(pw561)
+</pre>
+
+
+<h3>Format</h3>
+
+<p>All data sets are multivariate monthly time series from
+1959(8) to 1993(12) (except 1993(10) for <code>jocci</code>) with variables
+</p>
+
+<dl>
+<dt>y</dt><dd><p>original time series,</p>
+</dd>
+<dt>dy</dt><dd><p>transformed times series (first differences
+or log first differences),</p>
+</dd>
+<dt>dy1</dt><dd><p>transformed series at lag 1,</p>
+</dd>
+<dt>dy2</dt><dd><p>transformed series at lag 2,</p>
+</dd>
+<dt>dy3</dt><dd><p>transformed series at lag 3,</p>
+</dd>
+<dt>dy4</dt><dd><p>transformed series at lag 4,</p>
+</dd>
+<dt>dy5</dt><dd><p>transformed series at lag 5,</p>
+</dd>
+<dt>dy6</dt><dd><p>transformed series at lag 6.</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>The description from Stock &amp; Watson (1996) for the time series
+(with the transformation used):
+</p>
+
+<dl>
+<dt>fyff</dt><dd><p>interest rate (first differences),</p>
+</dd>
+<dt>gmdc</dt><dd><p>pce, implicit price deflator: pce (1987 = 100) (log first differences),</p>
+</dd>
+<dt>ip</dt><dd><p>index of industrial production (log first differences),</p>
+</dd>
+<dt>jocci</dt><dd><p>department of commerce commodity price index (log first differences),</p>
+</dd>
+<dt>lhur</dt><dd><p>unemployment rate: all workers, 16 years &amp; over (%, sa) (first differences),</p>
+</dd>
+<dt>pw561</dt><dd><p>producer price index: crude petroleum (82 = 100, nsa) (log first differences).</p>
+</dd>
+</dl>
+
+<p>Stock &amp; Watson (1996) fitted an AR(6) model to all transformed time series.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Stock &amp; Watson (1996) study the stability of 76 macroeconomic time series, which can be obtained
+from Mark W. Watson's homepage at <a href="http://www.princeton.edu/~mwatson/ddisk/bivtvp.zip">http://www.princeton.edu/~mwatson/ddisk/bivtvp.zip</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>J.H. Stock &amp; M.W. Watson (1996),
+Evidence on Structural Instability in Macroeconomic Time Series Relations.
+<em>Journal of Business &amp; Economic Statistics</em> <b>14</b>, 11&ndash;30.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(jocci)
+
+dwtest(dy ~ 1, data = jocci)
+bgtest(dy ~ 1, data = jocci)
+ar6.model &lt;- dy ~ dy1 + dy2 + dy3 + dy4 + dy5 +dy6
+bgtest(ar6.model, data = jocci)
+
+var.model &lt;- ~ I(dy1^2) + I(dy2^2) + I(dy3^2) + I(dy4^2) + I(dy5^2) + I(dy6^2)
+bptest(ar6.model, var.model, data = jocci)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

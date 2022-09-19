@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Isotonic Autocorrelation Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for isoacf {sandwich}"><tr><td>isoacf {sandwich}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Isotonic Autocorrelation Function</h2>
+
+<h3>Description</h3>
+
+<p>Autocorrelation function (forced to be decreasing by isotonic regression).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+isoacf(x, lagmax = NULL, weave1 = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector.</p>
+</td></tr>
+<tr valign="top"><td><code>lagmax</code></td>
+<td>
+<p>numeric. The maximal lag of the autocorrelations.</p>
+</td></tr>
+<tr valign="top"><td><code>weave1</code></td>
+<td>
+<p>logical. If set to <code>TRUE</code> <code>isoacf</code>
+uses the <code>acf.R</code> and <code>pava.blocks</code> function from the
+original <code>weave</code> package, otherwise R's own <code>acf</code> and
+<code>isoreg</code> functions are used.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>isoacf</code> computes the autocorrelation function (ACF)
+of <code>x</code> enforcing the ACF to be decreasing by isotonic regression.
+See also Robertson et al. (1988).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>isoacf</code> returns a numeric vector containing the ACF.
+</p>
+
+
+<h3>References</h3>
+
+<p>Lumley T &amp; Heagerty P (1999).
+&ldquo;Weighted Empirical Adaptive Variance Estimators for Correlated Data Regression.&rdquo;
+<em>Journal of the Royal Statistical Society B</em>, <b>61</b>,
+459&ndash;477.
+</p>
+<p>Robertson T, Wright FT, Dykstra RL (1988).
+<em>Order Restricted Statistical Inference</em>.
+John Wiley and Sons, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="weightsLumley.html">weave</a></code>, <code><a href="weightsLumley.html">weightsLumley</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- filter(rnorm(100), 0.9, "recursive")
+isoacf(x)
+acf(x, plot = FALSE)$acf
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sandwich</em> version 3.0-2 <a href="00Index.html">Index</a>]</div>
+</body></html>

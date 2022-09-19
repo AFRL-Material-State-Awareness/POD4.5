@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw an arrow</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for arrow3d {rgl}"><tr><td>arrow3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Draw an arrow
+</h2>
+
+<h3>Description</h3>
+
+<p>Draws various types of arrows in a scene.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+arrow3d(p0 = c(1, 1, 1), p1 = c(0, 0, 0), 
+        barblen, s = 1/3, theta = pi/12, 
+        type = c("extrusion", "lines", "flat", "rotation"), 
+        n = 3, width = 1/3, thickness = 0.618 * width, 
+        spriteOrigin = NULL, 
+        plot = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p0</code></td>
+<td>
+
+<p>The base of the arrow.
+</p>
+</td></tr>
+<tr valign="top"><td><code>p1</code></td>
+<td>
+
+<p>The head of the arrow.
+</p>
+</td></tr>
+<tr valign="top"><td><code>barblen</code></td>
+<td>
+
+<p>The length of the barbs (in display coordinates).
+Default given by <code>s</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>s</code></td>
+<td>
+
+<p>The length of the barbs as a fraction of line length.  Ignored if <code>barblen</code> is present.
+</p>
+</td></tr>
+<tr valign="top"><td><code>theta</code></td>
+<td>
+
+<p>Opening angle of barbs
+</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+
+<p>Type of arrow to draw.  Choose one from the list
+of defaults.  Can be abbreviated.  See below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+
+<p>Number of barbs.
+</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+
+<p>Width of shaft as fraction of barb width.
+</p>
+</td></tr>
+<tr valign="top"><td><code>thickness</code></td>
+<td>
+
+<p>Thickness of shaft as fraction of barb width.
+</p>
+</td></tr>
+<tr valign="top"><td><code>spriteOrigin</code></td>
+<td>
+
+<p>If arrow is to be replicated as sprites, the origins relative
+to which the sprites are drawn.
+</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+
+<p>If <code>TRUE</code> (the default), plot the object;
+otherwise return the computed data that
+would be used to plot it.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Material properties passed to <code><a href="polygon3d.html">polygon3d</a></code>, <code><a href="shade3d.html">shade3d</a></code> or <code><a href="3dobjects.html">segments3d</a></code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Four types of arrows can be drawn.  The shapes
+of all of them are affected by <code>p0</code>, <code>p1</code>, <code>barblen</code>,
+<code>s</code>, <code>theta</code>, material properties
+in <code>...</code>, and <code>spriteOrigin</code>.  Other parameters 
+only affect some of the types, as shown.
+</p>
+
+<dl>
+<dt><code>"extrusion"</code></dt><dd><p>(default) A 3-dimensional
+flat arrow, drawn with <code><a href="shade3d.html">shade3d</a></code>.  Affected by <code>width</code>, <code>thickness</code> and
+<code>smooth</code>.</p>
+</dd>
+<dt><code>"lines"</code></dt><dd><p>Drawn with lines, similar to <code><a href="../../graphics/html/arrows.html">arrows</a></code>, drawn with <code><a href="3dobjects.html">segments3d</a></code>.  Affected by <code>n</code>.</p>
+</dd>
+<dt><code>"flat"</code></dt><dd><p>A flat arrow, drawn with <code><a href="polygon3d.html">polygon3d</a></code>.  Affected by <code>width</code> and <code>smooth</code>.</p>
+</dd>
+<dt><code>"rotation"</code></dt><dd><p>A solid of rotation, 
+drawn with <code><a href="shade3d.html">shade3d</a></code>.  Affected by 
+<code>n</code> and <code>width</code>.</p>
+</dd>
+</dl>
+
+<p>Normally this function draws just one arrow from
+<code>p0</code> to <code>p1</code>, but
+if <code>spriteOrigin</code> is given (in any form
+that <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a>(spriteOrigin)</code> can
+handle), arrows will be drawn for each point
+specified, with <code>p0</code> and <code>p1</code> 
+interpreted relative to those origins.  The
+arrows will be drawn as 3D sprites which will
+maintain their orientation as the scene is rotated, so this is a good way to indicate
+particular locations of interest in the scene.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>plot = TRUE</code> (the default), this is
+called mainly for the side effect of drawing
+the arrow; invisibly returns the id(s) of 
+the objects drawn.
+</p>
+<p>If <code>plot = FALSE</code>, the data that would be
+used in the plot (not including material
+properties) is returned.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Design based on <code>heplots::arrow3d</code>, which contains modifications by Michael Friendly
+to a function posted by Barry Rowlingson to R-help on 1/10/2010.  Additions by Duncan Murdoch.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xyz &lt;- matrix(rnorm(300), ncol = 3)
+plot3d(xyz)
+arrow3d(xyz[1,], xyz[2,], type = "extrusion", col = "red")
+arrow3d(xyz[3,], xyz[4,], type = "flat",      col = "blue")
+arrow3d(xyz[5,], xyz[6,], type = "rotation",  col = "green")
+arrow3d(xyz[7,], xyz[8,], type = "lines",     col = "black")
+arrow3d(spriteOrigin = xyz[9:12,],            col = "purple")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coercion from and to zoo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.zoo {zoo}"><tr><td>as.zoo {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coercion from and to zoo</h2>
+
+<h3>Description</h3>
+
+<p>Methods for coercing <code>"zoo"</code> objects to other classes and
+a generic function <code>as.zoo</code> for coercing objects to class <code>"zoo"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.zoo(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object,</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to <code><a href="zoo.html">zoo</a></code> when the return
+object is created.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>as.zoo</code> currently has a default method and methods for <code><a href="../../stats/html/ts.html">ts</a></code>,
+<code><a href="../../fts/html/fts.html">fts</a></code>, <code><a href="../../tseries/html/irts.html">irts</a></code>,
+<code><a href="../../coda/html/mcmc.html">mcmc</a></code>, <code><a href="../../tis/html/tis.html">tis</a></code>, <code><a href="../../xts/html/xts.html">xts</a></code> 
+objects (and <code><a href="zoo.html">zoo</a></code> objects themselves).
+</p>
+<p>Methods for coercing objects of class <code>"zoo"</code> to other classes
+currently include: <code><a href="../../stats/html/ts.html">as.ts</a></code>, <code><a href="../../base/html/matrix.html">as.matrix</a></code>, <code><a href="../../base/html/vector.html">as.vector</a></code>,
+<code><a href="../../base/html/as.data.frame.html">as.data.frame</a></code>, <code><a href="../../base/html/list.html">as.list</a></code> (the latter also being available
+for <code>"ts"</code> objects). Furthermore, <code><a href="ggplot2.zoo.html">fortify.zoo</a></code> can transform <code>"zoo"</code>
+series to <code>"data.frame"</code> including the time index and optionally melting a wide series
+into a long data frame.
+</p>
+<p>In the conversion between <code>zoo</code> and <code>ts</code>, the <code><a href="zooreg.html">zooreg</a></code> class is
+always used.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>as.zoo</code> returns a <code><a href="zoo.html">zoo</a></code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code>, <code><a href="ggplot2.zoo.html">fortify.zoo</a></code>,
+<code><a href="zooreg.html">zooreg</a></code>, <code><a href="../../stats/html/ts.html">ts</a></code>, <code><a href="../../tseries/html/irts.html">irts</a></code>, 
+<code><a href="../../tis/html/tis.html">tis</a></code>, <code><a href="../../fts/html/fts.html">fts</a></code>, <code><a href="../../coda/html/mcmc.html">mcmc</a></code>,
+<code><a href="../../xts/html/xts.html">xts</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+
+## coercion to zoo:
+## default method
+as.zoo(rnorm(5))
+## method for "ts" objects
+as.zoo(ts(rnorm(5), start = 1981, freq = 12))
+
+## coercion from zoo:
+x.date &lt;- as.POSIXct(paste("2003-", rep(1:4, 4:1), "-", sample(1:28, 10, replace = TRUE), sep = ""))
+x &lt;- zoo(matrix(rnorm(24), ncol = 2), x.date)
+as.matrix(x)
+as.vector(x)
+as.data.frame(x)
+as.list(x)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

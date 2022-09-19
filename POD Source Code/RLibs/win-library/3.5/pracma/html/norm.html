@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Vector Norm</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Norm {pracma}"><tr><td>Norm {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Vector Norm
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code>Norm</code> function calculates several different types of vector
+norms for <code>x</code>, depending on the argument <code>p</code>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Norm(x, p = 2)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric vector; matrices not allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Numeric scalar or Inf, -Inf; default is 2</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>Norm</code> returns a scalar that gives some measure of the magnitude
+of the elements of <code>x</code>. It is called the <i>p</i>-norm for values
+<i>-Inf &le; p &le; Inf</i>, defining Hilbert spaces on <i>R^n</i>.
+</p>
+<p><code>Norm(x)</code> is the Euclidean length of a vecor <code>x</code>; same as
+<code>Norm(x, 2)</code>.<br />
+<code>Norm(x, p)</code> for finite p is defined as <code>sum(abs(A)^p)^(1/p)</code>.<br />
+<code>Norm(x, Inf)</code> returns <code>max(abs(x))</code>,
+while <code>Norm(x, -Inf)</code> returns <code>min(abs(x))</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric scalar (or <code>Inf</code>), or <code>NA</code> if an element of <code>x</code>
+is <code>NA</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In Matlab/Octave this is called <code>norm</code>; R's <code>norm</code> function
+<code>norm(x, "F")</code> (&lsquo;Frobenius Norm&rsquo;) is the same as <code>Norm(x)</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../Matrix/html/norm.html">norm</a></code> of a matrix
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+Norm(c(3, 4))          #=&gt; 5  Pythagoras triple
+Norm(c(1, 1, 1), p=2)  #   sqrt(3)
+Norm(1:10, p = 1)      #   sum(1:10)
+Norm(1:10, p = 0)      #   Inf
+Norm(1:10, p = Inf)    #   max(1:10)
+Norm(1:10, p = -Inf)   #   min(1:10)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

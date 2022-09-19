@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fit a linear regression model using sparse matrix algebra</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for slm {SparseM}"><tr><td>slm {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fit a linear regression model using sparse matrix algebra</h2>
+
+<h3>Description</h3>
+
+<p>This is a function to illustrate the use of sparse linear algebra
+to solve a linear least squares problem using Cholesky decomposition.
+The syntax and output attempt to emulate <code>lm()</code> but may
+fail to do so fully satisfactorily.  Ideally, this would eventually
+become a method for <code>lm</code>.  The main obstacle to this step is
+that it would be necessary to have a model.matrix function that
+returned an object in sparse csr form.  For the present, the objects
+represented in the formula must be in dense form.  If the user wishes
+to specify fitting with a design matrix that is already in sparse form,
+then the lower level function <code>slm.fit()</code> should be used. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+slm(formula, data, weights, na.action, method = "csr", contrasts = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+
+<p>a formula object, with the response on the left of a <code>~</code> operator,
+and the terms, separated by <code>+</code> operators, on the right.  As in
+<code>lm()</code>, the response variable in the formula can be matrix valued.
+</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+
+<p>a data.frame in which to interpret the variables
+named in the formula, or in the subset and the weights argument.
+If this is missing, then the variables in the formula should be on the
+search list.  This may also be a single number to handle some special
+cases &ndash; see below for details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+
+<p>vector of observation weights; if supplied, the algorithm fits
+to minimize the sum of the weights multiplied into the
+absolute residuals. The length of weights must be the same as
+the number of observations.  The weights must be nonnegative
+and it is strongly recommended that they be strictly positive,
+since zero weights are ambiguous.
+</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+
+<p>a function to filter missing data.
+This is applied to the model.frame after any subset argument has been used.
+The default (with <code>na.fail</code>) is to create an error if any missing 
+values are found.  A possible alternative is <code>na.omit</code>, which
+deletes observations that contain one or more missing values.
+</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>there is only one method based on Cholesky factorization</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+
+<p>a list giving contrasts for some or all of the factors
+default = <code>NULL</code> appearing in the model formula.
+The elements of the list should have the same name as the variable
+and should be either a contrast matrix (specifically, any full-rank
+matrix with as many rows as there are levels in the factor),
+or else a function to compute such a matrix given the number of levels.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>additional arguments for the fitting routines
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A list of class <code>slm</code> consisting of:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>estimated coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>chol</code></td>
+<td>
+<p>cholesky object from fitting</p>
+</td></tr>
+<tr valign="top"><td><code>residuals</code></td>
+<td>
+<p>residuals</p>
+</td></tr>
+<tr valign="top"><td><code>fitted</code></td>
+<td>
+<p>fitted values</p>
+</td></tr>
+<tr valign="top"><td><code>terms</code></td>
+<td>
+<p>terms</p>
+</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>call</p>
+</td></tr>
+</table>
+<p>...
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Koenker </p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R and Ng, P. (2002).  SparseM:  A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>, <br />
+<a href="http://www.econ.uiuc.edu/~roger/research/home.html">http://www.econ.uiuc.edu/~roger/research/home.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>slm.methods</code> for methods <code>summary</code>, <code>print</code>, <code>fitted</code>,
+<code>residuals</code> and <code>coef</code> associated with class <code>slm</code>,
+and <code>slm.fit</code> for lower level fitting functions.  The latter functions
+are of special interest if you would like to pass a sparse form of the
+design matrix directly to the fitting process.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(lsq)
+X &lt;- model.matrix(lsq) #extract the design matrix
+y &lt;- model.response(lsq) # extract the rhs
+X1 &lt;- as.matrix(X)
+slm.time &lt;- system.time(slm(y~X1-1) -&gt; slm.o) # pretty fast
+lm.time &lt;- system.time(lm(y~X1-1) -&gt; lm.o) # very slow
+cat("slm time =",slm.time,"\n")
+cat("slm Results: Reported Coefficients Truncated to 5  ","\n")
+sum.slm &lt;- summary(slm.o)
+sum.slm$coef &lt;- sum.slm$coef[1:5,]
+sum.slm
+cat("lm time =",lm.time,"\n")
+cat("lm Results: Reported Coefficients Truncated to 5  ","\n")
+sum.lm &lt;- summary(lm.o)
+sum.lm$coef &lt;- sum.lm$coef[1:5,]
+sum.lm
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Methods for Function recenter in Package 'sp'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for recenter-methods {sp}"><tr><td>recenter-methods {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Methods for Function recenter in Package &lsquo;sp&rsquo;</h2>
+
+<h3>Description</h3>
+
+<p>Methods for function <code>recenter</code> in package <span class="pkg">sp</span> to shift or re-center geographical coordinates for a Pacific view. All longitudes &lt; 0 are added to 360, to avoid for instance parts of Alaska being represented on the far left and right of a plot because they have values straddling 180 degrees. In general, using a projected coordinate reference system is to be preferred, but this method permits a geographical coordinate reference system to be used. This idea was suggested by Greg Snow, and corresponds to the two world representations in the <span class="pkg">maps</span> package. 
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>obj = &quot;SpatialPolygons&quot;</dt><dd><p>recenter a SpatialPolygons object</p>
+</dd>
+<dt>obj = &quot;Polygons&quot;</dt><dd><p>recenter a Polygons object </p>
+</dd>
+<dt>obj = &quot;Polygon&quot;</dt><dd><p>recenter an Polygon object </p>
+</dd>
+<dt>obj = &quot;SpatialLines&quot;</dt><dd><p>recenter a SpatialLines object </p>
+</dd>
+<dt>obj = &quot;Lines&quot;</dt><dd><p>recenter a Lines object </p>
+</dd>
+<dt>obj = &quot;Line&quot;</dt><dd><p>recenter an Line object </p>
+</dd>
+</dl>
+
+
+<h3>Examples</h3>
+
+<pre>
+crds &lt;- matrix(c(179, -179, -179, 179, 50, 50, 52, 52), ncol=2)
+SL &lt;- SpatialLines(list(Lines(list(Line(crds)), "1")),
+ CRS("+proj=longlat +ellps=WGS84"))
+bbox(SL)
+SLr &lt;- recenter(SL)
+bbox(SLr)
+rcrds &lt;- rbind(crds, crds[1,])
+SpP &lt;- SpatialPolygons(list(Polygons(list(Polygon(rcrds)), ID="r1")),
+ proj4string=CRS("+proj=longlat +ellps=WGS84"))
+bbox(SpP)
+SpPr &lt;- recenter(SpP)
+bbox(SpPr)
+opar &lt;- par(mfrow=c(1,2))
+plot(SpP)
+plot(SpPr)
+par(opar)
+crds &lt;- matrix(c(-1, 1, 1, -1, 50, 50, 52, 52), ncol=2)
+SL &lt;- SpatialLines(list(Lines(list(Line(crds)), "1")),
+ CRS("+proj=longlat +ellps=WGS84"))
+bbox(SL)
+SLr &lt;- recenter(SL)
+bbox(SLr)
+rcrds &lt;- rbind(crds, crds[1,])
+SpP &lt;- SpatialPolygons(list(Polygons(list(Polygon(rcrds)), ID="r1")),
+ proj4string=CRS("+proj=longlat +ellps=WGS84"))
+bbox(SpP)
+SpPr &lt;- recenter(SpP)
+bbox(SpPr)
+opar &lt;- par(mfrow=c(1,2))
+plot(SpP)
+plot(SpPr)
+par(opar)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

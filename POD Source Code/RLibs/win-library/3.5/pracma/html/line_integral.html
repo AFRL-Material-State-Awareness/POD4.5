@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Line integral (in the complex plane)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for line_integral {pracma}"><tr><td>line_integral {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Line integral (in the complex plane)
+</h2>
+
+<h3>Description</h3>
+
+<p>Provides complex line integrals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+line_integral(fun, waypoints, method = NULL, reltol = 1e-8, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>integrand, complex (vectorized) function.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>integration procedure, see below.</p>
+</td></tr>
+<tr valign="top"><td><code>waypoints</code></td>
+<td>
+<p>complex integration: points on the integration curve.</p>
+</td></tr>
+<tr valign="top"><td><code>reltol</code></td>
+<td>
+<p>relative tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>line_integral</code> realizes complex line integration, in this case straight
+lines between the waypoints. By passing discrete points densely along the
+curve, arbitrary line integrals can be approximated.
+</p>
+<p><code>line_integral</code> will accept the same methods as <code>integral</code>;
+default is <code>integrate</code> from Base R.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the integral, no error terms given.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="integral.html">integral</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Complex integration examples
+points &lt;- c(0, 1+1i, 1-1i, 0)           # direction mathematically negative
+f &lt;- function(z) 1 / (2*z -1)
+I &lt;- line_integral(f, points)
+abs(I - (0-pi*1i))                      # 0 ; residuum 2 pi 1i * 1/2
+
+f &lt;- function(z) 1/z
+points &lt;- c(-1i, 1, 1i, -1, -1i)
+I &lt;- line_integral(f, points)           # along a rectangle around 0+0i
+abs(I - 2*pi*1i)                        #=&gt; 0 ; residuum: 2 pi i * 1
+
+N &lt;- 100
+x &lt;- linspace(0, 2*pi, N)
+y &lt;- cos(x) + sin(x)*1i
+J &lt;- line_integral(f, waypoints = y)    # along a circle around 0+0i
+abs(I - J)                              #=&gt; 5.015201e-17; same residuum
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

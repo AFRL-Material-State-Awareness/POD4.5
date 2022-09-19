@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Polynomial Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for polyApprox {pracma}"><tr><td>polyApprox {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Polynomial Approximation
+</h2>
+
+<h3>Description</h3>
+
+<p>Generate a polynomial approximation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+polyApprox(f, a, b, n, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function to be approximated.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>end points of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>degree of the polynomial.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further variables for function <code>f</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Uses the Chebyshev coefficients to derive polynomial coefficients.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with four components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>the approximating polynomial.</p>
+</td></tr>
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>a function evaluating this polynomial.</p>
+</td></tr>
+<tr valign="top"><td><code>cheb.coeff</code></td>
+<td>
+<p>the Chebyshev coefficients.</p>
+</td></tr> 
+<tr valign="top"><td><code>estim.prec</code></td>
+<td>
+<p>the estimated precision over the given interval.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>The Chebyshev approximation is optimal in the sense of the <i>L^1</i> norm,
+but not as a solution of the <em>minimax</em> problem; for this, an
+application of the Remez algorithm is needed.
+</p>
+
+
+<h3>References</h3>
+
+<p>Carothers, N. L. (1998). A Short Course on Approximation Theory.
+Bowling Green State University.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="chebApprox.html">chebApprox</a></code>, <code><a href="polyfit.html">polyfit</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Example
+#   Polynomial approximation for sin
+polyApprox(sin, -pi, pi, 9)
+# $p
+#  [1]  2.197296e-06  0.000000e+00 -1.937495e-04  0.000000e+00  8.317144e-03
+#  [6]  0.000000e+00 -1.666468e-01  0.000000e+00  9.999961e-01  0.000000e+00
+#
+# $f
+# function (x) 
+# polyval(p, x)
+#
+# $cheb.coeff
+#  [1]  0.06549943  0.00000000 -0.58518036  0.00000000  2.54520983  0.00000000
+#  [7] -5.16709776  0.00000000  3.14158037  0.00000000
+#
+# $estim.prec
+# [1] 1.151207e-05
+
+## Not run: 
+f &lt;- polyApprox(sin, -pi, pi, 9)$f
+x &lt;- seq(-pi, pi, length.out = 100)
+y &lt;- sin(x) - f(x)
+plot(x, y, type = "l", col = "blue")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

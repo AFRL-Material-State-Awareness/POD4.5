@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract Residual Standard Deviation 'Sigma'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for sigma {lme4}"><tr><td>sigma {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extract Residual Standard Deviation 'Sigma'</h2>
+
+<h3>Description</h3>
+
+<p>Extract the estimated standard deviation of the errors, the
+&ldquo;residual standard deviation&rdquo; (also misnamed the
+&ldquo;residual standard error&rdquo;), from a fitted model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'merMod'
+sigma(object, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>a fitted model.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional, optional arguments, passed from or to
+methods. (None currently in our two methods.)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Package <span class="pkg">lme4</span> provides methods for mixed-effects models of class
+<code><a href="merMod-class.html">merMod</a></code> and lists of linear models, <code><a href="lmList4-class.html">lmList4</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Typically a number, the estimated standard deviation of the
+errors (&ldquo;residual standard deviation&rdquo;) for Gaussian
+models, and - less interpretably - the square root of the residual
+deviance per degree of freedom in more general models.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+methods(sigma)# from R 3.3.0 on, shows methods from pkgs 'stats' *and* 'lme4'
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

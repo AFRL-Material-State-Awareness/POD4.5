@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: do point(s) fall in a given polygon?</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for point.in.polygon {sp}"><tr><td>point.in.polygon {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> do point(s) fall in a given polygon? </h2>
+
+<h3>Description</h3>
+
+<p>verifies for one or more points whether they fall in a given polygon
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+point.in.polygon(point.x, point.y, pol.x, pol.y, mode.checked=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>point.x</code></td>
+<td>
+<p>numerical array of x-coordinates of points</p>
+</td></tr>
+<tr valign="top"><td><code>point.y</code></td>
+<td>
+<p>numerical array of y-coordinates of points</p>
+</td></tr>
+<tr valign="top"><td><code>pol.x</code></td>
+<td>
+<p>numerical array of x-coordinates of polygon</p>
+</td></tr>
+<tr valign="top"><td><code>pol.y</code></td>
+<td>
+<p>numerical array of y-coordinates of polygon</p>
+</td></tr>
+<tr valign="top"><td><code>mode.checked</code></td>
+<td>
+<p>default FALSE, used internally to save time when all the other argument are known to be of storage mode double</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> integer array; values are:
+0: point is strictly exterior to pol;
+1: point is strictly interior to pol;
+2: point lies on the relative interior of an edge of pol;
+3: point is a vertex of pol.
+</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Uses the C function InPoly().  InPoly is Copyright (c) 1998 by
+Joseph O'Rourke.  It may be freely redistributed in its entirety
+provided that this copyright notice is not removed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# open polygon:
+point.in.polygon(1:10,1:10,c(3,5,5,3),c(3,3,5,5))
+# closed polygon:
+point.in.polygon(1:10,rep(4,10),c(3,5,5,3,3),c(3,3,5,5,3))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Visualizing sequences of quantile regression summaries</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.summary.rqs {quantreg}"><tr><td>plot.summary.rqs {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Visualizing sequences of quantile regression summaries</h2>
+
+<h3>Description</h3>
+
+<p>A sequence of coefficient estimates for quantile
+regressions with varying <code>tau</code> parameters is visualized
+along with associated confidence bands.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'summary.rqs'
+plot(x, parm = NULL, level = 0.9, ols = TRUE,
+  mfrow = NULL, mar = NULL, ylim = NULL, main = NULL,
+  col = gray(c(0, 0.75)), border = NULL, lcol = 2, lty = 1:2,
+  cex = 0.5, pch = 20, type = "b", xlab = "", ylab = "", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class <code>"summary.rqs"</code> as produce by 
+applying the <code>summary</code> method to a <code><a href="rq.html">rq</a></code> object
+(with a vector of <code>tau</code> values).</p>
+</td></tr>
+<tr valign="top"><td><code>parm</code></td>
+<td>
+<p>a specification of which parameters are to be plotted,
+either a vector of numbers or a vector of names.  By default, all
+parameters are considered.</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>Confidence level of bands.  When using
+the rank based confidence intervals in summary, which is the default
+method for sample sizes under 1000, you will need to control the level
+of the intervals by passing the parameter alpha to 
+<code><a href="summary.rq.html">summary.rq</a></code>, prior to calling 
+<code><a href="plot.summary.rqs.html">plot.summary.rqs</a></code>.  Note also that alpha = 1 - level.</p>
+</td></tr>
+<tr valign="top"><td><code>ols</code></td>
+<td>
+<p>logical. Should a line for the OLS coefficient and their confidence
+bands (as estimated by <code><a href="../../stats/html/lm.html">lm</a></code>) be added?</p>
+</td></tr>
+<tr valign="top"><td><code>mfrow, mar, ylim, main</code></td>
+<td>
+<p>graphical parameters. Suitable defaults are chosen
+based on the coefficients to be visualized.  It can be useful to use a common
+vertical scale when plotting as a way of comparing confidence bands constructed
+by different methods. For this purpose one can specify a <code>ylim</code> as a 
+2 by <code>length(parm)</code> matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>vector of color specification for <code>rq</code> coefficients
+and the associated confidence polygon.</p>
+</td></tr>
+<tr valign="top"><td><code>border</code></td>
+<td>
+<p>color specification for the confidence polygon. By default,
+the second element of <code>col</code> is used.</p>
+</td></tr>
+<tr valign="top"><td><code>lcol, lty</code></td>
+<td>
+<p>color and line type specification for OLS coefficients
+and their confidence bounds.</p>
+</td></tr>
+<tr valign="top"><td><code>cex, pch, type, xlab, ylab, ...</code></td>
+<td>
+<p>further graphical parameters
+passed to <code><a href="../../graphics/html/points.html">points</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>plot</code> method for <code>"summary.rqs"</code> objects visualizes
+the coefficients along with their confidence bands. The bands can be
+omitted by using the <code>plot</code> method for <code>"rqs"</code> objects directly.</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components <code>z</code>, an array with all coefficients visualized 
+(and associated confidence bands), and <code>Ylim</code>, a 2 by p matrix containing  
+the y plotting limits.  The latter component may be useful for establishing a
+common scale for two or more similar plots.  The list is returned invisibly.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.html">rq</a></code>, <code><a href="plot.rqs.html">plot.rqs</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## fit Engel models (in levels) for tau = 0.1, ..., 0.9
+data("engel")
+fm &lt;- rq(foodexp ~ income, data = engel, tau = 1:9/10)
+sfm &lt;- summary(fm)
+
+## visualizations
+plot(sfm)
+plot(sfm, parm = 2, mar = c(5.1, 4.1, 2.1, 2.1), main = "", xlab = "tau", 
+  ylab = "income coefficient", cex = 1, pch = 19)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

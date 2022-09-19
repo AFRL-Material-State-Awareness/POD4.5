@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Improved Stochastic Ranking Evolution Strategy</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for isres {nloptr}"><tr><td>isres {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Improved Stochastic Ranking Evolution Strategy</h2>
+
+<h3>Description</h3>
+
+<p>The Improved Stochastic Ranking Evolution Strategy (ISRES) algorithm for
+nonlinearly constrained global optimization (or at least semi-global:
+although it has heuristics to escape local optima.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+isres(
+  x0,
+  fn,
+  lower,
+  upper,
+  hin = NULL,
+  heq = NULL,
+  maxeval = 10000,
+  pop.size = 20 * (length(x0) + 1),
+  xtol_rel = 1e-06,
+  nl.info = FALSE,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>initial point for searching the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>objective function that is to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>lower, upper</code></td>
+<td>
+<p>lower and upper bound constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>hin</code></td>
+<td>
+<p>function defining the inequality constraints, that is
+<code>hin&gt;=0</code> for all components.</p>
+</td></tr>
+<tr valign="top"><td><code>heq</code></td>
+<td>
+<p>function defining the equality constraints, that is <code>heq==0</code>
+for all components.</p>
+</td></tr>
+<tr valign="top"><td><code>maxeval</code></td>
+<td>
+<p>maximum number of function evaluations.</p>
+</td></tr>
+<tr valign="top"><td><code>pop.size</code></td>
+<td>
+<p>population size.</p>
+</td></tr>
+<tr valign="top"><td><code>xtol_rel</code></td>
+<td>
+<p>stopping criterion for relative change reached.</p>
+</td></tr>
+<tr valign="top"><td><code>nl.info</code></td>
+<td>
+<p>logical; shall the original NLopt info been shown.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The evolution strategy is based on a combination of a mutation rule (with a
+log-normal step-size update and exponential smoothing) and differential
+variation (a Nelder-Mead-like update rule). The fitness ranking is simply
+via the objective function for problems without nonlinear constraints, but
+when nonlinear constraints are included the stochastic ranking proposed by
+Runarsson and Yao is employed.
+</p>
+<p>This method supports arbitrary nonlinear inequality and equality constraints
+in addition to the bound constraints.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>the optimal solution found so far.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>the function value corresponding to <code>par</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of (outer) iterations, see <code>maxeval</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>integer code indicating successful completion (&gt; 0)
+or a possible error number (&lt; 0).</p>
+</td></tr>
+<tr valign="top"><td><code>message</code></td>
+<td>
+<p>character string produced by NLopt and giving additional
+information.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>The initial population size for CRS defaults to <code>20x(n+1)</code> in
+<code>n</code> dimensions, but this can be changed; the initial population must be
+at least <code>n+1</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans W. Borchers
+</p>
+
+
+<h3>References</h3>
+
+<p>Thomas Philip Runarsson and Xin Yao, &ldquo;Search biases in
+constrained evolutionary optimization,&rdquo; IEEE Trans. on Systems, Man, and
+Cybernetics Part C: Applications and Reviews, vol. 35 (no. 2), pp. 233-243
+(2005).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+### Rosenbrock Banana objective function
+fn &lt;- function(x)
+    return( 100 * (x[2] - x[1] * x[1])^2 + (1 - x[1])^2 )
+
+x0 &lt;- c( -1.2, 1 )
+lb &lt;- c( -3, -3 )
+ub &lt;- c(  3,  3 )
+
+isres(x0 = x0, fn = fn, lower = lb, upper = ub)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

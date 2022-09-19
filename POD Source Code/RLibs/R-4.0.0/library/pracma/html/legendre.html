@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Legendre Functions (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for legendre {pracma}"><tr><td>legendre {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Legendre Functions (Matlab Style)
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the values of (associated) Legendre functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+legendre(n, x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>degree of the Legendre polynomial involved.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>real points to evaluate Legendre's functions at.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>legendre(n,x)</code> computes the associated Legendre functions of degree
+<code>n</code> and order <code>m=0,1,...,n</code>, evaluated for each element of
+<code>x</code> where <code>x</code> must contain real values in <code>[-1,1]</code>.
+</p>
+<p>If <code>x</code> is a vector, then <code>L=legendre(n,x)</code> is an
+<code>(n+1)</code>-by-<code>N</code> matrix, where <code>N=length(x)</code>. Each element 
+<code>L[m+1,i]</code> corresponds to the associated Legendre function of degree
+<code>legendre(n,x)</code> and order <code>m</code> evaluated at <code>x[i]</code>.
+</p>
+<p>Note that the first row of <code>L</code> is the Legendre polynomial evaluated at
+<code>x</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a matrix of size <code>(n+1)</code>-by-<code>N</code> where <code>N=length(x)</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Legendre functions are solutions to Legendre's differential equation (it
+occurs when solving Laplace's equation in spherical coordinates).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="chebPoly.html">chebPoly</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- c(0.0, 0.1, 0.2)
+legendre(2, x)
+#      [,1]       [,2]       [,3]
+# [1,] -0.5 -0.4850000 -0.4400000
+# [2,]  0.0 -0.2984962 -0.5878775
+# [3,]  3.0  2.9700000  2.8800000
+
+## Not run: 
+x &lt;- seq(0, 1, len = 50)
+L &lt;- legendre(2, x)
+plot(x, L[1, ], type = "l", col = 1, ylim = c(-2, 3), ylab = "y",
+                main = "Legendre Functions of degree 2")
+lines(x, L[2, ], col = 2)
+lines(x, L[3, ], col = 3)
+grid()
+## End(Not run)
+## Generate Legendre's Polynomial as function
+# legendre_P &lt;- function(n, x) {
+#     L &lt;- legendre(n, x)
+#     return(L[1, ])
+# }
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

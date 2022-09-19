@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plotting Two y-Axes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plotyy {pracma}"><tr><td>plotyy {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Plotting Two y-Axes
+</h2>
+
+<h3>Description</h3>
+
+<p>Line plot with y-axes on both left and right side.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plotyy(x1, y1, x2, y2, gridp = TRUE, box.col = "grey",
+                       type = "l", lwd = 1, lty = 1,
+                       xlab = "x", ylab = "y", main = "",
+                       col.y1 = "navy", col.y2 = "maroon", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x1, x2</code></td>
+<td>
+<p>x-coordinates for the curves</p>
+</td></tr>
+<tr valign="top"><td><code>y1, y2</code></td>
+<td>
+<p>the y-values, with ordinates y1 left, y2 right.</p>
+</td></tr>
+<tr valign="top"><td><code>gridp</code></td>
+<td>
+<p>logical; shall a grid be plotted.</p>
+</td></tr>
+<tr valign="top"><td><code>box.col</code></td>
+<td>
+<p>color of surrounding box.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of the curves, line or points (for both data).</p>
+</td></tr>
+<tr valign="top"><td><code>lwd</code></td>
+<td>
+<p>line width (for both data).</p>
+</td></tr>
+<tr valign="top"><td><code>lty</code></td>
+<td>
+<p>line type (for both data).</p>
+</td></tr>
+<tr valign="top"><td><code>xlab, ylab</code></td>
+<td>
+<p>text below and on the left.</p>
+</td></tr>
+<tr valign="top"><td><code>main</code></td>
+<td>
+<p>main title of the plot.</p>
+</td></tr>
+<tr valign="top"><td><code>col.y1, col.y2</code></td>
+<td>
+<p>colors to be used for the lines or points.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional plotting parameters.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Plots <code>y1</code> versus <code>x1</code> with y-axis labeling on the left and plots
+<code>y2</code> versus <code>x2</code> with y-axis labeling on the right.
+</p>
+<p>The x-values should not be too far appart. To exclude certain points, use
+<code>NA</code> values. Both curves will be line or point plots, and have the
+same line type and width.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Generates a graph, no return values.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plotrix::twoord.plot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+x  &lt;- seq(0, 20, by = 0.01)
+y1 &lt;- 200*exp(-0.05*x)*sin(x)
+y2 &lt;- 0.8*exp(-0.5*x)*sin(10*x)
+
+plotyy(x, y1, x, y2, main = "Two-ordinates Plot")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

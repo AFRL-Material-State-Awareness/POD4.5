@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: a class for spatial lines with attributes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SpatialLinesDataFrame-class {sp}"><tr><td>SpatialLinesDataFrame-class {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>a class for spatial lines with attributes </h2>
+
+<h3>Description</h3>
+
+<p> this class holds data consisting of (sets of lines), where each
+set of lines relates to an attribute row in a data.frame </p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>can be created by the function <a href="SpatialLines.html">SpatialLinesDataFrame</a>
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>data</code>:</dt><dd><p>Object of class <a href="../../base/html/data.frame.html">data.frame</a> containing the attribute table </p>
+</dd>
+<dt><code>lines</code>:</dt><dd><p>Object of class <code>"list"</code>; see <a href="SpatialLines-class.html">SpatialLines-class</a></p>
+</dd>
+<dt><code>bbox</code>:</dt><dd><p>Object of class <code>"matrix"</code>; see <a href="Spatial-class.html">Spatial-class</a> </p>
+</dd>
+<dt><code>proj4string</code>:</dt><dd><p>Object of class <code>"CRS"</code>; see <a href="CRS-class.html">CRS-class</a></p>
+</dd>
+</dl>
+
+
+
+<h3>Extends</h3>
+
+<p>Class <code>"SpatialLines"</code>, directly.
+Class <code>"Spatial"</code>, by class <code>"SpatialLines"</code>.
+</p>
+
+
+<h3>Methods</h3>
+
+<p>Methods defined with class &quot;SpatialLinesDataFrame&quot; in the signature:
+</p>
+
+<dl>
+<dt>[</dt><dd><p><code>signature(x = "SpatialLinesDataFrame")</code>: subset rows or
+columns; in case of row subsetting, the line sets are also subsetted; NAs are not permitted in the row index </p>
+</dd>
+<dt>coordinates</dt><dd><p><code>signature(obj = "SpatialLinesDataFrame")</code>: retrieves
+a list with lists of coordinate matrices </p>
+</dd>
+<dt>show</dt><dd><p><code>signature(object = "SpatialLinesDataFrame")</code>: print method </p>
+</dd>
+<dt>plot</dt><dd><p><code>signature(x = "SpatialLinesDataFrame")</code>: plot points</p>
+</dd>
+<dt>lines</dt><dd><p><code>signature(object = "SpatialLinesDataFrame")</code>: add lines to plot</p>
+</dd>
+<dt>rbind</dt><dd><p><code>signature(object = "SpatialLinesDataFrame")</code>: 
+rbind-like method</p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p><code>rbind</code> for <code>SpatialLinesDataFrame</code> is only possible for 
+objects with unique IDs. If you want to <code>rbind</code> objects
+with duplicated IDs, see<code><a href="spChFIDs-methods.html">spChFIDs</a></code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Bivand; Edzer Pebesma </p>
+
+
+<h3>See Also</h3>
+
+<p><a href="SpatialLines-class.html">SpatialLines-class</a>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

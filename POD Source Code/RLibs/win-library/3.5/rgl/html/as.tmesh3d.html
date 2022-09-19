@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert object to a triangular mesh</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.tmesh3d {rgl}"><tr><td>as.tmesh3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Convert object to a triangular mesh
+</h2>
+
+<h3>Description</h3>
+
+<p>Converts the quads in a mesh version of an object to
+triangles by splitting them up.  Optionally drops any
+point or segment components.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.tmesh3d(x, ...)
+## Default S3 method:
+as.tmesh3d(x, drop = FALSE, ...)
+## S3 method for class 'mesh3d'
+as.tmesh3d(x, drop = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>An object from which to create a triangular mesh object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>drop</code></td>
+<td>
+
+<p>If <code>TRUE</code>, drop any point or segment components.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Ignored in the <code>mesh3d</code> method, passed to 
+<code>as.mesh3d</code> in the default method.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The default method simply calls <code><a href="as.mesh3d.default.html">as.mesh3d</a>(x, ...)</code>
+and passes the result to the <code>"mesh3d"</code> method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>"mesh3d"</code> object containing no quads.  If <code>drop = TRUE</code>, it will only contain triangles.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Older versions of <span class="pkg">rgl</span> had a <code>"tmesh3d"</code> class
+for meshes of triangles.  That class is no longer used:
+<code>as.tmesh3d</code> and <code><a href="mesh3d.html">tmesh3d</a></code> both produce
+<code>"mesh3d"</code> objects.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>as.triangles3d</code> to get just the coordinates.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- cuboctahedron3d()
+x             # has quads and triangles
+as.tmesh3d(x) # has only triangles
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

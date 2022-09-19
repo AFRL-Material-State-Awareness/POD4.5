@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sort Rows of a Matrix (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for sortrows {pracma}"><tr><td>sortrows {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Sort Rows of a Matrix (Matlab Style)</h2>
+
+<h3>Description</h3>
+
+<p>Sort rows of a matrix according to values in a column.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+sortrows(A, k = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>numeric matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>number of column to sort the matrix accordingly.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>sortrows(A, k)</code> sorts the rows of the matrix <code>A</code> such that
+column <code>k</code> is increasingly sorted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the sorted matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="../../base/html/sort.html">sort</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- magic(5)
+sortrows(A)
+sortrows(A, k = 2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

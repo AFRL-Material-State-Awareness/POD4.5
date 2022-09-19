@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find and replace substring</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for strRep {pracma}"><tr><td>strRep {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Find and replace substring
+</h2>
+
+<h3>Description</h3>
+
+<p>Find and replace all occurrences of a substring with another one
+in all strings of a character vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+strRep(s, old, new)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>s</code></td>
+<td>
+<p>Character vector.</p>
+</td></tr>
+<tr valign="top"><td><code>old</code></td>
+<td>
+<p>String to be replaced.</p>
+</td></tr>
+<tr valign="top"><td><code>new</code></td>
+<td>
+<p>String that replaces another one.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Replaces all occurrences of <code>old</code> with <code>new</code> in all strings
+of character vector <code>s</code>. The matching is case sensitive.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector of the same length.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/grep.html">gsub</a></code>, <code>regexprep</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+S &lt;- c('This is a good example.', "He has a good character.",
+       'This is good, good food.', "How goodgood this is!")
+strRep(S, 'good', 'great')
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

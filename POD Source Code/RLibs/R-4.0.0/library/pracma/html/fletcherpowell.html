@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fletcher-Powell Conjugate Gradient Minimization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fletcher_powell {pracma}"><tr><td>fletcher_powell {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Fletcher-Powell Conjugate Gradient Minimization
+</h2>
+
+<h3>Description</h3>
+
+<p>Conjugate Gradient (CG) minimization through the Davidon-Fletcher-Powell 
+approach for function minimization.
+</p>
+<p>The Davidon-Fletcher-Powell (DFP) and the Broyden-Fletcher-Goldfarb-Shanno
+(BFGS) methods are the first quasi-Newton minimization methods developed.
+These methods differ only in some details; in general, the BFGS approach
+is more robust.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fletcher_powell(x0, f, g = NULL,
+                maxiter = 1000, tol = .Machine$double.eps^(2/3))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>start value.</p>
+</td></tr>
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>g</code></td>
+<td>
+<p>gradient function of <code>f</code>;
+if <code>NULL</code>, a numerical gradient will be calculated.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>max. number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance, to be used as stopping rule.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The starting point is Newton's method in the multivariate case, when
+the estimate of the minimum is updated by the following equation
+</p>
+<p style="text-align: center;"><i>x_{new} = x - H^{-1}(x) grad(g)(x)</i></p>
+
+<p>where <i>H</i> is the Hessian and <i>grad</i> the gradient.
+</p>
+<p>The basic idea is to generate a sequence of good approximations to the
+inverse Hessian matrix, in such a way that the approximations are again
+positive definite.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>xmin</code></td>
+<td>
+<p>minimum solution found.</p>
+</td></tr>
+<tr valign="top"><td><code>fmin</code></td>
+<td>
+<p>value of <code>f</code> at minimum.</p>
+</td></tr>
+<tr valign="top"><td><code>niter</code></td>
+<td>
+<p>number of iterations performed.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>Used some Matlab code as described in the book &ldquo;Applied Numerical Analysis
+Using Matlab&rdquo; by L. V.Fausett.
+</p>
+
+
+<h3>References</h3>
+
+<p>J. F. Bonnans, J. C. Gilbert, C. Lemarechal, and C. A. Sagastizabal.
+Numerical Optimization: Theoretical and Practical Aspects. Second Edition,
+Springer-Verlag, Berlin Heidelberg, 2006.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="steep_descent.html">steep_descent</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Rosenbrock function
+rosenbrock &lt;- function(x) {
+    n &lt;- length(x)
+    x1 &lt;- x[2:n]
+    x2 &lt;- x[1:(n-1)]
+    sum(100*(x1-x2^2)^2 + (1-x2)^2)
+}
+fletcher_powell(c(0, 0), rosenbrock)
+# $xmin
+# [1] 1 1
+# $fmin
+# [1] 1.774148e-27
+# $niter
+# [1] 14
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

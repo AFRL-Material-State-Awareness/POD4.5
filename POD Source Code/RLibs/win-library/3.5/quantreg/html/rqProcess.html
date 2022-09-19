@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute Standardized Quantile Regression Process</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rqProcess {quantreg}"><tr><td>rqProcess {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Compute Standardized Quantile Regression Process </h2>
+
+<h3>Description</h3>
+
+<p>Computes a standardize quantile regression process for the model
+specified by the formula, on the partition of [0,1] specified by the
+taus argument, and standardized according to the argument nullH. 
+Intended for use in <code><a href="KhmaladzeTest.html">KhmaladzeTest</a></code>.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rqProcess(formula, data, taus, nullH = "location", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>model formula  </p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data frame to be used to interpret formula </p>
+</td></tr>
+<tr valign="top"><td><code>taus</code></td>
+<td>
+<p> quantiles at which the process is to be evaluated, if any
+of the taus lie outside (0,1)  then the full process is computed 
+for all distinct solutions.</p>
+</td></tr>
+<tr valign="top"><td><code>nullH</code></td>
+<td>
+<p>Null hypothesis to be used for standardization</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional arguments passed to <code><a href="summary.rq.html">summary.rq</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The process computes standardized estimates based on the 
+hypothesis specified in the <code>nullH</code> argument.  
+The Vhat component is rescaled by the Cholesky 
+decomposition of the tau specific covariance matrix, the vhat component is
+rescaled by the marginal standard errors.  The nature of the covariance
+matrix used for the standardization is controlled arguments passed via
+the <code>...</code> argument to <code><a href="summary.rq.html">summary.rq</a></code>.  If the full
+process is estimated then these covariance options aren't available
+and only a simple iid-error form of the covariance matrix is used.
+</p>
+
+
+<h3>Value</h3>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>taus</code></td>
+<td>
+<p>The points of evaluation of the process</p>
+</td></tr>
+<tr valign="top"><td><code>qtaus</code></td>
+<td>
+<p>Values of xbar'betahat(taus)</p>
+</td></tr>
+<tr valign="top"><td><code>Vhat</code></td>
+<td>
+<p>Joint parametric QR process</p>
+</td></tr>
+<tr valign="top"><td><code>vhat</code></td>
+<td>
+<p>Marginal parametric QR processes</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>R. Koenker</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="KhmaladzeTest.html">KhmaladzeTest</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

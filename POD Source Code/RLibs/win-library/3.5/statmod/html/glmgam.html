@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fit Gamma Generalized Linear Model by Fisher Scoring with...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for glmgam.fit {statmod}"><tr><td>glmgam.fit {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fit Gamma Generalized Linear Model by Fisher Scoring with Identity Link</h2>
+
+<h3>Description</h3>
+
+<p>Fit a generalized linear model with secure convergence.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+glmgam.fit(X, y, coef.start = NULL, tol = 1e-6, maxit = 50, trace = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>X</code></td>
+<td>
+<p>design matrix, assumed to be of full column rank.  Missing values not allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>numeric vector of responses. Negative or missing values not allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>coef.start</code></td>
+<td>
+<p>numeric vector of starting values for the regression coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>small positive numeric value giving convergence tolerance</p>
+</td></tr>
+<tr valign="top"><td><code>maxit</code></td>
+<td>
+<p>maximum number of iterations allowed</p>
+</td></tr>
+<tr valign="top"><td><code>trace</code></td>
+<td>
+<p>logical value. If <code>TRUE</code> then output diagnostic information at each iteration.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function implements a modified Fisher scoring algorithm for generalized linear models, similar to the Levenberg-Marquardt algorithm for nonlinear least squares.
+The Levenberg-Marquardt modification checks for a reduction in the deviance at each step, and avoids the possibility of divergence.
+The result is a very secure algorithm that converges for almost all datasets.
+</p>
+<p><code>glmgam.fit</code> is in principle equivalent to <code>glm.fit(X,y,family=Gamma(link="identity"))</code> but with much more secure convergence.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>numeric vector of regression coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>fitted</code></td>
+<td>
+<p>numeric vector of fitted values</p>
+</td></tr>
+<tr valign="top"><td><code>deviance</code></td>
+<td>
+<p>residual deviance</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of iterations used to convergence. If convergence was not achieved then <code>iter</code> is set to <code>maxit+1</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth and Yunshun Chen</p>
+
+
+<h3>References</h3>
+
+<p>Dunn, PK, and Smyth, GK (2018).
+<em>Generalized linear models with examples in R</em>. Springer, New York, NY.
+doi: <a href="https://doi.org/10.1007/978-1-4419-0118-7">10.1007/978-1-4419-0118-7</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>glmgam.fit</code> is called by <code><a href="mixedmodel.html">mixedModel2Fit</a></code>.
+</p>
+<p><code><a href="../../stats/html/glm.html">glm</a></code> is the standard glm fitting function in the stats package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+y &lt;- rgamma(10, shape=5)
+X &lt;- cbind(1, 1:10)
+fit &lt;- glmgam.fit(X, y, trace=TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

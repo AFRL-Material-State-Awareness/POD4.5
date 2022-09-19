@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Line midpoints</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SpatialLinesMidPoints {maptools}"><tr><td>SpatialLinesMidPoints {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Line midpoints</h2>
+
+<h3>Description</h3>
+
+<p>The function onverts SpatialLinesDataFrame to SpatialPointsDataFrame with points at the midpoints of the line segments.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+SpatialLinesMidPoints(sldf)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>sldf</code></td>
+<td>
+<p>A SpatialLines or SpatialLinesDataFrame object</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function builds a SpatialPointsDataFrame from the midpoints of Line objects belonging to Lines objects in an object inheriting from a Spatial Lines object. The output data slot contains an index variable showing which Lines object the midpoints belong to.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A SpatialPointsDataFrame object created from the input object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jonathan Callahan, modified by Roger Bivand</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xx &lt;- readShapeLines(system.file("shapes/fylk-val.shp", package="maptools")[1],
+ proj4string=CRS("+proj=utm +zone=33 +datum=WGS84"))
+plot(xx, col="blue")
+spdf &lt;- SpatialLinesMidPoints(xx)
+plot(spdf, col="orange", add=TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

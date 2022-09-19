@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create and write a KML file on the basis of a given Polygons...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for kmlPolygon {maptools}"><tr><td>kmlPolygon {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create and write a KML file on the basis of a given Polygons object</h2>
+
+<h3>Description</h3>
+
+<p>The function is used to create and write a KML file on the basis of a given Polygons object (a list of Polygon objects) for the usage in Google Earth resp. Google Maps.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+kmlPolygon(obj=NULL, kmlfile=NULL, 
+    name="R Polygon", description="", col=NULL, visibility=1, lwd=1, border=1,
+    kmlname="", kmldescription="")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>a <code>Polygons</code> or <code>SpatialPolygonsDataFrame</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>kmlfile</code></td>
+<td>
+<p>if not <code>NULL</code> the name as character string of the kml file to be written</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>the name of the KML polygon</p>
+</td></tr>
+<tr valign="top"><td><code>description</code></td>
+<td>
+<p>the description of the KML polygon (HTML tags allowed)</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>the fill color (see also Color Specification) of the KML polygon</p>
+</td></tr>
+<tr valign="top"><td><code>visibility</code></td>
+<td>
+<p>if set to <code>1</code> or <code>TRUE</code> specifies that the KML polygon should be visible after loading</p>
+</td></tr>
+<tr valign="top"><td><code>lwd</code></td>
+<td>
+<p>the stroke width for the KML polygon</p>
+</td></tr>
+<tr valign="top"><td><code>border</code></td>
+<td>
+<p>the stroke color (see also Color Specification) for the KML polygon</p>
+</td></tr>
+<tr valign="top"><td><code>kmlname</code></td>
+<td>
+<p>the name of the KML layer</p>
+</td></tr>
+<tr valign="top"><td><code>kmldescription</code></td>
+<td>
+<p>the description of the KML layer (HTML tags allowed)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function is used to convert a given <code>Polygons</code> object (a list of Polygon objects) or the first <code>Polygons</code> object listed in a passed <code>SpatialPolygonsDataFrame</code> object into KML polygon. If <code>kmlfile</code> is not <code>NULL</code> the result will be written into that file. If <code>kmlfile</code> is <code>NULL</code> the generated KML lines will be returned (see also value). 
+</p>
+<p>The conversion can also handle polygons which are marked as holes inside of the Polygons object if these holes are listed right after that polygon in which these holes appear. That implies that a given plot order set in the Polygons object will <b>not</b> be considered.
+</p>
+<p>For a passed <code>Polygons</code> object the function generates a &lt;Style&gt; tag whereby its id attribute is set to the passed object's ID.
+</p>
+<p>Note that the geometries should be in geographical coordinates with datum WGS84.
+</p>
+<p>The resulting KML polygon will be embedded in <code>&lt;Placemark&gt;&lt;MultiGeometry&gt;&lt;Polygon&gt;</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>x is a list with the elements <code>style</code> and <code>content</code> containing the generated lines of the KML file as character vectors if <code>kmlfile</code> is <code>NULL</code>.
+</p>
+<p>y is a list with the elements <code>header</code> and <code>footer</code> representing the KML file' header resp. footer if <code>obj</code> is <code>NULL</code> (see second example).
+</p>
+
+
+<h3>Color Specification</h3>
+
+<p>The following color specifications are allowed: <code>'red'</code>, <code>2</code>, or as hex code <code>'#RRGGBB'</code> resp. <code>'#RRGGBBAA'</code> for passing the alpha value.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans-J. Bibiko</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="kmlOverlay.html">kmlOverlay</a></code>, <code><a href="kmlLine.html">kmlLine</a></code>, <code><a href="../../sp/html/SpatialPolygons.html">SpatialPolygons</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(wrld_simpl)
+## creates a KML file containing the polygons of South Africa (plus hole)
+sw &lt;- slot(wrld_simpl[wrld_simpl$NAME=="South Africa",], "polygons")[[1]]
+tf &lt;- tempfile()
+kmlPolygon(sw, kmlfile=tf, name="South Africa", col="#df0000aa", lwd=5, 
+    border=4, kmlname="R Test", 
+    kmldescription="This is &lt;b&gt;only&lt;/b&gt; a &lt;a href='http://www.r-project.org'&gt;R&lt;/a&gt; test.")
+tf
+
+## creates a KML file containing the polygons of South Africa, Switzerland, and Canada
+sw  &lt;- wrld_simpl[wrld_simpl$NAME %in% c("South Africa", "Switzerland", "Canada"),]
+out &lt;- sapply(slot(sw, "polygons"), function(x) { kmlPolygon(x,
+    name=as(sw, "data.frame")[slot(x, "ID"), "NAME"], 
+    col="red", lwd=1.5, border='black', 
+    description=paste("ISO3:", slot(x, "ID"))) })
+tf &lt;- tempfile()
+kmlFile &lt;- file(tf, "w")
+tf
+cat(kmlPolygon(kmlname="R Test", kmldescription="&lt;i&gt;Hello&lt;/i&gt;")$header, 
+    file=kmlFile, sep="\n")
+cat(unlist(out["style",]), file=kmlFile, sep="\n")
+cat(unlist(out["content",]), file=kmlFile, sep="\n")
+cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
+close(kmlFile)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

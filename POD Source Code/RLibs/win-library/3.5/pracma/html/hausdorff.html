@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Hausdorff Distance</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hausdorff_dist {pracma}"><tr><td>hausdorff_dist {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Hausdorff Distance</h2>
+
+<h3>Description</h3>
+
+<p>Hausdorff distance (aka Hausdorff dimension)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hausdorff_dist(P, Q)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>P, Q</code></td>
+<td>
+<p>numerical matrices, representing points in an m-dim. space.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calculates the Hausdorff Distance between two sets of points, P and Q.
+Sets P and Q must be matrices with the same number of columns (dimensions).
+</p>
+<p>The &lsquo;directional&rsquo; Hausdorff distance (dhd) is defined as:
+</p>
+<p>dhd(P,Q) = max p in P [ min q in Q [ ||p-q|| ] ]
+</p>
+<p>Intuitively dhd finds the point p from the set P that is farthest from any
+point in Q and measures the distance from p to its nearest neighbor in Q.
+The Hausdorff Distance is defined as max(dhd(P,Q),dhd(Q,P)).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single scalar, the Hausdorff distance (dimension).
+</p>
+
+
+<h3>References</h3>
+
+<p>Barnsley, M. (1993). Fractals Everywhere. Morgan Kaufmann, San Francisco.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="distmat.html">distmat</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+P &lt;- matrix(c(1,1,2,2, 5,4,5,4), 4, 2)
+Q &lt;- matrix(c(4,4,5,5, 2,1,2,1), 4, 2)
+hausdorff_dist(P, Q)    # 4.242641 = sqrt(sum((c(4,2)-c(1,5))^2))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

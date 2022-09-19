@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Justify character vector</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for strjust {pracma}"><tr><td>strjust {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Justify character vector
+</h2>
+
+<h3>Description</h3>
+
+<p>Justify the strings in a character vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+strjust(s, justify = c("left", "right", "center"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>s</code></td>
+<td>
+<p>Character vector.</p>
+</td></tr>
+<tr valign="top"><td><code>justify</code></td>
+<td>
+<p>Whether to justify left, right, or centered.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>strjust(s)</code> or <code>strjust(s, justify = ``right'')</code> returns
+a right-justified character vector. All strings have the same length,
+the length of the longest string in <code>s</code> &mdash; but the strings in
+<code>s</code> have been trimmed before.
+</p>
+<p><code>strjust(s, justify = ``left'')</code> does the same, with all strings
+left-justified.
+</p>
+<p><code>strjust(s, justify = ``centered'')</code> returns all string in <code>s</code>
+centered. If an odd number of blanks has to be added, one blank more is
+added to the left than to the right.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector of the same length.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="strtrim.html">strTrim</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+S &lt;- c("abc", "letters", "1", "2  2")
+strjust(S, "left")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

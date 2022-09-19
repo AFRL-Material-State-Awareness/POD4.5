@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Piecewise Polynomial Fit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ppfit {pracma}"><tr><td>ppfit {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Piecewise Polynomial Fit
+</h2>
+
+<h3>Description</h3>
+
+<p>Piecewise linear or cubic fitting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ppfit(x, y, xi, method = c("linear", "cubic"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>x-, y-coordinates of given points.</p>
+</td></tr>
+<tr valign="top"><td><code>xi</code></td>
+<td>
+<p>x-coordinates of the choosen support nodes.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>interpolation method,
+can be &lsquo;constant&rsquo;, &lsquo;linear&rsquo;, or &lsquo;cubic&rsquo; (i.e., &lsquo;spline&rsquo;).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>ppfit</code> fits a piece-wise polynomial to the input independent and 
+dependent variables,<code>x</code> and <code>y</code>, respectively. A weighted linear 
+least squares solution is provided. The weighting vector <code>w</code> must be 
+of the same size as the input variables.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a <code>pp</code> (i.e., piecewise polynomial) structure.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Following an idea of Copyright (c) 2012 Ben Abbott, Martin Helm for Octave.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="pp.html">mkpp</a></code>, <code><a href="pp.html">ppval</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- 0:39
+y &lt;- c(  8.8500,  32.0775,  74.7375, 107.6775, 132.0975, 156.6675,
+       169.0650, 187.5375, 202.2575, 198.0750, 225.9600, 204.3550,
+       233.8125, 204.5925, 232.3625, 204.7550, 220.1925, 199.5875,
+       197.3025, 175.3050, 218.6325, 163.0775, 170.6625, 148.2850,
+       154.5950, 135.4050, 138.8600, 125.6750, 118.8450,  99.2675,
+       129.1675,  91.1925,  89.7000,  76.8825,  83.6625,  74.1950,
+        73.9125,  55.8750,  59.8675,  48.1900)
+
+xi &lt;- linspace(0, 39, 8)
+pplin &lt;- ppfit(x, y, xi)  # method = "linear"
+ppcub &lt;- ppfit(x, y, xi, method = "cubic")
+
+## Not run: 
+plot(x, y, type = "b", main = "Piecewise polynomial approximation")
+xs &lt;- linspace(0, 39, 100)
+yslin &lt;- ppval(pplin, xs)
+yscub &lt;- ppval(ppcub, xs)
+lines(xs, yscub, col="red",lwd = 2)
+lines(xs, yslin, col="blue")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

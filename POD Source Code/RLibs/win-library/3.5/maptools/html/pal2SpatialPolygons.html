@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Making SpatialPolygons objects from RArcInfo input</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pal2SpatialPolygons {maptools}"><tr><td>pal2SpatialPolygons {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Making SpatialPolygons objects from RArcInfo input</h2>
+
+<h3>Description</h3>
+
+<p>This function is used in making SpatialPolygons objects from RArcInfo input.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+pal2SpatialPolygons(arc, pal, IDs, dropPoly1=TRUE,
+ proj4string=CRS(as.character(NA)))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>IDs</code></td>
+<td>
+<p>Unique character ID values for each output Polygons object; the input IDs can be an integer or character vector with duplicates, where the duplicates will be combined as a single output Polygons object</p>
+</td></tr>
+<tr valign="top"><td><code>proj4string</code></td>
+<td>
+<p>Object of class <code>"CRS"</code>;
+holding a valid proj4 string</p>
+</td></tr>
+<tr valign="top"><td><code>arc</code></td>
+<td>
+<p>Object returned by <code>get.arcdata</code></p>
+</td></tr>
+<tr valign="top"><td><code>pal</code></td>
+<td>
+<p>Object returned by <code>get.paldata</code></p>
+</td></tr>
+<tr valign="top"><td><code>dropPoly1</code></td>
+<td>
+<p>Should the first polygon in the AVC or e00 data be dropped; the first polygon is typically the compound boundary of the whole dataset, and can be detected by looking at the relative lengths of the list components in the second component of pal, which are the numbers of arcs making up the boundary of each polygon</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The functions return a SpatialPolygons object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Bivand </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+nc1 &lt;- readShapePoly(system.file("shapes/sids.shp", package="maptools")[1], ID="FIPS")
+plot(nc1)
+text(coordinates(nc1), labels=row.names(nc1), cex=0.6)
+if(require(maps)){
+ncmap &lt;- map("county", "north carolina", fill=TRUE, col="transparent",
+ plot=FALSE)
+IDs &lt;- sapply(strsplit(ncmap$names, "[,:]"), function(x) x[2])
+nc2 &lt;- map2SpatialPolygons(ncmap, IDs)
+plot(nc2)
+text(coordinates(nc2), labels=row.names(nc2), cex=0.6)
+}
+#if(require(RArcInfo)) {
+#td &lt;- tempdir()
+#tmpcover &lt;- paste(td, "nc", sep="/")
+#if (!file.exists(tmpcover)) e00toavc(system.file("share/co37_d90.e00",
+# package="maptools")[1], tmpcover)
+#arc &lt;- get.arcdata(td, "nc")
+#pal &lt;- get.paldata(td, "nc")
+#pat &lt;- get.tabledata(paste(td, "info", sep="/"), "NC.PAT")
+#sapply(pal[[2]], function(x) length(x[[1]]))
+#IDs &lt;- paste(pat$ST[-1], pat$CO[-1], sep="")
+#nc3 &lt;- pal2SpatialPolygons(arc, pal, IDs=IDs)
+#plot(nc3)
+#text(coordinates(nc3), labels=row.names(nc3), cex=0.6)
+#}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

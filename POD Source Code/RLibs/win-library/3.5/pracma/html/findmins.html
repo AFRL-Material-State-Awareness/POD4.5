@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find All Minima</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for findmins {pracma}"><tr><td>findmins {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Find All Minima
+</h2>
+
+<h3>Description</h3>
+
+<p>Finding all local(!) minima of a unvariate function in an interval by
+splitting the interval in many small subintervals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+findmins(f, a, b, n = 100, tol = .Machine$double.eps^(2/3), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>functions whose minima shall be found.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>endpoints of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>number of subintervals to generate and search.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>has no effect at this moment.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Local minima are found by looking for one minimum in each subinterval.
+It will be found by applying <code>optimize</code> to any two adjacent
+subinterval where the first slope is negative and the second one
+positive.
+</p>
+<p>If the function is minimal on a whole subinterval, this will cause
+problems. If some minima are apparently not found, increase the number
+of subintervals.
+</p>
+<p>Note that the endpoints of the interval will never be considered to be
+local minima. The function need not be vectorized.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric vector with the x-positions of all minima found in the interval.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/optimize.html">optimize</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+fun &lt;- function(x) x * cos(0.1*exp(x)) * sin(0.1*pi*exp(x))
+## Not run: ezplot(fun, 0, 5, n = 1001)
+
+# If n is smaller, the rightmost minimum will not be found.
+findmins(fun, 0, 5, n= 1000)
+#  2.537727 3.248481 3.761840 4.023021 4.295831
+#  4.455115 4.641481 4.756263 4.897461 4.987802
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

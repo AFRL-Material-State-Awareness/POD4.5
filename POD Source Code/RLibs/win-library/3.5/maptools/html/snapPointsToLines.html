@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Snap a set of points to a set of lines</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for snapPointsToLines {maptools}"><tr><td>snapPointsToLines {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Snap a set of points to a set of lines
+</h2>
+
+<h3>Description</h3>
+
+<p>This function snaps a set of points to a set of lines based on the minimum 
+distance of each point to any of the lines. This function does not work with 
+geographic coordinates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+snapPointsToLines(points, lines, maxDist=NA, withAttrs = TRUE, idField=NA)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>points</code></td>
+<td>
+
+<p>An object of the class SpatialPoints or SpatialPointsDataFrame.
+</p>
+</td></tr>
+<tr valign="top"><td><code>lines</code></td>
+<td>
+
+<p>An object of the class SpatialLines or SpatialLinesDataFrame.
+</p>
+</td></tr>
+<tr valign="top"><td><code>maxDist</code></td>
+<td>
+
+<p>Numeric value for establishing a maximum distance to avoid snapping points that 
+are farther apart; its default value is NA.
+</p>
+</td></tr>
+<tr valign="top"><td><code>withAttrs</code></td>
+<td>
+
+<p>Boolean value for preserving (TRUE) or getting rid (FALSE) of the original point 
+attributes. Default: TRUE. This parameter is optional. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>idField</code></td>
+<td>
+
+<p>A string specifying the field which contains each line's id. This id will 
+be transferred to the snapped points data set to distinguish the line which each
+point was snapped to.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>SpatialPointsDataFrame object as defined by the R package 'sp'. This object 
+contains the snapped points, therefore all of them lie on the lines.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>German Carrillo and Ethan Plunkett
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="nearestPointOnSegment.html">nearestPointOnSegment</a></code>, <code><a href="nearestPointOnLine.html">nearestPointOnLine</a></code>, 
+<code><a href="../../sp/html/00sp.html">sp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# From the sp vignette
+l1 = cbind(c(1,2,3),c(3,2,2))
+l1a = cbind(l1[,1]+.05,l1[,2]+.05)
+l2 = cbind(c(1,2,3),c(1,1.5,1))
+Sl1 = Line(l1)
+Sl1a = Line(l1a)
+Sl2 = Line(l2)
+S1 = Lines(list(Sl1, Sl1a), ID="a")
+S2 = Lines(list(Sl2), ID="b")
+Sl = SpatialLines(list(S1,S2))
+df = data.frame(z = c(1,2), row.names=sapply(slot(Sl, "lines"), function(x) slot(x, "ID")))
+Sldf = SpatialLinesDataFrame(Sl, data = df)
+
+xc = c(1.2,1.5,2.5)
+yc = c(1.5,2.2,1.6)
+Spoints = SpatialPoints(cbind(xc, yc))
+
+if (rgeosStatus()) snapPointsToLines(Spoints, Sldf, maxDist=0.4)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

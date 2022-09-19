@@ -1,0 +1,76 @@
+BGSall                  Berkeley guidance study
+BigMac2003              World cities data
+BlowBS                  Blowdown data, Black Spruce only
+Blowdown                Blowdown data
+Challeng                Challenger data
+Donner                  Donner party
+Downer                  Downer data
+Forbes                  Forbes' data
+Heights                 Pearson-Lee data
+Highway                 Highway accidents
+Hooker                  Hooker's data
+Htwt                    Artificial height and weight data
+MWwords                 Word frequencies from Mosteller and Wallace
+MinnLand                Conservation restrictions and farm prices in
+                        Minnesota
+MinnWater               Total Water Usage in Minnesota
+Mitchell                Mitchell soil temperature
+Rateprof                Professor ratings from RateMyProfessors.com.
+Rpdata                  Always plot residuals.
+Stevens                 Subjective scaling data collected by S. S.
+                        Stevens
+UBSprices               UBS price data
+UN1                     National statistics from the United Nations
+UN11                    National statistics from the United Nations
+                        mostly from 2009-2011
+Whitestar               Titanic Survivors
+ais                     Australian institute of sport data
+allshoots               Apple shoots data
+alr4Web                 Access to the Applied Linear Regression website
+baeskel                 Surface tension
+brains                  Mammal brain weights
+cakes                   Cakes data
+cathedral               Cathedrals
+caution                 Caution data
+cloud                   Florida area cumulus experiment, FACE I.
+domedata                Metrodome fan experiment
+drugcost                Drug cost.
+dwaste                  Crock data.
+florida                 Florida presidential election
+ftcollinssnow           Ft. Collins snowfall
+ftcollinstemp           Ft. Collins Temperature
+fuel2001                Fuel consumption
+galapagos               Galapagos species data
+galtonpeas              Galton's peas
+jevons                  Jevon's gold coin data
+lakemary                Lake Mary bluegills
+lakes                   Lake zooplankton diversity
+landrent                Land rent
+lathe1                  Lathe data
+mantel                  Mantel's artifical data for stepwise regression
+mile                    World records for the mile run
+npdata                  Northern pike catch per unit effort
+oldfaith                Old Faithful Geyser data
+physics                 Physics data
+pipeline                Alaska pipeline
+prodscore               Soil productivity
+rat                     Rat data
+salary                  Salary data
+salarygov               Government salary study
+segreg                  Energy consumption
+shocks                  Small electric shocks in dairy cows
+sleep1                  Sleep in mammals
+snake                   Snake river data
+sniffer                 Sniffer data
+stopping                Stopping distances
+swan96                  Black crappie study on Swan Lake, Minnesota
+turk0                   Turkey data, one source
+turkey                  Turkey data, all sources
+twins                   Burt's twin data
+ufc                     Height-diameter data for Upper Flat Creek,
+                        Idaho
+walleye                 Walleye length at age
+water                   California water
+wblake                  West Bearskin Lake small mouth bass data.
+wm1                     Simple windmill data
+wm2                     Windmill data with direction information

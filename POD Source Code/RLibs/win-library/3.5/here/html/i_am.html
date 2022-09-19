@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Declare location of current script or report</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for i_am {here}"><tr><td>i_am {here}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Declare location of current script or report</h2>
+
+<h3>Description</h3>
+
+<p>Add a call to <code>here::i_am("&lt;project-relative path&gt;.&lt;ext&gt;")</code>
+at the top of your R script or in the first chunk of your rmarkdown document.
+This ensures that the project root is set up correctly:
+subsequent calls to <code>here()</code> will refer to the implied project root.
+If the current working directory is outside of the project
+where the script or report is intended to run, it will fail
+with a descriptive message.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+i_am(path, ..., uuid = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>path</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+The path to the current script or report, relative to the project root.
+Passing an absolute path raises an error.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Must be empty, reserved for future use.</p>
+</td></tr>
+<tr valign="top"><td><code>uuid</code></td>
+<td>
+<p><code style="white-space: pre;">[character(1)]</code><br />
+<a href='https://www.tidyverse.org/lifecycle/#experimental'><img src='figures/lifecycle-experimental.svg' alt='Experimental lifecycle'></a>)'
+</p>
+<p>If not <code>NULL</code>, a unique string that is matched
+against the first 100 lines of the file.
+Use <code><a href="../../uuid/html/UUIDgenerate.html">uuid::UUIDgenerate()</a></code> to create a unique string
+that can be used as a <code>uuid</code> argument.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Relying on the project root determined with a project file,
+the default for versions prior to 1.0.0,
+only weakly protects against running a script from an arbitrary directory
+outside the intended project.
+The <code>i_am()</code> function offers a stronger way to define the project root:
+it will ensure that the project root actually contains a file in that location,
+optionally checking for file contents that uniquely identify the file
+via the <code>nonce</code> argument.
+</p>
+<p>This function will fail if the script or report is moved within the project.
+Update the <code>i_am()</code> call to reflect the new location.
+If you use the <code>nonce</code> argument for extra safety, be sure to change it
+when you save an existing script or report under a new name.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function is called for its side effects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+here::i_am("prepare/penguins.R")
+here::i_am("analysis/report.Rmd", uuid = "f9e884084b84794d762a535f3facec85")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>here</em> version 1.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Lines intersecting the bounding box</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for abclines3d {rgl}"><tr><td>abclines3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Lines intersecting the bounding box
+</h2>
+
+<h3>Description</h3>
+
+<p>This adds mathematical lines to a scene.  Their intersection with the current
+bounding box will be drawn.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+abclines3d(x, y = NULL, z = NULL, a, b = NULL, c = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+
+<p>Coordinates of points through which each line passes.  
+</p>
+</td></tr> 
+<tr valign="top"><td><code>a, b, c</code></td>
+<td>
+
+<p>Coordinates of the direction vectors for the lines.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Material properties.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Draws the segment of a line that intersects the current
+bounding box of the scene using the parametrization
+<i> (x, y, z) + (a, b, c) * s </i> where <i>s</i> is a real number.
+</p>
+<p>Any reasonable way of defining the
+coordinates <code>x, y, z</code> and <code>a, b, c</code> is acceptable.  
+See the function <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code>
+for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A shape ID of the object is returned invisibly.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="planes.html">planes3d</a></code>, <code><a href="rgl.fns.html">rgl.planes</a></code> for mathematical planes.
+</p>
+<p><code><a href="3dobjects.html">segments3d</a></code> draws sections of lines that
+do not adapt to the bounding box.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+plot3d(rnorm(100), rnorm(100), rnorm(100))
+abclines3d(0, 0, 0, a = diag(3), col = "gray")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draws values of beta and sigma by Bayesian linear regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for norm.draw {mice}"><tr><td>norm.draw {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Draws values of beta and sigma by Bayesian linear regression</h2>
+
+<h3>Description</h3>
+
+<p>This function draws random values of beta and sigma under the Bayesian
+linear regression model as described in Rubin (1987, p. 167). This function
+can be called by user-specified imputation functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+norm.draw(y, ry, x, rank.adjust = TRUE, ...)
+
+.norm.draw(y, ry, x, rank.adjust = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Incomplete data vector of length <code>n</code></p>
+</td></tr>
+<tr valign="top"><td><code>ry</code></td>
+<td>
+<p>Vector of missing data pattern (<code>FALSE</code>=missing,
+<code>TRUE</code>=observed)</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Matrix (<code>n</code> x <code>p</code>) of complete covariates.</p>
+</td></tr>
+<tr valign="top"><td><code>rank.adjust</code></td>
+<td>
+<p>Argument that specifies whether <code>NA</code>'s in the
+coefficients need to be set to zero. Only relevant when <code>ls.meth = "qr"</code>
+AND the predictor matrix is rank-deficient.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A <code>list</code> containing components <code>coef</code> (least squares estimate),
+<code>beta</code> (drawn regression weights) and <code>sigma</code> (drawn value of the
+residual standard deviation).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gerko Vink, 2018, for this version, based on earlier versions written
+by Stef van Buuren, Karin Groothuis-Oudshoorn, 2017
+</p>
+
+
+<h3>References</h3>
+
+<p>Rubin, D.B. (1987). <em>Multiple imputation for nonresponse in surveys</em>. New York: Wiley.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

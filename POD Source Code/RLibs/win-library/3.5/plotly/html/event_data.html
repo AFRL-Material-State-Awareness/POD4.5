@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Access plotly user input event data in shiny</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for event_data {plotly}"><tr><td>event_data {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Access plotly user input event data in shiny</h2>
+
+<h3>Description</h3>
+
+<p>This function must be called within a reactive shiny context.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+event_data(
+  event = c("plotly_hover", "plotly_unhover", "plotly_click", "plotly_doubleclick",
+    "plotly_selected", "plotly_selecting", "plotly_brushed", "plotly_brushing",
+    "plotly_deselect", "plotly_relayout", "plotly_restyle", "plotly_legendclick",
+    "plotly_legenddoubleclick", "plotly_clickannotation", "plotly_afterplot",
+    "plotly_sunburstclick"),
+  source = "A",
+  session = shiny::getDefaultReactiveDomain(),
+  priority = c("input", "event")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>event</code></td>
+<td>
+<p>The type of plotly event. All supported events are listed in the
+function signature above (i.e., the usage section).</p>
+</td></tr>
+<tr valign="top"><td><code>source</code></td>
+<td>
+<p>a character string of length 1. Match the value of this string
+with the <code>source</code> argument in <code><a href="plot_ly.html">plot_ly()</a></code> (or <code><a href="ggplotly.html">ggplotly()</a></code>) to respond to
+events emitted from that specific plot.</p>
+</td></tr>
+<tr valign="top"><td><code>session</code></td>
+<td>
+<p>a shiny session object (the default should almost always be used).</p>
+</td></tr>
+<tr valign="top"><td><code>priority</code></td>
+<td>
+<p>the priority of the corresponding shiny input value.
+If equal to <code>"event"</code>, then <code><a href="event_data.html">event_data()</a></code> always triggers re-execution,
+instead of re-executing only when the relevant shiny input value changes
+(the default).</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li> <p><a href="https://plotly-r.com/linking-views-with-shiny.html#shiny-plotly-inputs">https://plotly-r.com/linking-views-with-shiny.html#shiny-plotly-inputs</a>
+</p>
+</li>
+<li> <p><a href="https://plotly.com/javascript/plotlyjs-function-reference/">https://plotly.com/javascript/plotlyjs-function-reference/</a>
+</p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p><a href="event_register.html">event_register</a>, <a href="event_unregister.html">event_unregister</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+plotly_example("shiny", "event_data")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

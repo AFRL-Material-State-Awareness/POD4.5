@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Vectorized Sequences</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for vecseq {bit}"><tr><td>vecseq {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Vectorized Sequences</h2>
+
+<h3>Description</h3>
+
+<p><code>vecseq</code> returns concatenated multiple sequences
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+vecseq(x, y = NULL, concat = TRUE, eval = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector of sequence start points</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>vector of sequence end points (if <code>is.null(y)</code> then <code>x</code>
+are taken as endpoints, all starting at 1)</p>
+</td></tr>
+<tr valign="top"><td><code>concat</code></td>
+<td>
+<p>vector of sequence end points (if <code>is.null(y)</code> then
+<code>x</code> are taken as endpoints, all starting at 1)</p>
+</td></tr>
+<tr valign="top"><td><code>eval</code></td>
+<td>
+<p>vector of sequence end points (if <code>is.null(y)</code> then
+<code>x</code> are taken as endpoints, all starting at 1)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is a generalization of <code><a href="../../base/html/sequence.html">sequence</a></code> in that you can choose
+sequence starts other than 1 and also have options to no concat and/or
+return a call instead of the evaluated sequence.
+</p>
+
+
+<h3>Value</h3>
+
+<p>if <code>concat==FALSE</code> and <code>eval==FALSE</code> a list with n calls
+that generate sequences <br /> if <code>concat==FALSE</code> and <code>eval==TRUE </code> a
+list with n sequences <br /> if <code>concat==TRUE </code> and <code>eval==FALSE</code> a
+single call generating the concatenated sequences <br /> if <code>concat==TRUE
+</code> and <code>eval==TRUE </code> an integer vector of concatentated sequences
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angelo Canty, Jens Oehlschlägel
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/Colon.html">:</a></code>, <code><a href="../../base/html/seq.html">seq</a></code>, <code><a href="../../base/html/sequence.html">sequence</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  sequence(c(3,4))
+  vecseq(c(3,4))
+  vecseq(c(1,11), c(5, 15))
+  vecseq(c(1,11), c(5, 15), concat=FALSE, eval=FALSE)
+  vecseq(c(1,11), c(5, 15), concat=FALSE, eval=TRUE)
+  vecseq(c(1,11), c(5, 15), concat=TRUE, eval=FALSE)
+  vecseq(c(1,11), c(5, 15), concat=TRUE, eval=TRUE)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

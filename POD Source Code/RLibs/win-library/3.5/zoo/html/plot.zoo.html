@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plotting zoo Objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.zoo {zoo}"><tr><td>plot.zoo {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plotting zoo Objects</h2>
+
+<h3>Description</h3>
+
+<p>Plotting method for objects of class <code>"zoo"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'zoo'
+plot(x, y = NULL, screens, plot.type,
+  panel = lines, xlab = "Index", ylab = NULL, main = NULL,
+  xlim = NULL, ylim = NULL, xy.labels = FALSE, xy.lines = NULL,
+  yax.flip = FALSE, oma = c(6, 0, 5, 0),
+  mar = c(0, 5.1, 0, if(yax.flip) 5.1 else 2.1), 
+  col = 1, lty = 1, lwd = 1, pch = 1, type = "l", log = "",
+  nc, widths = 1, heights = 1, ...)
+## S3 method for class 'zoo'
+lines(x, y = NULL, type = "l", ...)
+## S3 method for class 'zoo'
+points(x, y = NULL, type = "p", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class <code>"zoo"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>an object of class <code>"zoo"</code>. If <code>y</code> is <code>NULL</code>
+(the default) a time series plot of <code>x</code> is produced, otherwise
+if both <code>x</code> and <code>y</code> are univariate <code>"zoo"</code> series, a
+scatter plot of <code>y</code> versus <code>x</code> is produced.</p>
+</td></tr>
+<tr valign="top"><td><code>screens</code></td>
+<td>
+<p>factor (or coerced to factor) whose levels specify which
+graph each series is to be plotted in.  <code>screens=c(1,2,1)</code>
+would plot series 1, 2 and 3 in graphs 1, 2 and 1.  If not specified
+then 1 is used if <code>plot.type="single"</code> and <code>seq_len(ncol(x))</code>
+otherwise.</p>
+</td></tr>
+<tr valign="top"><td><code>plot.type</code></td>
+<td>
+<p>for multivariate zoo objects, &quot;multiple&quot; plots the
+series on multiple plots and &quot;single&quot; superimposes them on a single
+plot.  Default is &quot;single&quot; if <code>screens</code> has only one level and
+<code>"multiple"</code> otherwise. If neither <code>screens</code> nor
+<code>plot.type</code> is specified then <code>"single"</code>
+is used if there is one series and <code>"mulitple"</code> otherwise.  This
+option is provided for back compatibility.  Usually <code>screens</code> is
+used instead.</p>
+</td></tr>
+<tr valign="top"><td><code>panel</code></td>
+<td>
+<p>a <code>function(x, y, col, lty, ...)</code>  which gives the
+action to be carried out in each panel of the display for
+<code>plot.type = "multiple"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>ylim</code></td>
+<td>
+<p>if <code>plot.type = "multiple"</code> then it can be a list of
+y axis limits.  If not a list each graph has the same limits.
+If any list element is not a pair then its range is used instead. If 
+<code>plot.type = "single"</code> then it is as in <code>plot</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>xy.labels</code></td>
+<td>
+<p>logical, indicating if <code><a href="../../graphics/html/text.html">text</a></code> labels should be
+used in the scatter plot, or character, supplying a vector of labels to be used.</p>
+</td></tr>
+<tr valign="top"><td><code>xy.lines</code></td>
+<td>
+<p>logical, indicating if <code><a href="../../graphics/html/lines.html">lines</a></code> should be drawn in
+the scatter plot. Defaults to the value of <code>xy.labels</code> if that is
+logical, otherwise to <code>FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>yax.flip</code></td>
+<td>
+<p>logical, indicating if the y-axis (ticks and numbering)
+should flip from side 2 (left) to 4 (right) from series to series
+when <code>type = "multiple"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>xlab, ylab, main, xlim, oma, mar</code></td>
+<td>
+<p>graphical arguments, see <code><a href="../../graphics/html/par.html">par</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>col, lty, lwd, pch, type</code></td>
+<td>
+<p>graphical arguments that can be vectors or 
+(named) lists. See the details for more information.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>specification of log scales as <code>"x"</code>, <code>"y"</code> or <code>"xy"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>nc</code></td>
+<td>
+<p>the number of columns to use when <code>plot.type = "multiple"</code>.
+Defaults to <code>1</code> for up to <code>4</code> series, otherwise to <code>2</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>widths, heights</code></td>
+<td>
+<p>widths and heights for individual graphs, see
+<code><a href="../../graphics/html/layout.html">layout</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional graphical arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The methods for <code>plot</code> and <code>lines</code> are very similar
+to the corresponding <code>ts</code> methods. However, the handling of
+several graphical parameters is more flexible for multivariate series.
+These parameters can be vectors of the same length as the number of
+series plotted or are recycled if shorter. They can also be (partially)
+named list, e.g., <code>list(A = c(1,2), c(3,4))</code> in which <code>c(3, 4)</code>
+is the default value and <code>c(1, 2)</code> the value only  for series <code>A</code>.
+The <code>screens</code> argument can be specified in a similar way.
+If <code>plot.type</code> and <code>screens</code> conflict then multiple plots
+will be assumed. Also see the examples.
+</p>
+<p>In the case of a custom panel the panel can reference
+<code>parent.frame$panel.number</code> in order to determine which
+frame the panel is being called from.  See examples.
+</p>
+<p><code>par(mfrow=...)</code> and <code>Axis</code> can be used in conjunction with 
+single panel plots in the same way as with other classic graphics.
+</p>
+<p>For multi-panel graphics, <code>plot.zoo</code> takes over the layout so
+<code>par(mfrow=...)</code> cannot be used.  <code>Axis</code> can be used within
+the panels themselves but not outside the panel.  See examples.
+Also, <code>par(new = TRUE)</code> is not supported for multi-panel graphics.
+</p>
+<p>In addition to classical time series line plots, there is also a
+simple <code><a href="../../graphics/html/barplot.html">barplot</a></code> method for <code>"zoo"</code> series. Additionally,
+there is a <code><a href="../../graphics/html/boxplot.html">boxplot</a></code> method that visualizes the <code>coredata</code>
+of the <code>"zoo"</code> series with a box plot.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code>, <code><a href="../../stats/html/plot.ts.html">plot.ts</a></code>, <code><a href="../../graphics/html/barplot.html">barplot</a></code>,
+<code><a href="../../graphics/html/boxplot.html">boxplot</a></code>, <code><a href="xyplot.zoo.html">xyplot.zoo</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## example dates
+x.Date &lt;- as.Date(paste(2003, 02, c(1, 3, 7, 9, 14), sep = "-"))
+
+## univariate plotting
+x &lt;- zoo(rnorm(5), x.Date)
+x2 &lt;- zoo(rnorm(5, sd = 0.2), x.Date)
+plot(x)
+lines(x2, col = 2)
+
+## multivariate plotting
+z &lt;- cbind(x, x2, zoo(rnorm(5, sd = 0.5), x.Date))
+plot(z, type = "b", pch = 1:3, col = 1:3, ylab = list(expression(mu), "b", "c"))
+colnames(z) &lt;- LETTERS[1:3]
+plot(z, screens = 1, col = list(B = 2))
+plot(z, type = "b", pch = 1:3, col = 1:3)
+plot(z, type = "b", pch = list(A = 1:5, B = 3), col = list(C = 4, 2))
+plot(z, type = "b", screen = c(1,2,1), col = 1:3)
+# right axis is for broken lines
+plot(x)
+opar &lt;- par(usr = c(par("usr")[1:2], range(x2)))
+lines(x2, lty = 2)
+# axis(4)
+axis(side = 4)
+par(opar)
+
+
+## Custom x axis labelling using a custom panel.
+# 1. test data
+z &lt;- zoo(c(21, 34, 33, 41, 39, 38, 37, 28, 33, 40), 
+     as.Date(c("1992-01-10", "1992-01-17", "1992-01-24", "1992-01-31", 
+       "1992-02-07", "1992-02-14", "1992-02-21", "1992-02-28", "1992-03-06", 
+       "1992-03-13")))
+zz &lt;- merge(a = z, b = z+10)
+# 2. axis tick for every point. Also every 3rd point labelled.
+my.panel &lt;- function(x, y, ..., pf = parent.frame()) {
+   fmt &lt;- "%b-%d" # format for axis labels
+   lines(x, y, ...)
+   # if bottom panel
+   if (with(pf, length(panel.number) == 0 || 
+        panel.number %% nr == 0 || panel.number == nser)) { 
+      # create ticks at x values and then label every third tick
+      axis(side = 1, at = x, labels = FALSE)
+      ix &lt;- seq(1, length(x), 3)
+      labs &lt;- format(x, fmt)
+      axis(side = 1, at = x[ix], labels = labs[ix], tcl = -0.7, cex.axis = 0.7)
+   }
+}
+# 3. plot
+plot(zz, panel = my.panel, xaxt = "n")
+
+# with a single panel plot a fancy x-axis is just the same
+# procedure as for the ordinary plot command
+plot(zz, screen = 1, col = 1:2, xaxt = "n")
+# axis(1, at = time(zz), labels = FALSE)
+tt &lt;- time(zz)
+axis(side = 1, at = tt, labels = FALSE)
+ix &lt;- seq(1, length(tt), 3)
+fmt &lt;- "%b-%d" # format for axis labels
+labs &lt;- format(tt, fmt)
+# axis(1, at = time(zz)[ix], labels = labs[ix], tcl = -0.7, cex.axis = 0.7)
+axis(side = 1, at = tt[ix], labels = labs[ix], tcl = -0.7, cex.axis = 0.7)
+legend("bottomright", colnames(zz), lty = 1, col = 1:2)
+
+## plot a mulitple ts series with nice x-axis using panel function
+tab &lt;- ts(cbind(A = 1:24, B = 24:1), start = c(2006, 1), freq = 12)
+pnl.xaxis &lt;- function(...) {
+     lines(...)
+     panel.number &lt;- parent.frame()$panel.number
+     nser &lt;- parent.frame()$nser
+     # if bottom panel
+     if (!length(panel.number) || panel.number == nser) { 
+           tt &lt;- list(...)[[1]]
+           ym &lt;- as.yearmon(tt)
+	   mon &lt;- as.numeric(format(ym, "%m"))
+	   yy &lt;- format(ym, "%y")
+	   mm &lt;- substring(month.abb[mon], 1, 1)
+       if (any(mon == 1))
+	    # axis(1, tt[mon == 1], yy[mon == 1], cex.axis = 0.7)
+	    axis(side = 1, at = tt[mon == 1], labels = yy[mon == 1], cex.axis = 0.7)
+	   # axis(1, tt[mon &gt; 1], mm[mon &gt; 1], cex.axis = 0.5, tcl = -0.3)
+	   axis(side = 1, at = tt[mon &gt; 1], labels = mm[mon &gt; 1], cex.axis = 0.5, tcl = -0.3)
+     }
+}
+plot(as.zoo(tab), panel = pnl.xaxis, xaxt = "n", main = "Fancy X Axis")
+
+## Another example with a custom axis
+# test data
+z &lt;- zoo(matrix(1:25, 5), c(10,11,20,21))
+colnames(z) &lt;- letters[1:5]
+
+plot(zoo(coredata(z)), xaxt = "n", panel = function(x, y, ..., Time = time(z)) {
+    lines(x, y, ...)
+    # if bottom panel
+    pf &lt;- parent.frame()
+    if (with(pf, panel.number %% nr == 0 || panel.number == nser)) {
+        axis(side = 1, at = x, labels = Time)
+    }
+})
+
+
+## plot with left and right axes
+## modified from http://www.mayin.org/ajayshah/KB/R/html/g6.html
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+z &lt;- zoo(cbind(A = cumsum(rnorm(100)), B = cumsum(rnorm(100, mean = 0.2))))
+opar &lt;- par(mai = c(.8, .8, .2, .8))
+plot(z[,1], type = "l", 
+  xlab = "x-axis label", ylab = colnames(z)[1])
+par(new = TRUE)
+plot(z[,2], type = "l", ann = FALSE, yaxt = "n", col = "blue")
+# axis(4)
+axis(side = 4)
+legend(x = "topleft", bty = "n", lty = c(1,1), col = c("black", "blue"),
+  legend = paste(colnames(z), c("(left scale)", "(right scale)")))
+usr &lt;- par("usr")
+# if you don't care about srt= in text then mtext is shorter:
+#   mtext(colnames(z)[2], 4, 2, col = "blue")
+text(usr[2] + .1 * diff(usr[1:2]), mean(usr[3:4]), colnames(z)[2],
+  srt = -90, xpd = TRUE, col = "blue")
+par(opar)
+
+
+## another plot with left and right axes
+## modified from https://stat.ethz.ch/pipermail/r-help/2014-May/375293.html
+d1 &lt;- c(38.2, 18.1, 83.2, 42.7, 22.8, 48.1, 81.8, 129.6, 52.0, 110.3)
+d2 &lt;- c(2.2, 0.8, 0.7, 1.6, 0.9, 0.9, 1.1, 2.8, 5.1, 2.1)
+z1 &lt;- zooreg(d1, start = as.POSIXct("2013-01-01 00:00:01"), frequency = 0.0000006)
+z2 &lt;- zooreg(d2, start = as.POSIXct("2013-01-01 00:00:20"), frequency = 0.0000006)
+zt &lt;- zooreg(rnorm(1050), start = as.POSIXct("2013-01-01 00:00:01"), frequency = 0.00007)
+z &lt;- merge(zt, z1, z2, all = TRUE)
+z &lt;- na.spline(z[,2:3], na.rm = FALSE)
+## function to round up to a number divisible by n (2011 by Owen Jones)
+roundup &lt;- function(x, n) ceiling(ceiling(x)/n) * n
+## plot how to match secondary y-axis ticks to primary ones
+plot(z$z1, ylim = c(0, signif(max(na.omit(z$z1)), 2)), xlab = "")
+## use multiplication for even tick numbers and fake sekondary y-axis
+max.yl &lt;- roundup(max(na.omit(z$z2)), par("yaxp")[3])
+multipl.yl &lt;- max(na.omit(z$z2)) / max.yl
+multipl.z2 &lt;- signif(max(na.omit(z$z1) * 1.05), 2)/max.yl
+lines(z$z2 * multipl.z2, lty = 2)
+at4 &lt;- axTicks(4)
+axis(4, at = at4, seq(0, max.yl, length.out = par("yaxp")[3] + 1))
+
+
+# automatically placed point labels
+## Not run: 
+library("maptools")
+pointLabel(time(z), coredata(z[,2]), labels = format(time(z)), cex = 0.5)
+
+## End(Not run)
+
+## plot one zoo series against the other.
+plot(x, x2)
+plot(x, x2, xy.labels = TRUE)
+plot(x, x2, xy.labels = 1:5, xy.lines = FALSE)
+
+## shade a portion of a plot and make axis fancier
+
+v &lt;- zooreg(rnorm(50), start = as.yearmon(2004), freq = 12)
+
+plot(v, type = "n")
+u &lt;- par("usr")
+rect(as.yearmon("2007-8"), u[3], as.yearmon("2009-11"), u[4], 
+   border = 0, col = "grey")
+lines(v)
+axis(1, floor(time(v)), labels = FALSE, tcl = -1)
+
+## shade certain times to show recessions, etc.
+v &lt;- zooreg(rnorm(50), start = as.yearmon(2004), freq = 12)
+plot(v, type = "n")
+u &lt;- par("usr")
+rect(as.yearmon("2007-8"), u[3], as.yearmon("2009-11"), u[4], 
+   border = 0, col = "grey")
+lines(v)
+axis(1, floor(time(v)), labels = FALSE, tcl = -1)
+
+## fill area under plot
+
+pnl.xyarea &lt;- function(x, y, fill.base = 0, col = 1, ...) {
+       lines(x, y, ...)
+       panel.number &lt;- parent.frame()$panel.number
+	   col &lt;- rep(col, length = panel.number)[panel.number]
+       polygon(c(x[1], x, tail(x, 1), x[1]), 
+		c(fill.base, as.numeric(y), fill.base, fill.base), col = col)
+}
+plot(zoo(EuStockMarkets), col = rainbow(4), panel = pnl.xyarea)
+
+
+## barplot
+x &lt;- zoo(cbind(rpois(5, 2), rpois(5, 3)), x.Date)
+barplot(x, beside = TRUE)
+
+## boxplot
+boxplot(x)
+
+## 3d plot
+## The persp function in R (not part of zoo) works with zoo objects.
+## The following example is by Enrico Schumann.
+## https://stat.ethz.ch/pipermail/r-sig-finance/2009q1/003710.html
+nC &lt;- 10    # columns
+nO &lt;- 100 # observations
+dataM &lt;- array(runif(nC * nO), dim=c(nO, nC))
+zz &lt;- zoo(dataM, 1:nO)
+persp(1:nO, 1:nC, zz)
+
+# interactive plotting
+## Not run: 
+library("TeachingDemos")
+tke.test1 &lt;- list(Parameters = list(
+	lwd = list("spinbox", init = 1, from = 0, to = 5, increment = 1, width = 5),
+	lty = list("spinbox", init = 1, from = 0, to = 6, increment = 1, width = 5)
+))
+z &lt;- zoo(rnorm(25))
+tkexamp(plot(z), tke.test1, plotloc = "top")
+
+## End(Not run)
+
+# setting ylim on a multi-panel plot - 2nd panel y axis range is 1-50
+data("anscombe", package = "datasets")
+ans6 &lt;- zoo(anscombe[, 1:6])
+screens &lt;- c(1, 1, 2, 2, 3, 3)
+ylim &lt;- unname(tapply(as.list(ans6), screens, range))
+ylim[[2]] &lt;- 1:50 # or ylim[[2]] &lt;- c(1, 50)
+plot(ans6, screens = screens, ylim = ylim) 
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Design-based rank tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyranktest {survey}"><tr><td>svyranktest {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Design-based rank tests
+</h2>
+
+<h3>Description</h3>
+
+<p>Design-based versions of k-sample rank tests.  The built-in tests are
+all for location hypotheses, but the user could specify others.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyranktest(formula, design, 
+  test = c("wilcoxon", "vanderWaerden", "median","KruskalWallis"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+
+<p>Model formula <code>y~g</code> for outcome variable <code>y</code> and group <code>g</code>
+</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+
+<p>A survey design object
+</p>
+</td></tr>
+<tr valign="top"><td><code>test</code></td>
+<td>
+
+<p>Which rank test to use: Wilcoxon, van der Waerden's normal-scores
+test, Mood's test for the median, or a function <code>f(r,N)</code> where
+<code>r</code> is the rank and <code>N</code> the estimated population
+size. &quot;KruskalWallis&quot; is a synonym for &quot;wilcoxon&quot; for more than two groups.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> for future expansion</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>These tests are for the null hypothesis that the population or superpopulation distributions of the response variable are different between groups, targeted at population or superpopulation alternatives. 
+The 'ranks' are defined as quantiles of the pooled distribution of the variable, so they do not just go from 1 to N; the null hypothesis does not depend on the weights, but the ranks do.   
+</p>
+<p>The tests reduce to the usual Normal approximations to the usual rank tests under iid sampling.  Unlike the traditional rank tests, they are not exact in small samples. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>htest</code>
+</p>
+<p>Note that with more than two groups the <code>statistic</code> element of the return value holds the numerator degrees of freedom and the <code>parameter</code> element holds the test statistic. 
+</p>
+
+
+<h3>References</h3>
+
+<p>Lumley, T., &amp; Scott, A. J. (2013). Two-sample rank tests under complex sampling. BIOMETRIKA, 100 (4), 831-842. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svyttest.html">svyttest</a></code>, <code><a href="svylogrank.html">svylogrank</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+data(api)
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, fpc=~fpc, data=apiclus1)
+
+svyranktest(ell~comp.imp, dclus1)
+svyranktest(ell~comp.imp, dclus1, test="median")
+
+
+svyranktest(ell~stype, dclus1)
+svyranktest(ell~stype, dclus1, test="median")
+
+str(svyranktest(ell~stype, dclus1))
+
+## upper quartile
+svyranktest(ell~comp.imp, dclus1, test=function(r,N) as.numeric(r&gt;0.75*N))
+
+
+quantiletest&lt;-function(p){
+	  rval&lt;-function(r,N) as.numeric(r&gt;(N*p))
+	  attr(rval,"name")&lt;-paste(p,"quantile")
+	  rval
+	}
+svyranktest(ell~comp.imp, dclus1, test=quantiletest(0.5))
+svyranktest(ell~comp.imp, dclus1, test=quantiletest(0.75))
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

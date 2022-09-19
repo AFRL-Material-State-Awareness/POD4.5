@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Multivariate amputation based on continuous probability...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ampute.continuous {mice}"><tr><td>ampute.continuous {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Multivariate amputation based on continuous probability functions</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a missing data indicator for each pattern. The continuous
+probability distributions (Van Buuren, 2012, pp. 63, 64) will be induced on the
+weighted sum scores, calculated earlier in the multivariate amputation function
+<code><a href="ampute.html">ampute</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ampute.continuous(P, scores, prop, type)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>P</code></td>
+<td>
+<p>A vector containing the pattern numbers of the cases's candidacies.
+For each case, a value between 1 and #patterns is given. For example, a
+case with value 2 is candidate for missing data pattern 2.</p>
+</td></tr>
+<tr valign="top"><td><code>scores</code></td>
+<td>
+<p>A list containing vectors with the candidates's weighted sum scores,
+the result of an underlying function in <code><a href="ampute.html">ampute</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>prop</code></td>
+<td>
+<p>A scalar specifying the proportion of missingness. Should be a value
+between 0 and 1. Default is a missingness proportion of 0.5.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>A vector of strings containing the type of missingness for each
+pattern. Either <code>"LEFT"</code>, <code>"MID"</code>, <code>"TAIL"</code> or '<code>"RIGHT"</code>.
+If a single missingness type is entered, all patterns will be created by the same
+type. If missingness types should differ over patterns, a vector of missingness
+types should be entered. Default is RIGHT for all patterns and is the result of
+<code><a href="ampute.default.type.html">ampute.default.type</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A list containing vectors with <code>0</code> if a case should be made missing
+and <code>1</code> if a case should remain complete. The first vector refers to the
+first pattern, the second vector to the second pattern, etcetera.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rianne Schouten [aut, cre], Gerko Vink [aut], Peter Lugtig [ctb], 2016
+</p>
+
+
+<h3>References</h3>
+
+<p>#'Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/sec-linearnormal.html#sec:generateuni"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="ampute.html">ampute</a></code>, <code><a href="ampute.default.type.html">ampute.default.type</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Use a partial bundle of plotly.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for partial_bundle {plotly}"><tr><td>partial_bundle {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Use a partial bundle of plotly.js</h2>
+
+<h3>Description</h3>
+
+<p>Leveraging plotly.js' partial bundles can lead to smaller file sizes
+and faster rendering. The full list of available bundles, and the
+trace types that they support, are available
+<a href="https://github.com/plotly/plotly.js/blob/master/dist/README.md#partial-bundles">here</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+partial_bundle(p, type = "auto", local = TRUE, minified = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly object.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>name of the (partial) bundle. The default, <code>'auto'</code>, attempts to
+find the smallest single bundle that can render <code>p</code>. If no single partial bundle
+can render <code>p</code>, then the full bundle is used.</p>
+</td></tr>
+<tr valign="top"><td><code>local</code></td>
+<td>
+<p>whether or not to download the partial bundle so that it can be
+viewed later without an internet connection.</p>
+</td></tr>
+<tr valign="top"><td><code>minified</code></td>
+<td>
+<p>whether or not to use a minified js file (non-minified file can be useful for debugging plotly.js)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>WARNING: use this function with caution when rendering multiple
+plotly graphs on a single website. That's because, if multiple plotly.js
+bundles are used, the most recent bundle will override the other bundles.
+See the examples section for an example.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# ----------------------------------------------------------------------
+# This function is always safe to use when rendering a single 
+# plotly graph. In this case, we get a 3x file reduction.
+# ----------------------------------------------------------------------
+
+## Not run: 
+library(plotly)
+p &lt;- plot_ly(x = 1:10, y = 1:10) %&gt;% add_markers()
+save_widget &lt;- function(p, f) {
+  owd &lt;- setwd(dirname(f))
+  on.exit(setwd(owd))
+  htmlwidgets::saveWidget(p, f)
+  mb &lt;- round(file.info(f)$size / 1e6, 3)
+  message("File is: ", mb," MB")
+}
+f1 &lt;- tempfile(fileext = ".html")
+f2 &lt;- tempfile(fileext = ".html")
+save_widget(p, f1)
+save_widget(partial_bundle(p), f2)
+
+# ----------------------------------------------------------------------
+# But, since plotly.js bundles override one another, 
+# be careful when putting multiple graphs in a larger document!
+# Note how the surface (part of the gl3d bundle) renders, but the 
+# heatmap (part of the cartesian bundle) doesn't...
+# ----------------------------------------------------------------------
+
+library(htmltools)
+p1 &lt;- plot_ly(z = ~volcano) %&gt;% 
+  add_heatmap() %&gt;%
+  partial_bundle()
+p2 &lt;- plot_ly(z = ~volcano) %&gt;% 
+  add_surface() %&gt;%
+  partial_bundle()
+browsable(tagList(p1, p2))
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

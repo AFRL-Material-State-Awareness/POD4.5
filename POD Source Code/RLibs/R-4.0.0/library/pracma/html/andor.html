@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Logical AND, OR (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for and, or {pracma}"><tr><td>and, or {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Logical AND, OR (Matlab Style)
+</h2>
+
+<h3>Description</h3>
+
+<p><code>and(l, k)</code> resp. <code>or(l, k)</code> the same as <code>(l &amp; k) + 0</code> resp.
+<code>(l | k) + 0</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+and(l, k)
+or(l, k)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>l, k</code></td>
+<td>
+<p>Arrays.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Performs a logical operation of arrays <code>l</code> and <code>k</code> and returns an
+array containing elements set to either 1 (<code>TRUE</code>) or 0 (<code>FALSE</code>),
+that is in Matlab style.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Logical vector.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- matrix(c(0.5,  0.5,  0,    0.75, 0,
+              0.5,  0,    0.75, 0.05, 0.85,
+              0.35, 0,    0,    0,    0.01,
+              0.5,  0.65, 0.65, 0.05, 0), 4, 5, byrow=TRUE)
+B &lt;- matrix(c( 0, 1, 0, 1, 0,
+               1, 1, 1, 0, 1,
+               0, 1, 1, 1, 0,
+               0, 1, 0, 0, 1), 4, 5, byrow=TRUE)
+
+and(A, B)
+or(A, B)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

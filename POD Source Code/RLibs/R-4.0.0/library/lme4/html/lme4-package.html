@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Linear, generalized linear, and nonlinear mixed models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lme4-package {lme4}"><tr><td>lme4-package {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Linear, generalized linear, and nonlinear mixed models</h2>
+
+<h3>Description</h3>
+
+<p><code>lme4</code> provides functions for fitting and analyzing
+mixed models: linear (<code><a href="lmer.html">lmer</a></code>), generalized linear
+(<code><a href="glmer.html">glmer</a></code>) and nonlinear (<code><a href="nlmer.html">nlmer</a></code>.)
+</p>
+
+
+<h3>Differences between <span class="pkg">nlme</span> and <span class="pkg">lme4</span></h3>
+
+<p><span class="pkg">lme4</span> covers approximately the same ground as the earlier
+<span class="pkg">nlme</span> package.  The most important differences are:
+</p>
+
+<ul>
+<li> <p><span class="pkg">lme4</span> uses modern, efficient linear algebra methods
+as implemented in the <code>Eigen</code> package, and uses reference
+classes to avoid undue copying of large objects; it is therefore likely
+to be faster and more memory-efficient than <span class="pkg">nlme</span>.
+</p>
+</li>
+<li> <p><span class="pkg">lme4</span> includes generalized linear mixed model (GLMM)
+capabilities, via the <code><a href="glmer.html">glmer</a></code> function.
+</p>
+</li>
+<li> <p><span class="pkg">lme4</span> does <em>not</em> currently implement <span class="pkg">nlme</span>'s
+features for modeling heteroscedasticity and
+correlation of residuals.
+</p>
+</li>
+<li> <p><span class="pkg">lme4</span> does not currently offer the same flexibility
+as <span class="pkg">nlme</span> for composing complex variance-covariance structures,
+but it does implement crossed random effects in a way that
+is both easier for the user and much faster.
+</p>
+</li>
+<li> <p><span class="pkg">lme4</span> offers built-in facilities for likelihood
+profiling and parametric bootstrapping.
+</p>
+</li>
+<li> <p><span class="pkg">lme4</span> is designed to be more modular than <span class="pkg">nlme</span>,
+making it easier for downstream package developers and end-users
+to re-use its components for extensions of the basic mixed model
+framework. It also allows more flexibility for specifying
+different functions for optimizing over the random-effects
+variance-covariance parameters.
+</p>
+</li>
+<li> <p><span class="pkg">lme4</span> is not (yet) as well-documented as <span class="pkg">nlme</span>.
+</p>
+</li></ul>
+
+
+
+<h3>Differences between current (1.0.+) and previous versions of
+<span class="pkg">lme4</span></h3>
+
+
+<ul>
+<li> <p><code>[gn]lmer</code> now produces objects of class <code><a href="merMod-class.html">merMod</a></code>
+rather than class <code>mer</code> as before
+</p>
+</li>
+<li><p> the new version uses a combination of S3 and reference classes
+(see <code><a href="../../methods/html/refClass.html">ReferenceClasses</a></code>, <code><a href="merPredD-class.html">merPredD-class</a></code>, and
+<code><a href="lmResp-class.html">lmResp-class</a></code>) as well as S4 classes; partly for this reason
+it is more interoperable with <span class="pkg">nlme</span>
+</p>
+</li>
+<li><p> The internal structure of [gn]lmer is now more modular, allowing
+finer control of the different steps of argument checking; construction
+of design matrices and data structures; parameter estimation; and construction
+of the final <code>merMod</code> object (see <code><a href="modular.html">modular</a></code>)
+</p>
+</li>
+<li><p> profiling and parametric bootstrapping are new in
+the current version
+</p>
+</li>
+<li><p> the new version of <span class="pkg">lme4</span> does <em>not</em> provide
+an <code>mcmcsamp</code> (post-hoc MCMC sampling) method, because this
+was deemed to be unreliable.  Alternatives for computing p-values
+include parametric bootstrapping (<code><a href="bootMer.html">bootMer</a></code>) or methods
+implemented in the <span class="pkg">pbkrtest</span> package and leveraged by the
+<span class="pkg">lmerTest</span> package and the <code>Anova</code> function in the <span class="pkg">car</span> package
+(see <code><a href="pvalues.html">pvalues</a></code> for more details).
+</p>
+</li></ul>
+
+
+
+<h3>Caveats and trouble-shooting</h3>
+
+
+<ul>
+<li><p> Some users who have previously installed versions of the
+RcppEigen and minqa packages may encounter segmentation faults (!!);
+the solution is to make sure to re-install these packages before
+installing <span class="pkg">lme4</span>.  (Because the problem is not with the
+explicit <em>version</em> of the packages, but with running
+packages that were built with different versions of <span class="pkg">Rcpp</span>
+in conjunction with each other, simply making sure you have
+the latest version, or using <code>update.packages</code>, will
+not necessarily solve the problem; you must actually re-install
+the packages. The problem is most likely with <span class="pkg">minqa</span>.)
+</p>
+</li></ul>
+
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

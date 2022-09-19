@@ -1202,13 +1202,14 @@ namespace POD.Analyze
                 OutTestLackOfFit_p = _aHatAnalysisObject.LackOfFitPValue;
                 OutTestLackOfFit = _aHatAnalysisObject.LackOfFitFCalc;
                 OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit_p);
+                OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_aHatAnalysisObject.LackOfFitDegFreedom);
                 OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
                 OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
                 OutTestEqualVarianceRating= _python.GetPValueDecision(OutTestEqualVariance_p);
                 OutTestAutoCorrelation_p = _aHatAnalysisObject.DurbinWatsonPValue;
                 OutTestAutoCorrelationRating = _python.GetPValueDecision(OutTestAutoCorrelation_p);
-                 //A Values and sigma
-                 OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
+                //A Values and sigma
+                OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
                 OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
                 OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
                 OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
@@ -2347,8 +2348,8 @@ namespace POD.Analyze
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 myWriter.SetCellValue(rowIndex++, colIndex, "ANALYSIS MODEL TESTS:");
-                myWriter.SetCellValue(rowIndex++, colIndex, "Normality (Anderson Darling)");
-                myWriter.SetCellValue(rowIndex++, colIndex, "Equal Variance (Bartlett)");
+                myWriter.SetCellValue(rowIndex++, colIndex, "Normality (Shapiro-Wilk)");
+                myWriter.SetCellValue(rowIndex++, colIndex, "Equal Variance (Breusch-Pagan test)");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Lack of Fit (Pure Error, df=" + _outTestLackOfFitDegreesFreedom.ToString() + ")");
 
                 rowIndex++;
@@ -2525,6 +2526,7 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, "Response Min");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Response Max");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Response Transform");
+                myWriter.SetCellValue(rowIndex++, colIndex, "Lambda Value (Box-Cox only)");
             }
 
             rowIndex++;
@@ -2608,6 +2610,7 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseMin);
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseMax);
                 myWriter.SetCellValue(rowIndex++, colIndex, Data.ResponseTransform.ToString());
+                myWriter.SetCellValue(rowIndex++, colIndex, "LAMBDA VALUE HERE");
             }
 
             rowIndex++;

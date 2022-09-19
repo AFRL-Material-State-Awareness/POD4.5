@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coercion between sp objects and spatstat psp objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.psp {maptools}"><tr><td>as.psp {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coercion between sp objects and spatstat psp objects</h2>
+
+<h3>Description</h3>
+
+<p>Functions to convert between <span class="pkg">spatstat</span>s planar segment pattern (<code>psp</code>)
+format and various <span class="pkg">sp</span> line formats. S4-style <code>as()</code> coercion can be
+used as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.psp.Line(from, ..., window=NULL, marks=NULL, fatal)
+as.psp.Lines(from, ..., window=NULL, marks=NULL, fatal)
+as.psp.SpatialLines(from, ..., window=NULL, marks=NULL, characterMarks
+                 = FALSE, fatal)
+as.psp.SpatialLinesDataFrame(from, ..., window=NULL, marks=NULL, fatal)
+as.SpatialLines.psp(from)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>from</code></td>
+<td>
+<p>object to coerce from</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>ignored</p>
+</td></tr>
+<tr valign="top"><td><code>window</code></td>
+<td>
+<p>window of class <code>owin</code> as defined in the spatstat package</p>
+</td></tr>
+<tr valign="top"><td><code>marks</code></td>
+<td>
+<p>marks as defined in the spatstat package</p>
+</td></tr>
+<tr valign="top"><td><code>characterMarks</code></td>
+<td>
+<p>default FALSE, if TRUE, do not convert NULL marks to factor from character</p>
+</td></tr>
+<tr valign="top"><td><code>fatal</code></td>
+<td>
+<p>formal coercion argument; ignored</p>
+</td></tr>
+</table>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>coerce</dt><dd><p><code>signature(from = "Line", to = "psp")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "Lines", to = "psp")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "SpatialLines", to = "psp")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "SpatialLinesDataFrame", to = "psp")</code></p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "psp", to = "SpatialLines")</code></p>
+</dd>
+</dl>
+
+
+
+<h3>Warning</h3>
+
+<p>In <span class="pkg">spatstat</span> all spatial objects are assumed to be planar. This means
+that <span class="pkg">spatstat</span> is not designed to work directly with geographic
+(longitude and latitude) coordinates. If a <span class="pkg">sp</span> object is declared to
+have geographic (unprojected) coordinates <span class="pkg">maptools</span> refuses to convert
+directly to <span class="pkg">spatstat</span> format. Rather, these should be projected first
+using e.g. <code><a href="../../sp/html/spTransform.html">spTransform</a></code>. If you know what you are doing, and
+really want to force coercion, you can overwrite the <code>proj4string</code> of the
+<span class="pkg">sp</span> object with <code>NA</code>, <code>proj4string(x) &lt;- CRS(NA)</code>, which
+will fool the system to think that the data is in local planar coordinates.
+This is probably not a good idea!
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a>, Roger Bivand</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+run &lt;- FALSE
+if (require("spatstat.geom", quietly=TRUE)) run &lt;- TRUE
+if (run) {
+data(meuse.riv)
+mr &lt;- Line(meuse.riv)
+mr_psp &lt;- as(mr, "psp")
+mr_psp
+}
+if (run) {
+plot(mr_psp)
+}
+if (run) {
+xx_back &lt;- as(mr_psp, "SpatialLines")
+plot(xx_back)
+}
+if (run) {
+xx &lt;- readShapeLines(system.file("shapes/fylk-val.shp", package="maptools")[1],
+ proj4string=CRS("+proj=utm +zone=33 +ellps=WGS84"))
+xx_psp &lt;- as(xx["LENGTH"], "psp")
+xx_psp
+}
+if (run) {
+plot(xx_psp)
+}
+if (run) {
+xx_back &lt;- as(xx_psp, "SpatialLines")
+plot(xx_back)
+}
+if (run) {
+xx &lt;- readShapeLines(system.file("shapes/fylk-val-ll.shp", package="maptools")[1], 
+ proj4string=CRS("+proj=longlat +ellps=WGS84"))
+try(xx_psp &lt;- as(xx["LENGTH"], "psp"))
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

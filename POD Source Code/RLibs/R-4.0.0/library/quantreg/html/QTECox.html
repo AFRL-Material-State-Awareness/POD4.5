@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Function to obtain QTE from a Cox model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for QTECox {quantreg}"><tr><td>QTECox {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Function to obtain QTE from a Cox model</h2>
+
+<h3>Description</h3>
+
+<p>Computes quantile treatment effects comparable to those of 
+crq model from a coxph object.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+QTECox(x, smooth = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An object of class coxph produced by <code>coxph</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>smooth</code></td>
+<td>
+<p>Logical indicator if TRUE (default) 
+then Cox survival function is smoothed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p> Estimates of the Cox QTE, <i>(d/dx_j) Q( t | x ) </i> 
+at <i>x=xbar</i>, can be expressed as a function of t as follows:
+</p>
+<p style="text-align: center;"><i>
+(d/dx_j) Q( t | x ) = (d/dx_j)t * (d/dt) Q(t | x)</i></p>
+
+<p>The Cox survival function, <i>S( y | x ) = exp{ - H_o(y) exp(b'x) }</i>
+</p>
+<p style="text-align: center;"><i>(d/dx_j) 
+S( y | x ) = S( y | x ) log(S( y | x )) b_j</i></p>
+
+<p>where <i> (d/dt) Q(t | x) </i>
+can be estimated by <i>- (diff(t)/diff(S) (1-t)</i>
+where $S$  and $t$ denote the <code>surv</code> and <code>time</code> components
+of the  <code>survfit</code> object.
+Note that since <i>t = 1 - S( y | x )</i>, the above is the 
+value corresponding to the argument $(1-t)$; and furthermore
+</p>
+<p style="text-align: center;"><i>
+   (d/dx_j)t = - (d/dx_j) S( y | x ) =  - (1-t) log(1-t) b_j</i></p>
+
+<p>Thus the QTE at the mean of x's is:
+</p>
+<p style="text-align: center;"><i>(1 - S) = (diff(t)/diff(S) S log(S) b_j</i></p>
+
+<p>Since <i>diff(S)</i> is negative and $log (S)$ is also negative
+this has the same sign as <i>b_{j}</i>
+The crq  model fits the usual AFT form  Surv(log(Time),Status), then 
+</p>
+<p style="text-align: center;"><i>(d/dx_j) log(Q( t | x )) = (d/dx_j) Q( t | x ) / Q( t | x )</i></p>
+
+<p>This is the matrix form returned.
+</p>
+
+
+<h3>Value</h3>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>taus </code></td>
+<td>
+<p>points of evaluation of the QTE.</p>
+</td></tr>
+<tr valign="top"><td><code>QTE</code></td>
+<td>
+<p>matrix of QTEs, the ith column contains the QTE for the
+ith covariate effect.  Note that there is no intercept effect.
+see <code>plot.summary.crqs</code> for usage.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Koenker Stephen Portnoy &amp; Tereza Neocleous</p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R. and Geling, O. (2001). Reappraising Medfly 
+longevity: a quantile regression survival analysis, J. Amer. Statist. 
+Assoc., 96, 458-468</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="crq.html">crq</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

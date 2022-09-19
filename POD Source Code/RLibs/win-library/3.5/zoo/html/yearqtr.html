@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: An Index Class for Quarterly Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for yearqtr {zoo}"><tr><td>yearqtr {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>An Index Class for Quarterly Data</h2>
+
+<h3>Description</h3>
+
+<p><code>"yearqtr"</code> is a class for representing quarterly data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+yearqtr(x)
+as.yearqtr(x, ...)
+## S3 method for class 'character'
+as.yearqtr(x, format, ...)
+## S3 method for class 'yearqtr'
+format(x, format = "%Y Q%q", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>for <code>yearqtr</code> a numeric (interpreted as being 
+&ldquo;in years&rdquo;).  For <code>as.yearqtr</code> another date class
+object.  For the <code>"yearqtr"</code> method of <code>format</code> an 
+object of class <code>"yearqtr"</code> or if called as <code>format.yearqtr</code>
+then an object with an <code>as.yearqtr</code> method that can be coerced 
+to <code>"yearqtr"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>format</code></td>
+<td>
+<p>character string specifying format. For coercing to <code>"yearqtr"</code>
+from character: <code>"%Y"</code> and <code>"%q"</code> have to be specified. For formatting an existing
+<code>"yearqtr"</code>: <code>"%C"</code>, <code>"%Y"</code>, <code>"%y"</code> and <code>"%q"</code>, if present,
+are replaced with the century, year, last two digits of the year, 
+and quarter (i.e. a number between 1 and 4), respectively.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed ot other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>"yearqtr"</code> class is used to represent quarterly data. Internally it holds
+the data as year plus 0 for Quarter 1, 1/4 for Quarter 2
+and so on in order that its internal representation is the same as 
+<code>ts</code> class with <code>frequency = 4</code>. If <code>x</code> is not in this
+format it is rounded via <code>floor(4*x + .0001)/4</code>.
+</p>
+<p><code>as.yearqtr.character</code> uses a default format of <code>"%Y Q%q"</code>, 
+<code>"%Y q%q"</code> or <code>"%Y-%q"</code> according to whichever matches.
+<code>%q</code> accepts the numbers 1-4 (possibly with leading zeros). Due to
+this <code>%q</code> does not match to single digits only and consequently
+formats such as <code>as.yearqtr("Q12000", "Q%q%Y")</code> are ambiguous and
+do not work (i.e., result in <code>NA</code>).
+</p>
+<p>There are coercion methods available for various classes including:
+default coercion to <code>"yearqtr"</code> (which coerces to <code>"numeric"</code> first)
+and coercion from <code>"yearqtr"</code> to <code>"Date"</code> (see below), <code>"POSIXct"</code>,
+<code>"POSIXlt"</code>, <code>"numeric"</code>, <code>"character"</code> and <code>"jul"</code>.  
+The last one is from the <code>frame</code> package on CRAN.
+</p>
+<p>There is an <code>is.numeric</code> method which returns <code>FALSE</code>.
+</p>
+<p>There is also a <code>date</code> method for <code>as.yearqtr</code> usable with objects
+created with package <code>date</code>.
+</p>
+<p><code>Sys.yearqtr()</code> returns the current year/month and methods for
+<code>min</code>, <code>max</code> and <code>range</code> are defined (by defining 
+a method for <code>Summary</code>).
+</p>
+<p>A <code>yearqtr</code> <code>mean</code> method is also defined.
+</p>
+<p>Certain methods support a <code>frac</code> argument.  See <code><a href="yearmon.html">yearmon</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>yearqtr</code> and <code>as.yearqtr</code> return the first argument converted to 
+class <code>yearqtr</code>.
+The <code>format</code> method returns a character string representation of
+its argument first argument.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="yearmon.html">yearmon</a></code>, <code><a href="zoo.html">zoo</a></code>, <code><a href="zooreg.html">zooreg</a></code>, <code><a href="../../stats/html/ts.html">ts</a></code>,
+<code><a href="../../base/html/strptime.html">strptime</a></code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+Sys.setenv(TZ = "GMT")
+
+x &lt;- as.yearqtr(2000 + seq(0, 7)/4)
+x
+
+format(x, "%Y Quarter %q")
+as.yearqtr("2001 Q2")
+as.yearqtr("2001 q2") # same
+as.yearqtr("2001-2") # same
+
+# returned Date is the fraction of the way through
+# the period given by frac (= 0 by default)
+dd &lt;- as.Date(x)
+format.yearqtr(dd)
+as.Date(x, frac = 1)
+as.POSIXct(x)
+
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+
+zz &lt;- zoo(rnorm(8), x, frequency = 4)
+zz
+as.ts(zz)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

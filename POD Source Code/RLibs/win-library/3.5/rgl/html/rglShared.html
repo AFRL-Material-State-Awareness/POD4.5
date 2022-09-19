@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create shared data from an RGL object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rglShared {rgl}"><tr><td>rglShared {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Create shared data from an RGL object
+</h2>
+
+<h3>Description</h3>
+
+<p>The <span class="pkg">crosstalk</span> package provides a way for
+different parts of an interactive display to 
+communicate about datasets, using &ldquo;shared data&rdquo; objects.  When selection or filtering
+is performed in one view, the result is mirrored 
+in all other views.
+</p>
+<p>This function allows vertices of RGL objects
+to be treated as shared data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rglShared(id, key = NULL, group = NULL,
+          deselectedFade = 0.1, 
+          deselectedColor = NULL,
+	  selectedColor = NULL,
+          selectedIgnoreNone = TRUE,
+	  filteredFade = 0,
+          filteredColor = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>id</code></td>
+<td>
+
+<p>An existing RGL id.
+</p>
+</td></tr>
+<tr valign="top"><td><code>key</code></td>
+<td>
+
+<p>Optional unique labels to apply to each vertex.
+If missing, numerical keys will be used.
+</p>
+</td></tr>
+<tr valign="top"><td><code>group</code></td>
+<td>
+
+<p>Optional name of the shared group to which
+this data belongs.  If missing, a random name
+will be generated.
+</p>
+</td></tr>
+<tr valign="top"><td><code>deselectedFade, deselectedColor</code></td>
+<td>
+
+<p>Appearance of points that are not selected. See Details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>selectedColor</code></td>
+<td>
+
+<p>Appearance of points that are selected.
+</p>
+</td></tr>
+<tr valign="top"><td><code>selectedIgnoreNone</code></td>
+<td>
+
+<p>If no points are selected, should the points be shown
+in their original colors (<code>TRUE</code>), or in the 
+deselected colors (<code>FALSE</code>)?
+</p>
+</td></tr>
+<tr valign="top"><td><code>filteredFade, filteredColor</code></td>
+<td>
+
+<p>Appearance of points that have been filtered out.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Some functions which normally work on 
+dataframe-like datasets will accept shared data
+objects in their place. 
+</p>
+<p>If a selection is in progress, the alpha value for
+unselected points is multiplied by <code>deselectedFade</code>.
+If <code>deselectedColor</code> is <code>NULL</code>, the color is left
+as originally specified; if not, the point is changed to
+the color given by <code>deselectedColor</code>.
+</p>
+<p>If no points have been selected, then by default points
+are shown in their original colors.  However, if 
+<code>selectedIgnoreNone = FALSE</code>, all points are displayed
+as if unselected.
+</p>
+<p>The <code>selectedColor</code> argument is similarly used to 
+change the color (or not) of selected points, and <code>filteredFade</code> 
+and <code>filteredColor</code> are used for points that
+have been filtered out of the display.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"SharedData"</code> (from the 
+optional <span class="pkg">crosstalk</span> package) which 
+contains the x, y and z coordinates of the RGL object 
+with the given <code>id</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://rstudio.github.io/crosstalk/index.html">https://rstudio.github.io/crosstalk/index.html</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  save &lt;- options(rgl.useNULL = TRUE)
+  
+  #  rglShared requires the crosstalk package.
+  if (requireNamespace("crosstalk", quietly = TRUE)) {
+    open3d()
+    x &lt;- sort(rnorm(100))
+    y &lt;- rnorm(100)
+    z &lt;- rnorm(100) + atan2(x, y)
+    ids &lt;- plot3d(x, y, z, col = rainbow(100))
+
+    # The data will be selected and filtered, not the axes.
+    sharedData &lt;- rglShared(ids["data"])
+  
+    # Also add some labels that are only displayed
+    # when points are selected
+  
+    sharedLabel &lt;- rglShared(text3d(x, y, z, text = 1:100,
+                                    adj = -0.5),
+                             group = sharedData$groupName(),
+                             deselectedFade = 0,
+                             selectedIgnoreNone = FALSE) 
+    if (interactive() || in_pkgdown_example()) 
+      crosstalk::filter_slider("x", "x", sharedData, ~x) %&gt;%
+      rglwidget(shared = list(sharedData, sharedLabel), controller = .) %&gt;% 
+      rglMouse()
+  }    
+  options(save)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

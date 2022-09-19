@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Scene management</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for scene {rgl}"><tr><td>scene {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Scene management</h2>
+
+<h3>Description</h3>
+
+<p>Clear shapes, lights, bbox
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+clear3d( type = c("shapes", "bboxdeco", "material"), defaults, subscene = 0 ) 
+pop3d( type = "shapes", id = 0, tag = NULL)
+ids3d( type = "shapes", subscene = NA, tags = FALSE )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Select subtype(s):
+</p>
+
+<dl>
+<dt>&quot;shapes&quot;</dt><dd><p>shape stack</p>
+</dd>
+<dt>&quot;lights&quot;</dt><dd><p>light stack</p>
+</dd>
+<dt>&quot;bboxdeco&quot;</dt><dd><p>bounding box</p>
+</dd>
+<dt>&quot;userviewpoint&quot;</dt><dd><p>user viewpoint</p>
+</dd>
+<dt>&quot;modelviewpoint&quot;</dt><dd><p>model viewpoint</p>
+</dd>
+<dt>&quot;material&quot;</dt><dd><p>material properties</p>
+</dd>
+<dt>&quot;background&quot;</dt><dd><p>scene background</p>
+</dd>
+<dt>&quot;subscene&quot;</dt><dd><p>subscene list</p>
+</dd>
+<dt>&quot;all&quot;</dt><dd><p>all of the above</p>
+</dd>
+</dl>
+
+</td></tr>
+<tr valign="top"><td><code>defaults</code></td>
+<td>
+<p>default values to use after clearing</p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+<p>which subscene to work with.  <code>NA</code> means the current one, 
+<code>0</code> means the whole scene</p>
+</td></tr>  
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>vector of ID numbers of items to remove</p>
+</td></tr>
+<tr valign="top"><td><code>tag</code></td>
+<td>
+<p>override <code>id</code> with objects matching
+these <code>tag</code> material properties</p>
+</td></tr>
+<tr valign="top"><td><code>tags</code></td>
+<td>
+<p>logical; whether to return <code>tag</code> column.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>RGL holds several lists of objects in each scene. 
+There are lists for shapes, lights, bounding box decorations, subscenes, etc.
+<code>clear3d</code> clears the specified stack, or restores
+the defaults for the bounding box (not visible) or viewpoint. 
+With <code>id = 0</code> <code>pop3d</code> removes 
+the last added node on the list (except for subscenes:  there it
+removes the active subscene).  The <code>id</code> argument
+may be used to specify arbitrary item(s) to remove; if <code>id != 0</code>, 
+the <code>type</code> argument is ignored.
+</p>
+<p><code>clear3d</code> may also be used to clear material properties
+back to their defaults.  
+</p>
+<p><code>clear3d</code> has an optional <code>defaults</code> argument, which defaults to 
+<code><a href="open3d.html">r3dDefaults</a></code>.  Only the <code>materials</code> component of this argument
+is currently used by <code>clear3d</code>.
+</p>
+<p><code>ids3d</code> returns a dataframe containing the IDs in the currently active subscene
+by default, or a specified subscene, or if <code>subscene = 0</code>, in the whole
+rgl window along with an indicator of their type and if <code>tags = TRUE</code>, the
+<code>tag</code> value for each.
+</p>
+<p>Note that clearing the light stack leaves the scene in darkness; it should normally
+be followed by a call to <code><a href="light.html">light3d</a></code> or <code><a href="light.html">light3d</a></code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rgl-package.html">rgl</a></code>,
+<code><a href="bbox.html">bbox3d</a></code>,
+<code><a href="light.html">light3d</a></code>,
+<code><a href="open3d.html">open3d</a></code> to open a new window.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  x &lt;- rnorm(100)
+  y &lt;- rnorm(100)
+  z &lt;- rnorm(100)
+  p &lt;- plot3d(x, y, z, type = 's', tag = "plot")
+  ids3d()
+  lines3d(x, y, z)
+  ids3d(tags = TRUE)
+  if (interactive() &amp;&amp; !rgl.useNULL()) {
+    readline("Hit enter to change spheres")
+    pop3d(id = p["data"])
+    spheres3d(x, y, z, col = "red", radius = 1/5)
+    box3d()
+  }
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

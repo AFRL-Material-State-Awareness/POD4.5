@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find Cutting Points</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for cutpoints {pracma}"><tr><td>cutpoints {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Find Cutting Points
+</h2>
+
+<h3>Description</h3>
+
+<p>Finds cutting points for vector s of real numbers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+cutpoints(x, nmax = 8, quant = 0.95)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector of real values.</p>
+</td></tr>
+<tr valign="top"><td><code>nmax</code></td>
+<td>
+<p>the maximum number of cutting points to choose</p>
+</td></tr>
+<tr valign="top"><td><code>quant</code></td>
+<td>
+<p>quantile of the gaps to consider for cuts.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Finds cutting points for vector s of real numbers, based on the gaps in
+the values of the vector. The number of cutting points is derived from a
+quantile of gaps in the values. The user can set a lower limit for this
+number of gaps.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with components <code>cutp</code>, the cutting points selected,
+and <code>cutd</code>, the gap between values of <code>x</code> at this cutting point.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Automatically finding cutting points is often requested in Data Mining.
+If a target attribute is available, Quinlan's C5.0 does a very good job
+here. Unfortunately, the &lsquo;C5.0&rsquo; package (of the R-Forge project &ldquo;Rulebased
+Models&rdquo;) is quite cumbersome to use.
+</p>
+
+
+<h3>References</h3>
+
+<p>Witten, I. H., and E. Frank (2005). Data Mining: Practical Machine
+Learning Tools and Techniques. Morgan Kaufmann Publishers, San Francisco.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/cut.html">cut</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+N &lt;- 100; x &lt;- sort(runif(N))
+cp &lt;- cutpoints(x, 6, 0.9)
+n &lt;- length(cp$cutp)
+
+# Print out
+nocp &lt;- rle(findInterval(x, c(-Inf, cp$cutp, Inf)))$lengths
+cbind(c(-Inf, cp$cutp), c(cp$cutp, Inf), nocp)
+
+# Define a factor from the cutting points
+fx &lt;- cut(x, breaks = c(-Inf, cp$cutp, Inf))
+
+## Not run: 
+# Plot points and cutting points
+plot(x, rep(0, N), col="gray", ann = FALSE)
+points(cp$cutp, rep(0, n), pch="|", col=2)
+
+# Compare with k-means clustering
+km &lt;- kmeans(x, n)
+points(x, rep(0, N), col = km$cluster, pch = "+")
+
+##  A 2-dimensional example
+x &lt;- y &lt;- c()
+for (i in 1:9) {
+  for (j in 1:9) {
+    x &lt;- c(x, i + rnorm(20, 0, 0.2))
+    y &lt;- c(y, j + rnorm(20, 0, 0.2))
+  }
+}
+cpx &lt;- cutpoints(x, 8, 0)
+cpy &lt;- cutpoints(y, 8, 0)
+
+plot(x, y, pch = 18, col=rgb(0.5,0.5,0.5), axes=FALSE, ann=FALSE)
+for (xi in cpx$cutp) abline(v=xi, col=2, lty=2)
+for (yi in cpy$cutp) abline(h=yi, col=2, lty=2)
+
+km &lt;- kmeans(cbind(x, y), 81)
+points(x, y, col=km$cluster)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

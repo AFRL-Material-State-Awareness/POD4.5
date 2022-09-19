@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a new grob table.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable {gtable}"><tr><td>gtable {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a new grob table.</h2>
+
+<h3>Description</h3>
+
+<p>A grob table captures all the information needed to layout grobs in a table
+structure. It supports row and column spanning, offers some tools to
+automatically figure out the correct dimensions, and makes it easy to
+align and combine multiple tables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable(widths = list(), heights = list(), respect = FALSE,
+  name = "layout", rownames = NULL, colnames = NULL, vp = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>widths</code></td>
+<td>
+<p>a unit vector giving the width of each column</p>
+</td></tr>
+<tr valign="top"><td><code>heights</code></td>
+<td>
+<p>a unit vector giving the height of each row</p>
+</td></tr>
+<tr valign="top"><td><code>respect</code></td>
+<td>
+<p>a logical vector of length 1: should the aspect ratio of
+height and width specified in null units be respected.  See
+<code><a href="../../grid/html/grid.layout.html">grid.layout()</a></code> for more details</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>a string giving the name of the table. This is used to name
+the layout viewport</p>
+</td></tr>
+<tr valign="top"><td><code>rownames, colnames</code></td>
+<td>
+<p>character vectors of row and column names, used
+for characteric subsetting, particularly for <code>gtable_align</code>,
+and <code>gtable_join</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>vp</code></td>
+<td>
+<p>a grid viewport object (or NULL).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Each grob is put in its own viewport - grobs in the same location are
+not combined into one cell. Each grob takes up the entire cell viewport
+so justification control is not available.
+</p>
+<p>It constructs both the viewports and the gTree needed to display the table.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A gtable object
+</p>
+
+
+<h3>Components</h3>
+
+<p>There are three basics components to a grob table: the specification of
+table (cell heights and widths), the layout (for each grob, its position,
+name and other settings), and global parameters.
+</p>
+<p>It's easier to understand how <code>gtable</code> works if in your head you keep
+the table separate from it's contents.  Each cell can have 0, 1, or many
+grobs inside. Each grob must belong to at least one cell, but can span
+across many cells.
+</p>
+
+
+<h3>Layout</h3>
+
+<p>The layout details are stored in a data frame with one row for each grob,
+and columns:
+</p>
+
+<ul>
+<li> <p><code>t</code> top extent of grob
+</p>
+</li>
+<li> <p><code>r</code> right extent of grob
+</p>
+</li>
+<li> <p><code>b</code> bottom extent of
+</p>
+</li>
+<li> <p><code>l</code> left extent of grob
+</p>
+</li>
+<li> <p><code>z</code> the z-order of the grob - used to reorder the grobs
+before they are rendered
+</p>
+</li>
+<li> <p><code>clip</code> a string, specifying how the grob should be clipped:
+either <code>"on"</code>, <code>"off"</code> or <code>"inherit"</code>
+</p>
+</li>
+<li> <p><code>name</code>, a character vector used to name each grob and its
+viewport
+</p>
+</li></ul>
+
+<p>You should not need to modify this data frame directly - instead use
+functions like <code>gtable_add_grob</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other gtable construction: <code><a href="gtable_col.html">gtable_col</a></code>,
+<code><a href="gtable_matrix.html">gtable_matrix</a></code>, <code><a href="gtable_row.html">gtable_row</a></code>,
+<code><a href="gtable_spacer.html">gtable_spacer</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+a &lt;- gtable(unit(1:3, c("cm")), unit(5, "cm"))
+a
+gtable_show_layout(a)
+
+# Add a grob:
+rect &lt;- rectGrob(gp = gpar(fill = "black"))
+a &lt;- gtable_add_grob(a, rect, 1, 1)
+a
+plot(a)
+
+# gtables behave like matrices:
+dim(a)
+t(a)
+plot(t(a))
+
+# when subsetting, grobs are retained if their extents lie in the
+# rows/columns that retained.
+
+b &lt;- gtable(unit(c(2, 2, 2), "cm"), unit(c(2, 2, 2), "cm"))
+b &lt;- gtable_add_grob(b, rect, 2, 2)
+b[1, ]
+b[, 1]
+b[2, 2]
+
+# gtable have row and column names
+rownames(b) &lt;- 1:3
+rownames(b)[2] &lt;- 200
+colnames(b) &lt;- letters[1:3]
+dimnames(b)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

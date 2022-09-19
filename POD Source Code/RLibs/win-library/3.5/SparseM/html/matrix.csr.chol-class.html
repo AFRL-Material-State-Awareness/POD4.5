@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;matrix.csr.chol&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for matrix.csr.chol-class {SparseM}"><tr><td>matrix.csr.chol-class {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;matrix.csr.chol&quot;</h2>
+
+<h3>Description</h3>
+
+<p>A class of objects returned from Ng and Peyton's (1993) block
+sparse Cholesky algorithm</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Objects can be created by calls of the form <code>new("matrix.csr.chol", ...)</code>.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>nrow</code>:</dt><dd><p>Object of class <code>integer</code>, number of rows in the linear system of equations </p>
+</dd>
+<dt><code>nnzlindx</code>:</dt><dd><p>Object of class <code>numeric</code>, number of non-zero elements in lindx</p>
+</dd>
+<dt><code>nsuper</code>:</dt><dd><p>Object of class <code>integer</code>, number of supernodes</p>
+</dd>
+<dt><code>lindx</code>:</dt><dd><p>Object of class <code>integer</code>, vector of integer
+containing, in column major order, the row subscripts of the non-zero entries 
+in the Cholesky factor in a compressed storage format</p>
+</dd>
+<dt><code>xlindx</code>:</dt><dd><p>Object of class <code>integer</code>, vector of integer of pointers for lindx</p>
+</dd>
+<dt><code>nnzl</code>:</dt><dd><p>Object of class <code>numeric</code>, number of non-zero
+entries, including the diagonal entries, of the Cholesky factor stored in lnz</p>
+</dd>
+<dt><code>lnz</code>:</dt><dd><p>Object of class <code>numeric</code>, contains the entries of the Cholesky factor </p>
+</dd>
+<dt><code>log.det</code>:</dt><dd><p>Object of class <code>numeric</code>, log determinant of the Cholesky factor</p>
+</dd>
+<dt><code>xlnz</code>:</dt><dd><p>Object of class <code>integer</code>, column pointer for the Cholesky factor stored in lnz</p>
+</dd>
+<dt><code>invp</code>:</dt><dd><p>Object of class <code>integer</code>, vector of integer of inverse permutation vector</p>
+</dd>
+<dt><code>perm</code>:</dt><dd><p>Object of class <code>integer</code>, vector of integer of permutation vector </p>
+</dd>
+<dt><code>xsuper</code>:</dt><dd><p>Object of class <code>integer</code>, array containing the supernode partioning</p>
+</dd>
+<dt><code>det</code>:</dt><dd><p>Object of class <code>numeric</code>, determinant of the Cholesky factor</p>
+</dd>
+<dt><code>ierr</code>:</dt><dd><p>Object of class <code>integer</code>, error flag </p>
+</dd>
+<dt><code>time</code>:</dt><dd><p>Object of class <code>numeric</code> execution time </p>
+</dd>
+</dl>
+
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>backsolve</dt><dd><p><code>signature(r = "matrix.csr.chol")</code>: ... </p>
+</dd>
+<dt>as.matrix.csr</dt><dd><p><code>signature(x = "matrix.csr.chol", upper.tri=TRUE)</code>: ... </p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="SparseM.solve.html">chol</a></code>, <code><a href="SparseM.solve.html">backsolve</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Read GSHHS data into sp object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Rgshhs {maptools}"><tr><td>Rgshhs {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Read GSHHS data into sp object</h2>
+
+<h3>Description</h3>
+
+<p>If the data are polygon data, the function will read GSHHS polygons into SpatialPolygons object for a chosen region, using binary shorelines from Global Self-consistant Hierarchical High-resolution (Shorelines) Geography, release 2.3.0 of February 1, 2014 (<a href="http://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.0.zip">http://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.0.zip</a>). 
+</p>
+<p>The <code>getRgshhsMap</code> function calls <code>Rgshhs</code> internally to simplify the interface by returning only a SpatialPolygons object rather than a more complex list, and by calling <code>Rgshhs</code> twice either side of longitude 0 degrees for values of &ldquo;xlim&rdquo; straddling 0, then merging the polygons retrieved.
+</p>
+<p>If the data are line data, the borders or river lines will be read into a SpatialLines object. The data are provided in integer form as millionths of decimal degrees. Reading of much earlier versions of the GSHHS binary files will fail with an error message. The netCDF GSHHS files distributed with GMT &gt;= 4.2 cannot be read as they are in a very different format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Rgshhs(fn, xlim = NULL, ylim = NULL, level = 4, minarea = 0, shift = FALSE, 
+verbose = TRUE, no.clip = FALSE, properly=FALSE, avoidGEOS=FALSE, 
+checkPolygons=FALSE)
+getRgshhsMap(fn = system.file("share/gshhs_c.b", package= "maptools"),
+ xlim, ylim, level = 1, shift = TRUE, verbose = TRUE, no.clip = FALSE,
+ properly=FALSE, avoidGEOS=FALSE, checkPolygons=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>filename or full path to GSHHS 2.3.0 file to be read</p>
+</td></tr>
+<tr valign="top"><td><code>xlim</code></td>
+<td>
+<p>longitude limits within 0-360 in most cases, negative longitudes are also found east of the Atlantic, but the Americas are recorded as positive values</p>
+</td></tr>
+<tr valign="top"><td><code>ylim</code></td>
+<td>
+<p>latitude limits</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>maximum GSHHS level to include, defaults to 4 (everything), setting 1 will only retrieve land, no lakes</p>
+</td></tr>
+<tr valign="top"><td><code>minarea</code></td>
+<td>
+<p>minimum area in square km to retrieve, default 0</p>
+</td></tr>
+<tr valign="top"><td><code>shift</code></td>
+<td>
+<p>default FALSE, can be used to shift longitudes &gt; 180 degrees to below zero, beware of artefacts involving unhandled polygon splitting at 180 degrees</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>default TRUE, print progress reports</p>
+</td></tr>
+<tr valign="top"><td><code>no.clip</code></td>
+<td>
+<p>default FALSE, if TRUE, do not clip output polygons to bounding box</p>
+</td></tr>
+<tr valign="top"><td><code>properly</code></td>
+<td>
+<p>default FALSE, if TRUE use <code><a href="../../rgeos/html/gContainsProperly.html">gContainsProperly</a></code> rather than <code><a href="../../rgeos/html/gContains.html">gContains</a></code>, here FALSE because clip rectangle touches clipped objects, so they are not properly contained</p>
+</td></tr>
+<tr valign="top"><td><code>avoidGEOS</code></td>
+<td>
+<p>default FALSE; if TRUE force use of <span class="pkg">gpclib</span> even when <span class="pkg">rgeos</span> is available</p>
+</td></tr>
+<tr valign="top"><td><code>checkPolygons</code></td>
+<td>
+<p>default FALSE, if TRUE, check using GEOS, which may re-order the member Polygon objects with respect to the returned polydata data frame rows</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The package is distributed with the coarse version of the shoreline data, and much more detailed versions may be downloaded from the referenced websites. The data is of high quality, matching the accuracy of SRTM shorelines for the full dataset (but not for inland waterbodies). In general, users will construct study region SpatialPolygons objects, which can then be exported (for example as a shapefile), or used in other R packages (such as PBSmapping). The largest land polygons take considerable time to clip to the study region, certainly many minutes for an extract from the full resolution data file including Eurasia (with Africa) or the Americas. For this reason, do not give up if nothing seems to be happening after the (verbose) message: &quot;Rgshhs: clipping &lt;m&gt; of &lt;n&gt; polygons ...&quot; appears. Clipping the largest polygons in full resolution also needs a good deal of memory.
+</p>
+
+
+<h3>Value</h3>
+
+<p>for polygon data, a list with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>polydata</code></td>
+<td>
+<p>data from the headers of the selected GSHHS polygons</p>
+</td></tr>
+<tr valign="top"><td><code>belongs</code></td>
+<td>
+<p>a matrix showing which polygon belongs to (is included in) which polygon, going from the highest level among the selected polygons down to 1 (land); levels are: 1 land, 2 lake, 3 island_in_lake, 4 pond_in_island_in_lake.</p>
+</td></tr>
+<tr valign="top"><td><code>new_belongs</code></td>
+<td>
+<p>a ragged list of polygon inclusion used for making SP</p>
+</td></tr>
+<tr valign="top"><td><code>SP</code></td>
+<td>
+<p>a SpatialPolygons object; this is the principal output object, and will become the only output object as the package matures</p>
+</td></tr>
+</table>
+<p>the <code>getRgshhsMap</code> returns only a SpatialPolygons object;
+for line data, a list with the following component:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>SP</code></td>
+<td>
+<p>a SpatialLines object</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>A number of steps are taken in this implementation that are unexpected, print messages, and so require explanation. Following the extraction of polygons intersecting the required region, a check is made to see if Antarctica is present. If it is, a new southern border is imposed at the southern ylim value or -90 if no ylim value is given. When clipping polygons seeming to intersect the required region boundary, it can happen that no polygon is left within the region (for example when the boundaries are overlaid, but also because the min/max polygon values in the header may not agree with the polygon itself (one case observed for a lake west of Groningen). The function then reports a null polygon. Another problem occurs when closed polygons are cut up during the finding of intersections between polygons and the required region boundary. 
+</p>
+<p>By default, if the rgeos package is available, it is used for topology operations. If it is not available, the gpclib package may be used. Please also note that gpclib has a restricted licence.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Bivand</p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.soest.hawaii.edu/pwessel/gshhg/">http://www.soest.hawaii.edu/pwessel/gshhg/</a>, <a href="http://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.0.zip">http://www.soest.hawaii.edu/pwessel/gshhg/gshhg-bin-2.3.0.zip</a>; Wessel, P., and W. H. F. Smith, A Global Self-consistent, Hierarchical, High-resolution Shoreline Database, J. Geophys. Res., 101, 8741-8743, 1996.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if (rgeosStatus()) {
+gshhs.c.b &lt;- system.file("share/gshhs_c.b", package="maptools")
+WEx &lt;- c(-12, 3)
+WEy &lt;- c(48, 59)
+WE &lt;- getRgshhsMap(gshhs.c.b, xlim=WEx, ylim=WEy)
+plot(WE, col="khaki", xlim=WEx, ylim=WEy, xaxs="i", yaxs="i", axes=TRUE)
+NZx &lt;- c(160,180)
+NZy &lt;- c(-50,-30)
+NZ &lt;- Rgshhs(gshhs.c.b, xlim=NZx, ylim=NZy)
+plot(NZ$SP, col="khaki", pbg="azure2", xlim=NZx, ylim=NZy, xaxs="i", yaxs="i", axes=TRUE)
+GLx &lt;- c(265,285)
+GLy &lt;- c(40,50)
+GL &lt;- Rgshhs(gshhs.c.b, xlim=GLx, ylim=GLy)
+plot(GL$SP, col="khaki", pbg="azure2", xlim=GLx, ylim=GLy, xaxs="i", yaxs="i", axes=TRUE)
+BNLx &lt;- c(2,8)
+BNLy &lt;- c(49,54)
+wdb_lines &lt;- system.file("share/wdb_borders_c.b", package="maptools")
+BNLp &lt;- Rgshhs(gshhs.c.b, xlim=BNLx, ylim=BNLy)
+BNLl &lt;- Rgshhs(wdb_lines, xlim=BNLx, ylim=BNLy)
+plot(BNLp$SP, col="khaki", pbg="azure2", xlim=BNLx, ylim=BNLy, xaxs="i", yaxs="i", axes=TRUE)
+lines(BNLl$SP)
+xlims &lt;- c(0,360)
+ylims &lt;- c(-90,90)
+world &lt;- Rgshhs(gshhs.c.b, xlim=xlims, ylim=ylims, level=1, checkPolygons=TRUE)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

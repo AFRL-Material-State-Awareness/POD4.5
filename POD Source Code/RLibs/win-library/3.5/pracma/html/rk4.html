@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Classical Runge-Kutta</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rk4, rk4sys {pracma}"><tr><td>rk4, rk4sys {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Classical Runge-Kutta
+</h2>
+
+<h3>Description</h3>
+
+<p>Classical Runge-Kutta of order 4.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rk4(f, a, b, y0, n)
+
+rk4sys(f, a, b, y0, n)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function in the differential equation <i>y' = f(x, y)</i>;<br />
+defined as a function <i>R \times R^m \rightarrow R^m</i>, where <i>m</i>
+is the number of equations.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>endpoints of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>y0</code></td>
+<td>
+<p>starting values; for <i>m</i> equations <code>y0</code> needs to be
+a vector of length <code>m</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>the number of steps from <code>a</code> to <code>b</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Classical Runge-Kutta of order 4 for (systems of) ordinary differential
+equations with fixed step size.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>x</code> for grid points between <code>a</code> and <code>b</code>
+and <code>y</code> an n-by-m matrix with solutions for variables in columns, i.e.
+each row contains one time stamp.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function serves demonstration purposes only.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fausett, L. V. (2007). Applied Numerical Analysis Using Matlab.
+Second edition, Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="ode.html">ode23</a></code>, <code><a href="deval.html">deval</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Example1: ODE
+# y' = y*(-2*x + 1/x) for x != 0, 1 if x = 0
+# solution is x*exp(-x^2)
+f &lt;- function(x, y) {
+	if (x != 0) dy &lt;- y * (- 2*x + 1/x)
+	else        dy &lt;- rep(1, length(y))
+	return(dy)
+}
+sol &lt;- rk4(f, 0, 2, 0, 50)
+## Not run: 
+x &lt;- seq(0, 2, length.out = 51)
+plot(x, x*exp(-x^2), type = "l", col = "red")
+points(sol$x, sol$y, pch = "*")
+grid()
+## End(Not run)
+
+##  Example2: Chemical process
+  f &lt;- function(t, u) {
+    u1 &lt;- u[3] - 0.1 * (t+1) * u[1]
+    u2 &lt;- 0.1 * (t+1) * u[1] - 2 * u[2]
+    u3 &lt;- 2 * u[2] - u[3]
+    return(c(u1, u2, u3))
+  }
+u0 &lt;- c(0.8696, 0.0435, 0.0870)
+a &lt;- 0; b &lt;- 40
+n &lt;- 40
+sol &lt;- rk4sys(f, a, b, u0, n)
+## Not run: 
+matplot(sol$x, sol$y, type = "l", lty = 1, lwd = c(2, 1, 1),
+        col = c("darkred", "darkblue", "darkgreen"),
+        xlab = "Time [min]", ylab= "Concentration [Prozent]",
+        main = "Chemical composition")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

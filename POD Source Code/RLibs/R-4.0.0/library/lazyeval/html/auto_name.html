@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Automatically name all components of a lazy dots.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for auto_name {lazyeval}"><tr><td>auto_name {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Automatically name all components of a lazy dots.</h2>
+
+<h3>Description</h3>
+
+<p>Any components missing a name will automatically get a name added by
+looking at the first <code>max_width</code> characters of the deparsed expression.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+auto_name(x, max_width = 40)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A <code><a href="lazy_dots.html">lazy_dots</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>max_width</code></td>
+<td>
+<p>Maximum number of characters to use</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- lazy_dots(1 + 2, mean(mpg))
+auto_name(x)
+
+auto_name(list(~f, quote(x)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

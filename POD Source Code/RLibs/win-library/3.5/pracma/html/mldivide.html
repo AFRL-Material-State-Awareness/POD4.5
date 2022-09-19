@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Matlab backslash operator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mldivide {pracma}"><tr><td>mldivide {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Matlab backslash operator</h2>
+
+<h3>Description</h3>
+
+<p>Emulate the Matlab backslash operator &ldquo;\&rdquo; through QR decomposition.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mldivide(A, B, pinv = TRUE)
+mrdivide(A, B, pinv = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A, B</code></td>
+<td>
+
+<p>Numerical or complex matrices; <code>A</code> and <code>B</code> must have the same 
+number of rows (for <code>mldivide</code>) or the same number of columns
+(for <code>mrdivide</code>)
+</p>
+</td></tr>
+<tr valign="top"><td><code>pinv</code></td>
+<td>
+<p>logical; shall SVD decomposition be used; default true.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>mldivide</code> performs matrix left division (and <code>mrdivide</code> matrix
+right division). If <code>A</code> is scalar it performs element-wise division.
+</p>
+<p>If <code>A</code> is square, <code>mldivide</code> is roughly the same as
+<code>inv(A) %*% B</code> except it is computed in a different way &mdash;
+using QR decomposition.
+</p>
+<p>If <code>pinv = TRUE</code>, the default, the SVD will be used as
+<code>pinv(t(A)%*%A)%*%t(A)%*%B</code> to generate results similar
+to Matlab. Otherwise, <code>qr.solve</code> will be used.
+</p>
+<p>If <code>A</code> is not square, <code>x &lt;- mldivide(A, b)</code> returnes a
+least-squares solution that minimizes the length of the vector
+<code>A %*% x - b</code>
+(which is equivalent to <code>norm(A %*% x - b, "F")</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>A</code> is an n-by-p matrix and <code>B</code> n-by-q, then the result of
+<code>mldivide(A, B)</code> is a p-by-q matrix (<code>mldivide</code>).
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>mldivide(A, B)</code> corresponds to <code>A\B</code> in Matlab notation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Solve a system of linear equations
+A &lt;- matrix(c(8,1,6, 3,5,7, 4,9,2), nrow = 3, ncol = 3, byrow = TRUE)
+b &lt;- c(1, 1, 1)
+mldivide(A, b)  # 0.06666667 0.06666667 0.06666667
+
+A &lt;- rbind(1:3, 4:6)
+mldivide(A, c(1,1))                 # -0.5  0  0.5 ,i.e. Matlab/Octave result
+mldivide(A, c(1,1), pinv = FALSE)   # -1    1  0         R    qr.solve result
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

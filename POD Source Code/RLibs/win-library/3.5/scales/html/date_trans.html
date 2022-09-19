@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Transformation for dates (class Date)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for date_trans {scales}"><tr><td>date_trans {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Transformation for dates (class Date)</h2>
+
+<h3>Description</h3>
+
+<p>Transformation for dates (class Date)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+date_trans()
+</pre>
+
+
+<h3>Examples</h3>
+
+<pre>
+years &lt;- seq(as.Date("1910/1/1"), as.Date("1999/1/1"), "years")
+t &lt;- date_trans()
+t$transform(years)
+t$inverse(t$transform(years))
+t$format(t$breaks(range(years)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

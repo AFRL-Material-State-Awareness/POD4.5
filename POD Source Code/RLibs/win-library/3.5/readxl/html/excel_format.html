@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Determine file format</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for excel_format {readxl}"><tr><td>excel_format {readxl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Determine file format</h2>
+
+<h3>Description</h3>
+
+<p>Determine if files are xls or xlsx (or from the xlsx family).
+</p>
+<p><code>excel_format(guess = TRUE)</code> is used by <code>read_excel()</code> to
+determine format. It draws on logic from two lower level functions:
+</p>
+
+<ul>
+<li> <p><code>format_from_ext()</code> attempts to determine format from the file extension.
+</p>
+</li>
+<li> <p><code>format_from_signature()</code> consults the <a href="https://en.wikipedia.org/wiki/List_of_file_signatures">file signature</a> or &quot;magic
+number&quot;.
+</p>
+</li></ul>
+
+<p>File extensions associated with xlsx vs. xls:
+</p>
+
+<ul>
+<li><p> xlsx: <code>.xlsx</code>, <code>.xlsm</code>, <code>.xltx</code>, <code>.xltm</code>
+</p>
+</li>
+<li><p> xls: <code>.xls</code>
+</p>
+</li></ul>
+
+<p>File signatures (in hexadecimal) for xlsx vs xls:
+</p>
+
+<ul>
+<li><p> xlsx: First 4 bytes are <code style="white-space: pre;">50 4B 03 04</code>
+</p>
+</li>
+<li><p> xls: First 8 bytes are <code style="white-space: pre;">D0 CF 11 E0 A1 B1 1A E1</code>
+</p>
+</li></ul>
+
+
+
+<h3>Usage</h3>
+
+<pre>
+excel_format(path, guess = TRUE)
+
+format_from_ext(path)
+
+format_from_signature(path)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>path</code></td>
+<td>
+<p>Path to the xls/xlsx file.</p>
+</td></tr>
+<tr valign="top"><td><code>guess</code></td>
+<td>
+<p>Logical. If the file extension is absent or not recognized, this
+controls whether we attempt to guess format based on the file signature or
+&quot;magic number&quot;.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Character vector with values <code>"xlsx"</code>, <code>"xls"</code>, or <code>NA</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+files &lt;- c(
+  "a.xlsx",
+  "b.xls",
+  "c.png",
+  file.path(R.home("doc"), "html", "logo.jpg"),
+  readxl_example("clippy.xlsx"),
+  readxl_example("deaths.xls")
+)
+excel_format(files)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>readxl</em> version 1.4.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,26 @@
+Package: brew
+Type: Package
+Title: Templating Framework for Report Generation
+Version: 1.0-7
+Date: 2022-02-04
+Authors@R: c(person(given="Jeffrey", 
+                  family="Horner", 
+                  role = c("aut", "cph")),
+             person(given="Greg", 
+                  family="Hunt", 
+                  email = "greg@firmansyah.com", 
+                  role = c("aut", "cre", "cph")))
+Author: Jeffrey Horner [aut, cph],
+  Greg Hunt [aut, cre, cph]
+Maintainer: Greg Hunt <greg@firmansyah.com>
+Description: Implements a templating framework for mixing text and
+        R code for report generation. brew template syntax is similar
+        to PHP, Ruby's erb module, Java Server Pages, and Python's psp
+        module.
+License: GPL-2
+Repository: CRAN
+Suggests: testthat
+NeedsCompilation: no
+Packaged: 2022-02-04 10:07:41 UTC; greg
+Date/Publication: 2022-02-04 11:50:02 UTC
+Built: R 3.5.3; ; 2022-06-06 14:44:27 UTC; windows

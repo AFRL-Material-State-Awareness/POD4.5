@@ -32,7 +32,7 @@ lambda<-0
 data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 
 
-fullAnalysis=FALSE
+fullAnalysis=TRUE
 newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=6, lambda=lambda)
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()

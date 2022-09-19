@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Histogram Count (Matlab style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for histc {pracma}"><tr><td>histc {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Histogram Count (Matlab style)
+</h2>
+
+<h3>Description</h3>
+
+<p>Histogram-like counting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  histc(x, edges)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector or matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>edges</code></td>
+<td>
+<p>numeric vector of grid points, must be monotonically
+non-decreasing.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>n = histc(x,edges)</code> counts the number of values in vector <code>x</code>
+that fall between the elements in the <code>edges</code> vector (which must
+contain monotonically nondecreasing values).
+<code>n</code> is a <code>length(edges)</code> vector containing these counts.
+</p>
+<p>If <code>x</code> is a matrix then <code>cnt</code> and <code>bin</code> are matrices too, and
+</p>
+<p><code> for (j in (1:n))  cnt[k,j] &lt;- sum(bin[, j] == k) </code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>returns a list with components <code>cnt</code> and <code>bin</code>.
+<code>n(k)</code> counts the number of values in <code>x</code> that lie between
+<code>edges(k) &lt;= x(i) &lt; edges(k+1)</code>. The last counts any values of <code>x</code>
+that match <code>edges(n)</code>. Values outside the values in edges are not
+counted. Use <code>-Inf</code> and <code>Inf</code> in edges to include all values.
+</p>
+<p><code>bin[i]</code> returns <code>k</code> if <code>edges(k) &lt;= x(i) &lt; edges(k+1)</code>,
+and <code>0</code> if <code>x[i]</code> lies outside the grid.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../graphics/html/hist.html">hist</a></code>, code<a href="histss.html">histss</a>, <code><a href="../../base/html/findInterval.html">findInterval</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- seq(0.0, 1.0, by = 0.05)
+e &lt;- seq(0.1, 0.9, by = 0.10)
+histc(x, e)
+# $cnt
+# [1] 2 2 2 2 2 2 2 2 1
+# $bin
+# [1] 0 0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 0 0
+
+## Not run: 
+# Compare
+findInterval(x, e)
+# [1] 0 0 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 9
+findInterval(x, e, all.inside = TRUE)
+# [1] 1 1 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 8 8 8
+# cnt[i] &lt;- sum(findInterval(x, e) == i)
+## End(Not run)
+
+x &lt;- matrix( c(0.5029, 0.2375, 0.2243, 0.8495,
+               0.0532, 0.1644, 0.4215, 0.4135,
+               0.7854, 0.0879, 0.1221, 0.6170), 3, 4, byrow = TRUE)
+e &lt;- seq(0.0, 1.0, by = 0.2)
+histc(x, e)
+# $cnt
+#      [,1] [,2] [,3] [,4]
+# [1,]    1    2    1    0
+# [2,]    0    1    1    0
+# [3,]    1    0    1    1
+# [4,]    1    0    0    1
+# [5,]    0    0    0    1
+# [6,]    0    0    0    0
+# 
+# $bin
+#      [,1] [,2] [,3] [,4]
+# [1,]    3    2    2    5
+# [2,]    1    1    3    3
+# [3,]    4    1    1    4
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

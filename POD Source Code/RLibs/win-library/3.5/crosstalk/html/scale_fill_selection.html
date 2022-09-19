@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: ggplot2 helpers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for scale_fill_selection {crosstalk}"><tr><td>scale_fill_selection {crosstalk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>ggplot2 helpers</h2>
+
+<h3>Description</h3>
+
+<p>Add <code>scale_fill_selection()</code> or <code>scale_color_selection</code> to a ggplot
+to customize the scale for fill or color, respectively, for linked brushing.
+Use <code>selection_factor</code> to turn logical vectors representing selection,
+to a factor with the levels ordered for use with ggplot2 bar stacking.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+scale_fill_selection(color_false, color_true)
+
+scale_color_selection(color_false, color_true)
+
+selection_factor(
+  x,
+  na.replace = c(FALSE, NA, TRUE),
+  reverse = packageVersion("ggplot2") &lt; "2.2.0"
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>color_false</code></td>
+<td>
+<p>The color that should be mapped to unselected rows</p>
+</td></tr>
+<tr valign="top"><td><code>color_true</code></td>
+<td>
+<p>The color that should be mapped to selected rows</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Either a data frame with a <code>selected_</code> column, or, a logical
+vector indicating which rows are selected</p>
+</td></tr>
+<tr valign="top"><td><code>na.replace</code></td>
+<td>
+<p>The value to use to replace <code>NA</code> values; choose either
+<code>FALSE</code>, <code>NA</code>, or <code>TRUE</code> based on how you want values to be
+treated when no selection is active</p>
+</td></tr>
+<tr valign="top"><td><code>reverse</code></td>
+<td>
+<p>Whether the factor level order should be <code>c(FALSE, TRUE)</code>
+(normal) or <code>c(TRUE, FALSE)</code> (reverse). The former is required for
+ggplot2 2.2.0+, the latter for earlier versions.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+sd &lt;- SharedData$new(iris)
+renderPlot({
+  df &lt;- sd$data(withSelection = TRUE, withFilter = TRUE)
+  ggplot(df, aes(Sepal.Length, Sepal.Width,
+    color = selection_factor(df))) +
+    geom_point() +
+    scale_color_selection("#444444", "skyblue1")
+})
+
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>crosstalk</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

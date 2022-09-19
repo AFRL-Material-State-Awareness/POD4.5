@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create an HTML Widget</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for createWidget {htmlwidgets}"><tr><td>createWidget {htmlwidgets}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create an HTML Widget</h2>
+
+<h3>Description</h3>
+
+<p>Create an HTML widget based on widget YAML and JavaScript contained within
+the specified package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+createWidget(
+  name,
+  x,
+  width = NULL,
+  height = NULL,
+  sizingPolicy = htmlwidgets::sizingPolicy(),
+  package = name,
+  dependencies = NULL,
+  elementId = NULL,
+  preRenderHook = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>Widget name (should match the base name of the YAML and
+JavaScript files used to implement the widget)</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Widget instance data (underlying data to render and options that
+govern how it's rendered). This value will be converted to JSON using
+<code><a href="../../jsonlite/html/toJSON.html">toJSON</a></code> and made available to the widget's
+JavaScript <code>renderValue</code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>Fixed width for widget (in css units). The default is
+<code>NULL</code>, which results in intelligent automatic sizing based on the
+widget's container.</p>
+</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+<p>Fixed height for widget (in css units). The default is
+<code>NULL</code>, which results in intelligent automatic sizing based on the
+widget's container.</p>
+</td></tr>
+<tr valign="top"><td><code>sizingPolicy</code></td>
+<td>
+<p>Options that govern how the widget is sized in various
+containers (e.g. a standalone browser, the RStudio Viewer, a knitr figure,
+or a Shiny output binding). These options can be specified by calling the
+<code><a href="sizingPolicy.html">sizingPolicy</a></code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>package</code></td>
+<td>
+<p>Package where the widget is defined (defaults to the widget
+name).</p>
+</td></tr>
+<tr valign="top"><td><code>dependencies</code></td>
+<td>
+<p>Additional widget HTML dependencies (over and above those
+defined in the widget YAML). This is useful for dynamic dependencies that
+only exist when selected widget options are enabled (e.g. sets of map tiles
+or projections).</p>
+</td></tr>
+<tr valign="top"><td><code>elementId</code></td>
+<td>
+<p>Use an explicit element ID for the widget (rather than an
+automatically generated one). Useful if you have other JavaScript that
+needs to explicitly discover and interact with a specific widget instance.</p>
+</td></tr>
+<tr valign="top"><td><code>preRenderHook</code></td>
+<td>
+<p>A function to be run on the widget, just prior to
+rendering. It accepts the entire widget object as input, and should return
+a modified widget object.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For additional details on developing widgets, see package vignettes:
+<code>vignette("develop_intro", package = "htmlwidgets")</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>htmlwidget</code> that will intelligently print
+itself into HTML in a variety of contexts including the R console, within R
+Markdown documents, and within Shiny output bindings.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>htmlwidgets</em> version 1.5.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

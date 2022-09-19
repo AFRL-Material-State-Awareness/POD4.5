@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Adjusted denomintor degress freedom for linear estimate for...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for get_Lb_ddf {pbkrtest}"><tr><td>get_Lb_ddf {pbkrtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Adjusted denomintor degress freedom for linear estimate for linear
+mixed model.
+</h2>
+
+<h3>Description</h3>
+
+<p>Get adjusted denomintor degress freedom for testing Lb=0 in a
+linear mixed model where L is a restriction matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+get_Lb_ddf(object, L)
+Lb_ddf(L, V0, Vadj)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+
+<p>A linear mixed model object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>L</code></td>
+<td>
+
+<p>A vector with the same length as <code>fixef(object)</code> or a matrix
+with the same number of columns as the length of <code>fixef(object)</code>
+</p>
+</td></tr>
+<tr valign="top"><td><code>V0, Vadj</code></td>
+<td>
+
+<p>Unadjusted and adjusted covariance matrix for the fixed effects
+parameters. Undjusted covariance matrix is obtained with
+<code>vcov()</code> and adjusted with <code>vcovAdj()</code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Adjusted degrees of freedom (adjusment made by a Kenward-Roger
+approximation).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Soren Hojsgaard, <a href="mailto:sorenh@math.aau.dk">sorenh@math.aau.dk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Ulrich Halekoh, Søren Højsgaard (2014).,
+A Kenward-Roger Approximation and Parametric Bootstrap Methods for Tests in Linear Mixed Models - The R Package pbkrtest.,
+Journal of Statistical Software, 58(10), 1-30., <a href="http://www.jstatsoft.org/v59/i09/">http://www.jstatsoft.org/v59/i09/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="KRmodcomp.html">KRmodcomp</a></code>,
+<code><a href="vcovAdj.html">vcovAdj</a></code>,
+<code><a href="model2restrictionMatrix.html">model2restrictionMatrix</a></code>,
+<code><a href="model2restrictionMatrix.html">restrictionMatrix2model</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+(fmLarge &lt;- lmer(Reaction ~ Days + (Days|Subject), sleepstudy))
+## removing Days
+(fmSmall &lt;- lmer(Reaction ~ 1 + (Days|Subject), sleepstudy))
+anova(fmLarge,fmSmall)
+
+KRmodcomp(fmLarge,fmSmall)  ## 17 denominator df's
+get_Lb_ddf(fmLarge, c(0,1)) ## 17 denominator df's
+
+# Notice: The restriction matrix L corresponding to the test above
+# can be found with
+L&lt;-model2restrictionMatrix(fmLarge, fmSmall)
+L
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pbkrtest</em> version 0.4-5 <a href="00Index.html">Index</a>]</div>
+</body></html>

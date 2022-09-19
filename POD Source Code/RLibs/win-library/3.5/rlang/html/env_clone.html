@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Clone or coalesce an environment</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for env_clone {rlang}"><tr><td>env_clone {rlang}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Clone or coalesce an environment</h2>
+
+<h3>Description</h3>
+
+
+<ul>
+<li> <p><code>env_clone()</code> creates a new environment containing exactly the
+same bindings as the input, optionally with a new parent.
+</p>
+</li>
+<li> <p><code>env_coalesce()</code> copies binding from the RHS environment into the
+LHS. If the RHS already contains bindings with the same name as
+in the LHS, those are kept as is.
+</p>
+</li></ul>
+
+<p>Both these functions preserve active bindings and promises (the
+latter are only preserved on R &gt;= 4.0.0).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+env_clone(env, parent = env_parent(env))
+
+env_coalesce(env, from)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>An environment.</p>
+</td></tr>
+<tr valign="top"><td><code>parent</code></td>
+<td>
+<p>The parent of the cloned environment.</p>
+</td></tr>
+<tr valign="top"><td><code>from</code></td>
+<td>
+<p>Environment to copy bindings from.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+# A clone initially contains the same bindings as the original
+# environment
+env &lt;- env(a = 1, b = 2)
+clone &lt;- env_clone(env)
+
+env_print(clone)
+env_print(env)
+
+# But it can acquire new bindings or change existing ones without
+# impacting the original environment
+env_bind(clone, a = "foo", c = 3)
+
+env_print(clone)
+env_print(env)
+
+
+# `env_coalesce()` copies bindings from one environment to another
+lhs &lt;- env(a = 1)
+rhs &lt;- env(a = "a", b = "b", c = "c")
+env_coalesce(lhs, rhs)
+env_print(lhs)
+
+# To copy all the bindings from `rhs` into `lhs`, first delete the
+# conflicting bindings from `rhs`
+env_unbind(lhs, env_names(rhs))
+env_coalesce(lhs, rhs)
+env_print(lhs)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rlang</em> version 1.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Tridiagonal Linear System Solver</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for trisolve {pracma}"><tr><td>trisolve {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Tridiagonal Linear System Solver
+</h2>
+
+<h3>Description</h3>
+
+<p>Solves tridiagonal linear systems <code>A*x=rhs</code> efficiently.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+trisolve(a, b, d, rhs)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>diagonal of the tridiagonal matrix <code>A</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>b, d</code></td>
+<td>
+<p>upper and lower secondary diagonal of <code>A</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs</code></td>
+<td>
+<p>right hand side of the linear system <code>A*x=rhs</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Solves tridiagonal linear systems <code>A*x=rhs</code> by applying Givens
+transformations.
+</p>
+<p>By only storing the three diagonals, <code>trisolve</code> has memory requirements 
+of <code>3*n</code> instead of <code>n^2</code> and
+is faster than the standard <code>solve</code> function for larger matrices.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the solution of the tridiagonal linear system as vector.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Has applications for spline approximations and for solving boundary value
+problems (ordinary differential equations).
+</p>
+
+
+<h3>References</h3>
+
+<p>Gander, W. (1992). Computermathematik. Birkhaeuser Verlag, Basel.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="qrSolve.html">qrSolve</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+set.seed(8237)
+a &lt;- rep(1, 100)
+e &lt;- runif(99); f &lt;- rnorm(99)
+x &lt;- rep(seq(0.1, 0.9, by = 0.2), times = 20)
+A &lt;- diag(100) + Diag(e, 1) + Diag(f, -1)
+rhs &lt;- A %*% x
+s &lt;- trisolve(a, e, f, rhs)
+s[1:10]                         #=&gt; 0.1 0.3 0.5 0.7 0.9 0.1 0.3 0.5 0.7 0.9
+s[91:100]                       #=&gt; 0.1 0.3 0.5 0.7 0.9 0.1 0.3 0.5 0.7 0.9
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

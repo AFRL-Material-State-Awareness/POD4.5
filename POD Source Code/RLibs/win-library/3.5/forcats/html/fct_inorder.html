@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reorder factor levels by first appearance, frequency, or...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_inorder {forcats}"><tr><td>fct_inorder {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reorder factor levels by first appearance, frequency, or numeric order</h2>
+
+<h3>Description</h3>
+
+<p>This family of functions changes only the order of the levels.
+</p>
+
+<ul>
+<li> <p><code>fct_inorder()</code>: by the order in which they first appear.
+</p>
+</li>
+<li> <p><code>fct_infreq()</code>: by number of observations with each level (largest first)
+</p>
+</li>
+<li> <p><code>fct_inseq()</code>: by numeric value of level.
+</p>
+</li></ul>
+
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_inorder(f, ordered = NA)
+
+fct_infreq(f, ordered = NA)
+
+fct_inseq(f, ordered = NA)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>A factor</p>
+</td></tr>
+<tr valign="top"><td><code>ordered</code></td>
+<td>
+<p>A logical which determines the &quot;ordered&quot; status of the
+output factor. <code>NA</code> preserves the existing status of the factor.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- factor(c("b", "b", "a", "c", "c", "c"))
+f
+fct_inorder(f)
+fct_infreq(f)
+
+f &lt;- factor(1:3, levels = c("3", "2", "1"))
+f
+fct_inseq(f)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

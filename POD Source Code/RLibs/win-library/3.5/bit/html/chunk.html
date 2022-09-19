@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Methods for chunked range index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for chunk {bit}"><tr><td>chunk {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Methods for chunked range index</h2>
+
+<h3>Description</h3>
+
+<p>Calls <code><a href="chunks.html">chunks</a></code> to create a sequence of range indexes along the object which causes the method dispatch.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+chunk(x = NULL, ...)
+
+## Default S3 method:
+chunk(x = NULL, ..., RECORDBYTES = NULL, BATCHBYTES = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>the object along we want chunks</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to <code><a href="chunks.html">chunks</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>RECORDBYTES</code></td>
+<td>
+<p>integer scalar representing the bytes needed to process a single element of the boolean vector (default 4 bytes for logical)</p>
+</td></tr>
+<tr valign="top"><td><code>BATCHBYTES</code></td>
+<td>
+<p>integer scalar limiting the number of bytes to be processed in one chunk, default from <code>getOption("ffbatchbytes")</code> if not null, otherwise 16777216</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>chunk</code> is generic, the default method is described here, other methods
+that automatically consider RAM needs are provided with package 'ff', see
+for example <code><a href="../../ff/html/chunk.ffdf.html">chunk.ffdf</a></code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>returns a named list of <code><a href="ri.html">ri</a></code> objects 
+representing chunks of subscripts
+</p>
+
+
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>default</code>: default vector method
+</p>
+</li></ul>
+
+
+<h3>available methods</h3>
+
+<p><code>chunk.default</code>, <code><a href="../../ff/html/chunk.ffdf.html">chunk.ff_vector</a></code>, <code><a href="../../ff/html/chunk.ffdf.html">chunk.ffdf</a></code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="chunks.html">chunks</a></code>, <code><a href="ri.html">ri</a></code>, <code><a href="../../base/html/seq.html">seq</a></code>, <code><a href="bbatch.html">bbatch</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  chunk(complex(1e7))
+  chunk(raw(1e7))
+  chunk(raw(1e7), length=3)
+  
+  chunks(1,10,3)
+  # no longer do
+  chunk(1,100,10)
+  # but for bckward compatibility this works
+  chunk(from=1,to=100,by=10)
+  
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

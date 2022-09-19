@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Generalized Cholesky decompostion</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gchol {bdsmatrix}"><tr><td>gchol {bdsmatrix}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Generalized Cholesky decompostion
+</h2>
+
+<h3>Description</h3>
+
+<p>Perform the generalized Cholesky decompostion of a real symmetric matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gchol(x, tolerance=1e-10)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>the symmetric matrix to be factored
+</p>
+</td></tr>
+<tr valign="top"><td><code>tolerance</code></td>
+<td>
+
+<p>the numeric tolerance for detection of singular columns in x.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>A symmetric matrix A can be decomposed as LDL', where L is a lower
+triangular matrix with 1's on the diagonal, L' is the transpose of
+L, and D is diagonal.
+The inverse of L is also lower-triangular, with 1's on the diagonal.  
+If all elements of D are positive, then A must be symmetric
+positive definite (SPD), and the solution can be reduced the usual
+Cholesky decomposition U'U where U is upper triangular and
+U = sqrt(D) L'.
+</p>
+<p>The main advantage of the generalized form is that it admits
+of matrices that are not of full rank: D will contain zeros 
+marking the redundant columns, and the rank of A is the
+number of non-zero columns.  If all elements of D are zero or
+positive, then A is a non-negative definite (NND) matrix.
+The generalized form also has the (quite minor) numerical advantage
+of not requiring square roots during its calculation.
+To extract the components of the decompostion, use the 
+<code>diag</code> and <code>as.matrix</code>
+functions.
+</p>
+<p>The <code>solve</code> has a method for gchol decompostions,
+and there are gchol methods for block diagonal symmetric
+(<code>bdsmatrix</code>) matrices as well.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>gchol</code> containing the
+generalized Cholesky decompostion.
+It has the appearance of a lower triangular matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>bsdmatrix, solve.gchol
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Create a matrix that is symmetric, but not positive definite
+#   The matrix temp has column 6 redundant with cols 1-5
+smat &lt;- matrix(1:64, ncol=8)
+smat &lt;- smat + t(smat) + diag(rep(20,8))  #smat is 8 by 8 symmetric
+temp &lt;-  smat[c(1:5, 5:8), c(1:5, 5:8)]
+ch1  &lt;- gchol(temp)
+
+print(as.matrix(ch1), digits=4)   # print out L
+print(diag(ch1))        # Note the zero at position 6
+
+ginv &lt;- solve(ch1)    # generalized inverse
+diag(ginv)            # also has column 6 marked as singular
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bdsmatrix</em> version 1.3-6 <a href="00Index.html">Index</a>]</div>
+</body></html>

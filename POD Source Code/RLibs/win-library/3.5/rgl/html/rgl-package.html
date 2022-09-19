@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: 3D visualization device system</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rgl-package {rgl}"><tr><td>rgl-package {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>3D visualization device system</h2>
+
+<h3>Description</h3>
+
+<p>3D real-time rendering system.
+</p>
+
+
+<h3>Details</h3>
+
+<p>RGL is a 3D real-time rendering system for R.
+Multiple windows are managed at a time. Windows
+may be divided into &ldquo;subscenes&rdquo;, where one has the current focus
+that receives instructions from the R command-line. 
+The device design is oriented towards the R device metaphor. If you send
+scene management instructions, and there's no device open, it will be opened
+automatically.
+Opened devices automatically get the current device focus. The focus may be
+changed by using <code><a href="open3d.html">set3d</a>()</code> or <code><a href="subscene3d.html">useSubscene3d</a>()</code>.
+</p>
+<p>RGL provides medium to high level functions for 3D interactive graphics, including
+functions modelled on base graphics (<code><a href="plot3d.html">plot3d</a>()</code>, etc.) as well as functions for 
+constructing geometric objects (<code><a href="cube3d.html">cube3d</a>()</code>, etc.).  Output
+may be on screen using OpenGL, or to various standard 3D file formats including 
+WebGL, PLY, OBJ, STL as well as 2D image formats, including PNG, Postscript, SVG, PGF.
+</p>
+<p>The <code><a href="open3d.html">open3d</a>()</code> function attempts to open a new RGL window,
+using default settings specified by the user.
+</p>
+<p>RGL also includes a lower level interface which is described
+in the <a href="rgl.open.html">rgl.open</a> help topic.  We recommend that you avoid mixing
+<code>rgl.*</code> and <code>*3d</code> calls.
+</p>
+<p>See the first example below to display the ChangeLog.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="r3d.html">r3d</a> for a description of the <code>*3d</code> interface;
+<code><a href="par3d.html">par3d</a></code> for a description of scene properties and the rendering
+pipeline; <code><a href="rgl.useNULL.html">rgl.useNULL</a></code> for a description of how to 
+use RGL on a system with no graphics support.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if (!in_pkgdown_example())
+  file.show(system.file("NEWS", package = "rgl"))
+example(surface3d)
+example(plot3d)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

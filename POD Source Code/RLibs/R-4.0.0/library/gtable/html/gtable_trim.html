@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Trim off empty cells.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable_trim {gtable}"><tr><td>gtable_trim {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Trim off empty cells.</h2>
+
+<h3>Description</h3>
+
+<p>This function detects rows and columns that does not contain any grobs and
+removes thewm from the gtable. If the rows and/or columns removed had a
+non-zero height/width the relative layout of the gtable may change.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable_trim(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a gtable object</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+rect &lt;- rectGrob(gp = gpar(fill = "black"))
+base &lt;- gtable(unit(c(2, 2, 2), "cm"), unit(c(2, 2, 2), "cm"))
+
+center &lt;- gtable_add_grob(base, rect, 2, 2)
+plot(center)
+plot(gtable_trim(center))
+
+col &lt;- gtable_add_grob(base, rect, 1, 2, 3, 2)
+plot(col)
+plot(gtable_trim(col))
+
+row &lt;- gtable_add_grob(base, rect, 2, 1, 2, 3)
+plot(row)
+plot(gtable_trim(row))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

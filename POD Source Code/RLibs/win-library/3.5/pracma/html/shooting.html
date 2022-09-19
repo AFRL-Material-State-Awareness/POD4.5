@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Shooting Method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for shooting {pracma}"><tr><td>shooting {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Shooting Method</h2>
+
+<h3>Description</h3>
+
+<p>The shooting method solves the boundary value problem for 
+second-order differential equations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+shooting(f, t0, tfinal, y0, h, a, b,
+         itermax = 20, tol = 1e-6, hmax = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function in the differential equation <i>y'' = f(x, y, y')</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>t0, tfinal</code></td>
+<td>
+<p>start and end points of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>y0</code></td>
+<td>
+<p>starting value of the solution.</p>
+</td></tr>
+<tr valign="top"><td><code>h</code></td>
+<td>
+<p>function defining the boundary condition as a function at the
+end point of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>two guesses of the derivative at the start point.</p>
+</td></tr>
+<tr valign="top"><td><code>itermax</code></td>
+<td>
+<p>maximum number of iterations for the secant method.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>tolerance to be used for stopping and in the <code>ode45</code>
+solver.</p>
+</td></tr>
+<tr valign="top"><td><code>hmax</code></td>
+<td>
+<p>maximal step size, to be passed to the solver.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>A second-order differential equation is solved with boundary conditions
+<code>y(t0) = y0</code> at the start point of the interval, and
+<code>h(y(tfinal), dy/dt(tfinal)) = 0</code> at the end. The zero of
+<code>h</code> is found by a simple secant approach.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with two components, <code>t</code> for grid (or &lsquo;time&rsquo;)
+points between <code>t0</code> and <code>tfinal</code>, and <code>y</code> the solution
+of the differential equation evaluated at these points.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Replacing secant with Newton's method would be an easy exercise.
+The same for replacing <code>ode45</code> with some other solver.
+</p>
+
+
+<h3>References</h3>
+
+<p>L. V. Fausett (2008). Applied Numerical Analysis Using MATLAB.
+Second Edition, Pearson Education Inc.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="bvp.html">bvp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#-- Example 1
+f &lt;- function(t, y1, y2) -2*y1*y2
+h &lt;- function(u, v) u + v - 0.25
+
+t0 &lt;- 0; tfinal &lt;- 1
+y0 &lt;- 1
+sol &lt;- shooting(f, t0, tfinal, y0, h, 0, 1)
+## Not run: 
+plot(sol$t, sol$y[, 1], type='l', ylim=c(-1, 1))
+xs &lt;- linspace(0, 1); ys &lt;- 1/(xs+1)
+lines(xs, ys, col="red")
+lines(sol$t, sol$y[, 2], col="gray")
+grid()
+## End(Not run)
+
+#-- Example 2
+f &lt;- function(t, y1, y2) -y2^2 / y1
+h &lt;- function(u, v) u - 2
+t0 &lt;- 0; tfinal &lt;- 1
+y0 &lt;- 1
+sol &lt;- shooting(f, t0, tfinal, y0, h, 0, 1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

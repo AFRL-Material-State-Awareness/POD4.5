@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Anova function for quantile regression fits</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for anova.rq {quantreg}"><tr><td>anova.rq {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Anova function for quantile regression fits </h2>
+
+<h3>Description</h3>
+
+<p>Compute test statistics for two or more quantile regression fits.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'rq'
+anova(object, ..., test = "Wald", joint = TRUE, score =
+                       "tau", se = "nid", iid = TRUE, R = 200, trim = NULL)
+## S3 method for class 'rqs'
+anova(object, ..., se = "nid", iid = TRUE, joint = TRUE)
+## S3 method for class 'rqlist'
+anova(object, ...,  test = "Wald", joint = TRUE, 
+	score = "tau", se = "nid", iid = TRUE, R = 200, trim = NULL)
+rq.test.rank(x0, x1, y, v = NULL, score = "wilcoxon", weights = NULL, tau=.5,
+        iid = TRUE, delta0 = rep(0,NCOL(x1)), omega = 1, trim = NULL, pvalue = "F")
+rq.test.anowar(x0,x1,y,tau,R)
+## S3 method for class 'anova.rq'
+print(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object, ...</code></td>
+<td>
+<p>objects of class &lsquo;rq&rsquo;, originating from a call to &lsquo;rq&rsquo;. 
+or a single object of class rqs, originating from a call to 'rq' with
+multiple taus specified.</p>
+</td></tr>
+<tr valign="top"><td><code>test</code></td>
+<td>
+<p> A character string specifying the test statistic to use.
+Can be either &lsquo;Wald&rsquo; or &lsquo;rank&rsquo;.</p>
+</td></tr>
+<tr valign="top"><td><code>joint</code></td>
+<td>
+<p>A logical flag indicating whether tests of equality of slopes
+should be done as joint tests on all slope parameters, or whether
+(when joint = FALSE) separate tests on each of the slope parameters
+should be reported.  This option applies only to the tests of 
+equality of slopes in the case that estimated models correspond
+to distinct taus.</p>
+</td></tr>
+<tr valign="top"><td><code>score</code></td>
+<td>
+<p> A character string specifying the score function to use,
+only needed or applicable for the &lsquo;rank&rsquo; form of the test.</p>
+</td></tr>
+<tr valign="top"><td><code>trim</code></td>
+<td>
+<p>optional trimming proportion parameter(s)  &ndash; only applicable for the
+Wilcoxon score function &ndash;  when one value is provided there is symmetric
+trimming of the score integral to the interval <code>(trim, 1-trim)</code>, when
+there are two values provided, then the trimming restricts the integration
+to <code>(trim[1], trim[2])</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> objects of class &lsquo;summary.rq&rsquo;, originating from a call to &lsquo;summary&rsquo;. </p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>design matrix for the null component of the rank and anowar tests. </p>
+</td></tr>
+<tr valign="top"><td><code>x1</code></td>
+<td>
+<p>design matrix for the alternative component of the rank and anowar tests. </p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>response vector for the alternative component of the rank and anowar tests. </p>
+</td></tr>
+<tr valign="top"><td><code>v</code></td>
+<td>
+<p>optional rq process fit</p>
+</td></tr>
+<tr valign="top"><td><code>se</code></td>
+<td>
+<p>method for computing standard errors, either &quot;nid&quot; or &quot;ker&quot;, note 
+that &quot;boot&quot; cannot be used for testing homogeneity of slopes.</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+<p>quantile of interest for quantile specific forms of testing.</p>
+</td></tr>
+<tr valign="top"><td><code>iid</code></td>
+<td>
+<p>logical flag for quantile specific forms of testing, if TRUE the
+test presumes that the conditional densities take identical values,
+if it is FALSE then local densities are estimated and used, see Koenker(2005)
+p. 90.</p>
+</td></tr>
+<tr valign="top"><td><code>delta0</code></td>
+<td>
+<p>vector of hypothetical parameter values under test, typically zeros
+but can be specified to be nonzero in cases where simulations are being used
+to evaluate the validity of the non-central chisquare theory of the test.</p>
+</td></tr> 
+<tr valign="top"><td><code>omega</code></td>
+<td>
+<p>value to be used for the score and F dependent constant appearing
+in the non-centrality parameter,  this is only needed/useful when delta0
+is specified to be non-zero.  In the usual Wilcoxon (untrimmed) case this
+value is the integral the squared density.</p>
+</td></tr>
+<tr valign="top"><td><code>pvalue</code></td>
+<td>
+<p>type of p-value to be used, by default a pseudo F-statistic is
+produced and the corresponding F p-value is computed, otherwise the
+more conventional chisquared p-values are reported.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>optional weight vector to be used for fitting.</p>
+</td></tr>
+<tr valign="top"><td><code>R</code></td>
+<td>
+<p> The number of resampling replications for the anowar form of the test, 
+used to estimate the reference distribution for the test statistic.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>There are two (as yet) distinct forms of the test.  In the first the
+fitted objects all have the same specified quantile (tau) and the intent
+is to test the hypothesis that smaller models are adequate relative to
+the largest specified model.  In the second form of the test the linear predictor 
+of the fits are all the same, but the specified quantiles (taus) are different.  
+</p>
+<p>In the former case there are three options for
+the argument &lsquo;test&rsquo;, by default a Wald test is computed as in 
+Bassett and Koenker (1982).  If <code>test = 'anowar'</code> is specified
+then the test is based on the procedure suggested in Chen, Ying, Zhang
+and Zhao (2008); the test is based on the difference in the QR objective
+functions at the restricted and unrestricted models with a reference
+distribution computed by simulation.  The p-value of this form of the
+test is produced by fitting a density to the simulation values forming
+the reference distribution using the <code>logspline</code> function from
+the <span class="pkg">logspline</span> package.  The acronym anowar stands for  analysis
+of weighted absolute residuals.  If <code>test='rank'</code> is specified, then a rank
+test statistic is computed as described in Gutenbrunner, Jureckova,
+Koenker and Portnoy (1993).  In the latter case one can also specify
+a form for the score function of the rank test, by default the Wilcoxon
+score is used, the other options are score=&lsquo;sign&rsquo; for median (sign) scores,
+or score=&lsquo;normal&rsquo; for normal (van der Waerden) scores.  A fourth option
+is score=&lsquo;tau&rsquo; which is a generalization of median scores to an arbitrary
+quantile, in this case the quantile is assumed to be the one associated
+with the fitting of the specified objects.  The computing of
+the rank form of the test is carried out in the <code><a href="anova.rq.html">rq.test.rank</a></code>
+function, see <code><a href="ranks.html">ranks</a></code> for further details on the score function
+options.  The Wald form of the test is local in sense that the null hypothesis
+asserts only that a subset of the covariates are &ldquo;insignificant&rdquo; at
+the specified quantile of interest.  The rank form of the test can also be
+used to test the global hypothesis that a subset is &ldquo;insignificant&rdquo;
+over an entire range of quantiles.  The use of the score function
+score = &quot;tau&quot; restricts the rank test to the local hypothesis of
+the Wald test.  
+</p>
+<p>In the latter case the hypothesis of interest is that the slope coefficients of
+the models are identical.  The test statistic is a variant of the Wald 
+test described in Koenker and Bassett (1982).
+</p>
+<p>By default, both forms of the tests return an F-like statistic in the sense that the
+an asymptotically Chi-squared statistic is divided by its degrees of
+freedom and the reported p-value is computed for an F statistic based on 
+the numerator degrees of freedom equal to the rank of the null hypothesis and
+the denominator degrees of freedom is taken to be the sample size
+minus the number of parameters of the maintained model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class &lsquo;&quot;anova&quot;&rsquo; inheriting from class &lsquo;&quot;data.frame&quot;&rsquo;.
+</p>
+
+
+<h3>WARNING </h3>
+
+<p>An attempt to verify that the models are nested in the first form
+of the test is made, but this relies on checking set inclusion of
+the list of variable names and is subject to obvious ambiguities
+when variable names are generic.
+The comparison between two or more models will only be valid if
+they are fitted to the same dataset. This may be a problem if
+there are missing values and R's default of &lsquo;na.action = na.omit&rsquo; is used. 
+The rank version of the nested model tests involves computing the entire
+regression quantile process using parametric linear programming and thus
+can be rather slow and memory intensive on problems with more than 
+several thousand observations.</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Koenker </p>
+
+
+<h3>References</h3>
+
+<p>[1] Bassett, G. and R. Koenker  (1982). Tests of Linear Hypotheses
+and L1 Estimation,
+<em>Econometrica</em>, <b>50</b>, 1577&ndash;83.
+</p>
+<p>[2] Koenker, R. W. and Bassett, G. W. (1982). Robust Tests for
+Heteroscedasticity based on Regression Quantiles,
+<em>Econometrica</em>, <b>50</b>, 43&ndash;61.
+</p>
+<p>[3] Gutenbrunner, C., Jureckova, J., Koenker, R, and S. Portnoy  (1993).
+Tests of Linear Hypotheses based on Regression Rank Scores,
+<em>J. of Nonparametric Statistics</em>, <b>2</b>, 307&ndash;331.
+</p>
+<p>[4] Chen, K. Z. Ying, H. Zhang, and L Zhao, (2008) Analysis of least absolute
+deviations, Biometrika, 95, 107-122.
+</p>
+<p>[5] Koenker, R. W. (2005).  Quantile Regression, Cambridge U. Press. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The model fitting function  <code><a href="rq.html">rq</a></code>, 
+and the functions for testing hypothesis on the entire quantile
+regression process <code><a href="KhmaladzeTest.html">KhmaladzeTest</a></code>.  For further details
+on the rank tests see <code><a href="ranks.html">ranks</a></code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(barro)
+fit0 &lt;- rq(y.net ~  lgdp2 + fse2 + gedy2 , data = barro)
+fit1 &lt;- rq(y.net ~  lgdp2 + fse2 + gedy2 + Iy2 + gcony2, data = barro)
+fit2 &lt;- rq(y.net ~  lgdp2 + fse2 + gedy2 + Iy2 + gcony2, data = barro,tau=.75)
+fit3 &lt;- rq(y.net ~  lgdp2 + fse2 + gedy2 + Iy2 + gcony2, data = barro,tau=.25)
+anova(fit1,fit0)
+anova(fit1,fit2,fit3)
+anova(fit1,fit2,fit3,joint=FALSE)
+# Alternatively fitting can be done in one call:
+fit &lt;- rq(y.net ~  lgdp2 + fse2 + gedy2 + Iy2 + gcony2, 
+	  method = "fn", tau = 1:4/5, data = barro)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

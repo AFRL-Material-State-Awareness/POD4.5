@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Export screenshot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for snapshot3d {rgl}"><tr><td>snapshot3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Export screenshot</h2>
+
+<h3>Description</h3>
+
+<p>Saves the screenshot to a file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rgl.snapshot( filename, fmt = "png", top = TRUE )
+snapshot3d( filename = tempfile(fileext = ".png"), 
+            fmt = "png", top = TRUE,
+            ..., scene, width = NULL, height = NULL,
+            webshot = as.logical(Sys.getenv("RGL_USE_WEBSHOT", "TRUE")) )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>filename</code></td>
+<td>
+<p>path to file to save.</p>
+</td></tr>
+<tr valign="top"><td><code>fmt</code></td>
+<td>
+<p>image export format, currently supported: png.  Ignored if <code>webshot = TRUE</code>. </p>
+</td></tr>
+<tr valign="top"><td><code>top</code></td>
+<td>
+<p>whether to call <code><a href="rgl.bringtotop.html">rgl.bringtotop</a></code>.
+Ignored if <code>webshot = TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments to pass to <code>webshot2::webshot</code> </p>
+</td></tr>
+<tr valign="top"><td><code>scene</code></td>
+<td>
+<p>an optional result of <code><a href="scene3d.html">scene3d</a></code> 
+or <code><a href="rglwidget.html">rglwidget</a></code> to plot</p>
+</td></tr>
+<tr valign="top"><td><code>width, height</code></td>
+<td>
+<p>optional specifications of output
+size in pixels</p>
+</td></tr>
+<tr valign="top"><td><code>webshot</code></td>
+<td>
+<p>Use the <span class="pkg">webshot2</span> package to take the 
+snapshot</p>
+</td></tr>  
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>rgl.snapshot()</code> is a low-level function
+that copies the current RGL window from the screen.  Users
+should use <code>snapshot3d()</code> instead; it is more flexible,
+and (if <span class="pkg">webshot2</span> is installed) can take images even if
+no window is showing, and they can be larger than the physical
+screen.
+</p>
+<p>Animations can be created in a loop modifying the scene and saving 
+each screenshot to a file. Various graphics programs (e.g. ImageMagick)
+can put these together into a single animation. (See <code><a href="play3d.html">movie3d</a></code> or
+the example below.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>These functions are mainly called for the side effects.  The
+filename of the saved file is returned invisibly.
+</p>
+
+
+<h3>Note</h3>
+
+<p>When <code>rgl.useNULL()</code> is <code>TRUE</code>, only <code>webshot = TRUE</code>
+will produce a snapshot.  It requires the <span class="pkg">webshot2</span>
+package and a Chrome browser.  If no suitable browser is
+found, <code>snapshot3d()</code> will revert to <code>rgl.snapshot()</code>.
+To override the automatic search, set
+environment variable <span class="env">CHROMOTE_CHROME</span>
+to the path to a suitable browser.
+</p>
+<p><code>rgl.snapshot</code> works by taking an image from the displayed
+window on-screen.
+On some systems, the snapshot
+will include content from other windows if they cover the active RGL
+window.  Setting <code>top = TRUE</code> (the default) will use 
+<code><a href="rgl.bringtotop.html">rgl.bringtotop</a></code> before the snapshot
+to avoid this.  
+</p>
+<p>There are likely limits to how large <code>width</code> and
+<code>height</code> can be set based on the display hardware; if these
+are exceeded the results are undefined.  A typical result
+is that the snapshot will still be made but at a smaller
+size.
+</p>
+<p>There are slight differences between the displays with
+<code>webshot = TRUE</code> and <code>webshot = FALSE</code>, as the 
+former are rendered using WebGL while the latter are rendered
+using OpenGL.  Often the <code>webshot = TRUE</code> displays
+have better quality, but they are usually slower to
+produce, sometimes drastically so.  
+</p>
+<p>Set the environment
+variable <span class="env">RGL_USE_WEBSHOT</span> to <code>"FALSE"</code> if
+you want <code>rgl.snapshot</code> to be used by default.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="play3d.html">movie3d</a></code>, <code><a href="viewpoint.html">rgl.viewpoint</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if (interactive() &amp;&amp; !in_pkgdown_example()) {
+  saveopts &lt;- options(rgl.useNULL = TRUE)
+  plot3d(matrix(rnorm(300), ncol = 3, dimnames = list(NULL, c("x", "y", "z"))), 
+         col = "red")
+  options(saveopts)
+  browseURL(snapshot3d())
+}
+
+## Not run: 
+
+#
+# create animation
+#
+
+shade3d(oh3d(), color = "red")
+rgl.bringtotop()
+view3d(0, 20)
+
+olddir &lt;- setwd(tempdir())
+for (i in 1:45) {
+  view3d(i, 20)
+  filename &lt;- paste("pic", formatC(i, digits = 1, flag = "0"), ".png", sep = "")
+  snapshot3d(filename)
+}
+## Now run ImageMagick in tempdir().  Use 'convert' instead of 'magick'
+## if you have an older version of ImageMagick:
+##    magick -delay 10 *.png -loop 0 pic.gif
+setwd(olddir)
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

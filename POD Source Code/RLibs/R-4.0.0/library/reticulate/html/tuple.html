@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create Python tuple</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for tuple {reticulate}"><tr><td>tuple {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create Python tuple</h2>
+
+<h3>Description</h3>
+
+<p>Create a Python tuple object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tuple(..., convert = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Values for tuple (or a single list to be converted to a tuple).</p>
+</td></tr>
+<tr valign="top"><td><code>convert</code></td>
+<td>
+<p><code>TRUE</code> to automatically convert Python objects to their R
+equivalent. If you pass <code>FALSE</code> you can do manual conversion using the
+<code><a href="r-py-conversion.html">py_to_r()</a></code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A Python tuple
+</p>
+
+
+<h3>Note</h3>
+
+<p>The returned tuple will not automatically convert its elements from
+Python to R. You can do manual conversion with the <code><a href="r-py-conversion.html">py_to_r()</a></code> function or
+pass <code>convert = TRUE</code> to request automatic conversion.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

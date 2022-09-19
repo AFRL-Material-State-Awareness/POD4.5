@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Update to the new survey design format</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.svydesign2 {survey}"><tr><td>as.svydesign2 {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Update to the new survey design format</h2>
+
+<h3>Description</h3>
+
+<p>The structure of survey design objects changed in version 2.9, to allow
+standard errors based on multistage sampling. <code>as.svydesign</code> converts an
+object to the new structure and  <code>.svycheck</code> warns if an object
+does not have the new structure.
+</p>
+<p>You can set <code>options(survey.want.obsolete=TRUE)</code> to suppress the
+warnings produced by <code>.svycheck</code> and
+<code>options(survey.ultimate.cluster=TRUE)</code> to always compute
+variances based on just the first stage of sampling.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.svydesign2(object)
+.svycheck(object)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>produced by <code>svydesign</code></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>survey.design2</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svydesign.html">svydesign</a></code>, <code><a href="svyrecvar.html">svyrecvar</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

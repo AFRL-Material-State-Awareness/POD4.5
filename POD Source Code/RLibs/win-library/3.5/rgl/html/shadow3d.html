@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Project shadows of mesh onto object.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for shadow3d {rgl}"><tr><td>shadow3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Project shadows of mesh onto object.
+</h2>
+
+<h3>Description</h3>
+
+<p>Project a mesh onto a surface in a scene so that it appears to cast a shadow onto the surface.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+shadow3d(obj, mesh, plot = TRUE, up = c(0, 0, 1),
+         P = projectDown(up), outside = FALSE,
+         ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+
+<p>The target object which will show the shadow.
+</p>
+</td></tr>
+<tr valign="top"><td><code>mesh</code></td>
+<td>
+
+<p>The mesh which will cast the shadow.
+</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+
+<p>Whether to plot the result.
+</p>
+</td></tr>
+<tr valign="top"><td><code>up</code></td>
+<td>
+
+<p>Which direction is &ldquo;up&rdquo;?
+</p>
+</td></tr>
+<tr valign="top"><td><code>P</code></td>
+<td>
+
+<p>The projection to use for draping, a 4x4 matrix.  See <code><a href="drape3d.html">drape3d</a></code> for details on how <code>P</code> is used.
+</p>
+</td></tr>
+<tr valign="top"><td><code>outside</code></td>
+<td>
+
+<p>Should the function compute and (possibly) plot the region
+outside of the shadow?
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Other arguments to pass to <code><a href="contourLines3d.html">filledContour3d</a></code>,
+which will do the boundary calculations and plotting.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>shadow3d</code> internally constructs a function that 
+is zero on the boundary of the shadow and positive inside, 
+then draws filled contours of that function.  Because the
+function is nonlinear, the boundaries will be approximate,
+with the best approximation resulting from a large
+value of <code><a href="contourLines3d.html">filledContour3d</a></code> parameter <code>minVertices</code>.
+</p>
+<p>If <code>outside = TRUE</code>, the first color used by
+<code><a href="contourLines3d.html">filledContour3d</a></code> will indicate the inside
+of the shadow, and the second color will indicate the exterior.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The returned value from <code><a href="contourLines3d.html">filledContour3d</a></code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="drape3d.html">drape3d</a></code>, <code><a href="facing3d.html">facing3d</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+obj &lt;- translate3d(scale3d(oh3d(), 0.3, 0.3, 0.3), 0,0,2)
+shade3d(obj, col = "red")
+target &lt;- icosahedron3d()
+
+# We offset the target using polygon_offset = 1 so that the
+# shadow on its surface will appear clearly.
+
+shade3d(target, col = "white", polygon_offset = 1)
+
+# minVertices = 1000 leaves noticeable artifacts on the edges
+# of the shadow.  A larger value gives a better result, but is
+# slower.
+
+# We use facing3d(target) so the shadow and outside part only 
+# appear on the upper side of the target
+
+shadow3d(facing3d(target), obj, minVertices = 1000, plot=TRUE,
+         col = c("yellow", "blue"), outside = TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Quantile-quantile plots for survey data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyqqplot {survey}"><tr><td>svyqqplot {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Quantile-quantile plots for survey data
+</h2>
+
+<h3>Description</h3>
+
+<p>Quantile-quantile plots either against a specified distribution function or comparing two variables from the same or different designs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyqqplot(formula, design, designx = NULL, na.rm = TRUE, qrule = "hf8",
+    xlab = NULL, ylab = NULL, ...)
+svyqqmath(x, design, null=qnorm, na.rm=TRUE, xlab="Expected",ylab="Observed",...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x,formula</code></td>
+<td>
+
+<p>A one-sided formula for <code>svyqqmath</code> or a two-sided formula for <code>svyqqplot</code>
+</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+
+<p>Survey design object to look up variables
+</p>
+</td></tr>
+<tr valign="top"><td><code>designx</code></td>
+<td>
+
+<p>Survey design object to look up the RHS variable in <code>svyqqplot</code>, if
+different from the LHS variable
+</p>
+</td></tr>
+<tr valign="top"><td><code>null</code></td>
+<td>
+<p>Quantile function to compare the data quantiles to</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+
+<p>Remove missing values
+</p>
+</td></tr>
+<tr valign="top"><td><code>qrule</code></td>
+<td>
+
+<p>How to define quantiles for <code>svyqqplot</code> &ndash; see
+<code><a href="svyquantile.html">svyquantile</a></code> for possible values
+</p>
+</td></tr>
+<tr valign="top"><td><code>xlab,ylab</code></td>
+<td>
+
+<p>Passed to <code>plot</code>. For <code>svyqqplot</code>, if these are  <code>NULL</code>
+they are replaced by the variable names
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Graphical options to be passed to <code>plot</code>
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>None
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/quantile.html">quantile</a></code>
+<code><a href="../../stats/html/qqnorm.html">qqnorm</a></code>
+<code><a href="../../stats/html/qqnorm.html">qqplot</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+
+dstrat&lt;-svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat,
+fpc=~fpc)
+
+svyqqmath(~api99, design=dstrat)
+svyqqplot(api00~api99, design=dstrat)
+
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+opar&lt;-par(mfrow=c(1,2))
+
+## sample distributions very different
+qqplot(apiclus1$enroll, apistrat$enroll); abline(0,1)
+
+## estimated population distributions much more similar
+svyqqplot(enroll~enroll, design=dstrat,designx=dclus1,qrule=survey:::qrule_hf8); abline(0,1)
+par(opar)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

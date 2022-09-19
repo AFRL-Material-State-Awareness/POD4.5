@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Score Test for Adding a Covariate to a GLM</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for glm.scoretest {statmod}"><tr><td>glm.scoretest {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Score Test for Adding a Covariate to a GLM</h2>
+
+<h3>Description</h3>
+
+<p>Computes score test statistics (z-statistics) for adding covariates to a generalized linear model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+glm.scoretest(fit, x2, dispersion=NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fit</code></td>
+<td>
+<p>generalized linear model fit object, of class <code><a href="../../stats/html/glm.html">glm</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x2</code></td>
+<td>
+<p>vector or matrix with each column a covariate to be added.</p>
+</td></tr>
+<tr valign="top"><td><code>dispersion</code></td>
+<td>
+<p>the dispersion for the generalized linear model family.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Rao's score test is a type of asymptotic test that is an alternative to Wald tests or likelihood ratio tests (LRTs) (Dunn and Smyth, 2018).
+Wald tests are computed by dividing parameter estimates by their standard errors.
+LRTs are computed from differences in the log-likihoods between the null and alternative hypotheses.
+Score tests are computed from log-likelihood derivatives.
+All three types of tests (Wald, score and LRT) are asymptotically equivalent under ideal circumstances, but the score and LRT tests are invariant under-reparametrization whereas Wald tests are not.
+</p>
+<p>One of the main differences between the tests is the need for estimation of parameters under the null and alternative hypotheses.
+Wald tests require maximum likelihood estimates (MLEs) to be computed only under the alternative hypothesis, LRT tests require both the null and alternative models to be fitted, while score tests require only the null hypothesis to be fitted.
+</p>
+<p>When a generalized linear model (GLM) is fitted in R using the <code>glm</code> function, the <code>summary()</code> function presents Wald tests for all the coefficients in the linear model while <code>anova()</code> is able to compute likelihood ratio tests.
+GLM output in R has historically not included score tests, although score tests can be a very computationally coefficient choice when one wants to test for many potential additional covariates being added to a relatively simple null model.
+</p>
+<p>A number of well known Pearson chisquare statistics, including goodness of fit statistics and the Pearson test for independence in a contingency table can be derived as score tests (Smyth, 2003; Dunn and Smyth, 2018).
+</p>
+<p>This function computes score test statistics for adding a single numerical covariate to a GLM, given the <code>glm</code> output for the null model.
+It makes very efficient use of the quantities already stored in the GLM fit object.
+A computational formula for the score test statistics is given in Section 7.2.6 of Dunn and Smyth (2018).
+</p>
+<p>The dispersion parameter is treated as for <code><a href="../../stats/html/summary.glm.html">summary.glm</a></code>.
+If <code>NULL</code>, the Pearson estimator is used, except for the binomial, Poisson and negative binomial
+families, for which the dispersion is one.
+</p>
+<p>Note that the <code>anova.glm</code> function in the stats package has offered a Rao score test option since 2011, but it requires model fits under the alternative as well as the null hypothesis, which does not take advantage of the computational advantage of score test.
+The <code>glm.scoretest</code> is more efficient as it does not require a full model fit.
+On the other hand, <code>anova.glm</code> can compute score tests for factors and multiple covariates, which <code>glm.scoretest</code> does not currently do.
+</p>
+
+
+<h3>Value</h3>
+
+<p>numeric vector containing the z-statistics, one for each covariate.
+The z-statistics can be treated as standard normal under the null hypothesis.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Dunn, PK, and Smyth, GK (2018). <em>Generalized linear models with examples in R</em>. Springer, New York, NY. 
+doi: <a href="https://doi.org/10.1007/978-1-4419-0118-7">10.1007/978-1-4419-0118-7</a>
+</p>
+<p>Lovison, G (2005). On Rao score and Pearson X^2 statistics in generalized linear models.
+<em>Statistical Papers</em>, 46, 555-574.
+</p>
+<p>Pregibon, D (1982). Score tests in GLIM with applications.
+In <em>GLIM82: Proceedings of the International Conference on Generalized Linear Models</em>,
+R Gilchrist (ed.), Lecture Notes in Statistics, Volume 14, Springer, New York, pages 87-97. 
+</p>
+<p>Smyth, G. K. (2003). Pearson's goodness of fit statistic as a score test statistic. In: <em>Science and Statistics: A Festschrift for Terry Speed</em>, D. R. Goldstein (ed.), IMS Lecture Notes - Monograph Series, Volume 40, Institute of Mathematical Statistics, Beachwood, Ohio, pages 115-126.
+<a href="http://www.statsci.org/smyth/pubs/goodness.pdf">http://www.statsci.org/smyth/pubs/goodness.pdf</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/glm.html">glm</a></code>, <code><a href="../../stats/html/add1.html">add1</a></code>, <code><a href="../../stats/html/anova.glm.html">anova.glm</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#  Pearson's chisquare test for independence
+#  in a contingency table is a score test.
+
+#  First the usual test
+
+y &lt;- c(20,40,40,30)
+chisq.test(matrix(y,2,2), correct=FALSE)
+
+#  Now same test using glm.scoretest
+
+a &lt;- gl(2,1,4)
+b &lt;- gl(2,2,4)
+fit &lt;- glm(y~a+b, family=poisson)
+x2 &lt;- c(0,0,0,1)
+z &lt;- glm.scoretest(fit, x2)
+z^2
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

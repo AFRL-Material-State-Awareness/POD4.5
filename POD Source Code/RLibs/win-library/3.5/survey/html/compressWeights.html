@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compress replicate weight matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for compressWeights {survey}"><tr><td>compressWeights {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compress replicate weight matrix</h2>
+
+<h3>Description</h3>
+
+<p>Many replicate weight matrices have redundant rows, such as when
+weights are the same for all observations in a PSU.  This function
+produces a compressed form. Methods for <code>as.matrix</code> and
+<code>as.vector</code> extract and expand the weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+compressWeights(rw, ...)
+## S3 method for class 'svyrep.design'
+compressWeights(rw,...)
+## S3 method for class 'repweights_compressed'
+as.matrix(x,...)
+## S3 method for class 'repweights_compressed'
+as.vector(x,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>rw</code></td>
+<td>
+<p>A set of replicate weights or a <code>svyrep.design</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A compressed set of replicate weights</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>For future expansion</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>repweights_compressed</code> or a
+<code>svyrep.design</code> object with <code>repweights</code> element of class <code>repweights_compressed</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="brrweights.html">jknweights</a></code>,<code><a href="as.svrepdesign.html">as.svrepdesign</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+rclus1c&lt;-as.svrepdesign(dclus1,compress=TRUE)
+rclus1&lt;-as.svrepdesign(dclus1,compress=FALSE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

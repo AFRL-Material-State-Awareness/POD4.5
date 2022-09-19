@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Open and close DBI connections</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for open.DBIsvydesign {survey}"><tr><td>open.DBIsvydesign {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Open and close DBI connections </h2>
+
+<h3>Description</h3>
+
+<p>A database-backed survey design object contains a connection to a
+database.  This connection will be broken if the object is saved and
+reloaded, and the connection should ideally be closed with <code>close</code>
+before quitting R (although it doesn't matter for SQLite
+connections). The connection can be reopened with <code>open</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'DBIsvydesign'
+open(con, ...)
+## S3 method for class 'DBIsvydesign'
+close(con, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>con</code></td>
+<td>
+<p>Object of class <code>DBIsvydesign</code> </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other options, to be passed to <code>dbConnect</code> or
+<code>dbDisconnect</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The same survey design object with the connection opened or closed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svydesign.html">svydesign</a></code>
+</p>
+<p>DBI package </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+library(RSQLite)
+dbclus1&lt;-svydesign(id=~dnum, weights=~pw, fpc=~fpc,
+data="apiclus1",dbtype="SQLite",
+dbname=system.file("api.db",package="survey"))
+
+dbclus1
+close(dbclus1)
+dbclus1
+try(svymean(~api00, dbclus1))
+
+dbclus1&lt;-open(dbclus1)
+open(dbclus1)
+svymean(~api00, dbclus1)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

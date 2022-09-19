@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create and write KML file for PNG image overlay</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for kmlOverlay {maptools}"><tr><td>kmlOverlay {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create and write KML file for PNG image overlay</h2>
+
+<h3>Description</h3>
+
+<p>The function is used to create and write a KML file for a PNG image overlay for Google Earth.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+kmlOverlay(obj, kmlfile = NULL, imagefile = NULL, name = "R image")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>a <code>GE_SG</code> object from <code>GE_SpatialGrid</code></p>
+</td></tr>
+<tr valign="top"><td><code>kmlfile</code></td>
+<td>
+<p>if not NULL the name of the kml file to be written</p>
+</td></tr>
+<tr valign="top"><td><code>imagefile</code></td>
+<td>
+<p>the name of the PNG file containing the image - this should be either relative (same directory as kml file) or abosolute (fully qualified)</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>the name used to describe the image overlay in GE</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function is used together with <code>GE_SpatialGrid</code> to wrap around the opening of a PNG graphics device, plotting code, and the closing of the device. The computed values take account of the adjustment of the actual data bounding box to an integer number of rows and columns in the image file. 
+</p>
+<p>The approach may be used as an alternative to writing PNG files from SpatialGrid and SpatialPixel objects in <span class="pkg">rgdal</span> using <code>writeGDAL</code>, and to writing KML files using <code>writeOGR</code> for vector data objects. The output PNG files are likely to be very much smaller than large vector data KML files, and hinder the retrieval of exact positional information.
+</p>
+<p>Note that the geometries should be in geographical coordinates with datum WGS84.
+</p>
+
+
+<h3>Value</h3>
+
+<p>x is a character vector containing the generated lines of the kml file
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Golicher, David Forrest and Roger Bivand</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="GE_SpatialGrid.html">GE_SpatialGrid</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+opt_exask &lt;- options(example.ask=FALSE)
+qk &lt;- SpatialPointsDataFrame(quakes[, c(2:1)], quakes)
+proj4string(qk) &lt;- CRS("+proj=longlat +ellps=WGS84")
+tf &lt;- tempfile()
+SGqk &lt;- GE_SpatialGrid(qk)
+png(file=paste(tf, ".png", sep=""), width=SGqk$width, height=SGqk$height,
+  bg="transparent")
+par(mar=c(0,0,0,0), xaxs="i", yaxs="i")
+plot(qk, xlim=SGqk$xlim, ylim=SGqk$ylim, setParUsrBB=TRUE)
+dev.off()
+kmlOverlay(SGqk, paste(tf, ".kml", sep=""), paste(tf, ".png", sep=""))
+## Not run: 
+#library(rgdal)
+#qk0 &lt;- quakes
+#qk0$long &lt;- ifelse(qk0$long &lt;= 180, qk0$long, qk0$long-360)
+#qk0a &lt;- SpatialPointsDataFrame(qk0[, c(2:1)], qk0)
+#proj4string(qk0a) &lt;- CRS("+proj=longlat +ellps=WGS84")
+#writeOGR(qk0a, paste(tf, "v.kml", sep=""), "Quakes", "KML")
+#system(paste("googleearth ", tf, ".kml", sep=""))
+
+## End(Not run)
+options(example.ask=opt_exask)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

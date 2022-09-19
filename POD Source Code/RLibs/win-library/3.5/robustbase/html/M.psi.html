@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Psi / Chi / Wgt / Rho Functions for *M-Estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Mpsi {robustbase}"><tr><td>Mpsi {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Psi / Chi / Wgt / Rho Functions for *M-Estimation</h2>
+
+<h3>Description</h3>
+
+<p>Compute Psi / Chi / Wgt / Rho functions for M-estimation,
+i.e., including MM, etc.  For definitions and details, please use the
+vignette <a href="https://cran.r-project.org/package=robustbase/vignettes/psi_functions.pdf">
+&ldquo;<i>psi</i>-Functions Available in Robustbase&rdquo;</a>.
+</p>
+<p><code>MrhoInf(x)</code> computes <i>rho(Inf)</i>, i.e., the
+normalizing or scaling constant for the transformation
+from <i>rho(.)</i> to
+<i>rho~(.)</i>, where the latter, aka as
+<i>chi()</i> fulfills <i>rho~(Inf) = 1</i>
+which makes only sense for &ldquo;redescending&rdquo; psi functions, i.e.,
+not for <code>"huber"</code>.
+</p>
+<p><code>Mwgt(x, *)</code> computes <i>&psi;(x)/x</i>  (fast and numerically accurately).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Mpsi(x, cc, psi, deriv = 0)
+Mchi(x, cc, psi, deriv = 0)
+Mwgt(x, cc, psi)
+MrhoInf(cc, psi)
+
+.Mwgt.psi1(psi, cc = .Mpsi.tuning.default(psi))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric (&ldquo;abscissa&rdquo; values) vector, possibly with
+<code><a href="../../base/html/attributes.html">attributes</a></code> such as <code><a href="../../base/html/dim.html">dim</a></code> or
+<code><a href="../../base/html/names.html">names</a></code>, etc.  These are preserved for the
+<code>M*()</code> functions (but not the <code>.M()</code> ones).</p>
+</td></tr>
+<tr valign="top"><td><code>cc</code></td>
+<td>
+<p>numeric tuning constant, for some <code>psi</code> of length
+<i>&gt; 1</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>psi</code></td>
+<td>
+<p>a string specifying the psi / chi / rho / wgt function;
+either <code>"huber"</code>, or one of the same possible specifiers as for
+<code>psi</code> in <code><a href="lmrob.control.html">lmrob.control</a></code>, i.e. currently,
+<code>"bisquare"</code>, <code>"lqq"</code>, <code>"welsh"</code>, <code>"optimal"</code>,
+<code>"hampel"</code>, or <code>"ggw"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>deriv</code></td>
+<td>
+<p>an integer, specifying the <em>order</em> of derivative to
+consider; particularly, <code>Mpsi(x, *, deriv = -1)</code> is the
+principal function of <i>psi()</i>, typically denoted
+<i>rho()</i> in the literature.  For some psi functions,
+currently <code>"huber"</code>, <code>"bisquare"</code>, <code>"hampel"</code>, and <code>"lqq"</code>,
+<code>deriv = 2</code> is implemented, for the other psi's only
+<i>d in {-1,0,1}}.</i></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Theoretically, <code>Mchi()</code> would not be needed explicitly as it can be computed
+from <code>Mpsi()</code> and <code>MrhoInf()</code>, namely, by
+</p>
+<pre>Mchi(x, *, deriv = d)  ==  Mpsi(x, *, deriv = d-1) / MrhoInf(*)</pre>
+<p>for <i>d = 0, 1, 2</i>  (and &lsquo;*&rsquo; containing <code>par, psi</code>, and
+equality is in the sense of <code><a href="../../base/html/all.equal.html">all.equal</a>(x,y, tol)</code> with a
+small <code>tol</code>.
+</p>
+<p>Similarly, <code>Mwgt</code> would not be needed strictly, as it could be
+defined via <code>Mpsi</code>), but the explicit definition takes care of
+0/0 and typically is of a more simple form.
+</p>
+<p>For experts, there are slightly even faster versions,
+<code>.Mpsi()</code>, <code>.Mwgt()</code>, etc.
+</p>
+<p><code>.Mwgt.psi1()</code> mainly a utility for <code><a href="nlrob.html">nlrob</a>()</code>,
+returns a <em><code><a href="../../base/html/function.html">function</a></code></em> with similar semantics as
+<code><a href="../../MASS/html/psi.hampel.html">psi.hampel</a></code>, <code><a href="../../MASS/html/psi.huber.html">psi.huber</a></code>, or
+<code><a href="../../MASS/html/psi.bisquare.html">psi.bisquare</a></code> from package <a href="https://CRAN.R-project.org/package=MASS"><span class="pkg">MASS</span></a>.  Namely,
+a function with arguments <code>(x, deriv=0)</code>, which for
+<code>deriv=0</code> computes <code>Mwgt(x, cc, psi)</code> and otherwise computes
+<code>Mpsi(x, cc, psi, deriv=deriv)</code>.
+</p>
+<p><code>.Mpsi()</code>, <code>.Mchi()</code>, <code>.Mwgt()</code>, and <code>.MrhoInf()</code> are
+low-level versions of
+<code>Mpsi()</code>,  <code>Mchi()</code>,  <code>Mwgt()</code>, and  <code>MrhoInf()</code>, respectively,
+and <code>.psi2ipsi()</code> provides the psi-function integer codes needed
+for <code>ipsi</code> argument of the <code>.M*()</code> functions.
+</p>
+<p>For <code>psi = "ggw"</code>, the <i>rho()</i> function has no closed
+form and must be computed via numerical integration, apart from 6
+special cases including the defaults, see the &lsquo;Details&rsquo; in
+<code>help(<a href="psiFindc.html">.psi.ggw.findc</a>)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a numeric vector of the same length as <code>x</code>, with corresponding
+function (or derivative) values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Manuel Koller, notably for the original C implementation;
+tweaks and speedup via <code><a href="../../base/html/CallExternal.html">.Call</a></code> and <code>.M*()</code> etc by
+Martin Maechler.
+</p>
+
+
+<h3>References</h3>
+
+<p>See the vignette about  
+&ldquo;<i>psi</i>-Functions Available in Robustbase&rdquo;.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="psiFunc.html">psiFunc</a></code> and the <code><a href="psi_func-class.html">psi_func</a></code> class, both
+of which provide considerably more on the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> side, but are less
+optimized for speed.
+</p>
+<p><code><a href="lmrob.control.html">.Mpsi.tuning.defaults</a></code>, etc, for tuning constants'
+defaults for<code>lmrob()</code>, and <code><a href="psiFindc.html">.psi.ggw.findc</a>()</code>
+utilities to construct such constants' vectors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- seq(-5,7, by=1/8)
+matplot(x, cbind(Mpsi(x, 4, "biweight"),
+                 Mchi(x, 4, "biweight"),
+                 Mwgt(x, 4, "biweight")), type = "l")
+abline(h=0, v=0, lty=2, col=adjustcolor("gray", 0.6))
+
+hampelPsi
+(ccHa &lt;- hampelPsi @ xtras $ tuningP $ k)
+psHa &lt;- hampelPsi@psi(x)
+
+## using Mpsi():
+Mp.Ha &lt;- Mpsi(x, cc = ccHa, psi = "hampel")
+stopifnot(all.equal(Mp.Ha, psHa, tolerance = 1e-15))
+
+psi.huber &lt;- .Mwgt.psi1("huber")
+if(getRversion() &gt;= "3.0.0")
+stopifnot(identical(psi.huber, .Mwgt.psi1("huber", 1.345),
+                    ignore.env=TRUE))
+curve(psi.huber(x), -3, 5, col=2, ylim = 0:1)
+curve(psi.huber(x, deriv=1), add=TRUE, col=3)
+
+## and show that this is indeed the same as  MASS::psi.huber() :
+x &lt;- runif(256, -2,3)
+stopifnot(all.equal(psi.huber(x), MASS::psi.huber(x)),
+          all.equal(                 psi.huber(x, deriv=1),
+                    as.numeric(MASS::psi.huber(x, deriv=1))))
+
+## and how to get  MASS::psi.hampel():
+psi.hampel &lt;- .Mwgt.psi1("Hampel", c(2,4,8))
+x &lt;- runif(256, -4, 10)
+stopifnot(all.equal(psi.hampel(x), MASS::psi.hampel(x)),
+          all.equal(                 psi.hampel(x, deriv=1),
+                    as.numeric(MASS::psi.hampel(x, deriv=1))))
+
+## "lqq" / "LQQ" and its tuning constants:
+ctl0 &lt;- lmrob.control(psi = "lqq", tuning.psi=c(-0.5, 1.5, 0.95, NA))
+ctl  &lt;- lmrob.control(psi = "lqq", tuning.psi=c(-0.5, 1.5, 0.90, NA))
+ctl0$tuning.psi  ## keeps the vector _and_ has "constants" attribute:
+## [1] -0.50  1.50  0.95    NA
+## attr(,"constants")
+## [1] 1.4734061 0.9822707 1.5000000
+ctl$tuning.psi ## ditto:
+## [1] -0.5  1.5  0.9  NA \  .."constants"   1.213726 0.809151 1.500000
+stopifnot(all.equal(Mpsi(0:2, cc = ctl$tuning.psi, psi = ctl$psi),
+                    c(0, 0.977493, 1.1237), tol = 6e-6))
+x &lt;- seq(-4,8, by = 1/16)
+## Show how you can use .Mpsi() equivalently to Mpsi()
+stopifnot(all.equal( Mpsi(x, cc = ctl$tuning.psi, psi = ctl$psi),
+                    .Mpsi(x, ccc = attr(ctl$tuning.psi, "constants"),
+                             ipsi = .psi2ipsi("lqq"))))
+stopifnot(all.equal( Mpsi(x, cc = ctl0$tuning.psi, psi = ctl0$psi, deriv=1),
+                    .Mpsi(x, ccc = attr(ctl0$tuning.psi, "constants"),
+                             ipsi = .psi2ipsi("lqq"),              deriv=1)))
+
+
+## M*() preserving attributes :
+x &lt;- matrix(x, 32, 8, dimnames=list(paste0("r",1:32), col=letters[1:8]))
+comment(x) &lt;- "a vector which is a matrix"
+px &lt;- Mpsi(x, cc = ccHa, psi = "hampel")
+stopifnot(identical(attributes(x), attributes(px)))
+
+## The "optimal" psi exists in two versions "in the litterature": ---
+## Maronna et al. 2006, 5.9.1, p.144f:
+psi.M2006 &lt;- function(x, c = 0.013)
+  sign(x) * pmax(0, abs(x) - c/dnorm(abs(x)))
+## and the other is the one in robustbase from 'robust': via Mpsi(.., "optimal")
+## Here are both for 95% efficiency:
+(c106 &lt;- .Mpsi.tuning.default("optimal"))
+c1 &lt;- curve(Mpsi(x, cc = c106, psi="optimal"), -5, 7, n=1001)
+c2 &lt;- curve(psi.M2006(x), add=TRUE, n=1001, col=adjustcolor(2,0.4), lwd=2)
+abline(0,1, v=0, h=0, lty=3)
+## the two psi's are similar, but really quite different
+
+## a zoom into Maronna et al's:
+c3 &lt;- curve(psi.M2006(x), -.5, 1, n=1001); abline(h=0,v=0, lty=3);abline(0,1, lty=2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

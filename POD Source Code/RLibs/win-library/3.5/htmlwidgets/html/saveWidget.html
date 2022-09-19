@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Save a widget to an HTML file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for saveWidget {htmlwidgets}"><tr><td>saveWidget {htmlwidgets}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Save a widget to an HTML file</h2>
+
+<h3>Description</h3>
+
+<p>Save a rendered widget to an HTML file (e.g. for sharing with others).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+saveWidget(
+  widget,
+  file,
+  selfcontained = TRUE,
+  libdir = NULL,
+  background = "white",
+  title = class(widget)[[1]],
+  knitrOptions = list()
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>widget</code></td>
+<td>
+<p>Widget to save</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>File to save HTML into</p>
+</td></tr>
+<tr valign="top"><td><code>selfcontained</code></td>
+<td>
+<p>Whether to save the HTML as a single self-contained file
+(with external resources base64 encoded) or a file with external resources
+placed in an adjacent directory.</p>
+</td></tr>
+<tr valign="top"><td><code>libdir</code></td>
+<td>
+<p>Directory to copy HTML dependencies into (defaults to
+filename_files).</p>
+</td></tr>
+<tr valign="top"><td><code>background</code></td>
+<td>
+<p>Text string giving the html background color of the widget.
+Defaults to white.</p>
+</td></tr>
+<tr valign="top"><td><code>title</code></td>
+<td>
+<p>Text to use as the title of the generated page.</p>
+</td></tr>
+<tr valign="top"><td><code>knitrOptions</code></td>
+<td>
+<p>A list of <span class="pkg">knitr</span> chunk options.</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>htmlwidgets</em> version 1.5.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

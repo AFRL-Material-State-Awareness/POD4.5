@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a call by &quot;hand&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for call_new {lazyeval}"><tr><td>call_new {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a call by &quot;hand&quot;</h2>
+
+<h3>Description</h3>
+
+<p>Create a call by &quot;hand&quot;
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+call_new(f, ..., .args = list())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>Function to call. For <code>make_call</code>, either a string, a symbol
+or a quoted call. For <code>do_call</code>, a bare function name or call.</p>
+</td></tr>
+<tr valign="top"><td><code>..., .args</code></td>
+<td>
+<p>Arguments to the call either in or out of a list</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+# f can either be a string, a symbol or a call
+call_new("f", a = 1)
+call_new(quote(f), a = 1)
+call_new(quote(f()), a = 1)
+
+#' Can supply arguments individually or in a list
+call_new(quote(f), a = 1, b = 2)
+call_new(quote(f), .args = list(a = 1, b = 2))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Complete case indicator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for cci {mice}"><tr><td>cci {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Complete case indicator</h2>
+
+<h3>Description</h3>
+
+<p>The complete case indicator is useful for extracting the subset of complete cases. The function
+<code>cci(x)</code> calls <code>complete.cases(x)</code>.
+The companion function <code>ici()</code> selects the incomplete cases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+cci(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An <code>R</code> object. Currently supported are methods for the
+following classes: <code>mids</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Logical vector indicating the complete cases.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren, 2017.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/complete.cases.html">complete.cases</a></code>, <code><a href="ici.html">ici</a></code>, <code><a href="cc.html">cc</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+cci(nhanes) # indicator for 13 complete cases
+cci(mice(nhanes, maxit = 0))
+f &lt;- cci(nhanes[, c("bmi", "hyp")]) # complete data for bmi and hyp
+nhanes[f, ] # obtain all data from those with complete bmi and hyp
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Matrix Rotation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rot90 {pracma}"><tr><td>rot90 {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Matrix Rotation</h2>
+
+<h3>Description</h3>
+
+<p>Rotate matrices for 90, 180, or 270 degrees..
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rot90(a, k = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>numeric or complex matrix</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>scalar integer number of times the matrix will be rotated for
+90 degrees; may be negative.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Rotates a numeric or complex matrix for 90 (k = 1), 180 (k = 2) or
+270 (k = 3 or k = -1) degrees.
+</p>
+<p>Value of k is taken mod 4.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the original matrix rotated
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+a &lt;- matrix(1:12, nrow=3, ncol=4, byrow=TRUE)
+rot90(a)
+rot90(a, 2)
+rot90(a, -1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Trigonometric Polynomial</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for trigPoly {pracma}"><tr><td>trigPoly {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Trigonometric Polynomial
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the trigonometric coefficients.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+trigPoly(x, m)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>data from <code>t=0</code> to <code>t=2*(n-1)*pi/n</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+<p>degree of trigonometric regression.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Compute the coefficients of the trigonometric series of degree <code>m</code>,
+</p>
+<p style="text-align: center;"><i>a_0 + &sum;_k(a_k \cos(k t) + b_k \sin(k t))</i></p>
+
+<p>by applying orthogonality relations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Coefficients as a list with components <code>a0</code>, <code>a</code>, and <code>b</code>. 
+</p>
+
+
+<h3>Note</h3>
+
+<p>For irregular spaced data or data not covering the whole period, use
+standard regression techniques, see examples.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fausett, L. V. (2007). Applied Numerical Analysis Using Matlab.
+Second edition, Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="trigApprox.html">trigApprox</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Data available only from 0 to pi/2
+t &lt;- seq(0, pi, len=7)
+x &lt;- 0.5 + 0.25*sin(t) + 1/3*cos(t) - 1/3*sin(2*t) - 0.25*cos(2*t)
+
+# use standard regression techniques
+A &lt;- cbind(1, cos(t), sin(t), cos(2*t), sin(2*t))
+ab &lt;- qr.solve(A, x)
+ab
+# [1]  0.5000000  0.3333333  0.2500000 -0.2500000 -0.3333333
+ts &lt;- seq(0, 2*pi, length.out = 100)
+xs &lt;- ab[1] + ab[2]*cos(ts) +
+      ab[3]*sin(ts) + ab[4]*cos(2*ts) +ab[5]*sin(2*ts)
+
+## Not run: 
+# plot to make sure
+plot(t, x, col = "red", xlim=c(0, 2*pi), ylim=c(-2,2),
+           main = "Trigonometric Regression")
+lines(ts, xs, col="blue")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

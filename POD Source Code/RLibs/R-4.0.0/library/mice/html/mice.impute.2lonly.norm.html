@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Imputation at level 2 by Bayesian linear regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mice.impute.2lonly.norm {mice}"><tr><td>mice.impute.2lonly.norm {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Imputation at level 2 by Bayesian linear regression</h2>
+
+<h3>Description</h3>
+
+<p>Imputes univariate missing data at level 2 using Bayesian linear regression
+analysis.  Variables are level 1 are aggregated at level 2. The group
+identifier at level 2 must be indicated by <code>type = -2</code> in the
+<code>predictorMatrix</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mice.impute.2lonly.norm(y, ry, x, type, wy = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Vector to be imputed</p>
+</td></tr>
+<tr valign="top"><td><code>ry</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code> indicating the
+the subset <code>y[ry]</code> of elements in <code>y</code> to which the imputation
+model is fitted. The <code>ry</code> generally distinguishes the observed
+(<code>TRUE</code>) and missing values (<code>FALSE</code>) in <code>y</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric design matrix with <code>length(y)</code> rows with predictors for
+<code>y</code>. Matrix <code>x</code> may have no missing values.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Group identifier must be specified by '-2'. Predictors must be
+specified by '1'.</p>
+</td></tr>
+<tr valign="top"><td><code>wy</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code>. A <code>TRUE</code> value
+indicates locations in <code>y</code> for which imputations are created.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function allows in combination with <code><a href="mice.impute.2l.pan.html">mice.impute.2l.pan</a></code>
+switching regression imputation between level 1 and level 2 as described in
+Yucel (2008) or Gelman and Hill (2007, p. 541).
+</p>
+<p>The function checks for partial missing level-2 data. Level-2 data
+are assumed to be constant within the same cluster. If one or more
+entries are missing, then the procedure aborts with an error
+message that identifies the cluster with incomplete level-2 data.
+In such cases, one may first fill in the cluster mean (or mode) by
+the <code>2lonly.mean</code> method to remove inconsistencies.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of length <code>nmis</code> with imputations.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For a more general approach, see
+<code>miceadds::mice.impute.2lonly.function()</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alexander Robitzsch (IPN - Leibniz Institute for Science and
+Mathematics Education, Kiel, Germany), <a href="mailto:robitzsch@ipn.uni-kiel.de">robitzsch@ipn.uni-kiel.de</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Gelman, A. and Hill, J. (2007). <em>Data analysis using
+regression and multilevel/hierarchical models</em>. Cambridge, Cambridge
+University Press.
+</p>
+<p>Yucel, RM (2008). Multiple imputation inference for multivariate multilevel
+continuous data with ignorable non-response.  <em>Philosophical
+Transactions of the Royal Society A</em>, <b>366</b>, 2389-2404.
+</p>
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/sec-level2pred.html"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mice.impute.norm.html">mice.impute.norm</a></code>,
+<code><a href="mice.impute.2lonly.pmm.html">mice.impute.2lonly.pmm</a></code>, <code><a href="mice.impute.2l.pan.html">mice.impute.2l.pan</a></code>,
+<code><a href="mice.impute.2lonly.mean.html">mice.impute.2lonly.mean</a></code>
+</p>
+<p>Other univariate-2lonly: 
+<code><a href="mice.impute.2lonly.mean.html">mice.impute.2lonly.mean</a>()</code>,
+<code><a href="mice.impute.2lonly.pmm.html">mice.impute.2lonly.pmm</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# simulate some data
+# x,y ... level 1 variables
+# v,w ... level 2 variables
+
+G &lt;- 250 # number of groups
+n &lt;- 20 # number of persons
+beta &lt;- .3 # regression coefficient
+rho &lt;- .30 # residual intraclass correlation
+rho.miss &lt;- .10 # correlation with missing response
+missrate &lt;- .50 # missing proportion
+y1 &lt;- rep(rnorm(G, sd = sqrt(rho)), each = n) + rnorm(G * n, sd = sqrt(1 - rho))
+w &lt;- rep(round(rnorm(G), 2), each = n)
+v &lt;- rep(round(runif(G, 0, 3)), each = n)
+x &lt;- rnorm(G * n)
+y &lt;- y1 + beta * x + .2 * w + .1 * v
+dfr0 &lt;- dfr &lt;- data.frame("group" = rep(1:G, each = n), "x" = x, "y" = y, "w" = w, "v" = v)
+dfr[rho.miss * x + rnorm(G * n, sd = sqrt(1 - rho.miss)) &lt; qnorm(missrate), "y"] &lt;- NA
+dfr[rep(rnorm(G), each = n) &lt; qnorm(missrate), "w"] &lt;- NA
+dfr[rep(rnorm(G), each = n) &lt; qnorm(missrate), "v"] &lt;- NA
+
+# empty mice imputation
+imp0 &lt;- mice(as.matrix(dfr), maxit = 0)
+predM &lt;- imp0$predictorMatrix
+impM &lt;- imp0$method
+
+# multilevel imputation
+predM1 &lt;- predM
+predM1[c("w", "y", "v"), "group"] &lt;- -2
+predM1["y", "x"] &lt;- 1 # fixed x effects imputation
+impM1 &lt;- impM
+impM1[c("y", "w", "v")] &lt;- c("2l.pan", "2lonly.norm", "2lonly.pmm")
+
+# y ... imputation using pan
+# w ... imputation at level 2 using norm
+# v ... imputation at level 2 using pmm
+
+imp1 &lt;- mice(as.matrix(dfr),
+  m = 1, predictorMatrix = predM1,
+  method = impM1, maxit = 1, paniter = 500
+)
+
+# Demonstration that 2lonly.norm aborts for partial missing data.
+# Better use 2lonly.mean for repair.
+data &lt;- data.frame(
+  patid = rep(1:4, each = 5),
+  sex = rep(c(1, 2, 1, 2), each = 5),
+  crp = c(
+    68, 78, 93, NA, 143,
+    5, 7, 9, 13, NA,
+    97, NA, 56, 52, 34,
+    22, 30, NA, NA, 45
+  )
+)
+pred &lt;- make.predictorMatrix(data)
+pred[, "patid"] &lt;- -2
+# only missing value (out of five) for patid == 1
+data[3, "sex"] &lt;- NA
+## Not run: 
+# The following fails because 2lonly.norm found partially missing
+# level-2 data
+# imp &lt;- mice(data, method = c("", "2lonly.norm", "2l.pan"),
+#             predictorMatrix = pred, maxit = 1, m = 2)
+# &gt; iter imp variable
+# &gt; 1   1  sex  crpError in .imputation.level2(y = y, ... :
+# &gt;   Method 2lonly.norm found the following clusters with partially missing
+# &gt;    level-2 data: 1
+# &gt; Method 2lonly.mean can fix such inconsistencies.
+
+## End(Not run)
+
+# In contrast, if all sex values are missing for patid == 1, it runs fine,
+# except on r-patched-solaris-x86. I used dontrun to evade CRAN errors.
+## Not run: 
+data[1:5, "sex"] &lt;- NA
+imp &lt;- mice(data,
+  method = c("", "2lonly.norm", "2l.pan"),
+  predictorMatrix = pred, maxit = 1, m = 2
+)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

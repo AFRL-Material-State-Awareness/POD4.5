@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Set Control Parameters for Sparse Fitting</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for sfn.control {quantreg}"><tr><td>sfn.control {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Set Control Parameters for Sparse Fitting </h2>
+
+<h3>Description</h3>
+
+<p>Auxiliary function for setting storage dimensions and other parameters rq.fit.sfn[c]
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+sfn.control(nsubmax = NULL, tmpmax = NULL, nnzlmax = NULL, cachsz = 64, 
+	small = 1e-06, maxiter = 100, warn.mesg = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nsubmax</code></td>
+<td>
+
+<p>upper bound for dimension of lindx
+</p>
+</td></tr>
+<tr valign="top"><td><code>tmpmax</code></td>
+<td>
+
+<p>upper bound for dimension of tmpvec
+</p>
+</td></tr>
+<tr valign="top"><td><code>nnzlmax</code></td>
+<td>
+
+<p>upper bound for non-zero entries of L stored in lnz, including diagonal
+</p>
+</td></tr>
+<tr valign="top"><td><code>cachsz</code></td>
+<td>
+
+<p>size of cache in kbytes on target machine
+</p>
+</td></tr>
+<tr valign="top"><td><code>small</code></td>
+<td>
+
+<p>convergence tolerance for interior point algorithm
+</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+
+<p>maximal number of interior point iterations. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>warn.mesg</code></td>
+<td>
+
+<p>logical flag controlling printing of warnings. 
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Sparse fitting requires a number of temporary storage arrays whose size depends
+on problem specific features in somewhat mysterious ways, parameters controlling
+these sizes and some other fitting aspects can be controlled by specifying elements
+of this control object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components named as the arguments given above.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Koenker
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See Also <code><a href="rq.fit.sfn.html">rq.fit.sfn</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Gauss-Hermite Quadrature Formula</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gaussHermite {pracma}"><tr><td>gaussHermite {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Gauss-Hermite Quadrature Formula
+</h2>
+
+<h3>Description</h3>
+
+<p>Nodes and weights for the n-point Gauss-Hermite quadrature formula.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gaussHermite(n)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>Number of nodes in the interval <code>]-Inf, Inf[</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Gauss-Hermite quadrature is used for integrating functions of the form
+</p>
+<p style="text-align: center;"><i>\int_{-&infin;}^{&infin;} f(x) e^{-x^2} dx</i></p>
+
+<p>over the infinite interval <i>]-&infin;, &infin;[</i>.
+</p>
+<p><code>x</code> and <code>w</code> are obtained from a tridiagonal eigenvalue problem.
+The value of such an integral is then <code>sum(w*f(x))</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>x</code>, the nodes or points in<code>]-Inf, Inf[</code>, and
+<code>w</code>, the weights applied at these nodes.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The basic quadrature rules are well known and can, e. g., be found in
+Gautschi (2004) &mdash; and explicit Matlab realizations in Trefethen (2000).
+These procedures have also been implemented in Matlab by Geert Van Damme,
+see his entries at MatlabCentral since 2010.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gautschi, W. (2004). Orthogonal Polynomials: Computation and Approximation.
+Oxford University Press.
+</p>
+<p>Trefethen, L. N. (2000). Spectral Methods in Matlab. SIAM, Society for
+Industrial and Applied Mathematics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gaussLegendre.html">gaussLegendre</a></code>, <code><a href="gaussLaguerre.html">gaussLaguerre</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+cc &lt;- gaussHermite(17)
+# Integrate  exp(-x^2)  from -Inf to Inf
+sum(cc$w)                        #=&gt; 1.77245385090552 == sqrt(pi)
+# Integrate  x^2 exp(-x^2)
+sum(cc$w * cc$x^2)               #=&gt; 0.88622692545276 == sqrt(pi) /2
+# Integrate  cos(x) * exp(-x^2)
+sum(cc$w * cos(cc$x))            #=&gt; 1.38038844704314 == sqrt(pi)/exp(1)^0.25
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

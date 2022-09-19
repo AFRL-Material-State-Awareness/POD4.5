@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw a line from connected points</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for draw_line {cowplot}"><tr><td>draw_line {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Draw a line from connected points</h2>
+
+<h3>Description</h3>
+
+<p>Provide a sequence of x values and accompanying y values to draw a line on a plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+draw_line(x, y, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Vector of x coordinates.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Vector of y coordinates.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>geom_path parameters such as <code>colour</code>, <code>alpha</code>, <code>size</code>, etc.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is a convenience function, providing a wrapper around ggplot2's <code>geom_path</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../ggplot2/html/geom_path.html">geom_path</a></code>, <code><a href="ggdraw.html">ggdraw</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ggdraw() +
+  draw_line(
+    x = c(0.2, 0.7, 0.7, 0.3),
+    y = c(0.1, 0.3, 0.9, 0.8),
+    color = "blue", size = 2
+  )
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

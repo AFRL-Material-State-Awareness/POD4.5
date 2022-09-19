@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert object in plot to RGL mesh object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.mesh3d.rglId {rgl}"><tr><td>as.mesh3d.rglId {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Convert object in plot to RGL mesh object
+</h2>
+
+<h3>Description</h3>
+
+<p>This method attempts to read the attributes of objects in the
+rgl display and construct a mesh3d object to approximate them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'rglId'
+as.mesh3d(x, type = NA, subscene = NA, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>A vector of RGL identifiers of objects in the specified subscene.
+</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+
+<p>A vector of names of types of shapes to convert.  Other shapes 
+will be ignored.
+</p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+
+<p>Which subscene to look in; the default <code>NA</code> specifies the 
+current subscene.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Ignored.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function attempts to construct a triangle mesh to approximate 
+one or more objects from the current display.  It can handle objects of types from <code>c("points", "lines", "linestrip", "triangles", "quads", "planes", "surface")</code>.
+</p>
+<p>Since this method only produces meshes containing points,
+segments and triangles, they won't necessarily
+be an exact match to the original object.
+</p>
+<p>If the generic <code><a href="as.mesh3d.default.html">as.mesh3d</a></code> is called with no <code>x</code>
+argument, this method will be called with <code>x</code> set to the 
+ids in the current scene.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>A mesh object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="as.triangles3d.html">as.triangles3d.rglId</a></code> for extracting the triangles,
+<code><a href="clipMesh3d.html">clipMesh3d</a></code> to apply complex clipping to a mesh object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# volcano example taken from "persp"
+#
+data(volcano)
+
+z &lt;- 2 * volcano        # Exaggerate the relief
+
+x &lt;- 10 * (1:nrow(z))   # 10 meter spacing (S to N)
+y &lt;- 10 * (1:ncol(z))   # 10 meter spacing (E to W)
+
+zlim &lt;- range(y)
+zlen &lt;- zlim[2] - zlim[1] + 1
+
+colorlut &lt;- terrain.colors(zlen) # height color lookup table
+
+col &lt;- colorlut[ z - zlim[1] + 1 ] # assign colors to heights for each point
+
+open3d(useNULL = TRUE)
+surface3d(x, y, z, color = col)
+m &lt;- as.mesh3d()
+close3d()
+
+open3d()
+shade3d(m)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

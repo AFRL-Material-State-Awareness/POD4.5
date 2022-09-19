@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Converter functions to build SpatialLinesDataFrame objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ContourLines2SLDF {maptools}"><tr><td>ContourLines2SLDF {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Converter functions to build SpatialLinesDataFrame objects</h2>
+
+<h3>Description</h3>
+
+<p>These functions show how to build converters to SpatialLinesDataFrame objects: 
+<code>ArcObj2SLDF</code> from the list returned by the <code>get.arcdata</code> function in the RArcInfo package; <code>ContourLines2SLDF</code> from the list returned by the <code>contourLines</code> function in the graphics package (here the data frame is just the contour levels, with one Lines object made up of at least one Line object per level); and <code>MapGen2SL</code> reads a file in &quot;Mapgen&quot; format into a <code>SpatialLines</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ArcObj2SLDF(arc, proj4string=CRS(as.character(NA)), IDs)
+ContourLines2SLDF(cL, proj4string=CRS(as.character(NA)))
+MapGen2SL(file, proj4string=CRS(as.character(NA)))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>arc</code></td>
+<td>
+<p>a list returned by the <code>get.arcdata</code> function in the RArcInfo package</p>
+</td></tr>
+<tr valign="top"><td><code>IDs</code></td>
+<td>
+<p>vector of unique character identifiers; if not given, suitable defaults will be used, and the same values inserted as data slot row names</p>
+</td></tr>
+<tr valign="top"><td><code>cL</code></td>
+<td>
+<p>a list returned by the <code>contourLines</code> function in the graphics package</p>
+</td></tr>
+<tr valign="top"><td><code>proj4string</code></td>
+<td>
+<p>Object of class <code>"CRS"</code>; see <a href="../../sp/html/CRS-class.html">CRS-class</a></p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>filename of a file containing a Mapgen line data set</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A SpatialLinesDataFrame object
+</p>
+
+
+<h3>Note</h3>
+
+<p>Coastlines of varying resolution may be chosen online and downloaded in &quot;Mapgen&quot; text format from <a href="https://www.ngdc.noaa.gov/mgg/shorelines/shorelines.html">https://www.ngdc.noaa.gov/mgg/shorelines/shorelines.html</a>, most conveniently using the interactive selection tool, but please note the 500,000 point limit on downloads, which is easy to exceed.</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Bivand; Edzer Pebesma </p>
+
+
+<h3>See Also</h3>
+
+ <p><a href="../../sp/html/SpatialLines-class.html">SpatialLines-class</a> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#data(co37_d90_arc) # retrieved as: 
+# library(RArcInfo)
+# fl &lt;- "http://www.census.gov/geo/cob/bdy/co/co90e00/co37_d90_e00.zip"
+# download.file(fl, "co37_d90_e00.zip")
+# e00 &lt;- zip.file.extract("co37_d90.e00", "co37_d90_e00.zip")
+# e00toavc(e00, "ncar")
+# arc &lt;- get.arcdata(".", "ncar")
+#res &lt;- arcobj2SLDF(arc)
+#plot(res)
+#invisible(title(""))
+res &lt;- ContourLines2SLDF(contourLines(volcano))
+plot(res, col=terrain.colors(nrow(as(res, "data.frame"))))
+title("Volcano contours as SpatialLines")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Hessenberg Matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hessenberg {pracma}"><tr><td>hessenberg {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Hessenberg Matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates the Hessenberg matrix for A.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hessenberg(A)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>square matrix</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>An (upper) Hessenberg matrix has zero entries below the first
+subdiagonal. 
+</p>
+<p>The function generates a Hessenberg matrix <code>H</code> and a unitary 
+matrix <code>P</code> (a similarity transformation) such that
+<code>A = P * H * t(P)</code>.
+</p>
+<p>The Hessenberg matrix has the same eigenvalues. If <code>A</code> is 
+symmetric, its Hessenberg form will be a tridiagonal matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with two elements,
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>H</code></td>
+<td>
+<p>the upper Hessenberg Form of matrix A.</p>
+</td></tr>
+<tr valign="top"><td><code>H</code></td>
+<td>
+<p>a unitary matrix.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>Press, Teukolsky, Vetterling, and Flannery (2007).
+Numerical Recipes: The Art of Scientific Computing. 3rd Edition,
+Cambridge University Press. (Section 11.6.2)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="householder.html">householder</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- matrix(c(-149,   -50,  -154,
+               537,   180,   546,
+               -27,    -9,   -25), nrow = 3, byrow = TRUE)
+hb  &lt;- hessenberg(A)
+hb
+## $H
+##           [,1]         [,2]        [,3]
+## [1,] -149.0000  42.20367124 -156.316506
+## [2,] -537.6783 152.55114875 -554.927153
+## [3,]    0.0000   0.07284727    2.448851
+## 
+## $P
+##      [,1]       [,2]      [,3]
+## [1,]    1  0.0000000 0.0000000
+## [2,]    0 -0.9987384 0.0502159
+## [3,]    0  0.0502159 0.9987384
+
+hb$P %*% hb$H %*% t(hb$P)
+##      [,1] [,2] [,3]
+## [1,] -149  -50 -154
+## [2,]  537  180  546
+## [3,]  -27   -9  -25
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

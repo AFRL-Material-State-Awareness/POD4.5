@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Even Quicker Sample Quantiles</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for q489 {quantreg}"><tr><td>q489 {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Even Quicker Sample Quantiles </h2>
+
+<h3>Description</h3>
+
+<p>The function <code>q489</code> computes a single sample quantile using a 
+fortran implementation of the Floyd and Rivest (1975) algorithm.
+In contrast to the more elaborate function <code>kuantile</code> that uses
+the Kiweil (2005) implementation it does not attempt to replicate the
+nine varieties of quantiles as documented in the base function.
+<code>quantile</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+q489(x, tau = .5) 
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+<p>the quantile of intereste.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p> This is a direct translation of the Algol 68 implementation of
+Floyd and Rivest (1975), implemented in Ratfor.  For the median, average 
+case behavior requires <i>1.5 n + O((n log n)^{1/2})</i> comparisons. 
+In preliminary experiments it seems to be somewhat faster in large samples
+than the implementation <code>kuantile</code> of Kiwiel (2005). See  Knuth (1998)
+for further details. No provision is made for non-uniqueness of the quantile.
+so, when <i>&tau; n</i> is an integer there may be some discrepancy.</p>
+
+
+<h3>Value</h3>
+
+<p>A scalar quantile of the same length as the vector p.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> R.W.Floyd and R.L.Rivest, R implementation:  Roger Koenker </p>
+
+
+<h3>References</h3>
+
+ 
+<p>R.W. Floyd and R.L. Rivest: &quot;Algorithm 489: The Algorithm
+SELECT&mdash;for Finding the $i$th Smallest of $n$ Elements&quot;,
+Comm. ACM 18, 3 (1975) 173,
+</p>
+<p>K.C. Kiwiel: On Floyd and Rivest's SELECT Algorithm, Theoretical
+Computer Sci. 347 (2005) 214-238.
+</p>
+<p>D. Knuth, The Art of Computer Programming, Volume 3, Sorting and 
+Searching, 2nd Ed., (1998), Addison-Wesley.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/quantile.html">quantile</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+     medx &lt;- q489(rnorm(1001))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

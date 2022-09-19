@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Range index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ri {bit}"><tr><td>ri {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Range index</h2>
+
+<h3>Description</h3>
+
+<p>A range index can be used to extract or replace a continuous ascending part
+of the data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ri(from, to = NULL, maxindex = NA)
+
+## S3 method for class 'ri'
+print(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>from</code></td>
+<td>
+<p>first position</p>
+</td></tr>
+<tr valign="top"><td><code>to</code></td>
+<td>
+<p>last posistion</p>
+</td></tr>
+<tr valign="top"><td><code>maxindex</code></td>
+<td>
+<p>the maximal length of the object-to-be-subscripted (if
+known)</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class 'ri'</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A two element integer vector with class 'ri'
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../ff/html/as.hi.html">as.hi</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ bit(12)[ri(1,6)]
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

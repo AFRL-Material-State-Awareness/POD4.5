@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Summary methods for Censored Quantile Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for summary.crq {quantreg}"><tr><td>summary.crq {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Summary methods for Censored Quantile Regression
+</h2>
+
+<h3>Description</h3>
+
+<p>Returns a summary object for a censored quantile regression fit.  A null value
+will be returned if printing is invoked.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'crq'
+summary(object, taus = 1:4/5, alpha = .05, se="boot", covariance=TRUE,  ...)
+## S3 method for class 'summary.crq'
+print(x, digits = max(5, .Options$digits - 2), ...)
+## S3 method for class 'summary.crqs'
+print(x,  ...)
+## S3 method for class 'summary.crqs'
+plot(x, nrow = 3, ncol = 3, CoxPHit = NULL,  ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+
+<p>An object of class <code>"crq"</code>  produced by a call to <code>crq()</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>taus</code></td>
+<td>
+<p>Quantiles to be summarized. Specifying only one value can
+produce annoying error messages harmful to your mental health.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>An object of class <code>"crq"</code>  produced by a call to <code>crq()</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>se</code></td>
+<td>
+
+<p>specifies the method used to compute standard standard errors. but
+the only available method (so far) is &quot;boot&quot;.  Further arguments to
+<code><a href="boot.crq.html">boot.crq</a></code> and <code><a href="boot.rq.html">boot.rq</a></code>  can be passed with 
+the ... argument. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>covariance</code></td>
+<td>
+
+<p>logical flag to indicate whether the full covariance matrix of the 
+estimated parameters should be returned. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>nrow</code></td>
+<td>
+<p>Number of rows of the plot layout.</p>
+</td></tr>
+<tr valign="top"><td><code>ncol</code></td>
+<td>
+<p>Number of columns of the plot layout.</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>Confidence level for summary intervals.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>Number of digits to be printed in summary display.</p>
+</td></tr>
+<tr valign="top"><td><code>CoxPHit</code></td>
+<td>
+<p>An object of class coxph produced by <code>coxph</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Optional arguments to summary, e.g. to specify bootstrap methods
+sample sizes, etc.  see <code><a href="boot.rq.html">boot.rq</a></code> and <code><a href="boot.crq.html">boot.crq</a></code>
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For the Powell method the resampling strategy used by the
+<code>se = "boot"</code> method is based on the Bilias, Chen and Ying (2000) 
+proposal.  For the Portnoy and Peng-Huang methods the bootstrapping 
+is by default actually based on  a delete-d jackknife, as described in
+Portnoy (2013), but resampling xy pairs using either conventional multinomial 
+resampling or using exponential weighting as in Bose and Chatterjee (2003)
+can be used by specifying the <code>bmethod</code> argument.  Note that the default
+number of replications is set at <i>R = 100</i> a value that is obviously too small for
+most applications.  This is done merely to speed up the examples in the 
+documentation and facilitate testing. Larger, more appropriate values of <i>R</i>
+can be passed to the bootstrapping functions via the <code>...</code> argument
+of the <code>summary</code> method.  It is important to recognize that when some
+of the bootstrap replications are NA they are simply ignored in the computation
+of the confidence bands and standard errors as currently reported.  The number
+of these NAs is returned as part of the <code>summary.crq</code> object, and 
+when printed is also reported. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>For method &quot;Powell&quot; an object of class <code>summary.crq</code>  is returned 
+with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+
+<p>a p by 4 matrix consisting of the coefficients, their estimated standard
+errors, their t-statistics, and their associated p-values.
+</p>
+</td></tr>
+<tr valign="top"><td><code>cov</code></td>
+<td>
+
+<p>the estimated covariance matrix for the coefficients in the model,
+provided that <code>covariance = TRUE</code> appears in the calling sequence.
+</p>
+</td></tr>
+<tr valign="top"><td><code>rdf</code></td>
+<td>
+
+<p>the residual degrees of freedom
+</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+
+<p>the quantile estimated
+</p>
+</td></tr>
+</table>
+<p>For the other methods an object of class <code>summary.crq</code>  is returned 
+with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+
+<p>a list of  p by 6 matrix consisting of the coefficients, upper and lower bounds
+for a (1-alpha) level confidence interval, their estimated standard
+errors, their t-statistics, and their associated p-values, one component for each
+element of the specified <code>taus</code> vector.
+</p>
+</td></tr>
+<tr valign="top"><td><code>cov</code></td>
+<td>
+
+<p>the estimated covariance matrix for the coefficients in the model,
+provided that <code>covariance = TRUE</code> in the called sequence.
+</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>Bose, A. and S. Chatterjee, (2003) Generalized bootstrap for estimators 
+of minimizers of convex functions, <em>J. Stat. Planning and Inf</em>, 117,
+225-239.
+</p>
+<p>Bilias, Y. Chen, S. and Z. Ying, (2000) Simple resampling methods for censored
+quantile regression, <em>J. of Econometrics</em>, 99, 373-386.
+</p>
+<p>Portnoy, S. (2013) The Jackknife's Edge:  Inference for Censored Quantile Regression,
+<em>CSDA</em>, forthcoming.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="crq.html">crq</a></code>, <code><a href="QTECox.html">QTECox</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

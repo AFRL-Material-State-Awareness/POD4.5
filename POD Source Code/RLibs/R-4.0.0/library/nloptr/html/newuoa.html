@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: New Unconstrained Optimization with quadratic Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for newuoa {nloptr}"><tr><td>newuoa {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>New Unconstrained Optimization with quadratic Approximation</h2>
+
+<h3>Description</h3>
+
+<p>NEWUOA solves quadratic subproblems in a spherical trust regionvia a
+truncated conjugate-gradient algorithm. For bound-constrained problems,
+BOBYQA shold be used instead, as Powell developed it as an enhancement
+thereof for bound constraints.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+newuoa(x0, fn, nl.info = FALSE, control = list(), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>starting point for searching the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>objective function that is to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>nl.info</code></td>
+<td>
+<p>logical; shall the original NLopt info been shown.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>list of options, see <code>nl.opts</code> for help.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is an algorithm derived from the NEWUOA Fortran subroutine of Powell,
+converted to C and modified for the NLOPT stopping criteria.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>the optimal solution found so far.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>the function value corresponding to <code>par</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of (outer) iterations, see <code>maxeval</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>integer code indicating successful completion (&gt; 0)
+or a possible error number (&lt; 0).</p>
+</td></tr>
+<tr valign="top"><td><code>message</code></td>
+<td>
+<p>character string produced by NLopt and giving additional
+information.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>NEWUOA may be largely superseded by BOBYQA.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans W. Borchers
+</p>
+
+
+<h3>References</h3>
+
+<p>M. J. D. Powell. &ldquo;The BOBYQA algorithm for bound constrained
+optimization without derivatives,&rdquo; Department of Applied Mathematics and
+Theoretical Physics, Cambridge England, technical reportNA2009/06 (2009).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="bobyqa.html">bobyqa</a></code>, <code><a href="cobyla.html">cobyla</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+fr &lt;- function(x) {   ## Rosenbrock Banana function
+    100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
+}
+(S &lt;- newuoa(c(1, 2), fr))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

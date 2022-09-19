@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a data URI string</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for dataURI {base64enc}"><tr><td>dataURI {base64enc}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Create a data URI string
+</h2>
+
+<h3>Description</h3>
+
+<p><code>dataURI</code> creates URI with the <code>data:</code> scheme by encoding
+the payload either using base64 ot URI encoding.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dataURI(data, mime = "", encoding = "base64", file)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>raw vector, connection or character vector to use as
+payload. Character vectors of more than one element are collapsed
+using <code>"\n"</code> before encoding.</p>
+</td></tr>
+<tr valign="top"><td><code>mime</code></td>
+<td>
+<p>MIME-type of the data (per standard &quot;&quot; is interpreted as
+&quot;text/plain;charset=US-ASCII&quot; without including it in the URI)</p>
+</td></tr>
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>data encoding to use. Must be either <code>"base64"</code>
+or <code>NULL</code></p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>filename (string) to open as payload. <code>file</code> and
+<code>data</code> are mutually exclusive</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>string of the form <code>data:[mime][;base64],&lt;encoded-payload&gt;</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Simon Urbanek
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="http://tools.ietf.org/html/rfc2397">RFC 2397 The &quot;data&quot; URL scheme</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  dataURI(as.raw(1:10)) # default is base64
+  dataURI(as.raw(1:10), encoding=NULL) # URI
+  if (require("png", quietly=TRUE)) {
+    # let's say you have an image - e.g. from dev.capture(TRUE)
+    img &lt;- matrix(1:16/16, 4)
+    dataURI(writePNG(img), "image/png")
+    # or straight from a file
+    dataURI(file=system.file("img", "Rlogo.png", package="png"), mime="image/png")
+  }
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>base64enc</em> version 0.1-3 <a href="00Index.html">Index</a>]</div>
+</body></html>

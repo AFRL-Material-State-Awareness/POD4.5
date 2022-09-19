@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Anonymise factor levels</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_anon {forcats}"><tr><td>fct_anon {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Anonymise factor levels</h2>
+
+<h3>Description</h3>
+
+<p>Replaces factor levels with arbitrary numeric identifiers. Neither
+the values nor the order of the levels are preserved.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_anon(f, prefix = "")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>A factor.</p>
+</td></tr>
+<tr valign="top"><td><code>prefix</code></td>
+<td>
+<p>A character prefix to insert in front of the random labels.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+gss_cat$relig %&gt;% fct_count()
+gss_cat$relig %&gt;% fct_anon() %&gt;% fct_count()
+gss_cat$relig %&gt;% fct_anon("X") %&gt;% fct_count()
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

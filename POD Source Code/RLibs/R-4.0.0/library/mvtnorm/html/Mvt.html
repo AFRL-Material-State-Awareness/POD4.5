@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: The Multivariate t Distribution</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Mvt {mvtnorm}"><tr><td>Mvt {mvtnorm}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>The Multivariate t Distribution</h2>
+
+<h3>Description</h3>
+
+<p>These functions provide information about the multivariate <i>t</i>
+distribution with non-centrality parameter (or mode) <code>delta</code>,
+scale matrix <code>sigma</code> and degrees of freedom <code>df</code>.
+<code>dmvt</code> gives the density and <code>rmvt</code>
+generates random deviates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rmvt(n, sigma = diag(2), df = 1, delta = rep(0, nrow(sigma)),
+     type = c("shifted", "Kshirsagar"), ...)
+dmvt(x, delta = rep(0, p), sigma = diag(p), df = 1, log = TRUE,
+     type = "shifted", checkSymmetry = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector or matrix of quantiles. If <code>x</code> is a matrix, each
+row is taken to be a quantile.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>number of observations.</p>
+</td></tr>
+<tr valign="top"><td><code>delta</code></td>
+<td>
+<p>the vector of noncentrality parameters of length n, for
+<code>type = "shifted"</code> delta specifies the mode.</p>
+</td></tr>
+<tr valign="top"><td><code>sigma</code></td>
+<td>
+<p>scale matrix, defaults to
+<code>diag(ncol(x))</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>degrees of freedom. <code>df = 0</code> or <code>df = Inf</code>
+corresponds to the multivariate normal distribution.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p><code><a href="../../base/html/logical.html">logical</a></code> indicating whether densities <i>d</i>
+are given as <i>log(d)</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of the noncentral multivariate <i>t</i> distribution.
+<code>type = "Kshirsagar"</code> corresponds
+to formula (1.4) in Genz and Bretz (2009) (see also
+Chapter 5.1 in Kotz and Nadarajah (2004)). This is the
+noncentral t-distribution  needed for calculating
+the power of multiple contrast tests under a normality
+assumption. <code>type = "shifted"</code> corresponds to the
+formula right before formula (1.4) in Genz and Bretz (2009)
+(see also formula (1.1) in Kotz and Nadarajah (2004)). It
+is a location shifted version of the central t-distribution.
+This noncentral multivariate <i>t</i> distribution appears for
+example as the Bayesian posterior distribution
+for the regression coefficients in a linear regression.
+In the central case both types coincide.
+Note that the defaults differ from the default
+in <code><a href="pmvt.html">pmvt</a>()</code> (for reasons of backward
+compatibility).</p>
+</td></tr>
+<tr valign="top"><td><code>checkSymmetry</code></td>
+<td>
+<p>logical; if <code>FALSE</code>, skip checking whether the
+covariance matrix is symmetric or not. This will speed up the
+computation but may cause unexpected outputs when ill-behaved
+<code>sigma</code> is provided. The default value is <code>TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to <code><a href="Mvnorm.html">rmvnorm</a>()</code>,
+for example <code>method</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If <i>X</i> denotes a random vector following a <i>t</i> distribution
+with location vector <i>0</i> and scale matrix
+<i>Sigma</i> (written <i>X ~ t_nu(0,
+    Sigma)</i>), the scale matrix (the argument
+<code>sigma</code>) is not equal to the covariance matrix <i>Cov(X)</i>
+of <i>X</i>. If the degrees of freedom <i>nu</i> (the
+argument <code>df</code>) is larger than 2, then
+<i>Cov(X)=Sigma
+    nu/(nu-2)</i>. Furthermore,
+in this case the correlation matrix <i>Cor(X)</i> equals
+the correlation matrix corresponding to the scale matrix
+<i>Sigma</i> (which can be computed with
+<code><a href="../../stats/html/cor.html">cov2cor</a>()</code>). Note that the scale matrix is sometimes
+referred to as &ldquo;dispersion matrix&rdquo;;
+see McNeil, Frey, Embrechts (2005, p. 74).
+</p>
+<p>For <code>type = "shifted"</code> the density
+</p>
+<p style="text-align: center;"><i>c(1+(x-&delta;)'S^{-1}(x-&delta;)/&nu;)^{-(&nu;+m)/2}</i></p>
+
+<p>is implemented, where
+</p>
+<p style="text-align: center;"><i>c = &Gamma;((&nu;+m)/2)/((&pi; &nu;)^{m/2}&Gamma;(&nu;/2)|S|^{1/2}),</i></p>
+
+<p><i>S</i> is a positive definite symmetric matrix (the matrix
+<code>sigma</code> above), <i>delta</i> is the
+non-centrality vector and <i>nu</i> are the degrees of freedom.
+</p>
+<p><code>df=0</code> historically leads to the multivariate normal
+distribution. From a mathematical point of view, rather
+<code>df=Inf</code> corresponds to the multivariate normal
+distribution. This is (now) also allowed for <code>rmvt()</code> and
+<code>dmvt()</code>.
+</p>
+<p>Note that <code>dmvt()</code> has default <code>log = TRUE</code>, whereas
+<code><a href="Mvnorm.html">dmvnorm</a>()</code> has default <code>log = FALSE</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>McNeil, A. J., Frey, R., and Embrechts, P. (2005).
+<em>Quantitative Risk Management: Concepts, Techniques, Tools</em>.
+Princeton University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="pmvt.html">pmvt</a>()</code> and <code><a href="qmvt.html">qmvt</a>()</code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## basic evaluation
+dmvt(x = c(0,0), sigma = diag(2))
+
+## check behavior for df=0 and df=Inf
+x &lt;- c(1.23, 4.56)
+mu &lt;- 1:2
+Sigma &lt;- diag(2)
+x0 &lt;- dmvt(x, delta = mu, sigma = Sigma, df = 0) # default log = TRUE!
+x8 &lt;- dmvt(x, delta = mu, sigma = Sigma, df = Inf) # default log = TRUE!
+xn &lt;- dmvnorm(x, mean = mu, sigma = Sigma, log = TRUE)
+stopifnot(identical(x0, x8), identical(x0, xn))
+
+## X ~ t_3(0, diag(2))
+x &lt;- rmvt(100, sigma = diag(2), df = 3) # t_3(0, diag(2)) sample
+plot(x)
+
+## X ~ t_3(mu, Sigma)
+n &lt;- 1000
+mu &lt;- 1:2
+Sigma &lt;- matrix(c(4, 2, 2, 3), ncol=2)
+set.seed(271)
+x &lt;- rep(mu, each=n) + rmvt(n, sigma=Sigma, df=3)
+plot(x)
+
+## Note that the call rmvt(n, mean=mu, sigma=Sigma, df=3) does *not*
+## give a valid sample from t_3(mu, Sigma)! [and thus throws an error]
+try(rmvt(n, mean=mu, sigma=Sigma, df=3))
+
+## df=Inf correctly samples from a multivariate normal distribution
+set.seed(271)
+x &lt;- rep(mu, each=n) + rmvt(n, sigma=Sigma, df=Inf)
+set.seed(271)
+x. &lt;- rmvnorm(n, mean=mu, sigma=Sigma)
+stopifnot(identical(x, x.))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mvtnorm</em> version 1.1-3 <a href="00Index.html">Index</a>]</div>
+</body></html>

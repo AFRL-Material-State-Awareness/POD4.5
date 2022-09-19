@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Prepare for sorting and get range, number of NAs and...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for range_sortna {bit}"><tr><td>range_sortna {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Prepare for sorting and get range, number of NAs and unsortedness</h2>
+
+<h3>Description</h3>
+
+<p>In one pass over the vector <code>NA</code>s are treated according to parameter
+<code>na.last</code> exactly like <code><a href="../../base/html/sort.html">sort</a></code> does, the <code><a href="../../base/html/range.html">range</a></code>,
+number of <code>NA</code>s and unsortedness is determined.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+range_sortna(x, decreasing = FALSE, na.last = NA)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an integer vector</p>
+</td></tr>
+<tr valign="top"><td><code>decreasing</code></td>
+<td>
+<p>(currently only <code>FALSE</code> is supported)</p>
+</td></tr>
+<tr valign="top"><td><code>na.last</code></td>
+<td>
+<p><code>NA</code> removes NAs, <code>FALSE</code> puts NAs at the beginning,
+<code>TRUE</code> puts NAs at the end</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an integer vector with <code>NA</code>s are treated and an <code>attribute</code> <code><a href="range_na.html">range_na</a></code>  with four elements </p>
+
+<dl>
+<dt> 1 </dt><dd><p> min integer </p>
+</dd>
+<dt> 2 </dt><dd><p> max integer </p>
+</dd>
+<dt> 3 </dt><dd><p> number of NAs </p>
+</dd>
+<dt> 3 </dt><dd><p> 0 for sorted vector and 1 for <code><a href="../../base/html/is.unsorted.html">is.unsorted</a></code>  </p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="range_na.html">range_na</a></code> and <code><a href="range_nanozero.html">range_nanozero</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+range_sortna(c(0L,1L,NA,2L))
+range_sortna(c(2L,NA,1L,0L))
+range_sortna(c(0L,1L,NA,2L), na.last=TRUE)
+range_sortna(c(2L,NA,1L,0L), na.last=TRUE)
+range_sortna(c(0L,1L,NA,2L), na.last=FALSE)
+range_sortna(c(2L,NA,1L,0L), na.last=FALSE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

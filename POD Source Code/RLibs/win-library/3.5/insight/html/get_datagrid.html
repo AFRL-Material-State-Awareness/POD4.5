@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a reference grid</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for get_datagrid {insight}"><tr><td>get_datagrid {insight}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a reference grid</h2>
+
+<h3>Description</h3>
+
+<p>Create a reference matrix, useful for visualisation, with evenly spread and
+combined values. Usually used to make generate predictions using <code><a href="get_predicted.html">get_predicted()</a></code>.
+See this <a href="https://easystats.github.io/modelbased/articles/visualisation_matrix.html">vignette</a> for a tutorial on how to create a visualisation matrix using this function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+get_datagrid(x, ...)
+
+## S3 method for class 'data.frame'
+get_datagrid(
+  x,
+  at = "all",
+  factors = "reference",
+  numerics = "mean",
+  preserve_range = FALSE,
+  reference = x,
+  length = 10,
+  range = "range",
+  ...
+)
+
+## S3 method for class 'numeric'
+get_datagrid(x, length = 10, range = "range", ...)
+
+## S3 method for class 'factor'
+get_datagrid(x, ...)
+
+## Default S3 method:
+get_datagrid(
+  x,
+  at = "all",
+  factors = "reference",
+  numerics = "mean",
+  preserve_range = TRUE,
+  reference = x,
+  include_smooth = TRUE,
+  include_random = FALSE,
+  include_response = FALSE,
+  data = NULL,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An object from which to construct the reference grid.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Arguments passed to or from other methods (for instance, <code>length</code>
+or <code>range</code> to control the spread of numeric variables.).</p>
+</td></tr>
+<tr valign="top"><td><code>at</code></td>
+<td>
+<p>Can be <code>"all"</code>, a character vector or list of named elements, indicating
+the predictors of interest (focal predictors). Can also contain assignments
+(as named list, e.g. <code>at = list(c(Sepal.Length = c(2, 4), Species = "setosa"))</code>,
+or as string, e.g. <code>at = "Sepal.Length = 2"</code> or
+<code>at = c("Sepal.Length = 2", "Species = 'setosa'")</code> - note the usage of single
+and double quotes to assign strings within strings). The remaining variables
+will be fixed.</p>
+</td></tr>
+<tr valign="top"><td><code>factors</code></td>
+<td>
+<p>Type of summary for factors. Can be <code>"reference"</code> (set at the
+reference level), <code>"mode"</code> (set at the most common level) or <code>"all"</code> to
+keep all levels.</p>
+</td></tr>
+<tr valign="top"><td><code>numerics</code></td>
+<td>
+<p>Type of summary for numeric values. Can be <code>"all"</code> (will
+duplicate the grid for all unique values), any function (<code>"mean"</code>,
+<code>"median"</code>, ...) or a value (e.g., <code>numerics = 0</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>preserve_range</code></td>
+<td>
+<p>In the case of combinations between numeric variables
+and factors, setting <code>preserve_range = TRUE</code> will drop the observations
+where the value of the numeric variable is originally not present in the
+range of its factor level. This leads to an unbalanced grid. Also, if you
+want the minimum and the maximum to closely match the actual ranges, you
+should increase the <code>length</code> argument.</p>
+</td></tr>
+<tr valign="top"><td><code>reference</code></td>
+<td>
+<p>The reference vector from which to compute the mean and SD.
+Used when standardizing or unstandardizing the grid using <code>effectsize::standardize</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>length</code></td>
+<td>
+<p>Length of numeric target variables selected in <code>"at"</code>. This arguments
+controls the number of (equally spread) values that will be taken to represent the
+continuous variables. A longer length will increase precision, but can also
+substantially increase the size of the datagrid (especially in case of interactions).
+If <code>NA</code>, will return all the unique values. In case of multiple continuous target
+variables, <code>length</code> can also be a vector of different values (see examples).</p>
+</td></tr>
+<tr valign="top"><td><code>range</code></td>
+<td>
+<p>If <code>"range"</code> (default), will use the minimum and maximum of the
+original data vector as end-points (min and max). If an interval type is specified,
+such as <code><a href="../../stats/html/IQR.html">&quot;iqr&quot;</a></code>, <code><a href="../../bayestestR/html/ci.html">&quot;ci&quot;</a></code>, <code><a href="../../bayestestR/html/hdi.html">&quot;hdi&quot;</a></code> or <code><a href="../../bayestestR/html/eti.html">&quot;eti&quot;</a></code>, it will spread the values within
+that range (the default CI width is <code style="white-space: pre;">95%</code> but this can be changed by adding for instance
+<code>ci = 0.90</code>. See <code><a href="../../stats/html/IQR.html">IQR()</a></code> and <code><a href="../../bayestestR/html/ci.html">bayestestR::ci()</a></code>. This can be useful to have
+more robust change and skipping extreme values. If <code><a href="../../stats/html/sd.html">&quot;sd&quot;</a></code> or <code><a href="../../stats/html/mad.html">&quot;mad&quot;</a></code>, it will
+spread by this dispersion index around the mean or the median, respectively.
+If the <code>length</code> argument is an even number (e.g., <code>4</code>), it will have one more
+step on the positive side (i.e., <code style="white-space: pre;">-1, 0, +1, +2</code>). The result is a named vector.
+See examples.</p>
+</td></tr>
+<tr valign="top"><td><code>include_smooth</code></td>
+<td>
+<p>If <code>x</code> is a model object, decide whether smooth terms
+should be included in the data grid or not.</p>
+</td></tr>
+<tr valign="top"><td><code>include_random</code></td>
+<td>
+<p>If <code>x</code> is a mixed model object, decide whether random
+effect terms should be included in the data grid or not. If
+<code>include_random</code> is <code>FALSE</code>, but <code>x</code> is a mixed model with random effects,
+these will still be included in the returned grid, but set to their
+&quot;population level&quot; value (e.g., <code>NA</code> for <em>glmmTMB</em> or <code>0</code> for <em>merMod</em>).
+This ensures that common <code>predict()</code> methods work properly, as these
+usually need data with all variables in the model included.</p>
+</td></tr>
+<tr valign="top"><td><code>include_response</code></td>
+<td>
+<p>If <code>x</code> is a model object, decide whether the response
+variable should be included in the data grid or not.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>Optional, the data frame that was used to fit the model. Usually,
+the data is retrieved via <code>get_data()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Reference grid data frame.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="get_predicted.html">get_predicted()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Datagrids of variables and dataframes =====================================
+if (require("bayestestR", quietly = TRUE) &amp; require("datawizard", quietly = TRUE)) {
+  # Single variable is of interest; all others are "fixed" ------------------
+  # Factors
+  get_datagrid(iris, at = "Species") # Returns all the levels
+  get_datagrid(iris, at = "Species = c('setosa', 'versicolor')") # Specify an expression
+
+  # Numeric variables
+  get_datagrid(iris, at = "Sepal.Length") # default spread length = 10
+  get_datagrid(iris, at = "Sepal.Length", length = 3) # change length
+  get_datagrid(iris[2:150, ],
+    at = "Sepal.Length",
+    factors = "mode", numerics = "median"
+  ) # change non-targets fixing
+  get_datagrid(iris, at = "Sepal.Length", range = "ci", ci = 0.90) # change min/max of target
+  get_datagrid(iris, at = "Sepal.Length = [0, 1]") # Manually change min/max
+
+
+  # Standardization and unstandardization
+  data &lt;- get_datagrid(iris, at = "Sepal.Length", range = "sd", length = 3)
+  data$Sepal.Length # It is a named vector (extract names with `names(out$Sepal.Length)`)
+  # TODO: uncomment when datawizard &gt; 0.3.1 is out
+  # datawizard::standardize(data, select = "Sepal.Length")
+  # data &lt;- get_datagrid(iris, at = "Sepal.Length = c(-2, 0, 2)") # Manually specify values
+  # data
+  # datawizard::unstandardize(data, select = "Sepal.Length")
+
+
+  # Multiple variables are of interest, creating a combination --------------
+  get_datagrid(iris, at = c("Sepal.Length", "Species"), length = 3)
+  get_datagrid(iris, at = c("Sepal.Length", "Petal.Length"), length = c(3, 2))
+  get_datagrid(iris, at = c(1, 3), length = 3)
+  get_datagrid(iris, at = c("Sepal.Length", "Species"), preserve_range = TRUE)
+  get_datagrid(iris, at = c("Sepal.Length", "Species"), numerics = 0)
+  get_datagrid(iris, at = c("Sepal.Length = 3", "Species"))
+  get_datagrid(iris, at = c("Sepal.Length = c(3, 1)", "Species = 'setosa'"))
+
+  # With list-style at-argument
+  get_datagrid(iris, at = list(Sepal.Length = c(1, 3), Species = "setosa"))
+}
+
+# With models ===============================================================
+# Fit a linear regression
+model &lt;- lm(Sepal.Length ~ Sepal.Width * Petal.Length, data = iris)
+# Get datagrid of predictors
+data &lt;- get_datagrid(model, length = c(20, 3), range = c("range", "sd"))
+# Add predictions
+data$Sepal.Length &lt;- get_predicted(model, data = data)
+# Visualize relationships (each color is at -1 SD, Mean, and + 1 SD of Petal.Length)
+plot(data$Sepal.Width, data$Sepal.Length,
+  col = data$Petal.Length,
+  main = "Relationship at -1 SD, Mean, and + 1 SD of Petal.Length"
+)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>insight</em> version 0.18.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

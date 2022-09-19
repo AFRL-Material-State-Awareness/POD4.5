@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Number of imputations per block</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nimp {mice}"><tr><td>nimp {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Number of imputations per block</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the number of cells within a block for which imputation
+is requested.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nimp(where, blocks = make.blocks(where))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>where</code></td>
+<td>
+<p>A data frame or matrix with logicals of the same dimensions
+as <code>data</code> indicating where in the data the imputations should be
+created. The default, <code>where = is.na(data)</code>, specifies that the
+missing data should be imputed. The <code>where</code> argument may be used to
+overimpute observed data, or to skip imputations for selected missing values.</p>
+</td></tr>
+<tr valign="top"><td><code>blocks</code></td>
+<td>
+<p>List of vectors with variable names per block. List elements
+may be named to identify blocks. Variables within a block are
+imputed by a multivariate imputation method
+(see <code>method</code> argument). By default each variable is placed
+into its own block, which is effectively
+fully conditional specification (FCS) by univariate models
+(variable-by-variable imputation). Only variables whose names appear in
+<code>blocks</code> are imputed. The relevant columns in the <code>where</code>
+matrix are set to <code>FALSE</code> of variables that are not block members.
+A variable may appear in multiple blocks. In that case, it is
+effectively re-imputed each time that it is visited.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of length <code>length(blocks)</code> containing
+the number of cells that need to be imputed within a block.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mice.html">mice</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+where &lt;- is.na(nhanes)
+
+# standard FCS
+nimp(where)
+
+# user-defined blocks
+nimp(where, blocks = name.blocks(list(c("bmi", "hyp"), "age", "chl")))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

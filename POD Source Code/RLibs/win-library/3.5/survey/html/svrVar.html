@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute variance from replicates</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svrVar {survey}"><tr><td>svrVar {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute variance from replicates </h2>
+
+<h3>Description</h3>
+
+<p>Compute an appropriately scaled empirical variance estimate from
+replicates.  The <code>mse</code> argument specifies whether the sums of
+squares should be centered at the point estimate (<code>mse=TRUE</code>) or
+the mean of the replicates. It is usually taken from the <code>mse</code>
+component of the design object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svrVar(thetas, scale, rscales, na.action=getOption("na.action"), 
+  mse=getOption("survey.replicates.mse"),coef)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>thetas</code></td>
+<td>
+<p>matrix whose rows are replicates (or a vector of replicates)</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>Overall scaling factor</p>
+</td></tr>
+<tr valign="top"><td><code>rscales</code></td>
+<td>
+<p>Scaling factor for each squared deviation </p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>How to handle replicates where the statistic could
+not be estimated</p>
+</td></tr>
+<tr valign="top"><td><code>mse</code></td>
+<td>
+<p>if <code>TRUE</code>, center at the point estimated, if
+<code>FALSE</code> center at the mean of the replicates</p>
+</td></tr>
+<tr valign="top"><td><code>coef</code></td>
+<td>
+<p>The point estimate, required only if <code>mse==TRUE</code></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>covariance matrix.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svrepdesign.html">svrepdesign</a></code>, <code><a href="as.svrepdesign.html">as.svrepdesign</a></code>,
+<code><a href="brrweights.html">brrweights</a></code>,
+<code><a href="brrweights.html">jk1weights</a></code>, <code><a href="brrweights.html">jknweights</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Adding Polynomials</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for polyadd {pracma}"><tr><td>polyadd {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Adding Polynomials</h2>
+
+<h3>Description</h3>
+
+<p>Add two polynomials given as vectors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  polyadd(p, q)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p, q</code></td>
+<td>
+<p>Vectors representing two polynomials.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Polynomial addition realized simply by multiplying and summing up
+all the coefficients after extending vectors to the same length.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector representing a polynomial.
+</p>
+
+
+<h3>Note</h3>
+
+<p>There is no such function in Matlab or Octave.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="conv.html">conv</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+polyadd(c(1, 1, 1), 1)
+polyadd(c(1, 1, 1), c(0, 0, 1))
+polyadd(c(-0.5, 1, -1), c(0.5, 0, 1))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

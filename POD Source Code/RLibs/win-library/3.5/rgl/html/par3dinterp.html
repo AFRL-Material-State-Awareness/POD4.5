@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Interpolator for par3d parameters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for par3dinterp {rgl}"><tr><td>par3dinterp {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Interpolator for par3d parameters</h2>
+
+<h3>Description</h3>
+
+<p>Returns a function which interpolates <code>par3d</code> parameter values,
+suitable for use in animations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+par3dinterp(times = NULL, userMatrix, scale, zoom, FOV, 
+            method = c("spline", "linear"), 
+            extrapolate = c("oscillate", "cycle", "constant", "natural"),
+            dev = cur3d(), subscene = par3d("listeners", dev = dev))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>times</code></td>
+<td>
+<p> Times at which values are recorded or a list; see below </p>
+</td></tr>
+<tr valign="top"><td><code>userMatrix</code></td>
+<td>
+<p> Values of <code>par3d("userMatrix")</code> </p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p> Values of <code>par3d("scale")</code> </p>
+</td></tr>
+<tr valign="top"><td><code>zoom</code></td>
+<td>
+<p> Values of <code>par3d("zoom")</code> </p>
+</td></tr>
+<tr valign="top"><td><code>FOV</code></td>
+<td>
+<p> Values of <code>par3d("FOV")</code> </p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p> Method of interpolation </p>
+</td></tr>
+<tr valign="top"><td><code>extrapolate</code></td>
+<td>
+<p> How to extrapolate outside the time range </p>
+</td></tr>
+<tr valign="top"><td><code>dev</code></td>
+<td>
+<p> Which RGL device to use </p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+<p> Which subscene to use </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is intended to be used in constructing animations.  It produces
+a function that returns a list suitable to pass to <code><a href="par3d.html">par3d</a></code>, to set 
+the viewpoint at a given point in time.
+</p>
+<p>All of the parameters are optional.  Only those <code>par3d</code> parameters that are 
+specified will be returned.
+</p>
+<p>The input values other than <code>times</code> may each be specified as
+lists, giving the parameter value settings at a fixed time, or as
+matrices or arrays.  If not lists, the following formats should be
+used: <code>userMatrix</code> can be a <code>4 x 4 x n</code> array, or a <code>4
+x 4n</code> matrix; <code>scale</code> should be an <code>n x 3</code> matrix;
+<code>zoom</code> and <code>FOV</code> should be length <code>n</code> vectors.
+</p>
+<p>An alternative form of input is to put all of the above arguments into
+a list (i.e. a list of lists, or a list of arrays/matrices/vectors),
+and pass it as the first argument.  This is the most convenient way to
+use this function with the  function
+<code><a href="tkpar3dsave.html">tkpar3dsave</a></code>.
+</p>
+<p>Interpolation is by cubic spline or linear interpolation in an appropriate
+coordinate-wise fashion.  Extrapolation may oscillate
+(repeat the sequence forward, backward, forward, etc.), cycle (repeat
+it forward), be constant (no repetition outside the specified time
+range), or be natural (linear on an appropriate scale).   
+In the case of cycling, the first and last specified values
+should be equal, or the last one will be dropped.  Natural extrapolation
+is only supported with spline interpolation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A function is returned.  The function takes one argument, and returns a list of 
+<code>par3d</code> settings interpolated to that time.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Prior to <span class="pkg">rgl</span> version 0.95.1476, the
+<code>subscene</code> argument defaulted to the
+current subscene, and any additional entries would
+be ignored by <code><a href="play3d.html">play3d</a></code>.  The current
+default value of <code>par3d("listeners", dev = dev)</code> means that all subscenes that share 
+mouse responses will also share modifications
+by this function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch </p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="play3d.html">play3d</a></code> to play the animation. </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- par3dinterp( zoom = c(1, 2, 3, 1) )
+f(0)
+f(1)
+f(0.5)
+## Not run: 
+play3d(f)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

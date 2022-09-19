@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Drop unused levels</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_drop {forcats}"><tr><td>fct_drop {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Drop unused levels</h2>
+
+<h3>Description</h3>
+
+<p>Compared to <code>base::droplevels()</code>, does not drop <code>NA</code> levels that have values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_drop(f, only)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>A factor (or character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>only</code></td>
+<td>
+<p>A character vector restricting the set of levels to be dropped.
+If supplied, only levels that have no entries and appear in this vector
+will be removed.</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fct_expand.html">fct_expand()</a></code> to add additional levels to a factor.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- factor(c("a", "b"), levels = c("a", "b", "c"))
+f
+fct_drop(f)
+
+# Set only to restrict which levels to drop
+fct_drop(f, only = "a")
+fct_drop(f, only = "c")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

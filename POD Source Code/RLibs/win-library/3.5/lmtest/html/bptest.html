@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Breusch-Pagan Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bptest {lmtest}"><tr><td>bptest {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Breusch-Pagan Test</h2>
+
+<h3>Description</h3>
+
+<p>Performs the Breusch-Pagan test against heteroskedasticity.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bptest(formula, varformula = NULL, studentize = TRUE, data = list(), weights = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a symbolic description for the model to be tested
+(or a fitted <code>"lm"</code> object).</p>
+</td></tr>
+<tr valign="top"><td><code>varformula</code></td>
+<td>
+<p>a formula describing only the potential explanatory variables
+for the variance (no dependent variable needed). By default the same
+explanatory variables are taken as in the main regression model.</p>
+</td></tr>
+<tr valign="top"><td><code>studentize</code></td>
+<td>
+<p>logical. If set to <code>TRUE</code> Koenker's studentized
+version of the test statistic will be used.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables in the model.
+By default the variables are taken from the environment which <code>bptest</code> is
+called from.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of weights to be used in the model.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Breusch-Pagan test fits a linear regression model to the residuals
+of a linear regression model
+(by default the same explanatory variables are taken as in the main regression
+model) and rejects if too much of the variance
+is explained by the additional explanatory variables.
+</p>
+<p>Under <i>H_0</i> the test statistic of the Breusch-Pagan test follows a
+chi-squared distribution with <code>parameter</code> (the number of regressors without
+the constant in the model) degrees of freedom.
+</p>
+<p>Examples can not only be found on this page, but also on the help pages of the
+data sets <code><a href="bondyield.html">bondyield</a></code>, <code><a href="currencysubstitution.html">currencysubstitution</a></code>,
+<code><a href="growthofmoney.html">growthofmoney</a></code>, <code><a href="moneydemand.html">moneydemand</a></code>,
+<code><a href="unemployment.html">unemployment</a></code>, <code><a href="wages.html">wages</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>"htest"</code> containing the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>statistic</code></td>
+<td>
+<p>the value of the test statistic.</p>
+</td></tr>
+<tr valign="top"><td><code>p.value</code></td>
+<td>
+<p>the p-value of the test.</p>
+</td></tr>
+<tr valign="top"><td><code>parameter</code></td>
+<td>
+<p>degrees of freedom.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was
+performed.</p>
+</td></tr>
+<tr valign="top"><td><code>data.name</code></td>
+<td>
+<p>a character string giving the name(s) of the data.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>T.S. Breusch &amp; A.R. Pagan (1979),
+A Simple Test for Heteroscedasticity and Random Coefficient Variation.
+<em>Econometrica</em> <b>47</b>, 1287&ndash;1294
+</p>
+<p>R. Koenker (1981), A Note on Studentizing a Test for Heteroscedasticity.
+<em>Journal of Econometrics</em> <b>17</b>, 107&ndash;112.
+</p>
+<p>W. Krämer &amp; H. Sonnberger (1986),
+<em>The Linear Regression Model under Test</em>. Heidelberg: Physica
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/lm.html">lm</a></code>, <code><a href="../../car/html/ncvTest.html">ncvTest</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## generate a regressor
+x &lt;- rep(c(-1,1), 50)
+## generate heteroskedastic and homoskedastic disturbances
+err1 &lt;- rnorm(100, sd=rep(c(1,2), 50))
+err2 &lt;- rnorm(100)
+## generate a linear relationship
+y1 &lt;- 1 + x + err1
+y2 &lt;- 1 + x + err2
+## perform Breusch-Pagan test
+bptest(y1 ~ x)
+bptest(y2 ~ x)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Likelihood Ratio Test of Nested Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lrtest {lmtest}"><tr><td>lrtest {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Likelihood Ratio Test of Nested Models</h2>
+
+<h3>Description</h3>
+
+<p><code>lrtest</code> is a generic function for carrying out likelihood ratio tests.
+The default method can be employed for comparing nested (generalized)
+linear models (see details below).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ lrtest(object, ...)
+
+ ## Default S3 method:
+lrtest(object, ..., name = NULL) 
+
+ ## S3 method for class 'formula'
+lrtest(object, ..., data = list())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>an object. See below for details.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further object specifications passed to methods. See below for details.</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>a function for extracting a suitable name/description from
+a fitted model object. By default the name is queried by calling
+<code><a href="../../stats/html/formula.html">formula</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>a data frame containing the variables in the model.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>lrtest</code> is intended to be a generic function for comparisons
+of models via asymptotic likelihood ratio tests. The default method consecutively compares
+the fitted model object <code>object</code> with the models passed in <code>...</code>.
+Instead of passing the fitted model objects in <code>...</code>, several other
+specifications are possible. The updating mechanism is the same as for <code><a href="waldtest.html">waldtest</a></code>:
+the models in <code>...</code> can be specified as integers, characters
+(both for terms that should be eliminated from the previous model), update formulas or
+fitted model objects. Except for the last case, the existence of an <code><a href="../../stats/html/update.html">update</a></code>
+method is assumed. See <code><a href="waldtest.html">waldtest</a></code> for details.
+</p>
+<p>Subsequently, an asymptotic likelihood ratio test for each two consecutive models is carried out:
+Twice the difference in log-likelihoods (as derived by the <code><a href="../../stats/html/logLik.html">logLik</a></code> methods)
+is compared with a Chi-squared distribution.
+</p>
+<p>The <code>"formula"</code> method fits a <code><a href="../../stats/html/lm.html">lm</a></code> first and then calls the default 
+method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"anova"</code> which contains the log-likelihood, degrees of freedom,
+the difference in degrees of freedom, likelihood ratio Chi-squared statistic and corresponding p value.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="waldtest.html">waldtest</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## with data from Greene (1993):
+## load data and compute lags
+data("USDistLag")
+usdl &lt;- na.contiguous(cbind(USDistLag, lag(USDistLag, k = -1)))
+colnames(usdl) &lt;- c("con", "gnp", "con1", "gnp1")
+
+fm1 &lt;- lm(con ~ gnp + gnp1, data = usdl)
+fm2 &lt;- lm(con ~ gnp + con1 + gnp1, data = usdl)
+
+## various equivalent specifications of the LR test
+lrtest(fm2, fm1)
+lrtest(fm2, 2)
+lrtest(fm2, "con1")
+lrtest(fm2, . ~ . - con1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Gauss-Legendre Quadrature Formula</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gaussLegendre {pracma}"><tr><td>gaussLegendre {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Gauss-Legendre Quadrature Formula
+</h2>
+
+<h3>Description</h3>
+
+<p>Nodes and weights for the n-point Gauss-Legendre quadrature formula.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gaussLegendre(n, a, b)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>Number of nodes in the interval <code>[a,b]</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>lower and upper limit of the integral; must be finite.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>x</code> and <code>w</code> are obtained from a tridiagonal eigenvalue problem.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>x</code>, the nodes or points in<code>[a,b]</code>, and
+<code>w</code>, the weights applied at these nodes.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Gauss quadrature is not suitable for functions with singularities.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gautschi, W. (2004). Orthogonal Polynomials: Computation and Approximation.
+Oxford University Press.
+</p>
+<p>Trefethen, L. N. (2000). Spectral Methods in Matlab. SIAM, Society for
+Industrial and Applied Mathematics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gaussHermite.html">gaussHermite</a></code>, <code><a href="gaussLaguerre.html">gaussLaguerre</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Quadrature with Gauss-Legendre nodes and weights
+f &lt;- function(x) sin(x+cos(10*exp(x))/3)
+#\dontrun{ezplot(f, -1, 1, fill = TRUE)}
+cc &lt;- gaussLegendre(51, -1, 1)
+Q &lt;- sum(cc$w * f(cc$x))  #=&gt; 0.0325036515865218 , true error: &lt; 1e-15
+
+# If f is not vectorized, do an explicit summation:
+Q &lt;- 0; x &lt;- cc$x; w &lt;- cc$w
+for (i in 1:51) Q &lt;- Q + w[i] * f(x[i])
+
+# If f is infinite at b = 1, set  b &lt;- b - eps  (with, e.g., eps = 1e-15)
+
+# Use Gauss-Kronrod approach for error estimation
+cc &lt;- gaussLegendre(103, -1, 1)
+abs(Q - sum(cc$w * f(cc$x)))     # rel.error &lt; 1e-10
+
+# Use Gauss-Hermite for vector-valued functions
+f &lt;- function(x) c(sin(pi*x), exp(x), log(1+x))
+cc &lt;- gaussLegendre(32, 0, 1)
+drop(cc$w %*% matrix(f(cc$x), ncol = 3))  # c(2/pi, exp(1) - 1, 2*log(2) - 1)
+# absolute error &lt; 1e-15
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

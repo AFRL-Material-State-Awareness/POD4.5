@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reorder factor levels by sorting along another variable</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_reorder {forcats}"><tr><td>fct_reorder {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reorder factor levels by sorting along another variable</h2>
+
+<h3>Description</h3>
+
+<p><code>fct_reorder()</code> is useful for 1d displays where the factor is mapped to
+position; <code>fct_reorder2()</code> for 2d displays where the factor is mapped to
+a non-position aesthetic. <code>last2()</code> and <code>first2()</code> are helpers for <code>fct_reorder2()</code>;
+<code>last2()</code> finds the last value of <code>y</code> when sorted by <code>x</code>; <code>first2()</code> finds the first value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_reorder(.f, .x, .fun = median, ..., .desc = FALSE)
+
+fct_reorder2(.f, .x, .y, .fun = last2, ..., .desc = TRUE)
+
+last2(.x, .y)
+
+first2(.x, .y)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.f</code></td>
+<td>
+<p>A factor (or character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>.x, .y</code></td>
+<td>
+<p>The levels of <code>f</code> are reordered so that the values
+of <code>.fun(.x)</code> (for <code>fct_reorder()</code>) and <code>fun(.x, .y)</code> (for <code>fct_reorder2()</code>)
+are in ascending order.</p>
+</td></tr>
+<tr valign="top"><td><code>.fun</code></td>
+<td>
+<p>n summary function. It should take one vector for
+<code>fct_reorder</code>, and two vectors for <code>fct_reorder2</code>, and return a single
+value.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments passed on to <code>.fun</code>. A common argument is
+<code>na.rm = TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>.desc</code></td>
+<td>
+<p>Order in descending order? Note the default is different
+between <code>fct_reorder</code> and <code>fct_reorder2</code>, in order to
+match the default ordering of factors in the legend.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+df &lt;- tibble::tribble(
+  ~color,     ~a, ~b,
+  "blue",      1,  2,
+  "green",     6,  2,
+  "purple",    3,  3,
+  "red",       2,  3,
+  "yellow",    5,  1
+)
+df$color &lt;- factor(df$color)
+fct_reorder(df$color, df$a, min)
+fct_reorder2(df$color, df$a, df$b)
+
+boxplot(Sepal.Width ~ Species, data = iris)
+boxplot(Sepal.Width ~ fct_reorder(Species, Sepal.Width), data = iris)
+boxplot(Sepal.Width ~ fct_reorder(Species, Sepal.Width, .desc = TRUE), data = iris)
+
+chks &lt;- subset(ChickWeight, as.integer(Chick) &lt; 10)
+chks &lt;- transform(chks, Chick = fct_shuffle(Chick))
+
+if (require("ggplot2")) {
+ggplot(chks, aes(Time, weight, colour = Chick)) +
+  geom_point() +
+  geom_line()
+
+# Note that lines match order in legend
+ggplot(chks, aes(Time, weight, colour = fct_reorder2(Chick, Time, weight))) +
+  geom_point() +
+  geom_line() +
+  labs(colour = "Chick")
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

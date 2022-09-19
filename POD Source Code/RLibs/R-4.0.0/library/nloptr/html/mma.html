@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Method of Moving Asymptotes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mma {nloptr}"><tr><td>mma {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Method of Moving Asymptotes</h2>
+
+<h3>Description</h3>
+
+<p>Globally-convergent method-of-moving-asymptotes (MMA) algorithm for
+gradient-based local optimization, including nonlinear inequality
+constraints (but not equality constraints).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mma(
+  x0,
+  fn,
+  gr = NULL,
+  lower = NULL,
+  upper = NULL,
+  hin = NULL,
+  hinjac = NULL,
+  nl.info = FALSE,
+  control = list(),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>starting point for searching the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>objective function that is to be minimized.</p>
+</td></tr>
+<tr valign="top"><td><code>gr</code></td>
+<td>
+<p>gradient of function <code>fn</code>; will be calculated numerically if
+not specified.</p>
+</td></tr>
+<tr valign="top"><td><code>lower, upper</code></td>
+<td>
+<p>lower and upper bound constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>hin</code></td>
+<td>
+<p>function defining the inequality constraints, that is
+<code>hin&gt;=0</code> for all components.</p>
+</td></tr>
+<tr valign="top"><td><code>hinjac</code></td>
+<td>
+<p>Jacobian of function <code>hin</code>; will be calculated
+numerically if not specified.</p>
+</td></tr>
+<tr valign="top"><td><code>nl.info</code></td>
+<td>
+<p>logical; shall the original NLopt info been shown.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>list of options, see <code>nl.opts</code> for help.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is an improved CCSA (&quot;conservative convex separable approximation&quot;)
+variant of the original MMA algorithm published by Svanberg in 1987, which
+has become popular for topology optimization. Note:
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>par</code></td>
+<td>
+<p>the optimal solution found so far.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>the function value corresponding to <code>par</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of (outer) iterations, see <code>maxeval</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>integer code indicating successful completion (&gt; 1)
+or a possible error number (&lt; 0).</p>
+</td></tr>
+<tr valign="top"><td><code>message</code></td>
+<td>
+<p>character string produced by NLopt and giving additional
+information.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>&ldquo;Globally convergent&rdquo; does not mean that this algorithm converges to
+the global optimum; it means that it is guaranteed to converge to some local
+minimum from any feasible starting point.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans W. Borchers
+</p>
+
+
+<h3>References</h3>
+
+<p>Krister Svanberg, &ldquo;A class of globally convergent optimization
+methods based on conservative convex separable approximations,&rdquo; SIAM J.
+Optim. 12 (2), p. 555-573 (2002).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="slsqp.html">slsqp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+##  Solve the Hock-Schittkowski problem no. 100 with analytic gradients
+x0.hs100 &lt;- c(1, 2, 0, 4, 0, 1, 1)
+fn.hs100 &lt;- function(x) {
+    (x[1]-10)^2 + 5*(x[2]-12)^2 + x[3]^4 + 3*(x[4]-11)^2 + 10*x[5]^6 +
+                  7*x[6]^2 + x[7]^4 - 4*x[6]*x[7] - 10*x[6] - 8*x[7]
+}
+hin.hs100 &lt;- function(x) {
+    h &lt;- numeric(4)
+    h[1] &lt;- 127 - 2*x[1]^2 - 3*x[2]^4 - x[3] - 4*x[4]^2 - 5*x[5]
+    h[2] &lt;- 282 - 7*x[1] - 3*x[2] - 10*x[3]^2 - x[4] + x[5]
+    h[3] &lt;- 196 - 23*x[1] - x[2]^2 - 6*x[6]^2 + 8*x[7]
+    h[4] &lt;- -4*x[1]^2 - x[2]^2 + 3*x[1]*x[2] -2*x[3]^2 - 5*x[6]	+11*x[7]
+    return(h)
+}
+gr.hs100 &lt;- function(x) {
+   c(  2 * x[1] -  20,
+      10 * x[2] - 120,
+       4 * x[3]^3,
+       6 * x[4] - 66,
+      60 * x[5]^5,
+      14 * x[6]   - 4 * x[7] - 10,
+       4 * x[7]^3 - 4 * x[6] -  8 )}
+hinjac.hs100 &lt;- function(x) {
+    matrix(c(4*x[1], 12*x[2]^3, 1, 8*x[4], 5, 0, 0,
+        7, 3, 20*x[3], 1, -1, 0, 0,
+        23, 2*x[2], 0, 0, 0, 12*x[6], -8,
+        8*x[1]-3*x[2], 2*x[2]-3*x[1], 4*x[3], 0, 0, 5, -11), 4, 7, byrow=TRUE)
+}
+
+# incorrect result with exact jacobian
+S &lt;- mma(x0.hs100, fn.hs100, gr = gr.hs100,
+            hin = hin.hs100, hinjac = hinjac.hs100,
+            nl.info = TRUE, control = list(xtol_rel = 1e-8))
+
+
+# This example is put in donttest because it runs for more than
+# 40 seconds under 32-bit Windows. The difference in time needed
+# to execute the code between 32-bit Windows and 64-bit Windows
+# can probably be explained by differences in rounding/truncation
+# on the different systems. On Windows 32-bit more iterations
+# are needed resulting in a longer runtime.
+# correct result with inexact jacobian
+S &lt;- mma(x0.hs100, fn.hs100, hin = hin.hs100,
+            nl.info = TRUE, control = list(xtol_rel = 1e-8))
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

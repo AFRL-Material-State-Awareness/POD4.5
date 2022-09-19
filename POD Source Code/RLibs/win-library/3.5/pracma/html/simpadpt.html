@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Adaptive Simpson Quadrature</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for simpadpt {pracma}"><tr><td>simpadpt {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Adaptive Simpson Quadrature
+</h2>
+
+<h3>Description</h3>
+
+<p>Numerically evaluate an integral using adaptive Simpson's rule.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+simpadpt(f, a, b, tol = 1e-6, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>univariate function, the integrand.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>lower limits of integration; must be finite.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to <code>f</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Approximates the integral of the function <code>f</code> from a to b to within
+an error of <code>tol</code> using recursive adaptive Simpson quadrature.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numerical value or vector, the computed integral.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Based on code from the book by Quarteroni et al.,
+with some tricks borrowed from Matlab and Octave.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., R. Sacco, and F. Saleri (2007). Numerical Mathematics.
+Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="quad.html">quad</a></code>, <code><a href="simpson2d.html">simpson2d</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+myf &lt;- function(x, n) 1/(x+n)  # 0.0953101798043249 , log((n+1)/n) for n=10
+simpadpt(myf, 0, 1, n = 10)    # 0.095310179804535
+
+##  Dilogarithm function
+flog  &lt;- function(t) log(1-t) / t  # singularity at t=1, almost at t=0
+dilog &lt;- function(x) simpadpt(flog, x, 0, tol = 1e-12)
+dilog(1)  # 1.64493406685615
+          # 1.64493406684823 = pi^2/6
+
+## Not run: 
+N &lt;- 51
+xs &lt;- seq(-5, 1, length.out = N)
+ys &lt;- numeric(N)
+for (i in 1:N) ys[i] &lt;- dilog(xs[i])
+plot(xs, ys, type = "l", col = "blue",
+             main = "Dilogarithm function")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

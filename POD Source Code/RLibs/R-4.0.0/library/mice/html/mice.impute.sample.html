@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Imputation by simple random sampling</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mice.impute.sample {mice}"><tr><td>mice.impute.sample {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Imputation by simple random sampling</h2>
+
+<h3>Description</h3>
+
+<p>Imputes a random sample from the observed <code>y</code> data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mice.impute.sample(y, ry, x = NULL, wy = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Vector to be imputed</p>
+</td></tr>
+<tr valign="top"><td><code>ry</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code> indicating the
+the subset <code>y[ry]</code> of elements in <code>y</code> to which the imputation
+model is fitted. The <code>ry</code> generally distinguishes the observed
+(<code>TRUE</code>) and missing values (<code>FALSE</code>) in <code>y</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric design matrix with <code>length(y)</code> rows with predictors for
+<code>y</code>. Matrix <code>x</code> may have no missing values.</p>
+</td></tr>
+<tr valign="top"><td><code>wy</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code>. A <code>TRUE</code> value
+indicates locations in <code>y</code> for which imputations are created.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function takes a simple random sample from the observed values in
+<code>y</code>, and returns these as imputations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector with imputed data, same type as <code>y</code>, and of length
+<code>sum(wy)</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren, Karin Groothuis-Oudshoorn, 2000, 2017
+</p>
+
+
+<h3>References</h3>
+
+<p>van Buuren S and Groothuis-Oudshoorn K (2011). <code>mice</code>:
+Multivariate Imputation by Chained Equations in <code>R</code>. <em>Journal of
+Statistical Software</em>, <b>45</b>(3), 1-67.
+doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

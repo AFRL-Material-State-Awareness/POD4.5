@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Read and evaluate a Python script</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for source_python {reticulate}"><tr><td>source_python {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Read and evaluate a Python script</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate a Python script within the Python main module, then make all public
+(non-module) objects within the main Python module available within the
+specified R environment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+source_python(file, envir = parent.frame(), convert = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>The Python script to be executed.</p>
+</td></tr>
+<tr valign="top"><td><code>envir</code></td>
+<td>
+<p>The environment to assign Python objects into (for example,
+<code>parent.frame()</code> or <code>globalenv()</code>). Specify <code>NULL</code> to not assign Python
+objects.</p>
+</td></tr>
+<tr valign="top"><td><code>convert</code></td>
+<td>
+<p>Boolean; should Python objects be automatically converted
+to their <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> equivalent? If set to <code>FALSE</code>, you can still manually convert
+Python objects to <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> via the <code><a href="r-py-conversion.html">py_to_r()</a></code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>To prevent assignment of objects into R, pass <code>NULL</code> for the <code>envir</code>
+parameter.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

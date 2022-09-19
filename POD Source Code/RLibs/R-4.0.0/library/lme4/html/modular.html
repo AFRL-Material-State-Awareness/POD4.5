@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Modular Functions for Mixed Model Fits</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for modular {lme4}"><tr><td>modular {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Modular Functions for Mixed Model Fits</h2>
+
+<h3>Description</h3>
+
+<p>Modular functions for mixed model fits
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lFormula(formula, data = NULL, REML = TRUE,
+    subset, weights, na.action, offset, contrasts = NULL,
+    control = lmerControl(), ...)
+
+mkLmerDevfun(fr, X, reTrms, REML = TRUE, start = NULL,
+    verbose = 0, control = lmerControl(), ...)
+
+optimizeLmer(devfun,
+             optimizer    = formals(lmerControl)$optimizer,
+             restart_edge = formals(lmerControl)$restart_edge,
+             boundary.tol = formals(lmerControl)$boundary.tol,
+             start = NULL, verbose = 0L,
+             control = list(), ...)
+
+glFormula(formula, data = NULL, family = gaussian,
+    subset, weights, na.action, offset, contrasts = NULL,
+    start, mustart, etastart, control = glmerControl(), ...)
+
+mkGlmerDevfun(fr, X, reTrms, family, nAGQ = 1L,
+              verbose = 0L, maxit = 100L, control = glmerControl(), ...)
+
+optimizeGlmer(devfun,
+    optimizer = if(stage == 1) "bobyqa" else "Nelder_Mead",
+    restart_edge = FALSE,
+    boundary.tol = formals(glmerControl)$boundary.tol,
+    verbose = 0L, control = list(),
+    nAGQ = 1L, stage = 1, start = NULL, ...)
+
+updateGlmerDevfun(devfun, reTrms, nAGQ = 1L)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a two-sided linear formula object
+describing both the fixed-effects and random-effects parts
+of the model, with the response on the left of a <code>~</code>
+operator and the terms, separated by <code>+</code> operators,
+on the right.  Random-effects terms are distinguished by
+vertical bars (<code>"|"</code>) separating expressions for
+design matrices from grouping factors.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the
+variables named in <code>formula</code>.  By default the
+variables are taken from the environment from which
+<code>lmer</code> is called. While <code>data</code> is optional, the
+package authors <em>strongly</em> recommend its use,
+especially when later applying methods such as
+<code>update</code> and <code>drop1</code> to the fitted model
+(<em>such methods are not guaranteed to work properly
+if <code>data</code> is omitted</em>). If <code>data</code> is omitted,
+variables will be taken from the environment of
+<code>formula</code> (if specified as a formula) or from the
+parent frame (if specified as a character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>REML</code></td>
+<td>
+<p>(logical) indicating to fit <b>re</b>stricted maximum
+likelihood model.</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>an optional expression indicating the
+subset of the rows of <code>data</code> that should be used in
+the fit. This can be a logical vector, or a numeric
+vector indicating which observation numbers are to be
+included, or a character vector of the row names to be
+included.  All observations are included by default.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of &lsquo;prior weights&rsquo; to be used
+in the fitting process.  Should be <code>NULL</code> or a numeric vector.</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>a function that indicates what should
+happen when the data contain <code>NA</code>s.  The default
+action (<code>na.omit</code>, inherited from the 'factory
+fresh' value of <code>getOption("na.action")</code>) strips any
+observations with any missing values in any variables.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>this can be used to specify an <em>a priori</em> known
+component to be included in the linear predictor during
+fitting.  This should be <code>NULL</code> or a numeric vector of length
+equal to the number of cases.  One or more <code><a href="../../stats/html/offset.html">offset</a></code>
+terms can be included in the formula instead or as well, and if
+more than one is specified their sum is used.  See
+<code><a href="../../stats/html/model.extract.html">model.offset</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+<p>an optional <code><a href="../../base/html/list.html">list</a></code>.  See the
+<code>contrasts.arg</code> of <code><a href="../../stats/html/model.matrix.html">model.matrix.default</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a list giving
+</p>
+
+<dl>
+<dt>for <code>[g]lFormula</code>:</dt><dd><p>all
+options for running the model, see <code><a href="lmerControl.html">lmerControl</a></code>;</p>
+</dd>
+<dt>for <code>mkLmerDevfun,mkGlmerDevfun</code>:</dt><dd><p>options
+for the inner optimization step;</p>
+</dd>
+<dt>for <code>optimizeLmer</code> and <code>optimizeGlmer</code>:</dt><dd><p>control
+parameters for nonlinear optimizer (typically inherited from the
+... argument to <code><a href="lmerControl.html">lmerControl</a></code>).</p>
+</dd>
+</dl>
+
+
+</td></tr>
+<tr valign="top"><td><code>fr</code></td>
+<td>
+<p>A model frame containing the variables needed to create an
+<code><a href="lmResp.html">lmerResp</a></code> or <code><a href="lmResp.html">glmResp</a></code> instance.</p>
+</td></tr>
+<tr valign="top"><td><code>X</code></td>
+<td>
+<p>fixed-effects design matrix</p>
+</td></tr>
+<tr valign="top"><td><code>reTrms</code></td>
+<td>
+<p>information on random effects structure (see
+<code><a href="mkReTrms.html">mkReTrms</a></code>).</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>starting values (see <code><a href="lmer.html">lmer</a></code>;
+for <code>glFormula</code>, should be just a numeric vector of
+fixed-effect coefficients)</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>print output?</p>
+</td></tr>
+<tr valign="top"><td><code>maxit</code></td>
+<td>
+<p>maximal number of Pwrss update iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>devfun</code></td>
+<td>
+<p>a deviance function, as generated by <code><a href="modular.html">mkLmerDevfun</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>nAGQ</code></td>
+<td>
+<p>number of Gauss-Hermite quadrature points</p>
+</td></tr>
+<tr valign="top"><td><code>stage</code></td>
+<td>
+<p>optimization stage (1: nAGQ=0, optimize over theta only;
+2: nAGQ possibly &gt;0, optimize over theta and beta)</p>
+</td></tr>
+<tr valign="top"><td><code>optimizer</code></td>
+<td>
+<p>character - name of optimizing
+function(s).  A character vector or list of functions:
+length 1 for <code>lmer</code> or <code>glmer</code>, possibly length
+2 for <code>glmer</code>.  The built-in optimizers are
+<code>"<a href="Nelder_Mead.html">Nelder_Mead</a>"</code> and <code>"<a href="../../minqa/html/bobyqa.html">bobyqa</a>"</code>
+(from the <a href="https://CRAN.R-project.org/package=minqa"><span class="pkg">minqa</span></a> package).  Any minimizing function
+that allows box constraints can be used provided that it
+</p>
+
+<ol>
+<li><p>takes input parameters <code>fn</code> (function to be
+optimized), <code>par</code> (starting parameter values),
+<code>lower</code> (lower bounds) and <code>control</code> (control
+parameters, passed through from the <code>control</code>
+argument) and
+</p>
+</li>
+<li><p>returns a list with (at least) elements
+<code>par</code> (best-fit parameters), <code>fval</code> (best-fit
+function value), <code>conv</code> (convergence code) and
+(optionally) <code>message</code> (informational message, or
+explanation of convergence failure).
+</p>
+</li></ol>
+
+<p>Special provisions are made for <code><a href="../../minqa/html/bobyqa.html">bobyqa</a></code>,
+<code><a href="Nelder_Mead.html">Nelder_Mead</a></code>, and optimizers wrapped in the
+<a href="https://CRAN.R-project.org/package=optimx"><span class="pkg">optimx</span></a> package; to use <span class="pkg">optimx</span> optimizers
+(including <code>L-BFGS-B</code> from base <code><a href="../../stats/html/optim.html">optim</a></code>
+and <code><a href="../../stats/html/nlminb.html">nlminb</a></code>), pass the <code>method</code>
+argument to <code>optim</code> in the <code>control</code> argument.
+</p>
+<p>For <code>glmer</code>, if <code>length(optimizer)==2</code>, the
+first element will be used for the preliminary (random
+effects parameters only) optimization, while the second
+will be used for the final (random effects plus fixed
+effect parameters) phase. See <code><a href="modular.html">modular</a></code> for
+more information on these two phases.
+</p>
+</td></tr>
+<tr valign="top"><td><code>restart_edge</code></td>
+<td>
+<p>see <code><a href="lmerControl.html">lmerControl</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>boundary.tol</code></td>
+<td>
+<p>see <code><a href="lmerControl.html">lmerControl</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>family</code></td>
+<td>
+<p>a GLM family; see <code><a href="../../stats/html/glm.html">glm</a></code>
+and <code><a href="../../stats/html/family.html">family</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>mustart</code></td>
+<td>
+<p>optional starting values on the scale of
+the conditional mean; see <code><a href="../../stats/html/glm.html">glm</a></code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>etastart</code></td>
+<td>
+<p>optional starting values on the scale of
+the unbounded predictor; see <code><a href="../../stats/html/glm.html">glm</a></code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other potential arguments; for <code>optimizeLmer</code> and
+<code>optimizeGlmer</code>, these are passed to internal function
+<code>optwrap</code>, which has relevant parameters <code>calc.derivs</code>
+and <code>use.last.params</code> (see <code><a href="lmerControl.html">lmerControl</a></code>).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>These functions make up the internal components of an [gn]lmer fit.
+</p>
+
+<ul>
+<li> <p><code>[g]lFormula</code> takes the arguments that would normally be
+passed to <code>[g]lmer</code>, checking for errors and processing the
+formula and data input to create a list of objects required to fit a
+mixed model.
+</p>
+</li>
+<li> <p><code>mk(Gl|L)merDevfun</code> takes the output of the previous
+step (minus the <code>formula</code> component) and creates a
+deviance function
+</p>
+</li>
+<li> <p><code>optimize(Gl|L)mer</code> takes a
+deviance function and optimizes over <code>theta</code> (or
+over <code>theta</code> and <code>beta</code>, if <code>stage</code> is set
+to 2 for <code>optimizeGlmer</code>
+</p>
+</li>
+<li> <p><code>updateGlmerDevfun</code> takes the first stage of a GLMM
+optimization (with <code>nAGQ=0</code>, optimizing over <code>theta</code> only)
+and produces a second-stage deviance function
+</p>
+</li>
+<li> <p><code><a href="mkMerMod.html">mkMerMod</a></code> takes the <em>environment</em> of a
+deviance function, the results of an optimization, a list of
+random-effect terms, a model frame, and a model all and produces a
+<code>[g]lmerMod</code> object.
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p><code>lFormula</code> and <code>glFormula</code> return a list containing
+components:
+</p>
+
+<dl>
+<dt>fr</dt><dd><p>model frame</p>
+</dd>
+<dt>X</dt><dd><p>fixed-effect design matrix</p>
+</dd>
+<dt>reTrms</dt><dd><p>list containing information on random effects structure:
+result of <code><a href="mkReTrms.html">mkReTrms</a></code></p>
+</dd>
+<dt>REML</dt><dd><p>(lFormula only): logical indicating if restricted maximum
+likelihood was used (Copy of argument.)</p>
+</dd>
+</dl>
+
+<p><code>mkLmerDevfun</code> and <code>mkGlmerDevfun</code> return a function to
+calculate deviance (or restricted deviance) as a function of the
+theta (random-effect) parameters.  <code>updateGlmerDevfun</code>
+returns a function to calculate the deviance as a function of a
+concatenation of theta and beta (fixed-effect) parameters. These
+deviance functions have an environment containing objects required
+for their evaluation. CAUTION: The <code><a href="../../base/html/environment.html">environment</a></code> of
+functions returned by <code>mk(Gl|L)merDevfun</code> contains reference
+class objects (see <code><a href="../../methods/html/refClass.html">ReferenceClasses</a></code>,
+<code><a href="merPredD-class.html">merPredD-class</a></code>, <code><a href="lmResp-class.html">lmResp-class</a></code>), which
+behave in ways that may surprise many users. For example, if the
+output of <code>mk(Gl|L)merDevfun</code> is naively copied, then
+modifications to the original will also appear in the copy (and
+vice versa). To avoid this behavior one must make a deep copy (see
+<code><a href="../../methods/html/refClass.html">ReferenceClasses</a></code> for details).
+</p>
+<p><code>optimizeLmer</code> and <code>optimizeGlmer</code> return the results of an
+optimization.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+### Fitting a linear mixed model in 4 modularized steps
+
+## 1.  Parse the data and formula:
+lmod &lt;- lFormula(Reaction ~ Days + (Days|Subject), sleepstudy)
+names(lmod)
+## 2.  Create the deviance function to be optimized:
+(devfun &lt;- do.call(mkLmerDevfun, lmod))
+ls(environment(devfun)) # the environment of 'devfun' contains objects
+                        # required for its evaluation
+## 3.  Optimize the deviance function:
+opt &lt;- optimizeLmer(devfun)
+opt[1:3]
+## 4.  Package up the results:
+mkMerMod(environment(devfun), opt, lmod$reTrms, fr = lmod$fr)
+
+
+### Same model in one line
+lmer(Reaction ~ Days + (Days|Subject), sleepstudy)
+
+
+### Fitting a generalized linear mixed model in six modularized steps
+
+## 1.  Parse the data and formula:
+glmod &lt;- glFormula(cbind(incidence, size - incidence) ~ period + (1 | herd),
+                   data = cbpp, family = binomial)
+    #.... see what've got :
+str(glmod, max=1, give.attr=FALSE)
+## 2.  Create the deviance function for optimizing over theta:
+(devfun &lt;- do.call(mkGlmerDevfun, glmod))
+ls(environment(devfun)) # the environment of devfun contains lots of info
+## 3.  Optimize over theta using a rough approximation (i.e. nAGQ = 0):
+(opt &lt;- optimizeGlmer(devfun))
+## 4.  Update the deviance function for optimizing over theta and beta:
+(devfun &lt;- updateGlmerDevfun(devfun, glmod$reTrms))
+## 5.  Optimize over theta and beta:
+opt &lt;- optimizeGlmer(devfun, stage=2)
+str(opt, max=1) # seeing what we'got
+## 6.  Package up the results:
+(fMod &lt;- mkMerMod(environment(devfun), opt, glmod$reTrms, fr = glmod$fr))
+
+### Same model in one line
+fM &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+            data = cbpp, family = binomial)
+all.equal(fMod, fM, check.attributes=FALSE, tolerance = 1e-12)
+        # ----  --  even tolerance = 0  may work
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

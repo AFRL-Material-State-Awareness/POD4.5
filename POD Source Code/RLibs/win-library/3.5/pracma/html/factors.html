@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Prime Factors</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for factors {pracma}"><tr><td>factors {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Prime Factors</h2>
+
+<h3>Description</h3>
+
+<p>Returns a vector containing the prime factors of <code>n</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  factors(n)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>nonnegative integer</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the prime factors of <code>n</code> in ascending order,
+each one as often as its multiplicity requires, such that 
+<code>n == prod(factors(n))</code>.
+</p>
+<p>The corresponding Matlab function is called &lsquo;factor&rsquo;, but because
+factors have a special meaning in R and the factor() function in R
+could not (or should not) be shadowed, the number theoretic function
+has been renamed here.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector containing the prime factors of <code>n</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="isprime.html">isprime</a>, <a href="primes.html">primes</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+  factors(1002001)       # 7  7  11  11  13  13
+  factors(65537)         # is prime
+  # Euler's calculation
+  factors(2^32 + 1)      # 641  6700417
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

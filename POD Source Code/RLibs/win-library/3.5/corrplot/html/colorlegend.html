@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw color legend.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for colorlegend {corrplot}"><tr><td>colorlegend {corrplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Draw color legend.</h2>
+
+<h3>Description</h3>
+
+<p>Draw color legend.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+colorlegend(
+  colbar,
+  labels,
+  at = NULL,
+  xlim = c(0, 1),
+  ylim = c(0, 1),
+  vertical = TRUE,
+  ratio.colbar = 0.4,
+  lim.segment = "auto",
+  align = c("c", "l", "r"),
+  addlabels = TRUE,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>colbar</code></td>
+<td>
+<p>Vector, color of colbar.</p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p>Vector, numeric or character to be written.</p>
+</td></tr>
+<tr valign="top"><td><code>at</code></td>
+<td>
+<p>Numeric vector (quantile), the position to put labels. See examples
+for details.</p>
+</td></tr>
+<tr valign="top"><td><code>xlim</code></td>
+<td>
+<p>See in <code><a href="../../graphics/html/plot.html">plot</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>ylim</code></td>
+<td>
+<p>See in <code><a href="../../graphics/html/plot.html">plot</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>vertical</code></td>
+<td>
+<p>Logical, whether the colorlegend is vertical or horizon.</p>
+</td></tr>
+<tr valign="top"><td><code>ratio.colbar</code></td>
+<td>
+<p>The width ratio of colorbar to the total colorlegend
+(including colorbar, segments and labels).</p>
+</td></tr>
+<tr valign="top"><td><code>lim.segment</code></td>
+<td>
+<p>Vector (quantile) of length 2, the elements should be in
+[0,1], giving segments coordinates ranges. If the value is NULL or 'auto',
+then the ranges are derived automatically.</p>
+</td></tr>
+<tr valign="top"><td><code>align</code></td>
+<td>
+<p>Character, alignment type of labels, <code>'l'</code> means left,
+<code>'c'</code> means center and <code>'r'</code> right.
+Only valid when <code>vertical</code> is <code>TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>addlabels</code></td>
+<td>
+<p>Logical, whether add text label or not.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments, passed to <code><a href="../../graphics/html/plot.html">plot</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Taiyun Wei
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## diverging colors
+par(mar = c(0, 0, 0, 0) + 0.1)
+plot(0, xlim = c(-0.1, 1), ylim = c(0, 1), type = 'n')
+
+col = c('RdBu', 'BrBG', 'PiYG', 'PRGn', 'PuOr', 'RdYlBu')
+
+for(i in 1:length(col)) {
+  colorlegend(COL2(col[i]), -10:10/10, align = 'l', cex = 0.8, xlim = c(0, 1),
+              ylim = c(i/length(col)-0.1, i/length(col)), vertical = FALSE)
+  text(-0.01, i/length(col)-0.02, col[i], adj = 0.5, pos = 2, cex = 0.8)
+}
+
+
+
+## sequential colors
+par(mar = c(0, 0, 0, 0) + 0.1)
+plot(0, xlim = c(-0.1, 1), ylim = c(0, 1), type = 'n')
+
+col = c('Oranges', 'Purples', 'Reds', 'Blues', 'Greens', 'Greys', 'OrRd',
+        'YlOrRd', 'YlOrBr', 'YlGn')
+
+for(i in 1:length(col)) {
+  colorlegend(COL1(col[i]), 0:10, align = 'l', cex = 0.8, xlim = c(0, 1),
+              ylim = c(i/length(col)-0.1, i/length(col)), vertical = FALSE)
+  text(-0.01, i/length(col)-0.02, col[i], adj = 0.5, pos = 2)
+}
+
+
+
+## other examples to show colorlegend function
+par(mar = rep(0, 4))
+plot(0, xlim = c(0, 6), ylim = c(-0.5, 1.2), type = 'n')
+
+colorlegend(rainbow(100), 0:9)
+
+colorlegend(heat.colors(100), LETTERS[1:12], xlim = c(1, 2))
+
+colorlegend(terrain.colors(100), 0:9, ratio.colbar = 0.6,
+            lim.segment = c(0, 0.6), xlim = c(2, 3), align = 'l')
+
+colorlegend(topo.colors(100), 0:9, lim.segment = c(0, 0.6),
+            xlim = c(3, 4), align = 'l', offset = 0)
+
+colorlegend(cm.colors(100), 1:5, xlim = c(4, 5))
+
+colorlegend(sample(rainbow(12)), labels = LETTERS[1:12],
+            at = seq(0.05, 0.95, len = 12), xlim = c(5, 6), align = 'r')
+
+colorlegend(colbar = grey(1:100 / 100), 1:10, col = 'red', align = 'l',
+            xlim = c(0, 6), ylim = c(-0.5, -0.1), vertical = FALSE)
+
+colorlegend(sample(rainbow(12)),
+            labels = LETTERS[1:12], at = seq(0.05, 0.95, len = 12),
+            xlim = c(0, 6), ylim = c(1.1, 1.2), vertical = FALSE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>corrplot</em> version 0.92 <a href="00Index.html">Index</a>]</div>
+</body></html>

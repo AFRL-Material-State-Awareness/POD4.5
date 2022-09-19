@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Gaussian Quadrature with Probability Distributions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gauss.quad.prob {statmod}"><tr><td>gauss.quad.prob {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Gaussian Quadrature with Probability Distributions</h2>
+
+<h3>Description</h3>
+
+<p>Calculate nodes and weights for Gaussian quadrature in terms of probability distributions.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gauss.quad.prob(n, dist = "uniform", l = 0, u = 1,
+                mu = 0, sigma = 1, alpha = 1, beta = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>number of nodes and weights</p>
+</td></tr>
+<tr valign="top"><td><code>dist</code></td>
+<td>
+<p>distribution that Gaussian quadrature is based on, one of <code>"uniform"</code>, <code>"normal"</code>, <code>"beta"</code> or <code>"gamma"</code></p>
+</td></tr>
+<tr valign="top"><td><code>l</code></td>
+<td>
+<p>lower limit of uniform distribution</p>
+</td></tr>
+<tr valign="top"><td><code>u</code></td>
+<td>
+<p>upper limit of uniform distribution</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>mean of normal distribution</p>
+</td></tr>
+<tr valign="top"><td><code>sigma</code></td>
+<td>
+<p>standard deviation of normal distribution</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>positive shape parameter for gamma distribution or first shape parameter for beta distribution</p>
+</td></tr>
+<tr valign="top"><td><code>beta</code></td>
+<td>
+<p>positive scale parameter for gamma distribution or second shape parameter for beta distribution</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is a rewriting and simplification of <code>gauss.quad</code> in terms of probability distributions.
+The probability interpretation is explained by Smyth (1998).
+For details on the underlying quadrature rules, see <code><a href="gauss.quad.html">gauss.quad</a></code>.
+</p>
+<p>The expected value of <code>f(X)</code> is approximated by <code>sum(w*f(x))</code> where <code>x</code> is the vector of nodes and <code>w</code> is the vector of weights.  The approximation is exact if <code>f(x)</code> is a polynomial of order no more than <code>2n-1</code>.
+The possible choices for the distribution of <code>X</code> are as follows:
+</p>
+<p>Uniform on <code>(l,u)</code>.
+</p>
+<p>Normal with mean <code>mu</code> and standard deviation <code>sigma</code>.
+</p>
+<p>Beta with density <code>x^(alpha-1)*(1-x)^(beta-1)/B(alpha,beta)</code> on <code>(0,1)</code>.
+</p>
+<p>Gamma with density <code>x^(alpha-1)*exp(-x/beta)/beta^alpha/gamma(alpha)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>nodes</code></td>
+<td>
+<p>vector of values at which to evaluate the function</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>vector of weights to give the function values</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth, using Netlib Fortran code <a href="http://www.netlib.org/go/gaussq.f">http://www.netlib.org/go/gaussq.f</a>, and including corrections suggested by Spencer Graves</p>
+
+
+<h3>References</h3>
+
+<p>Smyth, G. K. (1998). Polynomial approximation.
+In: <em>Encyclopedia of Biostatistics</em>, P. Armitage and T. Colton (eds.), Wiley, London, pages 3425-3429.
+<a href="http://www.statsci.org/smyth/pubs/PolyApprox-Preprint.pdf">http://www.statsci.org/smyth/pubs/PolyApprox-Preprint.pdf</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gauss.quad.html">gauss.quad</a></code>, <code><a href="../../stats/html/integrate.html">integrate</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#  the 4th moment of the standard normal is 3
+out &lt;- gauss.quad.prob(10,"normal")
+sum(out$weights * out$nodes^4)
+
+#  the expected value of log(X) where X is gamma is digamma(alpha)
+out &lt;- gauss.quad.prob(32,"gamma",alpha=5)
+sum(out$weights * log(out$nodes))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

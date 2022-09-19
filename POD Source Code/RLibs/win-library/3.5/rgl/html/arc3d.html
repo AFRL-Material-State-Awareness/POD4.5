@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw arcs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for arc3d {rgl}"><tr><td>arc3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Draw arcs
+</h2>
+
+<h3>Description</h3>
+
+<p>Given starting and ending points on a sphere and the center of the
+sphere, draw the
+great circle arc between the starting and ending points.  If
+the starting and ending points have different radii, a segment of a
+logarithmic spiral will join them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+arc3d(from, to, center, radius, n, circle = 50, base = 0,
+plot = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>from</code></td>
+<td>
+
+<p>One or more points from which to start arcs.
+</p>
+</td></tr>
+<tr valign="top"><td><code>to</code></td>
+<td>
+
+<p>One or more destination points.
+</p>
+</td></tr>
+<tr valign="top"><td><code>center</code></td>
+<td>
+
+<p>One or more center points.
+</p>
+</td></tr>
+<tr valign="top"><td><code>radius</code></td>
+<td>
+
+<p>If not missing, a vector of length <code>n</code> giving the
+radii at each point between <code>from</code> and <code>to</code>.
+If missing, the starting and ending points will be joined by
+a logarithmic spiral.
+</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+
+<p>If not missing, how many segments to use between the first and last point.  If missing, a value will be calculated based on the
+angle between starting and ending points as seen from the center.
+</p>
+</td></tr>
+<tr valign="top"><td><code>circle</code></td>
+<td>
+
+<p>How many segments would be used if the arc went completely around
+a circle.
+</p>
+</td></tr>
+<tr valign="top"><td><code>base</code></td>
+<td>
+
+<p>See Details below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+
+<p>Should the arcs be plotted, or returned as a matrix?
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Additional parameters to pass to <code><a href="3dobjects.html">points3d</a></code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If any of <code>from</code>, <code>to</code> or <code>center</code> is an n by 3
+matrix with n &gt; 1, multiple arcs will be drawn by recycling
+each of these parameters to the number of rows of the longest
+one.
+</p>
+<p>If the vector lengths of <code>from - center</code> and
+<code>to - center</code> differ, then instead of a spherical
+arc, the function will draw a segment of a logarithmic spiral joining
+the two points.
+</p>
+<p>By default, the arc is drawn along the shortest great 
+circle path from <code>from</code> to <code>to</code>, but the
+<code>base</code> parameter can be used to modify this.  
+If <code>base = 1</code> is used, the longer arc will be followed.
+Larger positive integer values will result in <code>base - 1</code>
+loops in that direction completely around the sphere.  
+Negative values will draw the curve in the same direction
+as the shortest arc, but with <code>abs(base)</code> full loops.
+It doesn't make much sense to ask for such loops unless
+the radii of <code>from</code> and <code>to</code> differ, because
+spherical arcs would overlap.
+Normally the <code>base</code> parameter is left at its default
+value of <code>0</code>.  
+</p>
+<p>When <code>base</code> is non-zero, the curve will be constructed in multiple
+pieces, between <code>from</code>, <code>to</code>, <code>-from</code> and <code>-to</code>,
+for as many steps as necessary.  If <code>n</code> is specified, it
+will apply to each of these pieces.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>plot = TRUE</code>, called mainly for the side effect of drawing arcs.  Invisibly
+returns the object ID of the collection of arcs. 
+</p>
+<p>If <code>plot = FALSE</code>, returns a 3 column matrix containing
+the points that would be drawn as the arcs.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+normalize &lt;- function(v) v/sqrt(sum(v^2))
+
+# These vectors all have the same length
+
+from &lt;- t(apply(matrix(rnorm(9), ncol = 3), 1, normalize))
+to &lt;- normalize(rnorm(3))
+center &lt;- c(0, 0, 0)
+
+open3d()
+spheres3d(center, radius = 1, col = "white", alpha = 0.2)
+
+arc3d(from, to, center, col = "red")
+arc3d(from, 2*to, center, col = "blue")
+
+text3d(rbind(from, to, center, 2*to), 
+       texts = c(paste0("from", 1:3), "to", "center", "2*to"),
+       depth_mask = FALSE, depth_test = "always")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

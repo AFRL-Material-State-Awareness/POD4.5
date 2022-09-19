@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Making SpatialPolygons objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.SpatialPolygons.PolygonsList {sp}"><tr><td>as.SpatialPolygons.PolygonsList {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Making SpatialPolygons objects</h2>
+
+<h3>Description</h3>
+
+<p>This function is used in making SpatialPolygons objects from other formats.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.SpatialPolygons.PolygonsList(Srl, proj4string=CRS(as.character(NA)))
+
+
+
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Srl</code></td>
+<td>
+<p>A list of Polygons objects</p>
+</td></tr>
+</table>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>proj4string</code></td>
+<td>
+<p>Object of class <code>"CRS"</code>;
+holding a valid proj4 string</p>
+</td></tr>
+</table>
+
+
+
+
+
+
+<h3>Value</h3>
+
+<p>The functions return a SpatialPolygons object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Bivand </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+grd &lt;- GridTopology(c(1,1), c(1,1), c(10,10))
+polys &lt;- as.SpatialPolygons.GridTopology(grd)
+plot(polys)
+text(coordinates(polys), labels=sapply(slot(polys, "polygons"), function(i) slot(i, "ID")), cex=0.6)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Predict Method for logistf Fits</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for predict.logistf {logistf}"><tr><td>predict.logistf {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Predict Method for logistf Fits</h2>
+
+<h3>Description</h3>
+
+<p>Obtains predictions from a fitted <code>logistf</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'logistf'
+predict(
+  object,
+  newdata,
+  type = c("link", "response", "terms"),
+  flic = FALSE,
+  se.fit = FALSE,
+  reference,
+  na.action = na.pass,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>A fitted object of class <code>logistf</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>newdata</code></td>
+<td>
+<p>Optionally, a data frame in which to look for variables with which to predict.
+If omitted, the fitted linear predictors are used.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>The type of prediction required. The default is on the scale of the linear predictors.
+The alternative <code>response</code> gives the predicted probabilities. Type <code>terms</code> returns a matrix with the fitted
+values of each term in the formula on the linear predictor scale.</p>
+</td></tr>
+<tr valign="top"><td><code>flic</code></td>
+<td>
+<p>If <code>TRUE</code>(default = <code>FALSE</code>), predictions are computed with intercept correction.</p>
+</td></tr>
+<tr valign="top"><td><code>se.fit</code></td>
+<td>
+<p>If <code>TRUE</code>(default = <code>FALSE</code>) standard errors are computed.</p>
+</td></tr>
+<tr valign="top"><td><code>reference</code></td>
+<td>
+<p>A named vector of reference values for each variable for <code>type="terms"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>Function determining what should be done with missing values in newdata. The default is to predict NA.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If <code>newdata</code> is omitted the predictions are based on the data used for the fit.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector or matrix of predictions.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.24.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Access the low level credential API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gitcreds_fill {gitcreds}"><tr><td>gitcreds_fill {gitcreds}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Access the low level credential API</h2>
+
+<h3>Description</h3>
+
+<p>These function are primarily for package authors, who want more
+control over the user interface, so they want to avoid calling
+<code><a href="gitcreds_get.html">gitcreds_get()</a></code> and <code><a href="gitcreds_get.html">gitcreds_set()</a></code> directly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gitcreds_fill(input, args = character(), dummy = TRUE)
+
+gitcreds_approve(creds, args = character())
+
+gitcreds_reject(creds, args = character())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>input</code></td>
+<td>
+<p>Named list to pass to <code style="white-space: pre;">git credential fill</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>args</code></td>
+<td>
+<p>Extra args, used <em>before</em> <code>fill</code>, to allow
+<code style="white-space: pre;">git -c ... fill</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>dummy</code></td>
+<td>
+<p>Whether to append a dummy credential helper to the
+list of credential helpers.</p>
+</td></tr>
+<tr valign="top"><td><code>creds</code></td>
+<td>
+<p><code>gitcreds</code> object (named list) to add or remove.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>gitcreds_fill()</code> calls <code style="white-space: pre;">git credential fill</code> to query git
+credentials.
+</p>
+<p><code>gitcreds_approve()</code> calls <code style="white-space: pre;">git credential approve</code>
+to add new credentials.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The standard output of the <code>git</code> command, line by line.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gitcreds_parse_output.html">gitcreds_parse_output()</a></code> to parse the output of
+<code>gitcreds_fill()</code>.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>gitcreds</em> version 0.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

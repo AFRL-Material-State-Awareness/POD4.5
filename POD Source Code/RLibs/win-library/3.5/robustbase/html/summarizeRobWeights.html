@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Print a Nice &quot;summary&quot; of Robustness Weights</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for summarizeRobWeights {robustbase}"><tr><td>summarizeRobWeights {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Print a Nice &quot;summary&quot; of Robustness Weights</h2>
+
+<h3>Description</h3>
+
+<p>Print a nice &ldquo;summary&rdquo; about a numeric vector of robustness
+weights.  Observations with weights around zero are marked as outliers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+summarizeRobWeights(w, digits = getOption("digits"),
+                    header = "Robustness weights:",
+ 	            eps = 0.1 / length(w), eps1 = 1e-3, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>w</code></td>
+<td>
+<p>numeric vector of robustness weigths.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>digits to be used for <code><a href="../../base/html/print.html">print</a></code>ing.</p>
+</td></tr>
+<tr valign="top"><td><code>header</code></td>
+<td>
+<p>string to be printed as header line.</p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+<p>numeric tolerance <i>eps</i>: values of <code>w</code>
+with <i>|w[i]| &lt; eps/n</i> are said to
+be outliers.</p>
+</td></tr>
+<tr valign="top"><td><code>eps1</code></td>
+<td>
+<p>numeric tolerance: values of <code>w</code> with
+<i>|1 - w[i]| &lt; eps1</i> are said to
+have weight &lsquo;<code>~= 1</code>&rsquo;.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>potential further arguments, passed to
+<code><a href="../../base/html/print.html">print</a>()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>none; the function is used for its side effect of printing.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Martin Maechler</p>
+
+
+<h3>See Also</h3>
+
+<p>The <code><a href="../../base/html/summary.html">summary</a></code> methods for <code><a href="lmrob.html">lmrob</a></code>
+and <code><a href="glmrob.html">glmrob</a></code> make use of <code>summarizeRobWeights()</code>.
+</p>
+<p>Our methods for <code><a href="../../stats/html/weights.html">weights</a>()</code>,
+<code><a href="weights.lmrob.html">weights.lmrob</a>(*, type="robustness")</code> and
+<code><a href="weights.lmrob.html">weights.glmrob</a>(*, type="robustness")</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+w &lt;- c(1,1,1,1,0,1,1,1,1,0,1,1,.9999,.99999, .5,.6,1e-12)
+summarizeRobWeights(w) # two outside ~= {0,1}
+summarizeRobWeights(w, eps1 = 5e-5)# now three outside {0,1}
+
+## See the summary(&lt;lmrob&gt;) outputs
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: 2-D Barycentric Lagrange Interpolation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for barylag2d {pracma}"><tr><td>barylag2d {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>2-D Barycentric Lagrange Interpolation</h2>
+
+<h3>Description</h3>
+
+<p>Two-dimensional barycentric Lagrange interpolation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+barylag2d(F, xn, yn, xf, yf)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>F</code></td>
+<td>
+<p>matrix representing values of a function in two dimensions.</p>
+</td></tr>
+<tr valign="top"><td><code>xn, yn</code></td>
+<td>
+<p>x- and y-coordinates of supporting nodes.</p>
+</td></tr>
+<tr valign="top"><td><code>xf, yf</code></td>
+<td>
+<p>x- and y-coordinates of an interpolating grid..</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Well-known Lagrange interpolation using barycentric coordinates, here
+extended to two dimensions. The function is completely vectorized.
+</p>
+<p>x-coordinates run downwards in F, y-coordinates to the right. That conforms
+to the usage in image or contour plots, see the example below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix of size <code>length(xf)</code>-by-<code>length(yf)</code> giving the interpolated
+values at al the grid points <code>(xf, yf)</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Copyright (c) 2004 Greg von Winckel of a Matlab function under BSD license;
+translation to R by Hans W Borchers with permission.
+</p>
+
+
+<h3>References</h3>
+
+<p>Berrut, J.-P., and L. Nick Trefethen (2004). &ldquo;Barycentric Lagrange
+Interpolation&rdquo;. SIAM Review, Vol. 46(3), pp.501&ndash;517.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="interp2.html">interp2</a></code>, <code><a href="barylag.html">barylag</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Example from R-help
+xn &lt;- c(4.05, 4.10, 4.15, 4.20, 4.25, 4.30, 4.35)
+yn &lt;- c(60.0, 67.5, 75.0, 82.5, 90.0)
+foo &lt;- matrix(c(
+        -137.8379, -158.8240, -165.4389, -166.4026, -166.2593,
+        -152.1720, -167.3145, -171.1368, -170.9200, -170.4605,
+        -162.2264, -172.5862, -174.1460, -172.9923, -172.2861,
+        -168.7746, -175.2218, -174.9667, -173.0803, -172.1853,
+        -172.4453, -175.7163, -174.0223, -171.5739, -170.5384,
+        -173.7736, -174.4891, -171.6713, -168.8025, -167.6662,
+        -173.2124, -171.8940, -168.2149, -165.0431, -163.8390),
+            nrow = 7, ncol = 5, byrow = TRUE)
+xf &lt;- c(4.075, 4.1)
+yf &lt;- c(63.75, 67.25)
+barylag2d(foo, xn, yn, xf, yf)
+#  -156.7964 -163.1753
+#  -161.7495 -167.0424
+
+# Find the minimum of the underlying function
+bar &lt;- function(xy) barylag2d(foo, xn, yn, xy[1], xy[2])
+optim(c(4.25, 67.5), bar)  # "Nelder-Mead"
+# $par
+# 4.230547 68.522747
+# $value
+# -175.7959
+
+## Not run: 
+# Image and contour plots
+image(xn, yn, foo)
+contour(xn, yn, foo, col="white", add = TRUE)
+xs &lt;- seq(4.05, 4.35, length.out = 51)
+ys &lt;- seq(60.0, 90.0, length.out = 51)
+zz &lt;- barylag2d(foo, xn, yn, xs, ys)
+contour(xs, ys, zz, nlevels = 20, add = TRUE)
+contour(xs, ys, zz, levels=c(-175, -175.5), add = TRUE)
+points(4.23, 68.52)
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

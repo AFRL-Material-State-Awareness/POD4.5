@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Robust Location-Free Scale Estimate More Efficient than MAD</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Qn {robustbase}"><tr><td>Qn {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Robust Location-Free Scale Estimate More Efficient than MAD</h2>
+
+<h3>Description</h3>
+
+<p>Compute the robust scale estimator <i>Qn</i>, an efficient
+alternative to the MAD.
+</p>
+<p>By default, <i>Qn(x1, .., xn)</i> is the <i>k</i>-th
+order statistic (a quantile) of the <code>choose(n, 2)</code> absolute
+differences <i>abs(x[i] - x[j])</i>,
+(for <i>1 &lt;= i &lt; j &lt;= n</i>),
+where by default (originally only possible value) <i>k = choose(n\%/\% 2 + 1, 2)</i>
+which is about the first quartile (25% quantile) of these
+pairwise differences.  See the references for more.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Qn(x, constant = NULL, finite.corr = is.null(constant) &amp;&amp; missing(k),
+   na.rm = FALSE, k = choose(n %/% 2 + 1, 2), warn.finite.corr = TRUE)
+
+s_Qn(x, mu.too = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector of observations.</p>
+</td></tr>
+<tr valign="top"><td><code>constant</code></td>
+<td>
+<p>number by which the result is multiplied; the default
+achieves consistency for normally distributed data.  Note that until
+Nov. 2010, &ldquo;thanks&rdquo; to a typo in the very first papers, a slightly
+wrong default constant, 2.2219, was used instead of the correct one
+which is equal to <code>1 / (sqrt(2) * qnorm(5/8))</code> (as mentioned
+already on p.1277, after (3.7) in Rousseeuw and Croux (1993)).
+</p>
+<p>If you need the old slightly off version for historical
+reproducibility, you can use <code>Qn.old()</code>.
+</p>
+<p>Note that the relative difference is only about 1 in 1000, and that
+the correction should not affect the finite sample corrections for
+<i>n &lt;= 9</i>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>finite.corr</code></td>
+<td>
+<p>logical indicating if the finite sample bias
+correction factor should be applied.  Defaults to <code>TRUE</code> unless
+<code>constant</code> is specified.  Note the for non-default <code>k</code>, the
+consistency <code>constant</code> already depends on <code>n</code> leading to
+<em>some</em> finite sample correction, but no simulation-based
+small-<code>n</code> correction factors are available.</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>logical specifying if missing values (<code><a href="../../base/html/NA.html">NA</a></code>)
+should be removed from <code>x</code> before further computation.  If false
+as by default, and if there are <code>NA</code>s, i.e., <code>if(anyNA(x))</code>,
+the result will be <code>NA</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>integer, typically half of n, specifying the &ldquo;quantile&rdquo;, i.e., rather the
+order statistic that <code>Qn()</code> should return; for the Qn() proper,
+this has been hard wired to <code>choose(n%/%2 +1, 2)</code>, i.e.,
+<i>floor(n/2) +1</i>.  Choosing a large <code>k</code> is less robust but
+allows to get non-zero results in case the default <code>Qn()</code> is zero.</p>
+</td></tr>
+<tr valign="top"><td><code>warn.finite.corr</code></td>
+<td>
+<p>logical indicating if a <code><a href="../../base/html/warning.html">warning</a></code>
+should be signalled when <code>k</code> is non-default, in which case specific
+small-<i>n</i> correction is not yet provided.</p>
+</td></tr>
+<tr valign="top"><td><code>mu.too</code></td>
+<td>
+<p>logical indicating if the <code><a href="../../stats/html/median.html">median</a>(x)</code> should
+also be returned for <code>s_Qn()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>potentially further arguments for <code>s_Qn()</code> passed to
+<code>Qn()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>As the (default, consistency) constant needed to be corrected,
+the finite sample correction has been based on a much more extensive
+simulation, and on a 3rd or 4th degree polynomial model in <i>1/n</i>
+for odd or even n, respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>Qn()</code> returns a number, the <i>Qn</i> robust scale
+estimator, scaled to be consistent for <i>&sigma;^2</i> and
+i.i.d. Gaussian observations, optionally bias corrected for finite
+samples.
+</p>
+<p><code>s_Qn(x, mu.too=TRUE)</code> returns a length-2 vector with location
+(<i>&mu;</i>) and scale; this is typically only useful for
+<code><a href="covOGK.html">covOGK</a>(*, sigmamu = s_Qn)</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Original Fortran code:
+Christophe Croux and Peter Rousseeuw <a href="mailto:rousse@wins.uia.ac.be">rousse@wins.uia.ac.be</a>.
+<br />
+Port to C and R: Martin Maechler, <a href="mailto:maechler@R-project.org">maechler@R-project.org</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Rousseeuw, P.J. and Croux, C. (1993)
+Alternatives to the Median Absolute Deviation,
+<em>Journal of the American Statistical Association</em> <b>88</b>, 1273&ndash;1283.
+doi: <a href="https://doi.org/10.2307/2291267">10.2307/2291267</a>
+
+</p>
+<p>Christophe Croux and Peter J. Rousseeuw (1992)
+A class of high-breakdown scale estimators based on subranges ,
+<em>Communications in Statistics - Theory and Methods</em> <b>21</b>, 1935&ndash;1951;
+doi: <a href="https://doi.org/10.1080/03610929208830889">10.1080/03610929208830889</a>
+</p>
+<p>Christophe Croux and Peter J. Rousseeuw (1992)
+Time-Efficient Algorithms for Two Highly Robust Estimators of Scale,
+<em>Computational Statistics, Vol. 1</em>, ed. Dodge and Whittaker,
+Physica-Verlag Heidelberg, 411&ndash;428; available via Springer Link.
+
+
+</p>
+<p>About the typo in the <code>constant</code>:<br />
+Christophe Croux (2010)
+Private e-mail, Fri Jul 16, w/ Subject
+<em>Re: Slight inaccuracy of Qn implementation ......</em>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/mad.html">mad</a></code> for the &lsquo;most robust&rsquo; but much less efficient
+scale estimator; <code><a href="Sn.html">Sn</a></code> for a similar faster but less
+efficient alternative.  Finally, <code><a href="scaleTau2.html">scaleTau2</a></code> which some
+consider &ldquo;uniformly&rdquo; better than Qn or competitors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+set.seed(153)
+x &lt;- sort(c(rnorm(80), rt(20, df = 1)))
+s_Qn(x, mu.too = TRUE)
+Qn(x, finite.corr = FALSE)
+
+## A simple pure-R version of Qn() -- slow and memory-rich for large n: O(n^2)
+Qn0R &lt;- function(x, k = choose(n %/% 2 + 1, 2)) { 
+    n &lt;- length(x &lt;- sort(x))
+    if(n == 0) return(NA) else if(n == 1) return(0.)
+    stopifnot(is.numeric(k), k == as.integer(k), 1 &lt;= k, k &lt;= n*(n-1)/2)
+    m &lt;- outer(x,x,"-")# abs not needed as x[] is sorted
+    sort(m[lower.tri(m)], partial = k)[k]
+}
+(Qx1 &lt;- Qn(x, constant=1)) # 0.5498463
+## the C-algorithm "rounds" to 'float' single precision ..
+stopifnot(all.equal(Qx1, Qn0R(x), tol = 1e-6))
+
+
+(qn &lt;- Qn(c(1:4, 10, Inf, NA), na.rm=TRUE))
+stopifnot(is.finite(qn), all.equal(4.075672524, qn, tol=1e-10))
+
+## -- compute for different 'k' :
+
+n &lt;- length(x) # = 100 here
+(k0 &lt;- choose(floor(n/2) + 1, 2)) # 51*50/2 == 1275
+stopifnot(identical(Qx1, Qn(x, constant=1, k=k0)))
+nn2 &lt;- n*(n-1)/2
+all.k &lt;- 1:nn2
+system.time(Qss &lt;- sapply(all.k, function(k) Qn(x, 1, k=k)))
+system.time(Qs  &lt;- Qn  (x, 1, k = all.k))
+system.time(Qs0 &lt;- Qn0R(x,    k = all.k) )
+stopifnot(exprs = {
+   Qs[1]   == min(diff(x))
+   Qs[nn2] == diff(range(x))
+   all.equal(Qs,  Qss, tol = 1e-15) # even exactly
+   all.equal(Qs0, Qs, tol = 1e-7) # see 2.68e-8, as Qn() C-code rounds to (float)
+})
+
+plot(2:nn2, Qs[-1], type="b", log="y", main = "Qn(*, k),  k = 2..n(n-1)/2")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

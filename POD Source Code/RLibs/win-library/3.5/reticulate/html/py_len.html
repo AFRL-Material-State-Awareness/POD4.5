@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Length of Python object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_len {reticulate}"><tr><td>py_len {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Length of Python object</h2>
+
+<h3>Description</h3>
+
+<p>Get the length of a Python object. This is equivalent to calling
+the Python builtin <code>len()</code> function on the object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_len(x, default = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A Python object.</p>
+</td></tr>
+<tr valign="top"><td><code>default</code></td>
+<td>
+<p>The default length value to return, in the case that
+the associated Python object has no <code style="white-space: pre;">__len__</code> method. When <code>NULL</code>
+(the default), an error is emitted instead.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Not all Python objects have a defined length. For objects without a defined
+length, calling <code>py_len()</code> will throw an error. If you'd like to instead
+infer a default length in such cases, you can set the <code>default</code> argument
+to e.g. <code>1L</code>, to treat Python objects without a <code style="white-space: pre;">__len__</code> method as having
+length one.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The length of the object, as a numeric value.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

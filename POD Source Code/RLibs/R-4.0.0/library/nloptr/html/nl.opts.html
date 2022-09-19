@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Setting NL Options</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nl.opts {nloptr}"><tr><td>nl.opts {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Setting NL Options</h2>
+
+<h3>Description</h3>
+
+<p>Sets and changes the NLOPT options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nl.opts(optlist = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>optlist</code></td>
+<td>
+<p>list of options, see below.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The following options can be set (here with default values):
+</p>
+<p><code>stopval = -Inf, # stop minimization at this value</code><br /> <code>xtol_rel =
+1e-6, # stop on small optimization step</code><br /> <code>maxeval = 1000, # stop on
+this many function evaluations</code><br /> <code>ftol_rel = 0.0, # stop on change
+times function value</code><br /> <code>ftol_abs = 0.0, # stop on small change of
+function value</code><br /> <code>check_derivatives = FALSE</code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>returns a list with default and changed options.
+</p>
+
+
+<h3>Note</h3>
+
+<p>There are more options that can be set for solvers in NLOPT. These
+cannot be set through their wrapper functions. To see the full list of
+options and algorithms, type <code>nloptr.print.options()</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hans W. Borchers
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+nl.opts(list(xtol_rel = 1e-8, maxeval = 2000))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

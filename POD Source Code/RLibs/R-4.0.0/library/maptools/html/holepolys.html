@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Hisaji Ono's lake/hole problem</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gpcholes {maptools}"><tr><td>gpcholes {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Hisaji Ono's lake/hole problem</h2>
+
+<h3>Description</h3>
+
+<p>How to plot polygons with holes - holes are encoded by coordinates going anticlockwise, and overplotting is avoided by re-ordering the order in which polygons are plotted.
+</p>
+<p>This example is retained for historical interest only, other solutions are present in the sp package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>data(gpcholes)</pre>
+
+
+<h3>Details</h3>
+
+<p>&quot;Date: Tue, 11 May 2004 12:54:20 +0900
+From: Hisaji ONO 
+To: r-help
+</p>
+<p>I've tried to create a polygon with one hole by gpclib using following
+example script.
+</p>
+<p>holepoly &lt;- read.polyfile(system.file(&quot;poly-ex/hole-poly.txt&quot;, package=&quot;gpclib&quot;), nohole = FALSE)
+area.poly(holepoly)
+plot(holepoly,poly.args=list(col=&quot;red&quot;,border=&quot;blue&quot;))
+</p>
+<p>And I noticed plot function couldn't draw polygons with holes correctly.
+</p>
+<p>Does anyone know how to solve this situation?&quot;
+</p>
+<p>*(h1pl has reversed the y component of polygon 1, to make its ring direction clockwise, h2pl reverses the order of the two polygons in holepoly1@pts)*
+</p>
+
+
+<h3>Source</h3>
+
+<p>Data file included in &quot;gpclib&quot; package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(gpcholes)
+opar &lt;- par(mfrow=c(1,2))
+plot(SpatialPolygons(list(h2pl)), col="red", pbg="white", border="blue")
+plot(SpatialPolygons(list(h1pl)), col="red", pbg="white", border="blue")
+par(opar)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

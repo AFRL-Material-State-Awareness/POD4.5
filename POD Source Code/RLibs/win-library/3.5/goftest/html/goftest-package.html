@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Classical Goodness-of-Fit Tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for goftest-package {goftest}"><tr><td>goftest-package {goftest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Classical Goodness-of-Fit Tests
+</h2>
+
+<h3>Description</h3>
+
+<p>Cramer-von Mises
+and Anderson-Darling tests of goodness-of-fit
+for continuous univariate distributions, using modern
+algorithms to compute the null distributions.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The <span class="pkg">goftest</span> package contains implementations of the
+classical Cramer-von Mises
+and Anderson-Darling tests of goodness-of-fit
+for continuous univariate distributions.
+</p>
+<p>The Cramer-von Mises test
+is performed by <code><a href="cvm.test.html">cvm.test</a></code>. The cumulative distribution
+function of the null distribution of the test statistic
+is computed by <code><a href="pCvM.html">pCvM</a></code>
+using the algorithm of Csorgo
+and Faraway (1996). The quantiles are computed by <code><a href="pCvM.html">qCvM</a></code>
+by root-finding.
+</p>
+<p>The Anderson-Darling test is performed by 
+<code><a href="ad.test.html">ad.test</a></code>. The cumulative distribution
+function of the null distribution of the test statistic
+is computed by <code><a href="pAD.html">pAD</a></code>
+using the algorithm of Marsaglia and Marsaglia (2004).
+The quantiles are computed by <code><a href="pAD.html">qAD</a></code> by root-finding.
+</p>
+<p>By default, each test assumes that the parameters of the null
+distribution are known (a <em>simple</em> null hypothesis).
+If the parameters were estimated (calculated from the data)
+then the user should set <code>estimated=TRUE</code> which uses
+the method of Braun (1980) to adjust for the effect of 
+estimating the parameters from the data. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adrian Baddeley, Julian Faraway, John Marsaglia, George Marsaglia.
+</p>
+<p>Maintainer: Adrian Baddeley &lt;adrian.baddeley@uwa.edu.au&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Braun, H. (1980)
+A simple method for testing goodness-of-fit in the presence of
+nuisance parameters.
+<em>Journal of the Royal Statistical Society</em> <b>42</b>, 53&ndash;63.
+</p>
+<p>Csorgo, S. and Faraway, J.J. (1996)
+The exact and asymptotic distributions of
+Cramer-von Mises statistics.
+<em>Journal of the Royal Statistical Society, Series B</em>
+<b>58</b>, 221&ndash;234.
+</p>
+<p>Marsaglia, G. and Marsaglia, J. (2004)
+Evaluating the Anderson-Darling Distribution.
+<em>Journal of Statistical Software</em> <b>9</b> (2), 1&ndash;5.
+February 2004. 
+doi: <a href="https://doi.org/10.18637/jss.v009.i02">10.18637/jss.v009.i02</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/ks.test.html">ks.test</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  x &lt;- rnorm(30, mean=2, sd=1)
+  # default behaviour: parameters fixed: simple null hypothesis
+  cvm.test(x, "pnorm", mean=2, sd=1)
+  ad.test(x, "pnorm", mean=2, sd=1)
+  # parameters estimated: composite null hypothesis
+  mu &lt;- mean(x)
+  sigma &lt;- sd(x)
+  cvm.test(x, "pnorm", mean=mu, sd=sigma, estimated=TRUE)
+  ad.test(x, "pnorm", mean=mu, sd=sigma, estimated=TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>goftest</em> version 1.2-3 <a href="00Index.html">Index</a>]</div>
+</body></html>

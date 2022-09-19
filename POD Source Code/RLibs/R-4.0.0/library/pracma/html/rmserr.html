@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Accuracy Measures</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rmserr {pracma}"><tr><td>rmserr {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Accuracy Measures
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates different accuracy measures, most prominently RMSE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rmserr(x, y, summary = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>two vectors of real numbers</p>
+</td></tr>
+<tr valign="top"><td><code>summary</code></td>
+<td>
+<p>logical; should a summary be printed to the screen?</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calculates six different measures of accuracy for two given vectors or
+sequences of real numbers:
+</p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: left;">
+  MAE  </td><td style="text-align: left;"> Mean Absolute Error</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  MSE  </td><td style="text-align: left;"> Mean Squared Error</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  RMSE </td><td style="text-align: left;"> Root Mean Squared Error</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  MAPE </td><td style="text-align: left;"> Mean Absolute Percentage Error</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  LMSE </td><td style="text-align: left;"> Normalized Mean Squared Error</td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+  rSTD </td><td style="text-align: left;"> relative Standard Deviation
+  </td>
+</tr>
+
+</table>
+
+
+
+<h3>Value</h3>
+
+<p>Returns a list with different accuracy measures.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Often used in Data Mining for <em>predicting</em> the accuracy of predictions.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gentle, J. E. (2009). Computational Statistics, section 10.3.
+Springer Science+Business Media LCC, New York.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- rep(1, 10)
+y &lt;- rnorm(10, 1, 0.1)
+rmserr(x, y, summary = TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

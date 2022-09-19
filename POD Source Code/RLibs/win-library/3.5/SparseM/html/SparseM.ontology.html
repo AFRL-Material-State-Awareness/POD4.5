@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sparse Matrix Class</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SparseM.ontology {SparseM}"><tr><td>SparseM.ontology {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Sparse Matrix Class</h2>
+
+<h3>Description</h3>
+
+<p>This group of functions evaluates and coerces changes in class structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'matrix.csr'
+as(x, nrow = 1, ncol = 1, eps = .Machine$double.eps, ...)
+## S3 method for class 'matrix.csc'
+as(x, nrow = 1, ncol = 1, eps = .Machine$double.eps, ...)
+## S3 method for class 'matrix.ssr'
+as(x, nrow = 1, ncol = 1, eps = .Machine$double.eps, ...)
+## S3 method for class 'matrix.ssc'
+as(x, nrow = 1, ncol = 1, eps = .Machine$double.eps, ...)
+## S3 method for class 'matrix.csr'
+is(x, ...)
+## S3 method for class 'matrix.csc'
+is(x, ...)
+## S3 method for class 'matrix.ssr'
+is(x, ...)
+## S3 method for class 'matrix.ssc'
+is(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>is a matrix, or vector object,  of either dense or sparse form</p>
+</td></tr>
+<tr valign="top"><td><code>nrow</code></td>
+<td>
+<p>number of rows of matrix </p>
+</td></tr>
+<tr valign="top"><td><code>ncol</code></td>
+<td>
+<p>number of columns of matrix </p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+<p>A tolerance parameter:  elements of x such that abs(x) &lt; eps set to zero.
+This argument is only relevant when coercing matrices from dense to sparse form. Defaults to
+<code>eps = .Machine$double.eps</code> </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function <code>matrix.csc</code> acts like <code>matrix</code> to coerce a vector object to
+a sparse matrix object of class <code>matrix.csr</code>.  
+This aspect of the code is in the process of conversion from S3 to S4 classes.
+For the most part the S3 syntax prevails.  An exception is the code to
+coerce vectors to diagonal matrix form which uses <code>as(v,"matrix.diag.csr"</code>.
+The generic functions <code>as.matrix.xxx</code> coerce a matrix <code>x</code> into 
+a matrix of storage class <code>matrix.xxx</code>. The argument matrix <code>x</code>
+may be of conventional dense form, or of any of the four supported 
+classes:  <code>matrix.csr, matrix.csc, matrix.ssr, matrix.ssc</code>.  
+The generic functions <code>is.matrix.xxx</code> evaluate whether the  
+argument is of class <code>matrix.xxx</code>.  The function
+<code>as.matrix</code> transforms a matrix of any sparse class into conventional
+dense form.  The primary storage class for sparse matrices is the
+compressed sparse row <code>matrix.csr</code> class.
+An <em>n</em> by <em>m</em> matrix <em>A</em> with real elements <i>a_{ij}</i>, 
+stored in <code>matrix.csr</code> format consists of three arrays:
+</p>
+
+<ul>
+<li> <p><code>ra</code>: a real array of <em>nnz</em> elements containing the non-zero
+elements of <em>A</em>, stored in row order. Thus, if <em>i&lt;j</em>, all elements of row <em>i</em>
+precede elements from row <em>j</em>. The order of elements within the rows is immaterial.
+</p>
+</li>
+<li> <p><code>ja</code>: an integer array of <em>nnz</em> elements containing the column
+indices of the elements stored in <code>ra</code>.
+</p>
+</li>
+<li> <p><code>ia</code>: an integer array of <em>n+1</em> elements containing pointers to
+the beginning of each row in the arrays <code>ra</code> and <code>ja</code>. Thus
+<code>ia[i]</code> indicates the position in the arrays <code>ra</code> and
+<code>ja</code> where the <em>i</em>th row begins. The last, <em>(n+1)</em>st, element of
+<code>ia</code> indicates where the <em>n+1</em> row would start, if it existed.
+</p>
+</li></ul>
+
+<p>The compressed sparse column class  <code>matrix.csc</code> is defined in
+an analogous way, as are  the <code>matrix.ssr</code>, symmetric sparse row, and
+<code>matrix.ssc</code>, symmetric sparse column classes.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>as.matrix.ssr</code> and <code>as.matrix.ssc</code> should ONLY be used with 
+symmetric matrices.
+</p>
+<p><code>as.matrix.csr(x)</code>, when <code>x</code> is an object of class <code>matrix.csr.chol</code>
+(that is, an object returned by a call to <code>chol(a)</code> when <code>a</code> 
+is an object of class <code>matrix.csr</code> or <code>matric.csc</code>),
+by default returns an upper triangular matrix, which
+is <em>not</em> consistent with the result of <code>chol</code> in the <span class="pkg">base</span>
+package.  To get an lower triangular <code>matric.csr</code> matrix, use either
+<code>as.matrix.csr(x, upper.tri = FALSE)</code> or
+<code>t(as.matrix.csr(x))</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R and Ng, P. (2002).  SparseM:  A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>,<br />
+<a href="http://www.econ.uiuc.edu/~roger/research/home.html">http://www.econ.uiuc.edu/~roger/research/home.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>SparseM.hb</code> for handling Harwell-Boeing sparse matrices.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n1 &lt;- 10
+p &lt;- 5
+a &lt;- rnorm(n1*p)
+a[abs(a)&lt;0.5] &lt;- 0
+A &lt;- matrix(a,n1,p)
+B &lt;- t(A)%*%A
+A.csr &lt;- as.matrix.csr(A)
+A.csc &lt;- as.matrix.csc(A)
+B.ssr &lt;- as.matrix.ssr(B)
+B.ssc &lt;- as.matrix.ssc(B)
+is.matrix.csr(A.csr) # -&gt; TRUE
+is.matrix.csc(A.csc) # -&gt; TRUE
+is.matrix.ssr(B.ssr) # -&gt; TRUE
+is.matrix.ssc(B.ssc) # -&gt; TRUE
+as.matrix(A.csr)
+as.matrix(A.csc)
+as.matrix(B.ssr)
+as.matrix(B.ssc)
+as.matrix.csr(rep(0,9),3,3) #sparse matrix of all zeros
+as(4,"matrix.diag.csr") #identity matrix of dimension 4
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

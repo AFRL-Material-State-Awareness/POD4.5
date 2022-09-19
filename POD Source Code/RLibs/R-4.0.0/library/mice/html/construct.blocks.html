@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Construct blocks from 'formulas' and 'predictorMatrix'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for construct.blocks {mice}"><tr><td>construct.blocks {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Construct blocks from <code>formulas</code> and <code>predictorMatrix</code></h2>
+
+<h3>Description</h3>
+
+<p>This helper function attempts to find blocks of variables in the
+specification of the <code>formulas</code> and/or <code>predictorMatrix</code>
+objects. Blocks specified by <code>formulas</code> may consist of
+multiple variables. Blocks specified by <code>predictorMatrix</code> are
+assumed to consist of single variables. Any duplicates in names are
+removed, and the formula specification is preferred.
+<code>predictorMatrix</code> and <code>formulas</code>. When both arguments
+specify models for the same block, the model for the
+<code>predictMatrix</code> is removed, and priority is given to the
+specification given in <code>formulas</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+construct.blocks(formulas = NULL, predictorMatrix = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formulas</code></td>
+<td>
+<p>A named list of formula's, or expressions that
+can be converted into formula's by <code>as.formula</code>. List elements
+correspond to blocks. The block to which the list element applies is
+identified by its name, so list names must correspond to block names.
+The <code>formulas</code> argument is an alternative to the
+<code>predictorMatrix</code> argument that allows for more flexibility in
+specifying imputation models, e.g., for specifying interaction terms.</p>
+</td></tr>
+<tr valign="top"><td><code>predictorMatrix</code></td>
+<td>
+<p>A numeric matrix of <code>length(blocks)</code> rows
+and <code>ncol(data)</code> columns, containing 0/1 data specifying
+the set of predictors to be used for each target column.
+Each row corresponds to a variable block, i.e., a set of variables
+to be imputed. A value of <code>1</code> means that the column
+variable is used as a predictor for the target block (in the rows).
+By default, the <code>predictorMatrix</code> is a square matrix of <code>ncol(data)</code>
+rows and columns with all 1's, except for the diagonal.
+Note: For two-level imputation models (which have <code>"2l"</code> in their names)
+other codes (e.g, <code>2</code> or <code>-2</code>) are also allowed.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A <code>blocks</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="make.blocks.html">make.blocks</a></code>, <code><a href="name.blocks.html">name.blocks</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+form &lt;- name.formulas(list(bmi + hyp ~ chl + age, chl ~ bmi))
+pred &lt;- make.predictorMatrix(nhanes[, c("age", "chl")])
+construct.blocks(formulas = form, pred = pred)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

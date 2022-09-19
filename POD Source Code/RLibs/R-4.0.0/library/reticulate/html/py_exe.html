@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Python executable</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_exe {reticulate}"><tr><td>py_exe {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Python executable</h2>
+
+<h3>Description</h3>
+
+<p>Get the path to the Python executable that <code>reticulate</code> has been configured
+to use. If Python has already been initialized, then <code>reticulate</code> will
+choose the currently-active copy of Python.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_exe()
+</pre>
+
+
+<h3>Details</h3>
+
+<p>This can occasionally be useful if you'd like to interact with Python (or its
+modules) via a subprocess; for example you might choose to install a package
+with <code>pip</code>:</p>
+<pre>system2(py_exe(), c("-m", "pip", "install", "numpy"))
+</pre>
+<p>and so you can also have greater control over how these modules are invoked.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The path to the Python executable <code>reticulate</code> has been configured
+to use.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

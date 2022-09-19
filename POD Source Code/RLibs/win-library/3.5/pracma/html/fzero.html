@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Root Finding Algorithm</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fzero {pracma}"><tr><td>fzero {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Root Finding Algorithm
+</h2>
+
+<h3>Description</h3>
+
+<p>Find root of continuous function of one variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fzero(fun, x, maxiter = 500, tol = 1e-12, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>function whose root is sought.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a point near the root or an interval giving end points.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>fzero</code> tries to find a zero of <code>f</code> near <code>x</code>, if <code>x</code>
+is a scalar. Expands the interval until different signs are found at the
+endpoints or the maximum number of iterations is exceeded.
+If <code>x</code> is a vector of length two, <code>fzero</code> assumes <code>x</code> is
+an interval where the sign of <code>x[1]</code> differs from the sign of
+<code>x[1]</code>. An error occurs if this is not the case.
+</p>
+<p>&ldquo;This is essentially the ACM algorithm 748. The structure of the algorithm
+has been transformed non-trivially: it implement here a FSM version using
+one interior point determination and one bracketing per iteration, thus
+reducing the number of temporary variables and simplifying the structure.&rdquo;
+</p>
+<p>This approach will not find zeroes of quadratic order.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>fzero</code> returns a list with
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>location of the root.</p>
+</td></tr>
+<tr valign="top"><td><code>fval</code></td>
+<td>
+<p>function value at the root.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p><code>fzero</code> mimics the Matlab function of the same name, but is translated
+from Octave's <code>fzero</code> function, copyrighted (c) 2009 by Jaroslav Hajek.
+</p>
+
+
+<h3>References</h3>
+
+<p>Alefeld, Potra and Shi (1995). Enclosing Zeros of Continuous Functions.
+ACM Transactions on Mathematical Software, Vol. 21, No. 3.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/uniroot.html">uniroot</a></code>, <code><a href="brentdekker.html">brent</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+fzero(sin, 3)                    # 3.141593
+fzero(cos,c(1, 2))               # 1.570796
+fzero(function(x) x^3-2*x-5, 2)  # 2.094551
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

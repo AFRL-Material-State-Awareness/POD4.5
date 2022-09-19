@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Preprocessing Algorithm for Quantile Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq.fit.pfn {quantreg}"><tr><td>rq.fit.pfn {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Preprocessing Algorithm for Quantile Regression</h2>
+
+<h3>Description</h3>
+
+<p>A preprocessing algorithm for the Frisch Newton algorithm 
+for quantile regression. This is one possible method for rq().</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rq.fit.pfn(x, y, tau=0.5, Mm.factor=0.8, max.bad.fixups=3, eps=1e-06)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>design matrix usually supplied via rq() </p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p> response vector usually supplied via rq() </p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+<p> quantile of interest </p>
+</td></tr>
+<tr valign="top"><td><code>Mm.factor</code></td>
+<td>
+<p>  constant to determine sub sample size m</p>
+</td></tr>
+<tr valign="top"><td><code>max.bad.fixups</code></td>
+<td>
+<p> number of allowed mispredicted signs of residuals </p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+<p> convergence tolerance </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Preprocessing algorithm to reduce the effective sample size for QR
+problems with (plausibly) iid samples.  The preprocessing relies
+on subsampling of the original data, so situations in which the
+observations are not plausibly iid, are likely to cause problems.
+The tolerance eps may be relaxed somewhat.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of type rq
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Koenker &lt;rkoenker@uiuc.edu&gt;</p>
+
+
+<h3>References</h3>
+
+<p> Portnoy and Koenker, Statistical Science, (1997) 279-300</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="rq.html">rq</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

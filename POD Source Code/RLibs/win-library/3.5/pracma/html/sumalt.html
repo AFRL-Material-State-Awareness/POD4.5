@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Alternating Series Acceleration</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for sumalt {pracma}"><tr><td>sumalt {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Alternating Series Acceleration
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the value of an (infinite) alternating sum applying an
+acceleration method found by Cohen et al.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+sumalt(f_alt, n)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f_alt</code></td>
+<td>
+<p>a funktion of <code>k=0..Inf</code> that returns element
+<code>a_k</code> of the infinite alternating series.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>number of elements of the series used for calculating.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the sum of an alternating series (whose entries are strictly
+decreasing), applying the acceleration method developped by H. Cohen,
+F. Rodriguez Villegas, and Don Zagier.
+</p>
+<p>For example, to compute the Leibniz series (see below) to 15 digits 
+exactly, <code>10^15</code> summands of the series will be needed. This
+accelleration approach here will only need about 20 of them!
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an approximation of the series value.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Implemented by Hans W Borchers.
+</p>
+
+
+<h3>References</h3>
+
+<p>Henri Cohen, F. Rodriguez Villegas, and Don Zagier.
+Convergence Acceleration of Alternating Series.
+Experimental Mathematics, Vol. 9 (2000).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="aitken.html">aitken</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Beispiel: Leibniz-Reihe 1 - 1/3 + 1/5 - 1/7 +- ...
+a_pi4 &lt;- function(k) (-1)^k / (2*k + 1)
+sumalt(a_pi4, 20)  # 0.7853981633974484 = pi/4 + eps()
+
+# Beispiel: Van Wijngaarden transform needs 60 terms
+n &lt;- 60; N &lt;- 0:n
+a &lt;- cumsum((-1)^N / (2*N+1))
+for (i in 1:n) {
+    a &lt;- (a[1:(n-i+1)] + a[2:(n-i+2)]) / 2
+}
+a - pi/4  # 0.7853981633974483
+
+# Beispiel: 1 - 1/2^2 + 1/3^2 - 1/4^2 +- ...
+b_alt &lt;- function(k) (-1)^k / (k+1)^2
+sumalt(b_alt, 20)  # 0.8224670334241133 = pi^2/12 + eps()
+
+## Not run: 
+# Dirichlet eta() function: eta(s) = 1/1^s - 1/2^s + 1/3^s -+ ...
+  eta_ &lt;- function(s) {
+    eta_alt &lt;- function(k) (-1)^k / (k+1)^s
+    sumalt(eta_alt, 30)
+  }
+  eta_(1)                       # 0.6931471805599453 = log(2)
+  abs(eta_(1+1i) - eta(1+1i))   # 1.24e-16
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

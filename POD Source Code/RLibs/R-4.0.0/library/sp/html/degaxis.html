@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: axis with degrees</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for degAxis {sp}"><tr><td>degAxis {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> axis with degrees </h2>
+
+<h3>Description</h3>
+
+<p>draw axes on a plot using degree symbols in numbers
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+degAxis(side, at, labels, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>side</code></td>
+<td>
+<p>integer; see <a href="../../graphics/html/axis.html">axis</a></p>
+</td></tr>
+<tr valign="top"><td><code>at</code></td>
+<td>
+<p>numeric; if missing, <a href="../../graphics/html/axTicks.html">axTicks</a> is called for nice values; see <a href="../../graphics/html/axis.html">axis</a></p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p>character; if omitted labels are constructed with degree symbols, ending
+in N/S/E/W; in case of negative degrees, sign is reversed and S or W is added; see <a href="../../graphics/html/axis.html">axis</a></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>passed to the actual <a href="../../graphics/html/axis.html">axis</a> call</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> axis is plotted on current graph </p>
+
+
+<h3>Note</h3>
+
+<p>decimal degrees are used if variation is small, instead of minutes and seconds</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xy = cbind(x = 2 * runif(100) - 1, y = 2 * runif(100) - 1)
+plot(SpatialPoints(xy, proj4string = CRS("+proj=longlat +ellps=WGS84")),xlim=c(-1,1),ylim=c(-1,1))
+degAxis(1)
+degAxis(2, at = c(-1,-0.5,0,0.5,1))
+#
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coerce from integer64</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.character.integer64 {bit64}"><tr><td>as.character.integer64 {bit64}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Coerce from integer64
+</h2>
+
+<h3>Description</h3>
+
+<p>Methods to coerce integer64 to other atomic types. 
+'as.bitstring' coerces to a human-readable bit representation (strings of zeroes and ones). 
+The methods <code><a href="../../base/html/format.html">format</a></code>, <code><a href="../../base/html/character.html">as.character</a></code>, <code><a href="../../base/html/double.html">as.double</a></code>,
+<code><a href="../../base/html/logical.html">as.logical</a></code>, <code><a href="../../base/html/integer.html">as.integer</a></code> do what you would expect.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ as.bitstring(x, ...)
+ ## S3 method for class 'integer64'
+as.bitstring(x, ...)
+ ## S3 method for class 'bitstring'
+print(x, ...)
+ ## S3 method for class 'integer64'
+as.character(x, ...)
+ ## S3 method for class 'integer64'
+as.double(x, keep.names = FALSE, ...)
+ ## S3 method for class 'integer64'
+as.integer(x, ...)
+ ## S3 method for class 'integer64'
+as.logical(x, ...)
+ ## S3 method for class 'integer64'
+as.factor(x)
+ ## S3 method for class 'integer64'
+as.ordered(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> an integer64 vector </p>
+</td></tr>
+<tr valign="top"><td><code>keep.names</code></td>
+<td>
+<p> FALSE, set to TRUE to keep a names vector </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> further arguments to the <code><a href="../../base/html/UseMethod.html">NextMethod</a></code> </p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>as.bitstring</code> returns a string of class 'bitstring'. <br />
+The other methods return atomic vectors of the expected types
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel &lt;Jens.Oehlschlaegel@truecluster.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="as.integer64.character.html">as.integer64.character</a></code> <code><a href="bit64-package.html">integer64</a></code>  </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  as.character(lim.integer64())
+  as.bitstring(lim.integer64())
+  as.bitstring(as.integer64(c(
+   -2,-1,NA,0:2
+  )))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit64</em> version 4.0.5 <a href="00Index.html">Index</a>]</div>
+</body></html>

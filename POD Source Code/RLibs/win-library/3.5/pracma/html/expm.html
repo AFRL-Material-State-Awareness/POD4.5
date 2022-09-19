@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Matrix Exponential</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for expm {pracma}"><tr><td>expm {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Matrix Exponential
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the exponential of a matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+expm(A, np = 128)
+
+logm(A)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>numeric square matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>np</code></td>
+<td>
+<p>number of points to use on the unit circle.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For an analytic function <i>f</i> and a matrix <i>A</i> the expression
+<i>f(A)</i> can be computed by the Cauchy integral
+</p>
+<p style="text-align: center;"><i>f(A)  =  (2 &pi; i)^{-1} \int_G (zI-A)^{-1} f(z) dz</i></p>
+
+<p>where <i>G</i>  is a closed contour around the eigenvalues of <i>A</i>.
+</p>
+<p>Here this is achieved by taking G to be a circle and approximating the
+integral by the trapezoid rule.
+</p>
+<p><code>logm</code> is a fake at the moment as it computes the matrix logarithm
+through taking the logarithm of its eigenvalues; will be replaced by an
+approach using Pade interpolation.
+</p>
+<p>Another more accurate and more reliable approach for computing these
+functions can be found in the R package &lsquo;expm&rsquo;.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix of the same size as <code>A</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This approach could be used for other analytic functions, but a point to
+consider is which branch to take (e.g., for the <code>logm</code> function).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Idea and Matlab code for a cubic root by Nick Trefethen in his 
+&ldquo;10 digits 1 page&rdquo; project.
+</p>
+
+
+<h3>References</h3>
+
+<p>Moler, C., and Ch. Van Loan (2003). Nineteen Dubious Ways to Compute
+the Exponential of a Matrix, Twenty-Five Years Later.
+SIAM Review, Vol. 1, No. 1, pp. 1&ndash;46.
+</p>
+<p>N. J. Higham (2008). Matrix Functions: Theory and Computation. SIAM
+Society for Industrial and Applied Mathematics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>expm::expm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  The Ward test cases described in the help for expm::expm agree up to
+##  10 digits with the values here and with results from Matlab's expm !
+A &lt;- matrix(c(-49, -64, 24, 31), 2, 2)
+expm(A)
+# -0.7357588 0.5518191
+# -1.4715176 1.1036382
+
+A1 &lt;- matrix(c(10,  7,  8,  7,
+                7,  5,  6,  5,
+                8,  6, 10,  9,
+                7,  5,  9, 10), nrow = 4, ncol = 4, byrow = TRUE)
+expm(logm(A1))
+logm(expm(A1))
+
+##  System of linear differential equations: y' = M y  (y = c(y1, y2, y3))
+M &lt;- matrix(c(2,-1,1, 0,3,-1, 2,1,3), 3, 3, byrow=TRUE)
+M
+C1 &lt;- 0.5; C2 &lt;- 1.0; C3 &lt;- 1.5
+t  &lt;- 2.0; Mt &lt;- expm(t * M)
+yt &lt;- Mt 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

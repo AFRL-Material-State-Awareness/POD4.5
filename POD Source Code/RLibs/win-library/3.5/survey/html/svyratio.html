@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Ratio estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyratio {survey}"><tr><td>svyratio {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Ratio estimation</h2>
+
+<h3>Description</h3>
+
+<p>Ratio estimation and estimates of totals based on ratios for complex
+survey samples. Estimating domain (subpopulation) means can be done
+more easily with <code><a href="surveysummary.html">svymean</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'survey.design2'
+svyratio(numerator=formula, denominator,
+   design,separate=FALSE, na.rm=FALSE,formula, covmat=FALSE,
+   deff=FALSE,influence=FALSE,...)
+## S3 method for class 'svyrep.design'
+svyratio(numerator=formula, denominator, design,
+   na.rm=FALSE,formula, covmat=FALSE,return.replicates=FALSE,deff=FALSE, ...)
+## S3 method for class 'twophase'
+svyratio(numerator=formula, denominator, design,
+    separate=FALSE, na.rm=FALSE,formula,...)
+## S3 method for class 'svyratio'
+predict(object, total, se=TRUE,...)
+## S3 method for class 'svyratio_separate'
+predict(object, total, se=TRUE,...)
+## S3 method for class 'svyratio'
+SE(object,...,drop=TRUE)
+## S3 method for class 'svyratio'
+coef(object,...,drop=TRUE)
+## S3 method for class 'svyratio'
+confint(object,  parm, level = 0.95,df =Inf,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>numerator,formula</code></td>
+<td>
+<p>formula, expression, or data frame giving numerator variable(s)</p>
+</td></tr>
+<tr valign="top"><td><code>denominator</code></td>
+<td>
+<p>formula, expression, or data frame giving
+denominator variable(s) </p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>survey design object</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>result of <code>svyratio</code></p>
+</td></tr>
+<tr valign="top"><td><code>total</code></td>
+<td>
+<p>vector of population totals for the denominator variables in
+<code>object</code>, or list of vectors of 
+population stratum totals if <code>separate=TRUE</code></p>
+</td></tr>
+<tr valign="top"><td><code>se</code></td>
+<td>
+<p>Return standard errors?</p>
+</td></tr>
+<tr valign="top"><td><code>separate</code></td>
+<td>
+<p>Estimate ratio separately for strata</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>Remove missing values?</p>
+</td></tr>
+<tr valign="top"><td><code>covmat</code></td>
+<td>
+<p>Compute the full variance-covariance matrix of the
+ratios</p>
+</td></tr>
+<tr valign="top"><td><code>deff</code></td>
+<td>
+<p>Compute design effects</p>
+</td></tr>
+<tr valign="top"><td><code>return.replicates</code></td>
+<td>
+<p>Return replicate estimates of ratios</p>
+</td></tr>
+<tr valign="top"><td><code>influence</code></td>
+<td>
+<p>Return influence functions</p>
+</td></tr>
+<tr valign="top"><td><code>drop</code></td>
+<td>
+<p>Return a vector rather than a matrix</p>
+</td></tr>
+<tr valign="top"><td><code>parm</code></td>
+<td>
+<p>a specification of which parameters are to be given
+confidence intervals, either a vector of numbers or a vector of
+names. If missing, all parameters are considered.</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>the confidence level required.</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>degrees of freedom for t-distribution in confidence
+interval, use <code>degf(design)</code> for number of PSUs minus number of
+strata</p>
+</td></tr>  <tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other unused arguments for other methods</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The separate ratio estimate of a total is the sum of ratio estimates
+in each stratum.  If the stratum totals supplied in the <code>total</code>
+argument and the strata in the design object both have names these
+names will be matched. If they do not have names it is important that
+the sample totals are supplied in the correct order, the same order
+as shown in the output of <code>summary(design)</code>.
+</p>
+<p>When <code>design</code> is a two-phase design, stratification will be on
+the second phase.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>svyratio</code> returns an object of class <code>svyratio</code>. The
+<code>predict</code> method returns a matrix of population totals and
+optionally a matrix of standard errors.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thomas Lumley</p>
+
+
+<h3>References</h3>
+
+<p>Levy and Lemeshow. &quot;Sampling of Populations&quot; (3rd edition). Wiley</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svydesign.html">svydesign</a></code>
+</p>
+<p><code><a href="surveysummary.html">svymean</a></code> for estimating proportions and domain means
+</p>
+<p><code><a href="calibrate.html">calibrate</a></code> for estimators related to the separate ratio estimator.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(scd)
+
+## survey design objects
+scddes&lt;-svydesign(data=scd, prob=~1, id=~ambulance, strata=~ESA,
+nest=TRUE, fpc=rep(5,6))
+scdnofpc&lt;-svydesign(data=scd, prob=~1, id=~ambulance, strata=~ESA,
+nest=TRUE)
+
+# convert to BRR replicate weights
+scd2brr &lt;- as.svrepdesign(scdnofpc, type="BRR")
+
+# use BRR replicate weights from Levy and Lemeshow
+repweights&lt;-2*cbind(c(1,0,1,0,1,0), c(1,0,0,1,0,1), c(0,1,1,0,0,1),
+c(0,1,0,1,1,0))
+scdrep&lt;-svrepdesign(data=scd, type="BRR", repweights=repweights)
+
+# ratio estimates
+svyratio(~alive, ~arrests, design=scddes)
+svyratio(~alive, ~arrests, design=scdnofpc)
+svyratio(~alive, ~arrests, design=scd2brr)
+svyratio(~alive, ~arrests, design=scdrep)
+
+
+data(api)
+dstrat&lt;-svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+
+## domain means are ratio estimates, but available directly
+svyratio(~I(api.stu*(comp.imp=="Yes")), ~as.numeric(comp.imp=="Yes"), dstrat)
+svymean(~api.stu, subset(dstrat, comp.imp=="Yes"))
+
+## separate and combined ratio estimates of total
+(sep&lt;-svyratio(~api.stu,~enroll, dstrat,separate=TRUE))
+(com&lt;-svyratio(~api.stu, ~enroll, dstrat))
+
+stratum.totals&lt;-list(E=1877350, H=1013824, M=920298)
+
+predict(sep, total=stratum.totals)
+predict(com, total=sum(unlist(stratum.totals)))
+
+SE(com)
+coef(com)
+coef(com, drop=FALSE)
+confint(com)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

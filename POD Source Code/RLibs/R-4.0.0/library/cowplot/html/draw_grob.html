@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw a grob.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for draw_grob {cowplot}"><tr><td>draw_grob {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Draw a grob.</h2>
+
+<h3>Description</h3>
+
+<p>Places an arbitrary grob somewhere onto the drawing canvas. By default, coordinates run from
+0 to 1, and the point (0, 0) is in the lower left corner of the canvas.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+draw_grob(
+  grob,
+  x = 0,
+  y = 0,
+  width = 1,
+  height = 1,
+  scale = 1,
+  clip = "inherit",
+  hjust = 0,
+  vjust = 0,
+  halign = 0.5,
+  valign = 0.5
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>grob</code></td>
+<td>
+<p>The grob to place.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>The x location of the grob. (Left side if <code>hjust = 0</code>.)</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>The y location of the grob. (Bottom side if <code>vjust = 0</code>.)</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>Width of the grob.</p>
+</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+<p>Height of the grob.</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>Scales the grob relative to the rectangle defined by <code>x</code>, <code>y</code>, <code>width</code>, <code>height</code>. A setting
+of <code>scale = 1</code> indicates no scaling.</p>
+</td></tr>
+<tr valign="top"><td><code>clip</code></td>
+<td>
+<p>Set to &quot;on&quot; to clip the grob or &quot;inherit&quot; to not clip. Note that clipping doesn't always work as
+expected, due to limitations of the grid graphics system.</p>
+</td></tr>
+<tr valign="top"><td><code>hjust, vjust</code></td>
+<td>
+<p>Horizontal and vertical justification relative to x.</p>
+</td></tr>
+<tr valign="top"><td><code>halign, valign</code></td>
+<td>
+<p>Horizontal and vertical justification of the grob inside
+the box.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+# A grid grob (here a blue circle)
+g &lt;- grid::circleGrob(gp = grid::gpar(fill = "blue"))
+# place into the middle of the plotting area, at a scale of 50%
+ggdraw() + draw_grob(g, scale = 0.5)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

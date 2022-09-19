@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Linear Least-Squares Fitting with linear constraints</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lsqlincon {pracma}"><tr><td>lsqlincon {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Linear Least-Squares Fitting with linear constraints
+</h2>
+
+<h3>Description</h3>
+
+<p>Solves linearly constrained linear least-squares problems.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lsqlincon(C, d,  A = NULL, b = NULL,
+          Aeq = NULL, beq = NULL, lb = NULL,  ub = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>C</code></td>
+<td>
+<p><code>mxn</code>-matrix defining the least-squares problem.</p>
+</td></tr>
+<tr valign="top"><td><code>d</code></td>
+<td>
+<p>vector or a one colum matrix with <code>m</code> rows</p>
+</td></tr>
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p><code>pxn</code>-matrix for the linear inequality constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>vector or <code>px1</code>-matrix, right hand side for the constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>Aeq</code></td>
+<td>
+<p><code>qxn</code>-matrix for the linear equality constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>beq</code></td>
+<td>
+<p>vector or <code>qx1</code>-matrix, right hand side for the constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>lb</code></td>
+<td>
+<p>lower bounds, a scalar will be extended to length n.</p>
+</td></tr>
+<tr valign="top"><td><code>ub</code></td>
+<td>
+<p>upper bounds, a scalar will be extended to length n.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>lsqlincon(C, d, A, b, Aeq, beq, lb, ub)</code> minimizes <code>||C*x - d||</code>
+(i.e., in the least-squares sense) subject to the following constraints:
+<code>A*x &lt;= b</code>, <code>Aeq*x = beq</code>, and <code>lb &lt;= x &lt;= ub</code>.
+</p>
+<p>It applies the quadratic solver in <code>quadprog</code> with an active-set
+method for solving quadratic programming problems.
+</p>
+<p>If some constraints are <code>NULL</code> (the default), they will not be taken
+into account. In case no constraints are given at all, it simply uses
+<code>qr.solve</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the least-squares solution as a vector.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Function <code>lsqlin</code> in <code>pracma</code> solves this for equality constraints
+only, by computing a base for the nullspace of <code>Aeq</code>. But for linear
+inequality constraints there is no simple linear algebra &lsquo;trick&rsquo;, thus a real
+optimization solver is needed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>HwB  email: &lt;hwborchers@googlemail.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Trefethen, L. N., and D. Bau III. (1997). Numerical Linear Algebra.
+SIAM, Society for Industrial and Applied Mathematics, Philadelphia.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lsqlin.html">lsqlin</a></code>, <code>quadprog::solve.QP</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  MATLABs lsqlin example
+C &lt;- matrix(c(
+    0.9501,   0.7620,   0.6153,   0.4057,
+    0.2311,   0.4564,   0.7919,   0.9354,
+    0.6068,   0.0185,   0.9218,   0.9169,
+    0.4859,   0.8214,   0.7382,   0.4102,
+    0.8912,   0.4447,   0.1762,   0.8936), 5, 4, byrow=TRUE)
+d &lt;- c(0.0578, 0.3528, 0.8131, 0.0098, 0.1388)
+A &lt;- matrix(c(
+    0.2027,   0.2721,   0.7467,   0.4659,
+    0.1987,   0.1988,   0.4450,   0.4186,
+    0.6037,   0.0152,   0.9318,   0.8462), 3, 4, byrow=TRUE)
+b &lt;- c(0.5251, 0.2026, 0.6721)
+Aeq &lt;- matrix(c(3, 5, 7, 9), 1)
+beq &lt;- 4
+lb &lt;- rep(-0.1, 4)   # lower and upper bounds
+ub &lt;- rep( 2.0, 4)
+
+x &lt;- lsqlincon(C, d, A, b, Aeq, beq, lb, ub)
+# -0.1000000 -0.1000000  0.1599088  0.4089598
+# check A %*% x - b &gt;= 0
+# check Aeq %*% x - beq == 0
+# check sum((C %*% x - d)^2)    # 0.1695104
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: SCADPenalized Quantile Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq.fit.scad {quantreg}"><tr><td>rq.fit.scad {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+SCADPenalized Quantile Regression 
+</h2>
+
+<h3>Description</h3>
+
+<p>The fitting method implements the smoothly clipped absolute deviation
+penalty of Fan and Li for fitting quantile regression models.  
+When  the argument <code>lambda</code>
+is a scalar the penalty function is the scad modified l1
+norm of the last (p-1) coefficients, under the presumption that the
+first coefficient is an intercept parameter that should not be subject
+to the penalty.  When <code>lambda</code> is a vector it should have length
+equal the column dimension of the matrix <code>x</code> and then defines a
+coordinatewise specific vector of scad penalty parameters.  In this
+case <code>lambda</code> entries of zero indicate covariates that are not
+penalized.  There should be a sparse version of this, but isn't (yet).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rq.fit.scad(x, y, tau = 0.5, alpha = 3.2, lambda = 1, start="rq", 
+	beta = .9995, eps = 1e-06)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>the design matrix
+</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+
+<p>the response variable
+</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+
+<p>the quantile desired, defaults to 0.5.
+</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+
+<p>tuning parameter of the scad penalty.
+</p>
+</td></tr>
+<tr valign="top"><td><code>lambda</code></td>
+<td>
+
+<p>the value of the penalty parameter that determines how much shrinkage is done.
+This should be either a scalar, or a vector of length equal to the column dimension
+of the <code>x</code> matrix.
+</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+
+<p>starting method, default method 'rq' uses the unconstrained rq estimate, while
+method 'lasso' uses the corresponding lasso estimate with the specified lambda.
+</p>
+</td></tr>
+<tr valign="top"><td><code>beta</code></td>
+<td>
+
+<p>step length parameter for Frisch-Newton method.
+</p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+
+<p>tolerance parameter for convergence. 
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The algorithm is an adaptation of the &quot;difference convex algorithm&quot;
+described in Wu and Liu (2008).  It solves a sequence of (convex) QR problems 
+to approximate solutions of the (non-convex) scad problem.</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with a coefficient, residual, tau and lambda components.  
+When called from <code>"rq"</code> as intended the returned object
+has class &quot;scadrqs&quot;.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>R. Koenker</p>
+
+
+<h3>References</h3>
+
+<p>Wu, Y. and Y. Liu (2008) Variable  Selection in Quantile Regression, <em>Statistica
+Sinica</em>, to appear.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.html">rq</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n &lt;- 60
+p &lt;- 7
+rho &lt;- .5
+beta &lt;- c(3,1.5,0,2,0,0,0)
+R &lt;- matrix(0,p,p)
+for(i in 1:p){
+        for(j in 1:p){
+                R[i,j] &lt;- rho^abs(i-j)
+                }
+        }
+set.seed(1234)
+x &lt;- matrix(rnorm(n*p),n,p) %*% t(chol(R))
+y &lt;- x %*% beta + rnorm(n)
+
+f &lt;- rq(y ~ x, method="scad",lambda = 30)
+g &lt;- rq(y ~ x, method="scad", start = "lasso", lambda = 30)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

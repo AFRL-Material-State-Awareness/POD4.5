@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Communicate RGL parameters between R and Javascript in Shiny</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for shinyGetPar3d {rgl}"><tr><td>shinyGetPar3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Communicate RGL parameters between R and Javascript in Shiny
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions allow Shiny apps to read and write the <code>par3d</code>
+settings that may have been modified by user interaction in the browser.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+shinyGetPar3d(parameters, session, subscene = currentSubscene3d(cur3d()), tag = "")
+shinySetPar3d(..., session, subscene = currentSubscene3d(cur3d()))
+shinyResetBrush(session, brush)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>parameters</code></td>
+<td>
+
+<p>A character vector naming the parameters to get.
+</p>
+</td></tr>
+<tr valign="top"><td><code>session</code></td>
+<td>
+
+<p>The Shiny session object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+
+<p>The subscene to which the parameters apply.  Defaults to 
+the currently active subscene in the R session.
+</p>
+</td></tr>
+<tr valign="top"><td><code>tag</code></td>
+<td>
+
+<p>An arbitrary string or value which will be sent as part of the
+response.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>A number of <code>name = value</code> pairs to be modified, or a
+single named list of parameters.  Entries named <code>tag</code>
+or <code>subscene</code> will be ignored.
+</p>
+</td></tr>
+<tr valign="top"><td><code>brush</code></td>
+<td>
+<p>The name of a Shiny input element corresponding to
+the <code>shinyBrush</code> argument to <code><a href="rglwidget.html">rglwidget</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Requesting information from the browser is a complicated process.
+The <code>shinyGetPar3d</code> function doesn't return the requested value,
+it just submits a request for the value to be returned later in
+<code>input$par3d</code>, a reactive input.  No action will result
+except when a reactive observer depends on <code>input$par3d</code>.
+See the example code below.
+</p>
+<p>The <code>shinySetPar3d</code> function sends a message to the browser
+asking it to change a particular parameter.  The change will be
+made immediately, without sending the full scene to the browser,
+so should be reasonably fast.
+</p>
+
+
+<h3>Value</h3>
+
+<p>These functions are called for their side effects, and don't return
+useful values.
+</p>
+<p>The side effect of <code>shinyGetPar3d</code> is to cause <code>input$par3d</code>
+to be updated sometime later.  
+Besides the requested parameter values, <code>input$par3d</code> will
+contain a copy of the <code>subscene</code> and <code>tag</code> arguments.
+</p>
+<p>The side effect of <code>shinySetPar3d</code> is to send a message to the
+browser to update its copy of the <code>par3d</code> parameters 
+immediately.
+</p>
+
+
+<h3>Note</h3>
+
+<p>R and the browser don't maintain a perfect match between the way
+parameters are stored internally.  The browser version of parameters
+will be returned by <code>shinyGetPar3d</code> and should be supplied to
+<code>shinySetPar3d</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://shiny.rstudio.com/articles/communicating-with-js.html">https://shiny.rstudio.com/articles/communicating-with-js.html</a>
+describes the underlying mechanisms used by these two functions.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The <code><a href="rglwidget.html">rglwidget</a></code> argument <code>shinySelectionInput</code> allows information about mouse selections
+to be returned to R.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if (interactive() &amp;&amp; !in_pkgdown_example() &amp;&amp; requireNamespace("shiny")) {
+  save &lt;- options(rgl.useNULL = TRUE)
+
+  xyz &lt;- matrix(rnorm(300), ncol = 3)
+
+  app = shiny::shinyApp(
+    ui = shiny::bootstrapPage(
+      shiny::actionButton("redraw", "Redraw"),
+      rglwidgetOutput("rglPlot")
+    ),
+    server = function(input, output, session) {
+      # This waits until the user to click on the "redraw" 
+      # button, then sends a request for the current userMatrix
+      shiny::observeEvent(input$redraw, {
+        shinyGetPar3d("userMatrix", session)
+      })
+    
+      # This draws the plot whenever input$par3d changes,
+      # i.e. whenever a response to the request above is
+      # received.
+      output$rglPlot &lt;- renderRglwidget({
+        if (length(rgl.dev.list())) close3d()
+        col &lt;- sample(colors(), 1)
+        plot3d(xyz, col = col, type = "s", main = col)
+        par3d(userMatrix = input$par3d$userMatrix)
+        rglwidget()
+      })
+    })
+  shiny::runApp(app)
+  options(save)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

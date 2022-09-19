@@ -1,0 +1,702 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A visualization of a correlation matrix.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for corrplot {corrplot}"><tr><td>corrplot {corrplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A visualization of a correlation matrix.</h2>
+
+<h3>Description</h3>
+
+<p>A graphical display of a correlation matrix, confidence interval. The details
+are paid great attention to. It can also visualize a general matrix by
+setting <code>is.corr = FALSE</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+corrplot(
+  corr,
+  method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
+  type = c("full", "lower", "upper"),
+  col = NULL,
+  col.lim = NULL,
+  bg = "white",
+  title = "",
+  is.corr = TRUE,
+  add = FALSE,
+  diag = TRUE,
+  outline = FALSE,
+  mar = c(0, 0, 0, 0),
+  addgrid.col = NULL,
+  addCoef.col = NULL,
+  addCoefasPercent = FALSE,
+  order = c("original", "AOE", "FPC", "hclust", "alphabet"),
+  hclust.method = c("complete", "ward", "ward.D", "ward.D2", "single", "average",
+    "mcquitty", "median", "centroid"),
+  addrect = NULL,
+  rect.col = "black",
+  rect.lwd = 2,
+  tl.pos = NULL,
+  tl.cex = 1,
+  tl.col = "red",
+  tl.offset = 0.4,
+  tl.srt = 90,
+  cl.pos = NULL,
+  cl.length = NULL,
+  cl.cex = 0.8,
+  cl.ratio = 0.15,
+  cl.align.text = "c",
+  cl.offset = 0.5,
+  number.cex = 1,
+  number.font = 2,
+  number.digits = NULL,
+  addshade = c("negative", "positive", "all"),
+  shade.lwd = 1,
+  shade.col = "white",
+  p.mat = NULL,
+  sig.level = 0.05,
+  insig = c("pch", "p-value", "blank", "n", "label_sig"),
+  pch = 4,
+  pch.col = "black",
+  pch.cex = 3,
+  plotCI = c("n", "square", "circle", "rect"),
+  lowCI.mat = NULL,
+  uppCI.mat = NULL,
+  na.label = "?",
+  na.label.col = "black",
+  win.asp = 1,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>corr</code></td>
+<td>
+<p>The correlation matrix to visualize, must be square if
+<code>order</code> is not <code>'original'</code>. For general matrix, please using
+<code>is.corr = FALSE</code> to convert.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>Character, the visualization method of correlation matrix to be
+used. Currently, it supports seven methods, named <code>'circle'</code>
+(default), <code>'square'</code>, <code>'ellipse'</code>, <code>'number'</code>,
+<code>'pie'</code>, <code>'shade'</code> and <code>'color'</code>. See examples for details.
+</p>
+<p>The areas of circles or squares show the absolute value of corresponding
+correlation coefficients. Method <code>'pie'</code> and <code>'shade'</code> came from
+Michael Friendly's job (with some adjustment about the shade added on), and
+<code>'ellipse'</code> came from D.J. Murdoch and E.D. Chow's job, see in section
+References.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Character, <code>'full'</code> (default), <code>'upper'</code> or
+<code>'lower'</code>, display full matrix, lower triangular or upper triangular
+matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>Vector, the colors of glyphs. They are distributed uniformly in
+<code>col.lim</code> interval.
+If <code>is.corr</code> is <code>TRUE</code>, the default value will be <code>COL2('RdBu', 200)</code>.
+If <code>is.corr</code> is <code>FALSE</code> and <code>corr</code> is a non-negative or non-positive matrix,
+the default value will be <code>COL1('YlOrBr', 200)</code>;
+otherwise (elements are partly positive and partly negative),
+the default value will be <code>COL2('RdBu', 200)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>col.lim</code></td>
+<td>
+<p>The limits <code>(x1, x2)</code> interval for assigning color by
+<code>col</code>. If <code>NULL</code>,
+<code>col.lim</code> will be <code>c(-1, 1)</code> when <code>is.corr</code> is  <code>TRUE</code>,
+<code>col.lim</code> will be <code>c(min(corr), max(corr))</code> when <code>is.corr</code>
+is <code>FALSE</code>
+</p>
+<p>NOTICE: if you set <code>col.lim</code> when <code>is.corr</code> is <code>TRUE</code>, the assigning colors
+are still distributed uniformly in [-1, 1], it only affect the display
+on color-legend.</p>
+</td></tr>
+<tr valign="top"><td><code>bg</code></td>
+<td>
+<p>The background color.</p>
+</td></tr>
+<tr valign="top"><td><code>title</code></td>
+<td>
+<p>Character, title of the graph.</p>
+</td></tr>
+<tr valign="top"><td><code>is.corr</code></td>
+<td>
+<p>Logical, whether the input matrix is a correlation matrix or
+not. We can visualize the non-correlation matrix by setting
+<code>is.corr = FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>add</code></td>
+<td>
+<p>Logical, if <code>TRUE</code>, the graph is added to an existing plot,
+otherwise a new plot will be created.</p>
+</td></tr>
+<tr valign="top"><td><code>diag</code></td>
+<td>
+<p>Logical, whether display the correlation coefficients on the
+principal diagonal.</p>
+</td></tr>
+<tr valign="top"><td><code>outline</code></td>
+<td>
+<p>Logical or character, whether plot outline of circles, square
+and ellipse, or the color of these glyphs. For pie, this represents the
+color of the circle outlining the pie. If <code>outline</code> is <code>TRUE</code>,
+the default value is <code>'black'</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>mar</code></td>
+<td>
+<p>See <code><a href="../../graphics/html/par.html">par</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>addgrid.col</code></td>
+<td>
+<p>The color of the grid. If <code>NA</code>, don't add grid. If
+<code>NULL</code> the default value is chosen. The default value depends on
+<code>method</code>, if <code>method</code> is <code>color</code> or <code>shade</code>, the color
+of the grid is <code>NA</code>, that is, not draw grid; otherwise <code>'grey'</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>addCoef.col</code></td>
+<td>
+<p>Color of coefficients added on the graph. If <code>NULL</code>
+(default), add no coefficients.</p>
+</td></tr>
+<tr valign="top"><td><code>addCoefasPercent</code></td>
+<td>
+<p>Logic, whether translate coefficients into percentage
+style for spacesaving.</p>
+</td></tr>
+<tr valign="top"><td><code>order</code></td>
+<td>
+<p>Character, the ordering method of the correlation matrix.
+</p>
+
+<ul>
+<li><p><code>'original'</code> for original order (default).
+</p>
+</li>
+<li><p><code>'AOE'</code> for the angular order of the eigenvectors.
+</p>
+</li>
+<li><p><code>'FPC'</code> for the first principal component order.
+</p>
+</li>
+<li><p><code>'hclust'</code> for the hierarchical clustering order.
+</p>
+</li>
+<li><p><code>'alphabet'</code> for alphabetical order.
+</p>
+</li></ul>
+
+<p>See function <code><a href="corrMatOrder.html">corrMatOrder</a></code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>hclust.method</code></td>
+<td>
+<p>Character, the agglomeration method to be used when
+<code>order</code> is <code><a href="../../stats/html/hclust.html">hclust</a></code>. This should be one of <code>'ward'</code>,
+<code>'ward.D'</code>, <code>'ward.D2'</code>, <code>'single'</code>, <code>'complete'</code>,
+<code>'average'</code>, <code>'mcquitty'</code>, <code>'median'</code> or <code>'centroid'</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>addrect</code></td>
+<td>
+<p>Integer, the number of rectangles draws on the graph according
+to the hierarchical cluster, only valid when <code>order</code> is <code>hclust</code>.
+If <code>NULL</code> (default), then add no rectangles.</p>
+</td></tr>
+<tr valign="top"><td><code>rect.col</code></td>
+<td>
+<p>Color for rectangle border(s), only valid when <code>addrect</code>
+is equal or greater than 1.</p>
+</td></tr>
+<tr valign="top"><td><code>rect.lwd</code></td>
+<td>
+<p>Numeric, line width for borders for rectangle border(s), only
+valid when <code>addrect</code> is equal or greater than 1.</p>
+</td></tr>
+<tr valign="top"><td><code>tl.pos</code></td>
+<td>
+<p>Character or logical, position of text labels. If character, it
+must be one of <code>'lt'</code>, <code>'ld'</code>, <code>'td'</code>, <code>'d'</code> or
+<code>'n'</code>. <code>'lt'</code>(default if <code>type=='full'</code>) means left and top,
+<code>'ld'</code>(default if <code>type=='lower'</code>) means left and diagonal,
+<code>'td'</code>(default if <code>type=='upper'</code>) means top and diagonal(near),
+<code>'l'</code> means left,
+<code>'d'</code> means diagonal, <code>'n'</code> means don't add text-label.</p>
+</td></tr>
+<tr valign="top"><td><code>tl.cex</code></td>
+<td>
+<p>Numeric, for the size of text label (variable names).</p>
+</td></tr>
+<tr valign="top"><td><code>tl.col</code></td>
+<td>
+<p>The color of text label.</p>
+</td></tr>
+<tr valign="top"><td><code>tl.offset</code></td>
+<td>
+<p>Numeric, for text label, see <code><a href="../../graphics/html/text.html">text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tl.srt</code></td>
+<td>
+<p>Numeric, for text label string rotation in degrees, see
+<code><a href="../../graphics/html/text.html">text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cl.pos</code></td>
+<td>
+<p>Character or logical, position of color-legend; If character,
+it must be one of <code>'r'</code> (default if <code>type=='upper'</code> or
+<code>'full'</code>), <code>'b'</code> (default if <code>type=='lower'</code>) or <code>'n'</code>,
+<code>'n'</code> means don't draw color-legend.</p>
+</td></tr>
+<tr valign="top"><td><code>cl.length</code></td>
+<td>
+<p>Integer, the number of number-text in color-legend, passed to
+<code><a href="colorlegend.html">colorlegend</a></code>. If <code>NULL</code>, <code>cl.length</code> is
+<code>length(col) + 1</code> when <code>length(col) &lt;=20</code>; <code>cl.length</code> is 11
+when <code>length(col) &gt; 20</code></p>
+</td></tr>
+<tr valign="top"><td><code>cl.cex</code></td>
+<td>
+<p>Numeric, cex of number-label in color-legend,  passed to
+<code><a href="colorlegend.html">colorlegend</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cl.ratio</code></td>
+<td>
+<p>Numeric, to justify the width of color-legend, 0.1~0.2 is
+suggested.</p>
+</td></tr>
+<tr valign="top"><td><code>cl.align.text</code></td>
+<td>
+<p>Character, <code>'l'</code>, <code>'c'</code> (default) or
+<code>'r'</code>, for number-label in color-legend, <code>'l'</code> means left,
+<code>'c'</code> means center, and <code>'r'</code> means right.</p>
+</td></tr>
+<tr valign="top"><td><code>cl.offset</code></td>
+<td>
+<p>Numeric, for number-label in color-legend, see
+<code><a href="../../graphics/html/text.html">text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>number.cex</code></td>
+<td>
+<p>The <code>cex</code> parameter to send to the call to <code>text</code>
+when writing the correlation coefficients into the plot.</p>
+</td></tr>
+<tr valign="top"><td><code>number.font</code></td>
+<td>
+<p>the <code>font</code> parameter to send to the call to
+<code>text</code> when writing the correlation coefficients into the plot.</p>
+</td></tr>
+<tr valign="top"><td><code>number.digits</code></td>
+<td>
+<p>indicating the number of decimal digits to be
+added into the plot. Non-negative integer or NULL, default NULL.</p>
+</td></tr>
+<tr valign="top"><td><code>addshade</code></td>
+<td>
+<p>Character for shade style, <code>'negative'</code>,
+<code>'positive'</code> or <code>'all'</code>, only valid when <code>method</code> is
+<code>'shade'</code>. If <code>'all'</code>, all correlation coefficients' glyph will
+be shaded; if <code>'positive'</code>, only the positive will be shaded; if
+<code>'negative'</code>, only the negative will be shaded. Note: the angle of
+shade line is different, 45 degrees for positive and 135 degrees for
+negative.</p>
+</td></tr>
+<tr valign="top"><td><code>shade.lwd</code></td>
+<td>
+<p>Numeric, the line width of shade.</p>
+</td></tr>
+<tr valign="top"><td><code>shade.col</code></td>
+<td>
+<p>The color of shade line.</p>
+</td></tr>
+<tr valign="top"><td><code>p.mat</code></td>
+<td>
+<p>Matrix of p-value, if <code>NULL</code>, parameter <code>sig.level</code>,
+<code>insig</code>, <code>pch</code>, <code>pch.col</code>, <code>pch.cex</code> are invalid.</p>
+</td></tr>
+<tr valign="top"><td><code>sig.level</code></td>
+<td>
+<p>Significant level,  if the p-value in <code>p-mat</code> is bigger
+than <code>sig.level</code>, then the corresponding correlation coefficient is
+regarded as insignificant. If <code>insig</code> is <code>'label_sig'</code>, this may
+be an increasing vector of significance levels, in which case <code>pch</code>
+will be used once for the highest p-value interval and multiple times
+(e.g. '*', '**', '***') for each lower p-value interval.</p>
+</td></tr>
+<tr valign="top"><td><code>insig</code></td>
+<td>
+<p>Character, specialized insignificant correlation coefficients,
+<code>'pch'</code> (default), <code>'p-value'</code>, <code>'blank'</code>, <code>'n'</code>, or
+<code>'label_sig'</code>. If <code>'blank'</code>, wipe away the corresponding glyphs;
+if <code>'p-value'</code>, add p-values the corresponding glyphs;
+if <code>'pch'</code>, add characters (see <code>pch</code> for details) on
+corresponding glyphs; if <code>'n'</code>, don't take any measures; if
+<code>'label_sig'</code>, mark significant correlations with pch
+(see <code>sig.level</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>pch</code></td>
+<td>
+<p>Add character on the glyphs of insignificant correlation
+coefficients(only valid when <code>insig</code> is <code>'pch'</code>). See
+<code><a href="../../graphics/html/par.html">par</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>pch.col</code></td>
+<td>
+<p>The color of pch (only valid when <code>insig</code> is
+<code>'pch'</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>pch.cex</code></td>
+<td>
+<p>The cex of pch (only valid when <code>insig</code> is <code>'pch'</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>plotCI</code></td>
+<td>
+<p>Character, method of ploting confidence interval. If
+<code>'n'</code>, don't plot confidence interval. If 'rect', plot rectangles
+whose upper side means upper bound and lower side means lower bound,
+respectively. If 'circle', first plot a circle with the bigger absolute
+bound, and then plot the smaller. Warning: if the two bounds are the same
+sign, the smaller circle will be wiped away, thus forming a ring. Method
+'square' is similar to 'circle'.</p>
+</td></tr>
+<tr valign="top"><td><code>lowCI.mat</code></td>
+<td>
+<p>Matrix of the lower bound of confidence interval.</p>
+</td></tr>
+<tr valign="top"><td><code>uppCI.mat</code></td>
+<td>
+<p>Matrix of the upper bound of confidence interval.</p>
+</td></tr>
+<tr valign="top"><td><code>na.label</code></td>
+<td>
+<p>Label to be used for rendering <code>NA</code> cells. Default is
+<code>'?'</code>. If 'square', then the cell is rendered as a square with the
+<code>na.label.col</code> color.</p>
+</td></tr>
+<tr valign="top"><td><code>na.label.col</code></td>
+<td>
+<p>Color used for rendering <code>NA</code> cells. Default is
+<code>'black'</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>win.asp</code></td>
+<td>
+<p>Aspect ration for the whole plot. Value other than 1 is
+currently compatible only with methods 'circle' and 'square'.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments passing to function <code>text</code> for drawing
+text label.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>corrplot</code> function offers flexible ways to visualize
+correlation matrix, lower and upper bound of confidence interval matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>(Invisibly) returns a <code>list(corr, corrTrans, arg)</code>.
+<code>corr</code> is a reordered correlation matrix for plotting.
+<code>corrPos</code> is a data frame with <code>xName, yName, x, y, corr</code> and
+<code>p.value</code>(if p.mat is not NULL)
+column, which x and y are the position on the correlation matrix plot.
+<code>arg</code> is a list of some corrplot() input parameters' value.
+Now <code>type</code> is in.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>Cairo</code> and <code>cairoDevice</code> packages is strongly recommended to
+produce high-quality PNG, JPEG, TIFF bitmap files, especially for that
+<code>method</code> <code>circle</code>, <code>ellipse</code>.
+</p>
+<p>Row- and column names of the input matrix are used as labels rendered
+in the corrplot. Plothmath expressions will be used if the name is prefixed
+by one of the following characters: <code>:</code>, <code>=</code> or <code>$</code>.
+For example <code>':alpha + beta'</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Taiyun Wei (weitaiyun@gmail.com)
+</p>
+<p>Viliam Simko (viliam.simko@gmail.com)
+</p>
+<p>Michael Levy (michael.levy@healthcatalyst.com)
+</p>
+
+
+<h3>References</h3>
+
+<p>Michael Friendly (2002).
+<em>Corrgrams: Exploratory displays for correlation matrices</em>.
+The American Statistician, 56, 316&ndash;324.
+</p>
+<p>D.J. Murdoch, E.D. Chow (1996).
+<em>A graphical display of large correlation matrices</em>.
+The American Statistician, 50, 178&ndash;180.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Function <code>plotcorr</code>  in the <code>ellipse</code> package and
+<code>corrgram</code>  in the <code>corrgram</code> package have some similarities.
+</p>
+<p>Package <code>seriation</code> offered more methods to reorder matrices, such as
+ARSA, BBURCG, BBWRCG, MDS, TSP, Chen and so forth.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(mtcars)
+M = cor(mtcars)
+set.seed(0)
+
+##  different color series
+## COL2: Get diverging colors
+## c('RdBu', 'BrBG', 'PiYG', 'PRGn', 'PuOr', 'RdYlBu')
+## COL1: Get sequential colors
+## c('Oranges', 'Purples', 'Reds', 'Blues', 'Greens', 'Greys', 'OrRd', 'YlOrRd', 'YlOrBr', 'YlGn')
+
+wb = c('white', 'black')
+
+par(ask = TRUE)
+
+## different color scale and methods to display corr-matrix
+corrplot(M, method = 'number', col = 'black', cl.pos = 'n')
+corrplot(M, method = 'number')
+corrplot(M)
+corrplot(M, order = 'AOE')
+corrplot(M, order = 'AOE', addCoef.col = 'grey')
+
+corrplot(M, order = 'AOE',  cl.length = 21, addCoef.col = 'grey')
+corrplot(M, order = 'AOE', col = COL2(n=10), addCoef.col = 'grey')
+
+corrplot(M, order = 'AOE', col = COL2('PiYG'))
+corrplot(M, order = 'AOE', col = COL2('PRGn'), addCoef.col = 'grey')
+corrplot(M, order = 'AOE', col = COL2('PuOr', 20), cl.length = 21, addCoef.col = 'grey')
+corrplot(M, order = 'AOE', col = COL2('PuOr', 10), addCoef.col = 'grey')
+
+corrplot(M, order = 'AOE', col = COL2('RdYlBu', 100))
+corrplot(M, order = 'AOE', col = COL2('RdYlBu', 10))
+
+
+corrplot(M, method = 'color', col = COL2(n=20), cl.length = 21, order = 'AOE',
+         addCoef.col = 'grey')
+corrplot(M, method = 'square', col = COL2(n=200), order = 'AOE')
+corrplot(M, method = 'ellipse', col = COL2(n=200), order = 'AOE')
+corrplot(M, method = 'shade', col = COL2(n=20), order = 'AOE')
+corrplot(M, method = 'pie', order = 'AOE')
+
+## col = wb
+corrplot(M, col = wb, order = 'AOE', outline = TRUE, cl.pos = 'n')
+
+## like Chinese wiqi, suit for either on screen or white-black print.
+corrplot(M, col = wb, bg = 'gold2',  order = 'AOE', cl.pos = 'n')
+
+
+## mixed methods: It's more efficient if using function 'corrplot.mixed'
+## circle + ellipse
+corrplot(M, order = 'AOE', type = 'upper', tl.pos = 'd')
+corrplot(M, add = TRUE, type = 'lower', method = 'ellipse', order = 'AOE',
+         diag = FALSE, tl.pos = 'n', cl.pos = 'n')
+
+## circle + square
+corrplot(M, order = 'AOE', type = 'upper', tl.pos = 'd')
+corrplot(M, add = TRUE, type = 'lower', method = 'square', order = 'AOE',
+         diag = FALSE, tl.pos = 'n', cl.pos = 'n')
+
+## circle + colorful number
+corrplot(M, order = 'AOE', type = 'upper', tl.pos = 'd')
+corrplot(M, add = TRUE, type = 'lower', method = 'number', order = 'AOE',
+         diag = FALSE, tl.pos = 'n', cl.pos = 'n')
+
+## circle + black number
+corrplot(M, order = 'AOE', type = 'upper', tl.pos = 'tp')
+corrplot(M, add = TRUE, type = 'lower', method = 'number', order = 'AOE',
+         col = 'black', diag = FALSE, tl.pos = 'n', cl.pos = 'n')
+
+
+## order is hclust and draw rectangles
+corrplot(M, order = 'hclust')
+corrplot(M, order = 'hclust', addrect = 2)
+corrplot(M, order = 'hclust', addrect = 3, rect.col = 'red')
+corrplot(M, order = 'hclust', addrect = 4, rect.col = 'blue')
+corrplot(M, order = 'hclust', hclust.method = 'ward.D2', addrect = 4)
+
+## visualize a  matrix in [0, 1]
+corrplot(abs(M), order = 'AOE', col.lim = c(0, 1))
+corrplot(abs(M), order = 'AOE', is.corr = FALSE,  col.lim = c(0, 1))
+
+
+# when is.corr=TRUE, col.lim only affect the color legend
+# If you change it, the color is still assigned on [-1, 1]
+corrplot(M/2)
+corrplot(M/2, col.lim = c(-0.5, 0.5))
+
+# when is.corr=FALSE, col.lim is also used to assign colors
+# if the matrix have both positive and negative values
+# the matrix transformation keep every values positive and negative
+corrplot(M*2, is.corr = FALSE, col.lim = c(-2, 2))
+corrplot(M*2, is.corr = FALSE, col.lim = c(-2, 2) * 2)
+corrplot(M*2, is.corr = FALSE, col.lim = c(-2, 2) * 4)
+
+## 0.5~0.6
+corrplot(abs(M)/10+0.5, col = COL1('Greens', 10))
+corrplot(abs(M)/10+0.5, is.corr = FALSE, col.lim = c(0.5, 0.6), col = COL1('YlGn', 10))
+
+
+## visualize a  matrix in [-100, 100]
+ran = round(matrix(runif(225, -100, 100), 15))
+corrplot(ran, is.corr = FALSE)
+corrplot(ran, is.corr = FALSE, col.lim = c(-100, 100))
+
+## visualize a matrix in [100, 300]
+ran2 = ran + 200
+
+# bad color, not suitable for a matrix in [100, 300]
+corrplot(ran2, is.corr = FALSE, col.lim = c(100, 300), col = COL2(, 100))
+
+# good color
+corrplot(ran2, is.corr = FALSE, col.lim = c(100, 300), col = COL1(, 100))
+
+
+## text-labels and plot type
+corrplot(M, order = 'AOE', tl.srt = 45)
+corrplot(M, order = 'AOE', tl.srt = 60)
+corrplot(M, order = 'AOE', tl.pos = 'd', cl.pos = 'n')
+corrplot(M, order = 'AOE', diag = FALSE, tl.pos = 'd')
+corrplot(M, order = 'AOE', type = 'upper')
+corrplot(M, order = 'AOE', type = 'upper', diag = FALSE)
+corrplot(M, order = 'AOE', type = 'lower', cl.pos = 'b')
+corrplot(M, order = 'AOE', type = 'lower', cl.pos = 'b', diag = FALSE)
+
+
+
+#### color-legend
+corrplot(M, order = 'AOE', cl.ratio = 0.2, cl.align = 'l')
+corrplot(M, order = 'AOE', cl.ratio = 0.2, cl.align = 'c')
+corrplot(M, order = 'AOE', cl.ratio = 0.2, cl.align = 'r')
+corrplot(M, order = 'AOE', cl.pos = 'b')
+corrplot(M, order = 'AOE', cl.pos = 'b', tl.pos = 'd')
+corrplot(M, order = 'AOE', cl.pos = 'n')
+
+
+## deal with missing Values
+M2 = M
+diag(M2) = NA
+corrplot(M2)
+corrplot(M2, na.label = 'o')
+corrplot(M2, na.label = 'NA')
+
+
+##the input matrix is not square
+corrplot(M[1:8, ])
+corrplot(M[, 1:8])
+
+testRes = cor.mtest(mtcars, conf.level = 0.95)
+
+## specialized the insignificant value according to the significant level
+corrplot(M, p.mat = testRes$p, sig.level = 0.05, order = 'hclust', addrect = 2)
+
+## leave blank on no significant coefficient
+corrplot(M, p.mat = testRes$p, method = 'circle', type = 'lower', insig ='blank',
+         addCoef.col ='black', number.cex = 0.8, order = 'AOE', diag = FALSE)
+
+## add p-values on no significant coefficients
+corrplot(M, p.mat = testRes$p, insig = 'p-value')
+
+## add all p-values
+corrplot(M, p.mat = testRes$p, insig = 'p-value', sig.level = -1)
+
+## add significant level stars
+corrplot(M, p.mat = testRes$p, method = 'color', diag = FALSE, type = 'upper',
+         sig.level = c(0.001, 0.01, 0.05), pch.cex = 0.9,
+         insig = 'label_sig', pch.col = 'grey20', order = 'AOE')
+
+## add significant level stars and cluster rectangles
+corrplot(M, p.mat = testRes$p, tl.pos = 'd', order = 'hclust', addrect = 2,
+         insig = 'label_sig', sig.level = c(0.001, 0.01, 0.05),
+         pch.cex = 0.9, pch.col = 'grey20')
+
+# Visualize confidence interval
+corrplot(M, lowCI = testRes$lowCI, uppCI = testRes$uppCI, order = 'hclust',
+         tl.pos = 'd', rect.col = 'navy', plotC = 'rect', cl.pos = 'n')
+
+# Visualize confidence interval and cross the significant coefficients
+corrplot(M, p.mat = testRes$p, lowCI = testRes$lowCI, uppCI = testRes$uppCI,
+         addrect = 3, rect.col = 'navy', plotC = 'rect', cl.pos = 'n')
+
+
+
+res1 = cor.mtest(mtcars, conf.level = 0.95)
+res2 = cor.mtest(mtcars, conf.level = 0.99)
+
+
+## plot confidence interval(0.95), 'circle' method
+corrplot(M, low = res1$uppCI, upp = res1$uppCI,
+         plotCI = 'circle', addg = 'grey20', cl.pos = 'n')
+corrplot(M, p.mat = res1$p, low = res1$lowCI, upp = res1$uppCI,
+         plotCI = 'circle', addg = 'grey20', cl.pos = 'n')
+corrplot(M, low = res1$lowCI, upp = res1$uppCI,
+         col = c('white', 'black'), bg = 'gold2', order = 'AOE',
+         plotCI = 'circle', cl.pos = 'n', pch.col = 'red')
+corrplot(M, p.mat = res1$p, low = res1$lowCI, upp = res1$uppCI,
+         col = c('white', 'black'), bg = 'gold2', order = 'AOE',
+         plotCI = 'circle', cl.pos = 'n', pch.col = 'red')
+
+## plot confidence interval(0.95), 'square' method
+corrplot(M, low = res1$lowCI, upp = res1$uppCI,
+         col = c('white', 'black'), bg = 'gold2', order = 'AOE',
+         plotCI = 'square', addg = NULL, cl.pos = 'n')
+corrplot(M, p.mat = res1$p, low = res1$lowCI, upp = res1$uppCI,
+         col = c('white', 'black'), bg = 'gold2', order = 'AOE', pch.col = 'red',
+         plotCI = 'square', addg = NULL, cl.pos = 'n')
+
+## plot confidence interval0.95, 0.95, 0.99, 'rect' method
+corrplot(M, low = res1$lowCI, upp = res1$uppCI, order = 'hclust',
+         rect.col = 'navy', plotCI = 'rect', cl.pos = 'n')
+corrplot(M, p.mat = res1$p, low = res1$lowCI, upp = res1$uppCI,
+         order = 'hclust', pch.col = 'red', sig.level = 0.05, addrect = 3,
+         rect.col = 'navy', plotCI = 'rect', cl.pos = 'n')
+corrplot(M, p.mat = res2$p, low = res2$lowCI, upp = res2$uppCI,
+         order = 'hclust', pch.col = 'red', sig.level = 0.01, addrect = 3,
+         rect.col = 'navy', plotCI = 'rect', cl.pos = 'n')
+
+
+## an animation of changing confidence interval in different significance level
+## begin.animaton
+par(ask = FALSE)
+for (i in seq(0.1, 0, -0.005)) {
+  tmp = cor.mtest(mtcars, conf.level = 1 - i)
+  corrplot(M, p.mat = tmp$p, low = tmp$lowCI, upp = tmp$uppCI, order = 'hclust',
+           pch.col = 'red', sig.level = i, plotCI = 'rect', cl.pos = 'n',
+           mar = c(0, 0, 1, 0),
+           title = substitute(alpha == x,
+                              list(x = format(i, digits = 3, nsmall = 3))))
+  Sys.sleep(0.15)
+}
+## end.animaton
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>corrplot</em> version 0.92 <a href="00Index.html">Index</a>]</div>
+</body></html>

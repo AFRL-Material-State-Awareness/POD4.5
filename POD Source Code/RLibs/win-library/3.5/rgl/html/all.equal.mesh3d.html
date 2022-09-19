@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compare mesh3d objects in a meaningful way.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for all.equal.mesh3d {rgl}"><tr><td>all.equal.mesh3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Compare mesh3d objects in a meaningful way.
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions allow comparison of mesh3d objects, ignoring
+irrelevant differences.  
+</p>
+<p><code>compare_proxy.mesh3d</code> can function as a <code>compare_proxy</code> method for the
+<span class="pkg">waldo</span> package, by stripping out <code>NULL</code> components
+and ordering other components alphabetically by name.
+</p>
+<p><code>all.equal.mesh3d</code> compares mesh3d objects by using
+<code>compare_proxy.mesh3d</code> to standardize them, then
+using the regular <code><a href="../../base/html/all.equal.html">all.equal</a></code> function to
+compare them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'mesh3d'
+all.equal(target, current, ...)
+compare_proxy.mesh3d(x, path = "x")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>target, current</code></td>
+<td>
+
+<p>Two mesh3d objects to compare.  
+</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>A single mesh3d object to standardize.
+</p>
+</td></tr>
+<tr valign="top"><td><code>path</code></td>
+<td>
+
+<p>The string to use in a <span class="pkg">waldo</span> display of this object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Additional parameters to pass to <code><a href="../../base/html/all.equal.html">all.equal</a></code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>all.equal.mesh3d</code> returns <code>TRUE</code>, or a character
+vector describing (some of) the differences.
+</p>
+<p><code>compare_proxy.mesh3d</code> returns a list containing two
+components:
+</p>
+
+<dl>
+<dt>object</dt><dd><p>a copy of <code>x</code> with
+relevant components in alphabetical order.</p>
+</dd>
+<dt>path</dt><dd><p>a modification of the path label for <code>x</code></p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p><span class="pkg">waldo</span> is not an installation requirement for <span class="pkg">rgl</span>
+and <span class="pkg">rgl</span> will never cause it to be loaded.
+The <code>compare_proxy.mesh3d</code> function will only be 
+registered as a method for <code>waldo::compare_proxy</code>
+if you load <span class="pkg">waldo</span> before <span class="pkg">rgl</span>, as would normally 
+happen during testing using <span class="pkg">testthat</span>, or if you load
+it before calling <code><a href="mesh3d.html">mesh3d</a></code>,
+as might happen if you are doing manual tests.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

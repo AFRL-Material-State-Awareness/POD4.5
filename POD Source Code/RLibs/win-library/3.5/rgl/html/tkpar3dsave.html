@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Modal dialog for saving par3d settings</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for tkpar3dsave {rgl}"><tr><td>tkpar3dsave {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Modal dialog for saving par3d settings </h2>
+
+<h3>Description</h3>
+
+<p>This function opens a TCL/TK modal dialog to allow particular views of an RGL scene
+to be saved.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tkpar3dsave(params = c("userMatrix", "scale", "zoom", "FOV"),
+          times = FALSE, dev = cur3d(), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>params</code></td>
+<td>
+<p> Which parameters to save </p>
+</td></tr>
+<tr valign="top"><td><code>times</code></td>
+<td>
+<p> Should times be saved as well? </p>
+</td></tr>
+<tr valign="top"><td><code>dev</code></td>
+<td>
+<p> Which RGL device to work with </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> Additional parameters to pass to <code><a href="../../tcltk/html/TkWidgets.html">tktoplevel</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This opens a TCL/TK modal dialog box with <code>Record</code> and <code>Quit</code> buttons.  Each time
+<code>Record</code> is clicked, a snapshot is taken of current <code><a href="par3d.html">par3d</a></code> settings.  When
+<code>Quit</code> is clicked, the dialog closes and the values are returned in a list.
+</p>
+<p>If <code>times == TRUE</code>, then the times at which the views are recorded will also be saved, so that
+the <code><a href="play3d.html">play3d</a></code> function will play back with the same timing.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the requested components.  Each one will consist of a list of values that were
+current when the <code>Record</code> button was clicked.  These are suitable to be passed directly
+to the <code><a href="par3dinterp.html">par3dinterp</a></code> function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch </p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="par3d.html">par3d</a></code>, <code><a href="par3dinterp.html">par3dinterp</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if (interactive() &amp;&amp; !in_pkgdown_example()) {
+
+  # Record a series of positions, and then play them back immediately
+  # at evenly spaced times, in an oscillating loop
+  example(plot3d)
+  play3d( par3dinterp( tkpar3dsave() ) )
+
+  # As above, but preserve the click timings
+
+  # play3d( par3dinterp( tkpar3dsave(times=TRUE) ) )
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

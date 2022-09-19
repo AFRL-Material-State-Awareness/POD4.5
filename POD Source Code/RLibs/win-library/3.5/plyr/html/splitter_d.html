@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Split a data frame by variables.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for splitter_d {plyr}"><tr><td>splitter_d {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Split a data frame by variables.</h2>
+
+<h3>Description</h3>
+
+<p>Split a data frame into pieces based on variable contained in that data frame
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+splitter_d(data, .variables = NULL, drop = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data frame</p>
+</td></tr>
+<tr valign="top"><td><code>.variables</code></td>
+<td>
+<p>a <a href="quoted.html">quoted</a> list of variables</p>
+</td></tr>
+<tr valign="top"><td><code>drop</code></td>
+<td>
+<p>drop unnused factor levels?</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is the workhorse of the <code>d*ply</code> functions.  Based on the variables
+you supply, it breaks up a single data frame into a list of data frames,
+each containing a single combination from the levels of the specified
+variables.
+</p>
+<p>This is basically a thin wrapper around <code><a href="../../base/html/split.html">split</a></code> which
+evaluates the variables in the context of the data, and includes enough
+information to reconstruct the labelling of the data frame after
+other operations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list of data.frames, with attributes that record split details
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="quoted.html">.</a></code> for quoting variables, <code><a href="../../base/html/split.html">split</a></code>
+</p>
+<p>Other splitter functions: 
+<code><a href="splitter_a.html">splitter_a</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+plyr:::splitter_d(mtcars, .(cyl))
+plyr:::splitter_d(mtcars, .(vs, am))
+plyr:::splitter_d(mtcars, .(am, vs))
+
+mtcars$cyl2 &lt;- factor(mtcars$cyl, levels = c(2, 4, 6, 8, 10))
+plyr:::splitter_d(mtcars, .(cyl2), drop = TRUE)
+plyr:::splitter_d(mtcars, .(cyl2), drop = FALSE)
+
+mtcars$cyl3 &lt;- ifelse(mtcars$vs == 1, NA, mtcars$cyl)
+plyr:::splitter_d(mtcars, .(cyl3))
+plyr:::splitter_d(mtcars, .(cyl3, vs))
+plyr:::splitter_d(mtcars, .(cyl3, vs), drop = FALSE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

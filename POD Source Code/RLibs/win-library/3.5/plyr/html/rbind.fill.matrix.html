@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Bind matrices by row, and fill missing columns with NA.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rbind.fill.matrix {plyr}"><tr><td>rbind.fill.matrix {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Bind matrices by row, and fill missing columns with NA.</h2>
+
+<h3>Description</h3>
+
+<p>The matrices are bound together using their column names or the column
+indices (in that order of precedence.) Numeric columns may be converted to
+character beforehand, e.g. using format.  If a matrix doesn't have
+colnames, the column number is used. Note that this means that a
+column with name <code>"1"</code> is merged with the first column of a matrix
+without name and so on. The returned matrix will always have column names.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rbind.fill.matrix(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>the matrices to rbind. The first argument can be a list of
+matrices, in which case all other arguments are ignored.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Vectors are converted to 1-column matrices.
+</p>
+<p>Matrices of factors are not supported. (They are anyways quite
+inconvenient.) You may convert them first to either numeric or character
+matrices. If a matrices of different types are merged, then normal
+covnersion precendence will apply.
+</p>
+<p>Row names are ignored.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix with column names
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>C. Beleites
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/rbind.html">rbind</a></code>, <code><a href="../../base/html/cbind.html">cbind</a></code>,
+<code><a href="rbind.fill.html">rbind.fill</a></code>
+</p>
+<p>Other binding functions: 
+<code><a href="rbind.fill.html">rbind.fill</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- matrix (1:4, 2)
+B &lt;- matrix (6:11, 2)
+A
+B
+rbind.fill.matrix (A, B)
+
+colnames (A) &lt;- c (3, 1)
+A
+rbind.fill.matrix (A, B)
+
+rbind.fill.matrix (A, 99)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

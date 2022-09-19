@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get information about attributes of objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rgl.attrib.info {rgl}"><tr><td>rgl.attrib.info {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Get information about attributes of objects
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions give information about the attributes of
+RGL objects.  <code>rgl.attrib.info</code> is the more 
+&ldquo;user-friendly&rdquo; function; <code>rgl.attrib.count</code> is a 
+lower-level function more likely to be used in programming.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rgl.attrib.info(id = ids3d("all", 0)$id, attribs = NULL, showAll = FALSE)
+rgl.attrib.count(id, attrib)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>id</code></td>
+<td>
+
+<p>One or more RGL object ids.
+</p>
+</td></tr>
+<tr valign="top"><td><code>attribs</code></td>
+<td>
+
+<p>A character vector of one or more attribute names.
+</p>
+</td></tr>
+<tr valign="top"><td><code>showAll</code></td>
+<td>
+
+<p>Should attributes with zero entries be shown?
+</p>
+</td></tr>
+<tr valign="top"><td><code>attrib</code></td>
+<td>
+
+<p>A single attribute name.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>See the first example below to get the full list of attribute
+names.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following columns:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>The id of the object.</p>
+</td></tr>
+<tr valign="top"><td><code>attrib</code></td>
+<td>
+<p>The full name of the attribute.</p>
+</td></tr>
+<tr valign="top"><td><code>nrow, ncol</code></td>
+<td>
+<p>The size of matrix that would be returned
+by <code><a href="attributes.html">rgl.attrib</a></code> for this attribute.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="attributes.html">rgl.attrib</a></code> to obtain the attribute values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+open3d()
+id &lt;- points3d(rnorm(100), rnorm(100), rnorm(100), col = "green")
+rgl.attrib.info(id, showAll = TRUE)
+rgl.attrib.count(id, "vertices")
+
+merge(rgl.attrib.info(), ids3d("all"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

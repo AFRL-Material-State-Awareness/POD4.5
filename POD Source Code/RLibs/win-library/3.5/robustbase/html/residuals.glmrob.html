@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Residuals of Robust Generalized Linear Model Fits</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for residuals.glmrob {robustbase}"><tr><td>residuals.glmrob {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Residuals of Robust Generalized Linear Model Fits</h2>
+
+<h3>Description</h3>
+
+<p>Compute residuals of a fitted <code><a href="glmrob.html">glmrob</a></code> model, i.e., robust
+generalized linear model fit.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'glmrob'
+residuals(object,
+          type = c("deviance", "pearson", "working",
+                   "response", "partial"),
+          ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>an object of class <code>glmrob</code>, typically the result of
+a call to <code><a href="glmrob.html">glmrob</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>the type of residuals which should be returned.
+The alternatives are: <code>"deviance"</code> (default), <code>"pearson"</code>,
+<code>"working"</code>, <code>"response"</code>, and <code>"partial"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The references in <code><a href="../../stats/html/glm.html">glm</a></code> define the types of residuals:
+Davison &amp; Snell is a good reference for the usages of each.
+</p>
+<p>The partial residuals are a matrix of working residuals, with each
+column formed by omitting a term from the model.
+</p>
+<p>The <code>residuals</code> (S3) method (see <code><a href="../../utils/html/methods.html">methods</a></code>) for
+<code><a href="glmrob.html">glmrob</a></code> models has been modeled to follow closely the
+method for classical (non-robust) <code><a href="../../stats/html/glm.html">glm</a></code> fitted models.
+Possibly, see its documentation, i.e., <a href="../../stats/html/glm.summaries.html">residuals.glm</a>, for
+further details.
+</p>
+
+
+<h3>References</h3>
+
+<p>See those for the classical GLM's, <code><a href="../../stats/html/glm.html">glm</a></code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="glmrob.html">glmrob</a></code> for computing <code>object</code>, <code><a href="anova.glmrob.html">anova.glmrob</a></code>;
+the corresponding <em>generic</em> functions, <code><a href="summary.glmrob.html">summary.glmrob</a></code>,
+<code><a href="../../stats/html/coef.html">coef</a></code>,
+
+<code><a href="../../stats/html/fitted.values.html">fitted</a></code>,
+<code><a href="../../stats/html/residuals.html">residuals</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+### -------- Gamma family -- data from example(glm) ---
+clotting &lt;- data.frame(
+            u = c(5,10,15,20,30,40,60,80,100),
+         lot1 = c(118,58,42,35,27,25,21,19,18),
+         lot2 = c(69,35,26,21,18,16,13,12,12))
+summary(cl &lt;- glm   (lot1 ~ log(u), data=clotting, family=Gamma))
+summary(ro &lt;- glmrob(lot1 ~ log(u), data=clotting, family=Gamma))
+clotM5.high &lt;- within(clotting, { lot1[5] &lt;- 60 })
+cl5.high &lt;- glm   (lot1 ~ log(u), data=clotM5.high, family=Gamma)
+ro5.high &lt;- glmrob(lot1 ~ log(u), data=clotM5.high, family=Gamma)
+rr &lt;- range(residuals(ro), residuals(cl), residuals(ro5.high))
+plot(residuals(ro5.high) ~ residuals(cl5.high), xlim = rr, ylim = rr, asp = 1)
+abline(0,1, col=2, lty=3)
+points(residuals(ro) ~ residuals(cl), col = "gray", pch=3)
+
+## Show all kinds of residuals:
+r.types &lt;- c("deviance", "pearson", "working", "response")
+sapply(r.types, residuals, object = ro5.high)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Ridders' Root Finding Method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ridders {pracma}"><tr><td>ridders {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Ridders' Root Finding Method
+</h2>
+
+<h3>Description</h3>
+
+<p>Ridders' root finding method is a powerful variant of &lsquo;regula falsi&rsquo; (and
+&lsquo;false position&rsquo;). In reliability and speed, this method is competitive
+with Brent-Dekker and similar approaches.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ridders(fun, a, b, maxiter = 500, tol = 1e-12, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>function whose root is to be found.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>left and right interval bounds.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations (function calls).</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>tolerance, length of the last interval.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters passed on to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Given a bracketing interval $[x_1, x_2]$, the method first calculates the
+midpoint <i>x_3 = (x_1 + x_2)/2</i> and the uses an updating formula
+</p>
+<p style="text-align: center;"><i>x_4 = x_3 + (x_3 - x_1) \frac{sgn(f(x_1) - f(x_2)) f(x_3)}{&radic;{f(x_3)^2 - f(x_1) f(x_2)}}</i></p>
+ 
+
+
+<h3>Value</h3>
+
+<p>Returns a list with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>root</code></td>
+<td>
+<p>root of the function.</p>
+</td></tr>
+<tr valign="top"><td><code>f.root</code></td>
+<td>
+<p>value of the function at the found root.</p>
+</td></tr>
+<tr valign="top"><td><code>niter</code></td>
+<td>
+<p>number of iterations,or more specifically: number of function calls.</p>
+</td></tr>
+<tr valign="top"><td><code>estim.prec</code></td>
+<td>
+<p>the estimated precision, coming from the last brackett.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>See function <code>f12</code> whose zero at <i>&radic;{e}</i> is difficult to find
+exactly for all root finders.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>HwB  email: &lt;hwborchers@googlemail.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Press, Teukolsky, Vetterling, and Flannery (1992). Numerical Recipes in C.
+Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="brentdekker.html">brent</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Test functions
+f1  &lt;- function(x)                          # [0, 1.2],     0.399 422 2917
+            x^2 * (x^2/3 + sqrt(2)*sin(x)) - sqrt(3)/18
+f2  &lt;- function(x) 11*x^11 - 1              # [0.4, 1.6],   0.804 133 0975
+f3  &lt;- function(x) 35*x^35 - 1              # [-0.5, 1.9],  0.903 407 6632
+f4  &lt;- function(x)                          # [-0.5, 0.7],  0.077 014 24135
+            2*(x*exp(-9) - exp(-9*x)) + 1 
+f5  &lt;- function(x) x^2 - (1 - x)^9          # [-1.4, 1],    0.259 204 4937
+f6  &lt;- function(x) (x-1)*exp(-9*x) + x^9    # [-0.8, 1.6],  0.536 741 6626
+f7  &lt;- function(x) x^2 + sin(x/9) - 1/4     # [-0.5, 1.9],  0.4475417621
+f8  &lt;- function(x) 1/8 * (9 - 1/x)        # [0.001, 1.201], 0.111 111 1111 
+f9  &lt;- function(x) tan(x) - x - 0.0463025   # [-0.9, 1.5],  0.500 000 0340
+f10 &lt;- function(x)                          # [0.4, 1],     0.679 808 9215
+            x^2 + x*sin(sqrt(75)*x) - 0.2
+f11 &lt;- function(x) x^9 + 0.0001             # [-1.2, 0],   -0.359 381 3664 
+f12 &lt;- function(x)                          # [1, 3.4],     1.648 721 27070
+            log(x) + x^2/(2*exp(1)) - 2 * x/sqrt(exp(1)) + 1
+
+r &lt;- ridders(f1 , 0, 1.2);       r$root; r$niter # 18
+r &lt;- ridders(f2 , 0.4, 1.6);     r$root; r$niter # 14
+r &lt;- ridders(f3 ,-0.5, 1.9);     r$root; r$niter # 20
+r &lt;- ridders(f4 ,-0.5, 0.7);     r$root; r$niter # 12
+r &lt;- ridders(f5 ,-1.4, 1);       r$root; r$niter # 16
+r &lt;- ridders(f6 ,-0.8, 1.6);     r$root; r$niter # 20
+r &lt;- ridders(f7 ,-0.5, 1.9);     r$root; r$niter # 16
+r &lt;- ridders(f8 ,0.001, 1.201);  r$root; r$niter # 18
+r &lt;- ridders(f9 ,-0.9, 1.5);     r$root; r$niter # 20
+r &lt;- ridders(f10,0.4, 1);        r$root; r$niter # 14
+r &lt;- ridders(f11,-1.2, 0);       r$root; r$niter # 12
+r &lt;- ridders(f12,1, 3.4);        r$root; r$niter # 30, err = 1e-5
+
+## Not run: 
+##  Use ridders() with Rmpfr
+options(digits=16)
+library("Rmpfr") # unirootR
+prec &lt;- 256
+.N &lt;- function(.) mpfr(., precBits = prec)
+
+f12 &lt;- function(x) {
+    e1 &lt;- exp(.N(1))
+    log(x) + x^2/(2*e1) - 2*x/sqrt(e1) + 1
+}
+sqrte &lt;- sqrt(exp(.N(1)))  # 1.648721270700128...
+f12(sqrte)                 # 0
+
+unirootR(f12, interval=mpfr(c(1, 3.4), prec), tol=1e-20)
+# $root
+# 1 'mpfr' number of precision  200   bits 
+# [1] 1.648721270700128...
+
+ridders(f12, .N(1), .N(3.4), maxiter=200, tol=1e-20)
+# $root
+# 1 'mpfr' number of precision  200   bits 
+# [1] 1.648721270700128...
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

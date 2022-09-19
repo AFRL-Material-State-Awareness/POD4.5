@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Basic Linear Algebra for Sparse Matrices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SparseM.ops {SparseM}"><tr><td>SparseM.ops {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Basic Linear Algebra for Sparse Matrices</h2>
+
+<h3>Description</h3>
+
+<p>Basic linear algebra operations for sparse matrices
+of class <code>matrix.csr</code>.</p>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>matrix of class <code>matrix.csr</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>matrix of class <code>matrix.csr</code> or a dense matrix or vector.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>replacement values.</p>
+</td></tr>
+<tr valign="top"><td><code>i,j</code></td>
+<td>
+<p>vectors of elements to extract or replace.</p>
+</td></tr>
+<tr valign="top"><td><code>nrow</code></td>
+<td>
+<p>optional number of rows for the result.</p>
+</td></tr>
+<tr valign="top"><td><code>lag</code></td>
+<td>
+<p>an integer indicating which lag to use.</p>
+</td></tr>
+<tr valign="top"><td><code>differences</code></td>
+<td>
+<p>an integer indicating the order of the difference.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Linear algebra operations for matrices of class
+<code>matrix.csr</code> are designed to behave exactly as for
+regular matrices.  In particular, matrix multiplication, kronecker
+product, addition,
+subtraction and various logical operations should work as with the conventional
+dense form of matrix storage, as does indexing, rbind, cbind, and diagonal
+assignment and extraction.  The method diag may be used to extract the
+diagonal of a <code>matrix.csr</code> object, to create a sparse diagonal see
+<code>SparseM.ontology</code>.
+</p>
+<p>The function <code><a href="../../base/html/determinant.html">determinant</a></code> computes the (log) determinant,
+of the argument, returning a <code>"det"</code> object as the base function.
+This is <em>preferred</em> over using the function <code>det()</code>
+which is a simple wrapper for <code>determinant()</code>.
+Using <code>det()</code> in the following way is somewhat deprecated:
+<br />
+<code>det()</code> computes the determinant of the argument
+matrix.  If the matrix is of class <code>matrix.csr</code> then it must
+be symmetric, or an error will be returned.  If the matrix is of
+class <code>matrix.csr.chol</code> then the determinant of the Cholesky
+factor is returned, ie the product of the diagonal elements.
+
+
+</p>
+<p>The function <code>norm</code> is used to check for symmetry by
+computing the maximum of the elements of the difference between
+the matrix and its transpose.  Optionally, this sup norm can
+be replaced by the Hilbert-Schmidt norm, or the l1 norm.
+</p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R and Ng, P. (2002).
+SparseM: A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>,<br />
+<a href="http://www.econ.uiuc.edu/~roger/research/home.html">http://www.econ.uiuc.edu/~roger/research/home.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>slm</code> for sparse linear model fitting.
+<code>SparseM.ontology</code> for coercion and other class relations involving the
+sparse matrix classes.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n1 &lt;- 10
+n2 &lt;- 10
+p &lt;- 6
+y &lt;- rnorm(n1)
+a &lt;- rnorm(n1*p)
+a[abs(a) &lt; 0.5] &lt;- 0
+A &lt;- matrix(a,n1,p)
+A.csr &lt;- as.matrix.csr(A)
+b &lt;- rnorm(n2*p)
+b[abs(b)&lt;1.0] &lt;- 0
+B &lt;- matrix(b,n2,p)
+B.csr &lt;- as.matrix.csr(B)
+
+# matrix transposition and multiplication
+A.csr%*%t(B.csr)
+
+# kronecker product - via kronecker() methods:
+A.csr %x% matrix(1:4,2,2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

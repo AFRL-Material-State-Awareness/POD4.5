@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Obsolete function to set WebGL scene properties based on the...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ageSetter {rgl}"><tr><td>ageSetter {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Obsolete function to set WebGL scene properties based on the age of components
+of objects
+</h2>
+
+<h3>Description</h3>
+
+<p>Many RGL shapes contain lists of vertices with various
+attributes (available via <code><a href="attributes.html">rgl.attrib</a></code>).  This function
+modifies the data for those attributes in a WebGL scene.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ageSetter(births, ages, 
+         colors = NULL, alpha = NULL, radii = NULL, 
+         vertices = NULL, normals = NULL, origins = NULL, 
+         texcoords = NULL, 
+         objids, prefixes = "", digits = 7, 
+         param = seq(floor(min(births)), ceiling(max(births))))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>births</code></td>
+<td>
+
+<p>Numeric vector with one value per vertex, used to determine the
+&ldquo;age&rdquo; of the vertex when displaying it.
+</p>
+</td></tr>
+<tr valign="top"><td><code>ages</code></td>
+<td>
+
+<p>A non-decreasing sequence of &ldquo;ages&rdquo;.  
+</p>
+</td></tr>
+<tr valign="top"><td><code>colors, alpha, radii, vertices, normals, origins, texcoords</code></td>
+<td>
+
+<p>Attributes of the vertices.  Non-<code>NULL</code> attributes will be 
+interpolated from these values.  See the Details section below.
+</p>
+</td></tr>
+<tr valign="top"><td><code>objids, prefixes</code></td>
+<td>
+
+<p>The object ids and scene prefixes to modify.  These are recycled to
+the same length.
+</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+
+<p>How many digits to output in the generated Javascript code.
+</p>
+</td></tr>
+<tr valign="top"><td><code>param</code></td>
+<td>
+
+<p>Default values to be used by a slider control calling the generated
+function.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The vertex attributes
+are specified as follows:
+</p>
+
+<dl>
+<dt>colors</dt><dd><p>A vector of colors in a format suitable for input to <code><a href="../../grDevices/html/col2rgb.html">col2rgb</a></code></p>
+</dd>
+<dt>alpha</dt><dd><p>A numeric vector of alpha values between 0 and 1.</p>
+</dd>
+<dt>radii</dt><dd><p>A numeric vector of sphere radii.</p>
+</dd>
+<dt>vertices</dt><dd><p>A 3-column matrix of vertex coordinates.</p>
+</dd>
+<dt>normals</dt><dd><p>A 3-column matrix of vertex normals.</p>
+</dd>
+<dt>origins</dt><dd><p>A 2-column matrix of origins for text or sprites.</p>
+</dd>
+<dt>texcoords</dt><dd><p>A 2-column matrix of texture coordinates.</p>
+</dd>
+</dl>
+
+<p>All attributes must have the same number of entries (rows for the matrices)
+as the <code>ages</code> vector.  The <code>births</code> vector must have the
+same number of entries as the number of vertices in the object.
+</p>
+<p>Not all objects contain all attributes listed here; if one is
+chosen that is not a property of the corresponding object, a
+Javascript <code>alert()</code> will be generated.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector of class <code>c("ageSetter", "propertySetter")</code> 
+containing Javascript
+code defining a function suitable for use in a <code><a href="propertySetter.html">propertySlider</a></code>.
+</p>
+<p>The function takes a single argument, <code>time</code>, and uses it to compute the
+&ldquo;age&rdquo; of vertex <code>i</code> as <code>time - births[i]</code>.  
+Those are then used with the <code>ages</code>
+argument to linearly interpolate settings of the specified attributes.
+Extrapolation is constant.  Repeated values in <code>ages</code> can be used
+to obtain discontinuities in the settings.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="propertySetter.html">propertySlider</a></code>; more detailed control is available in
+<code><a href="propertySetter.html">vertexSetter</a></code>.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

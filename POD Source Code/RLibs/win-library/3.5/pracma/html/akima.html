@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Univariate Akima Interpolation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for akimaInterp {pracma}"><tr><td>akimaInterp {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Univariate Akima Interpolation
+</h2>
+
+<h3>Description</h3>
+
+<p>Interpolate smooth curve through given points on a plane.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  akimaInterp(x, y, xi)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>x/y-coordinates of (irregular) grid points defining the curve.</p>
+</td></tr>
+<tr valign="top"><td><code>xi</code></td>
+<td>
+<p>x-coordinates of points where to interpolate.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Implementation of Akima's univariate interpolation method, built from
+piecewise third order polynomials. There is no need to solve large systems
+of equations, and the method is therefore computationally very efficient.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the interpolated values at the points <code>xi</code> as a vector.
+</p>
+
+
+<h3>Note</h3>
+
+<p>There is also a 2-dimensional version in package &lsquo;akima&rsquo;.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Matlab code by H. Shamsundar under BSC License; re-implementation in R
+by Hans W Borchers.
+</p>
+
+
+<h3>References</h3>
+
+<p>Akima, H. (1970). A New Method of Interpolation and Smooth Curve Fitting
+Based on Local Procedures. Journal of the ACM, Vol. 17(4), pp 589-602.
+</p>
+<p>Hyman, J. (1983). Accurate Monotonicity Preserving Cubic Interpolation.
+SIAM J. Sci. Stat. Comput., Vol. 4(4), pp. 645-654.
+</p>
+<p>Akima, H. (1996). Algorithm 760: Rectangular-Grid-Data Surface Fitting that
+Has the Accurancy of a Bicubic Polynomial. ACM TOMS Vol. 22(3), pp. 357-361.
+</p>
+<p>Akima, H. (1996). Algorithm 761: Scattered-Data Surface Fitting that
+Has the Accuracy of a Cubic Polynomial. ACM TOMS, Vol. 22(3), pp. 362-371.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="kriging.html">kriging</a></code>, <code>akima::aspline</code>, <code>akima::interp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- c( 0,  2,  3,  5,  6,  8,  9,   11, 12, 14, 15)
+y &lt;- c(10, 10, 10, 10, 10, 10, 10.5, 15, 50, 60, 85)
+xs &lt;- seq(12, 14, 0.5)          # 12.0 12.5     13.0     13.5     14.0
+ys &lt;- akimaInterp(x, y, xs)     # 50.0 54.57405 54.84360 55.19135 60.0
+xs; ys
+
+## Not run: 
+plot(x, y, col="blue", main = "Akima Interpolation")
+xi &lt;- linspace(0,15,51)
+yi &lt;- akimaInterp(x, y, xi)
+lines(xi, yi, col = "darkred")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

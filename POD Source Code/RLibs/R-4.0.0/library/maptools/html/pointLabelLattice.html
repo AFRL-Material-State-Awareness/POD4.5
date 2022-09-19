@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Label placement with spplot and lattice.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for panel.pointLabel {maptools}"><tr><td>panel.pointLabel {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Label placement with spplot and lattice.</h2>
+
+<h3>Description</h3>
+
+<p>Use optimization routines to find good locations for point labels
+without overlaps.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+panel.pointLabel(x, y = NULL,
+                              labels = seq(along = x),
+                              method = c("SANN", "GA"),
+                              allowSmallOverlap = FALSE,
+                              col = add.text$col,
+                              alpha = add.text$alpha,
+                              cex = add.text$cex,
+                              lineheight = add.text$lineheight,
+                              font = add.text$font,
+                              fontfamily = add.text$fontfamily,
+                              fontface = add.text$fontface,
+                              fill='transparent',
+                              ...)
+
+sp.pointLabel(object, labels, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>A <code>SpatialPoints</code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>coordinates for the point labels. See
+<code><a href="../../grDevices/html/xy.coords.html">xy.coords</a></code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p>a character vector or expression.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>the optimization method, either SANN for simulated
+annealing (the default) or GA for a genetic algorithm.</p>
+</td></tr>
+<tr valign="top"><td><code>allowSmallOverlap</code></td>
+<td>
+<p>logical; if TRUE, labels are allowed a small
+overlap. The overlap allowed is 2% of the diagonal distance
+of the plot area.</p>
+</td></tr>
+<tr valign="top"><td><code>col, alpha, cex, lineheight, font, fontfamily,
+fontface, fill</code></td>
+<td>
+<p>Graphical arguments. See gpar for details</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments (currently not processed).</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Tom Short wrote <code><a href="pointLabelBase.html">pointLabel</a></code> for <code>base</code>
+graphics.  Oscar Perpiñán Lamigueiro modified this function for
+<code>lattice</code> and <code>spplot</code>.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../sp/html/spplot.html">spplot</a></code>
+
+<code><a href="pointLabelBase.html">pointLabel</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n &lt;- 15
+x &lt;- rnorm(n)*10
+y &lt;- rnorm(n)*10
+labels &lt;- as.character(round(x, 5))
+
+
+myTheme &lt;- list(add.text=list(
+                  cex=0.7,
+                  col='midnightblue',
+                  fontface=2,
+                  fontfamily='mono'))
+library(lattice)
+xyplot(y~x,
+       labels=labels,
+       par.settings=myTheme, 
+       panel=function(x, y, labels, ...){
+         panel.xyplot(x, y, ...)
+         panel.pointLabel(x, y, labels=labels, ...)
+       })
+
+
+
+data(meuse.grid)
+coordinates(meuse.grid) = ~x+y
+proj4string(meuse.grid) &lt;- CRS("+init=epsg:28992")
+gridded(meuse.grid) = TRUE
+
+
+pts &lt;- spsample(meuse.grid, n=15, type="random")
+
+Rauthors &lt;- readLines(file.path(R.home("doc"), "AUTHORS"))[9:28]
+someAuthors &lt;- Rauthors[seq_along(pts)]
+
+sl1 &lt;- list('sp.points', pts, pch=19, cex=.8, col='midnightblue')
+sl2 &lt;- list('sp.pointLabel', pts, label=someAuthors,
+            cex=0.7, col='midnightblue',
+            fontfamily='Palatino')
+run &lt;- FALSE
+if (require("RColorBrewer", quietly=TRUE)) run &lt;- TRUE
+if (run) {
+myCols &lt;- adjustcolor(colorRampPalette(brewer.pal(n=9, 'Reds'))(100), .85)
+spplot(meuse.grid["dist"], col.regions=myCols, sp.layout=list(sl1, sl2))
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Converts a hue, chroma and value to a Munsell colour</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hvc2mnsl {munsell}"><tr><td>hvc2mnsl {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Converts a hue, chroma and value to a Munsell colour</h2>
+
+<h3>Description</h3>
+
+<p>Takes separate specifications of hue, value and chroma and returns the 
+text specification of that colour.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hvc2mnsl(hue, value = NULL, chroma = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>hue</code></td>
+<td>
+<p>a character vector of Munsell hues, or a 3 column data frame
+containing the hue value and chroma levels</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>a numeric vector of values</p>
+</td></tr>
+<tr valign="top"><td><code>chroma</code></td>
+<td>
+<p>a numeric vector of chromas</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>passed on to <code><a href="check_mnsl.html">check_mnsl</a></code>. Use <code>fix = TRUE</code> to
+fix &quot;bad&quot; colours</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Munsell colours are specified by hue, value and chroma.  They 
+take a form like &quot;5PB 5/10&quot; where the first characters represent the
+hue, followed by a space then the value and chroma separated by a &quot;/&quot;. In
+this package value should be an integer in 0:10 and chroma an even number
+at most 24.  Note that not all possible specifications result in 
+representable colours.  Regular recycling rules apply.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a character string specification of a hex colour
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="check_mnsl.html">check_mnsl</a></code>, <code><a href="mnsl.html">mnsl2hex</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+hvc2mnsl("5PB", 5, 10)
+# All values of 5PB with chroma 10
+hvc2mnsl("5PB", 1:9, 10) # note some are undefined
+plot_mnsl(hvc2mnsl("5PB", 1:9, 10))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

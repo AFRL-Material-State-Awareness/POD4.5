@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: set spatial coordinates to create a Spatial object, or...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for coordinates {sp}"><tr><td>coordinates {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> set spatial coordinates to create a Spatial object, or retrieve
+spatial coordinates from a Spatial object</h2>
+
+<h3>Description</h3>
+
+<p> set spatial coordinates to create a Spatial object, or retrieve
+spatial coordinates from a Spatial object</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+	coordinates(obj, ...)
+	coordinates(object) &lt;- value
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> object deriving from class &quot;Spatial&quot; </p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p> object of class &quot;data.frame&quot; </p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p> spatial coordinates; either a matrix, list, or data
+frame with numeric data, or column names, column number or a
+reference: a formula (in the form of e.g. <code>~x+y</code>), column numbers
+(e.g. <code>c(1,2)</code>) or column names (e.g. <code>c("x","y")</code>) specifying
+which columns in <code>object</code> are the spatial coordinates. If the coordinates
+are part of object, giving the reference does not duplicate them, giving
+their value does duplicate them in the resulting structure.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments that may be used by particular methods</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> usually an object of class SpatialPointsDataFrame; if the coordinates
+set cover the full set of variables in object, an object of class SpatialPoints
+is returned </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# data.frame
+data(meuse.grid)
+coordinates(meuse.grid) &lt;- ~x+y
+gridded(meuse.grid) &lt;- TRUE
+class(meuse.grid)
+bbox(meuse.grid)
+
+data(meuse)
+meuse.xy = meuse[c("x", "y")]
+coordinates(meuse.xy) &lt;- ~x+y
+class(meuse.xy)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

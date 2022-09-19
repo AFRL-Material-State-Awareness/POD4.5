@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Older interface to 'label_bytes()'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for number_bytes_format {scales}"><tr><td>number_bytes_format {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Older interface to <code>label_bytes()</code></h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#superseded"><img src="../help/figures/lifecycle-superseded.svg" alt='[Superseded]' /></a>
+</p>
+<p>These functions are kept for backward compatibility, but you should switch
+to <code><a href="label_bytes.html">label_bytes()</a></code> for new code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+number_bytes_format(symbol = "auto", units = "binary", ...)
+
+number_bytes(x, symbol = "auto", units = c("binary", "si"), accuracy = 1, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>symbol</code></td>
+<td>
+<p>byte symbol to use. If &quot;auto&quot; the symbol used will be
+determined separately for each value of <code>x</code>. Valid symbols are &quot;B&quot;, &quot;kB&quot;,
+&quot;MB&quot;, &quot;GB&quot;, &quot;TB&quot;, &quot;PB&quot;, &quot;EB&quot;, &quot;ZB&quot;, and &quot;YB&quot; for SI units, and the &quot;iB&quot;
+variants for binary units.</p>
+</td></tr>
+<tr valign="top"><td><code>units</code></td>
+<td>
+<p>which unit base to use, &quot;binary&quot; (1024 base) or &quot;si&quot; (1000 base)</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

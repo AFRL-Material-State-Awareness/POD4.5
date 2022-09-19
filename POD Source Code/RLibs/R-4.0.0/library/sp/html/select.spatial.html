@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: select points spatially</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for select.spatial {sp}"><tr><td>select.spatial {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> select points spatially </h2>
+
+<h3>Description</h3>
+
+<p>select a number of points by digitizing the area they fall in
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+select.spatial(data, digitize = TRUE, pch = "+", rownames = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data object of class, or extending <code>SpatialPoints</code>;
+this object knows about its x and y coordinate </p>
+</td></tr>
+<tr valign="top"><td><code>digitize</code></td>
+<td>
+<p> logical; if TRUE, points in a digitized polygon
+are selected; if FALSE, points identified by mouse clicks are selected </p>
+</td></tr>
+<tr valign="top"><td><code>pch</code></td>
+<td>
+<p>plotting character used for points</p>
+</td></tr>
+<tr valign="top"><td><code>rownames</code></td>
+<td>
+<p>logical; if FALSE, row (coordinate) numbers are returned;
+if TRUE and data contains a data.frame part, row.names for selected points
+in the data.frame are returned. </p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> if rownames == FALSE, array with either indexes (row numbers)
+of points inside the digitized polygon; if rownames == TRUE, character
+array with corresponding row names in the data.frame part </p>
+
+
+<h3>See Also</h3>
+
+<p><a href="point.in.polygon.html">point.in.polygon</a>, <a href="../../graphics/html/locator.html">locator</a>, 
+<a href="SpatialPoints-class.html">SpatialPoints-class</a>, <a href="SpatialPointsDataFrame-class.html">SpatialPointsDataFrame-class</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(meuse)
+## the following command requires user interaction: left mouse
+## selects points, right mouse ends digitizing
+data(meuse)
+coordinates(meuse) = c("x", "y")
+# select.spatial(meuse)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

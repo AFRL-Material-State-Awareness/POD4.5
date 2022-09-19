@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Finding Function Minimum</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fminbnd {pracma}"><tr><td>fminbnd {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Finding Function Minimum
+</h2>
+
+<h3>Description</h3>
+
+<p>Find minimum of single-variable function on fixed interval.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fminbnd(f, a, b, maxiter = 1000, maximum = FALSE,
+        tol = 1e-07, rel.tol = tol, abs.tol = 1e-15, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function whose minimum or maximum is to be found.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>endpoints of the interval to be searched.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>maximal number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>maximum</code></td>
+<td>
+<p>logical; shall maximum or minimum be found; default FALSE.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance; left over for compatibility.</p>
+</td></tr>
+<tr valign="top"><td><code>rel.tol, abs.tol</code></td>
+<td>
+<p>relative and absolute tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional variables to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>fminbnd finds the minimum of a function of one variable within a fixed
+interval. It applies Brent's algorithm, based on golden section search and
+parabolic interpolation.
+</p>
+<p><code>fminbnd</code> may only give local solutions.
+<code>fminbnd</code> never evaluates <code>f</code> at the endpoints.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>xmin</code></td>
+<td>
+<p>location of the minimum resp. maximum.</p>
+</td></tr>
+<tr valign="top"><td><code>fmin</code></td>
+<td>
+<p>function value at the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>niter</code></td>
+<td>
+<p>number of iterations used.</p>
+</td></tr>
+<tr valign="top"><td><code>estim.prec</code></td>
+<td>
+<p>estimated precision.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p><code>fminbnd</code> mimics the Matlab function of the same name.
+</p>
+
+
+<h3>References</h3>
+
+<p>R. P. Brent (1973). Algorithms for Minimization Without Derivatives.
+Dover Publications, reprinted 2002.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fibsearch.html">fibsearch</a></code>, <code><a href="golden_ratio.html">golden_ratio</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  CHEBFUN example by Trefethen
+f &lt;- function(x) exp(x)*sin(3*x)*tanh(5*cos(30*x))
+fminbnd(f, -1, 1)                   # fourth local minimum (from left)
+g &lt;- function(x) complexstep(f, x)  # complex-step derivative
+xs &lt;- findzeros(g, -1, 1)           # local minima and maxima
+ys &lt;- f(xs); n0 &lt;- which.min(ys)    # index of global minimum
+fminbnd(f, xs[n0-1], xs[n0+1])      # xmin:0.7036632, fmin: -1.727377
+
+## Not run: 
+ezplot(f, -1, 1, n = 1000, col = "darkblue", lwd = 2)
+ezplot(function(x) g(x)/150, -1, 1, n = 1000, col = "darkred", add = TRUE)
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

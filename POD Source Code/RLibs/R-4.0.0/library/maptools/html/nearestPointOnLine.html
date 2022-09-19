@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get the nearest point on a line to a given point</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nearestPointOnLine {maptools}"><tr><td>nearestPointOnLine {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Get the nearest point on a line to a given point
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the coordinates of the nearest point on a line to a 
+given point. This function does not work with geographic coordinates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nearestPointOnLine(coordsLine, coordsPoint)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>coordsLine</code></td>
+<td>
+
+<p>Matrix with coordinates of line vertices. Each row represents a vertex. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>coordsPoint</code></td>
+<td>
+
+<p>A vector representing the X and Y coordinates of the point.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Vector with the X and Y coordinates of the nearest point on a line to the 
+given point.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>German Carrillo
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="nearestPointOnSegment.html">nearestPointOnSegment</a></code>, <code><a href="snapPointsToLines.html">snapPointsToLines</a></code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+coordsLine = cbind(c(1,2,3),c(3,2,2))
+coordsPoint = c(1.2,1.5)
+nearestPointOnLine(coordsLine, coordsPoint)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

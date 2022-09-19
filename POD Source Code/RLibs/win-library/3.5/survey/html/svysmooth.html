@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Scatterplot smoothing and density estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svysmooth {survey}"><tr><td>svysmooth {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Scatterplot smoothing and density estimation</h2>
+
+<h3>Description</h3>
+
+<p>Scatterplot smoothing and density estimation for probability-weighted
+data. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svysmooth(formula, design, ...)
+## Default S3 method:
+svysmooth(formula, design, method = c("locpoly", "quantreg"), 
+    bandwidth = NULL, quantile, df = 4, ...)
+## S3 method for class 'svysmooth'
+plot(x, which=NULL, type="l", xlabs=NULL, ylab=NULL,...)
+## S3 method for class 'svysmooth'
+lines(x,which=NULL,...)
+make.panel.svysmooth(design,bandwidth=NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>One-sided formula for density estimation, two-sided for smoothing</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>Survey design object</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>local polynomial smoothing for the mean or regression
+splines for quantiles</p>
+</td></tr>
+<tr valign="top"><td><code>bandwidth</code></td>
+<td>
+<p>Smoothing bandwidth for &quot;locpoly&quot; or <code>NULL</code> for automatic choice</p>
+</td></tr>
+<tr valign="top"><td><code>quantile</code></td>
+<td>
+<p>quantile to be estimated for &quot;quantreg&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>Degrees of freedom for &quot;quantreg&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>which</code></td>
+<td>
+<p>Which plots to show (default is all)</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>as for <code>plot</code></p>
+</td></tr>
+<tr valign="top"><td><code>xlabs</code></td>
+<td>
+<p>Optional vector of x-axis labels</p>
+</td></tr>
+<tr valign="top"><td><code>ylab</code></td>
+<td>
+<p>Optional y-axis label</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>More arguments</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Object of class <code>svysmooth</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>svysmooth</code> does one-dimensional smoothing. If <code>formula</code> has
+multiple predictor variables a separate one-dimensional smooth is
+performed for each one. 
+</p>
+<p>For <code>method="locpoly"</code> the extra arguments are passed to
+<code>locpoly</code> from the KernSmooth package, for
+<code>method="quantreg"</code> they are passed to <code>rq</code> from the
+quantreg package.  The automatic choice of bandwidth for
+<code>method="locpoly"</code> uses the default settings for <code>dpik</code> and
+<code>dpill</code> in the KernSmooth package.
+</p>
+<p><code>make.panel.svysmooth()</code> makes a function that plots points and
+draws a weighted smooth curve through them, a weighted replacement for
+<code><a href="../../graphics/html/panel.smooth.html">panel.smooth</a></code> that can be passed to functions such as
+<code><a href="../../stats/html/termplot.html">termplot</a></code> or <code><a href="../../stats/html/plot.lm.html">plot.lm</a></code>.  The resulting function has a <code>span</code> argument that will set the bandwidth; if this is not specified the automatic choice will be used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>svysmooth</code>, a list of lists, each with <code>x</code> and <code>y</code> components.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svyhist.html">svyhist</a></code> for histograms</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ data(api)
+ dstrat&lt;-svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+
+ smth&lt;-svysmooth(api00~api99+ell,dstrat)
+ dens&lt;-svysmooth(~api99, dstrat,bandwidth=30)
+ dens1&lt;-svysmooth(~api99, dstrat)
+ qsmth&lt;-svysmooth(api00~ell,dstrat, quantile=0.75, df=3,method="quantreg")
+
+ plot(smth)
+ plot(smth, which="ell",lty=2,ylim=c(500,900))
+ lines(qsmth, col="red")
+
+ svyhist(~api99,design=dstrat)
+ lines(dens,col="purple",lwd=3)
+ lines(dens1, col="forestgreen",lwd=2)
+
+ m&lt;-svyglm(api00~sin(api99/100)+stype, design=dstrat)
+ termplot(m, data=model.frame(dstrat), partial.resid=TRUE, se=TRUE,
+  smooth=make.panel.svysmooth(dstrat))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

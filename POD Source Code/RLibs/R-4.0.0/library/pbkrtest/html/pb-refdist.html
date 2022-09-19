@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculate reference distribution using parametric bootstrap</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pb-refdist {pbkrtest}"><tr><td>pb-refdist {pbkrtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculate reference distribution using parametric bootstrap</h2>
+
+<h3>Description</h3>
+
+<p>Calculate reference distribution of likelihood ratio statistic
+in mixed effects models using parametric bootstrap
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+PBrefdist(
+  largeModel,
+  smallModel,
+  nsim = 1000,
+  seed = NULL,
+  cl = NULL,
+  details = 0
+)
+
+## S3 method for class 'lm'
+PBrefdist(
+  largeModel,
+  smallModel,
+  nsim = 1000,
+  seed = NULL,
+  cl = NULL,
+  details = 0
+)
+
+## S3 method for class 'merMod'
+PBrefdist(
+  largeModel,
+  smallModel,
+  nsim = 1000,
+  seed = NULL,
+  cl = NULL,
+  details = 0
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>largeModel</code></td>
+<td>
+<p>A linear mixed effects model as fitted with the
+<code>lmer()</code> function in the <span class="pkg">lme4</span> package. This model muse be
+larger than <code>smallModel</code> (see below).</p>
+</td></tr>
+<tr valign="top"><td><code>smallModel</code></td>
+<td>
+<p>A linear mixed effects model as fitted with the
+<code>lmer()</code> function in the <span class="pkg">lme4</span> package. This model muse be
+smaller than <code>largeModel</code> (see above).</p>
+</td></tr>
+<tr valign="top"><td><code>nsim</code></td>
+<td>
+<p>The number of simulations to form the reference distribution.</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>Seed for the random number generation.</p>
+</td></tr>
+<tr valign="top"><td><code>cl</code></td>
+<td>
+<p>Used for controlling parallel computations. See sections
+'details' and 'examples' below.</p>
+</td></tr>
+<tr valign="top"><td><code>details</code></td>
+<td>
+<p>The amount of output produced. Mainly relevant for debugging
+purposes.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The model <code>object</code> must be fitted with maximum likelihood
+(i.e. with <code>REML=FALSE</code>). If the object is fitted with restricted
+maximum likelihood (i.e. with <code>REML=TRUE</code>) then the model is
+refitted with <code>REML=FALSE</code> before the p-values are calculated. Put
+differently, the user needs not worry about this issue.
+</p>
+<p>The argument 'cl' (originally short for 'cluster') is used for
+controlling parallel computations. 'cl' can be NULL (default),
+positive integer or a list of clusters.
+</p>
+<p>Special care must be taken
+on Windows platforms (described below) but the general picture
+is this:
+</p>
+<p>The recommended way of controlling cl is to specify the
+component <code>pbcl</code> in options() with
+e.g. <code>options("pbcl"=4)</code>.
+</p>
+<p>If cl is NULL, the function will look at if the pbcl has been set
+in the options list with <code>getOption("pbcl")</code>
+</p>
+<p>If cl=N then N cores will be used in the computations. If cl is
+NULL then the function will look for
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Søren Højsgaard <a href="mailto:sorenh@math.aau.dk">sorenh@math.aau.dk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Ulrich Halekoh, Søren Højsgaard (2014)., A Kenward-Roger
+Approximation and Parametric Bootstrap Methods for Tests in Linear Mixed
+Models - The R Package pbkrtest., Journal of Statistical Software,
+58(10), 1-30., <a href="https://www.jstatsoft.org/v59/i09/">https://www.jstatsoft.org/v59/i09/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="pb-modcomp.html">PBmodcomp</a></code>, <code><a href="kr-modcomp.html">KRmodcomp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+data(beets)
+head(beets)
+beet0 &lt;- lmer(sugpct ~ block + sow + harvest + (1|block:harvest), data=beets, REML=FALSE)
+beet_no.harv &lt;- update(beet0, . ~ . -harvest)
+rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20, cl=1)
+rd
+## Not run: 
+## Note: Many more simulations must be made in practice.
+
+# Computations can be made in parallel using several processors:
+
+# 1: On OSs that fork processes (that is, not on windows):
+# --------------------------------------------------------
+
+if (Sys.info()["sysname"] != "Windows"){
+  N &lt;- 2 ## Or N &lt;- parallel::detectCores()
+
+# N cores used in all calls to function in a session
+  options("mc.cores"=N)
+  rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20)
+
+# N cores used just in one specific call (when cl is set,
+# options("mc.cores") is ignored):
+  rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20, cl=N)
+}
+
+# In fact, on Windows, the approach above also work but only when setting the
+# number of cores to 1 (so there is to parallel computing)
+
+# In all calls:
+# options("mc.cores"=1)
+# rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20)
+# Just once
+# rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20, cl=1)
+
+# 2. On all platforms (also on Windows) one can do
+# ------------------------------------------------
+library(parallel)
+N &lt;- 2 ## Or N  &lt;- detectCores()
+clus &lt;- makeCluster(rep("localhost", N))
+
+# In all calls in a session
+options("pb.cl"=clus)
+rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20)
+
+# Just once:
+rd &lt;- PBrefdist(beet0, beet_no.harv, nsim=20, cl=clus)
+stopCluster(clus)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pbkrtest</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

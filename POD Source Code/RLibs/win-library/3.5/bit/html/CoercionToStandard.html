@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coercion from bit, bitwhich, which and ri to logical,...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for CoercionToStandard {bit}"><tr><td>CoercionToStandard {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coercion from bit, bitwhich, which and ri to logical, integer, double</h2>
+
+<h3>Description</h3>
+
+<p>Coercion from bit is quite fast because we use a double loop that fixes each
+word in a processor register.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'bit'
+as.logical(x, ...)
+
+## S3 method for class 'bit'
+as.integer(x, ...)
+
+## S3 method for class 'bit'
+as.double(x, ...)
+
+## S3 method for class 'bitwhich'
+as.integer(x, ...)
+
+## S3 method for class 'bitwhich'
+as.double(x, ...)
+
+## S3 method for class 'bitwhich'
+as.logical(x, ...)
+
+## S3 method for class 'ri'
+as.logical(x, ...)
+
+## S3 method for class 'ri'
+as.integer(x, ...)
+
+## S3 method for class 'ri'
+as.double(x, ...)
+
+## S3 method for class 'which'
+as.logical(x, length = attr(x, "maxindex"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class <code><a href="bit.html">bit</a></code>, <code><a href="bitwhich.html">bitwhich</a></code> or
+<code><a href="ri.html">ri</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>ignored</p>
+</td></tr>
+<tr valign="top"><td><code>length</code></td>
+<td>
+<p>length of the boolean vector (required for <code>as.logical.which</code>)</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code><a href="../../base/html/logical.html">as.logical</a></code> returns a vector of <code>FALSE, TRUE</code>,
+<code><a href="../../base/html/integer.html">as.integer</a></code> and <code><a href="../../base/html/double.html">as.double</a></code> return a vector of
+<code>0,1</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jens Oehlschlägel
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="CoercionToStandard.html">CoercionToStandard</a></code>, <code><a href="as.booltype.html">as.booltype</a></code>, <code><a href="as.bit.html">as.bit</a></code>, <code><a href="as.bitwhich.html">as.bitwhich</a></code>
+, <code><a href="as.which.html">as.which</a></code>, <code><a href="as.ri.html">as.ri</a></code>, <code><a href="../../ff/html/as.hi.html">as.hi</a></code>,  <code><a href="../../ff/html/as.ff.html">as.ff</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  x &lt;- ri(2, 5, 10)
+  y &lt;- as.logical(x)
+  y
+  stopifnot(identical(y, as.logical(as.bit(x))))
+  stopifnot(identical(y, as.logical(as.bitwhich(x))))
+
+  y &lt;- as.integer(x)
+  y
+  stopifnot(identical(y, as.integer(as.logical(x))))
+  stopifnot(identical(y, as.integer(as.bit(x))))
+  stopifnot(identical(y, as.integer(as.bitwhich(x))))
+
+  y &lt;- as.double(x)
+  y
+  stopifnot(identical(y, as.double(as.logical(x))))
+  stopifnot(identical(y, as.double(as.bit(x))))
+  stopifnot(identical(y, as.double(as.bitwhich(x))))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

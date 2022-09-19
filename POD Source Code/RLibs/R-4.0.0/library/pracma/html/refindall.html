@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find overlapping regular expression matches.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for refindall {pracma}"><tr><td>refindall {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Find overlapping regular expression matches.
+</h2>
+
+<h3>Description</h3>
+
+<p>Find overlapping matches for a regular expression.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+refindall(s, pat, over = 1, ignorecase = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>s</code></td>
+<td>
+<p>Single character string.</p>
+</td></tr>
+<tr valign="top"><td><code>pat</code></td>
+<td>
+<p>Regular expression.</p>
+</td></tr>
+<tr valign="top"><td><code>over</code></td>
+<td>
+<p>Natural number, indication how many steps to go forward
+after a match; defaults to 1.</p>
+</td></tr>
+<tr valign="top"><td><code>ignorecase</code></td>
+<td>
+<p>logical, whether to ignore case.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Returns the starting position of all &mdash; even overlapping &mdash; matches
+of the regular expression <code>pat</code> in the character string <code>s</code>.
+</p>
+<p>The syntax for pattern matching has to be PERL-like.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector with the indices of starting positions of all matches.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This effect can also be reached with the R function gregexpr(), see the
+example below.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="regexp.html">regexp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+refindall("ababababa", 'aba')
+gregexpr('a(?=ba)', "ababababa", perl=TRUE)
+
+refindall("AbababaBa", 'aba')
+refindall("AbababaBa", 'aba', ignorecase = TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

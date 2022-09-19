@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Change factor levels by hand</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_recode {forcats}"><tr><td>fct_recode {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Change factor levels by hand</h2>
+
+<h3>Description</h3>
+
+<p>Change factor levels by hand
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_recode(.f, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.f</code></td>
+<td>
+<p>A factor (or character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>&lt;<code><a href="../../rlang/html/dyn-dots.html">dynamic-dots</a></code>&gt; A sequence of named character
+vectors where the name gives the new level, and the value gives the old
+level. Levels not otherwise mentioned will be left as is. Levels can
+be removed by naming them <code>NULL</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- factor(c("apple", "bear", "banana", "dear"))
+fct_recode(x, fruit = "apple", fruit = "banana")
+
+# If you make a mistake you'll get a warning
+fct_recode(x, fruit = "apple", fruit = "bananana")
+
+# If you name the level NULL it will be removed
+fct_recode(x, NULL = "apple", fruit = "banana")
+
+# Wrap the left hand side in quotes if it contains special variables
+fct_recode(x, "an apple" = "apple", "a bear" = "bear")
+
+# When passing a named vector to rename levels use !!! to splice
+x &lt;- factor(c("apple", "bear", "banana", "dear"))
+levels &lt;- c(fruit = "apple", fruit = "banana")
+fct_recode(x, !!!levels)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

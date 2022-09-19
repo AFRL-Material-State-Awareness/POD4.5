@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create options for an r_session object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for r_session_options {callr}"><tr><td>r_session_options {callr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create options for an <a href="r_session.html">r_session</a> object</h2>
+
+<h3>Description</h3>
+
+<p>Create options for an <a href="r_session.html">r_session</a> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+r_session_options(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Options to override, named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Named list of options.
+</p>
+<p>The current options are:
+</p>
+
+<ul>
+<li> <p><code>libpath</code>: Library path for the subprocess. By default the same as the
+<em>current</em> library path. I.e. <em>not</em> necessarily the library path of
+a fresh R session.)
+</p>
+</li>
+<li> <p><code>repos</code>: <code>repos</code> option for the subprocess. By default the current
+value of the main process.
+</p>
+</li>
+<li> <p><code>stdout</code>: Standard output of the sub-process. This can be <code>NULL</code> or
+a pipe: <code>"|"</code>. If it is a pipe then the output of the subprocess is
+not included in the responses, but you need to poll and read it
+manually. This is for exports.
+</p>
+</li>
+<li> <p><code>stderr</code>: Similar to <code>stdout</code>, but for the standard error.
+</p>
+</li>
+<li> <p><code>error</code>: See 'Error handling' in <code><a href="r.html">r()</a></code>.
+</p>
+</li>
+<li> <p><code>cmdargs</code>: See the same argument of <code><a href="r.html">r()</a></code>. (Its default might be
+different, though.)
+</p>
+</li>
+<li> <p><code>system_profile</code>: See the same argument of <code><a href="r.html">r()</a></code>.
+</p>
+</li>
+<li> <p><code>user_profile</code>: See the same argument of <code><a href="r.html">r()</a></code>.
+</p>
+</li>
+<li> <p><code>env</code>: See the same argument of <code><a href="r.html">r()</a></code>.
+</p>
+</li>
+<li> <p><code>load_hook</code>: <code>NULL</code>, or code (quoted) to run in the sub-process
+at start up. (I.e. not for every single <code>run()</code> call.)
+</p>
+</li>
+<li> <p><code>extra</code>: List of extra arguments to pass to <a href="../../processx/html/process.html">processx::process</a>.
+</p>
+</li></ul>
+
+<p>Call <code>r_session_options()</code> to see the default values.
+<code>r_session_options()</code> might contain undocumented entries, you cannot
+change these.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+r_session_options()
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>callr</em> version 3.7.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

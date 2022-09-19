@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a bubble plot of spatial data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bubble {sp}"><tr><td>bubble {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Create a bubble plot of spatial data
+</h2>
+
+<h3>Description</h3>
+
+<p>Create a bubble plot of spatial data, with options for bicolour
+residual plots (xyplot wrapper)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bubble(obj, zcol = 1, ..., fill = TRUE, maxsize = 3, do.sqrt = TRUE, pch, 
+	col = c("#d01c8b", "#4dac26"), key.entries = quantile(data[,zcol]), main, 
+	identify = FALSE, labels = row.names(data.frame(obj)), key.space = "right",
+	scales = list(draw = FALSE), xlab = NULL, ylab = NULL, panel = panel.bubble,
+	sp.layout = NULL, 
+	xlim = bbexpand(bbox(obj)[1,], 0.04), 
+	ylim = bbexpand(bbox(obj)[2,], 0.04))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> object of, or extending, class SpatialPointsDataFrame 
+or SpatialGridDataFrame, see <a href="coordinates.html">coordinates</a> or <a href="SpatialPoints.html">SpatialPointsDataFrame</a>; 
+the object knows about its spatial coordinates</p>
+</td></tr>
+<tr valign="top"><td><code>zcol</code></td>
+<td>
+<p> z-variable column name, or column number after removing
+spatial coordinates from x@data: 1 refers to the first non-coordinate
+column </p>
+</td></tr>
+<tr valign="top"><td><code>fill</code></td>
+<td>
+<p> logical; if TRUE, filled circles are plotted (pch = 16), 
+else open circles (pch = 1); the pch argument overrides this </p>
+</td></tr>
+<tr valign="top"><td><code>maxsize</code></td>
+<td>
+ <p><code>cex</code> value for largest circle </p>
+</td></tr>
+<tr valign="top"><td><code>do.sqrt</code></td>
+<td>
+<p> logical; if TRUE the plotting symbol area (sqrt(diameter)) 
+is proportional to the value of the z-variable; if FALSE, the symbol size
+(diameter) is proportional to the z-variable </p>
+</td></tr>
+<tr valign="top"><td><code>pch</code></td>
+<td>
+<p> plotting character </p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p> colours to be used; numeric vector of size two: first value
+is for negative values, second for positive values. Default colors: 
+5-class PiYG from colorbrewer.org. </p>
+</td></tr>
+<tr valign="top"><td><code>key.entries</code></td>
+<td>
+<p> the values that will be plotted in the key; by default 
+the five quantiles min, q.25, median q.75, max </p>
+</td></tr>
+<tr valign="top"><td><code>main</code></td>
+<td>
+<p> main plotting title </p>
+</td></tr>
+<tr valign="top"><td><code>identify</code></td>
+<td>
+<p> logical; if true, regular <code>plot</code> is called instead of
+<code>xyplot</code>, and followed by a call to <code>identify()</code>. </p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p> labels argument passed to <code>plot</code> if <code>identify</code>
+is TRUE </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> arguments, passed to <code>xyplot</code>, or <code>plot</code> if 
+identification is required. </p>
+</td></tr>
+<tr valign="top"><td><code>key.space</code></td>
+<td>
+<p>location of the key</p>
+</td></tr>
+<tr valign="top"><td><code>scales</code></td>
+<td>
+<p>scales argument as passed to <a href="../../lattice/html/xyplot.html">xyplot</a></p>
+</td></tr>
+<tr valign="top"><td><code>xlab</code></td>
+<td>
+<p>x-axis label</p>
+</td></tr>
+<tr valign="top"><td><code>ylab</code></td>
+<td>
+<p>y-axis label</p>
+</td></tr>
+<tr valign="top"><td><code>panel</code></td>
+<td>
+<p>panel function used</p>
+</td></tr>
+<tr valign="top"><td><code>sp.layout</code></td>
+<td>
+<p>possible layout items; see <a href="spplot.html">spplot</a></p>
+</td></tr>
+<tr valign="top"><td><code>xlim</code></td>
+<td>
+<p>x axis limit</p>
+</td></tr>
+<tr valign="top"><td><code>ylim</code></td>
+<td>
+<p>y axis limit</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>returns (or plots) the bubble plot; if <code>identify</code> is TRUE, returns
+the indexes (row numbers) of identified points.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Edzer Pebesma </p>
+
+
+<h3>See Also</h3>
+
+<p><a href="../../lattice/html/xyplot.html">xyplot</a>, <a href="mapasp.html">mapasp</a>, <a href="../../graphics/html/identify.html">identify</a></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(meuse)
+coordinates(meuse) &lt;- c("x", "y") # promote to SpatialPointsDataFrame
+bubble(meuse, "cadmium", maxsize = 2.5, main = "cadmium concentrations (ppm)", 
+    key.entries = 2^(-1:4))
+bubble(meuse, "zinc", main = "zinc concentrations (ppm)",
+    key.entries =  100 * 2^(0:4))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

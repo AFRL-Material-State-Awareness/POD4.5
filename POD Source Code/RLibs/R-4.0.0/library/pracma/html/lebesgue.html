@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Lebesgue Constant</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lebesgue {pracma}"><tr><td>lebesgue {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Lebesgue Constant</h2>
+
+<h3>Description</h3>
+
+<p>Estimates the Lebesgue constant.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lebesgue(x, refine = 4, plotting = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector of grid points</p>
+</td></tr>
+<tr valign="top"><td><code>refine</code></td>
+<td>
+<p>refine the grid with <code>2^refine</code> grid points;
+can only be an integer between 2 and 10, default 4.</p>
+</td></tr>
+<tr valign="top"><td><code>plotting</code></td>
+<td>
+<p>shall the Lebesgue function be plotted.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Lebesgue constant gives an estimation <i>||P_n f|| &le; L ||f||</i>
+(in minimax norm) where <i>P_n f</i> is the interpolating polynomial of
+order <i>n</i> for <i>f</i> on an interval <i>[a, b]</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Lebesgue constant for the given grid points.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The Lebesgue constant plays an important role when estimating the distance
+of interpolating polynomials from the minimax solution (see the Remez
+algorithm).
+</p>
+
+
+<h3>References</h3>
+
+<p>Berrut, J.-P., and L. Nick Trefethen (2004). &ldquo;Barycentric Lagrange
+Interpolation&rdquo;. SIAM Review, Vol. 46(3), pp.501&ndash;517.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="barylag.html">barylag</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+lebesgue(seq(0, 1, length.out = 6))  #=&gt; 3.100425
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

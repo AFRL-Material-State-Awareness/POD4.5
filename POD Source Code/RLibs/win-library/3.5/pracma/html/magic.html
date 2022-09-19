@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Magic Square</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for magic {pracma}"><tr><td>magic {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Magic Square</h2>
+
+<h3>Description</h3>
+
+<p>Create a magic square.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+magic(n)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>numeric scalar specifying dimensions for the result;
+<code>n</code> must be a scalar greater than or equal to 3.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>A magic square is a square matrix where all row and column sums and also
+the diagonal sums all have the same value.
+</p>
+<p>This value or the characteristic sum for a magic square of order <i>n</i>
+is <i>sum(1:n^2)/n</i>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an <code>n</code>-by-<code>n</code> matrix constructed from
+the integers <code>1</code> through <code>N^2</code> with equal row and column sums.
+</p>
+
+
+<h3>Note</h3>
+
+<p>A magic square, scaled by its magic sum, is doubly stochastic.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>P. Roebuck <a href="mailto:roebuck@mdanderson.org">roebuck@mdanderson.org</a> for the first R version in the
+package &lsquo;matlab&rsquo;. The version here is more R-like.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+magic(3)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

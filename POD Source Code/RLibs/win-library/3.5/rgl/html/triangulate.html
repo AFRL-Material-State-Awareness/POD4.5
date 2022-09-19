@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Triangulate a two-dimensional polygon</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for triangulate {rgl}"><tr><td>triangulate {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Triangulate a two-dimensional polygon
+</h2>
+
+<h3>Description</h3>
+
+<p>This algorithm decomposes a general polygon into simple
+polygons and uses the &ldquo;ear-clipping&rdquo; algorithm to triangulate it.
+Polygons with holes are supported.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+triangulate(x, y = NULL, z = NULL, random = TRUE, plot = FALSE, partial = NA)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+
+<p>Coordinates of a two-dimensional polygon in a format supported by <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code>.  
+See Details for how <code>z</code> is handled.
+</p>
+</td></tr>
+<tr valign="top"><td><code>random</code></td>
+<td>
+
+<p>Whether to use a random or deterministic triangulation.
+</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+
+<p>Whether to plot the triangulation; mainly for debugging purposes.
+</p>
+</td></tr>
+<tr valign="top"><td><code>partial</code></td>
+<td>
+
+<p>If the triangulation fails, should partial results be returned?
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Normally <code>triangulate</code> looks only at the <code>x</code> and <code>y</code>
+coordinates.  However, if one of those is constant, it is replaced
+with the <code>z</code> coordinate if present.
+</p>
+<p>The algorithm works as follows.  First, it breaks the polygon into 
+pieces separated by <code>NA</code> values in <code>x</code> or <code>y</code>.
+Each of these pieces should be a simple, non-self-intersecting
+polygon, separate from the other pieces. 
+(Though some minor exceptions to this rule may work, none
+are guaranteed).  The nesting of these pieces is determined.
+</p>
+<p>The &ldquo;outer&rdquo; polygon(s) are then merged with the
+polygons that they immediately contain, and each of these
+pieces is triangulated using the ear-clipping algorithm.  
+</p>
+<p>Finally, all the triangulated pieces are put together into one
+result.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A three-by-n array giving the indices of the vertices of 
+each triangle.  (No vertices are added; only the original
+vertices are used in the triangulation.)
+</p>
+<p>The array has an integer vector attribute <code>"nextvert"</code>
+with one entry per vertex, giving the index of the next 
+vertex to proceed counter-clockwise around outer
+polygon boundaries, clockwise around inner boundaries.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Not all inputs will succeed, even when a triangulation is
+possible.  Generally using <code>random = TRUE</code> will find
+a successful triangulation if one exists, but it may
+occasionally take more than one try.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>References</h3>
+
+<p>See the Wikipedia article &ldquo;polygon triangulation&rdquo;
+for a description of the ear-clipping algorithm. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="extrude3d.html">extrude3d</a></code> for a solid extrusion of a polygon, <code><a href="polygon3d.html">polygon3d</a></code> for
+a flat display; both use <code>triangulate</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+theta &lt;- seq(0, 2*pi, length.out = 25)[-25]
+theta &lt;- c(theta, NA, theta, NA, theta, NA, theta, NA, theta)
+r &lt;- c(rep(1.5, 24), NA, rep(0.5, 24), NA, rep(0.5, 24), NA, rep(0.3, 24), NA, rep(0.1, 24))
+dx &lt;- c(rep(0, 24), NA, rep(0.6, 24), NA, rep(-0.6, 24), NA, rep(-0.6, 24), NA, rep(-0.6, 24))
+x &lt;- r*cos(theta) + dx
+y &lt;- r*sin(theta)
+plot(x, y, type = "n")
+polygon(x, y)
+triangulate(x, y, plot = TRUE)
+open3d()
+polygon3d(x, y, x - y, col = "red")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

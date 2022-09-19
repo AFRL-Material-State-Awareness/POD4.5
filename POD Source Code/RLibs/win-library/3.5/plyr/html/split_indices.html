@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Split indices.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for split_indices {plyr}"><tr><td>split_indices {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Split indices.</h2>
+
+<h3>Description</h3>
+
+<p>An optimised version of split for the special case of splitting row
+indices into groups, as used by <code><a href="splitter_d.html">splitter_d</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+split_indices(group, n = 0L)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>largest integer (may not appear in index). This is hint: if
+the largest value of <code>group</code> is bigger than <code>n</code>, the output
+will silently expand.</p>
+</td></tr>
+<tr valign="top"><td><code>index</code></td>
+<td>
+<p>integer indices</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+split_indices(sample(10, 100, rep = TRUE))
+split_indices(sample(10, 100, rep = TRUE), 10)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

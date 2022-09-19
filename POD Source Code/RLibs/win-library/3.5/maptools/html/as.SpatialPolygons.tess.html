@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coercion of spatstat tess object to sp SpatialPolygons object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for as.SpatialPolygons.tess {maptools}"><tr><td>as.SpatialPolygons.tess {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coercion of spatstat tess object to sp SpatialPolygons object</h2>
+
+<h3>Description</h3>
+
+<p>This function coerces <span class="pkg">spatstat</span>s tessellation objects of class <code>tess</code>
+to <span class="pkg">sp</span>s <code>SpatialPolygons</code> class. S4-style as() coercion works as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.SpatialPolygons.tess(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><span class="pkg">spatstat</span> object of class <code>tess</code> to coerce from</p>
+</td></tr>
+</table>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>coerce</dt><dd><p><code>signature(from = "tess", to = "SpatialPolygons")</code></p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a>, Roger Bivand</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+run &lt;- FALSE
+if (require("spatstat.geom", quietly=TRUE)) run &lt;- TRUE
+if (run) {
+A &lt;- tess(xgrid=0:4,ygrid=0:4)
+A_sp &lt;- as(A, "SpatialPolygons")
+plot(A_sp)
+text(coordinates(A_sp), labels=row.names(A_sp), cex=0.6)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

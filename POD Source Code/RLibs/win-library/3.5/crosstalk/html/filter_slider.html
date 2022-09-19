@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Range filter control</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for filter_slider {crosstalk}"><tr><td>filter_slider {crosstalk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Range filter control</h2>
+
+<h3>Description</h3>
+
+<p>Creates a slider widget that lets users filter observations based on a range
+of values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+filter_slider(
+  id,
+  label,
+  sharedData,
+  column,
+  step = NULL,
+  round = FALSE,
+  ticks = TRUE,
+  animate = FALSE,
+  width = NULL,
+  sep = ",",
+  pre = NULL,
+  post = NULL,
+  timeFormat = NULL,
+  timezone = NULL,
+  dragRange = TRUE,
+  min = NULL,
+  max = NULL
+)
+
+animation_options(
+  interval = 1000,
+  loop = FALSE,
+  playButton = NULL,
+  pauseButton = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>An HTML element ID; must be unique within the web page</p>
+</td></tr>
+<tr valign="top"><td><code>label</code></td>
+<td>
+<p>A human-readable label</p>
+</td></tr>
+<tr valign="top"><td><code>sharedData</code></td>
+<td>
+<p><code>SharedData</code> object with the data to filter</p>
+</td></tr>
+<tr valign="top"><td><code>column</code></td>
+<td>
+<p>A one-sided formula whose values will be used for this slider.
+The column must be of type <code><a href="../../base/html/Dates.html">Date</a></code>, <code><a href="../../base/html/DateTimeClasses.html">POSIXt</a></code>, or
+numeric.</p>
+</td></tr>
+<tr valign="top"><td><code>step</code></td>
+<td>
+<p>Specifies the interval between each selectable value on the
+slider (if <code>NULL</code>, a heuristic is used to determine the step size). If
+the values are dates, <code>step</code> is in days; if the values are times
+(POSIXt), <code>step</code> is in seconds.</p>
+</td></tr>
+<tr valign="top"><td><code>round</code></td>
+<td>
+<p><code>TRUE</code> to round all values to the nearest integer;
+<code>FALSE</code> if no rounding is desired; or an integer to round to that
+number of decimal places (for example, 1 will round to the nearest 0.1, and
+-2 will round to the nearest 100). Any rounding will be applied after
+snapping to the nearest step.</p>
+</td></tr>
+<tr valign="top"><td><code>ticks</code></td>
+<td>
+<p><code>FALSE</code> to hide tick marks, <code>TRUE</code> to show them
+according to some simple heuristics.</p>
+</td></tr>
+<tr valign="top"><td><code>animate</code></td>
+<td>
+<p><code>TRUE</code> to show simple animation controls with default
+settings; <code>FALSE</code> not to; or a custom settings list, such as those
+created using <code><a href="../../shiny/html/animationOptions.html">animationOptions</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>The width of the slider control (see
+<code><a href="../../htmltools/html/validateCssUnit.html">validateCssUnit</a></code> for valid formats)</p>
+</td></tr>
+<tr valign="top"><td><code>sep</code></td>
+<td>
+<p>Separator between thousands places in numbers.</p>
+</td></tr>
+<tr valign="top"><td><code>pre</code></td>
+<td>
+<p>A prefix string to put in front of the value.</p>
+</td></tr>
+<tr valign="top"><td><code>post</code></td>
+<td>
+<p>A suffix string to put after the value.</p>
+</td></tr>
+<tr valign="top"><td><code>timeFormat</code></td>
+<td>
+<p>Only used if the values are Date or POSIXt objects. A time
+format string, to be passed to the Javascript strftime library. See
+<a href="https://github.com/samsonjs/strftime">https://github.com/samsonjs/strftime</a> for more details. The allowed
+format specifications are very similar, but not identical, to those for R's
+<code><a href="../../base/html/strptime.html">strftime</a></code> function. For Dates, the default is <code>"%F"</code>
+(like <code>"2015-07-01"</code>), and for POSIXt, the default is <code>"%F %T"</code>
+(like <code>"2015-07-01 15:32:10"</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>timezone</code></td>
+<td>
+<p>Only used if the values are POSIXt objects. A string
+specifying the time zone offset for the displayed times, in the format
+<code>"+HHMM"</code> or <code>"-HHMM"</code>. If <code>NULL</code> (the default), times will
+be displayed in the browser's time zone. The value <code>"+0000"</code> will
+result in UTC time.</p>
+</td></tr>
+<tr valign="top"><td><code>dragRange</code></td>
+<td>
+<p>This option is used only if it is a range slider (with two
+values). If <code>TRUE</code> (the default), the range can be dragged. In other
+words, the min and max can be dragged together. If <code>FALSE</code>, the range
+cannot be dragged.</p>
+</td></tr>
+<tr valign="top"><td><code>min</code></td>
+<td>
+<p>The leftmost value of the slider. By default, set to the minimal
+number in input data.</p>
+</td></tr>
+<tr valign="top"><td><code>max</code></td>
+<td>
+<p>The rightmost value of the slider. By default, set to the maximal
+number in input data.</p>
+</td></tr>
+<tr valign="top"><td><code>interval</code></td>
+<td>
+<p>The interval, in milliseconds, between each animation step.</p>
+</td></tr>
+<tr valign="top"><td><code>loop</code></td>
+<td>
+<p><code>TRUE</code> to automatically restart the animation when it
+reaches the end.</p>
+</td></tr>
+<tr valign="top"><td><code>playButton</code></td>
+<td>
+<p>Specifies the appearance of the play button. Valid values
+are a one-element character vector (for a simple text label), an HTML tag
+or list of tags (using <code><a href="../../htmltools/html/tag.html">tag</a></code> and friends), or raw HTML (using
+<code><a href="../../htmltools/html/HTML.html">HTML</a></code>).</p>
+</td></tr>
+<tr valign="top"><td><code>pauseButton</code></td>
+<td>
+<p>Similar to <code>playButton</code>, but for the pause button.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Only run examples in interactive R sessions
+if (interactive()) {
+
+sd &lt;- SharedData$new(mtcars)
+filter_slider("mpg", "Miles per gallon", sd, "mpg")
+
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>crosstalk</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: rearrange data in SpatialPointsDataFrame or...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for stack {sp}"><tr><td>stack {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> rearrange data in SpatialPointsDataFrame or SpatialGridDataFrame 
+for plotting with spplot (levelplot/xyplot wrapper) </h2>
+
+<h3>Description</h3>
+
+ 
+<p>rearrange SpatialPointsDataFrame for plotting with spplot or levelplot </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+spmap.to.lev(data, zcol = 1:n, n = 2, names.attr)
+## S3 method for class 'SpatialPointsDataFrame'
+stack(x, select, ...)
+## S3 method for class 'SpatialGridDataFrame'
+stack(x, select, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p> object of class (or extending) SpatialPointsDataFrame or
+SpatialGridDataFrame </p>
+</td></tr>
+<tr valign="top"><td><code>zcol</code></td>
+<td>
+<p> z-coordinate column name(s), or a column number (range) (after
+removing the spatial coordinate columns: 1 refers to the first non-coordinate
+column, etc. ) </p>
+</td></tr>
+<tr valign="top"><td><code>names.attr</code></td>
+<td>
+<p>names of the set of z-columns (these names
+will appear in the plot); if omitted, column names of <code>zcol</code> </p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p> number of columns to be stacked </p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> same as <code>data</code></p>
+</td></tr>
+<tr valign="top"><td><code>select</code></td>
+<td>
+<p> same as <code>zcol</code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> ignored </p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+ 
+<p><code>spmap.to.lev</code> returns a data frame with the following elements:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> x-coordinate for each row</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p> y-coordinate for each row</p>
+</td></tr> 
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p> column vector with each of the elements in columns <code>zcol</code>
+of <code>data</code> stacked </p>
+</td></tr> 
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p> factor; name of each of the stacked <code>z</code> columns </p>
+</td></tr> 
+</table>
+<p><code>stack</code> is an S3 method: it return a data.frame with a column
+<code>values</code> that has the stacked coordinates and attributes, and a
+column <code>ind</code> that indicates the variable stacked; it also
+replicates the coordinates. </p>
+
+
+<h3>See Also</h3>
+
+ <p><a href="spplot.html">spplot</a>, <a href="../../lattice/html/levelplot.html">levelplot</a> in package <code>lattice</code>, and <a href="../../utils/html/stack.html">stack</a></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(lattice)
+data(meuse.grid) # data frame
+coordinates(meuse.grid) = c("x", "y") # promotes to SpatialPointsDataFrame
+meuse.grid[["idist"]] = 1 - meuse.grid[["dist"]] # add variable
+# the following is made much easier by spplot:
+levelplot(z~x+y|name, spmap.to.lev(meuse.grid, z=c("dist","idist"), names.attr =
+	c("distance", "inverse of distance")), aspect = "iso")
+levelplot(values~x+y|ind, as.data.frame(stack(meuse.grid)),aspect = "iso")
+gridded(meuse.grid) = TRUE
+levelplot(z~x+y|name, spmap.to.lev(meuse.grid, z=c("dist","idist"), names.attr =
+	c("distance", "inverse of distance")), aspect = "iso")
+levelplot(values~x+y|ind, as.data.frame(stack(meuse.grid)), asp = "iso")
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

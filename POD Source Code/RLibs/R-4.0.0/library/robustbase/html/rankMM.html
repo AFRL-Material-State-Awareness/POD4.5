@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Simple Matrix Rank</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rankMM {robustbase}"><tr><td>rankMM {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Simple Matrix Rank</h2>
+
+<h3>Description</h3>
+
+<p>Compute the rank of a matrix <code>A</code> in simple way, based on the SVD,
+<code><a href="../../base/html/svd.html">svd</a>()</code>, and &ldquo;the same as Matlab&rdquo;.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rankMM(A, tol = NULL, sv = svd(A, 0, 0)$d)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>a numerical matrix, maybe non-square.  When <code>sv</code> is
+specified, only <code>dim(A)</code> is made use of.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>numerical tolerance (compared to singular values).  By
+default, when <code>NULL</code>, the tolerance is determined from the
+maximal value of <code>sv</code> and the computer epsilon.</p>
+</td></tr>
+<tr valign="top"><td><code>sv</code></td>
+<td>
+<p>vector of <em>non-increasing</em> singular values of <code>A</code>, (to be
+passed if already known).</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an integer from the set <code>0:min(dim(A))</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Martin Maechler, Date: 7 Apr 2007
+</p>
+
+
+<h3>See Also</h3>
+
+<p>There are more sophisticated proposals for computing the rank of a
+matrix; for a couple of those, see <code><a href="../../Matrix/html/rankMatrix.html">rankMatrix</a></code> in the
+<a href="https://CRAN.R-project.org/package=Matrix"><span class="pkg">Matrix</span></a> package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+rankMM # - note the simple function definition
+
+hilbert &lt;- function(n) { i &lt;- seq_len(n); 1/outer(i - 1L, i, "+") }
+hilbert(4)
+H12 &lt;- hilbert(12)
+rankMM(H12)        # 11 - numerically more realistic
+rankMM(H12, tol=0) # -&gt; 12
+## explanation :
+round(log10(svd(H12, 0,0)$d), 1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

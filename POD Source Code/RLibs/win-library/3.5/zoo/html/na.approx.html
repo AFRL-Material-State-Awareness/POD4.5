@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Replace NA by Interpolation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for na.approx {zoo}"><tr><td>na.approx {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Replace NA by Interpolation</h2>
+
+<h3>Description</h3>
+
+<p>Generic functions for replacing each <code>NA</code> with interpolated
+values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+na.approx(object, ...) 
+## S3 method for class 'zoo'
+na.approx(object, x = index(object), xout, ..., na.rm = TRUE, maxgap = Inf, along)
+## S3 method for class 'zooreg'
+na.approx(object, ...) 
+## S3 method for class 'ts'
+na.approx(object, ...)
+## Default S3 method:
+na.approx(object, x = index(object), xout, ..., na.rm = TRUE, maxgap = Inf, along) 
+
+na.spline(object, ...) 
+## S3 method for class 'zoo'
+na.spline(object, x = index(object), xout, ..., na.rm = TRUE, maxgap = Inf, along)
+## S3 method for class 'zooreg'
+na.spline(object, ...) 
+## S3 method for class 'ts'
+na.spline(object, ...)
+## Default S3 method:
+na.spline(object, x = index(object), xout, ..., na.rm = TRUE, maxgap = Inf, along) 
+
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>object in which <code>NA</code>s are to be replaced</p>
+</td></tr>
+<tr valign="top"><td><code>x, xout</code></td>
+<td>
+<p>Variables to be used for interpolation as in <code><a href="../../stats/html/approxfun.html">approx</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>logical. If the result of the (spline) interpolation
+still results in leading and/or trailing <code>NA</code>s, should these be removed
+(using <code><a href="na.trim.html">na.trim</a></code>)?</p>
+</td></tr>
+<tr valign="top"><td><code>maxgap</code></td>
+<td>
+<p>maximum number of consecutive <code>NA</code>s to
+fill. Any longer gaps will be left unchanged. Note that all methods listed
+above can accept <code>maxgap</code> as it is ultimately passed to the 
+<code>default</code> method. In <code>na.spline</code> the <code>maxgap</code> argument cannot
+be combined with <code>xout</code>, though.</p>
+</td></tr>
+<tr valign="top"><td><code>along</code></td>
+<td>
+<p>deprecated.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to methods. The <code>n</code> argument of <code><a href="../../stats/html/approxfun.html">approx</a></code> is currently not supported.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Missing values (<code>NA</code>s) are replaced by linear interpolation via
+<code><a href="../../stats/html/approxfun.html">approx</a></code> or cubic spline interpolation via <code><a href="../../stats/html/splinefun.html">spline</a></code>,
+respectively.  
+</p>
+<p>It can also be used for series disaggregation by specifying <code>xout</code>.
+</p>
+<p>By default the index associated with <code>object</code> is used
+for interpolation. Note, that if this calls <code>index.default</code>
+this gives an equidistant spacing <code>1:NROW(object)</code>. If <code>object</code>
+is a matrix or data.frame, the interpolation is done separately for
+each column.
+</p>
+<p>If <code>obj</code> is a plain vector then <code>na.approx(obj, x, y, xout, ...)</code>
+returns <code>approx(x = x[!na], y = coredata(obj)[!na], xout = xout, ...)</code>
+(where <code>na</code> indicates observations with <code>NA</code>) such that <code>xout</code>
+defaults to <code>x</code>. Note that if there are less than two non-<code>NA</code>s then
+<code>approx()</code> cannot be applied and thus no <code>NA</code>s can be replaced.
+</p>
+<p>If <code>obj</code> is a <code>zoo</code>, <code>zooreg</code> or <code>ts</code> object its
+<code>coredata</code> value is processed as described and its time index is <code>xout</code> if
+specified and <code>index(obj)</code> otherwise. If <code>obj</code> is two dimensional
+then the above is applied to each column separately. For examples, see below.
+</p>
+<p>If <code>obj</code> has more than one column, the above strategy is applied to
+each column.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of similar structure as <code>object</code> with <code>NA</code>s replaced by
+interpolation. For <code>na.approx</code> only the internal <code>NA</code>s are replaced and
+leading or trailing <code>NA</code>s are omitted if <code>na.rm = TRUE</code> or not
+replaced if <code>na.rm = FALSE</code>. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code>, <code><a href="../../stats/html/approxfun.html">approx</a></code>, <code><a href="zoo.html">na.contiguous</a></code>,
+<code><a href="na.locf.html">na.locf</a></code>, <code><a href="../../stats/html/na.fail.html">na.omit</a></code>, <code><a href="na.trim.html">na.trim</a></code>, <code><a href="../../stats/html/splinefun.html">spline</a></code>,
+<code><a href="../../stinepack/html/stinterp.html">stinterp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+z &lt;- zoo(c(2, NA, 1, 4, 5, 2), c(1, 3, 4, 6, 7, 8))
+
+## use underlying time scale for interpolation
+na.approx(z) 
+## use equidistant spacing
+na.approx(z, 1:6)
+
+# with and without na.rm = FALSE
+zz &lt;- c(NA, 9, 3, NA, 3, 2)
+na.approx(zz, na.rm = FALSE)
+na.approx(zz)
+
+d0 &lt;- as.Date("2000-01-01")
+z &lt;- zoo(c(11, NA, 13, NA, 15, NA), d0 + 1:6)
+
+# NA fill, drop or keep leading/trailing NAs
+na.approx(z)
+na.approx(z, na.rm = FALSE)
+
+# extrapolate to point outside of range of time points
+# (a) drop NA, (b) keep NA, (c) extrapolate using rule = 2 from approx()
+na.approx(z, xout = d0 + 7)
+na.approx(z, xout = d0 + 7, na.rm = FALSE)
+na.approx(z, xout = d0 + 7, rule = 2)
+
+# use splines - extrapolation handled differently
+z &lt;- zoo(c(11, NA, 13, NA, 15, NA), d0 + 1:6)
+na.spline(z)
+na.spline(z, na.rm = FALSE)
+na.spline(z, xout = d0 + 1:6)
+na.spline(z, xout = d0 + 2:5)
+na.spline(z, xout = d0 + 7)
+na.spline(z, xout = d0 + 7, na.rm = FALSE)
+
+## using na.approx for disaggregation
+zy &lt;- zoo(1:3,  2000:2001)
+
+# yearly to monthly series
+zmo &lt;- na.approx(zy, xout = as.yearmon(2000+0:13/12))
+zmo
+
+# monthly to daily series
+sq &lt;- seq(as.Date(start(zmo)), as.Date(end(zmo), frac = 1), by = "day")
+zd &lt;- na.approx(zmo, x = as.Date, xout = sq)
+head(zd)
+
+# weekly to daily series
+zww &lt;- zoo(1:3, as.Date("2001-01-01") + seq(0, length = 3, by = 7))
+zww
+zdd &lt;- na.approx(zww, xout = seq(start(zww), end(zww), by = "day"))
+zdd
+
+# The lines do not show up because of the NAs
+plot(cbind(z, z), type = "b", screen = 1)
+# use na.approx to force lines to appear
+plot(cbind(z, na.approx(z)), type = "b", screen = 1)
+
+# Workaround where less than 2 NAs can appear in a column
+za &lt;- zoo(cbind(1:5, NA, c(1:3, NA, 5), NA)); za
+
+ix &lt;- colSums(!is.na(za)) &gt; 0
+za[, ix] &lt;- na.approx(za[, ix]); za
+
+# using na.approx to create regularly spaced series
+# z has points at 10, 20 and 40 minutes while output also has a point at 30
+if(require("chron")) {
+  tt &lt;- as.chron("2000-01-01 10:00:00") + c(1, 2, 4) * as.numeric(times("00:10:00"))
+  z &lt;- zoo(1:3, tt)
+  tseq &lt;- seq(start(z), end(z), by = times("00:10:00"))
+  na.approx(z, xout = tseq)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

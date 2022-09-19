@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reading and Writing zoo Series</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for read.zoo {zoo}"><tr><td>read.zoo {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reading and Writing zoo Series</h2>
+
+<h3>Description</h3>
+
+<p><code>read.zoo</code> and <code>write.zoo</code> are convenience functions for reading
+and writing <code>"zoo"</code> series from/to text files. They are convenience
+interfaces to <code>read.table</code> and <code>write.table</code>, respectively.
+To employ <code>read.csv</code>, <code>read.csv2</code>, <code>read.delim</code>,
+<code>read.delim2</code> instead of <code>read.table</code> additional functions
+<code>read.csv.zoo</code> etc. are provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+read.zoo(file, format = "", tz = "", FUN = NULL,
+  regular = FALSE, index.column = 1, drop = TRUE, FUN2 = NULL,
+  split = NULL, aggregate = FALSE, ..., text, read = read.table)
+  
+write.zoo(x, file = "", index.name = "Index", row.names = FALSE, col.names = NULL, ...)
+
+read.csv.zoo(..., read = read.csv)
+read.csv2.zoo(..., read = read.csv2)
+read.delim.zoo(..., read = read.delim)
+read.delim2.zoo(..., read = read.delim2)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>character string or strings giving the name of the file(s) 
+which the data
+are to be read from/written to. See <code><a href="../../utils/html/read.table.html">read.table</a></code> and
+<code><a href="../../utils/html/write.table.html">write.table</a></code> for more information. Alternatively,
+in <code>read.zoo</code>, <code>file</code> can be a <code>connection</code> or a
+<code>data.frame</code> (e.g.,
+resulting from a previous <code>read.table</code> call) that
+is subsequently processed to a <code>"zoo"</code> series.</p>
+</td></tr>
+<tr valign="top"><td><code>format</code></td>
+<td>
+<p>date format argument passed to <code>FUN</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tz</code></td>
+<td>
+<p>time zone argument passed to <code><a href="../../base/html/as.POSIXlt.html">as.POSIXct</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+<p>a function for computing the index from the first column
+of the data. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>regular</code></td>
+<td>
+<p>logical. Should the series be coerced to class <code>"zooreg"</code>
+(if the series is regular)?</p>
+</td></tr>
+<tr valign="top"><td><code>index.column</code></td>
+<td>
+<p>numeric vector or list. The column names or numbers of the data frame 
+in which the index/time is stored.  If the <code>read.table</code> argument <code>colClasses</code> 
+is used and <code>"NULL"</code> is among its components then 
+<code>index.column</code> refers to the column numbers after the columns 
+corresponding to <code>"NULL"</code> in <code>colClasses</code> have been removed.  
+If specified as a list then one argument will be passed to argument <code>FUN</code> per component so that, 
+for example, <code>index.column = list(1, 2)</code> will cause 
+<code>FUN(x[,1], x[,2], ...)</code> to be called whereas 
+<code>index.column = list(1:2)</code> will cause 
+<code>FUN(x[,1:2], ...)</code> to be called where <code>x</code> is a data frame of 
+characters data.  Here <code>...</code> refers to <code>format</code>
+and/or <code>tz</code>, if they specified as arguments.  <code>index.column = 0</code> can
+be used to specify that the row names be used as the index.  In the case that
+no row names were input sequential numbering is used.
+If <code>index.column</code> is specified as an ordinary vector then if it has the
+same length as the number of arguments of <code>FUN</code> (or <code>FUN2</code> in the
+event that <code>FUN2</code> is specified and <code>FUN</code> is not) 
+then <code>index.column</code> is converted to a
+list.  Also it is always converted to a list if it has length 1.</p>
+</td></tr>
+<tr valign="top"><td><code>drop</code></td>
+<td>
+<p>logical. If the data frame contains just a single data column, should
+the second dimension be dropped?</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a <code>"zoo"</code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>index.name</code></td>
+<td>
+<p>character with name of the index column in the written
+data file.</p>
+</td></tr>  
+<tr valign="top"><td><code>row.names</code></td>
+<td>
+<p>logical. Should row names be written? Default is <code>FALSE</code>
+because the row names are just character representations of the index.</p>
+</td></tr>
+<tr valign="top"><td><code>col.names</code></td>
+<td>
+<p>logical. Should column names be written? Default is to
+write column names only if <code>x</code> has column names.</p>
+</td></tr>
+<tr valign="top"><td><code>FUN2</code></td>
+<td>
+<p>function. It is applied to the time index after 
+<code>FUN</code> and before <code>aggregate</code>. If <code>FUN</code> is not specified
+but <code>FUN2</code> is specified then only <code>FUN2</code> is applied.</p>
+</td></tr>
+<tr valign="top"><td><code>split</code></td>
+<td>
+<p>NULL or column number or name or vector of numbers or 
+names. If not NULL then the data is assumed to be in long format and is 
+split according to the indicated columns.  See the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 
+<code><a href="../../stats/html/reshape.html">reshape</a></code> command for description of long data.
+If <code>split = Inf</code> then the first of each run among the times are made into
+a separate series, the second of each run and so on.  If <code>split= -Inf</code> then
+the last of each run is made into a separate series, the second last
+and so on.</p>
+</td></tr>
+<tr valign="top"><td><code>aggregate</code></td>
+<td>
+<p>logical or function. If set to <code>TRUE</code>, then <code><a href="aggregate.zoo.html">aggregate.zoo</a></code>
+is applied to the zoo object created to compute the <code><a href="../../base/html/mean.html">mean</a></code> of all values with
+the same time index. Alternatively, <code>aggregate</code> can be set to any other
+function that should be used for aggregation.
+If <code>FALSE</code> (the default), no aggregation is performed and a warning
+is given if there are any duplicated time indexes.  Note that most
+<code>zoo</code> functions do not accept objects with duplicate time indexes. 
+See <code><a href="aggregate.zoo.html">aggregate.zoo</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to other functions. In the <code>read.*.zoo</code>
+the arguments are passed to the function specified in <code>read</code>
+(unless <code>file</code> is a <code>data.frame</code> already). In <code>write.zoo</code> the
+arguments are passed to <code><a href="../../utils/html/write.table.html">write.table</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>text</code></td>
+<td>
+<p>character. If <code>file</code> is not supplied and this is, then
+data are read from the value of <code>text</code> via a text connection.
+See below for an example.</p>
+</td></tr>
+<tr valign="top"><td><code>read</code></td>
+<td>
+<p>function. The function for reading <code>file</code> (unless it is
+a <code>data.frame</code> already).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>read.zoo</code> is a convenience function which should make it easier
+to read data from a text file and turn it into a <code>"zoo"</code> series 
+immediately. <code>read.zoo</code> reads the data file via <code>read.table(file, ...)</code>.
+The column <code>index.column</code> (by default the first) of the resulting data is
+interpreted to be the index/time, the remaining columns the corresponding data.
+(If the file only has only column then that is assumed to be the data column and
+<code>1, 2, ...</code> are used for the index.)  To assign the appropriate class
+to the index, <code>FUN</code> can be specified and is applied to the first column.
+</p>
+<p>To process the index, <code>read.zoo</code> calls <code>FUN</code> with the index as the
+first argument. If <code>FUN</code> is not specified, the following default is employed:
+</p>
+<p>(a) If <code>file</code> is a data frame with a single
+index column that appears to be a time index already, then <code>FUN = identity</code> is used.
+The conditions for a readily produced time index are: It is not <code>character</code> or 
+<code>factor</code> (and the arguments <code>tz</code> and <code>format</code> must not be specified).
+</p>
+<p>(b) If the conditions from (a) do not hold then the following strategy is used.
+If there are multiple index columns they are pasted together with a space between each.
+Using the (pasted) index column: (1) If <code>tz</code> is specified then the
+index column is converted to <code>POSIXct</code>.  (2) If <code>format</code> is specified
+then the index column is converted to <code>Date</code>. (3) Otherwise, a heuristic
+attempts to decide between <code>"numeric"</code>, <code>"POSIXct"</code>, and <code>"Date"</code> by
+trying them in that order (which may not always succeed though). By default,
+only the standard date/time format is used. Hence, supplying <code>format</code> and/or <code>tz</code>
+is necessary if some date/time format is used that is not the default. And even
+if the default format is appropriate for the index, explicitly supplying
+<code>FUN</code> or at least <code>format</code> and/or <code>tz</code> typically leads to more
+reliable results than the heuristic.
+</p>
+<p>If <code>regular</code> is set to <code>TRUE</code> and the resulting series has an 
+underlying regularity, it is coerced to a <code>"zooreg"</code> series.
+</p>
+<p>To employ other functions than <code>read.table</code> to read the initial data,
+further convenience interfaces <code>read.csv.zoo</code> etc. are provided.
+</p>
+<p><code>write.zoo</code> is a convenience function for writing <code>"zoo"</code> series
+to text files. It first coerces its argument to a <code>"data.frame"</code>, adds
+a column with the index and then calls <code><a href="../../utils/html/write.table.html">write.table</a></code>.
+</p>
+<p>See also <code>vignette("zoo-read", package = "zoo")</code> for detailed examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>read.zoo</code> returns an object of class <code>"zoo"</code> (or <code>"zooreg"</code>).
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>read.zoo</code> works by first reading the data in using <code>read.table</code>
+and then processing it.  This implies that 
+if the index field is entirely numeric the default is to pass it to <code>FUN</code>
+or the built-in date conversion routine
+a number, rather than a character string. 
+Thus, a date field such as <code>09122007</code> intended
+to represent December 12, 2007 would be seen as <code>9122007</code>
+and interpreted as the 91st day 
+thereby generating an error.  
+</p>
+<p>This comment also applies to trailing decimals so that if 
+<code>2000.10</code> were intended to represent the 10th month of 2000 in fact
+it would receive
+<code>2000.1</code> and regard it as the first month of 2000
+unless similar precautions were taken.
+</p>
+<p>In the above cases the index field should be specified to be
+<code>"character"</code> so that leading or trailing zeros
+are not dropped.  This can be done by specifying a <code>"character"</code>
+index column in the 
+<code>"colClasses"</code> argument, which is passed to <code>read.table</code>, 
+as shown in the examples below.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## this manual page provides a few typical examples, many more cases
+## are covered in vignette("zoo-read", package = "zoo")
+
+## read text lines with a single date column
+Lines &lt;- "2013-12-24  2
+2013-12-25 3
+2013-12-26 8"
+read.zoo(text = Lines, FUN = as.Date)       # explicit coercion
+read.zoo(text = Lines, format = "%Y-%m-%d") # same
+read.zoo(text = Lines)                      # same, via heuristic
+
+## read text lines with date/time in separate columns
+Lines &lt;- "2013-11-24 12:41:21 2
+2013-12-25 12:41:22.25 3
+2013-12-26 12:41:22.75 8"
+read.zoo(text = Lines, index = 1:2,
+  FUN = paste, FUN2 = as.POSIXct)            # explicit coercion
+read.zoo(text = Lines, index = 1:2, tz = "") # same
+read.zoo(text = Lines, index = 1:2)          # same, via heuristic
+
+## read text lines with month/year in separate columns
+Lines &lt;- "Jan 1998 4.36
+Feb 1998 4.34"
+read.zoo(text = Lines, index = 1:2, FUN = paste, FUN2 = as.yearmon)
+
+## read directly from a data.frame (artificial and built-in BOD)
+dat &lt;- data.frame(date = paste("2000-01-", 10:15, sep = ""),
+  a = sin(1:6), b = cos(1:6))
+read.zoo(dat)
+data("BOD", package = "datasets")
+read.zoo(BOD)
+
+## Not run: 
+## descriptions of typical examples
+
+## turn *numeric* first column into yearmon index
+## where number is year + fraction of year represented by month
+z &lt;- read.zoo("foo.csv", sep = ",", FUN = as.yearmon)
+
+## first column is of form yyyy.mm
+## (Here we use format in place of as.character so that final zero 
+## is not dropped in dates like 2001.10 which as.character would do.)
+f &lt;- function(x) as.yearmon(format(x, nsmall = 2), "%Y.%m")
+z &lt;- read.zoo("foo.csv", header = TRUE, FUN = f)
+
+## turn *character* first column into "Date" index
+## Assume lines look like: 12/22/2007 1 2
+z &lt;- read.zoo("foo.tab", format = "%m/%d/%Y")
+
+# Suppose lines look like: 09112007 1 2 and there is no header
+z &lt;- read.zoo("foo.txt", format = "%d%m%Y")
+
+## csv file with first column of form YYYY-mm-dd HH:MM:SS
+## Read in times as "chron" class. Requires chron 2.3-22 or later.
+z &lt;- read.zoo("foo.csv", header = TRUE, sep = ",", FUN = as.chron)
+
+## same but with custom format.  Note as.chron uses POSIXt-style 
+## Read in times as "chron" class. Requires chron 2.3-24 or later.
+z &lt;- read.zoo("foo.csv", header = TRUE, sep = ",", FUN = as.chron, 
+	format = "
+
+## same file format but read it in times as "POSIXct" class.
+z &lt;- read.zoo("foo.csv", header = TRUE, sep = ",", tz = "")
+
+## csv file with first column mm-dd-yyyy. Read times as "Date" class.
+z &lt;- read.zoo("foo.csv", header = TRUE, sep = ",", format = "%m-%d-%Y")
+
+## whitespace separated file with first column of form YYYY-mm-ddTHH:MM:SS
+## and no headers.  T appears literally.  Requires chron 2.3-22 or later.
+z &lt;- read.zoo("foo.csv", FUN = as.chron)
+
+# read in all csv files in the current directory and merge them
+read.zoo(Sys.glob("*.csv"), header = TRUE, sep = ",")
+
+# We use "NULL" in colClasses for those columns we don't need but in 
+# col.names we still have to include dummy names for them.  Of what 
+# is left the index is the first three columns (1:3) which we convert 
+# to chron class times in FUN and then truncate to 5 seconds in FUN2.  
+# Finally we use aggregate = mean to average over the 5 second intervals.
+library("chron")
+
+Lines &lt;- "CVX 20070201 9 30 51 73.25 81400 0
+CVX 20070201 9 30 51 73.25 100 0
+CVX 20070201 9 30 51 73.25 100 0
+CVX 20070201 9 30 51 73.25 300 0
+CVX 20070201 9 30 51 73.25 81400 0
+CVX 20070201 9 40 51 73.25 100 0
+CVX 20070201 9 40 52 73.25 100 0
+CVX 20070201 9 40 53 73.25 300 0"
+
+z &lt;- read.zoo(text = Lines, 
+  colClasses = c("NULL", "NULL", "numeric", "numeric", "numeric",
+    "numeric", "numeric", "NULL"),
+  col.names = c("Symbol", "Date", "Hour", "Minute", "Second", "Price", "Volume", "junk"),
+  index = 1:3,  # do not count columns that are "NULL" in colClasses
+  FUN = function(h, m, s) times(paste(h, m, s, sep = ":")),
+  FUN2 = function(tt) trunc(tt, "00:00:05"),
+  aggregate = mean)
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

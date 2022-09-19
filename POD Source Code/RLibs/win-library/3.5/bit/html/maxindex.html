@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get maxindex (length of boolean vector) and poslength (number...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for maxindex.default {bit}"><tr><td>maxindex.default {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get maxindex (length of boolean vector) and poslength (number of 'selected' elements)</h2>
+
+<h3>Description</h3>
+
+<p>For <code><a href="is.booltype.html">is.booltype</a></code> objects the term <code><a href="../../base/html/length.html">length</a></code> is ambiguous. 
+For example the length of <code><a href="../../base/html/which.html">which</a></code> corresponds to the sum of <code><a href="../../base/html/logical.html">logical</a></code>.
+The generic <code>maxindex</code> gives <code>length(logical)</code> for all <code><a href="booltype.html">booltype</a>s</code>.
+The generic <code>poslength</code> gives the number of positively selected elements, i.e. <code>sum(logical)</code> for all <code><a href="booltype.html">booltype</a>s</code> 
+(and gives <code>NA</code> if <code>NAs</code> are present).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## Default S3 method:
+maxindex(x, ...)
+
+## Default S3 method:
+poslength(x, ...)
+
+## S3 method for class 'logical'
+maxindex(x, ...)
+
+## S3 method for class 'logical'
+poslength(x, ...)
+
+## S3 method for class 'bit'
+maxindex(x, ...)
+
+## S3 method for class 'bit'
+poslength(x, ...)
+
+## S3 method for class 'bitwhich'
+maxindex(x, ...)
+
+## S3 method for class 'bitwhich'
+poslength(x, ...)
+
+## S3 method for class 'which'
+maxindex(x, ...)
+
+## S3 method for class 'which'
+poslength(x, ...)
+
+## S3 method for class 'ri'
+maxindex(x, ...)
+
+## S3 method for class 'ri'
+poslength(x, ...)
+
+maxindex(x, ...)
+
+poslength(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an R object, typically a <code><a href="is.booltype.html">is.booltype</a></code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments (ignored)</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an integer scalar
+</p>
+
+
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>default</code>: default method for <code>maxindex</code>
+</p>
+</li>
+<li> <p><code>default</code>: default method for <code>poslength</code>
+</p>
+</li>
+<li> <p><code>logical</code>: <code>maxindex</code> method for class <code><a href="../../base/html/logical.html">logical</a></code>
+</p>
+</li>
+<li> <p><code>logical</code>: <code>poslength</code> method for class <code><a href="../../base/html/logical.html">logical</a></code>
+</p>
+</li>
+<li> <p><code>bit</code>: <code>maxindex</code> method for class <code><a href="bit.html">bit</a></code>
+</p>
+</li>
+<li> <p><code>bit</code>: <code>poslength</code> method for class <code><a href="bit.html">bit</a></code>
+</p>
+</li>
+<li> <p><code>bitwhich</code>: <code>maxindex</code> method for class <code><a href="bitwhich.html">bitwhich</a></code>
+</p>
+</li>
+<li> <p><code>bitwhich</code>: <code>poslength</code> method for class <code><a href="bitwhich.html">bitwhich</a></code>
+</p>
+</li>
+<li> <p><code>which</code>: <code>maxindex</code> method for class <code><a href="as.which.html">which</a></code>
+</p>
+</li>
+<li> <p><code>which</code>: <code>poslength</code> method for class <code><a href="as.which.html">which</a></code>
+</p>
+</li>
+<li> <p><code>ri</code>: <code>maxindex</code> method for class <code><a href="ri.html">ri</a></code>
+</p>
+</li>
+<li> <p><code>ri</code>: <code>poslength</code> method for class <code><a href="ri.html">ri</a></code>
+</p>
+</li></ul>
+
+
+<h3>Examples</h3>
+
+<pre>
+r &lt;- ri(1,2,12)
+i &lt;- as.which(r)
+w &lt;- as.bitwhich(r)
+b &lt;- as.bit(r)
+l &lt;- as.logical(r)
+u &lt;- which(l)      # unclassed which
+
+sapply(list(r=r,u=u,i=i,w=w,b=b,l=l), function(x){
+  c(length=length(x), sum=sum(x), maxindex=maxindex(x), poslength=poslength(x))
+})
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

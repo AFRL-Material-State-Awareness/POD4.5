@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Mark character strings as literal JavaScript code</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for JS {htmlwidgets}"><tr><td>JS {htmlwidgets}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Mark character strings as literal JavaScript code</h2>
+
+<h3>Description</h3>
+
+<p>This function <code>JS()</code> marks character vectors with a special class, so
+that it will be treated as literal JavaScript code when evaluated on the
+client-side.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+JS(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>character vectors as the JavaScript source code (all arguments
+will be pasted into one character string)</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Yihui Xie
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(htmlwidgets)
+JS('1 + 1')
+list(x = JS('function(foo) {return foo;}'), y = 1:10)
+JS('function(x) {', 'return x + 1;', '}')
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>htmlwidgets</em> version 1.5.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

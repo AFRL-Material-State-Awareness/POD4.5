@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add a range slider to the x-axis</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rangeslider {plotly}"><tr><td>rangeslider {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add a range slider to the x-axis</h2>
+
+<h3>Description</h3>
+
+<p>Add a range slider to the x-axis
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rangeslider(p, start = NULL, end = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>plotly object.</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>a start date/value.</p>
+</td></tr>
+<tr valign="top"><td><code>end</code></td>
+<td>
+<p>an end date/value.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>these arguments are documented here
+<a href="https://plotly.com/r/reference/#layout-xaxis-rangeslider">https://plotly.com/r/reference/#layout-xaxis-rangeslider</a></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+plot_ly(x = time(USAccDeaths), y = USAccDeaths) %&gt;% 
+  add_lines() %&gt;%
+  rangeslider()
+  
+d &lt;- tibble::tibble(
+  time = seq(as.Date("2016-01-01"), as.Date("2016-08-31"), by = "days"),
+  y = rnorm(seq_along(time))
+ )
+ 
+plot_ly(d, x = ~time, y = ~y) %&gt;%
+  add_lines() %&gt;%
+  rangeslider(d$time[5], d$time[50])
+  
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

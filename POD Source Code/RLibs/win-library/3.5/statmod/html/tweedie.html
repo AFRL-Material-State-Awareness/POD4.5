@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Tweedie Generalized Linear Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for tweedie {statmod}"><tr><td>tweedie {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Tweedie Generalized Linear Models</h2>
+
+<h3>Description</h3>
+
+<p>Produces a generalized linear model family object with any power variance function and any power link. Includes the Gaussian, Poisson, gamma and inverse-Gaussian families as special cases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tweedie(var.power = 0, link.power = 1 - var.power)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>var.power</code></td>
+<td>
+<p>index of power variance function</p>
+</td></tr>
+<tr valign="top"><td><code>link.power</code></td>
+<td>
+<p>index of power link function. <code>link.power=0</code> produces a log-link. Defaults to the canonical link, which is <code>1-var.power</code>.</p>
+</td></tr> 
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function provides access to a range of generalized linear model (GLM) response distributions that are not otherwise provided by R.
+It is also useful for accessing distribution/link combinations that are disallowed by the R <code>glm</code> function.
+The variance function for the GLM is assumed to be V(mu) = mu^var.power, where mu is the expected value of the distribution.
+The link function of the GLM is assumed to be mu^link.power for non-zero values of link.power or log(mu) for var.power=0.
+For example, <code>var.power=1</code> produces the identity link.
+The canonical link for each Tweedie family is <code>link.power = 1 - var.power</code>.
+</p>
+<p>The Tweedie family of GLMs is discussed in detail by Dunn and Smyth (2018).
+Each value of <code>var.power</code> corresponds to a particular type of response distribution.
+The values 0, 1, 2 and 3 correspond to the normal distribution, the Poisson distribution, the gamma distribution and the inverse-Gaussian distribution respectively.
+For these choices of <code>var.power</code>, the Tweedie family is exactly equivalent to the usual GLM famly except with a greater choice of link powers.
+For example, <code>tweedie(var.power = 1, link.power = 0)</code> is exactly equivalent to <code>poisson(link = "log")</code>.
+</p>
+<p>The most interesting Tweedie families occur for <code>var.power</code> between 1 and 2.
+For these GLMs, the response distribution has mass at zero (i.e., it has exact zeros) but is otherwise continuous on the positive real numbers (Smyth, 1996; Hasan et al, 2012).
+These GLMs have been used to model rainfall for example.
+Many days there is no rain at all (exact zero) but, if there is any rain, then the actual amount of rain is continuous and positive.
+</p>
+<p>Generally speaking, <code>var.power</code> should be chosen so that the theoretical response distribution matches the type of response data being modeled.
+Hence <code>var.power</code> should be chosen between 1 and 2 only if the response observations are continuous and positive except for exact zeros and <code>var.power</code> should be chosen greater than or equal to 2 only if the response observations are continuous and strictly positive.
+</p>
+<p>There are no theoretical Tweedie GLMs with var.power between 0 and 1 (Jorgensen 1987).
+The <code>tweedie</code> function will work for those values but the family should be interpreted in a quasi-likelihood sense.
+</p>
+<p>Theoretical Tweedie GLMs do exist for negative values of var.power, but they are of little practical application.
+These distributions assume 
+The <code>tweedie</code> function will work for those values but the family should be interpreted in a quasi-likelihood sense.
+</p>
+<p>The name Tweedie has been associated with this family by Joergensen (1987) in honour of M. C. K. Tweedie.
+Joergensen (1987) gives a mathematical derivation of the Tweedie distributions proving that no distributions exist for var.power between 0 and 1.
+</p>
+<p>Mathematically, a Tweedie GLM assumes the following.
+Let <i>&mu;_i = E(y_i)</i> be the expectation of the <i>i</i>th response. We assume that
+</p>
+<p style="text-align: center;"><i>&mu;_i^q = x_i^Tb, var(y_i) = &phi; &mu;_i^p</i></p>
+ 
+<p>where <i>x_i</i> is a vector of covariates and b is a vector of regression cofficients, for some <i>&phi;</i>, <i>p</i> and <i>q</i>.
+This family is specified by <code>var.power = p</code> and <code>link.power = q</code>.
+A value of zero for <i>q</i> is interpreted as <i>\log(&mu;_i) = x_i^Tb</i>. 
+</p>
+<p>The following table summarizes the possible Tweedie response distributions:
+</p>
+
+<table summary="Rd table">
+<tr>
+ <td style="text-align: center;">
+<b>var.power</b> </td><td style="text-align: left;"> <b>Response distribution</b></td>
+</tr>
+<tr>
+ <td style="text-align: center;">
+0 </td><td style="text-align: left;"> Normal</td>
+</tr>
+<tr>
+ <td style="text-align: center;">
+1 </td><td style="text-align: left;"> Poisson</td>
+</tr>
+<tr>
+ <td style="text-align: center;">
+(1, 2) </td><td style="text-align: left;"> Compound Poisson, non-negative with mass at zero</td>
+</tr>
+<tr>
+ <td style="text-align: center;">
+2 </td><td style="text-align: left;"> Gamma</td>
+</tr>
+<tr>
+ <td style="text-align: center;">
+3 </td><td style="text-align: left;"> Inverse-Gaussian</td>
+</tr>
+<tr>
+ <td style="text-align: center;">
+&gt; 2 </td><td style="text-align: left;"> Stable, with support on the positive reals
+</td>
+</tr>
+
+</table>
+
+
+
+<h3>Value</h3>
+
+<p>A family object, which is a list of functions and expressions used by <code>glm</code> and <code>gam</code> in their iteratively reweighted least-squares algorithms.
+See <code><a href="../../stats/html/family.html">family</a></code> and <code><a href="../../stats/html/glm.html">glm</a></code> in the R base help for details. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Dunn, P. K., and Smyth, G. K, (2018).
+<em>Generalized linear models with examples in R</em>. Springer, New York, NY.
+doi: <a href="https://doi.org/10.1007/978-1-4419-0118-7">10.1007/978-1-4419-0118-7</a>
+(Chapter 12 gives an overall discussion of Tweedie GLMs with R code and case studies.)
+</p>
+<p>Hasan, M.M. and Dunn, P.K. (2012).
+Understanding the effect of climatology on monthly rainfall amounts in Australia using Tweedie GLMs.
+<em>International Journal of Climatology</em>, 32(7) 1006-1017.
+(An example with var.power between 1 and 2)
+</p>
+<p>Joergensen, B. (1987). Exponential dispersion models. <em>J. R. Statist. Soc.</em> B <b>49</b>, 127-162. 
+(Mathematical derivation of Tweedie response distributions)
+</p>
+<p>Tweedie, M. C. K. (1984). An index which distinguishes between some important exponential families.
+In <em>Statistics: Applications and New Directions</em>. Proceedings of the Indian Statistical Institute Golden Jubilee International Conference.
+(Eds. J. K. Ghosh and J. Roy), pp. 579-604. Calcutta: Indian Statistical Institute.
+(The original mathematical paper from which the family is named)
+</p>
+<p>Smyth, G. K. (1996). Regression modelling of quantity data with exact zeroes.
+<em>Proceedings of the Second Australia-Japan Workshop on Stochastic Models in Engineering, Technology and Management</em>.
+Technology Management Centre, University of Queensland, pp. 572-580.
+<a href="http://www.statsci.org/smyth/pubs/RegressionWithExactZerosPreprint.pdf">http://www.statsci.org/smyth/pubs/RegressionWithExactZerosPreprint.pdf</a>
+(Derivation and examples of Tweedie GLMS with var.power between 0 and 1)
+</p>
+<p>Smyth, G. K., and Verbyla, A. P., (1999). Adjusted likelihood methods for modelling dispersion in generalized linear models. <em>Environmetrics</em> <b>10</b>, 695-709.
+<a href="http://www.statsci.org/smyth/pubs/Ties98-Preprint.pdf">http://www.statsci.org/smyth/pubs/Ties98-Preprint.pdf</a>
+(Includes examples of Tweedie GLMs with <code>var.power=2</code> and <code>var.power=4</code>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/glm.html">glm</a></code>, <code><a href="../../stats/html/family.html">family</a></code>, <code><a href="../../tweedie/html/dtweedie.html">dtweedie</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+y &lt;- rgamma(20,shape=5)
+x &lt;- 1:20
+# Fit a poisson generalized linear model with identity link
+glm(y~x,family=tweedie(var.power=1,link.power=1))
+
+# Fit an inverse-Gaussion glm with log-link
+glm(y~x,family=tweedie(var.power=3,link.power=0)) 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Distribution of quadratic forms</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pchisqsum {survey}"><tr><td>pchisqsum {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Distribution of quadratic forms </h2>
+
+<h3>Description</h3>
+
+<p>The distribution of a quadratic form in p standard Normal variables is
+a linear combination of p chi-squared distributions with 1df.   When
+there is uncertainty about the variance, a reasonable model for the
+distribution is a linear combination of F distributions with the same
+denominator. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+pchisqsum(x, df, a, lower.tail = TRUE, 
+   method = c("satterthwaite", "integration","saddlepoint"))
+pFsum(x, df, a, ddf=Inf,lower.tail = TRUE, 
+   method = c("saddlepoint","integration","satterthwaite"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Observed values</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>Vector of degrees of freedom</p>
+</td></tr>
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>Vector of coefficients </p>
+</td></tr>
+<tr valign="top"><td><code>ddf</code></td>
+<td>
+<p>Denominator degrees of freedom</p>
+</td></tr>
+<tr valign="top"><td><code>lower.tail</code></td>
+<td>
+<p> lower or upper  tail? </p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>See Details below</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments to <code>pchisqsum</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>"satterthwaite"</code> method uses Satterthwaite's
+approximation, and this is also used as a fallback for the other
+methods. The accuracy is usually good, but is more variable depending
+on <code>a</code> than the other methods and is anticonservative in the
+right tail (eg for upper tail probabilities less than <code>10^-5</code>).
+The Satterthwaite approximation requires all <code>a&gt;0</code>.
+</p>
+<p><code>"integration"</code> requires the <code>CompQuadForm</code> package. For
+<code>pchisqsum</code> it uses Farebrother's algorithm if all
+<code>a&gt;0</code>. For <code>pFsum</code> or when some <code>a&lt;0</code> it inverts the
+characteristic function using the algorithm of Davies (1980).
+These algorithms are highly accurate for the lower tail probability, but they obtain the upper tail probability by subtraction from 1 and so fail completely when the upper tail probability is comparable to machine epsilon or smaller. 
+</p>
+<p>If  the <code>CompQuadForm</code> package is not present, a warning is given
+and the saddlepoint approximation is used. 
+</p>
+<p><code>"saddlepoint"</code> uses Kuonen's saddlepoint approximation. This
+is moderately accurate even very far out in the upper tail or with some
+<code>a=0</code> and does not require any additional packages. The relative error
+in the right tail is uniformly bounded for all <code>x</code> and decreases as p
+increases. This method is implemented in pure R and so is slower than
+the <code>"integration"</code>  method. 
+</p>
+<p>The distribution in <code>pFsum</code> is standardised so that a likelihood
+ratio test can use the same <code>x</code> value as in <code>pchisqsum</code>.
+That is, the linear combination of chi-squareds is multiplied by
+<code>ddf</code> and then divided by an independent chi-squared with
+<code>ddf</code> degrees of freedom.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of cumulative probabilities
+</p>
+
+
+<h3>References</h3>
+
+<p>Chen, T., &amp; Lumley T. (2019). Numerical evaluation of methods approximating
+the distribution of a large quadratic form in normal variables.
+Computational Statistics and Data Analysis, 139, 75-81.
+</p>
+<p>Davies RB (1973). &quot;Numerical inversion of a characteristic function&quot;
+Biometrika 60:415-7
+</p>
+<p>Davies RB (1980) &quot;Algorithm AS 155: The Distribution of a Linear Combination of chi-squared Random Variables&quot;
+Applied Statistics,Vol. 29, No. 3 (1980), pp. 323-333
+</p>
+<p>P. Duchesne, P. Lafaye de Micheaux (2010) &quot;Computing the distribution
+of quadratic forms: Further comparisons between the Liu-Tang-Zhang
+approximation and exact methods&quot;, Computational Statistics and Data
+Analysis, Volume 54, (2010), 858-862
+</p>
+<p>Farebrother R.W. (1984)  &quot;Algorithm AS 204: The distribution of a
+Positive Linear Combination of chi-squared random variables&quot;. Applied
+Statistics Vol. 33, No. 3 (1984), p. 332-339
+</p>
+<p>Kuonen D (1999) Saddlepoint Approximations for Distributions of
+Quadratic Forms in Normal Variables. Biometrika, Vol. 86, No. 4
+(Dec., 1999), pp. 929-935 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/Chisquare.html">pchisq</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- 2.7*rnorm(1001)^2+rnorm(1001)^2+0.3*rnorm(1001)^2
+x.thin&lt;-sort(x)[1+(0:50)*20]
+p.invert&lt;-pchisqsum(x.thin,df=c(1,1,1),a=c(2.7,1,.3),method="int" ,lower=FALSE)
+p.satt&lt;-pchisqsum(x.thin,df=c(1,1,1),a=c(2.7,1,.3),method="satt",lower=FALSE)
+p.sadd&lt;-pchisqsum(x.thin,df=c(1,1,1),a=c(2.7,1,.3),method="sad",lower=FALSE)
+
+plot(p.invert, p.satt,type="l",log="xy")
+abline(0,1,lty=2,col="purple")
+plot(p.invert, p.sadd,type="l",log="xy")
+abline(0,1,lty=2,col="purple")
+
+pchisqsum(20, df=c(1,1,1),a=c(2.7,1,.3), lower.tail=FALSE,method="sad")
+pFsum(20, df=c(1,1,1),a=c(2.7,1,.3), ddf=49,lower.tail=FALSE,method="sad")
+pFsum(20, df=c(1,1,1),a=c(2.7,1,.3), ddf=1000,lower.tail=FALSE,method="sad")
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

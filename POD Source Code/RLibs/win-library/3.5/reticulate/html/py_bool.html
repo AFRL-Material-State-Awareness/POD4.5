@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Python Truthiness</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_bool {reticulate}"><tr><td>py_bool {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Python Truthiness</h2>
+
+<h3>Description</h3>
+
+<p>Equivalent to <code>bool(x)</code> in Python, or <code style="white-space: pre;">not not x</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_bool(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, </code></td>
+<td>
+<p>A python object.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If the Python object defines a <code style="white-space: pre;">__bool__</code> method, then that is invoked.
+Otherwise, if the object defines a <code style="white-space: pre;">__len__</code> method, then <code>TRUE</code> is
+returned if the length is nonzero. If neither <code style="white-space: pre;">__len__</code> nor <code style="white-space: pre;">__bool__</code>
+are defined, then the Python object is considered <code>TRUE</code>. If <code>x</code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>An R scalar logical: <code>TRUE</code> or <code>FALSE</code>. If <code>x</code> is a
+null pointer or Python is not initialized, <code>FALSE</code> is returned.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

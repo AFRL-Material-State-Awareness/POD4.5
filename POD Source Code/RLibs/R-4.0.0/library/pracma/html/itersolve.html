@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Iterative Methods</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for itersolve {pracma}"><tr><td>itersolve {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Iterative Methods
+</h2>
+
+<h3>Description</h3>
+
+<p>Iterative solutions of systems of linear equations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+itersolve(A, b, x0 = NULL, nmax = 1000, tol = .Machine$double.eps^(0.5),
+            method = c("Gauss-Seidel", "Jacobi", "Richardson"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>numerical matrix, square and non-singular.</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>numerical vector or column vector.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>starting solution for iteration; defaults to null vector.</p>
+</td></tr>
+<tr valign="top"><td><code>nmax</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>iterative method, Gauss-Seidel, Jacobi, or Richardson.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Iterative methods are based on splitting the matrix <code>A=(P-A)-A</code>
+with a so-called &lsquo;preconditioner&rsquo; matrix P. The methods differ in how
+to choose this preconditioner.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with components <code>x</code> the solution, <code>iter</code> the
+number of iterations, and <code>method</code> the name of the method applied.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Richardson's method allows to specify a &lsquo;preconditioner&rsquo;; this has not
+been implemented yet.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., and F. Saleri (2006). Scientific Computing with MATLAB
+and Octave. Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="qrSolve.html">qrSolve</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+N &lt;- 10
+A &lt;- Diag(rep(3,N)) + Diag(rep(-2, N-1), k=-1) + Diag(rep(-1, N-1), k=1)
+b &lt;- A %*% rep(1, N)
+x0 &lt;- rep(0, N)
+
+itersolve(A, b, tol = 1e-8, method = "Gauss-Seidel")
+# [1]  1  1  1  1  1  1  1  1  1  1
+# [1]  87
+itersolve(A, b, x0 = 1:10, tol = 1e-8, method = "Jacobi")
+# [1]  1  1  1  1  1  1  1  1  1  1
+# [1]  177
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

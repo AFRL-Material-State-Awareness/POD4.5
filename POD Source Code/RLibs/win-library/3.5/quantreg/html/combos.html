@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Ordered Combinations</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for combos {quantreg}"><tr><td>combos {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Ordered Combinations</h2>
+
+<h3>Description</h3>
+
+<p>All m combinations of the first n integers taken p at a time
+are computed and return as an p by m matrix.  The columns
+of the matrix are ordered so that adjacent columns differ
+by only one element.  This is just a reordered version of
+<code>combn</code> in base R, but the ordering is useful for some
+applications.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+combos(n,p)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>The n in n choose p</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>The p in n choose p</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a <code>matrix</code> of dimension p by <code>choose(n,p)</code>
+</p>
+
+
+<h3>Note</h3>
+
+<p>Implementation based on a Pascal algorithm of Limin Xiang 
+and Kazuo Ushijima (2001) translated to ratfor for R.
+If you have <span class="pkg">rgl</span> installed you might try <code>demo("combos")</code>
+for a visual impression of how this works.
+</p>
+
+
+<h3>References</h3>
+
+<p>Limin Xiang and Kazuo Ushijima (2001) 
+&quot;On O(1) Time Algorithms for Combinatorial Generation,&quot; 
+<em>Computer Journal</em>, 44(4), 292-302. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+H &lt;- combos(20,3)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

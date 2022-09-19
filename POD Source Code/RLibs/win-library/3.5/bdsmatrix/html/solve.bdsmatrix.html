@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Solve a matrix equation using the generalized Cholesky...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for solve.bdsmatrix {bdsmatrix}"><tr><td>solve.bdsmatrix {bdsmatrix}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Solve a matrix equation using the generalized Cholesky decompostion
+</h2>
+
+<h3>Description</h3>
+
+<p>This function solves the equation Ax=b for x, when
+A is a block diagonal sparse matrix 
+(an object of class <code>bdsmatrix</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'bdsmatrix'
+solve(a, b, full=TRUE, tolerance=1e-10, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+
+<p>a block diagonal sparse matrix object
+</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+
+<p>a numeric vector or matrix, that forms the right-hand side of the equation.
+</p>
+</td></tr>
+<tr valign="top"><td><code>full</code></td>
+<td>
+
+<p>if true, return the full inverse matrix; if false return only
+that portion corresponding to the blocks.  
+This argument is ignored if <code>b</code> is present.
+If the bdsmatrix <code>a</code> has a non-sparse portion,
+i.e., if the  <code>rmat</code> component is present,
+then the inverse of <code>a</code> will not be 
+block-diagonal sparse.  
+In this case setting full=F returns only a portion of the inverse.
+The elements that are returned are those of the full inverse, but the
+off-diagonal elements that are not returned would not have been zero.
+</p>
+</td></tr>
+<tr valign="top"><td><code>tolerance</code></td>
+<td>
+
+<p>the tolerance for detecting singularity in the a matrix
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments are ignored</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The matrix <code>a</code> consists of a block diagonal
+sparse portion with an optional dense border.
+The inverse of <code>a</code>, which is to be computed if
+<code>y</code> is not provided, will have the same
+block diagonal structure as <code>a</code> only if there
+is no dense border, otherwise the resulting matrix will not be sparse.
+</p>
+<p>However, these matrices may often be very large, and a non sparse
+version of one of them will require gigabytes of even terabytes of
+space.  For one of the
+common computations (degrees of freedom in a penalized model) only those
+elements of the inverse that correspond to the non-zero part of
+<code>a</code> are required;
+the <code>full=F</code> option returns only that portion
+of the (block diagonal portion of) the inverse matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>if argument <code>b</code> is not present, the inverse of
+<code>a</code> is returned, otherwise the solution to 
+matrix equation.
+The equation is solved using a generalized Cholesky decomposition.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>bdsmatrix, gchol
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+tmat &lt;- bdsmatrix(c(3,2,2,4), 
+              c(22,1,2,21,3,20,19,4,18,17,5,16,15,6,7, 8,14,9,10,13,11,12),
+              matrix(c(1,0,1,1,0,0,1,1,0,1,0,10,0,
+                       0,1,1,0,1,1,0,1,1,0,1,0,10), ncol=2))
+dim(tmat)
+solve(tmat, cbind(1:13, rep(1,13)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bdsmatrix</em> version 1.3-6 <a href="00Index.html">Index</a>]</div>
+</body></html>

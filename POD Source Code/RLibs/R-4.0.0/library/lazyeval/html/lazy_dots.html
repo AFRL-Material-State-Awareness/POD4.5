@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Capture ... (dots) for later lazy evaluation.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lazy_dots {lazyeval}"><tr><td>lazy_dots {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Capture ... (dots) for later lazy evaluation.</h2>
+
+<h3>Description</h3>
+
+<p>Capture ... (dots) for later lazy evaluation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lazy_dots(..., .follow_symbols = FALSE, .ignore_empty = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Dots from another function</p>
+</td></tr>
+<tr valign="top"><td><code>.follow_symbols</code></td>
+<td>
+<p>If <code>TRUE</code>, the default, follows promises across
+function calls. See <code>vignette("chained-promises")</code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>.ignore_empty</code></td>
+<td>
+<p>If <code>TRUE</code>, empty arguments will be ignored.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A named list of <code><a href="lazy_.html">lazy</a></code> expressions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+lazy_dots(x = 1)
+lazy_dots(a, b, c * 4)
+
+f &lt;- function(x = a + b, ...) {
+  lazy_dots(x = x, y = a + b, ...)
+}
+f(z = a + b)
+f(z = a + b, .follow_symbols = TRUE)
+
+# .follow_symbols is off by default because it causes problems
+# with lazy loaded objects
+lazy_dots(letters)
+lazy_dots(letters, .follow_symbols = TRUE)
+
+# You can also modify a dots like a list. Anything on the RHS will
+# be coerced to a lazy.
+l &lt;- lazy_dots(x = 1)
+l$y &lt;- quote(f)
+l[c("y", "x")]
+l["z"] &lt;- list(~g)
+
+c(lazy_dots(x = 1), lazy_dots(f))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

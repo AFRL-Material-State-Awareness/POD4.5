@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Modify the colorbar</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for colorbar {plotly}"><tr><td>colorbar {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Modify the colorbar</h2>
+
+<h3>Description</h3>
+
+<p>Modify the colorbar
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+colorbar(p, ..., limits = NULL, which = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly object</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments are documented here
+<a href="https://plotly.com/r/reference/#scatter-marker-colorbar">https://plotly.com/r/reference/#scatter-marker-colorbar</a>.</p>
+</td></tr>
+<tr valign="top"><td><code>limits</code></td>
+<td>
+<p>numeric vector of length 2. Set the extent of the colorbar scale.</p>
+</td></tr>
+<tr valign="top"><td><code>which</code></td>
+<td>
+<p>colorbar to modify? Should only be relevant for subplots with
+multiple colorbars.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+p &lt;- plot_ly(mtcars, x = ~wt, y = ~mpg, color = ~cyl)
+
+# pass any colorbar attribute -- 
+# https://plotly.com/r/reference/#scatter-marker-colorbar
+colorbar(p, len = 0.5)
+
+# Expand the limits of the colorbar
+colorbar(p, limits = c(0, 20))
+# values outside the colorbar limits are considered "missing"
+colorbar(p, limits = c(5, 6))
+
+# also works on colorbars generated via a z value
+corr &lt;- cor(diamonds[vapply(diamonds, is.numeric, logical(1))])
+plot_ly(x = rownames(corr), y = colnames(corr), z = corr) %&gt;%
+ add_heatmap() %&gt;%
+ colorbar(limits = c(-1, 1))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

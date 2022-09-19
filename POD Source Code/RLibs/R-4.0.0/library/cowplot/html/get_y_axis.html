@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get plot axes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for get_y_axis {cowplot}"><tr><td>get_y_axis {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get plot axes</h2>
+
+<h3>Description</h3>
+
+<p>These functions extract just the axes from a ggplot. <code>get_y_axis()</code> pulls
+the y-axis, while <code>get_x_axis()</code> pulls the x-axis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+get_y_axis(plot, position = c("left", "right"))
+
+get_x_axis(plot, position = c("bottom", "top"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p>A ggplot or gtable.</p>
+</td></tr>
+<tr valign="top"><td><code>position</code></td>
+<td>
+<p>Which side of the plot is the axis on? For the x-axis, this
+can be &quot;top&quot; or &quot;bottom&quot;, and for the y-axis, it can be &quot;left&quot; or &quot;right&quot;.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(ggplot2)
+
+p &lt;- ggplot(mpg, aes(displ, cty)) +
+  geom_point()
+
+ggdraw(get_y_axis(p))
+p &lt;- p + scale_x_continuous(position = "top")
+ggdraw(get_x_axis(p, position = "top"))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: MM-type Estimators for Linear Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lmrob {robustbase}"><tr><td>lmrob {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>MM-type Estimators for Linear Regression</h2>
+
+<h3>Description</h3>
+
+<p>Computes fast MM-type estimators for linear (regression) models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lmrob(formula, data, subset, weights, na.action, method = "MM",
+      model = TRUE, x = !control$compute.rd, y = FALSE,
+      singular.ok = TRUE, contrasts = NULL, offset = NULL,
+      control = NULL, init = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a symbolic description of the model to be fit.  See
+<code><a href="../../stats/html/lm.html">lm</a></code> and <code><a href="../../stats/html/formula.html">formula</a></code> for more details.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame, list or environment (or object
+coercible by <code><a href="../../base/html/as.data.frame.html">as.data.frame</a></code> to a data frame) containing
+the variables in the model.  If not found in <code>data</code>, the
+variables are taken from <code>environment(formula)</code>,
+typically the environment from which <code>lmrob</code> is called.</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of observations
+to be used in the fitting process.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of weights to be used in the fitting
+process (in addition to the robustness weights computed in the
+fitting process).</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>a function which indicates what should happen
+when the data contain <code>NA</code>s.  The default is set by
+the <code>na.action</code> setting of <code><a href="../../base/html/options.html">options</a></code>, and is
+<code><a href="../../stats/html/na.fail.html">na.fail</a></code> if that is unset.  The &ldquo;factory-fresh&rdquo;
+default is <code><a href="../../stats/html/na.fail.html">na.omit</a></code>.  Another possible value is
+<code>NULL</code>, no action.  Value <code><a href="../../stats/html/na.fail.html">na.exclude</a></code> can be useful.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>string specifying the estimator-chain. <code>MM</code>
+is interpreted as <code>SM</code>.  See <em>Details</em>, notably the
+currently recommended <code>setting = "KS2014"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>model, x, y</code></td>
+<td>
+<p>logicals.  If <code>TRUE</code> the corresponding
+components of the fit (the model frame, the model matrix, the
+response) are returned.</p>
+</td></tr>
+<tr valign="top"><td><code>singular.ok</code></td>
+<td>
+<p>logical.  If <code>FALSE</code> (the default in S but
+not in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>) a singular fit is an error.</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+<p>an optional list.  See the <code>contrasts.arg</code>
+of <code><a href="../../stats/html/model.matrix.html">model.matrix.default</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>this can be used to specify an <em>a priori</em>
+known component to be included in the linear predictor
+during fitting.  An <code><a href="../../stats/html/offset.html">offset</a></code> term can be included in the
+formula instead or as well, and if both are specified their sum is used.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a <code><a href="../../base/html/list.html">list</a></code> specifying control parameters; use
+the function <code><a href="lmrob.control.html">lmrob.control</a>(.)</code> and see its help page.</p>
+</td></tr>
+<tr valign="top"><td><code>init</code></td>
+<td>
+<p>an optional argument to specify or supply the initial
+estimate. See <em>Details</em>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments can be used to specify control
+parameters directly instead of (but not in addition to!) via <code>control</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<dl>
+<dt>Overview:</dt><dd>
+<p>This function computes an MM-type regression estimator as
+described in Yohai (1987) and Koller and Stahel (2011).  By
+default it uses a bi-square redescending score function, and it
+returns a highly robust and highly efficient estimator (with 50%
+breakdown point and 95% asymptotic efficiency for normal errors).
+The computation is carried out by a call to <code><a href="lmrob.fit.html">lmrob.fit</a>()</code>.
+</p>
+<p>The argument <code>setting</code> of <code><a href="lmrob.control.html">lmrob.control</a></code> is provided
+to set alternative defaults as suggested in Koller and Stahel (2011)
+(<code>setting="KS2011"</code>; now do use its extension
+<code>setting="KS2014"</code>).  For further details, see <code><a href="lmrob.control.html">lmrob.control</a></code>.
+</p>
+</dd>
+<dt>Initial Estimator <code>init</code>:</dt><dd>
+<p>The initial estimator may be specified using the argument
+<code>init</code>.  This can either be a string, a function or a list.
+A <em>string</em> can be used to specify built in internal
+estimators (currently <code>S</code> and <code>M-S</code>, see <em>See also</em>
+below).  A <code><a href="../../base/html/function.html">function</a></code> taking arguments <code>x, y,
+      control, mf</code> (where <code>mf</code> stands for <code>model.frame</code>) and
+returning a list containing at least the initial coefficients as
+<code>coefficients</code> and the initial scale estimate <code>scale</code>.
+Or a <em>list</em> giving the initial coefficients and scale as
+<code>coefficients</code> and <code>scale</code>.  See also <em>Examples</em>.
+</p>
+<p>Note that if the <code>init</code> argument is a function or list, the
+<code>method</code> argument must <em>not</em> contain the initial estimator, e.g.,
+use <code>MDM</code> instead of <code>SMDM</code>.
+</p>
+<p>The default, equivalent to <code>init = "S"</code>, uses as initial
+estimator an S-estimator (Rousseeuw and Yohai, 1984) which is
+computed using the Fast-S algorithm of Salibian-Barrera and Yohai
+(2006), calling <code><a href="lmrob.S.html">lmrob.S</a>()</code>.  That function, since
+March 2012, by default uses <em>nonsingular</em> subsampling which
+makes the Fast-S algorithm feasible for categorical data as well,
+see Koller (2012).  Note that convergence problems may still show
+up as warnings, e.g., </p>
+<pre>
+  S refinements did not converge (to refine.tol=1e-07) in 200 (= k.max) steps
+</pre>
+<p>and often can simply be remedied by increasing (i.e. weakening)
+<code>refine.tol</code> or increasing the allowed number of iterations
+<code>k.max</code>, see <code><a href="lmrob.control.html">lmrob.control</a></code>.
+</p>
+</dd>
+<dt>Method <code>method</code>:</dt><dd>
+<p>The following chain of estimates is customizable via the
+<code>method</code> argument. 
+There are currently two types of estimates available,
+</p>
+
+<dl>
+<dt><code>"M"</code>:</dt><dd><p>corresponds to the standard M-regression
+estimate.</p>
+</dd>
+<dt><code>"D"</code>:</dt><dd><p>stands for the Design Adaptive Scale estimate
+as proposed in Koller and Stahel (2011).</p>
+</dd>
+</dl>
+
+<p>The <code>method</code> argument takes a string that specifies the
+estimates to be calculated as a chain.  Setting
+<code>method='SMDM'</code> will result in an intial S-estimate, followed
+by an M-estimate, a Design Adaptive Scale estimate and a final
+M-step.  For methods involving a <code>D</code>-step, the default value
+of <code>psi</code> (see <code><a href="lmrob.control.html">lmrob.control</a></code>) is changed to
+<code>"lqq"</code>.
+</p>
+<p>By default, standard errors are computed using the formulas of
+Croux, Dhaene and Hoorelbeke (2003) (<code><a href="lmrob.control.html">lmrob.control</a></code>
+option <code>cov=".vcov.avar1"</code>).  This method, however, works only
+for MM-estimates (i.e., <code>method = "MM"</code> or <code> = "SM"</code>).  For other
+<code>method</code> arguments, the covariance matrix estimate used is based on the asymptotic
+normality of the estimated coefficients (<code>cov=".vcov.w"</code>) as
+described in Koller and Stahel (2011).
+The var-cov computation can be skipped by <code>cov = "none"</code> and
+(re)done later by e.g., <code>vcov(&lt;obj&gt;, cov = ".vcov.w")</code>.
+</p>
+<p>As of robustbase version 0.91-0 (April 2014), the computation of
+robust standard errors for <code>method="SMDM"</code> has been changed.
+The old behaviour can be restored by setting the control parameter
+<code>cov.corrfact = "tauold"</code>.
+</p>
+</dd>
+</dl>
+
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>lmrob</code>; a list including the following
+components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>The estimate of the coefficient vector</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>The scale as used in the M estimator.</p>
+</td></tr>
+<tr valign="top"><td><code>residuals</code></td>
+<td>
+<p>Residuals associated with the estimator.</p>
+</td></tr>
+</table>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>converged</code></td>
+<td>
+<p><code>TRUE</code> if the IRWLS iterations have converged.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>number of IRWLS iterations</p>
+</td></tr>
+<tr valign="top"><td><code>rweights</code></td>
+<td>
+<p>the &ldquo;robustness weights&rdquo; <i>&psi;(r_i/S) / (r_i/S)</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>fitted.values</code></td>
+<td>
+<p>Fitted values associated with the estimator.</p>
+</td></tr>
+</table>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>init.S</code></td>
+<td>
+<p>The <code><a href="../../base/html/list.html">list</a></code> returned by <code><a href="lmrob.S.html">lmrob.S</a>()</code> or
+<code><a href="lmrob.M.S.html">lmrob.M.S</a>()</code> (for MM-estimates, i.e., <code>method="MM"</code> or <code>"SM"</code> only)</p>
+</td></tr>
+<tr valign="top"><td><code>init</code></td>
+<td>
+<p>A similar list that contains the results of intermediate
+estimates (<em>not</em> for MM-estimates).</p>
+</td></tr>
+</table>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>rank</code></td>
+<td>
+<p>the numeric rank of the fitted linear model.</p>
+</td></tr>
+<tr valign="top"><td><code>cov</code></td>
+<td>
+<p>The estimated covariance matrix of the regression
+coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>df.residual</code></td>
+<td>
+<p>the residual degrees of freedom.</p>
+</td></tr>
+</table>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>the specified weights (missing if none were used).</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>(where relevant) information returned by
+<code><a href="../../stats/html/model.frame.html">model.frame</a></code> on the special handling of <code>NA</code>s.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>the offset used (missing if none were used).</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+<p>(only where relevant) the contrasts used.</p>
+</td></tr>
+<tr valign="top"><td><code>xlevels</code></td>
+<td>
+<p>(only where relevant) a record of the levels of the factors
+used in fitting.</p>
+</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>the matched call.</p>
+</td></tr>
+<tr valign="top"><td><code>terms</code></td>
+<td>
+<p>the <code>terms</code> object used.</p>
+</td></tr>
+</table>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>if requested (the default), the model frame used.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>if requested, the model matrix used.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>if requested, the response used.</p>
+</td></tr>
+</table>
+<p>In addition, non-null fits will have components <code>assign</code>,
+and <code>qr</code> relating to the linear fit, for use by extractor
+functions such as <code>summary</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>(mainly:) Matias Salibian-Barrera and Manuel Koller</p>
+
+
+<h3>References</h3>
+
+<p>Croux, C., Dhaene, G. and Hoorelbeke, D. (2003)
+<em>Robust standard errors for robust estimators</em>,
+Discussion Papers Series 03.16, K.U. Leuven, CES.
+</p>
+<p>Koller, M. (2012)
+Nonsingular subsampling for S-estimators with categorical predictors,
+<em>ArXiv e-prints</em> <a href="https://arxiv.org/abs/1208.5595">https://arxiv.org/abs/1208.5595</a>;
+extended version published as Koller and Stahel (2017), see
+<code><a href="lmrob.control.html">lmrob.control</a></code>.
+</p>
+<p>Koller, M. and Stahel, W.A. (2011)
+Sharpening Wald-type inference in robust regression for small samples.
+<em>Computational Statistics &amp; Data Analysis</em> <b>55</b>(8), 2504&ndash;2515.
+</p>
+<p>Maronna, R. A., and Yohai, V. J. (2000)
+Robust regression with both continuous and categorical predictors.
+<em>Journal of Statistical Planning and Inference</em> <b>89</b>, 197&ndash;214.
+</p>
+<p>Rousseeuw, P.J. and Yohai, V.J. (1984)
+Robust regression by means of S-estimators,
+In <em>Robust and Nonlinear Time Series</em>,
+J. Franke, W. Härdle and R. D. Martin (eds.).
+Lectures Notes in Statistics 26, 256&ndash;272,
+Springer Verlag, New York.
+</p>
+<p>Salibian-Barrera, M. and Yohai, V.J. (2006)
+A fast algorithm for S-regression estimates,
+<em>Journal of Computational and Graphical Statistics</em> <b>15</b>(2), 414&ndash;427.
+</p>
+<p>Yohai, V.J. (1987)
+High breakdown-point and high efficiency estimates for regression.
+<em>The Annals of Statistics</em> <b>15</b>, 642&ndash;65.
+</p>
+<p>Yohai, V., Stahel, W.~A. and Zamar, R. (1991)
+A procedure for robust estimation and inference in linear regression;
+in Stahel and Weisberg (eds), <em>Directions in Robust Statistics
+and Diagnostics</em>, Part II, Springer, New York, 365&ndash;374;
+doi: <a href="https://doi.org/10.1007/978-1-4612-4444-8_20">10.1007/978-1-4612-4444-8_20</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmrob.control.html">lmrob.control</a></code>;
+for the algorithms <code><a href="lmrob.S.html">lmrob.S</a></code>, <code><a href="lmrob.M.S.html">lmrob.M.S</a></code> and
+<code><a href="lmrob.fit.html">lmrob.fit</a></code>;
+and for methods,
+<code><a href="summary.lmrob.html">summary.lmrob</a></code>, for the extra &ldquo;statistics&rdquo;,
+notably <i>R^2</i> (&ldquo;R squared&rdquo;);
+<code><a href="predict.lmrob.html">predict.lmrob</a></code>,
+<code><a href="print.lmrob.html">print.lmrob</a></code>, <code><a href="plot.lmrob.html">plot.lmrob</a></code>, and
+<code><a href="weights.lmrob.html">weights.lmrob</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(coleman)
+set.seed(0)
+## Default for a very long time:
+summary( m1 &lt;- lmrob(Y ~ ., data=coleman) )
+
+## Nowadays **strongly recommended** for routine use:
+summary(m2 &lt;- lmrob(Y ~ ., data=coleman, setting = "KS2014") )
+##                                       ------------------
+
+plot(residuals(m2) ~ weights(m2, type="robustness")) ##-&gt; weights.lmrob()
+abline(h=0, lty=3)
+
+data(starsCYG, package = "robustbase")
+## Plot simple data and fitted lines
+plot(starsCYG)
+  lmST &lt;-    lm(log.light ~ log.Te, data = starsCYG)
+(RlmST &lt;- lmrob(log.light ~ log.Te, data = starsCYG))
+abline(lmST, col = "red")
+abline(RlmST, col = "blue")
+## --&gt; Least Sq.:/ negative slope  \ robust: slope ~= 2.2 % checked in ../tests/lmrob-data.R
+summary(RlmST) # -&gt; 4 outliers; rest perfect
+vcov(RlmST)
+stopifnot(all.equal(fitted(RlmST),
+                    predict(RlmST, newdata = starsCYG), tol = 1e-14))
+## FIXME: setting = "KS2011"  or  setting = "KS2014"  **FAIL** here
+
+##--- 'init' argument -----------------------------------
+## 1)  string
+set.seed(0)
+m3 &lt;- lmrob(Y ~ ., data=coleman, init = "S")
+stopifnot(all.equal(m1[-18], m3[-18]))
+## 2) function
+initFun &lt;- function(x, y, control, ...) { # no 'mf' needed
+    init.S &lt;- lmrob.S(x, y, control)
+    list(coefficients=init.S$coef, scale = init.S$scale)
+}
+set.seed(0)
+m4 &lt;- lmrob(Y ~ ., data=coleman, method = "M", init = initFun)
+## list
+m5 &lt;- lmrob(Y ~ ., data=coleman, method = "M",
+            init = list(coefficients = m3$init$coef, scale = m3$scale))
+stopifnot(all.equal(m4[-17], m5[-17]))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

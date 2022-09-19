@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Write Asymptote code for an RGL scene</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for writeASY {rgl}"><tr><td>writeASY {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Write Asymptote code for an RGL scene
+</h2>
+
+<h3>Description</h3>
+
+<p>Asymptote is a language for 3D graphics that
+is highly integrated with LaTeX.  This is
+an experimental function to
+write an Asymptote program to approximate 
+an RGL scene.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+writeASY(scene = scene3d(),
+         title = "scene", 
+         outtype = c("pdf", "eps", "asy", "latex", "pdflatex"), 
+         prc = TRUE, 
+         runAsy = "asy %filename%", 
+         defaultFontsize = 12,
+         width = 7, height = 7,
+         ppi = 100,
+         ids = tagged3d(tags),
+         tags = NULL, 
+         version = "2.65")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>scene</code></td>
+<td>
+<p>RGL scene object</p>
+</td></tr>
+<tr valign="top"><td><code>outtype</code></td>
+<td>
+
+<p>What type of file to write?  See Details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>prc</code></td>
+<td>
+
+<p>Whether to produce an interactive PRC scene.
+</p>
+</td></tr>
+<tr valign="top"><td><code>title</code></td>
+<td>
+
+<p>The base of the filename to produce.
+</p>
+</td></tr>
+<tr valign="top"><td><code>runAsy</code></td>
+<td>
+
+<p>Code to run the Asymptote program.
+</p>
+</td></tr>
+<tr valign="top"><td><code>defaultFontsize</code></td>
+<td>
+
+<p>The default fontsize for text. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>width, height</code></td>
+<td>
+
+<p>Width and height of the output image, in inches.
+</p>
+</td></tr>
+<tr valign="top"><td><code>ppi</code></td>
+<td>
+
+<p>&ldquo;Pixels per inch&rdquo; to assume when converting
+line widths and point sizes (which RGL measures in 
+pixels).
+</p>
+</td></tr>
+<tr valign="top"><td><code>ids</code></td>
+<td>
+
+<p>If not <code>NULL</code>, write out just these
+RGL objects.
+</p>
+</td></tr>
+<tr valign="top"><td><code>tags</code></td>
+<td>
+
+<p>Alternate way to specify <code>ids</code>.  Ignored if <code>ids</code> is
+given.
+</p>
+</td></tr>
+<tr valign="top"><td><code>version</code></td>
+<td>
+
+<p>Asymptote version 2.44 had a definition for its &ldquo;light()&rdquo; function
+that was incompatibly changed in versions 2.47 and 2.50.  
+The current code has been tested with version 2.65.
+If you are using an older version, set <code>version</code>
+to your version number and it may work better.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Asymptote is both a language describing a 
+2D or 3D graphic, and a program to interpret
+that language and produce output in a variety
+of formats including EPS, PDF (interactive
+or static), etc.
+</p>
+<p>The interactive scene produced with <code>prc = TRUE</code>
+requires <code>outtype = "pdf"</code>, and (as of this
+writing) has a number of limitations:
+</p>
+
+<ul>
+<li><p>As far as we know, only Adobe Acrobat Reader of a sufficiently recent version can display 
+these scenes.
+</p>
+</li>
+<li><p>Current versions ignore lighting settings.
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>The filename of the output file is returned
+invisibly.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function is currently under development and limited in the quality
+of output it produces.  Arguments will likely
+change.
+</p>
+<p>There are a number of differences between the interactive display in 
+Asymptote and the display in RGL.  In particular, many objects that are
+a fixed size in RGL will scale with the image in Asymptote.  Defaults
+have been chosen somewhat arbitrarily; tweaking will likely be needed.
+</p>
+<p>Material properties of surfaces are not yet implemented.
+</p>
+<p>On some systems, the program  <code>asy</code>  used
+to process the output has bugs and may fail.  Run the example
+at your own risk!
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>References</h3>
+
+<p>J. C. Bowman and A. Hammerlindl (2008). Asymptote: A vector graphics language, 
+TUGBOAT: The Communications of the TeX Users Group, 29:2, 288-294.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="scene3d.html">scene3d</a></code> saves a copy of a scene to an R variable; <code><a href="rglwidget.html">rglwidget</a></code>,
+<code><a href="writePLY.html">writePLY</a></code>, <code><a href="writeOBJ.html">writeOBJ</a></code> and <code><a href="readSTL.html">writeSTL</a></code>
+write the scene to a file in various other formats.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# On some systems, the program  "asy"  used
+# to process the output has bugs, so this may fail.
+x &lt;- rnorm(20)
+y &lt;- rnorm(20)
+z &lt;- rnorm(20)
+plot3d(x, y, z, type = "s", col = "red")
+olddir &lt;- setwd(tempdir())
+writeASY(title = "interactive")  # Produces interactive.pdf
+writeASY(title = "noninteractive", prc = FALSE) # Produces noninteractive.pdf
+setwd(olddir)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

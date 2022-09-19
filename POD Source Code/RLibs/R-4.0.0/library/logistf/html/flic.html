@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: FLIC - Firth's logistic regression with intercept correction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for flic {logistf}"><tr><td>flic {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>FLIC - Firth's logistic regression with intercept correction</h2>
+
+<h3>Description</h3>
+
+<p><code>flic</code> implements Firth's bias-reduced penalized-likelihood logistic regression with intercept correction.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+flic(...)
+
+## Default S3 method:
+flic(
+  formula,
+  data,
+  model = TRUE,
+  control,
+  modcontrol,
+  weights,
+  offset,
+  na.action,
+  ...
+)
+
+## S3 method for class 'logistf'
+flic(lfobject, model = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further arguments passed to the method or <code><a href="logistf.html">logistf</a></code>-call.</p>
+</td></tr>
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>A formula object, with the response on the left of the operator,
+and the model terms on the right. The response must be a vector with 0 and 1 or <code>FALSE</code> and
+<code>TRUE</code> for the outcome, where the higher value (1 or <code>TRUE</code>) is modeled.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>If using with formula, a data frame containing the variables in the model.</p>
+</td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>If TRUE the corresponding components of the fit are returned.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>Controls iteration parameter. Taken from <code>logistf</code>-object when specified. Otherwise default is <code>control= logistf.control()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>modcontrol</code></td>
+<td>
+<p>Controls additional parameter for fitting. Taken from <code>logistf</code>-object when specified. Otherwise default is <code>logistf.mod.control()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>specifies case weights. Each line of the input data set is multiplied
+by the corresponding element of weights</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>a priori known component to be included in the linear predictor</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>a function which indicates what should happen when the data contain NAs</p>
+</td></tr>
+<tr valign="top"><td><code>lfobject</code></td>
+<td>
+<p>A fitted <code><a href="logistf.html">logistf</a></code> object.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>FLIC is a simple modification of Firth's logistic regression which provides average predicted
+probabilities equal to the observed proportion of events, while preserving the ability to deal
+with separation.
+</p>
+<p>In general the average predicted probability in Firth's logistic regression is not equal to the observed
+proportion of events. Because the determinant of the Fisher-Information matrix is maximized
+for <i>&pi;_i = \frac{1}{2}</i> it is concluded that Firth's penalization tends to push the
+predicted probabilities towards one-half compared with ML-estimation.
+FLIC first applies Firth's logistic regression and then corrects the intercept such that the predicted probabilities become unbiased while keeping
+all other coefficients constant.
+The following generic methods are available for <code>flic</code>'s output object: <code>print, summary, coef, confint, anova, extractAIC, add1, drop1, 
+profile, terms, nobs, predict</code>. Furthermore, forward and backward functions perform convenient variable selection. Note
+that anova, extractAIC, add1, drop1, forward and backward are based on penalized likelihood
+ratio tests.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>flic</code> object with components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>The coefficients of the parameter in the fitted model.</p>
+</td></tr>
+<tr valign="top"><td><code>predict</code></td>
+<td>
+<p>A vector with the predicted probability of each observation.</p>
+</td></tr>
+<tr valign="top"><td><code>linear.predictors</code></td>
+<td>
+<p>A vector with the linear predictor of each observation.</p>
+</td></tr>
+<tr valign="top"><td><code>var</code></td>
+<td>
+<p>The variance-covariance-matrix of the parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>prob</code></td>
+<td>
+<p>The p-values of the specific parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>ci.lower</code></td>
+<td>
+<p>The lower confidence limits of the parameter.</p>
+</td></tr>
+<tr valign="top"><td><code>ci.upper</code></td>
+<td>
+<p>The upper confidence limits of the parameter.</p>
+</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>The call object.</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>The significance level: 0.95.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>depending on the fitting method 'Penalized ML' or <code style="white-space: pre;">Standard ML'.} \item{method.ci}{the method in calculating the confidence intervals, i.e. </code>profile likelihood' or &lsquo;Wald&rsquo;, depending on the argument pl and plconf.</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>The number of degrees of freedom in the model.</p>
+</td></tr>
+<tr valign="top"><td><code>loglik</code></td>
+<td>
+<p>A vector of the (penalized) log-likelihood of the restricted and the full models.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>The number of observations.</p>
+</td></tr>
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>The formula object.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a copy of the control parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>modcontrol</code></td>
+<td>
+<p>a copy of the modcontrol parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>terms</code></td>
+<td>
+<p>the model terms (column names of design matrix).</p>
+</td></tr>
+<tr valign="top"><td><code>model</code></td>
+<td>
+<p>if requested (the default), the model frame used.</p>
+</td></tr>
+</table>
+
+
+<h3>Methods (by class)</h3>
+
+
+<ul>
+<li> <p><code>default</code>: With formula and data
+</p>
+</li>
+<li> <p><code>logistf</code>: With logistf object
+</p>
+</li></ul>
+
+
+<h3>References</h3>
+
+<p>Puhr R, Heinze G, Nold M, Lusa L, Geroldinger A (2017). Firth's logistic regression with rare events:
+accurate effect estimates and predictions? Statistics in Medicine 36: 2302-2317.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="logistf.html">logistf</a></code> for Firth's bias-Reduced penalized-likelihood logistic regression.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#With formula and data:
+data(sex2)
+flic(case ~ age + oc + vic + vicl + vis + dia, sex2)
+
+#With a logistf object:
+lf &lt;- logistf(formula = case ~ age + oc + vic + vicl + vis + dia, data = sex2)
+flic(lf)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.24.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

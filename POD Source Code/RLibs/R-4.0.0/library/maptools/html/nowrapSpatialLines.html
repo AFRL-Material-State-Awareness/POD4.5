@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Split SpatialLines components at offset</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nowrapSpatialLines {maptools}"><tr><td>nowrapSpatialLines {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Split SpatialLines components at offset</h2>
+
+<h3>Description</h3>
+
+<p>When recentering a world map, most often from the &quot;Atlantic&quot; view with longitudes with range -180 to 180, to the &quot;pacific&quot; view with longitudes with range 0 to 360, lines crossing the offset (0 for this conversion) get stretched horizonally. This function breaks Line objects at the offset (usually Greenwich), inserting a very small gap, and reassembling the Line objects created as Lines. The <span class="pkg">rgeos</span> package is required to use this function. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nowrapSpatialLines(obj, offset = 0, eps = rep(.Machine$double.eps^(1/2.5), 2))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>A Spatial Lines object</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>default 0, untried for other values</p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+<p>vector of two fuzz values, both default 2.5 root of double.eps</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A Spatial Lines object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Bivand</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../sp/html/recenter-methods.html">recenter-methods</a></code>, <code><a href="nowrapRecenter.html">nowrapSpatialPolygons</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+Sl &lt;- SpatialLines(list(Lines(list(Line(cbind(sin(seq(-4,4,0.4)),
+ seq(1,21,1)))), "1")), proj4string=CRS("+proj=longlat +ellps=WGS84"))
+summary(Sl)
+if (require(rgeos)) {
+nwSL &lt;- nowrapSpatialLines(Sl)
+summary(nwSL)
+if(require(maps)) {
+worldmap &lt;- map("world", plot=FALSE)
+worldmapLines &lt;- map2SpatialLines(worldmap, proj4string=CRS("+proj=longlat +datum=WGS84"))
+bbox(worldmapLines)
+t0 &lt;- nowrapSpatialLines(worldmapLines, offset=180)
+bbox(t0)
+}
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

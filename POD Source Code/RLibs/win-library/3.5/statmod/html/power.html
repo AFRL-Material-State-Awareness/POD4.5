@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Power of Fisher's Exact Test for Comparing Proportions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for power.fisher.test {statmod}"><tr><td>power.fisher.test {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Power of Fisher's Exact Test for Comparing Proportions</h2>
+
+<h3>Description</h3>
+
+<p>Calculate by simulation the power of Fisher's exact test for comparing two proportions given two margin counts. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+power.fisher.test(p1, p2, n1, n2, alpha=0.05, nsim=100, alternative="two.sided")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p1</code></td>
+<td>
+<p>first proportion to be compared.</p>
+</td></tr>
+<tr valign="top"><td><code>p2</code></td>
+<td>
+<p>second proportion to be compared.</p>
+</td></tr>
+<tr valign="top"><td><code>n1</code></td>
+<td>
+<p>first sample size.</p>
+</td></tr>
+<tr valign="top"><td><code>n2</code></td>
+<td>
+<p>second sample size.</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>significance level.</p>
+</td></tr>
+<tr valign="top"><td><code>nsim</code></td>
+<td>
+<p>number of data sets to simulate.</p>
+</td></tr>
+<tr valign="top"><td><code>alternative</code></td>
+<td>
+<p>indicates the alternative hypothesis and must be one of &quot;two.sided&quot;, &quot;greater&quot; or &quot;less&quot;.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the power of Fisher's exact test for testing the null hypothesis that <code>p1</code> equals <code>p2</code> against the alternative that they are not equal.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Estimated power of the test.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/fisher.test.html">fisher.test</a></code>, <code><a href="../../stats/html/power.t.test.html">power.t.test</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+power.fisher.test(0.5,0.9,20,20) # 70% chance of detecting difference
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

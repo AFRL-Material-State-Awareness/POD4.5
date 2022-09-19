@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: create neighbourhood (nb) object from grid geometry</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gridIndex2nb {sp}"><tr><td>gridIndex2nb {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>create neighbourhood (nb) object from grid geometry</h2>
+
+<h3>Description</h3>
+
+<p>create neighbourhood (nb) object from grid geometry</p>
+
+
+<h3>Usage</h3>
+
+<pre> gridIndex2nb(obj, maxdist = sqrt(2), fullMat = TRUE, ...) </pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>object of class <a href="SpatialGrid.html">SpatialGrid</a> or <a href="SpatialGrid.html">SpatialPixels</a></p>
+</td></tr>
+<tr valign="top"><td><code>maxdist</code></td>
+<td>
+<p> maximum distance to be considered (inclusive), expressed in number
+of grid cell (sqrt(2) results in queen neighbours) </p>
+</td></tr>
+<tr valign="top"><td><code>fullMat</code></td>
+<td>
+<p> use <a href="../../stats/html/dist.html">dist</a> to compute distances from grid (row/col) indices;
+FALSE avoids forming the full distance matrix, at a large performance cost </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> arguments passed on to <a href="../../stats/html/dist.html">dist</a></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Object of class nb, which is a list.
+</p>
+<p>The nb object follows the convention of nb objects in package spdep;
+it is a list with each list element corresponding to a grid cell or
+pixel; the list element contains the indices of neighbours defined
+as cells less than maxdist away, measured in cell unit (N/S/E/W
+neighbour has distance 1). 
+</p>
+
+
+<h3>Note</h3>
+
+<p> Unequal grid cell size is ignored; grid cell row/col indices
+are taken to be the coordinates from which distances are computed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a> </p>
+
+
+<h3>See Also</h3>
+
+<p>plot.nb in package spdep</p>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

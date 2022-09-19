@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Capture expression for later lazy evaluation.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lazy_ {lazyeval}"><tr><td>lazy_ {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Capture expression for later lazy evaluation.</h2>
+
+<h3>Description</h3>
+
+<p><code>lazy()</code> uses non-standard evaluation to turn promises into lazy
+objects; <code>lazy_()</code> does standard evaluation and is suitable for
+programming.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lazy_(expr, env)
+
+lazy(expr, env = parent.frame(), .follow_symbols = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>expr</code></td>
+<td>
+<p>Expression to capture. For <code>lazy_</code> must be a name
+or a call.</p>
+</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+<p>Environment in which to evaluate expr.</p>
+</td></tr>
+<tr valign="top"><td><code>.follow_symbols</code></td>
+<td>
+<p>If <code>TRUE</code>, the default, follows promises across
+function calls. See <code>vignette("chained-promises")</code> for details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Use <code>lazy()</code> like you'd use <code><a href="../../base/html/substitute.html">substitute</a>()</code>
+to capture an unevaluated promise. Compared to <code>substitute()</code> it
+also captures the environment associated with the promise, so that you
+can correctly replay it in the future.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+lazy_(quote(a + x), globalenv())
+
+# Lazy is designed to be used inside a function - you should
+# give it the name of a function argument (a promise)
+f &lt;- function(x = b - a) {
+  lazy(x)
+}
+f()
+f(a + b / c)
+
+# Lazy also works when called from the global environment. This makes
+# easy to play with interactively.
+lazy(a + b / c)
+
+# By default, lazy will climb all the way back to the initial promise
+# This is handy if you have if you have nested functions:
+g &lt;- function(y) f(y)
+h &lt;- function(z) g(z)
+f(a + b)
+g(a + b)
+h(a + b)
+
+# To avoid this behavour, set .follow_symbols = FALSE
+# See vignette("chained-promises") for details
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

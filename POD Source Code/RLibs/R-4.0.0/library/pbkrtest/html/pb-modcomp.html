@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Model comparison using parametric bootstrap methods.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pb-modcomp {pbkrtest}"><tr><td>pb-modcomp {pbkrtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Model comparison using parametric bootstrap methods.</h2>
+
+<h3>Description</h3>
+
+<p>Model comparison of nested models using parametric bootstrap
+methods.  Implemented for some commonly applied model types.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+PBmodcomp(
+  largeModel,
+  smallModel,
+  nsim = 1000,
+  ref = NULL,
+  seed = NULL,
+  cl = NULL,
+  details = 0
+)
+
+## S3 method for class 'merMod'
+PBmodcomp(
+  largeModel,
+  smallModel,
+  nsim = 1000,
+  ref = NULL,
+  seed = NULL,
+  cl = NULL,
+  details = 0
+)
+
+## S3 method for class 'lm'
+PBmodcomp(
+  largeModel,
+  smallModel,
+  nsim = 1000,
+  ref = NULL,
+  seed = NULL,
+  cl = NULL,
+  details = 0
+)
+
+seqPBmodcomp(largeModel, smallModel, h = 20, nsim = 1000, cl = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>largeModel</code></td>
+<td>
+<p>A model object. Can be a linear mixed effects
+model or generalized linear mixed effects model (as fitted with
+<code>lmer()</code> and <code>glmer()</code> function in the <span class="pkg">lme4</span>
+package) or a linear normal model or a generalized linear
+model. The <code>largeModel</code> must be larger than
+<code>smallModel</code> (see below).</p>
+</td></tr>
+<tr valign="top"><td><code>smallModel</code></td>
+<td>
+<p>A model of the same type as <code>largeModel</code> or
+a restriction matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>nsim</code></td>
+<td>
+<p>The number of simulations to form the reference
+distribution.</p>
+</td></tr>
+<tr valign="top"><td><code>ref</code></td>
+<td>
+<p>Vector containing samples from the reference
+distribution. If NULL, this vector will be generated using
+PBrefdist().</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>A seed that will be passed to the simulation of new
+datasets.</p>
+</td></tr>
+<tr valign="top"><td><code>cl</code></td>
+<td>
+<p>A vector identifying a cluster; used for calculating the
+reference distribution using several cores. See examples below.</p>
+</td></tr>
+<tr valign="top"><td><code>details</code></td>
+<td>
+<p>The amount of output produced. Mainly relevant for
+debugging purposes.</p>
+</td></tr>
+<tr valign="top"><td><code>h</code></td>
+<td>
+<p>For sequential computing for bootstrap p-values: The
+number of extreme cases needed to generate before the sampling
+proces stops.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The model <code>object</code> must be fitted with maximum likelihood
+(i.e. with <code>REML=FALSE</code>). If the object is fitted with
+restricted maximum likelihood (i.e. with <code>REML=TRUE</code>) then
+the model is refitted with <code>REML=FALSE</code> before the
+p-values are calculated. Put differently, the user needs not
+worry about this issue.
+</p>
+<p>Under the fitted hypothesis (i.e. under the fitted small model) <code>nsim</code>
+samples of the likelihood ratio test statistic (LRT) are generetated.
+</p>
+<p>Then p-values are calculated as follows:
+</p>
+<p>LRT: Assuming that LRT has a chi-square distribution.
+</p>
+<p>PBtest: The fraction of simulated LRT-values that are larger or equal to the
+observed LRT value.
+</p>
+<p>Bartlett: A Bartlett correction is of LRT is calculated from the mean of the
+simulated LRT-values
+</p>
+<p>Gamma: The reference distribution of LRT is assumed to be a gamma
+distribution with mean and variance determined as the sample mean and sample
+variance of the simulated LRT-values.
+</p>
+<p>F: The LRT divided by the number of degrees of freedom is assumed to be
+F-distributed, where the denominator degrees of freedom are determined by
+matching the first moment of the reference distribution.
+</p>
+
+
+<h3>Note</h3>
+
+<p>It can happen that some values of the LRT statistic in the
+reference distribution are negative. When this happens one will
+see that the number of used samples (those where the LRT is
+positive) are reported (this number is smaller than the
+requested number of samples).
+</p>
+<p>In theory one can not have a negative value of the LRT statistic but in
+practice on can: We speculate that the reason is as follows: We simulate data
+under the small model and fit both the small and the large model to the
+simulated data. Therefore the large model represents - by definition - an
+overfit; the model has superfluous parameters in it. Therefore the fit of the
+two models will for some simulated datasets be very similar resulting in
+similar values of the log-likelihood. There is no guarantee that the the
+log-likelihood for the large model in practice always will be larger than for
+the small (convergence problems and other numerical issues can play a role
+here).
+</p>
+<p>To look further into the problem, one can use the <code>PBrefdist()</code> function
+for simulating the reference distribution (this reference distribution can be
+provided as input to <code>PBmodcomp()</code>). Inspection sometimes reveals that
+while many values are negative, they are numerically very small. In this case
+one may try to replace the negative values by a small positive value and then
+invoke <code>PBmodcomp()</code> to get some idea about how strong influence there
+is on the resulting p-values. (The p-values get smaller this way compared to
+the case when only the originally positive values are used).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Søren Højsgaard <a href="mailto:sorenh@math.aau.dk">sorenh@math.aau.dk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Ulrich Halekoh, Søren Højsgaard (2014)., A Kenward-Roger
+Approximation and Parametric Bootstrap Methods for Tests in Linear Mixed
+Models - The R Package pbkrtest., Journal of Statistical Software,
+58(10), 1-30., <a href="https://www.jstatsoft.org/v59/i09/">https://www.jstatsoft.org/v59/i09/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="kr-modcomp.html">KRmodcomp</a></code>, <code><a href="pb-refdist.html">PBrefdist</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+data(beets, package="pbkrtest")
+head(beets)
+
+NSIM &lt;- 50 ## Simulations in parametric bootstrap
+
+## Linear mixed effects model:
+sug   &lt;- lmer(sugpct ~ block + sow + harvest + (1|block:harvest),
+              data=beets, REML=FALSE)
+sug.h &lt;- update(sug, .~. -harvest)
+sug.s &lt;- update(sug, .~. -sow)
+
+anova(sug, sug.h)
+PBmodcomp(sug, sug.h, nsim=NSIM, cl=1)
+anova(sug, sug.h)
+PBmodcomp(sug, sug.s, nsim=NSIM, cl=1)
+
+## Linear normal model:
+sug &lt;- lm(sugpct ~ block + sow + harvest, data=beets)
+sug.h &lt;- update(sug, .~. -harvest)
+sug.s &lt;- update(sug, .~. -sow)
+
+anova(sug, sug.h)
+PBmodcomp(sug, sug.h, nsim=NSIM, cl=1)
+anova(sug, sug.s)
+PBmodcomp(sug, sug.s, nsim=NSIM, cl=1)
+
+## Generalized linear model
+counts    &lt;- c(18, 17, 15, 20, 10, 20, 25, 13, 12)
+outcome   &lt;- gl(3, 1, 9)
+treatment &lt;- gl(3, 3)
+d.AD      &lt;- data.frame(treatment, outcome, counts)
+head(d.AD)
+glm.D93   &lt;- glm(counts ~ outcome + treatment, family = poisson())
+glm.D93.o &lt;- update(glm.D93, .~. -outcome)
+glm.D93.t &lt;- update(glm.D93, .~. -treatment)
+
+anova(glm.D93, glm.D93.o, test="Chisq")
+PBmodcomp(glm.D93, glm.D93.o, nsim=NSIM, cl=1)
+anova(glm.D93, glm.D93.t, test="Chisq")
+PBmodcomp(glm.D93, glm.D93.t, nsim=NSIM, cl=1)
+
+## Generalized linear mixed model (it takes a while to fit these)
+## Not run: 
+(gm1 &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+              data = cbpp, family = binomial))
+(gm2 &lt;- update(gm1, .~.-period))
+anova(gm1, gm2)
+PBmodcomp(gm1, gm2, cl=2)
+
+## End(Not run)
+
+
+## Not run: 
+(fmLarge &lt;- lmer(Reaction ~ Days + (Days|Subject), sleepstudy))
+## removing Days
+(fmSmall &lt;- lmer(Reaction ~ 1 + (Days|Subject), sleepstudy))
+anova(fmLarge, fmSmall)
+PBmodcomp(fmLarge, fmSmall, cl=1)
+
+## The same test using a restriction matrix
+L &lt;- cbind(0,1)
+PBmodcomp(fmLarge, L, cl=1)
+
+## Vanilla
+PBmodcomp(beet0, beet_no.harv, nsim=NSIM, cl=1)
+
+## Simulate reference distribution separately:
+refdist &lt;- PBrefdist(beet0, beet_no.harv, nsim=1000)
+PBmodcomp(beet0, beet_no.harv, ref=refdist, cl=1)
+
+## Do computations with multiple processors:
+## Number of cores:
+(nc &lt;- detectCores())
+## Create clusters
+cl &lt;- makeCluster(rep("localhost", nc))
+
+## Then do:
+PBmodcomp(beet0, beet_no.harv, cl=cl)
+
+## Or in two steps:
+refdist &lt;- PBrefdist(beet0, beet_no.harv, nsim=NSIM, cl=cl)
+PBmodcomp(beet0, beet_no.harv, ref=refdist)
+
+## It is recommended to stop the clusters before quitting R:
+stopCluster(cl)
+
+## End(Not run)
+
+## Linear and generalized linear models:
+
+m11 &lt;- lm(dist ~ speed + I(speed^2), data=cars)
+m10 &lt;- update(m11, ~.-I(speed^2))
+anova(m11, m10)
+
+PBmodcomp(m11, m10, cl=1, nsim=NSIM)
+PBmodcomp(m11, ~.-I(speed^2), cl=1, nsim=NSIM)
+PBmodcomp(m11, c(0, 0, 1), cl=1, nsim=NSIM)
+
+m21 &lt;- glm(dist ~ speed + I(speed^2), family=Gamma("identity"), data=cars)
+m20 &lt;- update(m21, ~.-I(speed^2))
+anova(m21, m20, test="Chisq")
+
+PBmodcomp(m21, m20, cl=1, nsim=NSIM)
+PBmodcomp(m21, ~.-I(speed^2), cl=1, nsim=NSIM)
+PBmodcomp(m21, c(0, 0, 1), cl=1, nsim=NSIM)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pbkrtest</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

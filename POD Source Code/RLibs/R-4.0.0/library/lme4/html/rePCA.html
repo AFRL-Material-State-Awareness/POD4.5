@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: PCA of random-effects covariance matrix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rePCA {lme4}"><tr><td>rePCA {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>PCA of random-effects covariance matrix</h2>
+
+<h3>Description</h3>
+
+<p>PCA of random-effects variance-covariance estimates
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rePCA(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a <code>merMod</code> object</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Perform a Principal Components Analysis (PCA) of the random-effects
+variance-covariance estimates from a fitted mixed-effects model.
+This allows the user to detect and diagnose overfitting problems
+in the random effects model (see Bates et al. 2015 for details).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>prcomplist</code> object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Douglas Bates
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li><p> Douglas Bates, Reinhold Kliegl, Shravan Vasishth, and Harald Baayen.
+Parsimonious Mixed Models. arXiv:1506.04967 [stat], June 2015. arXiv:
+1506.04967.
+</p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="isSingular.html">isSingular</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  fm1 &lt;- lmer(Reaction~Days+(Days|Subject), sleepstudy)
+  rePCA(fm1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

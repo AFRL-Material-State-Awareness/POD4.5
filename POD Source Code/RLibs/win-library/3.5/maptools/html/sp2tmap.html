@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert SpatialPolygons object for Stata tmap command</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for sp2tmap {maptools}"><tr><td>sp2tmap {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert SpatialPolygons object for Stata tmap command</h2>
+
+<h3>Description</h3>
+
+<p>The function converts a SpatialPolygons object for use with the Stata tmap command, by creating a data frame with the required columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+sp2tmap(SP)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>SP</code></td>
+<td>
+<p>a SpatialPolygons object</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a data frame with three columns:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>_ID</code></td>
+<td>
+<p>an integer vector of polygon identifiers in numeric order</p>
+</td></tr>
+<tr valign="top"><td><code>_X</code></td>
+<td>
+<p>numeric x coordinate</p>
+</td></tr>
+<tr valign="top"><td><code>_Y</code></td>
+<td>
+<p>numeric y coordinate</p>
+</td></tr>
+</table>
+<p>and an <code>ID_n</code> attribute with the named polygon identifiers
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roger Bivand</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://www.stata.com/search.cgi?query=tmap">https://www.stata.com/search.cgi?query=tmap</a></p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../foreign/html/write.dta.html">write.dta</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+xx &lt;- readShapePoly(system.file("shapes/sids.shp", package="maptools")[1],
+ IDvar="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
+plot(xx, border="blue", axes=TRUE, las=1)
+tmapdf &lt;- sp2tmap(as(xx, "SpatialPolygons"))
+if (require(foreign)) {
+td &lt;- tempdir()
+write.dta(tmapdf, file=file.path(td, "NCmap.dta"), version=7)
+NCdf &lt;- as(xx, "data.frame")
+NCdf$ID_n &lt;- attr(tmapdf, "ID_names")
+write.dta(NCdf, file=file.path(td, "NC.dta"), version=7)
+}
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

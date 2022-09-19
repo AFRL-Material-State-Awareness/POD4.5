@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create bitwhich vector (skewed boolean)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bitwhich {bit}"><tr><td>bitwhich {bit}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create bitwhich vector (skewed boolean)</h2>
+
+<h3>Description</h3>
+
+<p>A bitwhich object represents a boolean filter like a <code><a href="bit.html">bit</a></code> object (NAs are not allowed)
+but uses a sparse representation suitable for very skewed (asymmetric) selections. 
+Three extreme cases are represented with logical values, no length via logical(), 
+all TRUE with TRUE and all FALSE with FALSE. All other selections are represented with 
+positive or negative integers, whatever is shorter. 
+This needs less RAM compared to <code><a href="../../base/html/logical.html">logical</a></code> (and often less than <code><a href="bit.html">bit</a></code> or <code><a href="as.which.html">which</a></code>).
+Logical operations are fast if the selection is asymetric (only few or almost all selected).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bitwhich(
+  maxindex = 0L,
+  x = NULL,
+  xempty = FALSE,
+  poslength = NULL,
+  is.unsorted = TRUE,
+  has.dup = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>maxindex</code></td>
+<td>
+<p>length of the vector</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Information about which positions are FALSE or TRUE: either <code>logical()</code> or <code>TRUE</code> or <code>FALSE</code> or a integer vector of positive or of negative subscripts.</p>
+</td></tr>
+<tr valign="top"><td><code>xempty</code></td>
+<td>
+<p>what to assume about parameter <code>x</code> if <code>x=integer(0)</code>, typically <code>TRUE</code> or <code>FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>poslength</code></td>
+<td>
+<p>tuning: <code>poslength</code> is calculated automatically, you can give <code>poslength</code> explicitely, in this case it must be correct and <code>x</code> must be sorted and not have duplicates.</p>
+</td></tr>
+<tr valign="top"><td><code>is.unsorted</code></td>
+<td>
+<p>tuning: FALSE implies that <code>x</code> is already sorted and sorting is skipped</p>
+</td></tr>
+<tr valign="top"><td><code>has.dup</code></td>
+<td>
+<p>tuning: FALSE implies that <code>x</code> has no duplicates</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class 'bitwhich' carrying two attributes
+</p>
+
+<dl>
+<dt>maxindex</dt><dd><p> see above </p>
+</dd>
+<dt>poslength</dt><dd><p> see above </p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="bitwhich_representation.html">bitwhich_representation</a></code>,  <code><a href="as.bitwhich.html">as.bitwhich</a></code>, <code><a href="bit.html">bit</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+bitwhich()
+bitwhich(12)
+bitwhich(12, x=TRUE)
+bitwhich(12, x=3)
+bitwhich(12, x=-3)
+bitwhich(12, x=integer())
+bitwhich(12, x=integer(), xempty=TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit</em> version 4.0.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

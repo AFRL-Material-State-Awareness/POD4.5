@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Enlarge number of imputations by combining 'mids' objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ibind {mice}"><tr><td>ibind {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Enlarge number of imputations by combining <code>mids</code> objects</h2>
+
+<h3>Description</h3>
+
+<p>This function combines two <code>mids</code> objects <code>x</code> and <code>y</code> into a
+single <code>mids</code> object, with the objective of increasing the number of
+imputed data sets. If the number of imputations in <code>x</code> and <code>y</code> are
+<code>m(x)</code> and <code>m(y)</code>, then the combined object will have
+<code>m(x)+m(y)</code> imputations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ibind(x, y)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A <code>mids</code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>A <code>mids</code> object.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The two <code>mids</code> objects are required to
+have the same underlying multiple imputation model and should
+be fitted on the same data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An S3 object of class <code>mids</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Karin Groothuis-Oudshoorn, Stef van Buuren
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mids-class.html">mids</a></code>, <code><a href="rbind.mids.html">rbind.mids</a></code>, <code><a href="cbind.mids.html">cbind.mids</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(nhanes)
+imp1 &lt;- mice(nhanes, m = 1, maxit = 2, print = FALSE)
+imp1$m
+
+imp2 &lt;- mice(nhanes, m = 3, maxit = 3, print = FALSE)
+imp2$m
+
+imp12 &lt;- ibind(imp1, imp2)
+imp12$m
+plot(imp12)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

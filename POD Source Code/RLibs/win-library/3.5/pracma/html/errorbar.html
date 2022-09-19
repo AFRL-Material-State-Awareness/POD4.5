@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot Error Bars</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for errorbar {pracma}"><tr><td>errorbar {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Plot Error Bars
+</h2>
+
+<h3>Description</h3>
+
+<p>Draws symmetric error bars in x- and/or y-direction.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+errorbar(x, y, xerr = NULL, yerr = NULL,
+         bar.col = "red", bar.len = 0.01,
+         grid = TRUE, with = TRUE, add = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>x-, y-coordinates</p>
+</td></tr>
+<tr valign="top"><td><code>xerr, yerr</code></td>
+<td>
+<p>length of the error bars, relative to the x-, y-values.</p>
+</td></tr>
+<tr valign="top"><td><code>bar.col</code></td>
+<td>
+<p>color of the error bars; default: red</p>
+</td></tr>
+<tr valign="top"><td><code>bar.len</code></td>
+<td>
+<p>length of the cross bars orthogonal to the error bars;
+default: 0.01.</p>
+</td></tr>
+<tr valign="top"><td><code>grid</code></td>
+<td>
+<p>logical; should the grid be plotted?; default: true</p>
+</td></tr>
+<tr valign="top"><td><code>with</code></td>
+<td>
+<p>logical; whether to end the error bars with small cross bars.</p>
+</td></tr>
+<tr valign="top"><td><code>add</code></td>
+<td>
+<p>logical; should the error bars be added to an existing plot?;
+default: false.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional plotting parameters that will be passed to the
+<code>plot</code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>errorbar</code> plots <code>y</code> versus <code>x</code> with symmetric error bars,
+with a length determined by <code>xerr</code> resp. <code>yerr</code> in x- and/or
+y-direction. If <code>xerr</code> or <code>yerr</code> is <code>NULL</code> error bars in
+this direction will not be drawn.
+</p>
+<p>A future version will allow to draw unsymmetric error bars by specifying
+upper and lower limits when <code>xerr</code> or <code>yerr</code> is a matrix of
+size <code>(2 x length(x))</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Generates a plot, no return value.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plotrix::plotCI</code>, <code>Hmisc::errbar</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+x &lt;- seq(0, 2*pi, length.out = 20)
+y &lt;- sin(x)
+xe &lt;- 0.1
+ye &lt;- 0.1 * y
+errorbar(x, y, xe, ye, type = "l", with = FALSE)
+
+cnt &lt;- round(100*randn(20, 3))
+y &lt;- apply(cnt, 1, mean)
+e &lt;- apply(cnt, 1, sd)
+errorbar(1:20, y, yerr = e, bar.col = "blue")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

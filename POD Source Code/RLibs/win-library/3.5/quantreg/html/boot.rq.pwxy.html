@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Preprocessing weighted bootstrap method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for boot.rq.pwxy {quantreg}"><tr><td>boot.rq.pwxy {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Preprocessing weighted bootstrap method
+</h2>
+
+<h3>Description</h3>
+
+<p>Bootstrap method exploiting preprocessing strategy to reduce 
+computation time for large problem.  In contrast to 
+<code><a href="boot.rq.pxy.html">boot.rq.pxy</a></code>  which uses the classical multinomial 
+sampling scheme and is coded in R, this uses the exponentially
+weighted bootstrap scheme and is coded in fortran and consequently
+is considerably faster in larger problems.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+boot.rq.pwxy(x, y, tau, coef, R = 200, m0 = NULL, eps = 1e-06, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>Design matrix
+</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+
+<p>response vector
+</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+
+<p>quantile of interest
+</p>
+</td></tr>
+<tr valign="top"><td><code>coef</code></td>
+<td>
+
+<p>point estimate of fitted object
+</p>
+</td></tr>
+<tr valign="top"><td><code>R</code></td>
+<td>
+
+<p>the number of bootstrap replications desired.
+</p>
+</td></tr>
+<tr valign="top"><td><code>m0</code></td>
+<td>
+
+<p>constant to determine initial sample size, defaults to sqrt(n*p)
+but could use some further tuning...
+</p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+
+<p>tolerance for convergence of fitting algorithm
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>other parameters not yet envisaged.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The fortran implementation is quite similar to the R code for 
+<code><a href="boot.rq.pxy.html">boot.rq.pxy</a></code> except that there is no multinomial sampling.
+Instead <code>rexp(n)</code> weights are used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>returns a list with elements: 
+</p>
+
+<ol>
+<li><p>coefficientsa matrix of dimension ncol(x) by R
+</p>
+</li>
+<li><p>nit a 5 by m matrix of iteration counts
+</p>
+</li>
+<li><p>info an m-vector of convergence flags
+</p>
+</li></ol>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Blaise Melly and Roger Koenker
+</p>
+
+
+<h3>References</h3>
+
+<p>Chernozhukov, V.  I. Fernandez-Val and B. Melly,
+Fast Algorithms for the Quantile Regression Process, 2019,
+arXiv, 1909.05782,
+</p>
+<p>Portnoy, S.  and R. Koenker, The Gaussian Hare and the Laplacian
+Tortoise, Statistical Science, (1997) 279-300
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="boot.rq.pxy.html">boot.rq.pxy</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

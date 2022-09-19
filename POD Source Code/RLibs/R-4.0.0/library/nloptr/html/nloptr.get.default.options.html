@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Return a data.frame with all the options that can be supplied...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nloptr.get.default.options {nloptr}"><tr><td>nloptr.get.default.options {nloptr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Return a data.frame with all the options that can be supplied to nloptr.</h2>
+
+<h3>Description</h3>
+
+<p>This function returns a data.frame with all the options that can be supplied
+to <code><a href="nloptr.html">nloptr</a></code>. The data.frame contains the default
+values of the options and an explanation. A user-friendly way to show these
+options is by using the function
+<code><a href="nloptr.print.options.html">nloptr.print.options</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nloptr.get.default.options()
+</pre>
+
+
+<h3>Value</h3>
+
+<p>The return value contains a <code>data.frame</code> with the following
+elements
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>name of the option</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type (numeric, logical, integer, character)</p>
+</td></tr>
+<tr valign="top"><td><code>possible_values</code></td>
+<td>
+<p>string explaining the values the option can take</p>
+</td></tr>
+<tr valign="top"><td><code>default</code></td>
+<td>
+<p>default value of the option (as a string)</p>
+</td></tr>
+<tr valign="top"><td><code>is_termination_condition</code></td>
+<td>
+<p>is this option part of the termination
+conditions?</p>
+</td></tr>
+<tr valign="top"><td><code>description</code></td>
+<td>
+<p>description of the option (taken from NLopt website
+if it's an option that is passed on to NLopt).</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Jelmer Ypma
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="nloptr.html">nloptr</a></code>
+<code><a href="nloptr.print.options.html">nloptr.print.options</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>nloptr</em> version 2.0.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

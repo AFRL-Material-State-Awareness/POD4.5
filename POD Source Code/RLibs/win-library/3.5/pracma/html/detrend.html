@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Remove Linear Trends</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for detrend {pracma}"><tr><td>detrend {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Remove Linear Trends
+</h2>
+
+<h3>Description</h3>
+
+<p>Removes the mean value or (piecewise) linear trend from a vector or
+from each column of a matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+detrend(x, tt = 'linear', bp = c())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector or matrix, columns considered as the time series.</p>
+</td></tr>
+<tr valign="top"><td><code>tt</code></td>
+<td>
+<p>trend type, &lsquo;constant&rsquo; or &lsquo;linear&rsquo;, default is &lsquo;linear&rsquo;.</p>
+</td></tr>
+<tr valign="top"><td><code>bp</code></td>
+<td>
+<p>break points, indices between 1 and <code>nrow(x)</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>detrend</code> computes the least-squares fit of a straight line (or
+composite line for piecewise linear trends) to the data and subtracts the
+resulting function from the data.
+</p>
+<p>To obtain the equation of the straight-line fit, use <code>polyfit</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>removes the mean or (piecewise) linear trend from <code>x</code> and returns it
+in <code>y=detrend(x)</code>, that is <code>x-y</code> <em>is</em> the linear trend.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Detrending is often used for FFT processing.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="polyfit.html">polyfit</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+t &lt;- 1:9
+x &lt;- c(0, 2, 0, 4, 4, 4, 0, 2, 0)
+x - detrend(x, 'constant')
+x - detrend(x, 'linear')
+
+y &lt;- detrend(x, 'linear', 5)
+## Not run: 
+plot(t, x, col="blue")
+lines(t, x - y, col="red")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

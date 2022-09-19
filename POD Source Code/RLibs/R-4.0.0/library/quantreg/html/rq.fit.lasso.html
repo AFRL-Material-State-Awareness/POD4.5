@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Lasso Penalized Quantile Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq.fit.lasso {quantreg}"><tr><td>rq.fit.lasso {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Lasso Penalized Quantile Regression 
+</h2>
+
+<h3>Description</h3>
+
+<p>The fitting method implements the lasso penalty for
+fitting quantile regression models.  When  the argument <code>lambda</code>
+is a scalar the penalty function is the l1
+norm of the last (p-1) coefficients, under the presumption that the
+first coefficient is an intercept parameter that should not be subject
+to the penalty.  When <code>lambda</code> is a vector it should have length
+equal the column dimension of the matrix <code>x</code> and then defines a
+coordinatewise specific vector of lasso penalty parameters.  In this
+case <code>lambda</code> entries of zero indicate covariates that are not
+penalized.  If <code>lambda</code> is not specified, a default value is
+selected according to the proposal of Belloni and Chernozhukov (2011).
+See <code>LassoLambdaHat</code> for further details.
+There should be a sparse version of this, but isn't (yet).
+There should also be a preprocessing version, but isn't (yet).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rq.fit.lasso(x, y, tau = 0.5, lambda = NULL, beta = .99995, eps = 1e-06)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>the design matrix
+</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+
+<p>the response variable
+</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+
+<p>the quantile desired, defaults to 0.5.
+</p>
+</td></tr>
+<tr valign="top"><td><code>lambda</code></td>
+<td>
+
+<p>the value of the penalty parameter(s) that determine how much shrinkage is done.
+This should be either a scalar, or a vector of length equal to the column dimension
+of the <code>x</code> matrix.  If unspecified, a default value is chosen according to
+the proposal of Belloni and Chernozhukov (2011).
+</p>
+</td></tr>
+<tr valign="top"><td><code>beta</code></td>
+<td>
+
+<p>step length parameter for Frisch-Newton method.
+</p>
+</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+
+<p>tolerance parameter for convergence. 
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with a coefficient, residual, tau and lambda components.  
+When called from <code>"rq"</code> (as intended) the returned object
+has class &quot;lassorqs&quot;.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>R. Koenker</p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R. (2005) <em>Quantile Regression</em>, CUP.
+</p>
+<p>Belloni, A. and  V. Chernozhukov. (2011) l1-penalized quantile regression 
+in high-dimensional sparse models. <em>Annals of Statistics</em>, 39 82 - 130.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.html">rq</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n &lt;- 60
+p &lt;- 7
+rho &lt;- .5
+beta &lt;- c(3,1.5,0,2,0,0,0)
+R &lt;- matrix(0,p,p)
+for(i in 1:p){
+        for(j in 1:p){
+                R[i,j] &lt;- rho^abs(i-j)
+                }
+        }
+set.seed(1234)
+x &lt;- matrix(rnorm(n*p),n,p) %*% t(chol(R))
+y &lt;- x %*% beta + rnorm(n)
+
+f &lt;- rq(y ~ x, method="lasso",lambda = 30)
+g &lt;- rq(y ~ x, method="lasso",lambda = c(rep(0,4),rep(30,4)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

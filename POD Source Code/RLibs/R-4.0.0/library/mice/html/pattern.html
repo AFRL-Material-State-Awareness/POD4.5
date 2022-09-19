@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Datasets with various missing data patterns</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pattern {mice}"><tr><td>pattern {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Datasets with various missing data patterns</h2>
+
+<h3>Description</h3>
+
+<p>Four simple datasets with various missing data patterns
+</p>
+
+
+<h3>Format</h3>
+
+ <dl>
+<dt>list(&quot;pattern1&quot;)</dt><dd><p>Data with a univariate missing
+data pattern</p>
+</dd> <dt>list(&quot;pattern2&quot;)</dt><dd><p>Data with a monotone missing data
+pattern</p>
+</dd> <dt>list(&quot;pattern3&quot;)</dt><dd><p>Data with a file matching missing data
+pattern</p>
+</dd> <dt>list(&quot;pattern4&quot;)</dt><dd><p>Data with a general missing data pattern</p>
+</dd> </dl>
+
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/missing-data-pattern.html"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+
+
+<h3>Details</h3>
+
+<p>Van Buuren (2012) uses these four artificial datasets to illustrate various
+missing data patterns.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+require(lattice)
+require(MASS)
+
+pattern4
+
+data &lt;- rbind(pattern1, pattern2, pattern3, pattern4)
+mdpat &lt;- cbind(expand.grid(rec = 8:1, pat = 1:4, var = 1:3), r = as.numeric(as.vector(is.na(data))))
+
+types &lt;- c("Univariate", "Monotone", "File matching", "General")
+tp41 &lt;- levelplot(r ~ var + rec | as.factor(pat),
+  data = mdpat,
+  as.table = TRUE, aspect = "iso",
+  shrink = c(0.9),
+  col.regions = mdc(1:2),
+  colorkey = FALSE,
+  scales = list(draw = FALSE),
+  xlab = "", ylab = "",
+  between = list(x = 1, y = 0),
+  strip = strip.custom(
+    bg = "grey95", style = 1,
+    factor.levels = types
+  )
+)
+print(tp41)
+
+md.pattern(pattern4)
+p &lt;- md.pairs(pattern4)
+p
+
+### proportion of usable cases
+p$mr / (p$mr + p$mm)
+
+### outbound statistics
+p$rm / (p$rm + p$rr)
+
+
+fluxplot(pattern2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

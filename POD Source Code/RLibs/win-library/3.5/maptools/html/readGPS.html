@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: GPSbabel read interface</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for readGPS {maptools}"><tr><td>readGPS {maptools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>GPSbabel read interface</h2>
+
+<h3>Description</h3>
+
+<p>The function reads a data frame from an attached GPS using the external program gpsbabel. The columns of the data frame need to be identified by hand because different GPS order NMEA data in different ways, and the columns should be converted to the correct classes by hand. Once the specifics of a particular GPS are identified, and ways of cleaning erroneous locations are found, the conversion of the output data frame into a usable one may be automated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+readGPS(i = "garmin", f = "usb:", type="w", invisible=TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>i</code></td>
+<td>
+<p>INTYPE: a supported file type, default &quot;garmin&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>INFILE: the appropriate device interface, default &quot;usb:&quot;, on Windows for serial interfaces commonly &quot;com4:&quot; or similar</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>&quot;w&quot; waypoints, or &quot;t&quot; track, or others provided in gpsbabel</p>
+</td></tr>
+<tr valign="top"><td><code>invisible</code></td>
+<td>
+<p>Under Windows, do not open an extra window</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed through to <code>read.table</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function just wraps: gpsbabel -i INTYPE -f INFILE -o tabsep -F - in system(), and reads the returned character vector of lines into a data frame. On some systems, INFILE may not be readable by ordinary users without extra configuration. The gpsbabel program must be present and on the user's PATH for the function to work. Typically, for a given GPS, the user will have to experiment first to find a set of data-cleaning tricks that work, but from then on they should be repeatable.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame of waypoint values
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Patrick Giraudoux and Roger Bivand</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://www.gpsbabel.org">https://www.gpsbabel.org</a></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+#b1 &lt;- readGPS(f="usb:")
+#str(b1)
+#b2 &lt;- b1[1:172,]
+#wp0 &lt;- b2[,c(2,3,4,8,9,19)]
+#str(wp0)
+#wp0$long &lt;- wp0$V9
+#wp0$lat &lt;- as.numeric(as.character(wp0$V8))
+#wp0$id &lt;- as.character(wp0$V2)
+#wp0$alt &lt;- as.numeric(substring(as.character(wp0$V19), 1,
+# (nchar(as.character(wp0$V19))-1)))
+#wp0$time &lt;- as.POSIXct(strptime(paste(as.character(wp0$V3),
+# as.character(wp0$V4)), format="%d-%b-%y %H:%M:%S"))
+#str(wp0)
+#wp1 &lt;- wp0[,-(1:6)]
+#str(wp1)
+#summary(wp1)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>maptools</em> version 1.1-4 <a href="00Index.html">Index</a>]</div>
+</body></html>

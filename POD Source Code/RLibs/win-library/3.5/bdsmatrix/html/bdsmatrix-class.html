@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;bdsmatrix&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bdsmatrix-class {bdsmatrix}"><tr><td>bdsmatrix-class {bdsmatrix}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;bdsmatrix&quot;</h2>
+
+<h3>Description</h3>
+
+<p>Representation for a Block Diagonal Sparse matrix</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Objects of this class are usually created using the <code>bdsmatrix</code>,
+<code>bdsI</code> or <code>bdsBlock</code> functions.
+The result is a symmetrix matrix whose upper left portion is block-diagonal,
+with an optional border on the right and bottom that is dense.
+The matrices were originally created to represent familial correlation
+structures, which have a block for each family but no connection between
+families.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>blocksize</code>:</dt><dd><p>An integer vector containing the
+sizes of the diagonal blocks</p>
+</dd>
+<dt><code>blocks</code>:</dt><dd><p>A numeric vector containing the contents of the
+block portion.  Only the lower triangle of each block is stored.</p>
+</dd>
+<dt><code>rmat</code>:</dt><dd><p>An optional numeric matrix containing the dense 
+portion</p>
+</dd>
+<dt><code>offdiag</code>:</dt><dd><p>A single numeric element, default zero, which is
+the value for elements off the block-diagonal </p>
+</dd>
+<dt><code>Dim</code>:</dt><dd><p>The dimension of the matrix, an integer vector of length 2</p>
+</dd>
+<dt><code>Dimnames</code>:</dt><dd><p>The dimnames of the matrix, a list with 2 elements</p>
+</dd>
+</dl>
+
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>%*%</dt><dd><p><code>signature(x = "matrix", y = "bdsmatrix")</code>: the result
+will be an ordinary matrix</p>
+</dd>
+<dt>%*%</dt><dd><p><code>signature(x = "numeric", y = "bdsmatrix")</code>: the result
+will be a vector</p>
+</dd>
+<dt>%*%</dt><dd><p><code>signature(x = "bdsmatrix", y = "matrix")</code>:  the result
+will be an ordinary matrix</p>
+</dd>
+<dt>%*%</dt><dd><p><code>signature(x = "bdsmatrix", y = "numeric")</code>:  the result
+will be a vector</p>
+</dd>
+<dt>Math2</dt><dd><p><code>signature(x = "bdsmatrix")</code>:  </p>
+</dd>
+<dt>Math</dt><dd><p><code>signature(x = "bdsmatrix")</code>:  </p>
+</dd>
+<dt>Ops</dt><dd><p><code>signature(e1 = "bdsmatrix", e2 = "numeric")</code>: </p>
+</dd>
+<dt>Ops</dt><dd><p><code>signature(e1 = "bdsmatrix", e2 = "bdsmatrix")</code>: </p>
+</dd>
+<dt>Ops</dt><dd><p><code>signature(e1 = "bdsmatrix", e2 = "matrix")</code>: </p>
+</dd>
+<dt>Ops</dt><dd><p><code>signature(e1 = "numeric", e2 = "bdsmatrix")</code>:  </p>
+</dd>
+<dt>Ops</dt><dd><p><code>signature(e1 = "matrix", e2 = "bdsmatrix")</code>: </p>
+</dd>
+<dt>[</dt><dd><p><code>signature(x = "bdsmatrix")</code>: if the subscripts are a
+set of increasing integers, and the row and column subscripts are identical,
+then the result is aslo a bdsmatrix.  This is useful for example to create
+the kinship matrix for all females from an overall kinship matrix.  If the
+subscripts do not match, then an ordinary matrix is created</p>
+</dd>
+<dt>all</dt><dd><p><code>signature(x = "bdsmatrix")</code>: ... </p>
+</dd>
+<dt>any</dt><dd><p><code>signature(x = "bdsmatrix")</code>: ... </p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "bdsmatrix", to = "matrix")</code>: ... </p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "bdsmatrix", to = "vector")</code>: ... </p>
+</dd>
+<dt>diag</dt><dd><p><code>signature(x = "bdsmatrix")</code>: retrieve the diagonal of
+the matrix</p>
+</dd>
+<dt>diag&lt;-</dt><dd><p><code>signature(x = "bdsmatrix")</code>: set the diagonal of the
+matrix to a given value</p>
+</dd>
+<dt>dim</dt><dd><p><code>signature(x = "bdsmatrix")</code>: dimension of the matrix</p>
+</dd>
+<dt>dimnames</dt><dd><p><code>signature(x = "bdsmatrix")</code>: dimnames of the
+matrix</p>
+</dd>
+<dt>dimnames&lt;-</dt><dd><p><code>signature(x = "bdsmatrix")</code>: set the dimnames of
+the matrix</p>
+</dd>
+<dt>gchol</dt><dd><p><code>signature(x = "bdsmatrix")</code>: generalized cholesky 
+decomposition of the matrix </p>
+</dd>
+<dt>max</dt><dd><p><code>signature(x = "bdsmatrix")</code>: maximum of the matrix</p>
+</dd>
+<dt>min</dt><dd><p><code>signature(x = "bdsmatrix")</code>: minimum of the matrix</p>
+</dd>
+<dt>prod</dt><dd><p><code>signature(x = "bdsmatrix")</code>: </p>
+</dd>
+<dt>range</dt><dd><p><code>signature(x = "bdsmatrix")</code>: </p>
+</dd>
+<dt>show</dt><dd><p><code>signature(object = "bdsmatrix")</code>: print out the matrix</p>
+</dd>
+<dt>sum</dt><dd><p><code>signature(x = "bdsmatrix")</code>: </p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p>Many of the actions above will result in conversion to an ordinary matrix
+object, including <code>print</code>, addition to an ordinary matrix, etc.
+This can easily create objects that are too large for system memory.
+By default the value of options('bdsmatrixsize') is consulted first, and
+if the resulting object would be have a length greater than this option
+the conversion an error is generated and conversion is not attempted.
+The default value for the option is 1000.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Terry Therneau</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gchol.html">gchol</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+showClass("bdsmatrix")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bdsmatrix</em> version 1.3-6 <a href="00Index.html">Index</a>]</div>
+</body></html>

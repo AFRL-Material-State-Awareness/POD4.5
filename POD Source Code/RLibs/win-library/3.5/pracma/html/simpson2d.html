@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Double Simpson Integration</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for simpson2d {pracma}"><tr><td>simpson2d {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Double Simpson Integration
+</h2>
+
+<h3>Description</h3>
+
+<p>Numerically evaluate double integral by 2-dimensional Simpson method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+simpson2d(f, xa, xb, ya, yb, nx = 128, ny = 128, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function of two variables, the integrand.</p>
+</td></tr>
+<tr valign="top"><td><code>xa, xb</code></td>
+<td>
+<p>left and right endpoint for first variable.</p>
+</td></tr>
+<tr valign="top"><td><code>ya, yb</code></td>
+<td>
+<p>left and right endpoint for second variable.</p>
+</td></tr>
+<tr valign="top"><td><code>nx, ny</code></td>
+<td>
+<p>number of intervals in x- and y-direction.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters to be passed to the integrand.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The 2D Simpson integrator has weights that are most easily determined 
+by taking the outer product of the vector of weights for the 1D Simpson
+rule.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numerical scalar, the value of the integral.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Copyright (c) 2008 W. Padden and Ch. Macaskill for Matlab code published
+under BSD License on MatlabCentral.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="dblquad.html">dblquad</a></code>, <code><a href="quad2d.html">quad2d</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f1 &lt;- function(x, y) x^2 + y^2
+simpson2d(f1, -1, 1, -1, 1)     #   2.666666667 , i.e. 8/3 . err = 0
+
+f2 &lt;- function(x, y) y*sin(x)+x*cos(y)
+simpson2d(f2, pi, 2*pi, 0, pi)  #  -9.869604401 , i.e. -pi^2, err = 2e-8
+
+f3 &lt;- function(x, y) sqrt((1 - (x^2 + y^2)) * (x^2 + y^2 &lt;= 1))
+simpson2d(f3, -1, 1, -1, 1)     #   2.094393912 , i.e. 2/3*pi , err = 1e-6
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

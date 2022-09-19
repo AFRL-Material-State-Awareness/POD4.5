@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Filter cells by name</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gtable_filter {gtable}"><tr><td>gtable_filter {gtable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Filter cells by name</h2>
+
+<h3>Description</h3>
+
+<p>Normally a gtable is considered a matrix when indexing so that indexing is
+working on the cell layout and not on the grobs it contains. <code>gtable_filter</code>
+allows you to subset the grobs by name and optionally remove rows or columns
+if left empty after the subsetting
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gtable_filter(x, pattern, fixed = FALSE, trim = TRUE, invert = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a gtable object</p>
+</td></tr>
+<tr valign="top"><td><code>pattern</code></td>
+<td>
+<p>character string containing a <a href="../../base/html/regex.html">regular expression</a>
+(or character string for <code>fixed = TRUE</code>) to be matched
+in the given character vector.  Coerced by
+<code><a href="../../base/html/character.html">as.character</a></code> to a character string if possible.  If a
+character vector of length 2 or more is supplied, the first element
+is used with a warning.  Missing values are allowed except for
+<code>regexpr</code> and <code>gregexpr</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>fixed</code></td>
+<td>
+<p>logical.  If <code>TRUE</code>, <code>pattern</code> is a string to be
+matched as is.  Overrides all conflicting arguments.</p>
+</td></tr>
+<tr valign="top"><td><code>trim</code></td>
+<td>
+<p>if <code>TRUE</code>, <code><a href="gtable_trim.html">gtable_trim()</a></code> will be used to trim
+off any empty cells.</p>
+</td></tr>
+<tr valign="top"><td><code>invert</code></td>
+<td>
+<p>Should the filtering be inverted so that cells matching
+<code>pattern</code> is removed instead of kept.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A gtable only containing the matching grobs, potentially stripped of
+empty columns and rows
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other gtable manipulation: <code><a href="gtable_add_cols.html">gtable_add_cols</a></code>,
+<code><a href="gtable_add_grob.html">gtable_add_grob</a></code>,
+<code><a href="gtable_add_padding.html">gtable_add_padding</a></code>,
+<code><a href="gtable_add_rows.html">gtable_add_rows</a></code>,
+<code><a href="gtable_add_space.html">gtable_add_space</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+gt &lt;- gtable(unit(rep(5, 3), c("cm")), unit(5, "cm"))
+rect &lt;- rectGrob(gp = gpar(fill = "black"))
+circ &lt;- circleGrob(gp = gpar(fill = "red"))
+
+gt &lt;- gtable_add_grob(gt, rect, 1, 1, name = "rect")
+gt &lt;- gtable_add_grob(gt, circ, 1, 3, name = "circ")
+
+plot(gtable_filter(gt, "rect"))
+plot(gtable_filter(gt, "rect", trim = FALSE))
+plot(gtable_filter(gt, "circ"))
+plot(gtable_filter(gt, "circ", trim = FALSE))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gtable</em> version 0.3.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

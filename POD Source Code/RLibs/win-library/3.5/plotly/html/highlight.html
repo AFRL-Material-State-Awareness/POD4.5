@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Query graphical elements in multiple linked views</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for highlight {plotly}"><tr><td>highlight {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Query graphical elements in multiple linked views</h2>
+
+<h3>Description</h3>
+
+<p>This function sets a variety of options for brushing (i.e., highlighting)
+multiple plots. These options are primarily designed for linking
+multiple plotly graphs, and may not behave as expected when linking
+plotly to another htmlwidget package via crosstalk. In some cases,
+other htmlwidgets will respect these options, such as persistent selection
+in leaflet (see <code>demo("highlight-leaflet", package = "plotly")</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+highlight(
+  p,
+  on = "plotly_click",
+  off,
+  persistent = getOption("persistent", FALSE),
+  dynamic = FALSE,
+  color = NULL,
+  selectize = FALSE,
+  defaultValues = NULL,
+  opacityDim = getOption("opacityDim", 0.2),
+  selected = attrs_selected(),
+  debounce = 0,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>a plotly visualization.</p>
+</td></tr>
+<tr valign="top"><td><code>on</code></td>
+<td>
+<p>turn on a selection on which event(s)? To disable on events
+altogether, use <code>NULL</code>. Currently the following are supported:
+</p>
+
+<ul>
+<li> <p><code>'plotly_click'</code>
+</p>
+</li>
+<li> <p><code>'plotly_hover'</code>
+</p>
+</li>
+<li> <p><code>'plotly_selected'</code>: triggered through rectangular
+(layout.dragmode = 'select') or lasso (layout.dragmode = 'lasso') brush.
+</p>
+</li></ul>
+</td></tr>
+<tr valign="top"><td><code>off</code></td>
+<td>
+<p>turn off a selection on which event(s)? To disable off
+events altogether, use <code>NULL</code>. Currently the following are supported:
+</p>
+
+<ul>
+<li> <p><code>'plotly_doubleclick'</code>: triggered on a double mouse click while
+(layout.dragmode = 'zoom') or (layout.dragmode = 'pan')
+</p>
+</li>
+<li> <p><code>'plotly_deselect'</code>: triggered on a double mouse click while
+(layout.dragmode = 'select') or (layout.dragmode = 'lasso')
+</p>
+</li>
+<li> <p><code>'plotly_relayout'</code>: triggered whenever axes are rescaled
+(i.e., clicking the home button in the modebar) or whenever the height/width
+of the plot changes.
+</p>
+</li></ul>
+</td></tr>
+<tr valign="top"><td><code>persistent</code></td>
+<td>
+<p>should selections persist (i.e., accumulate)? We often
+refer to the default (<code>FALSE</code>) as a 'transient' selection mode;
+which is recommended, because one may switch from 'transient' to
+'persistent' selection by holding the shift key.</p>
+</td></tr>
+<tr valign="top"><td><code>dynamic</code></td>
+<td>
+<p>should a widget for changing selection colors be included?</p>
+</td></tr>
+<tr valign="top"><td><code>color</code></td>
+<td>
+<p>character string of color(s) to use for
+highlighting selections. See <code><a href="toRGB.html">toRGB()</a></code> for valid color
+specifications. If <code>NULL</code> (the default), the color of selected marks
+are not altered.</p>
+</td></tr>
+<tr valign="top"><td><code>selectize</code></td>
+<td>
+<p>provide a selectize.js widget for selecting keys? Note that
+the label used for this widget derives from the groupName of the SharedData object.</p>
+</td></tr>
+<tr valign="top"><td><code>defaultValues</code></td>
+<td>
+<p>a vector of values for setting a &quot;default selection&quot;.
+These values should match the key attribute.</p>
+</td></tr>
+<tr valign="top"><td><code>opacityDim</code></td>
+<td>
+<p>a number between 0 and 1 used to reduce the
+opacity of non-selected traces (by multiplying with the existing opacity).</p>
+</td></tr>
+<tr valign="top"><td><code>selected</code></td>
+<td>
+<p>attributes of the selection, see <code><a href="attrs_selected.html">attrs_selected()</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>debounce</code></td>
+<td>
+<p>amount of time to wait before firing an event (in milliseconds).
+The default of 0 means do not debounce at all.
+Debouncing is mainly useful when <code>on = "plotly_hover"</code> to avoid firing too many events
+when users clickly move the mouse over relevant graphical marks.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>currently not supported.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://plotly-r.com/client-side-linking.html">https://plotly-r.com/client-side-linking.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="attrs_selected.html">attrs_selected()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# These examples are designed to show you how to highlight/brush a *single*
+# view. For examples of multiple linked views, see `demo(package = "plotly")` 
+
+d &lt;- highlight_key(txhousing, ~city)
+p &lt;- ggplot(d, aes(date, median, group = city)) + geom_line()
+gg &lt;- ggplotly(p, tooltip = "city") 
+highlight(gg, dynamic = TRUE)
+
+# supply custom colors to the brush 
+cols &lt;- toRGB(RColorBrewer::brewer.pal(3, "Dark2"), 0.5)
+highlight(gg, on = "plotly_hover", color = cols, dynamic = TRUE)
+
+# Use attrs_selected() for complete control over the selection appearance
+# note any relevant colors you specify here should override the color argument
+s &lt;- attrs_selected(
+  showlegend = TRUE,
+  mode = "lines+markers",
+  marker = list(symbol = "x")
+)
+
+highlight(layout(gg, showlegend = TRUE), selected = s)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

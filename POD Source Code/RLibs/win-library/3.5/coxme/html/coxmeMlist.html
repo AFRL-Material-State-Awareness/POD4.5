@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coxme variance function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for coxmeMlist {coxme}"><tr><td>coxmeMlist {coxme}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coxme variance function</h2>
+
+<h3>Description</h3>
+
+<p>This variance function accepts a list of matrices, which define a
+correlation structure for a coxme fit.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+coxmeMlist(varlist, rescale = FALSE, pdcheck = TRUE, positive = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>varlist</code></td>
+<td>
+<p>a list containing one or more matrix or bdsmatrix objects.</p>
+</td></tr>
+<tr valign="top"><td><code>rescale</code></td>
+<td>
+
+<p>if TRUE, each input matrix is rescaled to have a diagonal of 1.
+(Kinship matrices for instance are often generated with a diagonal
+of .5 and would be multiplied by 2).
+</p>
+</td></tr>
+<tr valign="top"><td><code>pdcheck</code></td>
+<td>
+
+<p>check each matrix to ensure that it is positive definite
+</p>
+</td></tr>
+<tr valign="top"><td><code>positive</code></td>
+<td>
+
+<p>constrain coefficients to be positive.  This may also be a vector of
+the same length as <code>varlist</code>
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If two matrices <i>A</i> and <i>B</i> were given, this fits
+the variance structure
+<i>V = s1 A + s2 B</i>,
+where the variances <i>s1</i> and <i>s2</i> are
+parameters that will be optimized by <code>coxme</code>,
+treating <i>A</i> and <i>B</i> as fixed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a coxme variance family object, used by <code>coxme</code> in the fitting process.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Terry Therneau</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="coxme.html">coxme</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>coxme</em> version 2.2-17 <a href="00Index.html">Index</a>]</div>
+</body></html>

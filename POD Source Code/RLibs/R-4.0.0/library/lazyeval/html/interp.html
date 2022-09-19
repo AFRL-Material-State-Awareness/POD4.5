@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Interpolate values into an expression.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for interp {lazyeval}"><tr><td>interp {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Interpolate values into an expression.</h2>
+
+<h3>Description</h3>
+
+<p>This is useful if you want to build an expression up from a mixture of
+constants and variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+interp(`_obj`, ..., .values)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>_obj</code></td>
+<td>
+<p>An object to modify: can be a call, name, formula,
+<code><a href="lazy_.html">lazy</a></code>, or a string.</p>
+</td></tr>
+<tr valign="top"><td><code>..., .values</code></td>
+<td>
+<p>Either individual name-value pairs, or a list
+(or environment) of values.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Interp works with formulas, lazy objects, quoted calls and strings
+interp(~ x + y, x = 10)
+interp(lazy(x + y), x = 10)
+interp(quote(x + y), x = 10)
+interp("x + y", x = 10)
+
+# Use as.name if you have a character string that gives a
+# variable name
+interp(~ mean(var), var = as.name("mpg"))
+# or supply the quoted name directly
+interp(~ mean(var), var = quote(mpg))
+
+# Or a function!
+interp(~ f(a, b), f = as.name("+"))
+# Remember every action in R is a function call:
+# http://adv-r.had.co.nz/Functions.html#all-calls
+
+# If you've built up a list of values through some other
+# mechanism, use .values
+interp(~ x + y, .values = list(x = 10))
+
+# You can also interpolate variables defined in the current
+# environment, but this is a little risky.
+y &lt;- 10
+interp(~ x + y, .values = environment())
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

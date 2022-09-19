@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Horner's Rule</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for horner {pracma}"><tr><td>horner {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Horner's Rule
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute the value of a polynomial via Horner's Rule.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+horner(p, x)
+hornerdefl(p, x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Numeric vector representing a polynomial.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric scalar, vector or matrix at which to evaluate the polynomial.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>horner</code> utilizes the Horner scheme to evaluate the polynomial and its
+first derivative at the same time.
+</p>
+<p>The polynomial <code>p = p_1*x^n + p_2*x^{n-1} + ... + p_n*x + p_{n+1}</code>
+is hereby represented by the vector <code>p_1, p_2, ..., p_n, p_{n+1}</code>,
+i.e. from highest to lowest coefficient.
+</p>
+<p><code>hornerdefl</code> uses a similar approach to return the value of <code>p</code>
+at <code>x</code> and a polynomial <code>q</code> that satisfies
+</p>
+<p><code>p(t) = q(t) * (t - x) + r, r constant</code>
+</p>
+<p>which implies <code>r=0</code> if <code>x</code> is a root of <code>p</code>. This will allow
+for a repeated root finding of polynomials.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>horner</code> returns a list with two elements, <code>list(y=..., dy=...)</code>
+where the first list elements returns the values of the polynomial, the
+second the values of its derivative at the point(s) <code>x</code>.
+</p>
+<p><code>hornerdefl</code> returns a list <code>list(y=..., dy=...)</code> where <code>q</code>
+represents a polynomial, see above.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For fast evaluation, there is no error checking for <code>p</code> and <code>x</code>,
+which both must be numerical vectors
+(<code>x</code> can be a matrix in <code>horner</code>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., and Saleri, F. (2006) Scientific Computing with Matlab
+and Octave. Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="polyval.html">polyval</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- c(-2, -1, 0, 1, 2)
+p &lt;- c(1, 0, 1)  # polynomial x^2 + x, derivative 2*x
+horner(p, x)$y   #=&gt;  5  2  1  2  5
+horner(p, x)$dy  #=&gt; -4 -2  0  2  4
+
+p &lt;- Poly(c(1, 2, 3))  # roots 1, 2, 3
+hornerdefl(p, 3)          # q = x^2- 3 x + 2  with roots 1, 2
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

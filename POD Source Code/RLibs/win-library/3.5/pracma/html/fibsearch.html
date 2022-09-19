@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fibonacci Search</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fibsearch {pracma}"><tr><td>fibsearch {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Fibonacci Search
+</h2>
+
+<h3>Description</h3>
+
+<p>Fibonacci search for function minimum.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fibsearch(f, a, b, ..., endp = FALSE, tol = .Machine$double.eps^(1/2))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>Function or its name as a string.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>endpoints of the interval</p>
+</td></tr>
+<tr valign="top"><td><code>endp</code></td>
+<td>
+<p>logical; shall the endpoints be considered as possible minima?</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>absolute tolerance; default <code>eps^(1/2)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to f.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Fibonacci search for a univariate function minimum in a bounded interval.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Return a list with components <code>xmin</code>, <code>fmin</code>, 
+the function value at the minimum, <code>niter</code>, the number of iterations
+done, and the estimated precision <code>estim.prec</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/uniroot.html">uniroot</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- function(x) x * cos(0.1*exp(x)) * sin(0.1*pi*exp(x))
+fibsearch(f, 0, 4, tol=10^-10)   # $xmin    = 3.24848329403424
+optimize(f, c(0,4), tol=10^-10)  # $minimum = 3.24848328971188
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

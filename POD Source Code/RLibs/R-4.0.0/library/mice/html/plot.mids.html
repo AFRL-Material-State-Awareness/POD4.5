@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot the trace lines of the MICE algorithm</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot.mids {mice}"><tr><td>plot.mids {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot the trace lines of the MICE algorithm</h2>
+
+<h3>Description</h3>
+
+<p>Trace line plots portray the value of an estimate
+against the iteration number. The estimate can be anything that you can calculate, but
+typically are chosen as parameter of scientific interest. The <code>plot</code> method for
+a <code>mids</code> object plots the mean and standard deviation of the imputed (not observed)
+values against the iteration number for each of the $m$ replications. By default,
+the function plot the development of the mean and standard deviation for each incomplete
+variable. On convergence, the streams should intermingle and be free of any trend.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'mids'
+plot(
+  x,
+  y = NULL,
+  theme = mice.theme(),
+  layout = c(2, 3),
+  type = "l",
+  col = 1:10,
+  lty = 1,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An object of class <code>mids</code></p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>A formula that specifies which variables, stream and iterations are plotted.
+If omitted, all streams, variables and iterations are plotted.</p>
+</td></tr>
+<tr valign="top"><td><code>theme</code></td>
+<td>
+<p>The trellis theme to applied to the graphs. The default is <code>mice.theme()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>layout</code></td>
+<td>
+<p>A vector of length 2 given the number of columns and rows in the plot.
+The default is <code>c(2, 3)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Parameter <code>type</code> of <code><a href="../../lattice/html/panel.xyplot.html">panel.xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>Parameter <code>col</code> of <code><a href="../../lattice/html/panel.xyplot.html">panel.xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>lty</code></td>
+<td>
+<p>Parameter <code>lty</code> of <code><a href="../../lattice/html/panel.xyplot.html">panel.xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Extra arguments for <code><a href="xyplot.mids.html">xyplot</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"trellis"</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren 2011
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mice.html">mice</a></code>, <code><a href="mids-class.html">mids</a></code>,
+<code><a href="xyplot.mids.html">xyplot</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+imp &lt;- mice(nhanes, print = FALSE)
+plot(imp, bmi + chl ~ .it | .ms, layout = c(2, 1))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute variances by replicate weighting</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for withReplicates {survey}"><tr><td>withReplicates {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute variances by replicate weighting</h2>
+
+<h3>Description</h3>
+
+<p>Given a function or expression computing a statistic based on sampling
+weights, <code>withReplicates</code> evaluates the statistic and produces a
+replicate-based estimate of variance. <code>vcov.svrep.design</code> produces
+the variance estimate from a set of replicates and the design object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+withReplicates(design, theta,..., return.replicates=FALSE)
+## S3 method for class 'svyrep.design'
+withReplicates(design, theta, rho = NULL, ..., 
+     scale.weights=FALSE, return.replicates=FALSE)
+## S3 method for class 'svrepvar'
+withReplicates(design, theta,  ...,  return.replicates=FALSE)
+## S3 method for class 'svrepstat'
+withReplicates(design, theta,  ...,  return.replicates=FALSE)
+## S3 method for class 'svyimputationList'
+withReplicates(design, theta,  ...,  return.replicates=FALSE)
+## S3 method for class 'svyrep.design'
+vcov(object, replicates, centre,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>A survey design with replicate weights (eg from <code><a href="svrepdesign.html">svrepdesign</a></code>) or a suitable object with replicate parameter estimates</p>
+</td></tr>
+<tr valign="top"><td><code>theta</code></td>
+<td>
+<p>A function or expression: see Details below</p>
+</td></tr>
+<tr valign="top"><td><code>rho</code></td>
+<td>
+<p>If <code>design</code> uses BRR weights, <code>rho</code> optionally
+specifies the parameter for Fay's variance estimator.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments to <code>theta</code></p>
+</td></tr>
+<tr valign="top"><td><code>scale.weights</code></td>
+<td>
+<p>Divide the probability weights by their sum (can
+help with overflow problems)</p>
+</td></tr>
+<tr valign="top"><td><code>return.replicates</code></td>
+<td>
+<p>Return the replicate estimates as well as
+the variance?</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>The replicate-weights design object used to create the replicates</p>
+</td></tr>
+<tr valign="top"><td><code>replicates</code></td>
+<td>
+<p>A set of replicates</p>
+</td></tr>
+<tr valign="top"><td><code>centre</code></td>
+<td>
+<p>The centering value for variance calculation. If
+<code>object$mse</code> is <code>TRUE</code> 
+this is the result of estimation using the sampling weights, and
+must be supplied.  If  <code>object$mse</code> is <code>FALSE</code> the
+mean of the replicates is used and this argument is silently ignored.
+</p>
+</td></tr></table>
+
+
+<h3>Details</h3>
+
+<p>The method for <code>svyrep.design</code> objects evaluates a function or
+expression using the sampling weights and then each set of replicate
+weights.  The method for <code>svrepvar</code> objects evaluates the function
+or expression on an estimated population covariance matrix and its
+replicates, to simplify multivariate statistics such as structural
+equation models.
+</p>
+<p>For the <code>svyrep.design</code> method, if <code>theta</code> is a function its first argument will be a vector of
+weights and the second argument will be a data frame containing the
+variables from the design object.   If it is an expression, the sampling weights will be available as the
+variable <code>.weights</code>.  Variables in the design object will also
+be in scope.  It is possible to use global variables in the
+expression, but unwise, as they may be masked by local variables
+inside <code>withReplicates</code>.
+</p>
+<p>For the <code>svrepvar</code> method a function will get the covariance
+matrix as its first argument, and an expression will be evaluated with
+<code>.replicate</code> set to the variance matrix.
+</p>
+<p>For the <code>svrepstat</code> method a function will get the point estimate, and an expression will be evaluated with
+<code>.replicate</code> set to each replicate.  The method can only be used
+when the <code>svrepstat</code> object includes replicates.
+</p>
+<p>The <code>svyimputationList</code> method runs <code>withReplicates</code> on each imputed design (which must be replicate-weight designs).
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>return.replicates=FALSE</code>,  the weighted statistic, with the
+variance matrix as the <code>"var"</code> attribute. If
+<code>return.replicates=TRUE</code>, a list with elements <code>theta</code> for
+the usual return value and <code>replicates</code> for the replicates.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="svrepdesign.html">svrepdesign</a></code>, <code><a href="as.svrepdesign.html">as.svrepdesign</a></code>, <code><a href="svrVar.html">svrVar</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(scd)
+repweights&lt;-2*cbind(c(1,0,1,0,1,0), c(1,0,0,1,0,1), c(0,1,1,0,0,1),
+c(0,1,0,1,1,0))
+scdrep&lt;-svrepdesign(data=scd, type="BRR", repweights=repweights)
+
+a&lt;-svyratio(~alive, ~arrests, design=scdrep)
+print(a$ratio)
+print(a$var)
+withReplicates(scdrep, quote(sum(.weights*alive)/sum(.weights*arrests)))
+withReplicates(scdrep, function(w,data)
+sum(w*data$alive)/sum(w*data$arrests))
+
+data(api)
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+rclus1&lt;-as.svrepdesign(dclus1)
+varmat&lt;-svyvar(~api00+api99+ell+meals+hsg+mobility,rclus1,return.replicates=TRUE)
+withReplicates(varmat, quote( factanal(covmat=.replicate, factors=2)$unique) )
+
+
+data(nhanes)
+nhanesdesign &lt;- svydesign(id=~SDMVPSU, strata=~SDMVSTRA, weights=~WTMEC2YR, nest=TRUE,data=nhanes)
+logistic &lt;- svyglm(HI_CHOL~race+agecat+RIAGENDR, design=as.svrepdesign(nhanesdesign),
+family=quasibinomial, return.replicates=TRUE)
+fitted&lt;-predict(logistic, return.replicates=TRUE, type="response")
+sensitivity&lt;-function(pred,actual) mean(pred&gt;0.1 &amp; actual)/mean(actual)
+withReplicates(fitted, sensitivity, actual=logistic$y)
+
+## Not run: 
+library(quantreg)
+data(api)
+## one-stage cluster sample
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+## convert to bootstrap
+bclus1&lt;-as.svrepdesign(dclus1,type="bootstrap", replicates=100)
+
+## median regression
+withReplicates(bclus1, quote(coef(rq(api00~api99, tau=0.5, weights=.weights))))
+
+## End(Not run)
+
+
+## pearson correlation
+dstrat &lt;- svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+bstrat&lt;- as.svrepdesign(dstrat,type="subbootstrap")
+
+v &lt;- svyvar(~api00+api99, bstrat, return.replicates=TRUE)
+vcor&lt;-cov2cor(as.matrix(v))[2,1]
+vreps&lt;-v$replicates
+correps&lt;-apply(vreps,1, function(v) v[2]/sqrt(v[1]*v[4]))
+
+vcov(bstrat,correps, centre=vcor)
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

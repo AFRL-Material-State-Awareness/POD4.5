@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Merge a Spatial* object having attributes with a data.frame</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for merge {sp}"><tr><td>merge {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> 
+Merge a Spatial* object having attributes with a data.frame
+</h2>
+
+<h3>Description</h3>
+
+<p>Merge a Spatial object having a data.frame (i.e. merging of non-spatial attributes).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S4 method for signature 'Spatial,data.frame'
+merge(x, y, by = intersect(names(x), names(y)),
+ by.x = by, by.y = by, all.x = TRUE, suffixes = c(".x",".y"),
+ incomparables = NULL, duplicateGeoms = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>object deriving from <a href="Spatial-class.html">Spatial</a></p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>object of class <code>data.frame</code>, or any other class that can be coerced to a data.frame with <code>as.data.frame</code></p>
+</td></tr>
+<tr valign="top"><td><code>by, by.x, by.y</code></td>
+<td>
+<p>specifications of the common columns. See 'Details' in (base) <code><a href="../../base/html/merge.html">merge</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>all.x</code></td>
+<td>
+<p>logical; if TRUE, then the returned object will have all rows of x, even those that has no matching row in y. These rows will have NAs in those columns that are usually filled with values from y</p>
+</td></tr>
+<tr valign="top"><td><code>suffixes</code></td>
+<td>
+<p>character(2) specifying the suffixes to be used for making non-by names() unique.</p>
+</td></tr>
+<tr valign="top"><td><code>incomparables</code></td>
+<td>
+<p>values which cannot be matched. See <code><a href="../../base/html/match.html">match</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>duplicateGeoms</code></td>
+<td>
+<p>logical; if <code>TRUE</code> geometries in <code>x</code> are
+duplicated if there are multiple matches between records in <code>x</code>
+and <code>y</code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments to be passed to or from methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> a Spatial* object </p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robert J. Hijmans</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="../../base/html/merge.html">merge</a></code> </p>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

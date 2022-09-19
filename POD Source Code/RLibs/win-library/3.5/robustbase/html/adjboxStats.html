@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Statistics for Skewness-adjusted Boxplots</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for adjboxStats {robustbase}"><tr><td>adjboxStats {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Statistics for Skewness-adjusted Boxplots</h2>
+
+<h3>Description</h3>
+
+<p>Computes the &ldquo;statistics&rdquo; for producing boxplots adjusted for
+skewed distributions as proposed in Hubert and Vandervieren (2008),
+see <code><a href="adjbox.html">adjbox</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+adjboxStats(x, coef = 1.5, a = -4, b = 3, do.conf = TRUE, do.out = TRUE,
+            ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a numeric vector for which adjusted boxplot statistics are computed.</p>
+</td></tr>
+<tr valign="top"><td><code>coef</code></td>
+<td>
+<p>number determining how far &lsquo;whiskers&rsquo; extend out
+from the box, see <code><a href="../../grDevices/html/boxplot.stats.html">boxplot.stats</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>scaling factors multiplied by the medcouple
+<code><a href="mc.html">mc</a>()</code> to determine outlyer boundaries; see the references.</p>
+</td></tr>
+<tr valign="top"><td><code>do.conf,do.out</code></td>
+<td>
+<p>logicals; if <code>FALSE</code>, the <code>conf</code> or
+<code>out</code> component respectively will be empty in the result.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further optional arguments to be passed to
+<code><a href="mc.html">mc</a>()</code>, such as <code>doReflect</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Given the quartiles <i>Q1</i>, <i>Q3</i>, the interquartile
+range <i>IQR := Q3-Q1</i>, and the medcouple
+<i>M :=</i><code>mc(x)</code>, <i>c =</i><code>coef</code>,
+the &ldquo;fence&rdquo; is defined,
+for <i>M &ge; 0</i> as
+</p>
+<p style="text-align: center;"><i>[Q1 - c*exp(a * M)*IQR, Q3 + c*exp(b * M)*IQR],</i></p>
+
+<p>and for <i>M &lt; 0</i> as
+</p>
+<p style="text-align: center;"><i>[Q1 - c*exp(-b * M)*IQR, Q3 + c*exp(-a * M)*IQR],</i></p>
+
+<p>and all observations <code>x</code> outside the fence, the &ldquo;potential
+outliers&rdquo;, are returned in <code>out</code>.
+</p>
+<p>Note that a typo in robustbase version up to 0.7-8,
+for the (rare left-skewed) case where <a href="mc.html">mc</a>(x) &lt; 0, lead to a
+&ldquo;fence&rdquo; not wide enough in the upper part, and hence
+<em>less</em> outliers there.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code><a href="../../base/html/list.html">list</a></code> with the components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>stats</code></td>
+<td>
+<p>a vector of length 5, containing the extreme of the lower
+whisker, the lower hinge, the median, the upper hinge and the extreme of
+the upper whisker.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>the number of observations</p>
+</td></tr>
+<tr valign="top"><td><code>conf</code></td>
+<td>
+<p>the lower and upper extremes of the &lsquo;notch&rsquo;
+(<code>if(do.conf)</code>). See <code><a href="../../grDevices/html/boxplot.stats.html">boxplot.stats</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>fence</code></td>
+<td>
+<p>length 2 vector of interval boundaries which
+define the non-outliers, and hence the whiskers of the plot.</p>
+</td></tr>
+<tr valign="top"><td><code>out</code></td>
+<td>
+<p>the values of any data points which lie beyond the fence,
+and hence beyond the extremes of the whiskers.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>The code only slightly modifies the code of <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>'s
+<code><a href="../../grDevices/html/boxplot.stats.html">boxplot.stats</a></code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>R Core Development Team (<code><a href="../../grDevices/html/boxplot.stats.html">boxplot.stats</a></code>); adapted
+by Tobias Verbeke and Martin Maechler.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="adjbox.html">adjbox</a>()</code>, also for references,
+the function which mainly uses this one;
+further <code><a href="../../grDevices/html/boxplot.stats.html">boxplot.stats</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(condroz)
+adjboxStats(ccA &lt;- condroz[,"Ca"])
+adjboxStats(ccA, doReflect = TRUE)# small difference in fence
+
+## Test reflection invariance [was not ok, up to and including robustbase_0.7-8]
+a1 &lt;- adjboxStats( ccA, doReflect = TRUE)
+a2 &lt;- adjboxStats(-ccA, doReflect = TRUE)
+
+nm1 &lt;- c("stats", "conf", "fence")
+stopifnot(all.equal(       a1[nm1],
+                    lapply(a2[nm1], function(u) rev(-u))),
+          all.equal(a1[["out"]], -a2[["out"]]))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

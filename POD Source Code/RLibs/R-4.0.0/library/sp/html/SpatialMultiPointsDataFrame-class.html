@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;SpatialMultiPointsDataFrame&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SpatialMultiPointsDataFrame-class {sp}"><tr><td>SpatialMultiPointsDataFrame-class {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;SpatialMultiPointsDataFrame&quot; </h2>
+
+<h3>Description</h3>
+
+<p> Class for spatial attributes that correspond to point sets </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  ## S4 method for signature 'SpatialMultiPointsDataFrame'
+x[i, j, ..., drop = TRUE]
+  ## S4 method for signature 'SpatialMultiPointsDataFrame,data.frame'
+coerce(from, to, strict=TRUE)
+  ## S4 method for signature 'SpatialMultiPointsDataFrame'
+coordinates(obj)
+  ## S4 method for signature 'SpatialMultiPointsDataFrame'
+show(object)
+  ## S4 method for signature 'SpatialMultiPointsDataFrame'
+points(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x,from,obj,object</code></td>
+<td>
+<p><code>SpatialMultiPointsDataFrame</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>to</code></td>
+<td>
+<p>class to which to coerce</p>
+</td></tr>
+<tr valign="top"><td><code>strict</code></td>
+<td>
+<p>see <code><a href="../../methods/html/as.html">as</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>i</code></td>
+<td>
+<p>row indices</p>
+</td></tr>
+<tr valign="top"><td><code>j</code></td>
+<td>
+<p>column indices</p>
+</td></tr>
+<tr valign="top"><td><code>drop</code></td>
+<td>
+<p>see <code><a href="../../base/html/Extract.html">Extract</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>indices passed through</p>
+</td></tr>
+</table>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>data</code>:</dt><dd><p>Object of class data.frame containing
+the attribute data (may or may not contain the coordinates in its columns) </p>
+</dd>
+<dt><code>coords</code>:</dt><dd><p>Object of class <code>"list"</code>; the list with coordinates matrices;
+points are rows in the matrix, the list length equals the number of rows in the <code>data</code> slot </p>
+</dd>
+<dt><code>bbox</code>:</dt><dd><p>Object of class <code>"matrix"</code>; bounding box</p>
+</dd>
+<dt><code>proj4string</code>:</dt><dd><p>Object of class <code>"CRS"</code>; projection string</p>
+</dd>
+</dl>
+
+
+
+<h3>Extends</h3>
+
+<p>Class <code>"SpatialMultiPoints"</code>, directly.
+Class <code>"Spatial"</code>, by class <code>"SpatialMultiPoints"</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a> </p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="coordinates.html">coordinates</a></code>, <code><a href="SpatialMultiPoints-class.html">SpatialMultiPoints-class</a></code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# create three sets of points:
+cl1 = cbind(rnorm(3, 10), rnorm(3, 10))
+cl2 = cbind(rnorm(5, 10), rnorm(5,  0))
+cl3 = cbind(rnorm(7,  0), rnorm(7, 10))
+
+mpdf = SpatialMultiPointsDataFrame(list(cl1, cl2, cl3), data.frame(a = 1:3))
+mpdf
+
+plot(mpdf, col = mpdf$a, cex = 1:3)
+as(mpdf, "data.frame")
+mpdf[1:2,]
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

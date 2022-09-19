@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Psi (Polygamma) Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for psi {pracma}"><tr><td>psi {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Psi (Polygamma) Function
+</h2>
+
+<h3>Description</h3>
+
+<p>Arbitrary order Polygamma function valid in the entire complex plane.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+psi(k, z)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>order of the polygamma function, whole number greater or equal 0.</p>
+</td></tr>
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p>numeric complex number or vector.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the Polygamma function of arbitrary order, and valid in the entire
+complex plane. The polygamma function is defined as
+</p>
+<p style="text-align: center;"><i>&psi;(n, z) = \frac{d^{n+1}}{dz^{n+1}} \log(&Gamma;(z))</i></p>
+
+<p>If <code>n</code> is 0 or absent then <code>psi</code> will be the Digamma function.
+If <code>n=1,2,3,4,5</code> etc. then <code>psi</code> will be the
+tri-, tetra-, penta-, hexa-, hepta- etc. gamma function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a complex number or a vector of complex numbers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+psi(2) - psi(1)         # 1
+-psi(1)                 # Eulers constant: 0.57721566490153  [or, -psi(0, 1)]
+psi(1, 2)               # pi^2/6 - 1     : 0.64493406684823
+psi(10, -11.5-0.577007813568142i)
+                        # is near a root of the decagamma function
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

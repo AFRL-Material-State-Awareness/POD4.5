@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Quiver or Velocity Plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for quiver {pracma}"><tr><td>quiver {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Quiver or Velocity Plot
+</h2>
+
+<h3>Description</h3>
+
+<p>A quiver plot displays velocity vectors as arrows with components
+<code>(u,v)</code> at the points <code>(x,y)</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+    quiver(x, y, u, v,
+           scale = 0.05, angle = 10, length = 0.1, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>x,y-coordinates of start points of the arrows.</p>
+</td></tr>
+<tr valign="top"><td><code>u, v</code></td>
+<td>
+<p>x,y-coordinates of start points.</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>scales the length of the arrows.</p>
+</td></tr>
+<tr valign="top"><td><code>angle</code></td>
+<td>
+<p>angle between shaft and edge of the arrows.</p>
+</td></tr>
+<tr valign="top"><td><code>length</code></td>
+<td>
+<p>length of the arrow edges.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>more options presented to the <code>arrows</code> primitive.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The matrices <code>x, y, u, v</code> must all be the same size and contain
+corresponding position and velocity components.
+However, x and y can also be vectors.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Opens a graph window and plots the velocity vectors.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="vectorfield.html">vectorfield</a></code>, <code><a href="../../graphics/html/arrows.html">arrows</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

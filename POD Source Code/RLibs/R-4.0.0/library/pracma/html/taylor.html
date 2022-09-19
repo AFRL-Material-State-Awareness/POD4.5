@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Taylor Series Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for taylor {pracma}"><tr><td>taylor {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Taylor Series Approximation
+</h2>
+
+<h3>Description</h3>
+
+<p>Local polynomial approximation through Taylor series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+taylor(f, x0, n = 4, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>differentiable function.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>point where the series expansion will take place.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>Taylor series order to be used; should be <code>n &lt;= 8</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>more variables to be passed to function <code>f</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calculates the first four coefficients of the Taylor series through
+numerical differentiation and uses some polynomial &lsquo;yoga&rsquo;.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of length <code>n+1</code> representing a polynomial of degree <code>n</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>TODO: Pade approximation.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="fderiv.html">fderiv</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+taylor(sin, 0, 4)  #=&gt; -0.1666666  0.0000000  1.0000000  0.0000000
+taylor(exp, 1, 4)  #=&gt;  0.04166657 0.16666673 0.50000000 1.00000000 1.00000000
+
+f &lt;- function(x) log(1+x)
+p &lt;- taylor(f, 0, 4)
+p                     # log(1+x) = 0 + x - 1/2 x^2 + 1/3 x^3 - 1/4 x^4 +- ...
+                      # [1] -0.250004  0.333334 -0.500000  1.000000  0.000000
+
+## Not run: 
+x &lt;- seq(-1.0, 1.0, length.out=100)
+yf &lt;- f(x)
+yp &lt;- polyval(p, x)
+plot(x, yf, type = "l", col = "gray", lwd = 3)
+lines(x, yp, col = "red")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

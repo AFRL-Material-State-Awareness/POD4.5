@@ -1,0 +1,17 @@
+citHeader("To cite the alr4 package in publications use:")
+
+citEntry(entry = "Book",
+  title        = "Applied Linear Regression",
+  edition	   = "Fourth",
+  author       = personList(as.person("Sanford Weisberg")),
+  year         = "2014",
+  publisher    = "Wiley",
+  address      = "Hoboken {NJ}",
+  url          = "http://z.umn.edu/alr4ed",
+
+  textVersion  =
+  paste("Sanford Weisberg (2014).",
+        "Applied Linear Regression, Fourth Edition.",
+        "Hoboken NJ:  Wiley.",
+        "URL: http://z.umn.edu/alr4ed")
+)

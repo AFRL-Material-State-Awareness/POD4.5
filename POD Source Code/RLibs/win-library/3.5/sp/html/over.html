@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: consistent spatial overlay for points, grids and polygons</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for over-methods {sp}"><tr><td>over-methods {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> consistent spatial overlay for points, grids and polygons </h2>
+
+<h3>Description</h3>
+
+<p> consistent spatial overlay for points, grids and
+polygons: at the spatial locations of object x retrieves the indexes
+or attributes from spatial object y </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+over(x, y, returnList = FALSE, fn = NULL, ...)
+x %over% y
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>geometry (locations) of the queries</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>layer from which the geometries or attributes are queried</p>
+</td></tr>
+<tr valign="top"><td><code>returnList</code></td>
+<td>
+<p> logical; see value </p>
+</td></tr>
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>(optional) a function; see value </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed on to function <code>fn</code>, except for the special
+argument <code>minDimension</code>: minimal dimension for an intersection to be counted;
+-1 takes any intersection, and does not order; 0 takes any intersection
+but will order according to dimensionality of the intersections (if returnList
+is TRUE, 1 (2) selects intersections with dimension 1, meaning
+lines (2, meaning areas); see <code>vignette("over")</code> for details </p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+ 
+<p>If <code>y</code> is only geometry an object of length <code>length(x)</code>.
+If <code>returnList</code> is <code>FALSE</code>, a vector with the (first) index
+of <code>y</code> for each geometry (point, grid cell centre, polygon
+or lines) matching <code>x</code>.  if <code>returnList</code> is TRUE, a list of
+length <code>length(x)</code>, with list element <code>i</code> the vector of
+all indices of the geometries in <code>y</code> that correspond to the
+$i$-th geometry in <code>x</code>.
+</p>
+<p>If <code>y</code> has attribute data, attribute data are
+returned. <code>returnList</code> is FALSE, a <code>data.frame</code> with
+number of rows equal to <code>length(x)</code> is returned, if it is
+TRUE a list with <code>length(x)</code> elements is returned, with a list
+element the <code>data.frame</code> elements of all geometries in <code>y</code>
+that correspond to that element of <code>x</code>.
+</p>
+<p>In case the <code>rgeos</code> <code>over</code> methods are used,
+matching is done by <a href="../../rgeos/html/pred-binary-gRelate.html">gRelate</a>, which uses DE-9IM
+(<a href="https://en.wikipedia.org/wiki/DE-9IM">https://en.wikipedia.org/wiki/DE-9IM</a>). From the string
+returned, characters 1, 2, 4 and 5 are used, indicating the dimension
+of the overlap of the inner and boundary of each <code>x</code> geometry
+with the inner and boundary of each <code>y</code> geometry.  The order
+in which matched <code>y</code> geometries are returned is determined by
+the dimension of the overlap (2: area overlap, 1: line in common,
+0: point in common), and then by the position in the string (1,
+2, 4, 5, meaning points in polygons are preferred over points on
+polygon boundaries). 
+</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>x = &quot;SpatialPoints&quot;, y = &quot;SpatialPolygons&quot;</dt><dd><p> returns a numeric
+vector of length equal to the number of points; the number is the
+index (number) of the polygon of <code>y</code> in which a point falls;
+NA denotes the point does not fall in a polygon; if a point falls
+in multiple polygons, the last polygon is recorded.  </p>
+</dd>
+<dt>x = &quot;SpatialPointsDataFrame&quot;, y = &quot;SpatialPolygons&quot;</dt><dd><p> equal
+to the previous method, except that an argument <code>fn=xxx</code> is
+allowed, e.g. <code>fn = mean</code> which will then report a data.frame
+with the mean attribute values of the <code>x</code> points falling 
+in each polygon (set) of <code>y</code> </p>
+</dd>
+<dt>x = &quot;SpatialPoints&quot;, y = &quot;SpatialPolygonsDataFrame&quot;</dt><dd><p> returns
+a data.frame of the second argument with row entries corresponding
+to the first argument </p>
+</dd>
+<dt>x = &quot;SpatialPolygons&quot;, y = &quot;SpatialPoints&quot;</dt><dd><p> returns
+the polygon index of points in <code>y</code>; if <code>x</code> is
+a <code>SpatialPolygonsDataFrame</code>, a data.frame with rows from
+<code>x</code> corresponding to points in <code>y</code> is returned.</p>
+</dd>
+<dt>x = &quot;SpatialGridDataFrame&quot;, y = &quot;SpatialPoints&quot;</dt><dd><p> returns
+object of class SpatialPointsDataFrame with grid attribute values
+x at spatial point locations y; NA for NA grid cells or points
+outside grid, and NA values on NA grid cells. </p>
+</dd>
+<dt>x = &quot;SpatialGrid&quot;, y = &quot;SpatialPoints&quot;</dt><dd><p> returns grid values
+x at spatial point locations y; NA for NA grid cells or points
+outside the grid </p>
+</dd>
+<dt>x = &quot;SpatialPixelsDataFrame&quot;, y = &quot;SpatialPoints&quot;</dt><dd><p> returns
+grid values x at spatial point locations y; NA for NA grid cells
+or points outside the grid </p>
+</dd>
+<dt>x = &quot;SpatialPixels&quot;, y = &quot;SpatialPoints&quot;</dt><dd><p> returns grid
+values x at spatial point locations y; NA for NA grid cells or
+points outside the grid </p>
+</dd>
+<dt>x = &quot;SpatialPoints&quot;, y = &quot;SpatialGrid&quot;</dt><dd><p> xx </p>
+</dd>
+<dt>x = &quot;SpatialPoints&quot;, y = &quot;SpatialGridDataFrame&quot;</dt><dd><p> xx </p>
+</dd>
+<dt>x = &quot;SpatialPoints&quot;, y = &quot;SpatialPixels&quot;</dt><dd><p> xx </p>
+</dd>
+<dt>x = &quot;SpatialPoints&quot;, y = &quot;SpatialPixelsDataFrame&quot;</dt><dd><p> xx </p>
+</dd>
+<dt>x = &quot;SpatialPolygons&quot;, y = &quot;SpatialGridDataFrame&quot;</dt><dd><p> xx </p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p><code>over</code> can be seen as a left outer join in SQL; the
+match is a spatial intersection.
+</p>
+<p>points on a polygon boundary and points corresponding to a
+polygon vertex are considered to be inside the polygon.
+</p>
+<p>These methods assume that pixels and grid cells are never
+overlapping; for objects of class <code>SpatialPixels</code> this is
+not guaranteed.
+</p>
+<p><code>over</code> methods that involve <code>SpatialLines</code> objects, or
+pairs of <code>SpatialPolygons</code> require package <code>rgeos</code>,
+and use <a href="../../rgeos/html/pred-binary-gIntersects.html">gIntersects</a>.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a></p>
+
+
+<h3>See Also</h3>
+
+<p><code>vignette("over")</code> for examples and figures;
+<a href="point.in.polygon.html">point.in.polygon</a>, package <a href="../../rgeos/html/pred-binary-gIntersects.html">gIntersects</a></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+r1 = cbind(c(180114, 180553, 181127, 181477, 181294, 181007, 180409, 
+180162, 180114), c(332349, 332057, 332342, 333250, 333558, 333676, 
+332618, 332413, 332349))
+r2 = cbind(c(180042, 180545, 180553, 180314, 179955, 179142, 179437, 
+179524, 179979, 180042), c(332373, 332026, 331426, 330889, 330683, 
+331133, 331623, 332152, 332357, 332373))
+r3 = cbind(c(179110, 179907, 180433, 180712, 180752, 180329, 179875, 
+179668, 179572, 179269, 178879, 178600, 178544, 179046, 179110),
+c(331086, 330620, 330494, 330265, 330075, 330233, 330336, 330004, 
+329783, 329665, 329720, 329933, 330478, 331062, 331086))
+r4 = cbind(c(180304, 180403,179632,179420,180304),
+c(332791, 333204, 333635, 333058, 332791))
+
+sr1=Polygons(list(Polygon(r1)),"r1")
+sr2=Polygons(list(Polygon(r2)),"r2")
+sr3=Polygons(list(Polygon(r3)),"r3")
+sr4=Polygons(list(Polygon(r4)),"r4")
+sr=SpatialPolygons(list(sr1,sr2,sr3,sr4))
+srdf=SpatialPolygonsDataFrame(sr, data.frame(cbind(1:4,5:2), 
+	row.names=c("r1","r2","r3","r4")))
+
+data(meuse)
+coordinates(meuse) = ~x+y
+
+plot(meuse)
+polygon(r1)
+polygon(r2)
+polygon(r3)
+polygon(r4)
+# retrieve mean heavy metal concentrations per polygon:
+over(sr, meuse[,1:4], fn = mean)
+
+# return the number of points in each polygon:
+sapply(over(sr, geometry(meuse), returnList = TRUE), length)
+
+data(meuse.grid)
+coordinates(meuse.grid) = ~x+y
+gridded(meuse.grid) = TRUE
+
+over(sr, geometry(meuse))
+over(sr, meuse)
+over(sr, geometry(meuse), returnList = TRUE)
+over(sr, meuse, returnList = TRUE)
+
+over(meuse, sr)
+over(meuse, srdf)
+
+# same thing, with grid:
+over(sr, meuse.grid)
+over(sr, meuse.grid, fn = mean)
+over(sr, meuse.grid, returnList = TRUE)
+
+over(meuse.grid, sr)
+over(meuse.grid, srdf, fn = mean)
+over(as(meuse.grid, "SpatialPoints"), sr)
+over(as(meuse.grid, "SpatialPoints"), srdf)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

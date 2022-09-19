@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Transformation for date-times (class POSIXt)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for time_trans {scales}"><tr><td>time_trans {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Transformation for date-times (class POSIXt)</h2>
+
+<h3>Description</h3>
+
+<p>Transformation for date-times (class POSIXt)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+time_trans(tz = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>tz</code></td>
+<td>
+<p>Optionally supply the time zone.  If <code>NULL</code>, the default,
+the time zone will be extracted from first input with a non-null tz.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+hours &lt;- seq(ISOdate(2000, 3, 20, tz = ""), by = "hour", length.out = 10)
+t &lt;- time_trans()
+t$transform(hours)
+t$inverse(t$transform(hours))
+t$format(t$breaks(range(hours)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

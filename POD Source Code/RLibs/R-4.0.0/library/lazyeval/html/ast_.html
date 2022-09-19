@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Display a call (or expression) as a tree.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ast_ {lazyeval}"><tr><td>ast_ {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Display a call (or expression) as a tree.</h2>
+
+<h3>Description</h3>
+
+<p><code>ast_</code> takes a quoted expression; <code>ast</code> does the quoting
+for you.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ast_(x, width = getOption("width"))
+
+ast(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Quoted call, list of calls, or expression to display.</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>Display width, defaults to current width as reported by
+<code>getOption("width")</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+ast(f(x, 1, g(), h(i())))
+ast(if (TRUE) 3 else 4)
+ast(function(a = 1, b = 2) {a + b + 10})
+ast(f(x)(y)(z))
+
+ast_(quote(f(x, 1, g(), h(i()))))
+ast_(quote(if (TRUE) 3 else 4))
+ast_(expression(1, 2, 3))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

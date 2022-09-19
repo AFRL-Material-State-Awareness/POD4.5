@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Adaptive Numerical Integration</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for integral {pracma}"><tr><td>integral {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Adaptive Numerical Integration
+</h2>
+
+<h3>Description</h3>
+
+<p>Combines several approaches to adaptive numerical integration of 
+functions of one variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+integral(fun, xmin, xmax,
+         method = c("Kronrod", "Clenshaw","Simpson"),
+         no_intervals = 8, random = FALSE,
+         reltol = 1e-8, abstol = 0, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>integrand, univariate (vectorized) function.</p>
+</td></tr>
+<tr valign="top"><td><code>xmin,xmax</code></td>
+<td>
+<p>endpoints of the integration interval.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>integration procedure, see below.</p>
+</td></tr>
+<tr valign="top"><td><code>no_intervals</code></td>
+<td>
+<p>number of subdivisions at at start.</p>
+</td></tr>
+<tr valign="top"><td><code>random</code></td>
+<td>
+<p>logical; shall the length of subdivisions be random.</p>
+</td></tr>
+<tr valign="top"><td><code>reltol</code></td>
+<td>
+<p>relative tolerance.</p>
+</td></tr>
+<tr valign="top"><td><code>abstol</code></td>
+<td>
+<p>absolute tolerance; not used.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>integral</code> combines the following methods for adaptive 
+numerical integration (also available as separate functions):
+</p>
+
+<ul>
+<li><p> Kronrod (Gauss-Kronrod)
+</p>
+</li>
+<li><p> Clenshaw (Clenshaw-Curtis; not yet made adaptive)
+</p>
+</li>
+<li><p> Simpson (adaptive Simpson)
+</p>
+</li></ul>
+
+<p>Recommended default method is Gauss-Kronrod. Also try Clenshaw-Curtis
+that may be faster at times.
+</p>
+<p>Most methods require that function <code>f</code> is vectorized. This will
+be checked and the function vectorized if necessary.
+</p>
+<p>By default, the integration domain is subdivided into <code>no_intervals</code>
+subdomains to avoid 0 results if the support of the integrand function is
+small compared to the whole domain. If <code>random</code> is true, nodes will
+be picked randomly, otherwise forming a regular division.
+</p>
+<p>If the interval is infinite, <code>quadinf</code> will be called that 
+accepts the same methods as well. [If the function is array-valued, 
+<code>quadv</code> is called that applies an adaptive Simpson procedure,
+other methods are ignored &ndash; not true anymore.]
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the integral, no error terms given.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>integral</code> does not provide &lsquo;new&rsquo; functionality, everything is 
+already contained in the functions called here. Other interesting
+alternatives are Gauss-Richardson (<code>quadgr</code>) and Romberg 
+(<code>romberg</code>) integration.
+</p>
+
+
+<h3>References</h3>
+
+<p>Davis, Ph. J., and Ph. Rabinowitz (1984). Methods of Numerical 
+Integration. Dover Publications, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="quadgk.html">quadgk</a></code>, <code><a href="quadgr.html">quadgr</a></code>, <code>quadcc</code>,
+<code><a href="simpadpt.html">simpadpt</a></code>, <code><a href="romberg.html">romberg</a></code>,
+<code><a href="quadv.html">quadv</a></code>, <code><a href="quadinf.html">quadinf</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Very smooth function
+fun &lt;- function(x) 1/(x^4+x^2+0.9)
+val &lt;- 1.582232963729353
+for (m in c("Kron", "Clen", "Simp")) {
+    Q &lt;- integral(fun, -1, 1, reltol = 1e-12, method = m)
+    cat(m, Q, abs(Q-val), "\n")}
+# Kron 1.582233 3.197442e-13 
+# Rich 1.582233 3.197442e-13  # use quadgr()
+# Clen 1.582233 3.199663e-13 
+# Simp 1.582233 3.241851e-13 
+# Romb 1.582233 2.555733e-13  # use romberg()
+
+##  Highly oscillating function
+fun &lt;- function(x) sin(100*pi*x)/(pi*x)
+val &lt;- 0.4989868086930458
+for (m in c("Kron", "Clen", "Simp")) {
+    Q &lt;- integral(fun, 0, 1, reltol = 1e-12, method = m)
+    cat(m, Q, abs(Q-val), "\n")}
+# Kron 0.4989868 2.775558e-16 
+# Rich 0.4989868 4.440892e-16  # use quadgr()
+# Clen 0.4989868 2.231548e-14
+# Simp 0.4989868 6.328271e-15 
+# Romb 0.4989868 1.508793e-13  # use romberg()
+
+## Evaluate improper integral
+fun &lt;- function(x) log(x)^2 * exp(-x^2)
+val &lt;- 1.9475221803007815976
+Q &lt;- integral(fun, 0, Inf, reltol = 1e-12)
+# For infinite domains Gauss integration is applied!
+cat(m, Q, abs(Q-val), "\n")
+# Kron 1.94752218028062 2.01587635473288e-11 
+
+## Example with small function support
+fun &lt;- function(x)
+            ifelse (x &lt;= 0 | x &gt;= pi, 0, sin(x))
+integral(fun, -100, 100, no_intervals = 1)      # 0
+integral(fun, -100, 100, no_intervals = 10)     # 1.99999999723
+integral(fun, -100, 100, random=FALSE)          # 2
+integral(fun, -100, 100, random=TRUE)           # 2 (sometimes 0 !)
+integral(fun, -1000, 10000, random=FALSE)       # 0
+integral(fun, -1000, 10000, random=TRUE)        # 0 (sometimes 2 !)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

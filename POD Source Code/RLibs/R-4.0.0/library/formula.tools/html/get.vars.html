@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get variable (names) from various R objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for get.vars {formula.tools}"><tr><td>get.vars {formula.tools}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get variable (names) from various R objects</h2>
+
+<h3>Description</h3>
+
+<p><code>get.vars</code> extracts variable names from various R objects such as
+formulas, expressions, calls, symbols, etc.  It is very similar to
+<code><a href="../../base/html/all.vars.html">all.vars</a></code> except that all symbols, etc. are interpolated 
+to the names of variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+get.vars(x, data = NULL, ...)
+
+## S4 method for signature 'formula,ANY'
+get.vars(x, data = NULL, ...)
+
+## S4 method for signature 'call,ANY'
+get.vars(x, data = NULL, ...)
+
+## S4 method for signature 'expression,missing'
+get.vars(x, data = NULL, ...)
+
+## S4 method for signature 'name,ANY'
+get.vars(x, data = NULL, ...)
+
+## S4 method for signature 'ANY,ANY'
+get.vars(x, data = NULL, ...)
+
+## S4 method for signature ''NULL',ANY'
+get.vars(x, data = NULL, ...)
+
+lhs.vars(x, ...)
+
+.lhs.vars(x, ..., data = NULL)
+
+## S4 method for signature 'formula'
+lhs.vars(x, ..., data = NULL)
+
+## S4 method for signature 'call'
+lhs.vars(x, ..., data = NULL)
+
+## S4 method for signature 'expression'
+lhs.vars(x, ...)
+
+rhs.vars(x, ...)
+
+.rhs.vars(x, ..., data = NULL)
+
+## S4 method for signature 'formula'
+rhs.vars(x, ..., data = NULL)
+
+## S4 method for signature 'call'
+rhs.vars(x, ..., data = NULL)
+
+## S4 method for signature 'expression'
+rhs.vars(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>object to extract vars from.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data set/list or environment on which the names are defined</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed to subsequent functions
+</p>
+<p><code>get.vars</code> and variant get the variables from objects optionally 
+interpreting on <code>.</code> on the data.  This is useful, for example, when you 
+wish to know what data is used based on a given formula.
+</p>
+<p>Methods/functions beginning with <code>.</code> are not exported</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>character vector of variables names in order that they appear in
+<code>x</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/all.vars.html">all.vars</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  get.vars( Species ~ ., iris )
+  get.vars( quote( Sepal.Length * Sepal.Width ), iris )
+  
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>formula.tools</em> version 1.7.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

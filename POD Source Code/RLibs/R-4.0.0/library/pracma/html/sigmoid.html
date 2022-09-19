@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sigmoid Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for sigmoid {pracma}"><tr><td>sigmoid {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Sigmoid Function
+</h2>
+
+<h3>Description</h3>
+
+<p>Sigmoid function (aka sigmoidal curve or logistic function).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+sigmoid(x, a = 1, b = 0)
+logit(x, a = 1, b = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>parameters.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>sigmoidal</code> function with parameters <code>a,b</code> is the function
+</p>
+<p style="text-align: center;"><i>y = 1/(1 + e^{-a (x-b)})</i></p>
+
+<p>The <code>sigmoid</code> function is also the solution of the ordinary 
+differentialequation
+</p>
+<p style="text-align: center;"><i>y' = y (1-y)</i></p>
+
+<p>with <i>y(0) = 1/2</i> and has an indefinite integral <i>\ln(1 + e^x)</i>.
+</p>
+<p>The <code>logit</code> function is the inverse of the sigmoid function and is
+(therefore) omly defined between 0 and 1. Its definition is
+</p>
+<p style="text-align: center;"><i>y = b + 1/a log(x/(1-x))</i></p>
+
+
+
+<h3>Value</h3>
+
+<p>Numeric/complex scalar or vector.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- seq(-6, 6, length.out = 101)
+y1 &lt;- sigmoid(x)
+y2 &lt;- sigmoid(x, a = 2)
+## Not run: 
+plot(x, y1, type = "l", col = "darkblue", 
+        xlab = "", ylab = "", main = "Sigmoid Function(s)")
+lines(x, y2, col = "darkgreen")
+grid()
+## End(Not run)
+
+# The slope in 0 (in x = b) is a/4
+# sigmf with slope 1 and range [-1, 1].
+sigmf &lt;- function(x) 2 * sigmoid(x, a = 2) - 1
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

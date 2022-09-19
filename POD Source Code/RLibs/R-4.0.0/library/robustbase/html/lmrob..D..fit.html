@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute Design Adaptive Scale estimate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lmrob..D..fit {robustbase}"><tr><td>lmrob..D..fit {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute Design Adaptive Scale estimate</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates a Design Adaptive Scale estimate
+for a given MM-estimate. This is supposed to be a part of a chain of
+estimates like <code>SMD</code> or <code>SMDM</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lmrob..D..fit(obj, x=obj$x, control = obj$control,
+              mf = obj$model, method = obj$control$method)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p><code>lmrob</code>-object based on which the estimate is to be
+calculated.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>the design matrix; if <code><a href="../../base/html/missing.html">missing</a></code>, the method tries
+to get it from <code>obj$x</code> and if this fails from <code>obj$model</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>list of control parameters, as returned
+by <code><a href="lmrob.control.html">lmrob.control</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>mf</code></td>
+<td>
+<p>unused and deprecated.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>optional; the <code>method</code> used for <em>obj</em> computation.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is used by <code><a href="lmrob.fit.html">lmrob.fit</a></code> and typically not to
+be used on its own.  Note that <code>lmrob.fit()</code> specifies
+<code>control</code> potentially differently than the default, but does use
+the default for <code>method</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The given <code>lmrob</code>-object with the following elements updated:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>The Design Adaptive Scale estimate</p>
+</td></tr>
+<tr valign="top"><td><code>converged</code></td>
+<td>
+ <p><code>TRUE</code> if the scale calculation converged,
+<code>FALSE</code> other.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Manuel Koller</p>
+
+
+<h3>References</h3>
+
+<p>Koller, M. and Stahel, W.A. (2011), Sharpening Wald-type inference in
+robust regression for small samples, <em>Computational Statistics &amp;
+Data Analysis</em> <b>55</b>(8), 2504&ndash;2515.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmrob.fit.html">lmrob.fit</a></code>, <code><a href="lmrob.html">lmrob</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(stackloss)
+## Compute manual SMD-estimate:
+## 1) MM-estimate
+m1 &lt;- lmrob(stack.loss ~ ., data = stackloss)
+## 2) Add Design Adaptive Scale estimate
+m2 &lt;- lmrob..D..fit(m1)
+print(c(m1$scale, m2$scale))
+
+summary(m1)
+summary(m2) ## the covariance matrix estimate is also updated
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

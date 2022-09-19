@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;Polygons&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Polygons-class {sp}"><tr><td>Polygons-class {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;Polygons&quot;</h2>
+
+<h3>Description</h3>
+
+<p> Collection of objects of class <code>"Polygon"</code> </p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Objects can be created by calls to the function <code>Polygons</code>
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>Polygons</code>:</dt><dd><p>Object of class <code>"list"</code>; list with objects
+of class <a href="Polygon-class.html">Polygon-class</a> </p>
+</dd>
+<dt><code>plotOrder</code>:</dt><dd><p>Object of class <code>"integer"</code>; order in which
+the Polygon objects should be plotted, currently by order of decreasing size </p>
+</dd>
+<dt><code>labpt</code>:</dt><dd><p>Object of class <code>"numeric"</code>; pair of x, y coordinates giving a label point, the label point of the largest polygon component  </p>
+</dd>
+<dt><code>ID</code>:</dt><dd><p>Object of class <code>"character"</code>; unique identifier string  </p>
+</dd>
+<dt><code>area</code>:</dt><dd><p>Object of class <code>"numeric"</code>; the gross total planar area of the Polygon list but not double-counting holes (changed from 0.9-58 - islands are summed, holes are ignored rather than subtracted); these values are used to make sure that polygons of a smaller area are plotted after polygons of a larger area, does not respect projection as objects of this class have no projection defined </p>
+</dd>
+</dl>
+
+
+
+<h3>Methods</h3>
+
+<p>No methods defined with class &quot;Polygons&quot; in the signature.
+</p>
+
+
+<h3>Note</h3>
+
+<p> By default, single polygons (where Polygons is a list of length one) are not expected to be holes, but in multiple polygons, hole definitions for member polygons can be set. Polygon objects belonging to an Polygons object should either not overlap one-other, or should be fully included (as lakes or islands in lakes). They should not be self-intersecting. Checking of hole FALSE/TRUE status for Polygons objects is included in the maptools package using functions in the rgeos package, function checkPolygonsHoles(). </p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Bivand </p>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

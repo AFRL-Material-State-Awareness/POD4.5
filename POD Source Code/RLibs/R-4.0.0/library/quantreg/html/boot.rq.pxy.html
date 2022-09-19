@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Preprocessing bootstrap method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for boot.rq.pxy {quantreg}"><tr><td>boot.rq.pxy {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Preprocessing bootstrap method
+</h2>
+
+<h3>Description</h3>
+
+<p>Bootstrap method exploiting preprocessing strategy to reduce 
+computation time for large problem.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+boot.rq.pxy(x, y, s, tau = 0.5, coef, method = "fn", Mm.factor = 3)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>Design matrix
+</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+
+<p>response vector
+</p>
+</td></tr>
+<tr valign="top"><td><code>s</code></td>
+<td>
+
+<p>matrix of multinomial draws for xy bootstrap
+</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+
+<p>quantile of interest
+</p>
+</td></tr>
+<tr valign="top"><td><code>coef</code></td>
+<td>
+
+<p>point estimate of fitted object
+</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+
+<p>fitting method for bootstrap
+</p>
+</td></tr>
+<tr valign="top"><td><code>Mm.factor</code></td>
+<td>
+
+<p>constant to determine initial sample size
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>See references for further details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns matrix of bootstrap estimates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Blaise Melly and Roger Koenker
+</p>
+
+
+<h3>References</h3>
+
+<p>Chernozhukov, V.  I. Fernandez-Val and B. Melly,
+Fast Algorithms for the Quantile Regression Process, 2019,
+arXiv, 1909.05782,
+</p>
+<p>Portnoy, S.  and R. Koenker, The Gaussian Hare and the Laplacian
+Tortoise, Statistical Science, (1997) 279-300
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.fit.ppro.html">rq.fit.ppro</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

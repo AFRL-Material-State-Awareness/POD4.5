@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Label p-values (e.g. &lt;0.001, 0.25, p &gt;= 0.99)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for label_pvalue {scales}"><tr><td>label_pvalue {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Label p-values (e.g. &lt;0.001, 0.25, p &gt;= 0.99)</h2>
+
+<h3>Description</h3>
+
+<p>Formatter for p-values, using &quot;&lt;&quot; and &quot;&gt;&quot; for p-values close to 0 and 1.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+label_pvalue(
+  accuracy = 0.001,
+  decimal.mark = ".",
+  prefix = NULL,
+  add_p = FALSE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>accuracy</code></td>
+<td>
+<p>A number to round to. Use (e.g.) <code>0.01</code> to show 2 decimal
+places of precision. If <code>NULL</code>, the default, uses a heuristic that should
+ensure breaks have the minimum number of digits needed to show the
+difference between adjacent values.
+</p>
+<p>Applied to rescaled data.</p>
+</td></tr>
+<tr valign="top"><td><code>decimal.mark</code></td>
+<td>
+<p>The character to be used to indicate the numeric
+decimal point.</p>
+</td></tr>
+<tr valign="top"><td><code>prefix</code></td>
+<td>
+<p>A character vector of length 3 giving the prefixes to
+put in front of numbers. The default values are <code>c("&lt;", "", "&gt;")</code>
+if <code>add_p</code> is <code>TRUE</code> and <code>c("p&lt;", "p=", "p&gt;")</code> if <code>FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>add_p</code></td>
+<td>
+<p>Add &quot;p=&quot; before the value?</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>All <code>label_()</code> functions return a &quot;labelling&quot; function, i.e. a function that
+takes a vector <code>x</code> and returns a character vector of <code>length(x)</code> giving a
+label for each input value.
+</p>
+<p>Labelling functions are designed to be used with the <code>labels</code> argument of
+ggplot2 scales. The examples demonstrate their use with x scales, but
+they work similarly for all scales, including those that generate legends
+rather than axes.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other labels for continuous scales: 
+<code><a href="label_bytes.html">label_bytes</a>()</code>,
+<code><a href="label_dollar.html">label_dollar</a>()</code>,
+<code><a href="label_number_auto.html">label_number_auto</a>()</code>,
+<code><a href="label_number_si.html">label_number_si</a>()</code>,
+<code><a href="label_ordinal.html">label_ordinal</a>()</code>,
+<code><a href="label_parse.html">label_parse</a>()</code>,
+<code><a href="label_percent.html">label_percent</a>()</code>,
+<code><a href="label_scientific.html">label_scientific</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+demo_continuous(c(0, 1))
+demo_continuous(c(0, 1), labels = label_pvalue())
+demo_continuous(c(0, 1), labels = label_pvalue(accuracy = 0.1))
+demo_continuous(c(0, 1), labels = label_pvalue(add_p = TRUE))
+
+# Or provide your own prefixes
+prefix &lt;- c("p &lt; ", "p = ", "p &gt; ")
+demo_continuous(c(0, 1), labels = label_pvalue(prefix = prefix))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

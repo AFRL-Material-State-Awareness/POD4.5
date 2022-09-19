@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Multivariate Normal Distribution</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pmvnorm {mvtnorm}"><tr><td>pmvnorm {mvtnorm}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Multivariate Normal Distribution </h2>
+
+<h3>Description</h3>
+
+<p>Computes the distribution function of the multivariate normal
+distribution for arbitrary limits and correlation matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+pmvnorm(lower=-Inf, upper=Inf, mean=rep(0, length(lower)),
+        corr=NULL, sigma=NULL, algorithm = GenzBretz(), keepAttr=TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>lower</code></td>
+<td>
+<p> the vector of lower limits of length n.</p>
+</td></tr>
+<tr valign="top"><td><code>upper</code></td>
+<td>
+<p> the vector of upper limits of length n.</p>
+</td></tr>
+<tr valign="top"><td><code>mean</code></td>
+<td>
+<p> the mean vector of length n.</p>
+</td></tr>
+<tr valign="top"><td><code>corr</code></td>
+<td>
+<p> the correlation matrix of dimension n.</p>
+</td></tr>
+<tr valign="top"><td><code>sigma</code></td>
+<td>
+<p> the covariance matrix of dimension n less than 1000. Either <code>corr</code> or
+<code>sigma</code> can be specified. If <code>sigma</code> is given, the
+problem is standardized. If neither <code>corr</code> nor
+<code>sigma</code> is given, the identity matrix is used
+for <code>sigma</code>. </p>
+</td></tr>
+<tr valign="top"><td><code>algorithm</code></td>
+<td>
+<p> an object of class <code><a href="algorithms.html">GenzBretz</a></code>,
+<code><a href="algorithms.html">Miwa</a></code> or <code><a href="algorithms.html">TVPACK</a></code>
+specifying both the algorithm to be used as well as
+the associated hyper parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>keepAttr</code></td>
+<td>
+<p><code><a href="../../base/html/logical.html">logical</a></code> indicating if
+<code><a href="../../base/html/attributes.html">attributes</a></code> such as <code>error</code> and <code>msg</code> should be
+attached to the return value.  The default, <code>TRUE</code> is back compatible.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> additional parameters (currently given to <code>GenzBretz</code> for
+backward compatibility issues). </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This program involves the computation of
+multivariate normal probabilities with arbitrary correlation matrices.
+It involves both the computation of singular and nonsingular
+probabilities. The implemented methodology is described in
+Genz (1992, 1993) (for algorithm GenzBretz), in Miwa et al. (2003)
+for algorithm Miwa (useful up to dimension 20) and Genz (2004)
+for the TVPACK algorithm (which covers 2- and 3-dimensional problems
+for semi-infinite integration regions).
+</p>
+<p>Note the default algorithm GenzBretz is randomized and hence slightly depends on
+<code><a href="../../base/html/Random.html">.Random.seed</a></code> and that both <code>-Inf</code> and <code>+Inf</code> may
+be specified in <code>lower</code> and <code>upper</code>.  For more details see
+<code><a href="pmvt.html">pmvt</a></code>.
+</p>
+<p>The multivariate normal
+case is treated as a special case of <code><a href="pmvt.html">pmvt</a></code> with <code>df=0</code> and
+univariate problems are passed to <code><a href="../../stats/html/Normal.html">pnorm</a></code>.
+</p>
+<p>The multivariate normal density and random deviates are available using
+<code><a href="Mvnorm.html">dmvnorm</a></code> and <code><a href="Mvnorm.html">rmvnorm</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The evaluated distribution function is returned, if <code>keepAttr</code> is true, with attributes
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>error</code></td>
+<td>
+<p>estimated absolute error</p>
+</td></tr>
+<tr valign="top"><td><code>msg</code></td>
+<td>
+<p>status message(s).</p>
+</td></tr>
+<tr valign="top"><td><code>algorithm</code></td>
+<td>
+<p>a <code><a href="../../base/html/character.html">character</a></code> string with <code>class(algorithm)</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Source</h3>
+
+<p><a href="http://www.sci.wsu.edu/math/faculty/genz/homepage">http://www.sci.wsu.edu/math/faculty/genz/homepage</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Genz, A. (1992). Numerical computation of multivariate normal probabilities.
+<em>Journal of Computational and Graphical Statistics</em>, <b>1</b>, 141&ndash;150.
+</p>
+<p>Genz, A. (1993). Comparison of methods for the computation of multivariate
+normal probabilities. <em>Computing Science and Statistics</em>, <b>25</b>,
+400&ndash;405.
+</p>
+<p>Genz, A. (2004), Numerical computation of rectangular bivariate and
+trivariate normal and t-probabilities, <em>Statistics and
+Computing</em>, <b>14</b>, 251&ndash;260.
+</p>
+<p>Genz, A. and Bretz, F. (2009), <em>Computation of Multivariate Normal and
+t Probabilities</em>. Lecture Notes in Statistics, Vol. 195. Springer-Verlag,
+Heidelberg.
+</p>
+<p>Miwa, A., Hayter J. and Kuriki, S. (2003).
+The evaluation of general non-centred orthant probabilities.
+<em>Journal of the Royal Statistical Society</em>, Ser. B, 65, 223&ndash;234.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="qmvnorm.html">qmvnorm</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+n &lt;- 5
+mean &lt;- rep(0, 5)
+lower &lt;- rep(-1, 5)
+upper &lt;- rep(3, 5)
+corr &lt;- diag(5)
+corr[lower.tri(corr)] &lt;- 0.5
+corr[upper.tri(corr)] &lt;- 0.5
+prob &lt;- pmvnorm(lower, upper, mean, corr)
+print(prob)
+
+stopifnot(pmvnorm(lower=-Inf, upper=3, mean=0, sigma=1) == pnorm(3))
+
+a &lt;- pmvnorm(lower=-Inf,upper=c(.3,.5),mean=c(2,4),diag(2))
+
+stopifnot(round(a,16) == round(prod(pnorm(c(.3,.5),c(2,4))),16))
+
+a &lt;- pmvnorm(lower=-Inf,upper=c(.3,.5,1),mean=c(2,4,1),diag(3))
+
+stopifnot(round(a,16) == round(prod(pnorm(c(.3,.5,1),c(2,4,1))),16))
+
+# Example from R News paper (original by Genz, 1992):
+
+m &lt;- 3
+sigma &lt;- diag(3)
+sigma[2,1] &lt;- 3/5
+sigma[3,1] &lt;- 1/3
+sigma[3,2] &lt;- 11/15
+pmvnorm(lower=rep(-Inf, m), upper=c(1,4,2), mean=rep(0, m), corr=sigma)
+
+# Correlation and Covariance
+
+a &lt;- pmvnorm(lower=-Inf, upper=c(2,2), sigma = diag(2)*2)
+b &lt;- pmvnorm(lower=-Inf, upper=c(2,2)/sqrt(2), corr=diag(2))
+stopifnot(all.equal(round(a,5) , round(b, 5)))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mvtnorm</em> version 1.1-3 <a href="00Index.html">Index</a>]</div>
+</body></html>

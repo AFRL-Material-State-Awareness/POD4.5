@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Linear Quantile Regression Object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq.object {quantreg}"><tr><td>rq.object {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Linear Quantile Regression Object 
+</h2>
+
+<h3>Description</h3>
+
+<p>These are objects of class <code>"rq"</code>.
+They represent the fit of a linear conditional quantile function model. 
+</p>
+
+
+<h3>Details</h3>
+
+<p>The coefficients, residuals, and effects may be extracted 
+by the generic functions of the same name, rather than 
+by the <code>$</code> operator.   For pure <code>rq</code> objects this is less critical 
+than for some of the inheritor classes.  In particular, for fitted rq objects
+using &quot;lasso&quot; and &quot;scad&quot; penalties, <code>logLik</code> and <code>AIC</code> functions
+compute degrees of freedom of the fitted model as the number of estimated
+parameters whose absolute value exceeds a threshold <code>edfThresh</code>.  By
+default this threshold is 0.0001, but this can be passed via the <code>AIC</code>
+function if this value is deemed unsatisfactory.  The function <code>AIC</code>
+is a generic function in R, with parameter <code>k</code> that controls the form
+of the penalty:  the default value of <code>k</code> is 2 which yields the classical
+Akaike form of the penalty, while <code>k &lt;= 0</code> yields the Schwarz (BIC)
+form of the penalty.
+Note that the extractor function <code>coef</code> returns a vector with missing values 
+omitted.  
+</p>
+
+
+<h3>Generation</h3>
+
+<p>This class of objects is returned from the <code>rq</code> function 
+to represent a fitted linear quantile regression model. 
+</p>
+
+
+<h3>Methods</h3>
+
+<p>The <code>"rq"</code> class of objects has methods for the following generic 
+functions: 
+<code>coef</code>, <code>effects</code>
+, <code>formula</code>
+, <code>labels</code>
+, <code>model.frame</code>
+, <code>model.matrix</code>
+, <code>plot</code>
+, <code>logLik</code>
+, <code>AIC</code>
+, <code>extractAIC</code>
+, <code>predict</code>
+, <code>print</code>
+, <code>print.summary</code>
+, <code>residuals</code>
+, <code>summary</code>
+</p>
+
+
+<h3>Structure</h3>
+
+<p>The following components must be included in a legitimate <code>rq</code> object. 
+</p>
+
+<dl>
+<dt><code>coefficients</code></dt><dd>
+<p>the coefficients of the quantile regression fit. 
+The names of the coefficients are the names of the 
+single-degree-of-freedom effects (the columns of the 
+model matrix). 
+If the model was fitted by method <code>"br"</code> with <code>ci=TRUE</code>, then
+the coefficient component consists of a matrix whose
+first column consists of the vector of estimated coefficients
+and the second and third columns are the lower and upper
+limits of a confidence interval for the respective coefficients.
+</p>
+</dd>
+<dt><code>residuals</code></dt><dd>
+<p>the residuals from the fit. 
+</p>
+</dd>
+<dt><code>dual</code></dt><dd>
+<p>the vector dual variables from the fit. 
+</p>
+</dd>
+<dt><code>rho</code></dt><dd>
+<p>The value(s) of objective function at the solution.
+</p>
+</dd>
+<dt><code>contrasts</code></dt><dd>
+<p>a list containing sufficient information to construct the contrasts 
+used to fit any factors occurring in the model. 
+The list contains entries that are either matrices or character vectors. 
+When a factor is coded by contrasts, the corresponding contrast matrix 
+is stored in this list. 
+Factors that appear only as dummy variables and variables in the model 
+that are matrices correspond to character vectors in the list. 
+The character vector has the level names for a factor or the column 
+labels for a matrix. 
+</p>
+</dd>
+<dt><code>model</code></dt><dd>
+<p>optionally the model frame, if <code>model=TRUE</code>. 
+</p>
+</dd>
+<dt><code>x</code></dt><dd>
+<p>optionally the model matrix, if <code>x=TRUE</code>. 
+</p>
+</dd>
+<dt><code>y</code></dt><dd>
+<p>optionally the response, if <code>y=TRUE</code>. 
+</p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rq.html">rq</a></code>,  <code><a href="../../stats/html/coef.html">coefficients</a></code>.   
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: define spatial grid with attribute data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SpatialPixelsDataFrame {sp}"><tr><td>SpatialPixelsDataFrame {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> define spatial grid with attribute data </h2>
+
+<h3>Description</h3>
+
+<p> defines spatial grid by offset, cell size and dimensions </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+SpatialPixelsDataFrame(points, data, tolerance = sqrt(.Machine$double.eps), 
+		proj4string = CRS(as.character(NA)), round = NULL, grid = NULL)
+SpatialGridDataFrame(grid, data, proj4string = CRS(as.character(NA)))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>points</code></td>
+<td>
+<p> coordinates, either as numeric matrix or as object of class
+<a href="SpatialPoints-class.html">SpatialPoints-class</a> </p>
+</td></tr>
+<tr valign="top"><td><code>grid</code></td>
+<td>
+<p> grid topology; object of class <a href="GridTopology-class.html">GridTopology-class</a>; for
+calls to <code>SpatialPixelsDataFrame</code> a value of NULL implies that this will 
+be derived from the point coordinates </p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p> data.frame; contains the attribute (actual grid) data </p>
+</td></tr>
+<tr valign="top"><td><code>tolerance</code></td>
+<td>
+<p> precision up to which extent points should be 
+exactly on a grid </p>
+</td></tr>
+<tr valign="top"><td><code>round</code></td>
+<td>
+<p>default NULL, otherwise a value passed to as the digits argument to <code>round</code> for setting cell size</p>
+</td></tr>
+<tr valign="top"><td><code>proj4string</code></td>
+<td>
+<p>object of class <a href="CRS-class.html">CRS-class</a> in the first
+form only used when <code>points</code> does not inherit from <a href="Spatial-class.html">Spatial-class</a></p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> SpatialPixelsDataFrame returns an object of class
+<a href="SpatialPixelsDataFrame-class.html">SpatialPixelsDataFrame-class</a>; SpatialGridDataFrame returns an object
+of class <a href="SpatialGridDataFrame-class.html">SpatialGridDataFrame-class</a>. 
+</p>
+
+
+<h3>Note</h3>
+
+ 
+<p>SpatialPixels stores grid topology and coordinates of the actual points,
+which may be in the form of a subset (set of pixels) of a full grid. To
+find out or change this, see <a href="gridded-methods.html">fullgrid</a> and <a href="SpatialGrid-class.html">SpatialGrid-class</a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Edzer Pebesma </p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><a href="gridded-methods.html">gridded</a>,
+<a href="gridded-methods.html">gridded&lt;-</a>,
+<a href="SpatialGrid.html">SpatialGrid</a>,
+<a href="SpatialGrid-class.html">SpatialGrid-class</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(meuse.grid)
+m = SpatialPixelsDataFrame(points = meuse.grid[c("x", "y")], data = meuse.grid)
+class(m)
+summary(m)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

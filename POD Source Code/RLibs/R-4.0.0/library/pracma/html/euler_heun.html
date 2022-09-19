@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Euler-Heun ODE Solver</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for euler_heun {pracma}"><tr><td>euler_heun {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Euler-Heun ODE Solver
+</h2>
+
+<h3>Description</h3>
+
+<p>Euler and Euler-Heun ODE solver.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+euler_heun(f, a, b, y0, n = 100, improved = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function in the differential equation <i>y' = f(x, y)</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>start and end points of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>y0</code></td>
+<td>
+<p>starting value at a.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>number of grid points.</p>
+</td></tr>
+<tr valign="top"><td><code>improved</code></td>
+<td>
+<p>logical; shall the Heun method be used; default TRUE.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>euler_heun</code> is an integration method for ordinary differential
+equations using the simple Euler resp. the improved Euler-Heun Method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components <code>t</code> for grid (or &lsquo;time&rsquo;) points, and <code>y</code> 
+the vector of predicted values at those grid points.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., and F. Saleri (). Scientific Computing with MATLAB
+and Octave. Second Edition, Springer-Verlag, Berlin Heidelberg, 2006.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="cranknic.html">cranknic</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Flame-up process
+f &lt;- function(x, y) y^2 - y^3
+s1 &lt;- cranknic(f, 0, 200, 0.01)
+s2 &lt;- euler_heun(f, 0, 200, 0.01)
+## Not run: 
+plot(s1$t, s1$y, type="l", col="blue")
+lines(s2$t, s2$y, col="red")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

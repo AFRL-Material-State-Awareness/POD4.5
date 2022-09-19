@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;gchol&quot;</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gchol-class {bdsmatrix}"><tr><td>gchol-class {bdsmatrix}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;gchol&quot;</h2>
+
+<h3>Description</h3>
+
+<p>The result of a generalized Cholesky decomposition A=LDL'
+where A is a symmetric matrix, L is lower triangular with 1s on the
+diagonal, and D is a diagonal matrix.</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>These objects are created by the <code>gchol</code> function.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>.Data</code>:</dt><dd><p>A numeric vector containing the results of the
+decompostion</p>
+</dd>
+<dt><code>Dim</code>:</dt><dd><p>An integer vector of length 2, the dimension of 
+the matrix</p>
+</dd>
+<dt><code>Dimnames</code>:</dt><dd><p>A list of length 2 containing the dimnames.  These
+default to the dimnames of the matrix A</p>
+</dd>
+<dt><code>rank</code>:</dt><dd><p>The rank of the matrix</p>
+</dd>
+</dl>
+
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt>%*%</dt><dd><p><code>signature(x = "gchol", y = "matrix")</code>: multiply
+the cholesky decomposition by a matrix.  That is, if A=LDL' is the
+decomposition, then <code>gchol(A) %*% B</code> will return L D^.5 B. </p>
+</dd>
+<dt>%*%</dt><dd><p><code>signature(x = "matrix", y = "gchol")</code>: multiply
+by a matrix on the left
+</p>
+</dd>
+<dt>[</dt><dd><p><code>signature(x = "gchol")</code>: if a square portion from the
+upper left corner is selected, then the result will be a gchol
+object, otherwise an ordinary matrix is returned.  The latter most
+often occurs when printing part of the matrix at the command line.</p>
+</dd>
+<dt>coerce</dt><dd><p><code>signature(from = "gchol", to = "matrix")</code>: Use of
+the <code>as.matrix</code> function will return L</p>
+</dd>
+<dt>diag</dt><dd><p><code>signature(x = "gchol")</code>: Use of the <code>diag</code> function
+will return D</p>
+</dd>
+<dt>dim</dt><dd><p><code>signature(x = "gchol")</code>: returns the dimension of the 
+matrix </p>
+</dd>
+<dt>dimnames</dt><dd><p><code>signature(x = "gchol")</code>: returns the dimnames</p>
+</dd>
+<dt>show</dt><dd><p><code>signature(object = "gchol")</code>: By default a triangular
+matrix is printed showing D on the diagonal and L off the diagonal
+</p>
+</dd>
+<dt>gchol</dt><dd><p><code>signature(x= "matrix")</code>: create a generalized
+Cholesky decompostion of the matrix</p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p>The primary advantages of the genearlized decomposition, as compared to
+the standard <code>chol function</code>, has to do with redundant columns 
+and generalized inverses (g-inverse).
+The lower triangular matrix L is always of full rank.  The diagonal matrix
+D has a 0 element at position j if and only if the jth column of A is
+linearly dependent on columns 1 to j-1 preceding it. 
+The g-inverse of A involves the inverse of L and a g-inverse of D.
+The g-inverse of D retains the zeros and inverts non-zero elements
+of D.   
+This is very useful inside modeling functions such as <code>coxph</code>,
+since the X matrix can often contain a redundant column.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Terry Therneau</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="gchol.html">gchol</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+showClass("gchol")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bdsmatrix</em> version 1.3-6 <a href="00Index.html">Index</a>]</div>
+</body></html>

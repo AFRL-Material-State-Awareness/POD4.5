@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Aggregate multiple functions into a single function.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for each {plyr}"><tr><td>each {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Aggregate multiple functions into a single function.</h2>
+
+<h3>Description</h3>
+
+<p>Combine multiple functions into a single function returning a named vector
+of outputs.
+Note: you cannot supply additional parameters for the summary functions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+each(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>functions to combine. each function should produce a single
+number as output</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="summarise.html">summarise</a></code> for applying summary functions to data
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Call min() and max() on the vector 1:10
+each(min, max)(1:10)
+# This syntax looks a little different.  It is shorthand for the
+# the following:
+f&lt;- each(min, max)
+f(1:10)
+# Three equivalent ways to call min() and max() on the vector 1:10
+each("min", "max")(1:10)
+each(c("min", "max"))(1:10)
+each(c(min, max))(1:10)
+# Call length(), min() and max() on a random normal vector
+each(length, mean, var)(rnorm(100))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

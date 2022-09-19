@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Coerce to a promise</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for is.promise {promises}"><tr><td>is.promise {promises}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Coerce to a promise</h2>
+
+<h3>Description</h3>
+
+<p>Use <code>is.promise</code> to determine whether an R object is a promise. Use
+<code>as.promise</code> (an S3 generic method) to attempt to coerce an R object to a
+promise. This package includes support for converting <a href="../../future/html/Future-class.html">future::Future</a>
+objects into promises.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+is.promise(x)
+
+is.promising(x)
+
+as.promise(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An R object to test or coerce.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>as.promise</code> returns a promise object, or throws an error if the
+object cannot be converted.
+</p>
+<p><code>is.promise</code> returns <code>TRUE</code> if the given value is a promise object, and
+<code>FALSE</code> otherwise.
+</p>
+<p><code>is.promising</code> returns <code>TRUE</code> if the given value is a promise object or
+if it can be converted to a promise object using <code>as.promise</code>, and <code>FALSE</code>
+otherwise.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>promises</em> version 1.2.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

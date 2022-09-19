@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Take a stratified sample</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for stratsample {survey}"><tr><td>stratsample {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Take a stratified sample
+</h2>
+
+<h3>Description</h3>
+
+<p>This function takes a stratified sample without replacement from a data set. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+stratsample(strata, counts)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>strata</code></td>
+<td>
+
+<p>Vector of stratum identifiers; will be coerced to character
+</p>
+</td></tr>
+<tr valign="top"><td><code>counts</code></td>
+<td>
+
+<p>named vector of stratum sample sizes, with names corresponding to the values of <code>as.character(strata)</code>
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>vector of indices into <code>strata</code> giving the sample
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/sample.html">sample</a></code>
+</p>
+<p>The &quot;sampling&quot; package has many more sampling algorithms.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  data(api)
+  s&lt;-stratsample(apipop$stype, c("E"=5,"H"=4,"M"=2))
+  table(apipop$stype[s])
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

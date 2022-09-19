@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: residuals of merMod objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for residuals.merMod {lme4}"><tr><td>residuals.merMod {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>residuals of merMod objects</h2>
+
+<h3>Description</h3>
+
+<p>residuals of merMod objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  ## S3 method for class 'merMod'
+ residuals(object,
+    type = if (isGLMM(object)) "deviance" else "response",
+    scaled = FALSE, ...)
+
+  ## S3 method for class 'lmResp'
+ residuals(object,
+    type = c("working", "response", "deviance", "pearson", "partial"),
+    ...)
+
+  ## S3 method for class 'glmResp'
+ residuals(object,
+    type = c("deviance", "pearson", "working", "response", "partial"),
+    ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>a fitted [g]lmer (<code>merMod</code>) object</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of residuals</p>
+</td></tr>
+<tr valign="top"><td><code>scaled</code></td>
+<td>
+<p>scale residuals by residual standard
+deviation (=scale parameter)?</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments (ignored: for method
+compatibility)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+ <ul>
+<li><p> The default residual type varies between
+<code>lmerMod</code> and <code>glmerMod</code> objects: they try to
+mimic <code><a href="../../stats/html/lm.summaries.html">residuals.lm</a></code> and
+<code><a href="../../stats/html/glm.summaries.html">residuals.glm</a></code> respectively. In particular,
+the default <code>type</code> is <code>"response"</code>, i.e.
+(observed-fitted) for <code>lmerMod</code> objects vs.
+<code>"deviance"</code> for <code>glmerMod</code> objects.
+<code>type="partial"</code> is not yet implemented for either
+type. </p>
+</li>
+<li><p> Note that the meaning of <code>"pearson"</code>
+residuals differs between <code><a href="../../stats/html/lm.summaries.html">residuals.lm</a></code> and
+<code><a href="../../nlme/html/residuals.lme.html">residuals.lme</a></code>.  The former returns values
+scaled by the square root of user-specified weights (if
+any), but <em>not</em> by the residual standard deviation,
+while the latter returns values scaled by the estimated
+standard deviation (which will include the effects of any
+variance structure specified in the <code>weights</code>
+argument).  To replicate <code>lme</code> behaviour, use
+<code>type="pearson"</code>, <code>scaled=TRUE</code>. </p>
+</li></ul>
+
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

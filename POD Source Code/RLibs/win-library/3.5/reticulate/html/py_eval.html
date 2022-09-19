@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Evaluate a Python Expression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_eval {reticulate}"><tr><td>py_eval {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Evaluate a Python Expression</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate a single Python expression, in a way analogous to the Python
+<code>eval()</code> built-in function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_eval(code, convert = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>code</code></td>
+<td>
+<p>A single Python expression.</p>
+</td></tr>
+<tr valign="top"><td><code>convert</code></td>
+<td>
+<p>Boolean; automatically convert Python objects to R?</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The result produced by evaluating <code>code</code>, converted to an <code>R</code>
+object when <code>convert</code> is set to <code>TRUE</code>.
+</p>
+
+
+<h3>Caveats</h3>
+
+<p><code>py_eval()</code> only supports evaluation of 'simple' Python expressions.
+Other expressions (e.g. assignments) will fail; e.g.</p>
+<pre>&gt; py_eval("x = 1")
+Error in py_eval_impl(code, convert) :
+  SyntaxError: invalid syntax (reticulate_eval, line 1)
+</pre>
+<p>and this mirrors what one would see in a regular Python interpreter:</p>
+<pre>&gt;&gt;&gt; eval("x = 1")
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "&lt;string&gt;", line 1
+x = 1
+^
+  SyntaxError: invalid syntax
+</pre>
+<p>The <code><a href="py_run.html">py_run_string()</a></code> method can be used if the evaluation of arbitrary
+Python code is required.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

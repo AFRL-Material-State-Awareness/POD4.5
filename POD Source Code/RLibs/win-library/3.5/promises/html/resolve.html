@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fulfill a promise</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for resolve {promises}"><tr><td>resolve {promises}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fulfill a promise</h2>
+
+<h3>Description</h3>
+
+<p>Use these functions to satisfy a promise with either success (<code>resolve</code>)
+or failure (<code>reject</code>). These functions are not exported, but rather, are
+passed as arguments to the <code>action</code> function you pass to a <a href="promise.html">promise</a>
+constructor.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+resolve(value = NULL)
+
+reject(reason)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>The result from a successful calculation.</p>
+</td></tr>
+<tr valign="top"><td><code>reason</code></td>
+<td>
+<p>An error or string that explains why the operation failed.</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>promises</em> version 1.2.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

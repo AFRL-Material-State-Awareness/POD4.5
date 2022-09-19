@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Easy Function Plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ezplot {pracma}"><tr><td>ezplot {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Easy Function Plot
+</h2>
+
+<h3>Description</h3>
+
+<p>Easy function plot w/o the need to define <code>x, y</code> coordinates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fplot(f, interval, ...)
+
+ezplot( f, a, b, n = 101, col = "blue", add = FALSE,
+        lty = 1, lwd = 1, marker = 0, pch = 1,
+        grid = TRUE, gridcol = "gray", 
+        fill = FALSE, fillcol = "lightgray",
+        xlab = "x", ylab = "f (x)", main = "Function Plot", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>Function to be plotted.</p>
+</td></tr>
+<tr valign="top"><td><code>interval</code></td>
+<td>
+<p>interval [a, b] to plot the function in</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>Left and right endpoint for the plot.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>Number of points to plot.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>Color of the function graph.</p>
+</td></tr>
+<tr valign="top"><td><code>add</code></td>
+<td>
+<p>logical; shall the polt be added to an existing plot.</p>
+</td></tr>
+<tr valign="top"><td><code>lty</code></td>
+<td>
+<p>line type; default 1.</p>
+</td></tr>
+<tr valign="top"><td><code>lwd</code></td>
+<td>
+<p>line width; default 1.</p>
+</td></tr>
+<tr valign="top"><td><code>marker</code></td>
+<td>
+<p>no. of markers to be added to the curve; defailt: none.</p>
+</td></tr>
+<tr valign="top"><td><code>pch</code></td>
+<td>
+<p>poimt character; default circle.</p>
+</td></tr>
+<tr valign="top"><td><code>grid</code></td>
+<td>
+<p>Logical; shall a grid be plotted?; default <code>TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>gridcol</code></td>
+<td>
+<p>Color of grid points.</p>
+</td></tr>
+<tr valign="top"><td><code>fill</code></td>
+<td>
+<p>Logical; shall the area between function and axis be filled?;
+default: <code>FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>fillcol</code></td>
+<td>
+<p>Color of fill area.</p>
+</td></tr>
+<tr valign="top"><td><code>xlab</code></td>
+<td>
+<p>Label on the <code>x</code>-axis.</p>
+</td></tr>
+<tr valign="top"><td><code>ylab</code></td>
+<td>
+<p>Label on the <code>y</code>-axis.</p>
+</td></tr>
+<tr valign="top"><td><code>main</code></td>
+<td>
+<p>Title of the plot</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>More parameters to be passed to <code>plot</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calculates the <code>x, y</code> coordinates of points to be plotted and
+calls the <code>plot</code> function.
+</p>
+<p>If <code>fill</code> is <code>TRUE</code>, also calls the <code>polygon</code> function
+with the <code>x, y</code> coordinates in appropriate order.
+</p>
+<p>If the no. of <code>markers</code> is greater than 2, this number of markers
+will be added to the curve, with equal distances measured along the curve.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Plots the function graph and invisibly returns <code>NULL</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>fplot</code> is almost an alias for <code>ezplot</code> as all <code>ez...</code> 
+will be replaced by MATLAB with function names <code>f...</code> in 2017.
+</p>
+<p><code>ezplot</code> should mimick the Matlab function of the same name, has
+more functionality, misses the possibility to plot several functions.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../graphics/html/curve.html">curve</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+fun &lt;- function(x) x * cos(0.1*exp(x)) * sin(0.1*pi*exp(x))
+ezplot(fun, 0, 5, n = 1001, fill = TRUE)
+  
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

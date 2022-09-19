@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Array/Apply Iterator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for iapply {iterators}"><tr><td>iapply {iterators}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Array/Apply Iterator</h2>
+
+<h3>Description</h3>
+
+<p>Returns an iterator over an array, which iterates over the 
+array in much the same manner
+as the <code>apply</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+iapply(X, MARGIN)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>X</code></td>
+<td>
+<p>the array to iterate over.</p>
+</td></tr>
+<tr valign="top"><td><code>MARGIN</code></td>
+<td>
+<p>a vector of subscripts.
+<code>1</code> indicates the first dimension (rows), <code>2</code>
+indicates the second dimension (columns), etc.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The apply iterator.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/apply.html">apply</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+a &lt;- array(1:8, c(2, 2, 2))
+
+# iterate over all the matrices
+it &lt;- iapply(a, 3)
+as.list(it)
+
+# iterate over all the columns of all the matrices
+it &lt;- iapply(a, c(2, 3))
+as.list(it)
+
+# iterate over all the rows of all the matrices
+it &lt;- iapply(a, c(1, 3))
+as.list(it)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>iterators</em> version 1.0.14 <a href="00Index.html">Index</a>]</div>
+</body></html>

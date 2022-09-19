@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Brownian Motion</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for brown72 {pracma}"><tr><td>brown72 {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Brownian Motion
+</h2>
+
+<h3>Description</h3>
+
+<p>The Brown72 data set represents a fractal Brownian motion with
+a prescribed Hurst exponent 0f 0.72 .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data(brown72)
+</pre>
+
+
+<h3>Format</h3>
+
+<p>The format is: one column.
+</p>
+
+
+<h3>Details</h3>
+
+<p>Estimating the Hurst exponent for a data set provides a measure of whether
+the data is a pure random walk or has underlying trends. Brownian walks can
+be generated from a defined Hurst exponent.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+data(brown72)
+plot(brown72, type = "l", col = "blue")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

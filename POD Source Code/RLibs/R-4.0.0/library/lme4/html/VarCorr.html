@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract Variance and Correlation Components</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for VarCorr {lme4}"><tr><td>VarCorr {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extract Variance and Correlation Components</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the estimated variances,
+standard deviations, and correlations between the
+random-effects terms in a mixed-effects model, of class
+<code><a href="merMod-class.html">merMod</a></code> (linear, generalized or
+nonlinear).  The within-group error variance and standard
+deviation are also calculated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'merMod'
+VarCorr(x, sigma=1, ...)
+
+
+## S3 method for class 'VarCorr.merMod'
+as.data.frame(x, row.names = NULL,
+              optional = FALSE, order = c("cov.last", "lower.tri"), ...)
+## S3 method for class 'VarCorr.merMod'
+print(x, digits = max(3, getOption("digits") - 2),
+      comp = "Std.Dev.", formatter = format, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>for <code>VarCorr</code>: a fitted model object, usually an object inheriting from
+class <code><a href="merMod-class.html">merMod</a></code>. For <code>as.data.frame</code>, a
+<code>VarCorr.merMod</code> object returned from <code>VarCorr</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>sigma</code></td>
+<td>
+<p>an optional numeric value used as a multiplier for the
+standard deviations.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>an optional integer value specifying the number of digits</p>
+</td></tr>
+<tr valign="top"><td><code>order</code></td>
+<td>
+<p>arrange data frame with variances/standard deviations
+first and covariances/correlations last for each random effects
+term (<code>"cov.last"</code>), or in the order of the lower triangle of the
+variance-covariance matrix (<code>"lower.tri"</code>)?</p>
+</td></tr>
+<tr valign="top"><td><code>row.names, optional</code></td>
+<td>
+<p>Ignored: necessary for the
+<code>as.data.frame</code> method.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Ignored for the <code>as.data.frame</code> method; passed to
+other <code><a href="../../base/html/print.html">print</a>()</code> methods for the <code>print()</code> method.</p>
+</td></tr>
+</table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>comp</code></td>
+<td>
+<p>a <code><a href="../../base/html/character.html">character</a></code> vector, specifying the components
+to be printed; simply passed to <code><a href="utilities.html">formatVC</a>()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>formatter</code></td>
+<td>
+<p>a <code><a href="../../base/html/function.html">function</a></code> for formatting the numbers;
+simply passed to <code><a href="utilities.html">formatVC</a>()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>print</code> method for <code>VarCorr.merMod</code> objects
+has optional arguments <code>digits</code> (specify digits of
+precision for printing) and <code>comp</code>: the latter is
+a character vector with any combination of <code>"Variance"</code>
+and <code>"Std.Dev."</code>, to specify whether variances,
+standard deviations, or both should be printed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>VarCorr.merMod</code>. The internal
+structure of the object is
+a list of matrices, one for each random effects grouping
+term.  For each grouping term, the standard deviations and
+correlation matrices for each grouping term are stored as
+attributes <code>"stddev"</code> and <code>"correlation"</code>,
+respectively, of the variance-covariance matrix, and the
+residual standard deviation is stored as attribute
+<code>"sc"</code> (for <code>glmer</code> fits, this attribute stores
+the scale parameter of the model).
+</p>
+<p>The <code>as.data.frame</code> method produces a combined data frame with one
+row for each variance or covariance parameter (and a row for the
+residual error term where applicable) and the following columns:
+</p>
+
+<dl>
+<dt>grp</dt><dd><p>grouping factor</p>
+</dd>
+<dt>var1</dt><dd><p>first variable</p>
+</dd>
+<dt>var2</dt><dd><p>second variable (<code>NA</code> for variance parameters)</p>
+</dd>
+<dt>vcov</dt><dd><p>variances or covariances</p>
+</dd>
+<dt>sdcor</dt><dd><p>standard deviations or correlations</p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p>This is modeled after <code><a href="../../nlme/html/VarCorr.html">VarCorr</a></code> from
+package <a href="https://CRAN.R-project.org/package=nlme"><span class="pkg">nlme</span></a>, by Jose Pinheiro and Douglas Bates.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmer.html">lmer</a></code>, <code><a href="nlmer.html">nlmer</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(Orthodont, package="nlme")
+fm1 &lt;- lmer(distance ~ age + (age|Subject), data = Orthodont)
+(vc &lt;- VarCorr(fm1))  ## default print method: standard dev and corr
+## both variance and std.dev.
+print(vc,comp=c("Variance","Std.Dev."),digits=2)
+## variance only
+print(vc,comp=c("Variance"))
+as.data.frame(vc)
+as.data.frame(vc,order="lower.tri")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

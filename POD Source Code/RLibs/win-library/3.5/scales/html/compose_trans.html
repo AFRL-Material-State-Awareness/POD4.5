@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compose two or more transformations together</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for compose_trans {scales}"><tr><td>compose_trans {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compose two or more transformations together</h2>
+
+<h3>Description</h3>
+
+<p>This transformer provides a general mechanism for composing two or more
+transformers together. The most important use case is to combine reverse
+with other transformations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+compose_trans(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>One or more transformers, either specified with string or
+as individual transformer objects.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+demo_continuous(10^c(-2:4), trans = "log10", labels = label_log())
+demo_continuous(10^c(-2:4), trans = c("log10", "reverse"), labels = label_log())
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

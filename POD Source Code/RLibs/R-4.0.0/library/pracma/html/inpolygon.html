@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Polygon Region</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for inpolygon {pracma}"><tr><td>inpolygon {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Polygon Region
+</h2>
+
+<h3>Description</h3>
+
+<p>Points inside polygon region.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+inpolygon(x, y, xp, yp, boundary = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y</code></td>
+<td>
+<p>x-, y-coordinates of points to be tested for being inside
+the polygon region.</p>
+</td></tr>
+<tr valign="top"><td><code>xp, yp</code></td>
+<td>
+<p>coordinates of the vertices specifying the polygon.</p>
+</td></tr>
+<tr valign="top"><td><code>boundary</code></td>
+<td>
+<p>Logical; does the boundary belong to the interior.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For a polygon defined by points <code>(xp, yp)</code>, determine if the
+points <code>(x, y)</code> are inside or outside the polygon. The boundary
+can be included or excluded (default) for the interior.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Logical vector, the same length as <code>x</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Special care taken for points on the boundary.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hormann, K., and A. Agathos (2001). The Point in Polygon Problem for
+Arbitrary Polygons. Computational Geometry, Vol. 20, No. 3, pp. 131&ndash;144.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../graphics/html/polygon.html">polygon</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xp &lt;- c(0.5, 0.75, 0.75, 0.5, 0.5)
+yp &lt;- c(0.5, 0.5, 0.75, 0.75, 0.5)
+x &lt;- c(0.6, 0.75, 0.6, 0.5)
+y &lt;- c(0.5, 0.6, 0.75, 0.6)
+inpolygon(x, y, xp, yp, boundary = FALSE)  # FALSE
+inpolygon(x, y, xp, yp, boundary = TRUE)   # TRUE
+
+## Not run: 
+pg &lt;- matrix(c(0.15, 0.75, 0.25, 0.45, 0.70,
+               0.80, 0.35, 0.55, 0.20, 0.90), 5, 2)
+plot(c(0, 1), c(0, 1), type="n")
+polygon(pg[,1], pg[,2])
+P &lt;- matrix(runif(20000), 10000, 2)
+R &lt;- inpolygon(P[, 1], P[, 2], pg[, 1], pg[,2])
+clrs &lt;- ifelse(R, "red", "blue")
+points(P[, 1], P[, 2], pch = ".", col = clrs)
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

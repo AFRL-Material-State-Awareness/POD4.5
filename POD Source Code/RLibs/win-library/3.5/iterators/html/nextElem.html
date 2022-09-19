@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get Next Element of Iterator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for nextElem {iterators}"><tr><td>nextElem {iterators}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get Next Element of Iterator</h2>
+
+<h3>Description</h3>
+
+<p><code>nextElem</code> is a generic function used to produce values. If a
+<code>checkFunc</code> was specified to the constructor, the potential
+iterated values will be passed to the <code>checkFunc</code> until the
+<code>checkFunc</code> returns <code>TRUE</code>. When the iterator has no more
+values, it calls stop with the message 'StopIteration'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nextElem(obj, ...)
+
+## S3 method for class 'containeriter'
+nextElem(obj, ...)
+## S3 method for class 'funiter'
+nextElem(obj, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>an iterator object.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments that are ignored.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The value.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  it &lt;- iter(c('a', 'b', 'c'))
+  print(nextElem(it))
+  print(nextElem(it))
+  print(nextElem(it))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>iterators</em> version 1.0.14 <a href="00Index.html">Index</a>]</div>
+</body></html>

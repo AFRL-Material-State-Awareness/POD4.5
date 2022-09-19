@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Explanatory Name of Distribution Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for recogniseCdf {goftest}"><tr><td>recogniseCdf {goftest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Explanatory Name of Distribution Function
+</h2>
+
+<h3>Description</h3>
+
+<p>Recognises many standard cumulative distribution functions and
+returns a string describing the distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+recogniseCdf(s="punif")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>s</code></td>
+<td>
+
+<p>A single character string giving the <em>name</em>
+of an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> function that calculates cumulative
+probabilities.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The list of recognised distribution functions
+includes all those available in the <span class="pkg">stats</span> package
+and in <span class="pkg">goftest</span>.
+</p>
+<p>By convention, the name of a cumulative distribution function
+begins with the letter <code>p</code>. For example, <code>punif</code> is the
+cumulative distribution function of the uniform distribution.
+</p>
+<p>The initial letter <code>p</code> can be omitted in the
+function <code>recogniseCdf</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Character string, or <code>NULL</code> if the name is not recognised.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adrian Baddeley.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="pAD.html">pAD</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+   recogniseCdf("punif")
+   recogniseCdf("unif")
+   recogniseCdf("pt")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>goftest</em> version 1.2-3 <a href="00Index.html">Index</a>]</div>
+</body></html>

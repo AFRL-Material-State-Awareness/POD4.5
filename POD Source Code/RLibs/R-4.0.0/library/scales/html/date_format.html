@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Superseded interface to 'label_date()'/'label_time()'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for date_format {scales}"><tr><td>date_format {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Superseded interface to <code>label_date()</code>/<code>label_time()</code></h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#superseded"><img src="../help/figures/lifecycle-superseded.svg" alt='[Superseded]' /></a>
+</p>
+<p>These functions are kept for backward compatibility; you should switch
+to [label_date()/<code><a href="label_date.html">label_time()</a></code> for new code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+date_format(format = "%Y-%m-%d", tz = "UTC", locale = NULL)
+
+time_format(format = "%H:%M:%S", tz = "UTC", locale = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>format</code></td>
+<td>
+<p>For <code>date_format()</code> and <code>time_format()</code> a date/time format
+string using standard POSIX specification.  See <code><a href="../../base/html/strptime.html">strptime()</a></code> for details.
+</p>
+<p>For <code>date_short()</code> a character vector of length 4 giving the format
+components to use for year, month, day, and hour respectively.</p>
+</td></tr>
+<tr valign="top"><td><code>tz</code></td>
+<td>
+<p>a time zone name, see <code><a href="../../base/html/timezones.html">timezones()</a></code>. Defaults
+to UTC</p>
+</td></tr>
+<tr valign="top"><td><code>locale</code></td>
+<td>
+<p>Locale to use when for day and month names. The default
+uses the current locale. Setting this argument requires stringi, and you
+can see a complete list of supported locales with
+<code><a href="../../stringi/html/stri_locale_list.html">stringi::stri_locale_list()</a></code>.</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

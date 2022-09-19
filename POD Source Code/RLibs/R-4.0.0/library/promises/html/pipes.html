@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Promise pipe operators</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for pipes {promises}"><tr><td>pipes {promises}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Promise pipe operators</h2>
+
+<h3>Description</h3>
+
+<p>Promise-aware pipe operators, in the style of <a href="https://CRAN.R-project.org/package=magrittr/vignettes/magrittr.html">magrittr</a>.
+Like magrittr pipes, these operators can be used to chain together pipelines
+of promise-transforming operations. Unlike magrittr pipes, these pipes wait
+for promise resolution and pass the unwrapped value (or error) to the <code>rhs</code>
+function call.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lhs %...&gt;% rhs
+
+lhs %...T&gt;% rhs
+
+lhs %...!% rhs
+
+lhs %...T!% rhs
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>lhs</code></td>
+<td>
+<p>A promise object.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs</code></td>
+<td>
+<p>A function call using the magrittr semantics. It can return either
+a promise or non-promise value, or throw an error.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>&gt;</code> variants are for handling successful resolution, the <code>!</code> variants are
+for handling errors. The <code>T</code> variants of each return the lhs instead of the
+rhs, which is useful for pipeline steps that are used for side effects
+(printing, plotting, saving).
+</p>
+
+<ol>
+<li> <p><code>promise %...&gt;% func()</code> is equivalent to <code>promise %&gt;% then(func)</code>.
+</p>
+</li>
+<li> <p><code>promise %...!% func()</code> is equivalent to <code>promise %&gt;% catch(func)</code>.
+</p>
+</li>
+<li> <p><code>promise %...T&gt;% func()</code> is equivalent to <code>promise %T&gt;% then(func)</code>.
+</p>
+</li>
+<li> <p><code>promise %...T!% func()</code> is equivalent to <code>promise %T&gt;%
+catch(func)</code> or <code>promise %&gt;% catch(func, tee = TRUE)</code>.
+</p>
+</li></ol>
+
+<p>One situation where 3. and 4. above break down is when <code>func()</code> throws an
+error, or returns a promise that ultimately fails. In that case, the failure
+will be propagated by our pipe operators but not by the
+magrittr-plus-function &quot;equivalents&quot;.
+</p>
+<p>For simplicity of implementation, we do not support the magrittr feature of
+using a <code>.</code> at the head of a pipeline to turn the entire pipeline into a
+function instead of an expression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A new promise.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>https://rstudio.github.io/promises/articles/overview.html#using-pipes
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+library(future)
+plan(multisession)
+
+future_promise(cars) %...&gt;%
+  head(5) %...T&gt;%
+  print()
+
+# If the read.csv fails, resolve to NULL instead
+future_promise(read.csv("http://example.com/data.csv")) %...!%
+  { NULL }
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>promises</em> version 1.2.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: n-dimensional Vector Cross Product</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for crossn {pracma}"><tr><td>crossn {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>n-dimensional Vector Cross Product</h2>
+
+<h3>Description</h3>
+
+<p>Vector cross product of <code>n-1</code> vectors in n-dimensional space
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+crossn(A)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>matrix of size <code>(n-1) x n</code> where <code>n &gt;= 2</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The rows of the matrix <code>A</code> are taken as<code>(n-1)</code> vectors in
+<code>n</code>-dimensional space. The cross product generates a vector in this
+space that is orthogonal to all these rows in <code>A</code> and its length is
+the volume of the geometric hypercube spanned by the vectors.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a vector of length <code>n</code>
+</p>
+
+
+<h3>Note</h3>
+
+<p>The &lsquo;scalar triple product&rsquo; in <i>R^3</i> can be defined as
+</p>
+<p><code>spatproduct &lt;- function(a, b, c) dot(a, crossn(b, c))</code>
+</p>
+<p>It represents the volume of the parallelepiped spanned by the three vectors.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="cross.html">cross</a></code>, <code><a href="dot.html">dot</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+A &lt;- matrix(c(1,0,0, 0,1,0), nrow=2, ncol=3, byrow=TRUE)
+crossn(A)  #=&gt; 0 0 1
+
+x &lt;- c(1.0, 0.0, 0.0)
+y &lt;- c(1.0, 0.5, 0.0)
+z &lt;- c(0.0, 0.0, 1.0)
+identical(dot(x, crossn(rbind(y, z))), det(rbind(x, y, z)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Vector Field Plotting</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for vectorfield {pracma}"><tr><td>vectorfield {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Vector Field Plotting
+</h2>
+
+<h3>Description</h3>
+
+<p>Plotting a vector field
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+vectorfield(fun, xlim, ylim, n = 16,
+            scale = 0.05, col = "green", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>function of two variables &mdash; must be vectorized.</p>
+</td></tr>
+<tr valign="top"><td><code>xlim</code></td>
+<td>
+<p>range of <code>x</code> values.</p>
+</td></tr>
+<tr valign="top"><td><code>ylim</code></td>
+<td>
+<p>range of <code>y</code> values.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>grid size, proposed 16 in each direction.</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>scales the length of the arrows.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>arrow color, proposed &lsquo;green&rsquo;.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>more options presented to the <code>arrows</code> primitive.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Plots a vector field for a function <code>f</code>. Main usage could be to plot
+the solution of a differential equation into the same graph.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Opens a graph window and plots the vector field.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="quiver.html">quiver</a></code>, <code><a href="../../graphics/html/arrows.html">arrows</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f &lt;- function(x, y) x^2 - y^2
+xx &lt;- c(-1, 1); yy &lt;- c(-1, 1)
+## Not run: 
+vectorfield(f, xx, yy, scale = 0.1)
+for (xs in seq(-1, 1, by = 0.25)) {
+    sol &lt;- rk4(f, -1, 1, xs, 100)
+    lines(sol$x, sol$y, col="darkgreen")
+}
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -116,5 +116,5 @@ for(i in 1:detectCores()){
   print(proc.time() - ptm)
 }
 
-
+assign(".lib.loc", "C:/Users/gohmancm/Desktop/newPODrepository/POD Source Code/RLibs/win-library/3.5", envir = environment(.libPaths))
 

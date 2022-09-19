@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: External R Process</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for r_process {callr}"><tr><td>r_process {callr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>External R Process</h2>
+
+<h3>Description</h3>
+
+<p>An R process that runs in the background. This is an R6 class that
+extends the <a href="../../processx/html/process.html">processx::process</a> class. The process starts in the
+background, evaluates an R function call, and then quits.
+</p>
+
+
+<h3>Super class</h3>
+
+<p><code><a href="../../processx/html/process.html">processx::process</a></code> -&gt; <code>r_process</code>
+</p>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-r_process-new"><code>r_process$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-r_process-get_result"><code>r_process$get_result()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-r_process-finalize"><code>r_process$finalize()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-r_process-clone"><code>r_process$clone()</code></a>
+</p>
+</li></ul>
+
+
+
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="as_ps_handle"><a href='../../processx/html/process.html#method-process-as_ps_handle'><code>processx::process$as_ps_handle()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="format"><a href='../../processx/html/process.html#method-process-format'><code>processx::process$format()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_cmdline"><a href='../../processx/html/process.html#method-process-get_cmdline'><code>processx::process$get_cmdline()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_cpu_times"><a href='../../processx/html/process.html#method-process-get_cpu_times'><code>processx::process$get_cpu_times()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_error_connection"><a href='../../processx/html/process.html#method-process-get_error_connection'><code>processx::process$get_error_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_error_file"><a href='../../processx/html/process.html#method-process-get_error_file'><code>processx::process$get_error_file()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_exe"><a href='../../processx/html/process.html#method-process-get_exe'><code>processx::process$get_exe()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_exit_status"><a href='../../processx/html/process.html#method-process-get_exit_status'><code>processx::process$get_exit_status()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_input_connection"><a href='../../processx/html/process.html#method-process-get_input_connection'><code>processx::process$get_input_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_input_file"><a href='../../processx/html/process.html#method-process-get_input_file'><code>processx::process$get_input_file()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_memory_info"><a href='../../processx/html/process.html#method-process-get_memory_info'><code>processx::process$get_memory_info()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_name"><a href='../../processx/html/process.html#method-process-get_name'><code>processx::process$get_name()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_output_connection"><a href='../../processx/html/process.html#method-process-get_output_connection'><code>processx::process$get_output_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_output_file"><a href='../../processx/html/process.html#method-process-get_output_file'><code>processx::process$get_output_file()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_pid"><a href='../../processx/html/process.html#method-process-get_pid'><code>processx::process$get_pid()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_poll_connection"><a href='../../processx/html/process.html#method-process-get_poll_connection'><code>processx::process$get_poll_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_start_time"><a href='../../processx/html/process.html#method-process-get_start_time'><code>processx::process$get_start_time()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_status"><a href='../../processx/html/process.html#method-process-get_status'><code>processx::process$get_status()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_username"><a href='../../processx/html/process.html#method-process-get_username'><code>processx::process$get_username()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="get_wd"><a href='../../processx/html/process.html#method-process-get_wd'><code>processx::process$get_wd()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="has_error_connection"><a href='../../processx/html/process.html#method-process-has_error_connection'><code>processx::process$has_error_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="has_input_connection"><a href='../../processx/html/process.html#method-process-has_input_connection'><code>processx::process$has_input_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="has_output_connection"><a href='../../processx/html/process.html#method-process-has_output_connection'><code>processx::process$has_output_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="has_poll_connection"><a href='../../processx/html/process.html#method-process-has_poll_connection'><code>processx::process$has_poll_connection()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="interrupt"><a href='../../processx/html/process.html#method-process-interrupt'><code>processx::process$interrupt()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="is_alive"><a href='../../processx/html/process.html#method-process-is_alive'><code>processx::process$is_alive()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="is_incomplete_error"><a href='../../processx/html/process.html#method-process-is_incomplete_error'><code>processx::process$is_incomplete_error()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="is_incomplete_output"><a href='../../processx/html/process.html#method-process-is_incomplete_output'><code>processx::process$is_incomplete_output()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="is_supervised"><a href='../../processx/html/process.html#method-process-is_supervised'><code>processx::process$is_supervised()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="kill"><a href='../../processx/html/process.html#method-process-kill'><code>processx::process$kill()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="kill_tree"><a href='../../processx/html/process.html#method-process-kill_tree'><code>processx::process$kill_tree()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="poll_io"><a href='../../processx/html/process.html#method-process-poll_io'><code>processx::process$poll_io()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="print"><a href='../../processx/html/process.html#method-process-print'><code>processx::process$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_all_error"><a href='../../processx/html/process.html#method-process-read_all_error'><code>processx::process$read_all_error()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_all_error_lines"><a href='../../processx/html/process.html#method-process-read_all_error_lines'><code>processx::process$read_all_error_lines()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_all_output"><a href='../../processx/html/process.html#method-process-read_all_output'><code>processx::process$read_all_output()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_all_output_lines"><a href='../../processx/html/process.html#method-process-read_all_output_lines'><code>processx::process$read_all_output_lines()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_error"><a href='../../processx/html/process.html#method-process-read_error'><code>processx::process$read_error()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_error_lines"><a href='../../processx/html/process.html#method-process-read_error_lines'><code>processx::process$read_error_lines()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_output"><a href='../../processx/html/process.html#method-process-read_output'><code>processx::process$read_output()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="read_output_lines"><a href='../../processx/html/process.html#method-process-read_output_lines'><code>processx::process$read_output_lines()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="resume"><a href='../../processx/html/process.html#method-process-resume'><code>processx::process$resume()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="signal"><a href='../../processx/html/process.html#method-process-signal'><code>processx::process$signal()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="supervise"><a href='../../processx/html/process.html#method-process-supervise'><code>processx::process$supervise()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="suspend"><a href='../../processx/html/process.html#method-process-suspend'><code>processx::process$suspend()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="wait"><a href='../../processx/html/process.html#method-process-wait'><code>processx::process$wait()</code></a></li>
+<li><span class="pkg-link" data-pkg="processx" data-topic="process" data-id="write_input"><a href='../../processx/html/process.html#method-process-write_input'><code>processx::process$write_input()</code></a></li>
+</ul>
+</details>
+
+<hr>
+<a id="method-r_process-new"></a>
+
+
+
+<h4>Method <code>new()</code></h4>
+
+<p>Start a new R process in the background.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>r_process$new(options)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>options</code></dt><dd><p>A list of options created via <code><a href="r_process_options.html">r_process_options()</a></code>.</p>
+</dd>
+</dl>
+
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>r_process</code> object.
+</p>
+
+
+<hr>
+<a id="method-r_process-get_result"></a>
+
+
+
+<h4>Method <code>get_result()</code></h4>
+
+<p>Return the result, an R object, from a finished
+background R process. If the process has not finished yet, it throws
+an error. (You can use <code>wait()</code> method (see <a href="../../processx/html/process.html">processx::process</a>) to
+wait for the process to finish, optionally with a timeout.) You can
+also use <code><a href="../../processx/html/poll.html">processx::poll()</a></code> to wait for the end of the process,
+together with other processes or events.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>r_process$get_result()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>The return value of the R expression evaluated in the R
+process.
+</p>
+
+
+<hr>
+<a id="method-r_process-finalize"></a>
+
+
+
+<h4>Method <code>finalize()</code></h4>
+
+<p>Clean up temporary files once an R process has finished and its
+handle is garbage collected.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>r_process$finalize()</pre></div>
+
+
+<hr>
+<a id="method-r_process-clone"></a>
+
+
+
+<h4>Method <code>clone()</code></h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>r_process$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## List all options and their default values:
+r_process_options()
+
+## Start an R process in the background, wait for it, get result
+opts &lt;- r_process_options(func = function() 1 + 1)
+rp &lt;- r_process$new(opts)
+rp$wait()
+rp$get_result()
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>callr</em> version 3.7.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

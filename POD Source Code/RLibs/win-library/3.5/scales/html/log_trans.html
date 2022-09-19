@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Log transformations</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for log_trans {scales}"><tr><td>log_trans {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Log transformations</h2>
+
+<h3>Description</h3>
+
+
+<ul>
+<li> <p><code>log_trans()</code>: <code>log(x)</code>
+</p>
+</li>
+<li> <p><code>log1p()</code>: <code>log(x + 1)</code>
+</p>
+</li>
+<li> <p><code>pseudo_log_trans()</code>:  smoothly transition to linear scale around 0.
+</p>
+</li></ul>
+
+
+
+<h3>Usage</h3>
+
+<pre>
+log_trans(base = exp(1))
+
+log10_trans()
+
+log2_trans()
+
+log1p_trans()
+
+pseudo_log_trans(sigma = 1, base = exp(1))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>base</code></td>
+<td>
+<p>base of logarithm</p>
+</td></tr>
+<tr valign="top"><td><code>sigma</code></td>
+<td>
+<p>Scaling factor for the linear part of pseudo-log transformation.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+plot(log2_trans(), xlim = c(0, 5))
+plot(log_trans(), xlim = c(0, 5))
+plot(log10_trans(), xlim = c(0, 5))
+
+plot(log_trans(), xlim = c(0, 2))
+plot(log1p_trans(), xlim = c(-1, 1))
+
+# The pseudo-log is defined for all real numbers
+plot(pseudo_log_trans(), xlim = c(-5, 5))
+lines(log_trans(), xlim = c(0, 5), col = "red")
+
+# For large positives nubmers it's very close to log
+plot(pseudo_log_trans(), xlim = c(1, 20))
+lines(log_trans(), xlim = c(1, 20), col = "red")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

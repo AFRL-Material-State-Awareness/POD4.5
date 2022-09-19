@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Split list, apply function, and return results in a data...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ldply {plyr}"><tr><td>ldply {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Split list, apply function, and return results in a data frame.</h2>
+
+<h3>Description</h3>
+
+<p>For each element of a list, apply function then combine results into a data
+frame.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ldply(
+  .data,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .parallel = FALSE,
+  .paropts = NULL,
+  .id = NA
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.data</code></td>
+<td>
+<p>list to be processed</p>
+</td></tr>
+<tr valign="top"><td><code>.fun</code></td>
+<td>
+<p>function to apply to each piece</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed on to <code>.fun</code></p>
+</td></tr>
+<tr valign="top"><td><code>.progress</code></td>
+<td>
+<p>name of the progress bar to use, see
+<code><a href="create_progress_bar.html">create_progress_bar</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>.inform</code></td>
+<td>
+<p>produce informative error messages?  This is turned off
+by default because it substantially slows processing speed, but is very
+useful for debugging</p>
+</td></tr>
+<tr valign="top"><td><code>.parallel</code></td>
+<td>
+<p>if <code>TRUE</code>, apply function in parallel, using parallel
+backend provided by foreach</p>
+</td></tr>
+<tr valign="top"><td><code>.paropts</code></td>
+<td>
+<p>a list of additional options passed into
+the <code><a href="../../foreach/html/foreach.html">foreach</a></code> function when parallel computation
+is enabled.  This is important if (for example) your code relies on
+external data or packages: use the <code>.export</code> and <code>.packages</code>
+arguments to supply them so that all cluster nodes have the correct
+environment set up for computing.</p>
+</td></tr>
+<tr valign="top"><td><code>.id</code></td>
+<td>
+<p>name of the index column (used if <code>.data</code> is a named list).
+Pass <code>NULL</code> to avoid creation of the index column. For compatibility,
+omit this argument or pass <code>NA</code> to avoid converting the index column
+to a factor; in this case, <code>".id"</code> is used as colum name.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A data frame, as described in the output section.
+</p>
+
+
+<h3>Input</h3>
+
+<p>This function splits lists by elements.
+</p>
+
+
+<h3>Output</h3>
+
+<p>The most unambiguous behaviour is achieved when <code>.fun</code> returns a
+data frame - in that case pieces will be combined with
+<code><a href="rbind.fill.html">rbind.fill</a></code>.  If <code>.fun</code> returns an atomic vector of
+fixed length, it will be <code>rbind</code>ed together and converted to a data
+frame. Any other values will result in an error.
+</p>
+<p>If there are no results, then this function will return a data
+frame with zero rows and columns (<code>data.frame()</code>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Hadley Wickham (2011). The Split-Apply-Combine Strategy
+for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
+<a href="https://www.jstatsoft.org/v40/i01/">https://www.jstatsoft.org/v40/i01/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other list input: 
+<code><a href="l_ply.html">l_ply</a>()</code>,
+<code><a href="laply.html">laply</a>()</code>,
+<code><a href="llply.html">llply</a>()</code>
+</p>
+<p>Other data frame output: 
+<code><a href="adply.html">adply</a>()</code>,
+<code><a href="ddply.html">ddply</a>()</code>,
+<code><a href="mdply.html">mdply</a>()</code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

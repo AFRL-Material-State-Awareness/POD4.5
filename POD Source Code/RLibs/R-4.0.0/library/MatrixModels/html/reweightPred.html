@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Reweight Prediction Module Structure Internals</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for reweightPred {MatrixModels}"><tr><td>reweightPred {MatrixModels}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Reweight Prediction Module Structure Internals</h2>
+
+<h3>Description</h3>
+
+<p>Update any internal structures associated with sqrtXwt and the
+weighted residuals.  The &quot;V&quot; matrix is evaluated from X using the
+sqrtXwt matrix and a Vtr vector is calculated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+reweightPred(predM, sqrtXwt, wtres, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>predM</code></td>
+<td>
+<p>a predictor module</p>
+</td></tr>
+<tr valign="top"><td><code>sqrtXwt</code></td>
+<td>
+<p>the sqrtXwt matrix</p>
+</td></tr>
+<tr valign="top"><td><code>wtres</code></td>
+<td>
+<p>the vector of weighted residuals</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>potentially further arguments used in methods; not used
+currently.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>updated predM</p>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt><code>signature(predM = "dPredModule", sqrtXwt = "matrix",
+	wtres = "numeric")</code></dt><dd><p> .. </p>
+</dd>
+<dt><code>signature(predM = "sPredModule", sqrtXwt = "matrix",
+	wtres = "numeric")</code></dt><dd><p> .. </p>
+</dd>
+</dl>
+
+
+
+<h3>Examples</h3>
+
+<pre>
+## TODO
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>MatrixModels</em> version 0.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

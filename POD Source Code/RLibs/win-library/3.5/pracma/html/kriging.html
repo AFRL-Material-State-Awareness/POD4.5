@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Interpolation by Kriging</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for kriging {pracma}"><tr><td>kriging {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Interpolation by Kriging
+</h2>
+
+<h3>Description</h3>
+
+<p>Simple and ordinary Kriging interpolation and interpolating function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+kriging(u, v, u0, type = c("ordinary", "simple"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>u</code></td>
+<td>
+<p>an <code>nxm</code>-matrix of n points in the m-dimensional space.</p>
+</td></tr>
+<tr valign="top"><td><code>v</code></td>
+<td>
+<p>an <code>n</code>-dim. (column) vector of interpolation values.</p>
+</td></tr>
+<tr valign="top"><td><code>u0</code></td>
+<td>
+<p>a <code>kxm</code>-matrix of k points in <code>R^m</code> to be interpolated.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>character; values &lsquo;simple&rsquo; or &lsquo;ordinary&rsquo;; no partial matching.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Kriging is a geo-spatial estimation procedure that estimates points based
+on the variations of known points in a non-regular grid. It is especially
+suited for surfaces.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>kriging</code> returns a <code>k</code>-dim. vektor of interpolation values.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In the literature, different versions and extensions are discussed.
+</p>
+
+
+<h3>References</h3>
+
+<p>Press, W. H., A. A. Teukolsky, W. T. Vetterling, and B. P. Flannery (2007).
+Numerical recipes: The Art of Scientific Computing (3rd Ed.). Cambridge
+University Press, New York, Sect. 3.7.4, pp. 144-147.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="akima.html">akimaInterp</a></code>, <code><a href="barylag2d.html">barylag2d</a></code>, package <code>kriging</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Interpolate the Saddle Point function
+f &lt;- function(x) x[1]^2 - x[2]^2       # saddle point function
+
+set.seed(8237)
+n &lt;- 36
+x &lt;- c(1, 1, -1, -1, runif(n-4, -1, 1)) # add four vertices
+y &lt;- c(1, -1, 1, -1, runif(n-4, -1, 1))
+u &lt;- cbind(x, y)
+v &lt;- numeric(n)
+for (i in 1:n) v[i] &lt;- f(c(x[i], y[i]))
+
+kriging(u, v, c(0, 0))                      #=&gt;  0.006177183
+kriging(u, v, c(0, 0), type = "simple")     #=&gt;  0.006229557
+
+## Not run: 
+xs &lt;- linspace(-1, 1, 101)              # interpolation on a diagonal
+u0 &lt;- cbind(xs, xs)
+
+yo &lt;- kriging(u, v, u0, type = "ordinary")  # ordinary kriging
+ys &lt;- kriging(u, v, u0, type = "simple")    # simple kriging
+plot(xs, ys, type = "l", col = "blue", ylim = c(-0.1, 0.1),
+             main = "Kriging interpolation along the diagonal")
+lines(xs, yo, col = "red")
+legend( -1.0, 0.10, c("simple kriging", "ordinary kriging", "function"),
+        lty = c(1, 1, 1), lwd = c(1, 1, 2), col=c("blue", "red", "black"))
+grid()
+lines(c(-1, 1), c(0, 0), lwd = 2)
+## End(Not run)
+
+##  Find minimum of the sphere function
+f &lt;- function(x, y) x^2 + y^2 + 100
+v &lt;- bsxfun(f, x, y)
+
+ff &lt;- function(w) kriging(u, v, w)
+ff(c(0, 0))                                 #=&gt;  100.0317
+## Not run: 
+optim(c(0.0, 0.0), ff)
+# $par:   [1]  0.04490075 0.01970690
+# $value: [1]  100.0291
+ezcontour(ff, c(-1, 1), c(-1, 1))
+points(0.04490075, 0.01970690, col = "red")
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

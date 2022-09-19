@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute Summary Statistics of zoo Objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for aggregate.zoo {zoo}"><tr><td>aggregate.zoo {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute Summary Statistics of zoo Objects</h2>
+
+<h3>Description</h3>
+
+<p>Splits a <code>"zoo"</code> object into subsets along a coarser index grid,
+computes summary statistics for each, and returns the 
+reduced <code>"zoo"</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'zoo'
+aggregate(x, by, FUN = sum, ...,
+  regular = NULL, frequency = NULL, coredata = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class <code>"zoo"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>by</code></td>
+<td>
+<p>index vector of the same length as <code>index(x)</code> which defines
+aggregation groups and the new index to be associated with each group.
+If <code>by</code> is a function, then it is applied to <code>index(x)</code> to
+obtain the aggregation groups.</p>
+</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+<p>a function to compute the summary statistics which can be applied
+to all subsets. Always needs to return a result of fixed length (typically
+scalar).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>FUN</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>regular</code></td>
+<td>
+<p>logical. Should the aggregated series be coerced to class <code>"zooreg"</code>
+(if the series is regular)? The default is <code>FALSE</code> for <code>"zoo"</code> series and
+<code>TRUE</code> for <code>"zooreg"</code> series.</p>
+</td></tr>
+<tr valign="top"><td><code>frequency</code></td>
+<td>
+<p>numeric indicating the frequency of the aggregated series
+(if a <code>"zooreg"</code> series should be returned. The default is to
+determine the frequency from the data if <code>regular</code> is <code>TRUE</code>.
+If <code>frequency</code> is specified, it sets <code>regular</code> to <code>TRUE</code>.
+See examples for illustration.</p>
+</td></tr>
+<tr valign="top"><td><code>coredata</code></td>
+<td>
+<p>logical. Should only the <code>coredata(x)</code>
+be passed to every <code>by</code> group? If set to <code>FALSE</code> the
+full zoo series is used.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"zoo"</code> or <code>"zooreg"</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The <code>xts</code> package functions <code>endpoints</code>, <code>period.apply</code> 
+<code>to.period</code>, <code>to.weekly</code>, <code>to.monthly</code>, etc., 
+can also directly input and output certain <code>zoo</code> objects and 
+so can be used for aggregation tasks in some cases as well.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zoo.html">zoo</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## averaging over values in a month:
+# x.date is jan 1,3,5,7; feb 9,11,13; mar 15,17,19
+x.date &lt;- as.Date(paste(2004, rep(1:4, 4:1), seq(1,20,2), sep = "-")); x.date
+x &lt;- zoo(rnorm(12), x.date); x
+# coarser dates - jan 1 (4 times), feb 1 (3 times), mar 1 (3 times)
+x.date2 &lt;- as.Date(paste(2004, rep(1:4, 4:1), 1, sep = "-")); x.date2
+x2 &lt;- aggregate(x, x.date2, mean); x2
+# same - uses as.yearmon
+x2a &lt;- aggregate(x, as.Date(as.yearmon(time(x))), mean); x2a
+# same - uses by function
+x2b &lt;- aggregate(x, function(tt) as.Date(as.yearmon(tt)), mean); x2b
+# same - uses cut
+x2c &lt;- aggregate(x, as.Date(cut(time(x), "month")), mean); x2c
+# almost same but times of x2d have yearmon class rather than Date class
+x2d &lt;- aggregate(x, as.yearmon, mean); x2d
+
+# compare time series
+plot(x)
+lines(x2, col = 2)
+
+## aggregate a daily time series to a quarterly series
+# create zoo series
+tt &lt;- as.Date("2000-1-1") + 0:300
+z.day &lt;- zoo(0:300, tt)
+
+# function which returns corresponding first "Date" of quarter
+first.of.quarter &lt;- function(tt) as.Date(as.yearqtr(tt))
+
+# average z over quarters
+# 1. via "yearqtr" index (regular)
+# 2. via "Date" index (not regular)
+z.qtr1 &lt;- aggregate(z.day, as.yearqtr, mean)
+z.qtr2 &lt;- aggregate(z.day, first.of.quarter, mean)
+
+# The last one used the first day of the quarter but suppose
+# we want the first day of the quarter that exists in the series
+# (and the series does not necessarily start on the first day
+# of the quarter).
+z.day[!duplicated(as.yearqtr(time(z.day)))]
+
+# This is the same except it uses the last day of the quarter.
+# It requires R 2.6.0 which introduced the fromLast= argument.
+## Not run: 
+z.day[!duplicated(as.yearqtr(time(z.day)), fromLast = TRUE)]
+
+## End(Not run)
+
+# The aggregated series above are of class "zoo" (because z.day
+# was "zoo"). To create a regular series of class "zooreg",
+# the frequency can be automatically chosen
+zr.qtr1 &lt;- aggregate(z.day, as.yearqtr, mean, regular = TRUE)
+# or specified explicitely
+zr.qtr2 &lt;- aggregate(z.day, as.yearqtr, mean, frequency = 4)
+
+
+## aggregate on month and extend to monthly time series
+if(require(chron)) {
+y &lt;- zoo(matrix(11:15, nrow = 5, ncol = 2), chron(c(15, 20, 80, 100, 110)))
+colnames(y) &lt;- c("A", "B")
+
+# aggregate by month using first of month as times for coarser series
+# using first day of month as repesentative time
+y2 &lt;- aggregate(y, as.Date(as.yearmon(time(y))), head, 1)
+
+# fill in missing months by merging with an empty series containing
+# a complete set of 1st of the months
+yrt2 &lt;- range(time(y2))
+y0 &lt;- zoo(,seq(from = yrt2[1], to = yrt2[2], by = "month"))
+merge(y2, y0)
+}
+
+# given daily series keep only first point in each month at
+# day 21 or more
+z &lt;- zoo(101:200, as.Date("2000-01-01") + seq(0, length = 100, by = 2))
+zz &lt;- z[as.numeric(format(time(z), "%d")) &gt;= 21]
+zz[!duplicated(as.yearmon(time(zz)))]
+
+# same except times are of "yearmon" class
+aggregate(zz, as.yearmon, head, 1)
+
+# aggregate POSIXct seconds data every 10 minutes
+Sys.setenv(TZ = "GMT")
+tt &lt;- seq(10, 2000, 10)
+x &lt;- zoo(tt, structure(tt, class = c("POSIXt", "POSIXct")))
+aggregate(x, time(x) - as.numeric(time(x)) %% 600, mean)
+
+# aggregate weekly series to a series with frequency of 52 per year
+suppressWarnings(RNGversion("3.5.0"))
+set.seed(1)
+z &lt;- zooreg(1:100 + rnorm(100), start = as.Date("2001-01-01"), deltat = 7)
+
+# new.freq() converts dates to a grid of freq points per year
+# yd is sequence of dates of firsts of years
+# yy is years of the same sequence
+# last line interpolates so dates, d, are transformed to year + frac of year
+# so first week of 2001 is 2001.0, second week is 2001 + 1/52, third week
+# is 2001 + 2/52, etc.
+new.freq &lt;- function(d, freq = 52) {
+       y &lt;- as.Date(cut(range(d), "years")) + c(0, 367)
+       yd &lt;- seq(y[1], y[2], "year")
+       yy &lt;- as.numeric(format(yd, "%Y"))
+       floor(freq * approx(yd, yy, xout = d)$y) / freq
+}
+
+# take last point in each period
+aggregate(z, new.freq, tail, 1)
+
+# or, take mean of all points in each
+aggregate(z, new.freq, mean)
+
+# example of taking means in the presence of NAs
+z.na &lt;- zooreg(c(1:364, NA), start = as.Date("2001-01-01"))
+aggregate(z.na, as.yearqtr, mean, na.rm = TRUE)
+
+# Find the sd of all days that lie in any Jan, all days that lie in
+# any Feb, ..., all days that lie in any Dec (i.e. output is vector with
+# 12 components)
+aggregate(z, format(time(z), "%m"), sd)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

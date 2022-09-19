@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Check characteristics of models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for isREML {lme4}"><tr><td>isREML {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Check characteristics of models</h2>
+
+<h3>Description</h3>
+
+<p>Check characteristics of models: whether a model fit
+corresponds to a linear (LMM), generalized linear (GLMM),
+or nonlinear (NLMM) mixed model, and whether a linear
+mixed model has been fitted by REML or not
+(<code>isREML(x)</code> is always <code>FALSE</code> for GLMMs and
+NLMMs).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  isREML(x, ...)
+
+  isLMM(x, ...)
+
+  isNLMM(x, ...)
+
+  isGLMM(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted model.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional, optional arguments.  (None are
+used in the merMod methods)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>These are generic functions.  At present the only methods
+are for mixed-effects models of class
+<code><a href="merMod-class.html">merMod</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a logical value
+</p>
+
+
+<h3>See Also</h3>
+
+<p>getME
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+fm1 &lt;- lmer(Reaction ~ Days + (Days|Subject), sleepstudy)
+gm1 &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+              data = cbpp, family = binomial)
+nm1 &lt;- nlmer(circumference ~ SSlogis(age, Asym, xmid, scal) ~ Asym|Tree,
+             Orange, start = c(Asym = 200, xmid = 725, scal = 350))
+
+isLMM(fm1)
+isGLMM(gm1)
+## check all :
+is.MM &lt;- function(x) c(LMM = isLMM(x), GLMM= isGLMM(x), NLMM= isNLMM(x))
+stopifnot(cbind(is.MM(fm1), is.MM(gm1), is.MM(nm1))
+	  == diag(rep(TRUE,3)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

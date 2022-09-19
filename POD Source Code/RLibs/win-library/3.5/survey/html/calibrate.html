@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calibration (GREG) estimators</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for calibrate {survey}"><tr><td>calibrate {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calibration (GREG) estimators</h2>
+
+<h3>Description</h3>
+
+<p>Calibration, generalized raking, or GREG estimators generalise post-stratification and
+raking by calibrating a sample to the marginal totals of
+variables in a linear regression model.  This function reweights the
+survey design and adds additional information that is used by
+<code>svyrecvar</code> to reduce the estimated standard errors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+calibrate(design,...)
+## S3 method for class 'survey.design2'
+calibrate(design, formula, population,
+       aggregate.stage=NULL, stage=0, variance=NULL,
+       bounds=c(-Inf,Inf), calfun=c("linear","raking","logit"),
+       maxit=50,epsilon=1e-7,verbose=FALSE,force=FALSE,trim=NULL,
+       bounds.const=FALSE, sparse=FALSE,...)
+## S3 method for class 'svyrep.design'
+calibrate(design, formula, population,compress=NA,
+       aggregate.index=NULL, variance=NULL, bounds=c(-Inf,Inf),
+       calfun=c("linear","raking","logit"),
+       maxit=50, epsilon=1e-7, verbose=FALSE,force=FALSE,trim=NULL,
+       bounds.const=FALSE, sparse=FALSE,...)
+## S3 method for class 'twophase'
+calibrate(design, phase=2,formula, population,
+       calfun=c("linear","raking","logit","rrz"),...)
+grake(mm,ww,calfun,eta=rep(0,NCOL(mm)),bounds,population,epsilon, 
+  verbose,maxit,variance=NULL)
+cal_names(formula,design,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>Survey design object</p>
+</td></tr>
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>Model formula for calibration model, or list of
+formulas for each margin</p>
+</td></tr>
+<tr valign="top"><td><code>population</code></td>
+<td>
+<p>Vectors of population column totals for the model matrix in the
+calibration model, or list of such vectors for each
+cluster, or list of tables for each margin. Required except for two-phase designs</p>
+</td></tr>
+<tr valign="top"><td><code>compress</code></td>
+<td>
+<p>compress the resulting replicate weights if
+<code>TRUE</code> or if <code>NA</code> and weights were previously compressed</p>
+</td></tr>
+<tr valign="top"><td><code>stage</code></td>
+<td>
+<p>See Details below</p>
+</td></tr>
+<tr valign="top"><td><code>variance</code></td>
+<td>
+<p>Coefficients for variance in calibration model (heteroskedasticity parameters) (see
+Details below)</p>
+</td></tr>
+<tr valign="top"><td><code>aggregate.stage</code></td>
+<td>
+<p>An integer. If not <code>NULL</code>, make calibration weights
+constant within sampling units at this stage.</p>
+</td></tr>
+<tr valign="top"><td><code>aggregate.index</code></td>
+<td>
+<p>A vector or one-sided formula. If not <code>NULL</code>, make calibration weights
+constant within levels of this variable</p>
+</td></tr>
+<tr valign="top"><td><code>bounds</code></td>
+<td>
+<p>Bounds for the calibration weights, optional
+except for <code>calfun="logit"</code></p>
+</td></tr>
+<tr valign="top"><td><code>bounds.const</code></td>
+<td>
+<p>Should be <code>TRUE</code> if <code>bounds</code> have been spcified as constant values rather than multiplicative values</p>
+</td></tr>
+<tr valign="top"><td><code>trim</code></td>
+<td>
+<p>Weights outside this range will be trimmed to these bounds.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Options for other methods</p>
+</td></tr>
+<tr valign="top"><td><code>calfun</code></td>
+<td>
+<p>Calibration function: see below</p>
+</td></tr>
+<tr valign="top"><td><code>maxit</code></td>
+<td>
+<p>Number of iterations</p>
+</td></tr>
+<tr valign="top"><td><code>epsilon</code></td>
+<td>
+<p>Tolerance in matching population total. Either a single
+number or a vector of the same length as <code>population</code></p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>Print lots of uninteresting information</p>
+</td></tr>
+<tr valign="top"><td><code>force</code></td>
+<td>
+<p>Return an answer even if the specified accuracy was not achieved</p>
+</td></tr>
+<tr valign="top"><td><code>phase</code></td>
+<td>
+<p>Phase of a two-phase design to calibrate (only
+<code>phase=2</code> currently implemented.)</p>
+</td></tr>
+<tr valign="top"><td><code>mm</code></td>
+<td>
+<p>Model matrix</p>
+</td></tr>
+<tr valign="top"><td><code>ww</code></td>
+<td>
+<p>Vector of weights</p>
+</td></tr>
+<tr valign="top"><td><code>eta</code></td>
+<td>
+<p>Starting values for iteration</p>
+</td></tr>
+<tr valign="top"><td><code>sparse</code></td>
+<td>
+<p>Use sparse matrices for faster computation</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>formula</code> argument specifies a model matrix, and the
+<code>population</code> argument is the population column sums of this
+matrix. The function <code>cal_names</code> shows what the column names of
+this model matrix will be. 
+</p>
+<p>For the important special case where the calibration totals are (possibly
+overlapping) marginal tables of factor variables, as in classical
+raking, the <code>formula</code> and <code>population</code> arguments may be
+lists in the same format as the input to <code><a href="rake.html">rake</a></code>.
+</p>
+<p>If the <code>population</code> argument has a names attribute it will be
+checked against the names produced by <code>model.matrix(formula)</code> and
+reordered if necessary.  This protects against situations where the
+(locale-dependent) ordering of factor levels is not what you expected.
+</p>
+<p>Numerical instabilities may result if the sampling weights in the
+<code>design</code> object are wrong by multiple orders of magnitude. The
+code now attempts to rescale the weights first, but it is better for
+the user to ensure that the scale is reasonable. 
+</p>
+<p>The <code>calibrate</code> function implements linear, bounded linear,
+raking, bounded raking, and logit calibration functions. All except
+unbounded linear calibration use the Newton-Raphson algorithm
+described by Deville et al (1993). This algorithm is exposed for other
+uses in the <code>grake</code> function.  Unbounded linear calibration uses
+an algorithm that is less sensitive to collinearity. The calibration
+function may be specified as a string naming one of the three built-in
+functions or as an object of class <code>calfun</code>, allowing
+user-defined functions. See <code><a href="make.calfun.html">make.calfun</a></code> for details.
+</p>
+<p>The <code>bounds</code> argument can be specified as global upper and lower bounds e.g
+<code>bounds=c(0.5, 2)</code> or as a list with lower and upper vectors e.g. 
+<code>bounds=list(lower=lower, upper=upper)</code>. This allows for individual 
+boundary constraints for each unit. The lower and upper vectors must be 
+the same length as the input data. The bounds can be specified as multiplicative 
+values or constant values. If constant, <code>bounds.const</code> must be set to <code>TRUE</code>.
+</p>
+<p>Calibration with bounds, or on highly collinear data, may fail. If
+<code>force=TRUE</code> the approximately calibrated design object will
+still be returned (useful for examining why it failed). A failure in
+calibrating a set of replicate weights when the sampling weights were
+successfully calibrated will give only a warning, not an error.
+</p>
+<p>When calibration to the desired set of bounds is not possible, another option is
+to trim weights. To do this set <code>bounds</code> to a looser set of bounds
+for which calibration is achievable and set <code>trim</code> to the tighter
+bounds. Weights outside the bounds will be trimmed to the bounds, and
+the excess weight distributed over other observations in proportion to
+their sampling weight (and so this may put some other observations
+slightly over the trimming bounds). The projection matrix used in computing
+standard errors is based on the feasible bounds specified by the
+<code>bounds</code> argument.  See also <code><a href="trimWeights.html">trimWeights</a></code>,
+which trims the final weights in a design object rather than the
+calibration adjustments.
+</p>
+<p>For two-phase designs <code>calfun="rrz"</code> estimates the sampling
+probabilities using logistic regression as described by Robins et al
+(1994). <code><a href="estweights.html">estWeights</a></code> will do the same thing.
+</p>
+<p>Calibration may result in observations within the last-stage sampling
+units having unequal weight even though they necessarily are sampled
+together.  Specifying <code>aggegrate.stage</code> ensures that the
+calibration weight adjustments are constant within sampling units at
+the specified stage; if the original sampling weights were equal the
+final weights will also be equal.  The algorithm is as described by
+Vanderhoeft (2001, section III.D). Specifying <code>aggregate.index</code>
+does the same thing for replicate weight designs; a warning will be
+given if the original weights are not constant within levels of
+<code>aggregate.index</code>.
+</p>
+<p>In a model with two-stage sampling, population totals may be available
+for the PSUs actually sampled, but not for the whole population.  In
+this situation, calibrating within each PSU reduces with second-stage
+contribution to variance. This generalizes to multistage sampling.
+The <code>stage</code> argument specifies which stage of sampling the totals
+refer to.  Stage 0 is full population totals, stage 1 is totals for
+PSUs, and so on.  The default, <code>stage=NULL</code> is interpreted as
+stage 0 when a single population vector is supplied and stage 1 when a
+list is supplied. Calibrating to PSU totals will fail (with a message
+about an exactly singular matrix) for PSUs that have fewer
+observations than the number of calibration variables.
+</p>
+<p>The variance in the calibration model may depend on covariates.  If <code>variance=NULL</code> the
+calibration model has constant variance.  If <code>variance</code> is not <code>NULL</code>
+it specifies a linear combination of the columns of the model matrix
+and the calibration variance is proportional to that linear combination.
+Alternatively <code>variance</code> can be specified as a vector of values the
+same length as the input data specifying a heteroskedasticity parameter
+for each unit.
+</p>
+<p>The design matrix specified by formula (after any aggregation) must be
+of full rank, with one exception. If the population total for a column
+is zero and all the observations are zero the column will be
+ignored. This allows the use of factors where the population happens
+to have no observations at some level.
+</p>
+<p>In a two-phase design, <code>population</code> may be omitted when
+<code>phase=2</code>, to specify calibration to the phase-one sample. If the
+two-phase design object was constructed using the more memory-efficient
+<code>method="approx"</code> argument to <code><a href="twophase.html">twophase</a></code>, calibration of the first
+phase of sampling to the population is not supported.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A survey design object.
+</p>
+
+
+<h3>References</h3>
+
+<p>Breslow NE, Lumley T, Ballantyne CM, Chambless LE, Kulich M. Using the
+whole cohort in the analysis of case-cohort data. Am J Epidemiol.
+2009;169(11):1398-1405. doi:10.1093/aje/kwp055
+</p>
+<p>Deville J-C, Sarndal C-E, Sautory O (1993) Generalized Raking
+Procedures in Survey Sampling. JASA 88:1013-1020
+</p>
+<p>Kalton G, Flores-Cervantes I (2003) &quot;Weighting methods&quot; J Official
+Stat 19(2) 81-97
+</p>
+<p>Lumley T, Shaw PA, Dai JY (2011) &quot;Connections between survey calibration estimators and semiparametric models for incomplete data&quot; International Statistical Review. 79:200-220. (with discussion 79:221-232)
+</p>
+<p>Sarndal C-E, Swensson B, Wretman J. &quot;Model Assisted Survey
+Sampling&quot;. Springer. 1991.
+</p>
+<p>Rao JNK, Yung W, Hidiroglou MA (2002)   Estimating equations for the
+analysis of survey data using poststratification information. Sankhya
+64 Series A Part 2, 364-378.
+</p>
+<p>Robins JM, Rotnitzky A, Zhao LP. (1994) Estimation of regression
+coefficients when some regressors are not always observed. Journal of
+the American Statistical Association, 89, 846-866.
+</p>
+<p>Vanderhoeft C (2001) Generalized Calibration at Statistics
+Belgium. Statistics Belgium Working Paper No 3.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="postStratify.html">postStratify</a></code>, <code><a href="rake.html">rake</a></code> for other ways
+to use auxiliary information
+</p>
+<p><code><a href="twophase.html">twophase</a></code> and <code>vignette("epi")</code> for an example of calibration in two-phase designs
+</p>
+<p><code>survey/tests/kalton.R</code> for examples replicating those in Kalton &amp; Flores-Cervantes (2003)
+</p>
+<p><code><a href="make.calfun.html">make.calfun</a></code> for user-defined calibration distances.
+</p>
+<p><code><a href="trimWeights.html">trimWeights</a></code> to trim final weights rather than calibration adjustments.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+
+cal_names(~stype, dclus1)
+
+pop.totals&lt;-c(`(Intercept)`=6194, stypeH=755, stypeM=1018)
+
+## For a single factor variable this is equivalent to
+## postStratify
+
+(dclus1g&lt;-calibrate(dclus1, ~stype, pop.totals))
+
+svymean(~api00, dclus1g)
+svytotal(~enroll, dclus1g)
+svytotal(~stype, dclus1g)
+
+## Make weights constant within school district
+(dclus1agg&lt;-calibrate(dclus1, ~stype, pop.totals, aggregate=1))
+svymean(~api00, dclus1agg)
+svytotal(~enroll, dclus1agg)
+svytotal(~stype, dclus1agg)
+
+
+## Now add sch.wide
+cal_names(~stype+sch.wide, dclus1)
+(dclus1g2 &lt;- calibrate(dclus1, ~stype+sch.wide, c(pop.totals, sch.wideYes=5122)))
+
+svymean(~api00, dclus1g2)
+svytotal(~enroll, dclus1g2)
+svytotal(~stype, dclus1g2)
+
+## Finally, calibrate on 1999 API and school type
+
+cal_names(~stype+api99, dclus1)
+(dclus1g3 &lt;- calibrate(dclus1, ~stype+api99, c(pop.totals, api99=3914069)))
+
+svymean(~api00, dclus1g3)
+svytotal(~enroll, dclus1g3)
+svytotal(~stype, dclus1g3)
+
+
+## Same syntax with replicate weights
+rclus1&lt;-as.svrepdesign(dclus1)
+
+(rclus1g3 &lt;- calibrate(rclus1, ~stype+api99, c(pop.totals, api99=3914069)))
+
+svymean(~api00, rclus1g3)
+svytotal(~enroll, rclus1g3)
+svytotal(~stype, rclus1g3)
+
+(rclus1agg3 &lt;- calibrate(rclus1, ~stype+api99, c(pop.totals,api99=3914069), aggregate.index=~dnum))
+
+svymean(~api00, rclus1agg3)
+svytotal(~enroll, rclus1agg3)
+svytotal(~stype, rclus1agg3)
+
+
+###
+## Bounded weights
+range(weights(dclus1g3)/weights(dclus1))
+dclus1g3b &lt;- calibrate(dclus1, ~stype+api99, c(pop.totals, api99=3914069),bounds=c(0.6,1.6))
+range(weights(dclus1g3b)/weights(dclus1))
+
+svymean(~api00, dclus1g3b)
+svytotal(~enroll, dclus1g3b)
+svytotal(~stype, dclus1g3b)
+
+## Individual boundary constraints as constant values
+# the first weight will be bounded at 40, the rest free to move
+bnds &lt;- list(
+  lower = rep(-Inf, nrow(apiclus1)), 
+  upper = c(40, rep(Inf, nrow(apiclus1)-1))) 
+head(weights(dclus1g3))
+dclus1g3b1 &lt;- calibrate(dclus1, ~stype+api99, c(pop.totals, api99=3914069), 
+  bounds=bnds, bounds.const=TRUE)
+head(weights(dclus1g3b1))
+svytotal(~api.stu, dclus1g3b1)
+
+## trimming
+dclus1tr &lt;- calibrate(dclus1, ~stype+api99, c(pop.totals, api99=3914069), 
+   bounds=c(0.5,2), trim=c(2/3,3/2))
+svymean(~api00+api99+enroll, dclus1tr)
+svytotal(~stype,dclus1tr)
+range(weights(dclus1tr)/weights(dclus1))
+
+rclus1tr &lt;- calibrate(rclus1, ~stype+api99, c(pop.totals, api99=3914069),
+   bounds=c(0.5,2), trim=c(2/3,3/2))
+svymean(~api00+api99+enroll, rclus1tr)
+svytotal(~stype,rclus1tr)
+
+## Input in the same format as rake() for classical raking
+pop.table &lt;- xtabs(~stype+sch.wide,apipop)
+pop.table2 &lt;- xtabs(~stype+comp.imp,apipop)
+dclus1r&lt;-rake(dclus1, list(~stype+sch.wide, ~stype+comp.imp),
+               list(pop.table, pop.table2))
+gclus1r&lt;-calibrate(dclus1, formula=list(~stype+sch.wide, ~stype+comp.imp), 
+     population=list(pop.table, pop.table2),calfun="raking")
+svymean(~api00+stype, dclus1r)
+svymean(~api00+stype, gclus1r)
+
+
+## generalised raking
+dclus1g3c &lt;- calibrate(dclus1, ~stype+api99, c(pop.totals,
+    api99=3914069), calfun="raking")
+range(weights(dclus1g3c)/weights(dclus1))
+
+(dclus1g3d &lt;- calibrate(dclus1, ~stype+api99, c(pop.totals,
+    api99=3914069), calfun=cal.logit, bounds=c(0.5,2.5)))
+range(weights(dclus1g3d)/weights(dclus1))
+
+
+
+## Ratio estimators are calibration estimators
+dstrat&lt;-svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+svytotal(~api.stu,dstrat)
+
+common&lt;-svyratio(~api.stu, ~enroll, dstrat, separate=FALSE)
+predict(common, total=3811472)
+
+pop&lt;-3811472
+## equivalent to (common) ratio estimator
+dstratg1&lt;-calibrate(dstrat,~enroll-1, pop, variance=1)
+svytotal(~api.stu, dstratg1)
+
+# Alternatively specifying the heteroskedasticity parameters directly
+dstratgh &lt;- calibrate(dstrat,~enroll-1, pop, variance=apistrat$enroll)
+svytotal(~api.stu, dstratgh)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

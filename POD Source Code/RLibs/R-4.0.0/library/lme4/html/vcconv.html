@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Convert between representations of (co-)variance structures</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for vcconv {lme4}"><tr><td>vcconv {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Convert between representations of (co-)variance structures</h2>
+
+<h3>Description</h3>
+
+<p>Convert between representations of (co-)variance structures
+(EXPERIMENTAL).  See source code for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  mlist2vec(L)
+  vec2mlist(v, n = NULL, symm = TRUE)
+  vec2STlist(v, n = NULL)
+  sdcor2cov(m)
+  cov2sdcor(V)
+  Vv_to_Cv(v, n = NULL, s = 1)
+  Sv_to_Cv(v, n = NULL, s = 1)
+  Cv_to_Vv(v, n = NULL, s = 1)
+  Cv_to_Sv(v, n = NULL, s = 1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>L</code></td>
+<td>
+<p>List of symmetric, upper-triangular, or lower-triangular
+square matrices.</p>
+</td></tr>
+<tr valign="top"><td><code>v</code></td>
+<td>
+<p>Concatenated vector containing the elements of the
+lower-triangle (including the diagonal) of a symmetric or triangular
+matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>Number of rows (and columns) of the resulting matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>symm</code></td>
+<td>
+<p>Return symmetric matrix if <code>TRUE</code> or lower-triangular
+if <code>FALSE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+<p>Standard deviation-correlation matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>V</code></td>
+<td>
+<p>Covariance matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>s</code></td>
+<td>
+<p>Scale parameter.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<ul>
+<li><p><code>mlist2vec</code>Convert list of matrices to concatenated
+vector of lower triangles with an attribute that gives the
+dimension of each matrix in the original list. This attribute may
+be used to reconstruct the matrices.  Returns a concatenation of
+the elements in one triangle of each matrix. An attribute
+<code>"clen"</code> gives the dimension of each matrix.
+</p>
+</li>
+<li><p><code>vec2mlist</code>Convert concatenated vector to list of matrices (lower
+triangle or symmetric). These matrices could represent Cholesky
+factors, covariance matrices, or correlation matrices (with
+standard deviations on the diagonal).
+</p>
+</li>
+<li><p><code>vec2STlist</code>Convert concatenated vector to list of ST
+matrices.
+</p>
+</li>
+<li><p><code>sdcor2cov</code>Standard deviation-correlation matrix to
+covariance matrix convert 'sdcor' format (std dev on diagonal,
+cor on off-diag) to and from variance-covariance matrix.
+</p>
+</li>
+<li><p><code>cov2sdcor</code>Covariance matrix to standard
+deviation-correlation matrix (i.e. standard deviations on the
+diagonal and correlations off the diagonal).
+</p>
+</li>
+<li><p><code>Vv_to_Cv</code>Variance-covariance to relative covariance
+factor. Returns a vector of elements from the lower triangle of a
+relative covariance factor.
+</p>
+</li>
+<li><p><code>Sv_to_Cv</code>Standard-deviation-correlation to relative covariance
+factor. Returns a vector of elements from the lower triangle of a
+relative covariance factor.
+</p>
+</li>
+<li><p><code>Cv_to_Vv</code>Relative covariance factor to
+variance-covariance. From unscaled Cholesky vector to (possibly
+scaled) variance-covariance vector. Returns a vector of elements
+from the lower triangle of a variance-covariance matrix.
+</p>
+</li>
+<li><p><code>Cv_to_Sv</code>Relative covariance factor to
+standard-deviation-correlation.  From unscaled Chol to sd-cor
+vector. Returns a vector of elements from the lower triangle of a
+standard-deviation-correlation matrix.
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>(Co-)variance structure
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+vec2mlist(1:6)
+mlist2vec(vec2mlist(1:6)) # approximate inverse
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

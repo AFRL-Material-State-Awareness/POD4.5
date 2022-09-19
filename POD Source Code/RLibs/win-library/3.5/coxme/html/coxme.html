@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fit a mixed effects Cox model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for coxme {coxme}"><tr><td>coxme {coxme}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Fit a mixed effects Cox model
+</h2>
+
+<h3>Description</h3>
+
+<p>Fit a Cox model containing mixed (random and fixed) effects.  Assume
+a Gaussian distribution for the random effects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+coxme(formula, data, weights, subset, na.action, init, control,
+ties = c("efron", "breslow"),
+varlist, vfixed, vinit,  x = FALSE, y = TRUE,
+refine.n = 0, random, fixed, variance, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+
+<p>a two-sided formula with a survival object as the left hand side of a
+<code>~</code> operator and the fixed and random effects on the right.
+</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+
+<p>an optional data frame containing the variables named in the <code>formula</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>subset, weights, na.action</code></td>
+<td>
+
+<p>further model specifications arguments as in <code>lm</code>; see there
+for details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>init</code></td>
+<td>
+
+<p>optional initial values for the fixed effects.
+</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+
+<p>optional list of control options.  See <code>coxme.control</code> for details. 
+</p>
+</td></tr>
+<tr valign="top"><td><code>ties</code></td>
+<td>
+
+<p>method for handling exact ties in the survival time.
+</p>
+</td></tr>
+<tr valign="top"><td><code>varlist</code></td>
+<td>
+
+<p>the variance family to be used for each random term.  If there are
+multiple terms it will be a list of variance functions.
+The default is <code>coxmeFull</code>.
+Alternatively it can be a list of matrices, in which case the
+<code>coxmeMlist</code> function is used.
+</p>
+</td></tr>
+<tr valign="top"><td><code>vfixed</code></td>
+<td>
+
+<p>optional named list or vector used to fix the value of one or more
+of the variance terms at a constant.
+</p>
+</td></tr>
+<tr valign="top"><td><code>vinit</code></td>
+<td>
+
+<p>optional named list or vector giving suggested starting values for
+the variance.
+</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>if TRUE the X matrix (fixed effects) is included in the output object
+</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+
+<p>if TRUE the y variable (survival time) is included in the output object
+</p>
+</td></tr>
+<tr valign="top"><td><code>refine.n</code></td>
+<td>
+
+<p>number of samples to be used in a monte-carlo estimate of 
+possible error in the log-likelihood of the fitted model due to
+inadequacy of the Laplace approximation.
+</p>
+</td></tr>
+<tr valign="top"><td><code>fixed, random, variance</code></td>
+<td>
+
+<p>In the preliminary version of <code>coxme</code>
+the fixed and random effects were separate arguments.  These arguments
+are included for backwards compatability, but are depreciated.
+The variance argument is a depreciated alias for vfixed.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>any other arguments are passed forward to <code>coxme.control</code>.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>coxme</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Terry Therneau
+</p>
+
+
+<h3>References</h3>
+
+<p>S Ripatti and J Palmgren, Estimation of multivariate frailty 
+models using penalized partial likelihood,
+Biometrics, 56:1016-1022, 2000.
+</p>
+<p>T Therneau, P Grambsch and VS Pankratz,
+Penalized survival models and frailty,
+J Computational and Graphical Statistics, 12:156-175, 2003.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="coxmeFull.html">coxmeFull</a></code>, <code><a href="coxmeMlist.html">coxmeMlist</a></code>,
+<code><a href="coxme.object.html">coxme.object</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# A non-significant institution effect
+fit1 &lt;- coxph(Surv(time, status) ~ ph.ecog + age, data=lung,
+              subset=(!is.na(inst)))
+fit2 &lt;- coxme(Surv(time, status) ~ ph.ecog + age + (1|inst), lung)
+anova(fit1, fit2)
+
+# Shrinkage effects (equivalent to ridge regression)
+temp &lt;- with(lung, scale(cbind(age, wt.loss, meal.cal)))
+rfit &lt;- coxme(Surv(time, status) ~ ph.ecog + (temp | 1), data=lung)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>coxme</em> version 2.2-17 <a href="00Index.html">Index</a>]</div>
+</body></html>

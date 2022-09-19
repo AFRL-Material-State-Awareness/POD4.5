@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: create objects of class Line or Lines</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Line {sp}"><tr><td>Line {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> create objects of class Line or Lines</h2>
+
+<h3>Description</h3>
+
+<p> create objects of class <code>Line</code> or <code>Lines</code> from coordinates</p>
+
+
+<h3>Usage</h3>
+
+<pre> 
+Line(coords)
+Lines(slinelist, ID)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>coords</code></td>
+<td>
+<p> 2-column numeric matrix with coordinates for a single line </p>
+</td></tr>
+<tr valign="top"><td><code>slinelist</code></td>
+<td>
+<p> list with elements of class <a href="Line-class.html">Line-class</a></p>
+</td></tr>
+<tr valign="top"><td><code>ID</code></td>
+<td>
+<p>a single word unique character identifier, 
+character vector of length one</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>Line</code> returns an object of class <a href="Line-class.html">Line-class</a>;
+<code>Lines</code> returns an object of class <a href="Lines-class.html">Lines-class</a>
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><a href="SpatialLines-class.html">SpatialLines-class</a> </p>
+
+
+<h3>Examples</h3>
+
+<pre> 
+# from the sp vignette:
+l1 = cbind(c(1,2,3),c(3,2,2))
+l1a = cbind(l1[,1]+.05,l1[,2]+.05)
+l2 = cbind(c(1,2,3),c(1,1.5,1))
+Sl1 = Line(l1)
+Sl1a = Line(l1a)
+Sl2 = Line(l2)
+S1 = Lines(list(Sl1, Sl1a), ID="a")
+S2 = Lines(list(Sl2), ID="b")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Survey-weighted Cox models.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svycoxph {survey}"><tr><td>svycoxph {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Survey-weighted Cox models.</h2>
+
+<h3>Description</h3>
+
+<p>Fit a proportional hazards model to data from a complex survey design.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svycoxph(formula, design,subset=NULL, rescale=TRUE, ...)
+## S3 method for class 'svycoxph'
+predict(object, newdata, se=FALSE,
+    type=c("lp", "risk", "expected", "terms","curve"),...)
+## S3 method for class 'svycoxph'
+AIC(object, ..., k = 2)    
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>Model formula. Any <code>cluster()</code> terms will be ignored.</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+ <p><code>survey.design</code> object. Must contain all variables
+in the formula</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>Expression to select a subpopulation</p>
+</td></tr>
+<tr valign="top"><td><code>rescale</code></td>
+<td>
+<p>Rescale weights to improve numerical stability</p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>A <code>svycoxph</code> object</p>
+</td></tr>
+<tr valign="top"><td><code>newdata</code></td>
+<td>
+<p>New data for prediction</p>
+</td></tr>
+<tr valign="top"><td><code>se</code></td>
+<td>
+<p>Compute standard errors? This takes a lot of memory for
+<code>type="curve"</code></p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>&quot;curve&quot; does predicted survival curves. The other values
+are passed to <code>predict.coxph()</code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>For <code>AIC</code>, more models to compare the AIC of. For <code>svycoxph</code>,
+other arguments passed to <code>coxph</code>. </p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>The penalty per parameter that would be used under independent sampling: AIC has <code>k=2</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The main difference between <code>svycoxph</code> function and the <code>robust=TRUE</code>
+option to <code><a href="../../survival/html/coxph.html">coxph</a></code> in the
+survival package is that this function accounts for the reduction in
+variance from stratified sampling and the increase in variance from
+having only a small number of clusters.
+</p>
+<p>Note that <code>strata</code> terms in the model formula describe subsets that
+have a separate baseline hazard function and need not have anything to
+do with the stratification of the sampling.
+</p>
+<p>The <code>AIC</code> method uses the same approach as <code><a href="anova.svyglm.html">AIC.svyglm</a></code>,
+though the relevance of the criterion this optimises is a bit less clear
+than for generalised linear models. 
+</p>
+<p>The standard errors for predicted survival curves are available only by linearization, not
+by replicate weights (at the moment). Use
+<code><a href="withReplicates.html">withReplicates</a></code> to get standard errors with replicate
+weights. Predicted survival curves are not available for stratified
+Cox models.
+</p>
+<p>The standard errors use the delta-method approach of Williams (1995)
+for the Nelson-Aalen estimator, modified to handle the Cox model
+following Tsiatis (1981). The standard errors agree closely with
+<code>survfit.coxph</code> for independent sampling when the model fits
+well, but are larger when the model fits poorly.  I believe the
+standard errors are equivalent to those of Lin (2000), but I don't
+know of any implementation that would allow a check.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>svycoxph</code> for <code>svycoxph</code>, an object of
+class <code>svykm</code> or <code>svykmlist</code> for <code>predict(,type="curve")</code>.
+</p>
+
+
+<h3>Warning</h3>
+
+<p>The standard error calculation for survival curves uses memory
+proportional to the sample size times the square of the number of events.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thomas Lumley</p>
+
+
+<h3>References</h3>
+
+<p>Binder DA. (1992) Fitting Cox's proportional hazards models
+from survey data. Biometrika 79: 139-147
+</p>
+<p>Lin D-Y (2000) On fitting Cox's proportional hazards model to survey data. Biometrika 87: 37-47
+</p>
+<p>Tsiatis AA (1981) A Large Sample Study of Cox's Regression Model. Annals
+of Statistics 9(1) 93-108
+</p>
+<p>Williams RL (1995) &quot;Product-Limit Survival Functions with Correlated 
+Survival Times&quot; Lifetime Data Analysis 1: 171&ndash;186
+</p>
+
+
+<h3>See Also</h3>
+
+  <p><code><a href="../../survival/html/coxph.html">coxph</a></code>, <code><a href="../../survival/html/predict.coxph.html">predict.coxph</a></code>
+</p>
+<p><code><a href="svykm.html">svykm</a></code> for estimation of Kaplan-Meier survival curves and
+for methods that operate on survival curves.
+</p>
+<p><code><a href="regTermTest.html">regTermTest</a></code> for Wald and (Rao-Scott) likelihood ratio tests for one or more parameters.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Somewhat unrealistic example of nonresponse bias.
+data(pbc, package="survival")
+
+pbc$randomized&lt;-with(pbc, !is.na(trt) &amp; trt&gt;0)
+biasmodel&lt;-glm(randomized~age*edema,data=pbc,family=binomial)
+pbc$randprob&lt;-fitted(biasmodel)
+if (is.null(pbc$albumin)) pbc$albumin&lt;-pbc$alb ##pre2.9.0
+
+dpbc&lt;-svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
+rpbc&lt;-as.svrepdesign(dpbc)
+
+(model&lt;-svycoxph(Surv(time,status&gt;0)~log(bili)+protime+albumin,design=dpbc))
+
+svycoxph(Surv(time,status&gt;0)~log(bili)+protime+albumin,design=rpbc)
+
+s&lt;-predict(model,se=TRUE, type="curve",
+     newdata=data.frame(bili=c(3,9), protime=c(10,10), albumin=c(3.5,3.5)))
+plot(s[[1]],ci=TRUE,col="sienna")
+lines(s[[2]], ci=TRUE,col="royalblue")
+quantile(s[[1]], ci=TRUE)
+confint(s[[2]], parm=365*(1:5))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

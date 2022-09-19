@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Iterator over Lines of Text from a Connection</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for ireadLines {iterators}"><tr><td>ireadLines {iterators}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Iterator over Lines of Text from a Connection</h2>
+
+<h3>Description</h3>
+
+<p>Returns an iterator over the lines of text from a connection.
+It is a wrapper around the standard <code>readLines</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ireadLines(con, n=1, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>con</code></td>
+<td>
+<p>a connection object or a character string.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>integer.  The maximum number of lines to read.
+Negative values indicate that one should read up to
+the end of the connection.  The default value is 1.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>passed on to the <code>readLines</code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The line reading iterator.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/readLines.html">readLines</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  # create an iterator over the lines of COPYING
+  it &lt;- ireadLines(file.path(R.home(), 'COPYING'))
+  nextElem(it)
+  nextElem(it)
+  nextElem(it)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>iterators</em> version 1.0.14 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Broyden's Method</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for broyden {pracma}"><tr><td>broyden {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Broyden's Method</h2>
+
+<h3>Description</h3>
+
+<p>Broyden's method for the numerical solution of nonlinear systems of
+<code>n</code> equations in <code>n</code> variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+broyden(Ffun, x0, J0 = NULL, ...,
+        maxiter = 100, tol = .Machine$double.eps^(1/2))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Ffun</code></td>
+<td>
+<p><code>n</code> functions of <code>n</code> variables.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>Numeric vector of length <code>n</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>J0</code></td>
+<td>
+<p>Jacobian of the function at <code>x0</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional parameters passed to the function.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>Maximum number of iterations.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>Tolerance, relative accuracy.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>F as a function must return a vector of length <code>n</code>, and accept an
+<code>n</code>-dim. vector or column vector as input. F must not be univariate,
+that is <code>n</code> must be greater than 1.
+</p>
+<p>Broyden's method computes the Jacobian and its inverse only at the first
+iteration, and does a rank-one update thereafter, applying the so-called
+Sherman-Morrison formula that computes the inverse of the sum of an
+invertible matrix A and the dyadic product, uv', of a column vector u and
+a row vector v'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components: <code>zero</code> the best root found so far, <code>fnorm</code>
+the square root of sum of squares of the values of f, and <code>niter</code> the
+number of iterations needed.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Applied to a system of <code>n</code> linear equations it will stop in
+<code>2n</code> steps
+</p>
+
+
+<h3>References</h3>
+
+<p>Quarteroni, A., R. Sacco, and F. Saleri (2007). Numerical Mathematics.
+Second Edition, Springer-Verlag, Berlin Heidelberg.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="newtonsys.html">newtonsys</a></code>, <code><a href="fsolve.html">fsolve</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Example from Quarteroni &amp; Saleri
+F1 &lt;- function(x) c(x[1]^2 + x[2]^2 - 1, sin(pi*x[1]/2) + x[2]^3)
+broyden(F1, x0 = c(1, 1))
+# zero: 0.4760958 -0.8793934; fnorm: 9.092626e-09; niter: 13
+
+F &lt;- function(x) {
+    x1 &lt;- x[1]; x2 &lt;- x[2]; x3 &lt;- x[3]
+    as.matrix(c(x1^2 + x2^2 + x3^2 - 1,
+                x1^2 + x3^2 - 0.25,
+                x1^2 + x2^2 - 4*x3), ncol = 1)
+}
+x0 &lt;- as.matrix(c(1, 1, 1))
+broyden(F, x0)
+# zero: 0.4407629 0.8660254 0.2360680; fnorm: 1.34325e-08; niter: 8
+
+##  Find the roots of the complex function sin(z)^2 + sqrt(z) - log(z)
+F2 &lt;- function(x) {
+    z  &lt;- x[1] + x[2]*1i
+    fz &lt;- sin(z)^2 + sqrt(z) - log(z)
+    c(Re(fz), Im(fz))
+}
+broyden(F2, c(1, 1))
+# zero   0.2555197 0.8948303 , i.e.  z0 = 0.2555 + 0.8948i
+# fnorm  7.284374e-10
+# niter  13
+
+##  Two more problematic examples
+F3 &lt;- function(x)
+        c(2*x[1] - x[2] - exp(-x[1]), -x[1] + 2*x[2] - exp(-x[2]))
+broyden(F3, c(0, 0))
+# $zero   0.5671433 0.5671433   # x = exp(-x)
+
+F4 &lt;- function(x)   # Dennis Schnabel
+        c(x[1]^2 + x[2]^2 - 2, exp(x[1] - 1) + x[2]^3 - 2)
+broyden(F4, c(2.0, 0.5), maxiter = 100)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Exponential and Logarithmic Integral</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for expint {pracma}"><tr><td>expint {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Exponential and Logarithmic Integral
+</h2>
+
+<h3>Description</h3>
+
+<p>The exponential integral functions E1 and Ei and
+the logarithmic integral Li.
+</p>
+<p>The exponential integral is defined for <i>x &gt; 0</i> as
+</p>
+<p style="text-align: center;"><i>\int_x^&infin; \frac{e^{-t}}{t} dt</i></p>
+
+<p>and by analytic continuation in the complex plane. It can also be defined
+as the Cauchy principal value of the integral
+</p>
+<p style="text-align: center;"><i>\int_{-&infin;}^x \frac{e^t}{t} dt</i></p>
+
+<p>This is denoted as <i>Ei(x)</i> and the relationship between <code>Ei</code> and
+<code>expint(x)</code> for x real, x &gt; 0 is as follows:
+</p>
+<p style="text-align: center;"><i>Ei(x) = - E1(-x) -i &pi;</i></p>
+
+<p>The logarithmic integral <i>li(x)</i> for real <i>x, x &gt; 0</i>, is defined as
+</p>
+<p style="text-align: center;"><i>li(x) = \int_0^x \frac{dt}{log(t)}</i></p>
+
+<p>and the Eulerian logarithmic integral as <i>Li(x) = li(x) - li(2)</i>.
+</p>
+<p>The integral <i>Li</i> approximates the prime number function <i>&pi;(n)</i>,
+i.e., the number of primes below or equal to n (see the examples).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+expint(x)
+expint_E1(x)
+
+expint_Ei(x)
+li(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector of real or complex numbers.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For <code>x</code> in <code>[-38, 2]</code> we use a series expansion,
+otherwise a continued fraction, see the references below, chapter 5.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a vector of real or complex numbers, the vectorized exponential
+integral, resp. the logarithmic integral.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The logarithmic integral <code>li(10^i)-li(2)</code> is an approximation of the
+number of primes below <code>10^i</code>, i.e., <code>Pi(10^i)</code>, see &ldquo;?primes&rdquo;.
+</p>
+
+
+<h3>References</h3>
+
+<p>Abramowitz, M., and I.A. Stegun (1965). Handbook of Mathematical Functions.
+Dover Publications, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gsl::expint_E1,expint_Ei</code>, <code><a href="primes.html">primes</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+expint_E1(1:10)
+#   0.2193839  0.0489005  0.0130484  0.0037794  0.0011483
+#   0.0003601  0.0001155  0.0000377  0.0000124  0.0000042
+expint_Ei(1:10)
+
+## Not run: 
+estimPi &lt;- function(n) round(Re(li(n) - li(2))) # estimated number of primes
+primesPi &lt;- function(n) length(primes(n))       # true number of primes &lt;= n
+N &lt;- 1e6
+(estimPi(N) - primesPi(N)) / estimPi(N)         # deviation is 0.16 percent!
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Make a promise explicit by converting into a formula.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for f_capture {lazyeval}"><tr><td>f_capture {lazyeval}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Make a promise explicit by converting into a formula.</h2>
+
+<h3>Description</h3>
+
+<p>This should be used sparingly if you want to implement true non-standard
+evaluation with 100% magic. I recommend avoiding this unless you have
+strong reasons otherwise since requiring arguments to be formulas only
+adds one extra character to the inputs, and otherwise makes life much much
+simpler.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+f_capture(x)
+
+dots_capture(..., .ignore_empty = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, ...</code></td>
+<td>
+<p>An unevaluated promises</p>
+</td></tr>
+<tr valign="top"><td><code>.ignore_empty</code></td>
+<td>
+<p>If <code>TRUE</code>, empty arguments will be silently
+dropped.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p><code>f_capture</code> returns a formula; <code>dots_capture</code>
+returns a list of formulas.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f_capture(a + b)
+dots_capture(a + b, c + d, e + f)
+
+# These functions will follow a chain of promises back to the
+# original definition
+f &lt;- function(x) g(x)
+g &lt;- function(y) h(y)
+h &lt;- function(z) f_capture(z)
+f(a + b + c)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lazyeval</em> version 0.2.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

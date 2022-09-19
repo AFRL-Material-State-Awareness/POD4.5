@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A Simple Meat Matrix Estimator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for meat {sandwich}"><tr><td>meat {sandwich}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A Simple Meat Matrix Estimator</h2>
+
+<h3>Description</h3>
+
+<p>Estimating the variance of the estimating functions of
+a regression model by cross products of the empirical
+estimating functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+meat(x, adjust = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted model object.</p>
+</td></tr>
+<tr valign="top"><td><code>adjust</code></td>
+<td>
+<p>logical. Should a finite sample adjustment be made?
+This amounts to multiplication with <i>n/(n-k)</i> where <i>n</i> is the
+number of observations and <i>k</i> the number of estimated parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed to the <code><a href="estfun.html">estfun</a></code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For some theoretical background along with implementation
+details see Zeileis (2006).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <i>k x k</i> matrix corresponding containing
+the scaled cross products of the empirical estimating functions.</p>
+
+
+<h3>References</h3>
+
+<p>Zeileis A (2006).
+&ldquo;Object-Oriented Computation of Sandwich Estimators.&rdquo;
+<em>Journal of Statistical Software</em>, <b>16</b>(9), 1&ndash;16.
+doi: <a href="http://doi.org/10.18637/jss.v016.i09">10.18637/jss.v016.i09</a>
+</p>
+<p>Zeileis A, Köll S, Graham N (2020).
+&ldquo;Various Versatile Variances: An Object-Oriented Implementation of Clustered Covariances in R.&rdquo;
+<em>Journal of Statistical Software</em>, <b>95</b>(1), 1&ndash;36.
+doi: <a href="http://doi.org/10.18637/jss.v095.i01">10.18637/jss.v095.i01</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="sandwich.html">sandwich</a></code>, <code><a href="bread.html">bread</a></code>, <code><a href="estfun.html">estfun</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- sin(1:10)
+y &lt;- rnorm(10)
+fm &lt;- lm(y ~ x)
+
+meat(fm)
+meatHC(fm, type = "HC")
+meatHAC(fm)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sandwich</em> version 3.0-2 <a href="00Index.html">Index</a>]</div>
+</body></html>

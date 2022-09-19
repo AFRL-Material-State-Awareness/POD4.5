@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a bdsmatrix from a list</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for bdsmatrix.ibd {bdsmatrix}"><tr><td>bdsmatrix.ibd {bdsmatrix}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Create a bdsmatrix from a list
+</h2>
+
+<h3>Description</h3>
+
+<p>Routines that create identity-by-descent (ibd) coefficients
+often output their results as a list of values (i, j, x[i,j]),
+with unlisted values of the x matrix assumed to be zero.
+This routine recasts such a list into 
+<code>bdsmatrix</code> form.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bdsmatrix.ibd(id1, id2, x, idmap, diagonal)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>id1</code></td>
+<td>
+
+<p>row identifier for the value, in the final matrix.
+Optionally, <code>id1</code> can be a 3 column
+matrix or data.frame, in which case it is assumed to contain
+the first 3 arguments, in order.
+</p>
+</td></tr>
+<tr valign="top"><td><code>id2</code></td>
+<td>
+
+<p>column identifier for the value, in the final matrix.
+</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+
+<p>the value to place in the matrix
+</p>
+</td></tr>
+<tr valign="top"><td><code>idmap</code></td>
+<td>
+
+<p>a two column matrix or data frame.
+Sometimes routines create output with integer values for 
+<code>id1</code> and <code>id2</code>,
+and then this argument is the mapping from this internal label to
+the &ldquo;real&rdquo; name)
+</p>
+</td></tr>
+<tr valign="top"><td><code>diagonal</code></td>
+<td>
+
+<p>If diagonal elements are not preserved in the list, this value
+will be used for the diagonal of the result.
+If the argument appears, then the output matrix will contain
+an entry for each value in <code>idlist</code>.
+Otherwise only those with an explicit entry appear.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The routine first checks for non-symmetric or otherwise inconsistent input.
+It then groups observations together into &lsquo;families&rsquo; of
+related subjects, which determines the structure of the final matrix.
+As with the <code>makekinship</code> function, 
+singletons with no relationships are first in the output matrix, and
+then families appear one by one.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>bdsmatrix</code> object representing a
+block-diagonal sparse matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>bdsmatrix, kinship, coxme, lmekin
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+ibdmat &lt;- bdsmatrix.ibd(i,j, ibdval, idlist=subject)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bdsmatrix</em> version 1.3-6 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Quantile Regression Prediction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for predict.rq {quantreg}"><tr><td>predict.rq {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Quantile Regression Prediction</h2>
+
+<h3>Description</h3>
+
+<p>Prediction based on fitted quantile regression model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'rq'
+predict(object, newdata, type = "none", interval = c("none", "confidence"), 
+	level = .95, na.action = na.pass, ...)
+## S3 method for class 'rqs'
+predict(object, newdata, type = "Qhat", stepfun = FALSE, na.action = na.pass, ...)
+## S3 method for class 'rq.process'
+predict(object, newdata, type = "Qhat", stepfun = FALSE, na.action = na.pass, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p> object of class rq or rqs or rq.process produced by <code>rq</code> </p>
+</td></tr>
+<tr valign="top"><td><code>newdata</code></td>
+<td>
+<p>An optional data frame in which to look for variables with
+which to predict.  If omitted, the fitted values are used.</p>
+</td></tr>
+<tr valign="top"><td><code>interval</code></td>
+<td>
+<p>type of interval desired:  default is  'none', when set to
+'confidence' the function returns a matrix predictions with point predictions
+for each of the 'newdata' points as well as lower and upper confidence limits.</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>converage probability for the 'confidence' intervals.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>For <code>predict.rq</code>, the  method for 'confidence' intervals, if desired. 
+If 'percentile' then one of the bootstrap methods is used to generate percentile 
+intervals for each prediction, if 'direct' then a version of the Portnoy and Zhou 
+(1998) method is used, and otherwise an estimated covariance matrix for the parameter
+estimates is used.  Further arguments to determine the choice of bootstrap
+method or covariance matrix estimate can be passed via the ... argument.
+For <code>predict.rqs</code> and <code>predict.rq.process</code> when <code>stepfun = TRUE</code>,
+<code>type</code> is &quot;Qhat&quot;, &quot;Fhat&quot; or &quot;fhat&quot; depending  on whether the user would
+like to have estimates of the conditional quantile, distribution or density  functions
+respectively.  As noted below the two former estimates can be monotonized with the 
+function <code>rearrange</code>.  When the &quot;fhat&quot; option is invoked, a list of conditional
+density functions is returned based on Silverman's adaptive kernel method as
+implemented in <code>akj</code> and <code>approxfun</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>stepfun</code></td>
+<td>
+<p>If 'TRUE' return stepfunctions otherwise return matrix of predictions.
+these functions can be estimates of either the conditional quantile or distribution
+functions depending upon the <code>type</code> argument.  When <code>stepfun = FALSE</code>
+a matrix of point estimates of the conditional quantile function at the points
+specified by the <code>newdata</code> argument. </p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p> function determining what should be done with missing values
+in 'newdata'.  The default is to predict 'NA'.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> Further arguments passed to or from other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Produces predicted values, obtained by evaluating the quantile
+regression function in the frame 'newdata' (which defaults to
+'model.frame(object)'.  These predictions purport to estimate
+the conditional quantile function of the response variable of
+the fitted model evaluated at the covariate values specified
+in &quot;newdata&quot; and the quantile(s) specified by the &quot;tau&quot; argument.
+Several methods are provided to compute confidence intervals for
+these predictions.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector or matrix of predictions, depending upon the setting of 
+'interval'.  In the case that there are multiple taus in <code>object</code>
+when object is of class 'rqs' setting 'stepfun = TRUE'  will produce a
+<code>stepfun</code> object or a list of <code>stepfun</code> objects.
+The function <code>rearrange</code> can be used to monotonize these
+step-functions, if desired.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>R. Koenker</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Zhou, Kenneth Q. and Portnoy, Stephen L. (1998) 
+Statistical inference on heteroscedastic models based on regression quantiles 
+Journal of Nonparametric Statistics, 9, 239-260 
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="rq.html">rq</a></code> <code><a href="rearrange.html">rearrange</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(airquality)
+airq &lt;- airquality[143:145,]
+f &lt;- rq(Ozone ~ ., data=airquality)
+predict(f,newdata=airq)
+f &lt;- rq(Ozone ~ ., data=airquality, tau=1:19/20)
+fp &lt;- predict(f, newdata=airq, stepfun = TRUE)
+fpr &lt;- rearrange(fp)
+plot(fp[[2]],main = "Conditional Ozone Quantile Prediction")
+lines(fpr[[2]], col="red")
+legend(.2,20,c("raw","cooked"),lty = c(1,1),col=c("black","red"))
+fp &lt;- predict(f, newdata=airq, type = "Fhat", stepfun = TRUE)
+fpr &lt;- rearrange(fp)
+plot(fp[[2]],main = "Conditional Ozone Distribution Prediction")
+lines(fpr[[2]], col="red")
+legend(20,.4,c("raw","cooked"),lty = c(1,1),col=c("black","red"))
+  </pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.93 <a href="00Index.html">Index</a>]</div>
+</body></html>

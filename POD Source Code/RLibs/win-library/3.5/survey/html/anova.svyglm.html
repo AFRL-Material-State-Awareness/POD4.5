@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Model comparison for glms.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for anova.svyglm {survey}"><tr><td>anova.svyglm {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Model comparison for glms.
+</h2>
+
+<h3>Description</h3>
+
+<p>A method for the <code><a href="../../stats/html/anova.html">anova</a></code> function, for use on <code><a href="svyglm.html">svyglm</a></code> objects.  With a single model argument it produces a sequential anova table, with two arguments it compares the two models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'svyglm'
+anova(object, object2 = NULL, test = c("F", "Chisq"), 
+ method = c("LRT", "Wald"), tolerance = 1e-05, ..., force = FALSE)
+## S3 method for class 'svyglm'
+AIC(object,...,k=2, null_has_intercept=TRUE)
+## S3 method for class 'svyglm'
+BIC(object,...,maximal)
+## S3 method for class 'svyglm'
+extractAIC(fit,scale,k=2,..., null_has_intercept=TRUE)
+## S3 method for class 'svrepglm'
+extractAIC(fit,scale,k=2,..., null_has_intercept=TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object,fit</code></td>
+<td>
+
+<p>A <code><a href="svyglm.html">svyglm</a></code> object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>object2</code></td>
+<td>
+
+<p>Optionally, another <code><a href="svyglm.html">svyglm</a></code> object.
+</p>
+</td></tr>
+<tr valign="top"><td><code>test</code></td>
+<td>
+
+<p>Use (linear combination of) F or chi-squared distributions for p-values. F is usually preferable.
+</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+
+<p>Use weighted deviance difference (LRT) or Wald tests to compare models
+</p>
+</td></tr>
+<tr valign="top"><td><code>tolerance</code></td>
+<td>
+
+<p>For models that are not symbolically nested, the tolerance for deciding that a term is common to the models.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>For <code>AIC</code> and <code>BIC</code>, optionally more <code>svyglm</code> objects
+</p>
+</td></tr>
+<tr valign="top"><td><code>scale</code></td>
+<td>
+<p>not used</p>
+</td></tr>
+<tr valign="top"><td><code>null_has_intercept</code></td>
+<td>
+<p>Does the null model for AIC have an intercept or
+not? </p>
+</td></tr>
+<tr valign="top"><td><code>force</code></td>
+<td>
+
+<p>Force the tests to be done by explicit projection even if the models
+are symbolically nested (eg, for debugging)
+</p>
+</td></tr>
+<tr valign="top"><td><code>maximal</code></td>
+<td>
+<p>A <code>svyglm</code> model that <code>object</code> (and ... if supplied) are nested in.</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>Multiplier for effective df in AIC. Usually 2. There is no choice of <code>k</code> that will give BIC</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The reference distribution for the LRT depends on the misspecification effects for the parameters being tested (Rao and Scott, 1984). If the models are symbolically nested, so that the relevant parameters can be identified just by manipulating the model formulas, <code>anova</code> is equivalent to <code><a href="regTermTest.html">regTermTest</a></code>.If the models are nested but not symbolically nested, more computation using the design matrices is needed to determine the projection matrix on to the parameters being tested.   In the examples below, <code>model1</code> and <code>model2</code> are symbolically nested in <code>model0</code> because <code>model0</code> can be obtained just by deleting terms from the formulas.  On the other hand, <code>model2</code> is nested in <code>model1</code> but not symbolically nested: knowing that the model is nested requires knowing what design matrix columns are produced by <code>stype</code> and <code>as.numeric(stype)</code>.  Other typical examples of models that are nested but not symbolically nested are linear and spline models for a continuous covariate, or models with categorical versions of a variable at different resolutions (eg, smoking yes/no or smoking never/former/current). 
+</p>
+<p>A saddlepoint approximation is used for the LRT with numerator df greater than 1.
+</p>
+<p><code>AIC</code> is defined using the Rao-Scott approximation to the weighted
+loglikelihood (Lumley and Scott, 2015). It replaces the usual penalty term p, which is the null expectation of the log likelihood ratio, by the trace of the generalised design effect matrix, which is the expectation under complex sampling. For computational reasons everything is scaled so the weights sum to the sample size. 
+</p>
+<p><code>BIC</code> is a BIC for the (approximate) multivariate Gaussian models
+on regression coefficients from the maximal model implied by each
+submodel (ie, the models that say some coefficients in the maximal model
+are zero) (Lumley and Scott, 2015). It corresponds to comparing the models with a Wald test and replacing the sample size in the penalty by an effective sample size.
+For computational reasons, the models must not only be nested, the names of the coefficients must match.
+</p>
+<p><code>extractAIC</code> for a model with a Gaussian link uses the actual AIC based on maximum likelihood estimation of the variance parameter as well as the regression parameters.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>seqanova.svyglm</code> if one model is given, otherwise of class <code>regTermTest</code> or <code>regTermTestLRT</code>
+</p>
+
+
+<h3>Note</h3>
+
+<p>At the moment, <code>AIC</code> works only for models including an intercept.
+</p>
+
+
+<h3>References</h3>
+
+<p>Rao, JNK, Scott, AJ (1984) &quot;On Chi-squared Tests For Multiway Contingency Tables with Proportions Estimated From Survey Data&quot; Annals of Statistics 12:46-60.
+</p>
+<p>Lumley, T., &amp; Scott, A. (2014). &quot;Tests for Regression Models Fitted to Survey Data&quot;. Australian and New Zealand Journal of Statistics, 56 (1), 1-14. 
+</p>
+<p>Lumley T, Scott AJ (2015)
+&quot;AIC and BIC for modelling with complex survey data&quot; J Surv Stat
+Methodol 3 (1): 1-18. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="regTermTest.html">regTermTest</a></code>, <code><a href="pchisqsum.html">pchisqsum</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dclus2&lt;-svydesign(id=~dnum+snum, weights=~pw, data=apiclus2)
+
+model0&lt;-svyglm(I(sch.wide=="Yes")~ell+meals+mobility, design=dclus2, family=quasibinomial())
+model1&lt;-svyglm(I(sch.wide=="Yes")~ell+meals+mobility+as.numeric(stype), 
+     design=dclus2, family=quasibinomial())
+model2&lt;-svyglm(I(sch.wide=="Yes")~ell+meals+mobility+stype, design=dclus2, family=quasibinomial())
+
+anova(model2)	
+anova(model0,model2)					     		    
+anova(model1, model2)
+
+anova(model1, model2, method="Wald")
+
+AIC(model0,model1, model2)
+BIC(model0, model2,maximal=model2)
+
+
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

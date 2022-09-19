@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get diverging colors</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for COL2 {corrplot}"><tr><td>COL2 {corrplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get diverging colors</h2>
+
+<h3>Description</h3>
+
+<p>Get diverging colors from palette theme name and n. The color palettes
+are from RColorBrewer, but with the middle color changing to '#FFFFFF'(white),
+thus we can visualize element 0 with white color.
+Diverging colors are suitable for visualize a matrix which elements are partly positive and
+partly negative (e.g. correlation matrix in [-1, 1], or [-20, 100]).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+COL2(diverging = c("RdBu", "BrBG", "PiYG", "PRGn", "PuOr", "RdYlBu"), n = 200)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>diverging</code></td>
+<td>
+<p>Diverging color Palettes</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>the number of colors (&gt;= 1) to be in the palette.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A character vector containing color names
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Function <code><a href="../../grDevices/html/colorRamp.html">colorRampPalette</a></code>, package <code>RColorBrewer</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## diverging colors
+par(mar = c(0, 0, 0, 0) + 0.1)
+plot(0, xlim = c(-0.1, 1), ylim = c(0, 1), type = 'n')
+
+col = c('RdBu', 'BrBG', 'PiYG', 'PRGn', 'PuOr', 'RdYlBu')
+
+for(i in 1:length(col)) {
+  colorlegend(COL2(col[i]), -10:10/10, align = 'l', cex = 0.8, xlim = c(0, 1),
+              ylim = c(i/length(col)-0.1, i/length(col)), vertical = FALSE)
+  text(-0.01, i/length(col)-0.02, col[i], adj = 0.5, pos = 2, cex = 0.8)
+}
+
+
+
+## sequential colors
+par(mar = c(0, 0, 0, 0) + 0.1)
+plot(0, xlim = c(-0.1, 1), ylim = c(0, 1), type = 'n')
+
+col = c('Oranges', 'Purples', 'Reds', 'Blues', 'Greens', 'Greys', 'OrRd',
+        'YlOrRd', 'YlOrBr', 'YlGn')
+
+for(i in 1:length(col)) {
+  colorlegend(COL1(col[i]), 0:10, align = 'l', cex = 0.8, xlim = c(0, 1),
+              ylim = c(i/length(col)-0.1, i/length(col)), vertical = FALSE)
+  text(-0.01, i/length(col)-0.02, col[i], adj = 0.5, pos = 2)
+}
+
+
+
+## other examples to show colorlegend function
+par(mar = rep(0, 4))
+plot(0, xlim = c(0, 6), ylim = c(-0.5, 1.2), type = 'n')
+
+colorlegend(rainbow(100), 0:9)
+
+colorlegend(heat.colors(100), LETTERS[1:12], xlim = c(1, 2))
+
+colorlegend(terrain.colors(100), 0:9, ratio.colbar = 0.6,
+            lim.segment = c(0, 0.6), xlim = c(2, 3), align = 'l')
+
+colorlegend(topo.colors(100), 0:9, lim.segment = c(0, 0.6),
+            xlim = c(3, 4), align = 'l', offset = 0)
+
+colorlegend(cm.colors(100), 1:5, xlim = c(4, 5))
+
+colorlegend(sample(rainbow(12)), labels = LETTERS[1:12],
+            at = seq(0.05, 0.95, len = 12), xlim = c(5, 6), align = 'r')
+
+colorlegend(colbar = grey(1:100 / 100), 1:10, col = 'red', align = 'l',
+            xlim = c(0, 6), ylim = c(-0.5, -0.1), vertical = FALSE)
+
+colorlegend(sample(rainbow(12)),
+            labels = LETTERS[1:12], at = seq(0.05, 0.95, len = 12),
+            xlim = c(0, 6), ylim = c(1.1, 1.2), vertical = FALSE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>corrplot</em> version 0.92 <a href="00Index.html">Index</a>]</div>
+</body></html>

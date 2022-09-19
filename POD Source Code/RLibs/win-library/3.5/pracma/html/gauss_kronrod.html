@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Gauss-Kronrod Quadrature</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for gauss_kronrod {pracma}"><tr><td>gauss_kronrod {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Gauss-Kronrod Quadrature
+</h2>
+
+<h3>Description</h3>
+
+<p>Simple Gaussian-Kronrod quadrature formula.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gauss_kronrod(f, a, b, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p>function to be integrated.</p>
+</td></tr>
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>end points of the interval.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>variables to be passed to the function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Gaussian quadrature of degree 7 with Gauss-Kronrod of degree 15 for error
+estimation, the <code>quadQK15</code> procedure in the QUADPACK library.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of value and relative error.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The function needs to be vectorized (though this could easily be changed),
+but the function does not need to be defined at the end points.
+</p>
+
+
+<h3>References</h3>
+
+<p>Fausett, L. V. (2007). Applied Numerical Analysis Using Matlab.
+Second edition, Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="quadgk.html">quadgk</a></code>, <code><a href="romberg.html">romberg</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+gauss_kronrod(sin, 0, pi)  #  2.000000000000000 , rel.error: 1.14e-12
+gauss_kronrod(exp, 0, 1)   #  1.718281828459045 , rel.error: 0
+                           #  1.718281828459045 , i.e. exp(1) - 1
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

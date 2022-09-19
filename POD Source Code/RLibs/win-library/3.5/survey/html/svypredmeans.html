@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Predictive marginal means</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svypredmeans {survey}"><tr><td>svypredmeans {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Predictive marginal means
+</h2>
+
+<h3>Description</h3>
+
+<p>Predictive marginal means for a generalised linear model, using the method of Korn and Graubard (1999) and matching the results of SUDAAN. The predictive marginal mean for one level of a factor is the probability-weighted average of the fitted values for the model on new data where all the observations are set to that level of the factor but have whatever values of adjustment variables they really have.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svypredmeans(adjustmodel, groupfactor, predictat=NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>adjustmodel</code></td>
+<td>
+
+<p>A generalised linear model fit by <code><a href="svyglm.html">svyglm</a></code> with the adjustment variable but without the factor for which predictive means are wanted
+</p>
+</td></tr>
+<tr valign="top"><td><code>groupfactor</code></td>
+<td>
+
+<p>A one-sided formula specifying the factor for which predictive means are wanted. Can use, eg, <code>~interaction(race,sex)</code> for combining variables.
+This does not have to be a factor, but it will be modelled linearly if it isn't</p>
+</td></tr>
+<tr valign="top"><td><code>predictat</code></td>
+<td>
+<p>A vector of the values of <code>groupfactor</code> where you want predictions.  If <code>groupfactor</code> is a factor, these must be values in the data, but if it is numeric you can interpolate/extrapolate</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>svystat</code> with the predictive marginal means and their covariance matrix. 
+</p>
+
+
+<h3>Note</h3>
+
+<p>It is possible to supply an adjustment model with only an intercept, but the results are then the same as <code><a href="surveysummary.html">svymean</a></code>
+</p>
+<p>It makes no sense to have a variable in the adjustment model that is part of the grouping factor, and will give an error message or <code>NA</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Graubard B, Korn E (1999) &quot;Predictive Margins with Survey Data&quot; Biometrics 55:652-659
+</p>
+<p>Bieler, Brown, Williams, &amp; Brogan (2010) &quot;Estimating Model-Adjusted Risks, Risk Differences, and Risk Ratios From Complex Survey Data&quot; Am J Epi DOI: 10.1093/aje/kwp440</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svyglm.html">svyglm</a></code>
+</p>
+<p>Worked example using National Health Interview Survey data: <a href="https://gist.github.com/tslumley/2e74cd0ac12a671d2724">https://gist.github.com/tslumley/2e74cd0ac12a671d2724</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(nhanes)
+nhanes_design &lt;- svydesign(id=~SDMVPSU, strata=~SDMVSTRA, weights=~WTMEC2YR, nest=TRUE,data=nhanes)
+agesexmodel&lt;-svyglm(HI_CHOL~agecat+RIAGENDR, design=nhanes_design,family=quasibinomial)
+## high cholesterol by race/ethnicity, adjusted for demographic differences
+means&lt;-svypredmeans(agesexmodel, ~factor(race))
+means
+## relative risks compared to non-Hispanic white
+svycontrast(means,quote(`1`/`2`))
+svycontrast(means,quote(`3`/`2`))
+
+data(api)
+dstrat&lt;-svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+demog_model &lt;- svyglm(api00~mobility+ell+hsg+meals, design=dstrat)
+svypredmeans(demog_model,~enroll, predictat=c(100,300,1000,3000))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

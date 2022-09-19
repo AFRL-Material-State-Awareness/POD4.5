@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Scaffold R wrappers for Python functions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for py_function_wrapper {reticulate}"><tr><td>py_function_wrapper {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Scaffold R wrappers for Python functions</h2>
+
+<h3>Description</h3>
+
+<p>Scaffold R wrappers for Python functions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+py_function_wrapper(python_function, r_prefix = NULL, r_function = NULL)
+
+py_function_docs(python_function)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>python_function</code></td>
+<td>
+<p>Fully qualified name of Python function or class
+constructor (e.g. <code>tf$layers$average_pooling1d</code>)</p>
+</td></tr>
+<tr valign="top"><td><code>r_prefix</code></td>
+<td>
+<p>Prefix to add to generated R function name</p>
+</td></tr>
+<tr valign="top"><td><code>r_function</code></td>
+<td>
+<p>Name of R function to generate (defaults to name of Python
+function if not specified)</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>The generated wrapper will often require additional editing (e.g. to
+convert Python list literals in the docs to R lists, to massage R numeric
+values to Python integers via <code>as.integer</code> where required, etc.) so is
+really intended as an starting point for an R wrapper rather than a wrapper
+that can be used without modification.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

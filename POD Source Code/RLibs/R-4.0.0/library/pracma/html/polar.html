@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Polar Coordinate Plot (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for polar {pracma}"><tr><td>polar {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Polar Coordinate Plot (Matlab Style)
+</h2>
+
+<h3>Description</h3>
+
+<p>The polar function accepts polar coordinates, plots them in a Cartesian
+plane, and draws the polar grid on the plane.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+polar(t, r, type="l", 
+      col = "blue", grcol = "darkgrey", bxcol = "black",
+      main = "Polar Plot", add = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>t, r</code></td>
+<td>
+<p>vectors specifying angle and radius.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>type of the plot, lines, points, or no plotting.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>color of the graph.</p>
+</td></tr>
+<tr valign="top"><td><code>grcol, bxcol</code></td>
+<td>
+<p>color of grid anf box around the plot.</p>
+</td></tr>
+<tr valign="top"><td><code>main</code></td>
+<td>
+<p>plot title.</p>
+</td></tr>
+<tr valign="top"><td><code>add</code></td>
+<td>
+<p>logical; if true, the graph will be plotted into the
+coordinate system of an existing plot.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>plotting parameters to be passed to the <code>points</code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>polar(theta,rho)</code> creates a polar coordinate plot of the angle
+<code>theta</code> versus the radius <code>rho</code>. <code>theta</code> is the angle
+from the x-axis to the radius vector specified in radians; <code>rho</code>
+is the length of the radius vector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Generates a plot; no returns.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+t &lt;- deg2rad(seq(0, 360, by = 2))
+polar(t, cos(2*t), bxcol = "white", main = "Sine and Cosine")
+polar(t, sin(2*t), col = "red", add = TRUE)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

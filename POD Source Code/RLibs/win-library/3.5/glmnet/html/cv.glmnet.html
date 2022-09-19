@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Cross-validation for glmnet</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for cv.glmnet {glmnet}"><tr><td>cv.glmnet {glmnet}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Cross-validation for glmnet</h2>
+
+<h3>Description</h3>
+
+<p>Does k-fold cross-validation for glmnet, produces a plot,
+and returns a value for <code>lambda</code></p>
+
+
+<h3>Usage</h3>
+
+<pre>
+cv.glmnet(x, y, weights, offset, lambda, type.measure, nfolds, foldid, grouped, keep,
+      parallel, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><code>x</code> matrix as in <code>glmnet</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>response <code>y</code> as in <code>glmnet</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>Observation weights; defaults to 1 per observation</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>Offset vector (matrix) as in <code>glmnet</code></p>
+</td></tr>
+<tr valign="top"><td><code>lambda</code></td>
+<td>
+<p>Optional user-supplied lambda sequence; default is
+<code>NULL</code>, and <code>glmnet</code> chooses its own sequence</p>
+</td></tr>
+<tr valign="top"><td><code>nfolds</code></td>
+<td>
+<p>number of folds - default is 10. Although <code>nfolds</code>
+can be as large as the sample size (leave-one-out CV), it is not
+recommended for large datasets. Smallest value allowable is <code>nfolds=3</code></p>
+</td></tr>
+<tr valign="top"><td><code>foldid</code></td>
+<td>
+<p>an optional vector of values between 1 and <code>nfold</code>
+identifying what fold each observation is in. If supplied,
+<code>nfold</code> can be missing.</p>
+</td></tr>
+<tr valign="top"><td><code>type.measure</code></td>
+<td>
+<p>loss to use for cross-validation. Currently five
+options, not all available for all models. The default is <code>type.measure="deviance"</code>, which uses
+squared-error for gaussian models (a.k.a <code>type.measure="mse"</code> there), deviance
+for logistic and poisson
+regression, and partial-likelihood for the Cox
+model. <code>type.measure="class"</code> applies to binomial and multinomial logistic regression only,
+and gives misclassification error.  <code>type.measure="auc"</code> is for
+two-class logistic regression only, and gives area under the ROC
+curve. <code>type.measure="mse"</code> or <code>type.measure="mae"</code> (mean absolute error)
+can be used by all models except the <code>"cox"</code>; they measure the
+deviation from the fitted mean to the response.</p>
+</td></tr>
+<tr valign="top"><td><code>grouped</code></td>
+<td>
+<p>This is an experimental argument, with default
+<code>TRUE</code>, and can be ignored by most users. For all models
+except the <code>"cox"</code>, this refers to computing <code>nfolds</code>
+separate statistics, and then using their mean and estimated
+standard error to describe the CV curve. If <code>grouped=FALSE</code>,
+an error matrix is built up at the observation level from the predictions
+from the <code>nfold</code> fits, and then summarized (does not apply to
+<code>type.measure="auc"</code>). For the <code>"cox"</code> family,
+<code>grouped=TRUE</code> obtains the CV partial likelihood for the Kth
+fold by <em>subtraction</em>; by subtracting the log partial
+likelihood evaluated on the full dataset from that evaluated on
+the  on the (K-1)/K dataset. This makes more efficient use of risk
+sets. With <code>grouped=FALSE</code> the log partial likelihood is
+computed only on the Kth fold</p>
+</td></tr>
+<tr valign="top"><td><code>keep</code></td>
+<td>
+<p>If <code>keep=TRUE</code>, a <em>prevalidated</em> array is
+returned containing fitted values for each observation and each
+value of <code>lambda</code>. This means these fits are computed with
+this observation and the rest of its fold omitted. The
+<code>folid</code> vector is also returned. Default is keep=FALSE</p>
+</td></tr>
+<tr valign="top"><td><code>parallel</code></td>
+<td>
+<p>If <code>TRUE</code>, use parallel <code>foreach</code> to fit each fold.
+Must register parallel before hand, such as <code>doMC</code> or others.
+See the example below.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments that can be passed to <code>glmnet</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function runs <code>glmnet</code> <code>nfolds</code>+1 times; the
+first to get the <code>lambda</code> sequence, and then the remainder to
+compute the fit with each of the folds omitted. The error is
+accumulated, and the average error and standard deviation over the
+folds is computed.
+Note that <code>cv.glmnet</code> does NOT search for
+values for <code>alpha</code>. A specific value should be supplied, else
+<code>alpha=1</code> is assumed by default. If users would like to
+cross-validate <code>alpha</code> as well, they should call <code>cv.glmnet</code>
+with a pre-computed vector <code>foldid</code>, and then use this same fold vector
+in separate calls to <code>cv.glmnet</code> with different values of
+<code>alpha</code>. Note also that the results of <code>cv.glmnet</code> are
+random, since the folds are selected at random. Users can reduce this
+randomness by running <code>cv.glmnet</code> many times, and averaging the
+error curves.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>"cv.glmnet"</code> is returned, which is a
+list with the ingredients of the cross-validation fit.
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>lambda</code></td>
+<td>
+<p>the values of <code>lambda</code> used in the fits.</p>
+</td></tr>
+<tr valign="top"><td><code>cvm</code></td>
+<td>
+<p>The mean cross-validated error - a vector of length
+<code>length(lambda)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cvsd</code></td>
+<td>
+<p>estimate of standard error of <code>cvm</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cvup</code></td>
+<td>
+<p>upper curve = <code>cvm+cvsd</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cvlo</code></td>
+<td>
+<p>lower curve = <code>cvm-cvsd</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>nzero</code></td>
+<td>
+<p>number of non-zero coefficients at each <code>lambda</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>a text string indicating type of measure (for plotting
+purposes).</p>
+</td></tr>
+<tr valign="top"><td><code>glmnet.fit</code></td>
+<td>
+<p>a fitted glmnet object for the full data.</p>
+</td></tr>
+<tr valign="top"><td><code>lambda.min</code></td>
+<td>
+<p>value of <code>lambda</code> that gives minimum
+<code>cvm</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>lambda.1se</code></td>
+<td>
+<p>largest value of <code>lambda</code> such that error is
+within 1 standard error of the minimum.</p>
+</td></tr>
+<tr valign="top"><td><code>fit.preval</code></td>
+<td>
+<p>if <code>keep=TRUE</code>, this is the array of
+prevalidated fits. Some entries can be <code>NA</code>, if that and
+subsequent values of <code>lambda</code> are not reached for that fold</p>
+</td></tr>
+<tr valign="top"><td><code>foldid</code></td>
+<td>
+<p>if <code>keep=TRUE</code>, the fold assignments used</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Jerome Friedman, Trevor Hastie and Rob Tibshirani<br />
+Noah Simon helped develop the 'coxnet' function.<br />
+Jeffrey Wong and B. Narasimhan helped with the parallel option<br />
+Maintainer: Trevor Hastie <a href="mailto:hastie@stanford.edu">hastie@stanford.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>Friedman, J., Hastie, T. and Tibshirani, R. (2008)
+<em>Regularization Paths for Generalized Linear Models via Coordinate
+Descent</em>,   <a href="https://web.stanford.edu/~hastie/Papers/glmnet.pdf">https://web.stanford.edu/~hastie/Papers/glmnet.pdf</a><br />
+<em>Journal of Statistical Software, Vol. 33(1), 1-22 Feb 2010</em><br />
+<a href="http://www.jstatsoft.org/v33/i01/">http://www.jstatsoft.org/v33/i01/</a><br />
+Simon, N., Friedman, J., Hastie, T., Tibshirani, R. (2011)
+<em>Regularization Paths for Cox's Proportional Hazards Model via
+Coordinate Descent, Journal of Statistical Software, Vol. 39(5)
+1-13</em><br />
+<a href="http://www.jstatsoft.org/v39/i05/">http://www.jstatsoft.org/v39/i05/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>glmnet</code> and <code>plot</code>, <code>predict</code>, and <code>coef</code> methods for <code>"cv.glmnet"</code> object.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+set.seed(1010)
+n=1000;p=100
+nzc=trunc(p/10)
+x=matrix(rnorm(n*p),n,p)
+beta=rnorm(nzc)
+fx= x[,seq(nzc)] %*% beta
+eps=rnorm(n)*5
+y=drop(fx+eps)
+px=exp(fx)
+px=px/(1+px)
+ly=rbinom(n=length(px),prob=px,size=1)
+set.seed(1011)
+cvob1=cv.glmnet(x,y)
+plot(cvob1)
+coef(cvob1)
+predict(cvob1,newx=x[1:5,], s="lambda.min")
+title("Gaussian Family",line=2.5)
+set.seed(1011)
+cvob1a=cv.glmnet(x,y,type.measure="mae")
+plot(cvob1a)
+title("Gaussian Family",line=2.5)
+set.seed(1011)
+par(mfrow=c(2,2),mar=c(4.5,4.5,4,1))
+cvob2=cv.glmnet(x,ly,family="binomial")
+plot(cvob2)
+title("Binomial Family",line=2.5)
+frame()
+set.seed(1011)
+cvob3=cv.glmnet(x,ly,family="binomial",type.measure="class")
+plot(cvob3)
+title("Binomial Family",line=2.5)
+## Not run: 
+set.seed(1011)
+cvob3a=cv.glmnet(x,ly,family="binomial",type.measure="auc")
+plot(cvob3a)
+title("Binomial Family",line=2.5)
+set.seed(1011)
+mu=exp(fx/10)
+y=rpois(n,mu)
+cvob4=cv.glmnet(x,y,family="poisson")
+plot(cvob4)
+title("Poisson Family",line=2.5)
+
+# Multinomial
+n=500;p=30
+nzc=trunc(p/10)
+x=matrix(rnorm(n*p),n,p)
+beta3=matrix(rnorm(30),10,3)
+beta3=rbind(beta3,matrix(0,p-10,3))
+f3=x%*% beta3
+p3=exp(f3)
+p3=p3/apply(p3,1,sum)
+g3=rmult(p3)
+set.seed(10101)
+cvfit=cv.glmnet(x,g3,family="multinomial")
+plot(cvfit)
+title("Multinomial Family",line=2.5)
+# Cox
+beta=rnorm(nzc)
+fx=x[,seq(nzc)]%*%beta/3
+hx=exp(fx)
+ty=rexp(n,hx)
+tcens=rbinom(n=n,prob=.3,size=1)# censoring indicator
+y=cbind(time=ty,status=1-tcens) # y=Surv(ty,1-tcens) with library(survival)
+foldid=sample(rep(seq(10),length=n))
+fit1_cv=cv.glmnet(x,y,family="cox",foldid=foldid)
+plot(fit1_cv)
+title("Cox Family",line=2.5)
+# Parallel
+require(doMC)
+registerDoMC(cores=4)
+x = matrix(rnorm(1e5 * 100), 1e5, 100)
+y = rnorm(1e5)
+system.time(cv.glmnet(x,y))
+system.time(cv.glmnet(x,y,parallel=TRUE))
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>glmnet</em> version 2.0-16 <a href="00Index.html">Index</a>]</div>
+</body></html>

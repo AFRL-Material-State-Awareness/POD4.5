@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Numerical Gradient of a Function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for grad {numDeriv}"><tr><td>grad {numDeriv}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Numerical Gradient of a Function</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the gradient of a function by numerical approximation.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+     grad(func, x, method="Richardson", side=NULL, method.args=list(), ...) 
+
+    ## Default S3 method:
+grad(func, x, method="Richardson", side=NULL,
+      method.args=list(), ...)
+ </pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>func</code></td>
+<td>
+<p>a function with a scalar real result (see details).</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a real scalar or vector argument to func, indicating the 
+point(s) at which the gradient is to be calculated.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>one of <code>"Richardson"</code>, <code>"simple"</code>, or 
+<code>"complex"</code> indicating the method to use for the approximation.</p>
+</td></tr>
+<tr valign="top"><td><code>method.args</code></td>
+<td>
+<p>arguments passed to method. Arguments not specified 
+remain with their default values as specified in details</p>
+</td></tr>
+<tr valign="top"><td><code>side</code></td>
+<td>
+<p>an indication of whether one-sided derivatives should be
+attempted (see details).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>an additional arguments passed to <code>func</code>.
+WARNING: None of these should have names matching other arguments of this function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The function <code>grad</code> calculates a numerical approximation of the 
+first derivative of <code>func</code> at the point <code>x</code>. Any additional 
+arguments in ... are also passed to <code>func</code>, but the gradient is not
+calculated with respect to these additional arguments.
+It is assumed <code>func</code>  is a scalar value function. If a vector <code>x</code> 
+produces a scalar
+result then <code>grad</code> returns the numerical approximation of the gradient
+at the point <code>x</code> (which has the same length as <code>x</code>).
+If a vector <code>x</code> produces a vector result then the result must have the
+same length as <code>x</code>, and it is assumed that this corresponds to applying
+the function to each of its arguments (for example, <code>sin(x)</code>). 
+In this case <code>grad</code> returns the
+gradient at each of the points in <code>x</code> (which also has the same length 
+as <code>x</code> &ndash; so be careful). An alternative for vector valued functions is
+provided by <code><a href="jacobian.html">jacobian</a></code>.
+</p>
+<p>If method is &quot;simple&quot;, the calculation is done using a simple epsilon
+difference. 
+For method &quot;simple&quot; <code>method.args=list(eps=1e-4)</code> is the
+default. Only <code>eps</code> is used by this method.
+</p>
+<p>If method is &quot;complex&quot;, the calculation is done using the complex step
+derivative approach of Lyness and Moler, described in  Squire and Trapp. 
+This method requires that the function be able to handle complex valued 
+arguments and return the appropriate complex valued result, 
+even though the user may only be interested in the real-valued derivatives. 
+It also requires that the complex function be analytic. (This might be thought 
+of as the complex equivalent of the requirement for continuity and smoothness 
+of a real valued function.) 
+So, while this method is extremely powerful it is applicable to
+a very restricted class of functions. <em>Avoid this method if you do not 
+know that your function is suitable. Your mistake may not be caught and the
+results will be spurious.</em>
+For cases where it can be used,
+it is faster than Richardson's extrapolation, and
+it also provides gradients that are correct to machine precision (16 digits).   
+For method &quot;complex&quot;, <code>method.args</code> is ignored.
+The algorithm uses an <code>eps</code> of <code>.Machine$double.eps</code> which cannot
+(and should not) be modified. 
+</p>
+<p>If method is &quot;Richardson&quot;, the calculation
+is done by Richardson's extrapolation (see e.g. Linfield and Penny, 1989,
+or Fornberg and Sloan, 1994.)
+This method should be used if accuracy, as opposed to speed, is important
+(but see method &quot;complex&quot; above). 
+For this method 
+<code>method.args=list(eps=1e-4, d=0.0001, zero.tol=sqrt(.Machine$double.eps/7e-7), 
+   r=4, v=2, show.details=FALSE)</code> is set as the default.
+<code>d</code> gives the fraction of <code>x</code> to use for the initial numerical 
+approximation. The default means the initial approximation uses
+<code>0.0001 * x</code>.
+<code>eps</code> is used instead of <code>d</code> for elements of <code>x</code> which are 
+zero (absolute value less than zero.tol).
+<code>zero.tol</code> tolerance used for deciding which elements of <code>x</code> are 
+zero.
+<code>r</code> gives the number of Richardson improvement iterations (repetitions
+with successly smaller <code>d</code>. The default <code>4</code> general provides 
+good results, but this can be increased to <code>6</code> for improved
+accuracy at the cost of more evaluations.
+<code>v</code> gives the reduction factor.
+<code>show.details</code> is a logical indicating if detailed calculations should 
+be shown.
+</p>
+<p>The general approach in the Richardson method is to iterate for <code>r</code> 
+iterations from initial 
+values for interval value <code>d</code>,  using reduced factor <code>v</code>.
+The the first order approximation to the derivative with respect 
+to <i>x_{i}</i> is
+</p>
+<p style="text-align: center;"><i>
+	    f'_{i}(x) = &lt;f(x_{1},&hellip;,x_{i}+d,&hellip;,x_{n}) -
+               f(x_{1},&hellip;,x_{i}-d,&hellip;,x_{n})&gt;/(2*d)</i></p>
+
+<p>This is repeated <code>r</code> times  with successively smaller <code>d</code>  and 
+then Richardson extraplolation is applied.
+</p>
+<p>If elements of <code>x</code> are near zero the multiplicative interval calculation
+using <code>d</code> does not work, and for these elements an additive calculation
+using <code>eps</code> is done instead. The argument <code>zero.tol</code> is used
+determine if an element should be considered too close to zero. 
+In the iterations, interval is successively reduced to eventual 
+be <code>d/v^r</code> and the square of this value is used in second derivative 
+calculations (see <code><a href="genD.html">genD</a></code>) so the 
+default <code>zero.tol=sqrt(.Machine$double.eps/7e-7)</code> is set to ensure the
+interval is bigger than <code>.Machine$double.eps</code> with the default <code>d</code>,
+<code>r</code>, and <code>v</code>.
+</p>
+<p>If <code>side</code> is <code>NULL</code> then it is assumed that the point at which the
+calculation is being done is interior to the domain of the function. If the
+point is on the boundary of the domain then <code>side</code> can be used to 
+indicate which side of the point <code>x</code> should be used for the calculation.
+If not <code>NULL</code> then it should be a vector of the same length as <code>x</code>
+and have values <code>NA</code>, <code>+1</code>, or <code>-1</code>. <code>NA</code> indicates that
+the usual calculation will be done, while <code>+1</code>, or <code>-1</code> indicate
+adding or subtracting from the parameter point <code>x</code>. The argument
+<code>side</code> is not supported for all methods.
+</p>
+<p>Since usual calculation with method &quot;simple&quot; uses only a small <code>eps</code> 
+step to one side, the only effect of argument <code>side</code> is to determine the
+direction of the step. The usual calculation with method &quot;Richardson&quot; is 
+symmetric, using steps to both sides. The effect of argument <code>side</code> 
+is to take a double sized step to one side, and no step to the other side.
+This means that the center of the Richardson extrapolation steps is moving
+slightly in the reduction, and is not exactly on the boundary. 
+(Warning: I am not aware of theory or published
+experimental evidence to support this, but the results in my limited testing
+seem good.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A real scalar or vector of the approximated gradient(s).</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Linfield, G. R. and Penny, J. E. T. (1989) <em>Microcomputers in Numerical 
+Analysis</em>. New York: Halsted Press.
+</p>
+<p>Fornberg, B. and Sloan, D, M. (1994) &ldquo;A review of pseudospectral methods 
+for solving partial differential equations.&rdquo; <em>Acta Numerica</em>, 3, 203-267.
+</p>
+<p>Lyness, J. N. and Moler, C. B. (1967) &ldquo;Numerical Differentiation of Analytic 
+Functions.&rdquo; <em>SIAM Journal for Numerical Analysis</em>,
+4(2), 202-210.
+</p>
+<p>Squire, William and Trapp, George (1998) &ldquo;Using Complex Variables to Estimate
+Derivatives of Real Functions.&rdquo; <em>SIAM Rev</em>,
+40(1), 110-112.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="jacobian.html">jacobian</a></code>,
+<code><a href="hessian.html">hessian</a></code>,
+<code><a href="genD.html">genD</a></code>,
+<code><a href="../../stats/html/numericDeriv.html">numericDeriv</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  grad(sin, pi)
+  grad(sin, (0:10)*2*pi/10)
+  func0 &lt;- function(x){ sum(sin(x))  }
+  grad(func0 , (0:10)*2*pi/10)
+
+  func1 &lt;- function(x){ sin(10*x) - exp(-x) }
+
+  curve(func1,from=0,to=5)
+
+  x &lt;- 2.04
+  numd1 &lt;- grad(func1, x)
+  exact &lt;- 10*cos(10*x) + exp(-x)
+  c(numd1, exact, (numd1 - exact)/exact)
+
+  x &lt;- c(1:10)
+  numd1 &lt;- grad(func1, x)
+  numd2 &lt;- grad(func1, x, "complex")
+  exact &lt;- 10*cos(10*x) + exp(-x)
+  cbind(numd1, numd2, exact, (numd1 - exact)/exact, (numd2 - exact)/exact)
+
+  sc2.f &lt;- function(x){
+    n &lt;- length(x)
+    sum((1:n) * (exp(x) - x)) / n
+    }
+
+  sc2.g &lt;- function(x){
+    n &lt;- length(x)
+    (1:n) * (exp(x) - 1) / n
+    }
+
+  x0 &lt;- rnorm(100)
+  exact &lt;- sc2.g(x0)
+
+  g &lt;- grad(func=sc2.f, x=x0)
+  max(abs(exact - g)/(1 + abs(exact)))
+
+  gc &lt;- grad(func=sc2.f, x=x0, method="complex")
+  max(abs(exact - gc)/(1 + abs(exact)))
+
+  f &lt;- function(x) if(x[1]&lt;=0) sum(sin(x)) else  NA
+  grad(f, x=c(0,0), method="Richardson", side=c(-1,  1))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>numDeriv</em> version 2016.8-1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Draw rectangles on the correlation matrix graph.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for corrRect.hclust {corrplot}"><tr><td>corrRect.hclust {corrplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Draw rectangles on the correlation matrix graph.</h2>
+
+<h3>Description</h3>
+
+<p>Draw rectangles on the correlation matrix graph based on hierarchical cluster
+(<code><a href="../../stats/html/hclust.html">hclust</a></code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+corrRect.hclust(
+  corr,
+  k = 2,
+  col = "black",
+  lwd = 2,
+  method = c("complete", "ward", "ward.D", "ward.D2", "single", "average", "mcquitty",
+    "median", "centroid")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>corr</code></td>
+<td>
+<p>Correlation matrix for function <code>corrRect.hclust</code>. It use
+<code>1-corr</code> as dist in  hierarchical clustering (<code><a href="../../stats/html/hclust.html">hclust</a></code>).</p>
+</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+<p>Integer, the number of rectangles drawn on the graph according to
+the hierarchical cluster, for function <code>corrRect.hclust</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>Color of rectangles.</p>
+</td></tr>
+<tr valign="top"><td><code>lwd</code></td>
+<td>
+<p>Line width of rectangles.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>Character, the agglomeration method to be used for hierarchical
+clustering (<code><a href="../../stats/html/hclust.html">hclust</a></code>). This should be (an unambiguous
+abbreviation of) one of <code>'ward'</code>, <code>'ward.D'</code>, <code>'ward.D2'</code>,
+<code>'single'</code>, <code>'complete'</code>, <code>'average'</code>, <code>'mcquitty'</code>,
+<code>'median'</code> or <code>'centroid'</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Taiyun Wei
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(mtcars)
+M = cor(mtcars)
+corrplot(M, order = 'FPC') -&gt; p
+corrRect(p, index = c(1, 6, 11))
+
+if(getRversion() &gt;= '4.1.0') {
+  corrplot(M, order = 'FPC') |&gt; corrRect(index = c(1, 6, 11))
+}
+
+(order.hc = corrMatOrder(M, order = 'hclust'))
+(order.hc2 = corrMatOrder(M, order = 'hclust', hclust.method = 'ward.D2'))
+M.hc  = M[order.hc, order.hc]
+M.hc2 = M[order.hc2, order.hc2]
+
+par(ask = TRUE)
+
+# same as: corrplot(M, order = 'hclust', addrect = 2)
+corrplot(M.hc)
+corrRect.hclust(corr = M.hc, k = 2)
+
+# same as: corrplot(M, order = 'hclust', addrect = 3)
+corrplot(M.hc)
+corrRect.hclust(corr = M.hc, k = 3)
+
+# same as: corrplot(M, order = 'hclust', hclust.method = 'ward.D2', addrect = 2)
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 2, method = 'ward.D2')
+
+# same as: corrplot(M, order = 'hclust', hclust.method = 'ward.D2', addrect = 3)
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 3, method = 'ward.D2')
+
+# same as: corrplot(M, order = 'hclust', hclust.method = 'ward.D2', addrect = 4)
+corrplot(M.hc2)
+corrRect.hclust(M.hc2, k = 4, method = 'ward.D2')
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>corrplot</em> version 0.92 <a href="00Index.html">Index</a>]</div>
+</body></html>

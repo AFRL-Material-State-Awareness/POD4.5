@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fitting by Polynomial</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for polyfit,polyfix {pracma}"><tr><td>polyfit,polyfix {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fitting by Polynomial</h2>
+
+<h3>Description</h3>
+
+<p>Polynomial curve fitting
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+polyfit(x, y, n)
+
+polyfix(x, y, n, xfix, yfix)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>x-coordinates of points</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>y-coordinates of points</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>degree of the fitting polynomial</p>
+</td></tr>
+<tr valign="top"><td><code>xfix,yfix</code></td>
+<td>
+<p>x- and y-coordinates of points to be fixed</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>polyfit</code> finds the coefficients of a polynomial of degree <code>n</code>
+fitting the points given by their <code>x</code>, <code>y</code> coordinates in a
+least-squares sense. In <code>polyfit</code>, if <code>x</code>, <code>y</code> are matrices
+of the same size, the coordinates are taken elementwise. Complex values are 
+not allowed.
+</p>
+<p><code>polyfix</code> finds a polynomial that fits the data in a least-squares
+sense, but also passes exactly through all the points with coordinates
+<code>xfix</code> and <code>yfix</code>. Degree <code>n</code> should be greater or equal
+to the number of fixed points, but not too big to avoid &lsquo;singular matrix&rsquo;
+or similar error messages
+</p>
+
+
+<h3>Value</h3>
+
+<p>vector representing a polynomial.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Please not that <code>polyfit2</code> is has been removed since 1.9.3; please use
+<code>polyfix</code> instead.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/poly.html">poly</a></code>, <code><a href="polyval.html">polyval</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  # Fitting the sine function by a polynomial
+  x &lt;- seq(0, pi, length.out=25)
+  y &lt;- sin(x)
+  p &lt;- polyfit(x, y, 6)
+  
+## Not run: 
+  # Plot sin and fitted polynomial
+  plot(x, y, type="b")
+  yf &lt;- polyval(p, x)
+  lines(x, yf, col="red")
+  grid()
+## End(Not run)
+
+## Not run: 
+  n &lt;- 3
+  N &lt;- 100
+  x &lt;- linspace(0, 2*pi, N); y = sin(x) + 0.1*rnorm(N)
+  xfix &lt;- c(0, 2*pi); yfix = c(0, 0)
+
+  xs &lt;- linspace(0, 2*pi); ys &lt;- sin(xs)
+  plot(xs, ys, type = 'l', col = "gray",
+	   main = "Polynom Approximation of Degree 3")
+  grid()
+  points(x, y, pch='o', cex=0.5)
+  points(xfix, yfix, col = "darkred")
+
+  p0 &lt;- polyfit(x, y, n)
+  lines(xs, polyval(p0, xs), col = "blue")
+
+  p1 &lt;- polyfix(x, y, n, xfix, yfix)
+  lines(xs, polyval(p1, xs), col = "red")
+
+  legend(4, 1, c("sin", "polyfit", "polyfix"),
+         col=c("gray", "blue", "red"), lty=c(1,1,1))
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

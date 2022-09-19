@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: M Scale Estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mscale {statmod}"><tr><td>mscale {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>M Scale Estimation</h2>
+
+<h3>Description</h3>
+
+<p>Robust estimation of a scale parameter using Hampel's redescending psi function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mscale(u, na.rm=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>u</code></td>
+<td>
+<p>numeric vector of residuals.</p>
+</td></tr>
+<tr valign="top"><td><code>na.rm</code></td>
+<td>
+<p>logical. Should missing values be removed?</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Estimates a scale parameter or standard deviation using an M-estimator with 50% breakdown.
+This means the estimator is highly robust to outliers.
+If the input residuals <code>u</code> are a normal sample, then <code>mscale(u)</code> should be equal to the standard deviation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>numeric constant giving the estimated scale.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Yohai, V. J. (1987). High breakdown point and high efficiency robust estimates for regression. <em>Ann. Statist.</em> 15, 642-656.
+</p>
+<p>Stromberg, A. J. (1993). Computation of high breakdown nonlinear regression parameters. <em>J. Amer. Statist. Assoc.</em> 88, 237-244.
+</p>
+<p>Smyth, G. K., and Hawkins, D. M. (2000). Robust frequency estimation using elemental sets. <em>Journal of Computational and Graphical Statistics</em> 9, 196-214. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+u &lt;- rnorm(100)
+sd(u)
+mscale(u)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

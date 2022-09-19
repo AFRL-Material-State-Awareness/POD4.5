@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Mean t-Statistic Between Two Groups of Growth Curves</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for meanT {statmod}"><tr><td>meanT {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Mean t-Statistic Between Two Groups of Growth Curves</h2>
+
+<h3>Description</h3>
+
+<p>The mean-t statistic of the distance between two groups of growth curves. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+meanT(y1, y2)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y1</code></td>
+<td>
+<p>matrix of response values for the first group, with a row for each individual and a column for each time. Missing values are allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>y2</code></td>
+<td>
+<p>matrix of response values for the second group.  Must have the same number of columns as <code>y1</code>. Missing values are allowed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function computes the pooled two-sample t-statistic between the response values at each time, and returns the mean of these values weighted by the degrees of freedom.
+This function is used by <code>compareGrowthCurves</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>numeric vector of length one containing the mean t-statistic.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="growthcurve.html">compareGrowthCurves</a></code>, <code><a href="growthcurve.html">compareTwoGrowthCurves</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+y1 &lt;- matrix(rnorm(4*3),4,3)
+y2 &lt;- matrix(rnorm(4*3),4,3)
+meanT(y1,y2)
+
+data(PlantGrowth)
+compareGrowthCurves(PlantGrowth$group,as.matrix(PlantGrowth$weight))
+# Can make p-values more accurate by nsim=10000
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

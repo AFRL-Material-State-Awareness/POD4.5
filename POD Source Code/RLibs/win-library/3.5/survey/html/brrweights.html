@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute replicate weights</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for brrweights {survey}"><tr><td>brrweights {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute replicate weights </h2>
+
+<h3>Description</h3>
+
+<p>Compute replicate weights from a survey design. These functions are
+usually called from <code><a href="as.svrepdesign.html">as.svrepdesign</a></code> rather than directly
+by the user.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+brrweights(strata, psu, match = NULL,
+              small = c("fail","split","merge"),
+              large = c("split", "merge", "fail"),
+              fay.rho=0, only.weights=FALSE,
+              compress=TRUE, hadamard.matrix=NULL)
+jk1weights(psu,fpc=NULL,
+              fpctype=c("population","fraction","correction"),
+              compress=TRUE)
+jknweights(strata,psu, fpc=NULL,
+              fpctype=c("population","fraction","correction"),
+              compress=TRUE,
+              lonely.psu=getOption("survey.lonely.psu"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>strata</code></td>
+<td>
+<p>Stratum identifiers </p>
+</td></tr>
+<tr valign="top"><td><code>psu</code></td>
+<td>
+<p>PSU (cluster) identifier </p>
+</td></tr>
+<tr valign="top"><td><code>match</code></td>
+<td>
+<p>Optional variable to use in matching. </p>
+</td></tr>
+<tr valign="top"><td><code>small</code></td>
+<td>
+<p>How to handle strata with only one PSU</p>
+</td></tr>
+<tr valign="top"><td><code>large</code></td>
+<td>
+<p>How to handle strata with more than two PSUs</p>
+</td></tr>
+<tr valign="top"><td><code>fpc</code></td>
+<td>
+<p>Optional population (stratum) size or finite population correction </p>
+</td></tr>
+<tr valign="top"><td><code>fpctype</code></td>
+<td>
+<p>How <code>fpc</code> is coded.</p>
+</td></tr>
+<tr valign="top"><td><code>fay.rho</code></td>
+<td>
+<p>Parameter for Fay's extended BRR method</p>
+</td></tr>
+<tr valign="top"><td><code>only.weights</code></td>
+<td>
+<p>If <code>TRUE</code> return only the matrix of
+replicate weights</p>
+</td></tr>
+<tr valign="top"><td><code>compress</code></td>
+<td>
+<p>If <code>TRUE</code>, store the replicate weights in
+compressed form</p>
+</td></tr>
+<tr valign="top"><td><code>hadamard.matrix</code></td>
+<td>
+<p>Optional user-supplied Hadamard matrix for
+<code>brrweights</code></p>
+</td></tr>
+<tr valign="top"><td><code>lonely.psu</code></td>
+<td>
+<p>Handling of non-certainty single-PSU strata</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>JK1 and JKn are  jackknife schemes for unstratified and stratified
+designs respectively.  The finite population correction may be
+specified as a single number, a vector with one entry per stratum, or
+a vector with one entry per observation (constant within strata). 
+When <code>fpc</code> is a vector with one entry per stratum it may not have
+names that differ from the stratum identifiers (it may have no names,
+in which case it must be in the same order as
+<code>unique(strata)</code>). To specify population stratum sizes use
+<code>fpctype="population"</code>, to specify sampling fractions use
+<code>fpctype="fraction"</code> and to specify the correction directly use
+<code>fpctype="correction"</code>
+</p>
+<p>The only reason not to use <code>compress=TRUE</code> is that it is new and
+there is a greater possibility of bugs.  It reduces the number of
+rows of the replicate weights matrix from the number of observations
+to the number of PSUs.
+</p>
+<p>In BRR variance estimation each stratum is split in two to give
+half-samples. Balanced replicated weights are needed, where
+observations in two different strata end up in the same half stratum
+as often as in different half-strata.BRR, strictly speaking, is
+defined only when each stratum has exactly
+two PSUs.  A stratum with one PSU can be merged with another such
+stratum, or can be split to appear in both half samples with half
+weight.  The latter approach is appropriate for a PSU that was
+deterministically sampled.
+</p>
+<p>A stratum with more than two PSUs can be split into multiple smaller
+strata each with two PSUs or the PSUs can be merged to give two
+superclusters within the stratum.
+</p>
+<p>When merging small strata or grouping PSUs in large strata the
+<code>match</code> variable is used to sort PSUs before merging, to give
+approximate matching on this variable.
+</p>
+<p>If you want more control than this you should probably construct your
+own weights using the Hadamard matrices produced by <code><a href="hadamard.html">hadamard</a></code>
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>brrweights</code> with <code>only.weights=FALSE</code> a list with elements
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>two-column matrix indicating the weight for each
+half-stratum in one particular set  of split samples</p>
+</td></tr>
+<tr valign="top"><td><code>wstrata</code></td>
+<td>
+<p>New stratum variable incorporating merged or split strata</p>
+</td></tr>
+<tr valign="top"><td><code>strata</code></td>
+<td>
+<p>Original strata for distinct PSUs</p>
+</td></tr>
+<tr valign="top"><td><code>psu</code></td>
+<td>
+<p>Distinct PSUs</p>
+</td></tr>
+<tr valign="top"><td><code>npairs</code></td>
+<td>
+<p>Dimension of Hadamard matrix used in BRR construction</p>
+</td></tr>
+<tr valign="top"><td><code>sampler</code></td>
+<td>
+<p>function returning replicate weights</p>
+</td></tr>
+<tr valign="top"><td><code>compress</code></td>
+<td>
+<p>Indicates whether the <code>sampler</code> returns per PSU
+or per observation weights</p>
+</td></tr>
+</table>
+<p>For <code>jk1weights</code> and <code>jknweights</code> a data frame of replicate
+weights and the <code>scale</code> and <code>rscale</code> arguments to <code><a href="svrVar.html">svrVar</a></code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Levy and Lemeshow &quot;Sampling of Populations&quot;. Wiley.
+</p>
+<p>Shao and Tu &quot;The Jackknife and Bootstrap&quot;. Springer.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="hadamard.html">hadamard</a></code>, <code><a href="as.svrepdesign.html">as.svrepdesign</a></code>,
+<code><a href="svrVar.html">svrVar</a></code>, <code><a href="surveyoptions.html">surveyoptions</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(scd)
+scdnofpc&lt;-svydesign(data=scd, prob=~1, id=~ambulance, strata=~ESA,
+nest=TRUE)
+
+## convert to BRR replicate weights
+scd2brr &lt;- as.svrepdesign(scdnofpc, type="BRR")
+svymean(~alive, scd2brr)
+svyratio(~alive, ~arrests, scd2brr)
+
+## with user-supplied hadamard matrix
+scd2brr1 &lt;- as.svrepdesign(scdnofpc, type="BRR", hadamard.matrix=paley(11))
+svymean(~alive, scd2brr1)
+svyratio(~alive, ~arrests, scd2brr1)
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

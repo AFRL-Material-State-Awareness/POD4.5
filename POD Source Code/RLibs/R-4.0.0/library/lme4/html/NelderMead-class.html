@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class '&quot;NelderMead&quot;' of Nelder-Mead optimizers and its...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for NelderMead-class {lme4}"><tr><td>NelderMead-class {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class <code>"NelderMead"</code> of Nelder-Mead optimizers and its Generator</h2>
+
+<h3>Description</h3>
+
+<p>Class <code>"NelderMead"</code> is a reference class for a Nelder-Mead
+simplex optimizer allowing box constraints on the parameters and using
+reverse communication.
+</p>
+<p>The <code>NelderMead()</code> function conveniently generates such objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+NelderMead(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Argument list (see Note below).</p>
+</td></tr>
+</table>
+
+
+<h3>Methods</h3>
+
+<p><code>NelderMead$new(lower, upper, xst, x0, xt)</code>Create a
+new <code><a href="NelderMead-class.html">NelderMead</a></code> object
+</p>
+
+
+<h3>Extends</h3>
+
+<p>All reference classes extend and inherit methods from
+<code>"<a href="../../methods/html/stdRefClass.html">envRefClass</a>"</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This is the default optimizer for the second stage of
+<code><a href="glmer.html">glmer</a></code> and <code><a href="nlmer.html">nlmer</a></code> fits.  We
+found that it was more reliable and often faster than
+more sophisticated optimizers.
+</p>
+<p>Arguments to <code>NelderMead()</code> and the <code><a href="../../methods/html/new.html">new</a></code> method must
+be named arguments:
+</p>
+
+<dl>
+<dt>lower</dt><dd><p>numeric vector of lower bounds - elements may be <code>-Inf</code>.</p>
+</dd>
+<dt>upper</dt><dd><p>numeric vector of upper bounds - elements may be <code>Inf</code>.</p>
+</dd>
+<dt>xst</dt><dd><p>numeric vector of initial step sizes to establish the
+simplex - all elements must be non-zero.</p>
+</dd>
+<dt>x0</dt><dd><p>numeric vector of starting values for the parameters.</p>
+</dd>
+<dt>xt</dt><dd><p>numeric vector of tolerances on the parameters.</p>
+</dd>
+</dl>
+
+
+
+<h3>References</h3>
+
+<p>Based on code in the NLopt collection.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="Nelder_Mead.html">Nelder_Mead</a></code>, the typical &ldquo;constructor&rdquo;.
+Further, <code><a href="glmer.html">glmer</a></code>, <code><a href="nlmer.html">nlmer</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+showClass("NelderMead")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-30 <a href="00Index.html">Index</a>]</div>
+</body></html>

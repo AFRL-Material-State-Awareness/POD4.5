@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Automatic breaks for numeric axes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for breaks_extended {scales}"><tr><td>breaks_extended {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Automatic breaks for numeric axes</h2>
+
+<h3>Description</h3>
+
+<p>Uses Wilkinson's extended breaks algorithm as implemented in the
+<span class="pkg">labeling</span> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+breaks_extended(n = 5, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>Desired number of breaks. You may get slightly more or fewer
+breaks that requested.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed on to <code><a href="../../labeling/html/extended.html">labeling::extended()</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>Talbot, J., Lin, S., Hanrahan, P. (2010) An Extension of
+Wilkinson's Algorithm for Positioning Tick Labels on Axes, InfoVis
+2010 <a href="http://vis.stanford.edu/files/2010-TickLabels-InfoVis.pdf">http://vis.stanford.edu/files/2010-TickLabels-InfoVis.pdf</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+demo_continuous(c(0, 10))
+demo_continuous(c(0, 10), breaks = breaks_extended(3))
+demo_continuous(c(0, 10), breaks = breaks_extended(10))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Summary Method for MCD objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for summary.mcd {robustbase}"><tr><td>summary.mcd {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Summary Method for MCD objects</h2>
+
+<h3>Description</h3>
+
+<p><code><a href="../../base/html/summary.html">summary</a></code> method for class <code>"mcd"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'mcd'
+summary(object, ...)
+## S3 method for class 'summary.mcd'
+print(x, digits = max(3, getOption("digits") - 3),
+     print.gap = 2, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object,x</code></td>
+<td>
+<p>an object of class <code>"mcd"</code> (or <code>"summary.mcd"</code>);
+usually, a result of a call to <code><a href="covMcd.html">covMcd</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>the number of significant digits to use when printing.</p>
+</td></tr>
+<tr valign="top"><td><code>print.gap</code></td>
+<td>
+<p>number of horizontal spaces between numbers; see also
+<code><a href="../../base/html/print.default.html">print.default</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>summary.mcd()</code>, the S3 method, simply returns an (S3) object of
+<code><a href="../../base/html/class.html">class</a> "summary.mcd"</code> for which there's a
+<code><a href="../../base/html/print.html">print</a></code> method:
+</p>
+<p><code>print.summary.mcd</code> prints summary statistics for the weighted covariance
+matrix and location estimates with weights based on MCD estimates.
+While the function <code><a href="covMcd.html">print.mcd</a></code> prints only the robust estimates
+of the location and the covariance matrix, <code>print.summary.mcd</code> will
+print also the correlation matrix (if requested in the call to
+<code>covMcd</code> with <code>cor=TRUE</code>), the eigenvalues of the covariance
+or the correlation matrix and the robust (&ldquo;Mahalanobis&rdquo;) distances.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>summary.mcd</code> returns an <code>summary.mcd</code> object, whereas the
+<code>print</code> methods returns its first argument via
+<code><a href="../../base/html/invisible.html">invisible</a></code>, as all <code>print</code> methods do.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="covMcd.html">covMcd</a></code>, <code><a href="../../base/html/summary.html">summary</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(Animals, package = "MASS")
+brain &lt;- Animals[c(1:24, 26:25, 27:28),]
+lbrain &lt;- log(brain)
+summary(cLB &lt;- covMcd(lbrain))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

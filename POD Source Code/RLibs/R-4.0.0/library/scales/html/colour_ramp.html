@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fast colour interpolation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for colour_ramp {scales}"><tr><td>colour_ramp {scales}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fast colour interpolation</h2>
+
+<h3>Description</h3>
+
+<p>Returns a function that maps the interval [0,1] to a set of colours.
+Interpolation is performed in the CIELAB colour space. Similar to
+<code><a href="../../grDevices/html/colorRamp.html">colorRamp</a>(space = 'Lab')</code>, but hundreds of
+times faster, and provides results in <code>"#RRGGBB"</code> (or
+<code>"#RRGGBBAA"</code>) character form instead of RGB colour matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+colour_ramp(colors, na.color = NA, alpha = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>colors</code></td>
+<td>
+<p>Colours to interpolate; must be a valid argument to
+<code><a href="../../grDevices/html/col2rgb.html">grDevices::col2rgb()</a></code>. This can be a character vector of
+<code>"#RRGGBB"</code> or  <code>"#RRGGBBAA"</code>, colour names from
+<code><a href="../../grDevices/html/colors.html">grDevices::colors()</a></code>, or a positive integer that indexes into
+<code><a href="../../grDevices/html/palette.html">grDevices::palette()</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>na.color</code></td>
+<td>
+<p>The colour to map to <code>NA</code> values (for example,
+<code>"#606060"</code> for dark grey, or <code>"#00000000"</code> for transparent) and
+values outside of [0,1]. Can itself by <code>NA</code>, which will simply cause
+an <code>NA</code> to be inserted into the output.</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>Whether to include alpha transparency channels in interpolation.
+If <code>TRUE</code> then the alpha information is included in the interpolation.
+The returned colours will be provided in <code>"#RRGGBBAA"</code> format when needed,
+i.e., in cases where the colour is not fully opaque, so that the <code>"AA"</code>
+part is not equal to <code>"FF"</code>. Fully opaque colours will be returned in
+<code>"#RRGGBB"</code> format. If <code>FALSE</code>, the alpha information is discarded
+before interpolation and colours are always returned as <code>"#RRGGBB"</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A function that takes a numeric vector and returns a character vector
+of the same length with RGB or RGBA hex colours.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../grDevices/html/colorRamp.html">colorRamp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ramp &lt;- colour_ramp(c("red", "green", "blue"))
+show_col(ramp(seq(0, 1, length = 12)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>scales</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

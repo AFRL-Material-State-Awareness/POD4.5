@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: List to data frame.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for list_to_dataframe {plyr}"><tr><td>list_to_dataframe {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>List to data frame.</h2>
+
+<h3>Description</h3>
+
+<p>Reduce/simplify a list of homogenous objects to a data frame. All
+<code>NULL</code> entries are removed. Remaining entries must be all atomic
+or all data frames.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+list_to_dataframe(res, labels = NULL, id_name = NULL, id_as_factor = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>res</code></td>
+<td>
+<p>list of input data</p>
+</td></tr>
+<tr valign="top"><td><code>labels</code></td>
+<td>
+<p>a data frame of labels, one row for each element of res</p>
+</td></tr>
+<tr valign="top"><td><code>idname</code></td>
+<td>
+<p>the name of the index column, <code>NULL</code> for no index
+column</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p>Other list simplification functions: 
+<code><a href="list_to_array.html">list_to_array</a>()</code>,
+<code><a href="list_to_vector.html">list_to_vector</a>()</code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

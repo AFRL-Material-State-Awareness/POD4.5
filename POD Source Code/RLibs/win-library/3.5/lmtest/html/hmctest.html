@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Harrison-McCabe test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for hmctest {lmtest}"><tr><td>hmctest {lmtest}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Harrison-McCabe test</h2>
+
+<h3>Description</h3>
+
+<p>Harrison-McCabe test for heteroskedasticity.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hmctest(formula, point = 0.5, order.by = NULL, simulate.p = TRUE, nsim = 1000,
+  plot = FALSE, data = list())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a symbolic description for the model to be tested
+(or a fitted <code>"lm"</code> object).</p>
+</td></tr>
+<tr valign="top"><td><code>point</code></td>
+<td>
+<p>numeric. If <code>point</code> is smaller than 1 it is
+interpreted as percentages of data, i.e. <code>n*point</code> is
+taken to be the (potential) breakpoint in the variances, if
+<code>n</code> is the number of observations in the model. If <code>point</code>
+is greater than 1 it is interpreted to be the index of the breakpoint.</p>
+</td></tr>
+<tr valign="top"><td><code>order.by</code></td>
+<td>
+<p>Either a vector <code>z</code> or a formula with a single explanatory
+variable like <code>~ z</code>. The observations in the model
+are ordered by the size of <code>z</code>. If set to <code>NULL</code> (the
+default) the observations are assumed to be ordered (e.g., a
+time series).</p>
+</td></tr>
+<tr valign="top"><td><code>simulate.p</code></td>
+<td>
+<p>logical. If <code>TRUE</code> a p value will be assessed
+by simulation, otherwise the p value is <code>NA</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>nsim</code></td>
+<td>
+<p>integer. Determines how many runs are used to simulate the
+p value.</p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p>logical. If <code>TRUE</code> the test statistic for all possible
+breakpoints is plotted.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables in the model.
+By default the variables are taken from the environment which <code>hmctest</code>
+is called from.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Harrison-McCabe test statistic is the fraction of the residual sum
+of
+squares that relates to the fraction of the data before the breakpoint. Under
+<i>H_0</i>
+the test statistic should be close to the size of this fraction, e.g. in the
+default
+case close to 0.5. The null hypothesis is reject if the statistic is too small.
+</p>
+<p>Examples can not only be found on this page, but also on the help pages of the
+data sets <code><a href="bondyield.html">bondyield</a></code>, <code><a href="currencysubstitution.html">currencysubstitution</a></code>,
+<code><a href="growthofmoney.html">growthofmoney</a></code>, <code><a href="moneydemand.html">moneydemand</a></code>,
+<code><a href="unemployment.html">unemployment</a></code>,
+<code><a href="wages.html">wages</a></code>.</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>"htest"</code> containing the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>statistic</code></td>
+<td>
+<p>the value of the test statistic.</p>
+</td></tr>
+<tr valign="top"><td><code>p.value</code></td>
+<td>
+<p>the simulated p-value of the test.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>a character string indicating what type of test was
+performed.</p>
+</td></tr>
+<tr valign="top"><td><code>data.name</code></td>
+<td>
+<p>a character string giving the name(s) of the data.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>M.J. Harrison &amp; B.P.M McCabe (1979),
+A Test for Heteroscedasticity based on Ordinary Least Squares Residuals.
+<em>Journal of the American Statistical Association</em> <b>74</b>, 494&ndash;499
+</p>
+<p>W. Krämer &amp; H. Sonnberger (1986),
+<em>The Linear Regression Model under Test</em>. Heidelberg: Physica
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/html/lm.html">lm</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## generate a regressor
+x &lt;- rep(c(-1,1), 50)
+## generate heteroskedastic and homoskedastic disturbances
+err1 &lt;- c(rnorm(50, sd=1), rnorm(50, sd=2))
+err2 &lt;- rnorm(100)
+## generate a linear relationship
+y1 &lt;- 1 + x + err1
+y2 &lt;- 1 + x + err2
+## perform Harrison-McCabe test
+hmctest(y1 ~ x)
+hmctest(y2 ~ x)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lmtest</em> version 0.9-40 <a href="00Index.html">Index</a>]</div>
+</body></html>

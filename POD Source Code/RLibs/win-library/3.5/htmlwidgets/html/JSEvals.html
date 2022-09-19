@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Creates a list of keys whose values need to be evaluated on...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for JSEvals {htmlwidgets}"><tr><td>JSEvals {htmlwidgets}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Creates a list of keys whose values need to be evaluated on the client-side</h2>
+
+<h3>Description</h3>
+
+<p>It works by transforming <code>list(foo = list(1, list(bar =
+I('function(){}')), 2))</code> to <code>list("foo.2.bar")</code>. Later on the JS side,
+the <code>window.HTMLWidgets.evaluateStringMember</code> function is called with
+the JSON object and the &quot;foo.2.bar&quot; string, which is split to <code>['foo',
+'2', 'bar']</code>, and the string at that location is replaced <em>in-situ</em> with
+the results of evaluating it. Note '2' (character) should have been 2
+(integer) but it does not seem to matter in JS: x[2] is the same as x['2']
+when all child members of x are unnamed, and ('2' in x) will be true even if
+x is an array without names. This is a little hackish.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+JSEvals(list)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>list</code></td>
+<td>
+<p>a list in which the elements that should be evaluated as
+JavaScript are to be identified</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is intended mostly for internal use. There's generally no need
+for widget authors or users to call it, as it's called automatically on the
+widget instance data during rendering. It's exported in case other packages
+want to add support for <code><a href="JS.html">JS</a></code> in contexts outside of widget
+payloads.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yihui Xie
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>htmlwidgets</em> version 1.5.4 <a href="00Index.html">Index</a>]</div>
+</body></html>

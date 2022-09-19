@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Combine levels from two or more factors to create a new...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fct_cross {forcats}"><tr><td>fct_cross {forcats}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Combine levels from two or more factors to create a new factor</h2>
+
+<h3>Description</h3>
+
+<p>Computes a factor whose levels are all the combinations of the levels of the input factors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fct_cross(..., sep = ":", keep_empty = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>&lt;<code><a href="../../rlang/html/dyn-dots.html">dynamic-dots</a></code>&gt; Additional factors
+or character vectors.</p>
+</td></tr>
+<tr valign="top"><td><code>sep</code></td>
+<td>
+<p>A character string to separate the levels</p>
+</td></tr>
+<tr valign="top"><td><code>keep_empty</code></td>
+<td>
+<p>If TRUE, keep combinations with no observations as levels</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The new factor
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+fruit &lt;- factor(c("apple", "kiwi", "apple", "apple"))
+colour &lt;- factor(c("green", "green", "red", "green"))
+eaten &lt;- c("yes", "no", "yes", "no")
+fct_cross(fruit, colour)
+fct_cross(fruit, colour, eaten)
+fct_cross(fruit, colour, keep_empty = TRUE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>forcats</em> version 0.5.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

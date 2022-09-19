@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Find Interval Indices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for findintervals {pracma}"><tr><td>findintervals {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Find Interval Indices
+</h2>
+
+<h3>Description</h3>
+
+<p>Find indices <code>i</code> in vector <code>xs</code> such that either <code>x=xs[i]</code>
+or such that <code>xs[i]&lt;x&lt;xs[i+1]</code> or <code>xs[i]&gt;x&gt;xs[i+1]</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+findintervals(x, xs)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>single number.</p>
+</td></tr>
+<tr valign="top"><td><code>xs</code></td>
+<td>
+<p>numeric vector, not necessarily sorted.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Contrary to <code>findInterval</code>, the vector <code>xs</code> in
+<code>findintervals</code> need not be sorted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of indices in <code>1..length(xs)</code>.
+If none is found, returns <code>integer(0)</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If <code>x</code> is equal to the last element in <code>xs</code>, the index
+<code>length(xs)</code> will also be returned.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xs &lt;- zapsmall(sin(seq(0, 10*pi, len=100)))
+findintervals(0, xs)
+#   1  10  20  30  40  50  60  70  80  90 100
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

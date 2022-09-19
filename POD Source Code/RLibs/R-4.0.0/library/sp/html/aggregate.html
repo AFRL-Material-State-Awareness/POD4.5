@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: aggregation of spatial objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for aggregate {sp}"><tr><td>aggregate {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> aggregation of spatial objects </h2>
+
+<h3>Description</h3>
+
+<p> spatial aggregation of thematic information in spatial objects</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'Spatial'
+aggregate(x, by = list(ID = rep(1, length(x))),
+	FUN, ..., dissolve = TRUE, areaWeighted = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>object deriving from <a href="Spatial-class.html">Spatial</a>, with attributes </p>
+</td></tr>
+<tr valign="top"><td><code>by</code></td>
+<td>
+<p>aggregation predicate; if <code>by</code> is a <a href="Spatial-class.html">Spatial</a> object,
+the geometry by which attributes in <code>x</code> are aggregated; if <code>by</code>
+is a list, aggregation by attribute(s), see <a href="../../stats/html/aggregate.html">aggregate.data.frame</a></p>
+</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+<p>aggregation function, e.g. <a href="../../base/html/mean.html">mean</a>; see details</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed on to function <code>FUN</code>, unless <code>minDimension</code>
+is specified, which is passed on to function <a href="over.html">over</a></p>
+</td></tr>
+<tr valign="top"><td><code>dissolve</code></td>
+<td>
+<p>logical; should, when aggregating based on attributes, the
+resulting geometries be dissolved? Note that if <code>x</code> has class
+<code>SpatialPointsDataFrame</code>, this returns an object of class <code>SpatialMultiPointsDataFrame</code></p>
+</td></tr>
+<tr valign="top"><td><code>areaWeighted</code></td>
+<td>
+<p>logical; should the aggregation of <code>x</code> be weighted by the
+areas it intersects with each feature of <code>by</code>? See value.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>FUN</code> should be a function that takes as first argument a
+vector, and that returns a single number. The canonical examples
+are <a href="../../base/html/mean.html">mean</a> and <a href="../../base/html/sum.html">sum</a>. Counting features is obtained when
+summing an attribute variable that has the value 1 everywhere.
+</p>
+
+
+<h3>Value</h3>
+
+ 
+<p>The aggregation of attribute values of <code>x</code> either over the
+geometry of <code>by</code> by using <a href="over.html">over</a> for spatial matching,
+or by attribute values, using aggregation function <code>FUN</code>.
+</p>
+<p>If <code>areaWeighted</code> is <code>TRUE</code>, <code>FUN</code> is ignored and the
+area weighted mean is computed for numerical variables, or if all
+attributes are <code>factor</code>s, the area dominant factor level (area
+mode) is returned. This will compute the <a href="../../rgeos/html/topo-bin-gIntersection.html">gIntersection</a>
+of <code>x</code> and <code>by</code>; see examples below.
+</p>
+<p>If <code>by</code> is missing, aggregates over all features.
+</p>
+
+
+<h3>Note</h3>
+
+<p> uses <a href="over.html">over</a> to find spatial match if <code>by</code> is a 
+<a href="Spatial-class.html">Spatial</a> object </p>
+
+
+<h3>Author(s)</h3>
+
+<p>Edzer Pebesma, <a href="mailto:edzer.pebesma@uni-muenster.de">edzer.pebesma@uni-muenster.de</a></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data("meuse")
+coordinates(meuse) &lt;- ~x+y
+data("meuse.grid")
+coordinates(meuse.grid) &lt;- ~x+y
+gridded(meuse.grid) &lt;- TRUE
+i = cut(meuse.grid$dist, c(0,.25,.5,.75,1), include.lowest = TRUE)
+j = sample(1:2, 3103,replace=TRUE)
+## Not run: 
+if (require(rgeos)) {
+	# aggregation by spatial object:
+	ab = gUnaryUnion(as(meuse.grid, "SpatialPolygons"), meuse.grid$part.a)
+	x = aggregate(meuse["zinc"], ab, mean)
+	spplot(x)
+	# aggregation of multiple variables
+	x = aggregate(meuse[c("zinc", "copper")], ab, mean)
+	spplot(x)
+	# aggregation by attribute, then dissolve to polygon:
+	x = aggregate(meuse.grid["dist"], list(i=i), mean)
+	spplot(x["i"])
+	x = aggregate(meuse.grid["dist"], list(i=i,j=j), mean)
+	spplot(x["dist"], col.regions=bpy.colors())
+	spplot(x["i"], col.regions=bpy.colors(4))
+	spplot(x["j"], col.regions=bpy.colors())
+}
+
+## End(Not run)
+
+x = aggregate(meuse.grid["dist"], list(i=i,j=j), mean, dissolve = FALSE)
+spplot(x["j"], col.regions=bpy.colors())
+
+if (require(gstat) &amp;&amp; require(rgeos)) {
+	x = idw(log(zinc)~1, meuse, meuse.grid, debug.level=0)[1]
+	spplot(x[1],col.regions=bpy.colors())
+	i = cut(x$var1.pred, seq(4, 7.5, by=.5), 
+		include.lowest = TRUE)
+	xa = aggregate(x["var1.pred"], list(i=i), mean)
+	spplot(xa[1],col.regions=bpy.colors(8))
+}
+
+if (require(rgeos)) {
+# Area-weighted example, using two partly overlapping grids:
+
+  gt1 = SpatialGrid(GridTopology(c(0,0), c(1,1), c(4,4)))
+  gt2 = SpatialGrid(GridTopology(c(-1.25,-1.25), c(1,1), c(4,4)))
+
+  # convert both to polygons; give p1 attributes to aggregate
+  p1 = SpatialPolygonsDataFrame(as(gt1, "SpatialPolygons"), 
+		  data.frame(v = 1:16, w=5:20, x=factor(1:16)), match.ID = FALSE)
+  p2 = as(gt2, "SpatialPolygons")
+
+  # plot the scene:
+  plot(p1, xlim = c(-2,4), ylim = c(-2,4))
+  plot(p2, add = TRUE, border = 'red')
+  i = gIntersection(p1, p2, byid = TRUE)
+  plot(i, add=TRUE, density = 5, col = 'blue')
+  # plot IDs p2:
+  ids.p2 = sapply(p2@polygons, function(x) slot(x, name = "ID"))
+  text(coordinates(p2), ids.p2)
+  # plot IDs i:
+  ids.i = sapply(i@polygons, function(x) slot(x, name = "ID"))
+  text(coordinates(i), ids.i, cex = .8, col = 'blue')
+
+  # compute &amp; plot area-weighted average; will warn for the factor
+  ret = aggregate(p1, p2, areaWeighted = TRUE)
+  spplot(ret)
+
+  # all-factor attributes: compute area-dominant factor level:
+  ret = aggregate(p1["x"], p2, areaWeighted = TRUE) 
+  spplot(ret)
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

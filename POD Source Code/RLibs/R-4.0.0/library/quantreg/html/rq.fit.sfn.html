@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Sparse Regression Quantile Fitting</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for rq.fit.sfn {quantreg}"><tr><td>rq.fit.sfn {quantreg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Sparse Regression Quantile Fitting</h2>
+
+<h3>Description</h3>
+
+<p>Fit a quantile regression model using a sparse implementation of the
+Frisch-Newton interior-point algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rq.fit.sfn(a, y, tau = 0.5, rhs = (1-tau)*c(t(a) %*% rep(1,length(y))), control)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>structure of the design matrix X stored in csr format</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>response vector</p>
+</td></tr>
+<tr valign="top"><td><code>tau</code></td>
+<td>
+<p>desired quantile</p>
+</td></tr>
+<tr valign="top"><td><code>rhs</code></td>
+<td>
+<p>the right-hand-side of the dual problem; regular users
+shouldn't need to specify this, but in special cases can be quite
+usefully altered to meet special needs.  See e.g. Section 6.8 of
+Koenker (2005).</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>control parameters for fitting routines:  see <code>sfn.control</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is a sparse implementation of the Frisch-Newton algorithm for quantile
+regression described in Portnoy and Koenker (1997). The sparse matrix
+linear algebra is implemented through the functions available in the R
+package <span class="pkg">SparseM</span>.
+</p>
+
+
+<h3>Value</h3>
+
+<table summary="R valueblock">
+<tr valign="top"><td><code>coef</code></td>
+<td>
+<p>Regression quantile coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>ierr</code></td>
+<td>
+<p>Error code for the internal Fortran routine <code>srqfnc</code>:
+</p>
+
+<dl>
+<dt>1:</dt><dd><p> insufficient work space in call to <code>extract</code></p>
+</dd>
+<dt>2:</dt><dd><p> nnzd &gt; nnzdmax</p>
+</dd>
+<dt>3:</dt><dd><p> insufficient storage in iwork when calling ordmmd</p>
+</dd>
+<dt>4:</dt><dd><p> insufficient storage in iwork when calling sfinit</p>
+</dd>
+<dt>5:</dt><dd><p> nnzl &gt; nnzlmax when calling sfinit</p>
+</dd>
+<dt>6:</dt><dd><p> nsub &gt; nsubmax when calling sfinit</p>
+</dd>
+<dt>7:</dt><dd><p> insufficient work space in iwork when calling symfct</p>
+</dd>
+<dt>8:</dt><dd><p> inconsistancy in input when calling symfct</p>
+</dd>
+<dt>9:</dt><dd><p> tmpsiz &gt; tmpmax when calling bfinit; increase tmpmax</p>
+</dd>
+<dt>10:</dt><dd><p> nonpositive diagonal encountered, not positive definite</p>
+</dd>
+<dt>11:</dt><dd><p> insufficient work storage in tmpvec when calling blkfct</p>
+</dd>
+<dt>12:</dt><dd><p> insufficient work storage in iwork when calling blkfct</p>
+</dd>
+<dt>17:</dt><dd><p> tiny diagonals replaced with Inf when calling blkfct</p>
+</dd>
+</dl>
+
+</td></tr>
+<tr valign="top"><td><code>it</code></td>
+<td>
+<p>Iteration count</p>
+</td></tr>
+<tr valign="top"><td><code>time</code></td>
+<td>
+<p>Amount of time used in the computation</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Pin Ng</p>
+
+
+<h3>References</h3>
+
+<p>Portnoy, S. and R. Koenker (1997) The Gaussian Hare and the Laplacean Tortoise: 
+Computability of Squared-error vs Absolute Error Estimators, (with discussion). 
+<em>Statistical Science</em>, 12, 279-300.
+</p>
+<p>Koenker, R and Ng, P. (2003).  SparseM:  A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>, 
+<em>J. of Stat. Software</em>, 8, 1&ndash;9.
+</p>
+<p>Koenker, R. (2005) <em>Quantile Regression</em>, Cambridge U. Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rq.fit.sfnc</code> for the constrained version,
+<code>SparseM</code> for a sparse matrix package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## An artificial example :
+n &lt;- 200
+p &lt;- 50
+set.seed(101)
+X &lt;- rnorm(n*p)
+X[abs(X) &lt; 2.0] &lt;- 0
+X &lt;- cbind(1, matrix(X, n, p))
+y &lt;- 0.5 * apply(X,1,sum) + rnorm(n) ## true beta = (0.5, 0.5, ...)
+
+sX &lt;- as.matrix.csr(X)
+try(rq.o &lt;- rq.fit.sfn(sX, y)) #-&gt; not enough tmp memory
+(tmpmax &lt;- floor(1e5 + exp(-12.1)*(sX@ia[p+1]-1)^2.35))
+## now ok:
+rq.o &lt;- rq.fit.sfn(sX, y, control = list(tmpmax= tmpmax))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>quantreg</em> version 5.94 <a href="00Index.html">Index</a>]</div>
+</body></html>

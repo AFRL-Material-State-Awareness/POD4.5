@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Kronecker product (Matlab Style)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for kron {pracma}"><tr><td>kron {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Kronecker product (Matlab Style)</h2>
+
+<h3>Description</h3>
+
+<p>Kronecker tensor product of two matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+kron(a, b)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>real or complex matrix</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>real or complex matrix</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The Kronecker product is a large matrix formed by all products between the
+elements of <code>a</code> and those of <code>b</code>. The first left block is a11*b,
+etc.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an <code>(n*p x m*q</code>-matrix, if <code>a</code> is <code>(n x m</code> and
+<code>b</code> is <code>(p x q)</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>kron()</code> is an alias for the R function <code>kronecker()</code>, which can
+also be executed with the binary operator &lsquo;%x%&rsquo;.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+a &lt;- diag(1, 2, 2)
+b &lt;- matrix(1:4, 2, 2)
+kron(a, b)
+kron(b, a)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

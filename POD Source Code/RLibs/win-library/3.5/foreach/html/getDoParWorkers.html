@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Functions Providing Information on the doPar Backend</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for getDoParWorkers {foreach}"><tr><td>getDoParWorkers {foreach}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Functions Providing Information on the doPar Backend</h2>
+
+<h3>Description</h3>
+
+<p>The <code>getDoParWorkers</code> function returns the number of
+execution workers there are in the currently registered doPar backend.
+It can be useful when determining how to split up the work to be executed
+in parallel.  A <code>1</code> is returned by default.
+</p>
+<p>The <code>getDoParRegistered</code> function returns TRUE if a doPar backend
+has been registered, otherwise FALSE.
+</p>
+<p>The <code>getDoParName</code> function returns the name of the currently
+registered doPar backend.  A <code>NULL</code> is returned if no backend is
+registered.
+</p>
+<p>The <code>getDoParVersion</code> function returns the version of the currently
+registered doPar backend.  A <code>NULL</code> is returned if no backend is
+registered.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+getDoParWorkers()
+
+getDoParRegistered()
+
+getDoParName()
+
+getDoParVersion()
+</pre>
+
+
+<h3>Examples</h3>
+
+<pre>
+cat(sprintf('%s backend is registered\n',
+            if(getDoParRegistered()) 'A' else 'No'))
+cat(sprintf('Running with %d worker(s)\n', getDoParWorkers()))
+(name &lt;- getDoParName())
+(ver &lt;- getDoParVersion())
+if (getDoParRegistered())
+  cat(sprintf('Currently using %s [%s]\n', name, ver))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>foreach</em> version 1.5.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

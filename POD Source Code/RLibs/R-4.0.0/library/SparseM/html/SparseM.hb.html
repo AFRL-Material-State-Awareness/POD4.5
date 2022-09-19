@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Harwell-Boeing Format Sparse Matrices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for SparseM.hb {SparseM}"><tr><td>SparseM.hb {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Harwell-Boeing Format Sparse Matrices</h2>
+
+<h3>Description</h3>
+
+<p>Read, and extract components of data in Harwell-Boeing sparse matrix format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+read.matrix.hb(file)
+model.matrix(object, ...)
+model.response(data,type)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>file name to read from or </p>
+</td></tr>
+<tr valign="top"><td><code>data, object</code></td>
+<td>
+<p>an object of either 'matrix.csc.hb' or 'matrix.ssc.hb' class</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>One of &lsquo;&quot;any&quot;&rsquo;, &lsquo;&quot;numeric&quot;&rsquo;, &lsquo;&quot;double&quot;&rsquo;. Using the either of
+latter two coerces the result to have storage mode &lsquo;&quot;double&quot;&rsquo;</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to model.matrix</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Sparse coefficient matrices in the Harwell-Boeing format are stored in 
+80-column records. Each file begins with a multiple line header block 
+followed by two, three or four data blocks. The header block contains 
+summary information on the storage formats and storage requirements. 
+The data blocks contain information of the sparse coefficient matrix and 
+data for the right-hand-side of the linear system of equations, 
+initial guess of the solution and the exact solutions if they exist.
+The function <code>model.matrix</code> extracts the X matrix component.
+The function <code>model.response</code> extracts the y vector (or matrix).
+The function <code>model.guess</code> extracts the guess vector. 
+The function <code>model.xexact</code> extracts the xexact vector. 
+This function is written in R replacing a prior implementation based
+on iohb.c which had memory fault difficulties.  The function write.matrix.hb
+has been purged; users wishing to write matrices in Harwell-Boeing format
+are advised to convert SparseM matrices to Matrix classes and use writeHB
+from the Matrix package.  Contributions of code to facilitate this conversion
+would be appreciated!
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function <code>read.matrix.hb</code> returns a list of class 
+<code>matrix.csc.hb</code> or <code>matrix.ssc.hb</code> depending
+on how the coefficient matrix is stored in the <code>file</code>.
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>ra </code></td>
+<td>
+<p>ra component of the csc or ssc format of the coefficient matrix, X.</p>
+</td></tr>
+<tr valign="top"><td><code>ja </code></td>
+<td>
+<p>ja component of the csc or ssc format of the coefficient matrix, X.</p>
+</td></tr>
+<tr valign="top"><td><code>ia </code></td>
+<td>
+<p>ia component of the csc or ssc format of the coefficient matrix, X.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs.ra </code></td>
+<td>
+<p>ra component of the right-hand-side, y, if stored in csc or 
+ssc format; right-hand-side stored in dense vector or matrix otherwise.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs.ja </code></td>
+<td>
+<p>ja component of the right-hand-side, y, if stored in csc or 
+ssc format; a null vector otherwise.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs.ia </code></td>
+<td>
+<p>ia component of the right-hand-side, y, if stored in csc or 
+ssc format; a null vector otherwise.</p>
+</td></tr>
+<tr valign="top"><td><code>xexact</code></td>
+<td>
+<p>vector of the exact solutions, b, if they exist; a null vector otherwise.</p>
+</td></tr>
+<tr valign="top"><td><code>guess</code></td>
+<td>
+<p>vector of the initial guess of the solutions if they exist; 
+a null vector otherwise.</p>
+</td></tr>
+<tr valign="top"><td><code>dimension</code></td>
+<td>
+<p>dimenson of the coefficient matrix, X.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs.dim</code></td>
+<td>
+<p>dimenson of the right-hand-side, y.</p>
+</td></tr>
+<tr valign="top"><td><code>rhs.mode</code></td>
+<td>
+<p>storage mode of the right-hand-side; can be full storage or
+same format as the coefficient matrix, for the moment the only allowed
+mode is &quot;F&quot; for full, or dense mode.</p>
+</td></tr>
+</table>
+<p>The function <code>model.matrix</code> returns the X matrix of class <code>matrix.csr</code>.
+The function <code>model.response</code> returns the y vector (or matrix).
+The function <code>model.guess</code> returns the guess  vector (or matrix).
+The function <code>model.xexact</code> returns the xexact vector (or matrix).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Pin Ng</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Duff, I.S., Grimes, R.G. and Lewis, J.G. (1992) 
+User's Guide for Harwell-Boeing Sparse Matrix Collection at 
+<a href="https://math.nist.gov/MatrixMarket/collections/hb.html">https://math.nist.gov/MatrixMarket/collections/hb.html</a></p>
+
+
+<h3>See Also</h3>
+
+<p><code>slm</code> for sparse version of <code>lm</code> <br />
+<code>SparseM.ops</code> for operators on class <code>matrix.csr</code> <br />
+<code>SparseM.solve</code> for linear equation solving for class <code>matrix.csr</code> <br />
+<code>SparseM.image</code> for image plotting of class <code>matrix.csr</code> <br />
+<code>SparseM.ontology</code> for coercion of class <code>matrix.csr</code> <br />
+</p>
+
+
+<h3>Examples</h3>
+
+<pre> 
+Xy &lt;- read.matrix.hb(system.file("extdata","lsq.rra",package = "SparseM"))
+class(Xy) # -&gt; [1] "matrix.csc.hb"
+X &lt;- model.matrix(Xy)-&gt;X
+class(X) # -&gt; "matrix.csr"
+dim(X) # -&gt; [1] 1850  712
+y &lt;- model.response(Xy) # extract the rhs
+length(y) # [1] 1850
+Xy &lt;- read.matrix.hb(system.file("extdata","rua_32_ax.rua",package = "SparseM"))
+X &lt;- model.matrix(Xy)
+y &lt;- model.response(Xy) # extract the rhs
+g &lt;- model.guess(Xy) # extract the guess 
+a &lt;- model.xexact(Xy) # extract the xexact 
+fit &lt;- solve(t(X) %*% X, t(X) %*% y) # compare solution with xexact solution 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

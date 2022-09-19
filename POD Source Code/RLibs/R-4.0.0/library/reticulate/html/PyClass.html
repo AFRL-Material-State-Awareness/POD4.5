@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a python class</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for PyClass {reticulate}"><tr><td>PyClass {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a python class</h2>
+
+<h3>Description</h3>
+
+<p>Create a python class
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+PyClass(classname, defs = list(), inherit = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>classname</code></td>
+<td>
+<p>Name of the class. The class name is useful for S3 method
+dispatch.</p>
+</td></tr>
+<tr valign="top"><td><code>defs</code></td>
+<td>
+<p>A named list of class definitions - functions, attributes, etc.</p>
+</td></tr>
+<tr valign="top"><td><code>inherit</code></td>
+<td>
+<p>A list of Python class objects. Usually these objects have
+the <code>python.builtin.type</code> S3 class.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+Hi &lt;- PyClass("Hi", list(
+  name = NULL,
+  `__init__` = function(self, name) {
+    self$name &lt;- name
+    NULL
+  },
+  say_hi = function(self) {
+    paste0("Hi ", self$name)
+  }
+))
+
+a &lt;- Hi("World")
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

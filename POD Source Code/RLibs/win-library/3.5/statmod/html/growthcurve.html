@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compare Groups of Growth Curves</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for growthcurve {statmod}"><tr><td>growthcurve {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compare Groups of Growth Curves</h2>
+
+<h3>Description</h3>
+
+<p>Do all pairwise comparisons between groups of growth curves using a permutation test. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+compareGrowthCurves(group, y, levels=NULL, nsim=100, fun=meanT, times=NULL,
+                    verbose=TRUE, adjust="holm")
+compareTwoGrowthCurves(group, y, nsim=100, fun=meanT)
+plotGrowthCurves(group, y, levels=sort(unique(group)), times=NULL, col=NULL,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>group</code></td>
+<td>
+<p>vector or factor indicating group membership.  Missing values are allowed in <code>compareGrowthCurves</code> but not in <code>compareTwoGrowthCurves</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>matrix of response values with rows for individuals and columns for times.  The number of rows must agree with the length of <code>group</code>. Missing values are allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>levels</code></td>
+<td>
+<p>a character vector containing the identifiers of the groups to be compared.  By default all groups with two more more members will be compared.</p>
+</td></tr>
+<tr valign="top"><td><code>nsim</code></td>
+<td>
+<p>number of permutations to estimated p-values.</p>
+</td></tr>
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>a function defining the statistic used to measure the distance between two groups of growth curves.
+Defaults to <code><a href="meanT.html">meanT</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>times</code></td>
+<td>
+<p>a numeric vector containing the column numbers on which the groups should be compared.
+By default all the columns are used.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>should progress results be printed?</p>
+</td></tr>
+<tr valign="top"><td><code>adjust</code></td>
+<td>
+<p>method used to adjust for multiple testing, see <code>p.adjust</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>vector of colors corresponding to distinct groups</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed to <code>plot()</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>compareTwoGrowthCurves</code> performs a permutation test of the difference between two groups of growth curves.
+<code>compareGrowthCurves</code> does all pairwise comparisons between two or more groups of growth curves.
+Accurate p-values can be obtained by setting <code>nsim</code> to some large value, <code>nsim=10000</code> say.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>compareTwoGrowthCurves</code> returns a list with two components, <code>stat</code> and <code>p.value</code>, containing the observed statistics and the estimated p-value.  <code>compareGrowthCurves</code> returns a data frame with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>Group1</code></td>
+<td>
+<p>name of first group in a comparison</p>
+</td></tr>
+<tr valign="top"><td><code>Group2</code></td>
+<td>
+<p>name of second group in a comparison</p>
+</td></tr>
+<tr valign="top"><td><code>Stat</code></td>
+<td>
+<p>observed value of the statistic</p>
+</td></tr>
+<tr valign="top"><td><code>P.Value</code></td>
+<td>
+<p>estimated p-value</p>
+</td></tr>
+<tr valign="top"><td><code>adj.P.Value</code></td>
+<td>
+<p>p-value adjusted for multiple testing</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Elso, C. M., Roberts, L. J., Smyth, G. K., Thomson, R. J., Baldwin, T. M., 
+Foote, S. J., and Handman, E. (2004). Leishmaniasis host response loci 
+(lmr13) modify disease severity through a Th1/Th2-independent pathway.  
+<em>Genes and Immunity</em> 5, 93-100.
+</p>
+<p>Baldwin, T., Sakthianandeswaren, A., Curtis, J., Kumar, B., Smyth, G. K., Foote, S., and Handman, E. (2007).
+Wound healing response is a major contributor to the severity of cutaneous leishmaniasis in the ear model of infection.
+<em>Parasite Immunology</em> 29, 501-513.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="meanT.html">meanT</a></code>, <code><a href="growthcurve.html">compareGrowthCurves</a></code>, <code><a href="growthcurve.html">compareTwoGrowthCurves</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# A example with only one time
+data(PlantGrowth)
+compareGrowthCurves(PlantGrowth$group,as.matrix(PlantGrowth$weight))
+# Can make p-values more accurate by nsim=10000
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

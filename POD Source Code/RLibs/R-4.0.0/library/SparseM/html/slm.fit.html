@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Internal slm fitting functions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for slm.fit {SparseM}"><tr><td>slm.fit {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Internal slm fitting functions</h2>
+
+<h3>Description</h3>
+
+<p>Fitting functions for sparse linear model fitting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+slm.fit(x,y,method, ...)
+slm.wfit(x,y,weights,...)
+slm.fit.csr(x, y, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p> design matrix.  </p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p> vector of response observations.  </p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p> only <code>csr</code> is supported currently </p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of weights to be used in the fitting
+process. If specified, weighted least squares is used with
+weights &lsquo;weights&rsquo; (that is, minimizing </p>
+<p style="text-align: center;"><i>sum w e^2</i></p>
+
+<p>The length of weights must be the same as
+the number of observations.  The weights must be nonnegative
+and it is strongly recommended that they be strictly positive,
+since zero weights are ambiguous.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>slm.fit</code> and <code>slm.wfit</code> call <code>slm.fit.csr</code> 
+to do Cholesky decomposition
+and then backsolve to obtain the least squares estimated coefficients.
+These functions can be called directly if the user is willing to
+specify the design matrix in <code>matrix.csr</code> form.  This is often
+advantageous in large problems to reduce memory requirements.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of class <code>slm</code> consisting of:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coef</code></td>
+<td>
+<p>estimated coefficients</p>
+</td></tr>
+<tr valign="top"><td><code>chol</code></td>
+<td>
+<p>cholesky object from fitting</p>
+</td></tr>
+<tr valign="top"><td><code>residuals</code></td>
+<td>
+<p>residuals</p>
+</td></tr>
+<tr valign="top"><td><code>fitted</code></td>
+<td>
+<p>fitted values</p>
+</td></tr>
+<tr valign="top"><td><code>df.residual</code></td>
+<td>
+<p>degrees of freedom</p>
+</td></tr>
+<tr valign="top"><td><code>terms</code></td>
+<td>
+<p>terms</p>
+</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>call</p>
+</td></tr>
+</table>
+<p>...
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Roger Koenker </p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R and Ng, P. (2002).  SparseM:  A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>,<br />
+<a href="http://www.econ.uiuc.edu/~roger/research/home.html">http://www.econ.uiuc.edu/~roger/research/home.html</a></p>
+
+
+<h3>See Also</h3>
+
+  <p><code><a href="slm.html">slm</a></code> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(lsq)
+X &lt;- model.matrix(lsq) #extract the design matrix
+y &lt;- model.response(lsq) # extract the rhs
+class(X) # -&gt; "matrix.csr"
+class(y) # -&gt; NULL
+slm.fit(X,y)-&gt;slm.fit.o # this is much more efficient in memory usage than slm()
+slm(y~as.matrix(X)-1) -&gt; slm.o # this requires X to be transformed into dense mode
+cat("Difference between `slm.fit' and `slm' estimated coefficients =",
+	sum(abs(slm.fit.o$coef-slm.o$coef)),"\n")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

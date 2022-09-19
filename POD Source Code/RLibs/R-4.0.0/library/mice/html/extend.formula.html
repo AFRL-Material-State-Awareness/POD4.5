@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extends a formula with predictors</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for extend.formula {mice}"><tr><td>extend.formula {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extends a formula with predictors</h2>
+
+<h3>Description</h3>
+
+<p>Extends a formula with predictors
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+extend.formula(
+  formula = ~0,
+  predictors = NULL,
+  auxiliary = TRUE,
+  include.intercept = FALSE,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>A formula. If it is
+not a formula, the formula is internally reset to <code>~0</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>predictors</code></td>
+<td>
+<p>A character vector of variable names.</p>
+</td></tr>
+<tr valign="top"><td><code>auxiliary</code></td>
+<td>
+<p>A logical that indicates whether the variables
+listed in <code>predictors</code> should be added to the formula as main
+effects. The default is <code>TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>include.intercept</code></td>
+<td>
+<p>A logical that indicated whether the intercept
+should be included in the result.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A formula
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

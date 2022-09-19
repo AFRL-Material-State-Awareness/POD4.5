@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Trim Leading/Trailing Missing Observations</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for na.trim {zoo}"><tr><td>na.trim {zoo}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Trim Leading/Trailing Missing Observations</h2>
+
+<h3>Description</h3>
+
+<p>Generic function for removing leading and trailing <code>NA</code>s.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+na.trim(object, ...)
+## Default S3 method:
+na.trim(object, sides = c("both", "left", "right"), 
+	is.na = c("any", "all"), maxgap = Inf, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>an object.</p>
+</td></tr>
+<tr valign="top"><td><code>sides</code></td>
+<td>
+<p>character specifying whether <code>NA</code>s are to be removed from
+both sides, just from the left side or just from the right side.</p>
+</td></tr>
+<tr valign="top"><td><code>is.na</code></td>
+<td>
+<p>If &quot;any&quot; then a row will be regarded as <code>NA</code> if it has
+any <code>NA</code>s.  If &quot;all&quot; then a row will be regarded as <code>NA</code>
+only if all elements in the row are <code>NA</code>.  For one dimensional
+zoo objects this argument has no effect.</p>
+</td></tr>
+<tr valign="top"><td><code>maxgap</code></td>
+<td>
+<p>maximum number of consecutive <code>NA</code>s to
+trim. Any longer gaps will be left unchanged.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object in which leading and/or trailing
+<code>NA</code>s have been removed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="na.approx.html">na.approx</a></code>, <code><a href="zoo.html">na.contiguous</a></code>, <code><a href="na.locf.html">na.locf</a></code>, <code><a href="../../stats/html/na.fail.html">na.omit</a></code>, <code><a href="na.approx.html">na.spline</a></code>, <code><a href="../../stinepack/html/stinterp.html">stinterp</a></code>, <code><a href="zoo.html">zoo</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# examples of na.trim
+x &lt;- zoo(c(1, 4, 6), c(2, 4, 6))
+xx &lt;- zoo(matrix(c(1, 4, 6, NA, 5, 7), 3), c(2, 4, 6))
+na.trim(x)
+na.trim(xx)
+
+# using na.trim for alignment
+# cal defines the legal dates
+# all dates within the date range of x should be present
+cal &lt;- zoo(,c(1, 2, 3, 6, 7))
+x &lt;- zoo(c(12, 16), c(2, 6))
+na.trim(merge(x, cal))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>zoo</em> version 1.8-10 <a href="00Index.html">Index</a>]</div>
+</body></html>

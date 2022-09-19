@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Arrange multiple grobs on a page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for arrangeGrob {gridExtra}"><tr><td>arrangeGrob {gridExtra}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Arrange multiple grobs on a page</h2>
+
+<h3>Description</h3>
+
+<p>Set up a gtable layout to place multiple grobs on a page.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+arrangeGrob(..., grobs = list(...), layout_matrix, vp = NULL,
+  name = "arrange", as.table = TRUE, respect = FALSE, clip = "off",
+  nrow = NULL, ncol = NULL, widths = NULL, heights = NULL, top = NULL,
+  bottom = NULL, left = NULL, right = NULL, padding = unit(0.5, "line"))
+
+grid.arrange(..., newpage = TRUE)
+
+marrangeGrob(grobs, ..., ncol, nrow, layout_matrix = matrix(seq_len(nrow *
+  ncol), nrow = nrow, ncol = ncol), top = quote(paste("page", g, "of",
+  npages)))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>grobs, gtables, ggplot or trellis objects</p>
+</td></tr>
+<tr valign="top"><td><code>grobs</code></td>
+<td>
+<p>list of grobs</p>
+</td></tr>
+<tr valign="top"><td><code>layout_matrix</code></td>
+<td>
+<p>optional layout</p>
+</td></tr>
+<tr valign="top"><td><code>vp</code></td>
+<td>
+<p>viewport</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>as.table</code></td>
+<td>
+<p>logical: bottom-left to top-right (TRUE) or top-left to bottom-right (FALSE)</p>
+</td></tr>
+<tr valign="top"><td><code>respect</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>clip</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>nrow</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>ncol</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>widths</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>heights</code></td>
+<td>
+<p>argument of gtable</p>
+</td></tr>
+<tr valign="top"><td><code>top</code></td>
+<td>
+<p>optional string, or grob</p>
+</td></tr>
+<tr valign="top"><td><code>bottom</code></td>
+<td>
+<p>optional string, or grob</p>
+</td></tr>
+<tr valign="top"><td><code>left</code></td>
+<td>
+<p>optional string, or grob</p>
+</td></tr>
+<tr valign="top"><td><code>right</code></td>
+<td>
+<p>optional string, or grob</p>
+</td></tr>
+<tr valign="top"><td><code>padding</code></td>
+<td>
+<p>unit of length one, margin around annotations</p>
+</td></tr>
+<tr valign="top"><td><code>newpage</code></td>
+<td>
+<p>open a new page</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Using marrangeGrob, if the layout specifies both nrow and ncol, the list of grobs can be split into multiple pages. On interactive devices print opens new windows, whilst non-interactive devices such as pdf call grid.newpage() between the drawings.
+</p>
+
+
+<h3>Value</h3>
+
+<p>arrangeGrob returns a gtable.
+</p>
+<p>marrangeGrob returns a list of class arrangelist
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>arrangeGrob</code>: return a grob without drawing
+</p>
+</li>
+<li> <p><code>grid.arrange</code>: draw on the current device
+</p>
+</li>
+<li> <p><code>marrangeGrob</code>: interface to arrangeGrob that can dispatch on multiple pages
+</p>
+</li></ul>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(grid)
+grid.arrange(rectGrob(), rectGrob())
+## Not run:  
+library(ggplot2)
+pl &lt;- lapply(1:11, function(.x) qplot(1:10, rnorm(10), main=paste("plot", .x)))
+ml &lt;- marrangeGrob(pl, nrow=2, ncol=2)
+## non-interactive use, multipage pdf
+ggsave("multipage.pdf", ml)
+## interactive use; open new devices
+ml
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>gridExtra</em> version 2.3 <a href="00Index.html">Index</a>]</div>
+</body></html>

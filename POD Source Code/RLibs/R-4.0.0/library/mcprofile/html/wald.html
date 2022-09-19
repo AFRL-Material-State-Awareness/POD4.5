@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculate Wald-Profiles</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for wald {mcprofile}"><tr><td>wald {mcprofile}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculate Wald-Profiles</h2>
+
+<h3>Description</h3>
+
+<p>Transforms a signed root deviance profile of a mcprofile object into a profile of Wald-type statistics
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+wald(object)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class mcprofile</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of class mcprofile with a wald profile in the srdp slot.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mcprofile.html">mcprofile</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#######################################
+## cell transformation assay example ##
+#######################################
+
+str(cta)
+## change class of cta$conc into factor
+cta$concf &lt;- factor(cta$conc, levels=unique(cta$conc))
+
+ggplot(cta, aes(y=foci, x=concf)) + 
+  geom_boxplot() +
+  geom_dotplot(binaxis = "y", stackdir = "center", binwidth = 0.2) + 
+  xlab("concentration")
+  
+  
+# glm fit assuming a Poisson distribution for foci counts
+# parameter estimation on the log link
+# removing the intercept
+fm &lt;- glm(foci ~ concf-1, data=cta, family=poisson(link="log"))
+
+### Comparing each dose to the control by Dunnett-type comparisons
+# Constructing contrast matrix
+library(multcomp)
+CM &lt;- contrMat(table(cta$concf), type="Dunnett")
+
+# calculating signed root deviance profiles
+(dmcp &lt;- mcprofile(fm, CM))
+# computing profiles for the modified likelihood root
+wp &lt;- wald(dmcp)
+
+plot(wp)
+
+# comparing confidence intervals
+confint(wp)
+confint(dmcp)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mcprofile</em> version 1.0-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

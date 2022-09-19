@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Define Polynomial by Roots</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for Poly {pracma}"><tr><td>Poly {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Define Polynomial by Roots</h2>
+
+<h3>Description</h3>
+
+<p>Define a polynomial by its roots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  Poly(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>vector or square matrix, real or complex</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Computes the characteristic polynomial of an (n x n)-Matrix.
+</p>
+<p>If <code>x</code> is a vector, <code>Poly(x)</code> is the vector of coefficients
+of the polynomial whose roots are the elements of <code>x</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector representing a polynomial.
+</p>
+
+
+<h3>Note</h3>
+
+<p>In Matlab/Octave this function is called <code>poly()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="polyval.html">polyval</a></code>, <code><a href="roots.html">roots</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  Poly(c(1, -1, 1i, -1i))  # Solves x^4 -1 = 0
+  # Wilkinson's example:
+  roots(Poly(1:20))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

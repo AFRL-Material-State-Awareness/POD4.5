@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Work with homogeneous coordinates</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for matrices {rgl}"><tr><td>matrices {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Work with homogeneous coordinates </h2>
+
+<h3>Description</h3>
+
+<p>These functions construct 4x4 matrices for transformations
+in the homogeneous coordinate system used by OpenGL, and translate
+vectors between homogeneous and Euclidean coordinates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+identityMatrix()
+scaleMatrix(x, y, z)
+translationMatrix(x, y, z)
+rotationMatrix(angle, x, y, z, matrix)
+asHomogeneous(x)
+asEuclidean(x)
+asHomogeneous2(x)
+asEuclidean2(x)
+
+scale3d(obj, x, y, z, ...)
+translate3d(obj, x, y, z, ...)
+rotate3d(obj, angle, x, y, z, matrix, ...)
+
+transform3d(obj, matrix, ...)
+
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z, angle, matrix</code></td>
+<td>
+<p>See details</p>
+</td></tr> 
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>An object to be transformed</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to methods</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>OpenGL uses homogeneous coordinates to handle perspective and affine
+transformations.  The homogeneous point <code>(x, y, z, w)</code> corresponds
+to the Euclidean point <code>(x/w, y/w, z/w)</code>.  The matrices produced by
+the functions <code>scaleMatrix</code>, <code>translationMatrix</code>, and <code>rotationMatrix</code>
+are to be left-multiplied by a row vector 
+of homogeneous coordinates; alternatively, the transpose of the result
+can be right-multiplied by a column vector.  The generic functions
+<code>scale3d</code>, <code>translate3d</code> and <code>rotate3d</code> apply these transformations
+to the <code>obj</code> argument.  The <code>transform3d</code> function is a synonym 
+for <code>rotate3d(obj, matrix = matrix)</code>.
+</p>
+<p>By default, it is assumed that <code>obj</code> is a row vector
+(or a matrix of row vectors) which will be multiplied on the right by
+the corresponding matrix, but users may write methods for these generics
+which operate differently.  Methods are supplied for <code><a href="mesh3d.html">mesh3d</a></code>
+objects.
+</p>
+<p>To compose transformations, use matrix multiplication.  The effect is
+to apply the matrix on the left first, followed by the one on the right.
+</p>
+<p><code>identityMatrix</code> returns an identity matrix.
+</p>
+<p><code>scaleMatrix</code> scales each coordinate by the given factor.  In Euclidean
+coordinates, <code>(u, v, w)</code> is transformed to <code>(x*u, y*v, z*w)</code>.
+</p>
+<p><code>translationMatrix</code> translates each coordinate by the given translation, i.e.
+<code>(u, v, w)</code> is transformed to <code>(u + x, v + y, w + z)</code>.
+</p>
+<p><code>rotationMatrix</code> can be called in three ways.  With 
+arguments <code>angle, x, y, z</code> it represents a rotation 
+of <code>angle</code> radians about the axis 
+<code>x, y, z</code>.  If <code>matrix</code> is a 3x3 rotation matrix,
+it will be converted into the corresponding matrix in 4x4 homogeneous
+coordinates.  Finally, if a 4x4 matrix is given, it will be returned unchanged.
+(The latter behaviour is used to allow <code>transform3d</code> to act like a 
+generic function, even though it is not.)
+</p>
+<p>Use <code>asHomogeneous(x)</code> to convert the Euclidean vector <code>x</code> to
+homogeneous coordinates, and <code>asEuclidean(x)</code> for the reverse transformation.  These functions accept the following
+inputs:
+</p>
+
+<ul>
+<li><p> n x 3 matrices:  rows are assumed to be Euclidean
+</p>
+</li>
+<li><p> n x 4 matrices:  rows are assumed to be homogeneous
+</p>
+</li>
+<li><p> vectors of length 3n or 4n:  assumed to be vectors
+concatenated. For the ambiguous case
+of vectors that are length 12n (so both 3n and 4n are possible),
+the assumption is that the conversion is necessary:  <code>asEuclidean</code> assumes the vectors are homogeneous,
+and <code>asHomogeneous</code> assumes the vectors are Euclidean.
+</p>
+</li></ul>
+
+<p>Outputs are n x 4 or n x 3 matrices for <code>asHomogeneous</code>
+and <code>asEuclidean</code> respectively.  
+</p>
+<p>The functions <code>asHomogeneous2</code> and <code>asEuclidean2</code>
+act similarly, but they assume inputs are 3 x n or 4 x n
+and outputs are in similar shapes.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>identityMatrix</code>,
+<code>scaleMatrix</code>, <code>translationMatrix</code>, and <code>rotationMatrix</code> produce
+a 4x4 matrix representing the requested transformation
+in homogeneous coordinates.  
+</p>
+<p><code>scale3d</code>, <code>translate3d</code> and <code>rotate3d</code> transform the object
+and produce a new object of the same class.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch </p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="par3d.html">par3d</a></code> for a description of how RGL uses matrices in
+rendering.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# A 90 degree rotation about the x axis:
+
+rotationMatrix(pi/2, 1, 0, 0)
+
+# Find what happens when you rotate (2, 0, 0) by 45 degrees about the y axis:
+
+x &lt;- asHomogeneous(c(2, 0, 0))
+y &lt;- x %*% rotationMatrix(pi/4, 0, 1, 0)
+asEuclidean(y)
+
+# or more simply...
+
+rotate3d(c(2, 0, 0), pi/4, 0, 1, 0)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

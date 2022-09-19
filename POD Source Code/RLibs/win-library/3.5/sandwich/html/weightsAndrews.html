@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Kernel-based HAC Covariance Matrix Estimation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for weightsAndrews {sandwich}"><tr><td>weightsAndrews {sandwich}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Kernel-based HAC Covariance Matrix Estimation</h2>
+
+<h3>Description</h3>
+
+<p>A set of functions implementing a class of kernel-based heteroscedasticity
+and autocorrelation consistent (HAC) covariance matrix estimators
+as introduced by Andrews (1991).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+kernHAC(x, order.by = NULL, prewhite = 1, bw = bwAndrews,
+  kernel = c("Quadratic Spectral", "Truncated", "Bartlett", "Parzen", "Tukey-Hanning"),
+  approx = c("AR(1)", "ARMA(1,1)"), adjust = TRUE, diagnostics = FALSE,
+  sandwich = TRUE, ar.method = "ols", tol = 1e-7, data = list(), verbose = FALSE, ...)
+
+weightsAndrews(x, order.by = NULL, bw = bwAndrews,
+  kernel = c("Quadratic Spectral", "Truncated", "Bartlett", "Parzen", "Tukey-Hanning"),
+  prewhite = 1, ar.method = "ols", tol = 1e-7, data = list(), verbose = FALSE, ...)
+
+bwAndrews(x, order.by = NULL, kernel = c("Quadratic Spectral", "Truncated",
+  "Bartlett", "Parzen", "Tukey-Hanning"), approx = c("AR(1)", "ARMA(1,1)"),
+  weights = NULL, prewhite = 1, ar.method = "ols", data = list(), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted model object. For <code>bwAndrews</code> it can also
+be a score matrix (as returned by <code>estfun</code>) directly.</p>
+</td></tr>
+<tr valign="top"><td><code>order.by</code></td>
+<td>
+<p>Either a vector <code>z</code> or a formula with a single explanatory
+variable like <code>~ z</code>. The observations in the model
+are ordered by the size of <code>z</code>. If set to <code>NULL</code> (the
+default) the observations are assumed to be ordered (e.g., a
+time series).</p>
+</td></tr>
+<tr valign="top"><td><code>prewhite</code></td>
+<td>
+<p>logical or integer. Should the estimating functions
+be prewhitened? If <code>TRUE</code> or greater than 0 a VAR model of
+order <code>as.integer(prewhite)</code> is fitted via <code>ar</code> with
+method <code>"ols"</code> and <code>demean = FALSE</code>. The default is to
+use VAR(1) prewhitening.</p>
+</td></tr>
+<tr valign="top"><td><code>bw</code></td>
+<td>
+<p>numeric or a function. The bandwidth of the kernel (corresponds to the
+truncation lag). If set to to a function (the default is <code>bwAndrews</code>) it is adaptively
+chosen.</p>
+</td></tr>
+<tr valign="top"><td><code>kernel</code></td>
+<td>
+<p>a character specifying the kernel used. All kernels used
+are described in Andrews (1991).</p>
+</td></tr>
+<tr valign="top"><td><code>approx</code></td>
+<td>
+<p>a character specifying the approximation method if the
+bandwidth <code>bw</code> has to be chosen by <code>bwAndrews</code>.</p>
+</td></tr>    
+<tr valign="top"><td><code>adjust</code></td>
+<td>
+<p>logical. Should a finite sample adjustment be made?
+This amounts to multiplication with <i>n/(n-k)</i> where <i>n</i> is the
+number of observations and <i>k</i> the number of estimated parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>diagnostics</code></td>
+<td>
+<p>logical. Should additional model diagnostics be returned?
+See <code><a href="vcovHAC.html">vcovHAC</a></code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>sandwich</code></td>
+<td>
+<p>logical. Should the sandwich estimator be computed?
+If set to <code>FALSE</code> only the middle matrix is returned.</p>
+</td></tr>
+<tr valign="top"><td><code>ar.method</code></td>
+<td>
+<p>character. The <code>method</code> argument passed to
+<code><a href="../../stats/html/ar.html">ar</a></code> for prewhitening (only, not for bandwidth selection).</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>numeric. Weights that exceed <code>tol</code> are used for computing
+the covariance matrix, all other weights are treated as 0.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables in the <code>order.by</code> 
+model. By default the variables are taken from the environment which
+the function is called from.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical. Should the bandwidth parameter used be
+printed?</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to <code>bwAndrews</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>numeric. A vector of weights used for weighting the estimated
+coefficients of the approximation model (as specified by <code>approx</code>). By
+default all weights are 1 except that for the intercept term (if there is more than
+one variable).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>kernHAC</code> is a convenience interface to <code><a href="vcovHAC.html">vcovHAC</a></code> using 
+<code>weightsAndrews</code>: first a weights function is defined and then <code>vcovHAC</code>
+is called.
+</p>
+<p>The kernel weights underlying <code>weightsAndrews</code>
+are directly accessible via the function <code><a href="kweights.html">kweights</a></code> and require
+the specification of the bandwidth parameter <code>bw</code>. If this is not specified
+it can be chosen adaptively by the function <code>bwAndrews</code> (except for the
+<code>"Truncated"</code> kernel). The automatic bandwidth selection is based on
+an approximation of the estimating functions by either AR(1) or ARMA(1,1) processes.
+To aggregate the estimated parameters from these approximations a weighted sum
+is used. The <code>weights</code> in this aggregation are by default all equal to 1
+except that corresponding to the intercept term which is set to 0 (unless there
+is no other variable in the model) making the covariance matrix scale invariant.
+</p>
+<p>Further details can be found in Andrews (1991).
+</p>
+<p>The estimator of Newey &amp; West (1987) is a special case of the class of estimators
+introduced by Andrews (1991). It can be obtained using the <code>"Bartlett"</code>
+kernel and setting <code>bw</code> to <code>lag + 1</code>. A convenience interface is 
+provided in <code><a href="NeweyWest.html">NeweyWest</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>kernHAC</code> returns the same type of object as <code><a href="vcovHAC.html">vcovHAC</a></code>
+which is typically just the covariance matrix.
+</p>
+<p><code>weightsAndrews</code> returns a vector of weights.
+</p>
+<p><code>bwAndrews</code> returns the selected bandwidth parameter.
+</p>
+
+
+<h3>References</h3>
+
+<p>Andrews DWK (1991).
+&ldquo;Heteroskedasticity and Autocorrelation Consistent Covariance Matrix Estimation.&rdquo;
+<em>Econometrica</em>, <b>59</b>,
+817&ndash;858.
+</p>
+<p>Newey WK &amp; West KD (1987).
+&ldquo;A Simple, Positive Semi-Definite, Heteroskedasticity and Autocorrelation Consistent Covariance Matrix.&rdquo;
+<em>Econometrica</em>, <b>55</b>,
+703&ndash;708.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="vcovHAC.html">vcovHAC</a></code>, <code><a href="NeweyWest.html">NeweyWest</a></code>, <code><a href="weightsLumley.html">weightsLumley</a></code>,
+<code><a href="weightsLumley.html">weave</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+curve(kweights(x, kernel = "Quadratic", normalize = TRUE),
+      from = 0, to = 3.2, xlab = "x", ylab = "k(x)")
+curve(kweights(x, kernel = "Bartlett", normalize = TRUE),
+      from = 0, to = 3.2, col = 2, add = TRUE)
+curve(kweights(x, kernel = "Parzen", normalize = TRUE),
+      from = 0, to = 3.2, col = 3, add = TRUE)
+curve(kweights(x, kernel = "Tukey", normalize = TRUE),
+      from = 0, to = 3.2, col = 4, add = TRUE)
+curve(kweights(x, kernel = "Truncated", normalize = TRUE),
+      from = 0, to = 3.2, col = 5, add = TRUE)
+
+## fit investment equation
+data(Investment)
+fm &lt;- lm(RealInv ~ RealGNP + RealInt, data = Investment)
+
+## compute quadratic spectral kernel HAC estimator
+kernHAC(fm)
+kernHAC(fm, verbose = TRUE)
+
+## use Parzen kernel instead, VAR(2) prewhitening, no finite sample
+## adjustment and Newey &amp; West (1994) bandwidth selection
+kernHAC(fm, kernel = "Parzen", prewhite = 2, adjust = FALSE,
+  bw = bwNeweyWest, verbose = TRUE)
+
+## compare with estimate under assumption of spheric errors
+vcov(fm)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sandwich</em> version 3.0-2 <a href="00Index.html">Index</a>]</div>
+</body></html>

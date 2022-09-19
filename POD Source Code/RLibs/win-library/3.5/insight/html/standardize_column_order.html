@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Standardize column order</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for standardize_column_order {insight}"><tr><td>standardize_column_order {insight}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Standardize column order</h2>
+
+<h3>Description</h3>
+
+<p>Standardizes order of columns for dataframes and other objects from
+<em>easystats</em> and <em>broom</em> ecosystem packages.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+standardize_column_order(data, ...)
+
+## S3 method for class 'parameters_model'
+standardize_column_order(data, style = c("easystats", "broom"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame. In particular, objects from <em>easystats</em>
+package functions like
+<code><a href="../../parameters/html/model_parameters.html">parameters::model_parameters()</a></code> or
+<code><a href="../../effectsize/html/effectsize.html">effectsize::effectsize()</a></code> are accepted, but also
+data frames returned by <code>broom::tidy()</code> are valid objects.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Currently not used.</p>
+</td></tr>
+<tr valign="top"><td><code>style</code></td>
+<td>
+<p>Standardization can either be based on the naming conventions
+from the <a href="https://easystats.github.io/easystats/">easystats-project</a>,
+or on <span class="pkg">broom</span>'s naming scheme.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A data frame, with standardized column order.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# easystats conventions
+df1 &lt;- cbind.data.frame(
+  CI_low      = -2.873,
+  t           = 5.494,
+  CI_high     = -1.088,
+  p           = 0.00001,
+  Parameter   = -1.980,
+  CI          = 0.95,
+  df          = 29.234,
+  Method      = "Student's t-test"
+)
+
+standardize_column_order(df1, style = "easystats")
+
+# broom conventions
+df2 &lt;- cbind.data.frame(
+  conf.low   = -2.873,
+  statistic  = 5.494,
+  conf.high  = -1.088,
+  p.value    = 0.00001,
+  estimate   = -1.980,
+  conf.level = 0.95,
+  df         = 29.234,
+  method     = "Student's t-test"
+)
+
+standardize_column_order(df2, style = "broom")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>insight</em> version 0.18.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

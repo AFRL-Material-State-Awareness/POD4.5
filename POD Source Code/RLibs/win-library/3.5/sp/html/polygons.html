@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: sets spatial coordinates to create spatial data, or retrieves...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for polygons {sp}"><tr><td>polygons {sp}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> sets spatial coordinates to create spatial data, or retrieves
+spatial coordinates </h2>
+
+<h3>Description</h3>
+
+<p> sets spatial coordinates to create spatial data, or retrieves
+spatial coordinates </p>
+
+
+<h3>Usage</h3>
+
+<pre>
+	polygons(obj)
+	polygons(object) &lt;- value
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p> object of class &quot;SpatialPolygons&quot; or &quot;SpatialPolygonsDataFrame&quot; </p>
+</td></tr>
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p> object of class &quot;data.frame&quot; </p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p> object of class &quot;SpatialPolygons&quot; </p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p> polygons returns the SpatialPolygons of obj; polygons&lt;- promotes a
+data.frame to a SpatialPolygonsDataFrame object </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+grd &lt;- GridTopology(c(1,1), c(1,1), c(10,10))
+polys &lt;- as.SpatialPolygons.GridTopology(grd)
+centroids &lt;- coordinates(polys)
+x &lt;- centroids[,1]
+y &lt;- centroids[,2]
+z &lt;- 1.4 + 0.1*x + 0.2*y + 0.002*x*x
+df &lt;- data.frame(x=x, y=y, z=z, row.names=row.names(polys))
+polygons(df) &lt;- polys
+class(df)
+summary(df)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sp</em> version 1.5-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

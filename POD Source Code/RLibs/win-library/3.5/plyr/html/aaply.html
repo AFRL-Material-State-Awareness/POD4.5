@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Split array, apply function, and return results in an array.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for aaply {plyr}"><tr><td>aaply {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Split array, apply function, and return results in an array.</h2>
+
+<h3>Description</h3>
+
+<p>For each slice of an array, apply function, keeping results as an array.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+aaply(
+  .data,
+  .margins,
+  .fun = NULL,
+  ...,
+  .expand = TRUE,
+  .progress = "none",
+  .inform = FALSE,
+  .drop = TRUE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.data</code></td>
+<td>
+<p>matrix, array or data frame to be processed</p>
+</td></tr>
+<tr valign="top"><td><code>.margins</code></td>
+<td>
+<p>a vector giving the subscripts to split up <code>data</code> by.
+1 splits up by rows, 2 by columns and c(1,2) by rows and columns, and so
+on for higher dimensions</p>
+</td></tr>
+<tr valign="top"><td><code>.fun</code></td>
+<td>
+<p>function to apply to each piece</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed on to <code>.fun</code></p>
+</td></tr>
+<tr valign="top"><td><code>.expand</code></td>
+<td>
+<p>if <code>.data</code> is a data frame, should output be 1d (expand
+= FALSE), with an element for each row; or nd (expand = TRUE), with a
+dimension for each variable.</p>
+</td></tr>
+<tr valign="top"><td><code>.progress</code></td>
+<td>
+<p>name of the progress bar to use, see
+<code><a href="create_progress_bar.html">create_progress_bar</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>.inform</code></td>
+<td>
+<p>produce informative error messages?  This is turned off
+by default because it substantially slows processing speed, but is very
+useful for debugging</p>
+</td></tr>
+<tr valign="top"><td><code>.drop</code></td>
+<td>
+<p>should extra dimensions of length 1 in the output be
+dropped, simplifying the output.  Defaults to <code>TRUE</code></p>
+</td></tr>
+<tr valign="top"><td><code>.parallel</code></td>
+<td>
+<p>if <code>TRUE</code>, apply function in parallel, using parallel
+backend provided by foreach</p>
+</td></tr>
+<tr valign="top"><td><code>.paropts</code></td>
+<td>
+<p>a list of additional options passed into
+the <code><a href="../../foreach/html/foreach.html">foreach</a></code> function when parallel computation
+is enabled.  This is important if (for example) your code relies on
+external data or packages: use the <code>.export</code> and <code>.packages</code>
+arguments to supply them so that all cluster nodes have the correct
+environment set up for computing.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is very similar to <code><a href="../../base/html/apply.html">apply</a></code>, except that it will
+always return an array, and when the function returns &gt;1 d data structures,
+those dimensions are added on to the highest dimensions, rather than the
+lowest dimensions.  This makes <code>aaply</code> idempotent, so that
+<code>aaply(input, X, identity)</code> is equivalent to <code>aperm(input, X)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>if results are atomic with same type and dimensionality, a
+vector, matrix or array; otherwise, a list-array (a list with
+dimensions)
+</p>
+
+
+<h3>Warning</h3>
+
+<p>Contrary to <code><a href="alply.html">alply</a></code> and <code><a href="adply.html">adply</a></code>, passing a data
+frame as first argument to <code>aaply</code> may lead to unexpected results
+such as huge memory allocations.
+</p>
+
+
+<h3>Input</h3>
+
+<p>This function splits matrices, arrays and data frames by
+dimensions
+</p>
+
+
+<h3>Output</h3>
+
+<p>If there are no results, then this function will return a vector of
+length 0 (<code>vector()</code>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Hadley Wickham (2011). The Split-Apply-Combine Strategy
+for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
+<a href="https://www.jstatsoft.org/v40/i01/">https://www.jstatsoft.org/v40/i01/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other array input: 
+<code><a href="a_ply.html">a_ply</a>()</code>,
+<code><a href="adply.html">adply</a>()</code>,
+<code><a href="alply.html">alply</a>()</code>
+</p>
+<p>Other array output: 
+<code><a href="daply.html">daply</a>()</code>,
+<code><a href="laply.html">laply</a>()</code>,
+<code><a href="maply.html">maply</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+dim(ozone)
+aaply(ozone, 1, mean)
+aaply(ozone, 1, mean, .drop = FALSE)
+aaply(ozone, 3, mean)
+aaply(ozone, c(1,2), mean)
+
+dim(aaply(ozone, c(1,2), mean))
+dim(aaply(ozone, c(1,2), mean, .drop = FALSE))
+
+aaply(ozone, 1, each(min, max))
+aaply(ozone, 3, each(min, max))
+
+standardise &lt;- function(x) (x - min(x)) / (max(x) - min(x))
+aaply(ozone, 3, standardise)
+aaply(ozone, 1:2, standardise)
+
+aaply(ozone, 1:2, diff)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

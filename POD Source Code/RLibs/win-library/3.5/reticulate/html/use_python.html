@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Use Python</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for use_python {reticulate}"><tr><td>use_python {reticulate}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Use Python</h2>
+
+<h3>Description</h3>
+
+<p>Select the version of Python to be used by <code>reticulate</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+use_python(python, required = NULL)
+
+use_python_version(version, required = NULL)
+
+use_virtualenv(virtualenv = NULL, required = NULL)
+
+use_condaenv(condaenv = NULL, conda = "auto", required = NULL)
+
+use_miniconda(condaenv = NULL, required = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>python</code></td>
+<td>
+<p>The path to a Python binary.</p>
+</td></tr>
+<tr valign="top"><td><code>required</code></td>
+<td>
+<p>Is the requested copy of Python required? If <code>TRUE</code>, an error will be
+emitted if the requested copy of Python does not exist. Otherwise, the
+request is taken as a hint only, and scanning for other versions will still
+proceed.</p>
+</td></tr>
+<tr valign="top"><td><code>version</code></td>
+<td>
+<p>The version of Python to use. <code>reticulate</code> will search for versions of
+Python as installed by the <code><a href="install_python.html">install_python()</a></code> helper function.</p>
+</td></tr>
+<tr valign="top"><td><code>virtualenv</code></td>
+<td>
+<p>Either the name of, or the path to, a Python virtual environment.</p>
+</td></tr>
+<tr valign="top"><td><code>condaenv</code></td>
+<td>
+<p>The conda environment to use. This can be the name, the absolute prefix path
+or the absolute path to the python binary. If the name is ambiguous, the
+first environment is used and a warning is issued.</p>
+</td></tr>
+<tr valign="top"><td><code>conda</code></td>
+<td>
+<p>The path to a <code>conda</code> executable. By default, <code>reticulate</code> will check the
+<code>PATH</code>, as well as other standard locations for Anaconda installations.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>reticulate</code> package initializes its Python bindings lazily &ndash; that is,
+it does not initialize its Python bindings until an API that explicitly
+requires Python to be loaded is called. This allows users and package authors
+to request particular versions of Python by calling <code>use_python()</code> or one of
+the other helper functions documented in this help file.
+</p>
+
+
+<h3>RETICULATE_PYTHON</h3>
+
+<p>The <code>RETICULATE_PYTHON</code> environment variable can also be used to control
+which copy of Python <code>reticulate</code> chooses to bind to. It should be set to
+the path to a Python interpreter, and that interpreter can either be:
+</p>
+
+<ul>
+<li><p> A standalone system interpreter,
+</p>
+</li>
+<li><p> Part of a virtual environment,
+</p>
+</li>
+<li><p> Part of a Conda environment.
+</p>
+</li></ul>
+
+<p>When set, this will override any other requests to use a particular copy of
+Python. Setting this in <code style="white-space: pre;">~/.Renviron</code> (or optionally, a project <code>.Renviron</code>)
+can be a useful way of forcing <code>reticulate</code> to use a particular version of
+Python.
+</p>
+
+
+<h3>Caveats</h3>
+
+<p>Note that the requests for a particular version of Python via <code>use_python()</code>
+and friends only persist for the active session; they must be re-run in each
+new <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session as appropriate.
+</p>
+<p>If <code>use_python()</code> (or one of the other <code style="white-space: pre;">use_*()</code> functions) are called
+multiple times, the most recently-requested version of Python will be
+used. Note that any request to <code>use_python()</code> will always be overridden
+by the <code>RETICULATE_PYTHON</code> environment variable, if set.
+</p>
+<p>The <code><a href="py_config.html">py_config()</a></code> function will also provide a short note describing why
+<code>reticulate</code> chose to select the version of Python that was ultimately
+activated.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>reticulate</em> version 1.25 <a href="00Index.html">Index</a>]</div>
+</body></html>

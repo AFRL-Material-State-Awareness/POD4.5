@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Derivative-free Nonlinear Function Minimization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fminsearch {pracma}"><tr><td>fminsearch {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Derivative-free Nonlinear Function Minimization
+</h2>
+
+<h3>Description</h3>
+
+<p>Find minimum of multivariable functions using derivative-free methods.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fminsearch(fn, x0, ..., lower = NULL, upper = NULL,
+           method = c("Nelder-Mead", "Hooke-Jeeves"),
+           minimize = TRUE, maxiter = 1000, tol = 1e-08)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fn</code></td>
+<td>
+<p>function whose minimum or maximum is to be found.</p>
+</td></tr>
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>point considered near to the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional variables to be passed to the function.</p>
+</td></tr>
+<tr valign="top"><td><code>lower, upper</code></td>
+<td>
+<p>lower and upper bounds constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>&quot;Nelder-Mead&quot; (default) or &quot;Hooke-Jeeves&quot;; can be abbreviated.</p>
+</td></tr>
+<tr valign="top"><td><code>minimize</code></td>
+<td>
+<p>logical; shall a minimum or a maximum be found.</p>
+</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+<p>maximal number of iterations</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>relative tolerance.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>fminsearch</code> finds the minimum of a nonlinear scalar multivariable
+function, starting at an initial estimate and returning a value x that is
+a local minimizer of the function. With <code>minimize=FALSE</code> it searches
+for a maximum, by default for a (local) minimum.
+</p>
+<p>As methods/solvers &quot;Nelder-Mead&quot; and &quot;Hooke-Jeeves&quot; are available. Only
+Hooke-Jeeves can handle bounds constraints. For nonlinear constraints see
+<code>fmincon</code>, and for methods using gradients see <code>fminunc</code>.
+</p>
+<p>Important: <code>fminsearch</code> may only give local solutions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>xopt</code></td>
+<td>
+<p>location of the location of minimum resp. maximum.</p>
+</td></tr>
+<tr valign="top"><td><code>fmin</code></td>
+<td>
+<p>function value at the optimum.</p>
+</td></tr>
+<tr valign="top"><td><code>count</code></td>
+<td>
+<p>number of function calls.</p>
+</td></tr>
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>info about convergence: not used at the moment.</p>
+</td></tr>
+<tr valign="top"><td><code>info</code></td>
+<td>
+<p>special information from the solver.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p><code>fminsearch</code> mimics the Matlab function of the same name.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nocedal, J., and S. Wright (2006). Numerical Optimization.
+Second Edition, Springer-Verlag, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="neldermead.html">nelder_mead</a></code>, <code><a href="hookejeeves.html">hooke_jeeves</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Rosenbrock function
+rosena &lt;- function(x, a) 100*(x[2]-x[1]^2)^2 + (a-x[1])^2  # min: (a, a^2)
+
+fminsearch(rosena, c(-1.2, 1), a = sqrt(2), method="Nelder-Mead")
+## $xmin                   $fmin
+## [1] 1.414292 2.000231   [1] 1.478036e-08
+
+fminsearch(rosena, c(-1.2, 1), a = sqrt(2), method="Hooke-Jeeves")
+## $xmin                   $fmin
+## [1] 1.414215 2.000004   [1] 1.79078e-12
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

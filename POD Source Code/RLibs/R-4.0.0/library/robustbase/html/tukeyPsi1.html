@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Tukey's Bi-square Score (Psi) and &quot;Chi&quot; (Rho) Functions and...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for tukeyPsi1 {robustbase}"><tr><td>tukeyPsi1 {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Tukey's Bi-square Score (Psi) and &quot;Chi&quot; (Rho) Functions and Derivatives</h2>
+
+<h3>Description</h3>
+
+<p>These are <b>deprecated</b>, replaced by
+<code><a href="M.psi.html">Mchi</a>(*, psi="tukey")</code>, <code><a href="M.psi.html">Mpsi</a>(*, psi="tukey")</code>
+</p>
+<p><code>tukeyPsi1()</code> computes Tukey's bi-square score (psi) function, its first
+derivative or it's integral/&ldquo;principal function&rdquo;.  This is
+scaled such that <i>&psi;'(0) = 1</i>, i.e.,
+<i>psi(x) ~= x</i> around 0.
+</p>
+<p><code>tukeyChi()</code> computes Tukey's bi-square loss function,
+<code>chi(x)</code> and its first two derivatives.  Note that in the general
+context of <i>M</i>-estimators, these loss functions are called
+<i>rho</i>-functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tukeyPsi1(x, cc, deriv = 0)
+tukeyChi (x, cc, deriv = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>numeric vector.</p>
+</td></tr>
+<tr valign="top"><td><code>cc</code></td>
+<td>
+<p> tuning constant </p>
+</td></tr>
+<tr valign="top"><td><code>deriv</code></td>
+<td>
+<p>integer in <i>\{-1,0,1,2\}</i> specifying the order of the
+derivative; the default, <code>deriv = 0</code> computes the psi-, or
+chi- (&quot;rho&quot;-)function.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a numeric vector of the same length as <code>x</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>tukeyPsi1(x, d)</code> and <code><a href="tukeyPsi1.html">tukeyChi</a>(x, d+1)</code> are just
+re-scaled versions of each other (for <code>d in -1:1</code>), i.e.,
+</p>
+<p style="text-align: center;"><i>&chi;^{(&nu;)}(x, c) = (6/c^2) &psi;^{(&nu;-1)}(x,c),</i></p>
+
+<p>for <i>&nu; = 0,1,2</i>.
+</p>
+<p>We use the name &lsquo;tukeyPsi<b>1</b>&rsquo;, because <code>tukeyPsi</code> is
+reserved for a future &ldquo;Psi Function&rdquo; class object, see
+<code><a href="psiFunc.html">psiFunc</a></code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Matias Salibian-Barrera, Martin Maechler and Andreas Ruckstuhl</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmrob.html">lmrob</a></code> and <code><a href="M.psi.html">Mpsi</a></code>; further
+<code><a href="anova.lmrob.html">anova.lmrob</a></code> which needs the <code>deriv = -1</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+op &lt;- par(mfrow = c(3,1), oma = c(0,0, 2, 0),
+          mgp = c(1.5, 0.6, 0), mar= .1+c(3,4,3,2))
+x &lt;- seq(-2.5, 2.5, length = 201)
+cc &lt;- 1.55 # as set by default in lmrob.control()
+plot. &lt;- function(...) { plot(...); abline(h=0,v=0, col="gray", lty=3)}
+plot.(x, tukeyChi(x, cc), type = "l", col = 2)
+plot.(x, tukeyChi(x, cc, deriv = 1), type = "l", col = 2)
+plot.(x, tukeyChi(x, cc, deriv = 2), type = "l", col = 2)
+
+mtext(sprintf("tukeyChi(x, c = %g, deriv),  deriv = 0,1,2", cc),
+      outer = TRUE, font = par("font.main"), cex = par("cex.main"))
+par(op)
+
+op &lt;- par(mfrow = c(3,1), oma = c(0,0, 2, 0),
+          mgp = c(1.5, 0.6, 0), mar= .1+c(3,4,1,1))
+x &lt;- seq(-5, 5, length = 201)
+cc &lt;- 4.69 # as set by default in lmrob.control()
+plot. &lt;- function(...) { plot(..., asp = 1); abline(h=0,v=0, col="gray", lty=3)}
+plot.(x, tukeyPsi1(x, cc), type = "l", col = 2)
+abline(0:1, lty = 3, col = "light blue")
+plot.(x, tukeyPsi1(x, cc, deriv = -1), type = "l", col = 2)
+plot.(x, tukeyPsi1(x, cc, deriv =  1), type = "l", col = 2); abline(h=1,lty=3)
+
+mtext(sprintf("tukeyPsi1(x, c = %g, deriv),  deriv = 0, -1, 1", cc),
+      outer = TRUE, font = par("font.main"), cex = par("cex.main"))
+par(op)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

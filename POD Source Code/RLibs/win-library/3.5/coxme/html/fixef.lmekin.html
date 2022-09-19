@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extraction functions for Lmekin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fixef.lmekin {coxme}"><tr><td>fixef.lmekin {coxme}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extraction functions for Lmekin</h2>
+
+<h3>Description</h3>
+
+<p>Extract the fixed effects, random effects, variance of the
+fixed effects, or variance of the random effects from a linear mixed
+effects model fit with lmekin.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'lmekin'
+fixef(object, ...)
+## S3 method for class 'lmekin'
+ranef(object, ...)
+## S3 method for class 'lmekin'
+vcov(object, ...)
+## S3 method for class 'lmekin'
+VarCorr(x, ...)
+## S3 method for class 'lmekin'
+logLik(object, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>an object inheriting from class <code>lmekin</code> 
+representing the result of a mixed effects model.
+</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object inheriting from class <code>lmekin</code> 
+representing the result of a mixed effects model.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>some methods for this generic require additional
+arguments.  None are used in this method.</p>
+</td></tr> 
+</table>
+
+
+<h3>Details</h3>
+
+<p>For the random effects model <i>y = X beta
+    + Zb + e</i>, let <i>s^2</i> be the variance of the error term
+<i>e</i>.
+Let <i>A = sP</i> be the variance of the random effects
+<i>b</i>.  There is a computational advantage to solving the problem
+in terms of <i>P</i> instead of <i>A</i>, and that is what is
+stored in the returned lmekin object.
+The <code>VarCorr</code> function returns elements of <i>P</i>; the print
+and summary functions report values of <i>A</i>.
+Pinhiero and Bates call <i>P</i> the precision factor.
+</p>
+
+
+<h3>Value</h3>
+
+<p>the fixed effects are a vector and vcov returns their
+variance/covariance matrix.  The random effects are a list with one
+element for each random effect.  The ranef component contains the
+coefficients and VarCorr the estimated variance/covariance matrix.
+The logLik method returns the loglikelihood along with its
+degrees of freedom.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Terry Therneau</p>
+
+
+<h3>References</h3>
+
+<p>J Pinheiro and D Bates, Mixed-effects models in S and
+S-Plus. Springer, 2000.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lmekin.html">lmekin</a></code>, <code><a href="ranef.html">random.effects</a></code>,
+<code><a href="fixed.effects.html">fixed.effects</a></code>, <code>link{vcov}</code>, <code><a href="VarCorr.html">VarCorr</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(ergoStool, package="nlme")  # use a data set from nlme
+efit &lt;-  lmekin(effort ~ Type + (1|Subject), ergoStool)
+ranef(efit)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>coxme</em> version 2.2-17 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot an interactive dendrogram</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot_dendro {plotly}"><tr><td>plot_dendro {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot an interactive dendrogram</h2>
+
+<h3>Description</h3>
+
+<p>This function takes advantage of nested key selections to implement an
+interactive dendrogram. Selecting a node selects all the labels (i.e. leafs)
+under that node.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plot_dendro(d, set = "A", xmin = -50, height = 500, width = 500, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>d</code></td>
+<td>
+<p>a dendrogram object</p>
+</td></tr>
+<tr valign="top"><td><code>set</code></td>
+<td>
+<p>defines a crosstalk group</p>
+</td></tr>
+<tr valign="top"><td><code>xmin</code></td>
+<td>
+<p>minimum of the range of the x-scale</p>
+</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+<p>height</p>
+</td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>width</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments supplied to <code><a href="subplot.html">subplot()</a></code></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="plot_ly.html">plot_ly()</a></code>, <code><a href="plot_mapbox.html">plot_mapbox()</a></code>, <code><a href="ggplotly.html">ggplotly()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## Not run: 
+hc &lt;- hclust(dist(USArrests), "ave")
+dend1 &lt;- as.dendrogram(hc)
+plot_dendro(dend1, height = 600) %&gt;% 
+  hide_legend() %&gt;% 
+  highlight(persistent = TRUE, dynamic = TRUE)
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

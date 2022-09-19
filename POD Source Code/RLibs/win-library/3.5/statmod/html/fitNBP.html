@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Negative Binomial Model for SAGE Libraries with Pearson...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for fitNBP {statmod}"><tr><td>fitNBP {statmod}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Negative Binomial Model for SAGE Libraries with Pearson Estimation of Dispersion</h2>
+
+<h3>Description</h3>
+
+<p>Fit a multi-group negative-binomial model to SAGE data, with Pearson estimation of the common overdispersion parameter. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fitNBP(y, group=NULL, lib.size=colSums(y), tol=1e-5, maxit=40, verbose=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>numeric matrix giving counts. Rows correspond to tags (genes) and columns to SAGE libraries.</p>
+</td></tr>
+<tr valign="top"><td><code>group</code></td>
+<td>
+<p>factor indicating which library belongs to each group. If <code>NULL</code> then one group is assumed.</p>
+</td></tr>
+<tr valign="top"><td><code>lib.size</code></td>
+<td>
+<p>vector giving total number of tags in each library.</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>small positive numeric tolerance to judge convergence</p>
+</td></tr>
+<tr valign="top"><td><code>maxit</code></td>
+<td>
+<p>maximum number of iterations permitted</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical, if <code>TRUE</code> then iteration progress information is output.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The overdispersion parameter is estimated equating the Pearson goodness of fit to its expectation.
+The variance is assumed to be of the form
+Var(y)=mu*(1+phi*mu)
+where E(y)=mu and phi is the dispersion parameter.
+All tags are assumed to share the same dispersion.
+</p>
+<p>For given dispersion, the model for each tag is a negative-binomial generalized linear model with log-link and <code>log(lib.size)</code> as offset.
+The coefficient parametrization used is that corresponding to the formula <code>~0+group+offset(log(lib.size)</code>.
+</p>
+<p>Except for the dispersion being common rather than genewise, the model fitted by this function is equivalent to that proposed by Lu et al (2005).
+The numeric algorithm used is that of alternating iterations (Smyth, 1996) using Newton's method as the outer iteration for the dispersion parameter starting at phi=0.
+This iteration is monotonically convergent for the dispersion.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>numeric matrix of rates for each tag (gene) and each group</p>
+</td></tr>
+<tr valign="top"><td><code>fitted.values</code></td>
+<td>
+<p>numeric matrix of fitted values</p>
+</td></tr>
+<tr valign="top"><td><code>dispersion</code></td>
+<td>
+<p>estimated dispersion parameter</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>This function has been made obsolete by the <a href="https://doi.org/doi:10.18129/B9.bioc.edgeR">edgeR</a> package on Bioconductor.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gordon Smyth</p>
+
+
+<h3>References</h3>
+
+<p>Lu, J, Tomfohr, JK, Kepler, TB (2005).
+Identifying differential expression in multiple SAGE libraries: an overdispersed log-linear model approach.
+<em>BMC Bioinformatics</em> 6,165.
+</p>
+<p>Smyth, G. K. (1996). Partitioned algorithms for maximum likelihood and other nonlinear estimation. <em>Statistics and Computing</em>, 6, 201-216.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="sage.test.html">sage.test</a></code>
+</p>
+<p>The edgeR package on Biconductor provides new and better functions to fit negative-binomial glms to SAGE or RNA-seq data.
+See particularly the <code>glmFit</code> and <code>mglmOneWay</code> functions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# True value for dispersion is 1/size=2/3
+# Note the Pearson method tends to under-estimate the dispersion
+y &lt;- matrix(rnbinom(10*4,mu=4,size=1.5),10,4)
+lib.size &lt;- rep(50000,4)
+group &lt;- c(1,1,2,2)
+fit &lt;- fitNBP(y,group=group,lib.size=lib.size)
+logratio &lt;- fit$coef %*% c(-1,1)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>statmod</em> version 1.4.36 <a href="00Index.html">Index</a>]</div>
+</body></html>

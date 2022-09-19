@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create and plot a list of shapes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for shapelist3d {rgl}"><tr><td>shapelist3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2> Create and plot a list of shapes </h2>
+
+<h3>Description</h3>
+
+<p>These functions create and plot a list of shapes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+shapelist3d(shapes, x = 0, y = NULL, z = NULL, size = 1, matrix = NULL, override = TRUE, 
+            ..., plot = TRUE)  
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>shapes</code></td>
+<td>
+<p> A single <code>shape3d</code> object, or a list of them. </p>
+</td></tr>
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+<p> Translation(s) to apply </p>
+</td></tr>
+<tr valign="top"><td><code>size</code></td>
+<td>
+<p> Scaling(s) to apply </p>
+</td></tr>
+<tr valign="top"><td><code>matrix</code></td>
+<td>
+<p> A single matrix transformation, or a list of them. </p>
+</td></tr>
+<tr valign="top"><td><code>override</code></td>
+<td>
+<p> Whether the material properties should override the ones in the shapes. </p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> Material properties to apply. </p>
+</td></tr>
+<tr valign="top"><td><code>plot</code></td>
+<td>
+<p> Whether to plot the result. </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>shapelist3d</code> is a quick way to create a complex object made up of simpler ones.
+Each of the arguments <code>shapes</code> through <code>override</code> may be a vector of 
+values (a list in the case of <code>shapes</code> or <code>matrix</code>).  All values
+will be recycled to produce a list of shapes as long as the longest of them.
+</p>
+<p>The <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code> function will be used to process the <code>x</code>,
+<code>y</code> and <code>z</code> arguments, so a matrix may be used as <code>x</code> to 
+specify all three.   If a vector is used for <code>x</code> but <code>y</code> or <code>z</code>
+is missing, default values of <code>0</code> will be used.
+</p>
+<p>The <code>"shapelist3d"</code> class is simply a list of <code>"shape3d"</code> objects.
+</p>
+<p>Methods for <code><a href="shade3d.html">dot3d</a></code>, <code><a href="shade3d.html">wire3d</a></code>, <code><a href="shade3d.html">shade3d</a></code>,
+<code><a href="matrices.html">translate3d</a></code>, <code><a href="matrices.html">scale3d</a></code>, and <code><a href="matrices.html">rotate3d</a></code>
+are defined for these objects.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>c("shapelist3d", "shape3d")</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Duncan Murdoch </p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="mesh3d.html">mesh3d</a></code> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+open3d() 
+shapelist3d(icosahedron3d(), x = rnorm(10), y = rnorm(10), z = rnorm(10), col = 1:5, size = 0.3)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: 'Splat' arguments to a function.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for splat {plyr}"><tr><td>splat {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>&lsquo;Splat&rsquo; arguments to a function.</h2>
+
+<h3>Description</h3>
+
+<p>Wraps a function in do.call, so instead of taking multiple arguments, it
+takes a single named list which will be interpreted as its arguments.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+splat(flat)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>flat</code></td>
+<td>
+<p>function to splat</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is useful when you want to pass a function a row of data frame or
+array, and don't want to manually pull it apart in your function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a function
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+hp_per_cyl &lt;- function(hp, cyl, ...) hp / cyl
+splat(hp_per_cyl)(mtcars[1,])
+splat(hp_per_cyl)(mtcars)
+
+f &lt;- function(mpg, wt, ...) data.frame(mw = mpg / wt)
+ddply(mtcars, .(cyl), splat(f))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

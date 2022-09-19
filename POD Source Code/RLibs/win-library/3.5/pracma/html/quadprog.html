@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Quadratic Programming</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for quadprog {pracma}"><tr><td>quadprog {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Quadratic Programming
+</h2>
+
+<h3>Description</h3>
+
+<p>Solves quadratic programming problems with linear and box constraints.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+quadprog(C, d, A = NULL, b = NULL,
+         Aeq = NULL, beq = NULL, lb = NULL, ub = NULL) 
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>C</code></td>
+<td>
+<p>symmetric matrix, representing the quadratic term.</p>
+</td></tr>
+<tr valign="top"><td><code>d</code></td>
+<td>
+<p>vector, representing the linear term.</p>
+</td></tr>
+<tr valign="top"><td><code>A</code></td>
+<td>
+<p>matrix, represents the linear constraint coefficients.</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>vector, constant vector in the constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>Aeq</code></td>
+<td>
+<p>matrix, linear equality constraint coefficients.</p>
+</td></tr>
+<tr valign="top"><td><code>beq</code></td>
+<td>
+<p>vector, constant equality constraint vector.</p>
+</td></tr>
+<tr valign="top"><td><code>lb</code></td>
+<td>
+<p>elementwise lower bounds.</p>
+</td></tr>
+<tr valign="top"><td><code>ub</code></td>
+<td>
+<p>elementwise upper bounds.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Finds a minimum for the quadratic programming problem specified as:
+</p>
+<p style="text-align: center;"><i>min 1/2 x'Cx + d'x</i></p>
+
+<p>such that the following constraints are satisfied:
+</p>
+<p style="text-align: center;"><i>A x &lt;= b</i></p>
+
+<p style="text-align: center;"><i>Aeq x = beq</i></p>
+
+<p style="text-align: center;"><i>lb &lt;= x &lt;= ub</i></p>
+
+<p>The matrix should be symmetric and positive definite, in which case
+the solution is unique, indicated when the exit flag is 1.
+</p>
+<p>For more information, see <code>?solve.QP</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>xmin</code></td>
+<td>
+<p>minimum solution, subject to all bounds and constraints.</p>
+</td></tr>
+<tr valign="top"><td><code>fval</code></td>
+<td>
+<p>value of the target expression at the arg minimum.</p>
+</td></tr>
+<tr valign="top"><td><code>eflag</code></td>
+<td>
+<p>exit flag.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>This function is wrapping the active set quadratic solver in the 
+<code>quadprog</code> package: <code>quadprog::solve.QP</code>, combined with
+a more MATLAB-like API interface.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nocedal, J., and St. J. Wright (2006). Numerical Optimization.
+Second Edition, Springer Series in Operations Research, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="lsqlincon.html">lsqlincon</a></code>, <code>quadprog::solve.QP</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Example in ?solve.QP
+# Assume we want to minimize: 1/2 x^T x - (0 5 0) %*% x
+# under the constraints:      A x &lt;= b
+# with b = (8,-2, 0)
+# and      ( 4  3  0) 
+#      A = (-2 -1  0)
+#          ( 0  2,-1)
+# and possibly equality constraint  3x1 + 2x2 + x3 = 1
+# or upper bound c(1.5, 1.5, 1.5).
+
+C &lt;- diag(1, 3); d &lt;- -c(0, 5, 0)
+A &lt;- matrix(c(4,3,0, -2,-1,0, 0,2,-1), 3, 3, byrow=TRUE)
+b &lt;- c(8, -2, 0)
+
+quadprog(C, d, A, b)
+# $xmin
+# [1] 0.4761905 1.0476190 2.0952381
+# $fval
+# [1] -2.380952
+# $eflag
+# [1] 1
+
+Aeq &lt;- c(3, 2, 1);  beq &lt;- 1
+quadprog(C, d, A, b, Aeq, beq)
+# $xmin
+# [1]  1.4 -0.8 -1.6
+# $fval
+# [1] 6.58
+# $eflag
+# [1] 1
+
+quadprog(C, d, A, b, lb = 0, ub = 1.5)
+# $xmin
+# [1] 0.625 0.750 1.500
+# $fval
+# [1] -2.148438
+# $eflag
+# [1] 1
+
+## Example help(quadprog)
+C &lt;- matrix(c(1, -1, -1, 2), 2, 2)
+d &lt;- c(-2, -6)
+A &lt;- matrix(c(1,1, -1,2, 2,1), 3, 2, byrow=TRUE)
+b &lt;- c(2, 2, 3)
+lb &lt;- c(0, 0)
+
+quadprog(C, d, A, b, lb=lb)
+# $xmin
+# [1] 0.6666667 1.3333333
+# $fval
+# [1] -8.222222
+# $eflag
+# [1] 1
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

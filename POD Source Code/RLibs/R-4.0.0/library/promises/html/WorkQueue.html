@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Future promise work queue</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for WorkQueue {promises}"><tr><td>WorkQueue {promises}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Future promise work queue</h2>
+
+<h3>Description</h3>
+
+<p>Future promise work queue
+</p>
+<p>Future promise work queue
+</p>
+
+
+<h3>Details</h3>
+
+<p>#' <a href='https://www.tidyverse.org/lifecycle/#experimental'><img src='figures/lifecycle-experimental.svg' alt='Experimental lifecycle'></a>
+</p>
+<p>An <span class="pkg">R6</span> class to help with scheduling work to be completed. <code>WorkQueue</code> will only execute work if the <code>can_proceed()</code> returns <code>TRUE</code>. For the use case of <code>future</code>, <code>can_proceed()</code> defaults to <code>future::nbrOfFreeWorkers() &gt; 0</code> which will not allow for work to be executed if a <span class="pkg">future</span> worker is not available.
+</p>
+<p><code>WorkQueue</code> will constantly try to start new work once prior work item finishes.  However, if <code>can_proceed()</code> returns <code>FALSE</code> (no future workers are available) and there is more work to be done, then work is attempted later a random amount of time later using exponential backoff.  The exponential backoff will cap out at 10 seconds to prevent unnecessarily large wait times.
+</p>
+<p>Each time <code>WorkQueue</code> tries to start more work, it will repeat until <code>can_proceed()</code> returns <code>FALSE</code> or there is no more work in the <code>queue</code>.
+</p>
+
+
+<h3>Global event loop</h3>
+
+<p>The global loop is used by default as the internal <code>WorkQueue</code> &quot;delayed check&quot; uses a single delay check for the whole queue, rather than having each item in the queue attempt to process.
+This behavior might change in the future, but we are not exactly sure how at this point.
+</p>
+<p>If a private <code>later</code> loop wants to become synchronous by running until all jobs are completed but is waiting on a <code>future_promise()</code>, the private loop will not complete unless the global loop is allowed to move forward.
+</p>
+<p>However, it is possible to use a private loop inside a user-defined <code>WorkQueue</code> may work which can be provided directly to <code>future_promise(queue=custom_queue)</code>. Having a concrete example (or need) will help us understand the problem better. If you have an example, please reach out .
+</p>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-new"><code>WorkQueue$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-schedule_work"><code>WorkQueue$schedule_work()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-clone"><code>WorkQueue$clone()</code></a>
+</p>
+</li></ul>
+
+
+<hr>
+<a id="method-new"></a>
+
+
+
+<h4>Method <code>new()</code></h4>
+
+<p>Create a new <code>WorkQueue</code>
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>WorkQueue$new(
+  can_proceed = future_worker_is_free,
+  queue = fastmap::fastqueue(),
+  loop = later::global_loop()
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>can_proceed</code></dt><dd><p>Function that should return a logical value. If <code>TRUE</code> is returned, then the next scheduled work will be executed. By default, this function checks if <code><a href="../../future/html/nbrOfWorkers.html">future::nbrOfFreeWorkers()</a> &gt; 0</code></p>
+</dd>
+<dt><code>queue</code></dt><dd><p>Queue object to use to store the scheduled work. By default, this is a &quot;First In, First Out&quot; queue using <code><a href="../../fastmap/html/fastqueue.html">fastmap::fastqueue()</a></code>. If using your own queue, it should have the methods <code style="white-space: pre;">$add(x)</code>, <code style="white-space: pre;">$remove()</code>, <code style="white-space: pre;">$size()</code>.</p>
+</dd>
+<dt><code>loop</code></dt><dd><p><span class="pkg">later</span> loop to use for calculating the next delayed check. Defaults to <code><a href="../../later/html/create_loop.html">later::global_loop()</a></code>.
+Schedule work</p>
+</dd>
+</dl>
+
+</div>
+
+
+<hr>
+<a id="method-schedule_work"></a>
+
+
+
+<h4>Method <code>schedule_work()</code></h4>
+
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>WorkQueue$schedule_work(fn)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>fn</code></dt><dd><p>function to execute when <code>can_proceed()</code> returns <code>TRUE</code>.</p>
+</dd>
+</dl>
+
+</div>
+
+
+<hr>
+<a id="method-clone"></a>
+
+
+
+<h4>Method <code>clone()</code></h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>WorkQueue$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="future_promise.html">future_promise_queue()</a></code> which returns a <code>WorkQueue</code> which is cached per R session.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>promises</em> version 1.2.0.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Summarizing Robust Fits of Generalized Linear Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for summary.glmrob {robustbase}"><tr><td>summary.glmrob {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Summarizing Robust Fits of Generalized Linear Models</h2>
+
+<h3>Description</h3>
+
+<p>The <code>summary</code> method for class <code>"<a href="glmrob.html">glmrob</a>"</code>
+summarizes robust fits of (currently only discrete) generalized linear
+models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'glmrob'
+summary(object, correlation = FALSE, symbolic.cor = FALSE, ...)
+## S3 method for class 'glmrob'
+vcov(object, ...)
+
+## S3 method for class 'summary.glmrob'
+print(x, digits = max(3, getOption("digits") - 3),
+      symbolic.cor = x$symbolic.cor,
+      signif.stars = getOption("show.signif.stars"), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>an object of class <code>"glmrob"</code>, usually, a result of
+a call to <code><a href="glmrob.html">glmrob</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>correlation</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, the correlation matrix of
+the estimated parameters is returned and printed.</p>
+</td></tr>
+<tr valign="top"><td><code>symbolic.cor</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, print the correlations in
+a symbolic form (see <code><a href="../../stats/html/symnum.html">symnum</a></code>) rather than as numbers.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an object of class <code>"summary.glrob"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>the number of digits to use for printing.</p>
+</td></tr>
+<tr valign="top"><td><code>signif.stars</code></td>
+<td>
+<p>logical indicating if the P-values should be
+visualized by so called &ldquo;significance stars&rdquo;.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code><a href="summary.glmrob.html">summary.glmrob</a></code> returns an object of <code><a href="../../base/html/class.html">class</a></code>
+<code>"summary.glmrob"</code>.
+</p>
+<p>Its <code><a href="../../base/html/print.html">print</a>()</code> method tries to be smart about formatting the
+coefficients, standard errors, etc, and gives
+&ldquo;significance stars&rdquo; if <code>signif.stars</code> is <code>TRUE</code>
+(as per default when <code><a href="../../base/html/options.html">options</a></code> where not changed).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function <code><a href="summary.glmrob.html">summary.glmrob</a></code> computes and returns a list
+of summary statistics of the robustly fitted linear model given in
+<code>object</code>. The following elements are in the list:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p> FIXME </p>
+</td></tr>
+</table>
+
+
+
+
+<h3>Author(s)</h3>
+
+<p>Andreas Ruckstuhl</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="glmrob.html">glmrob</a></code>; the generic <code><a href="../../base/html/summary.html">summary</a></code> and
+also <code><a href="../../stats/html/summary.glm.html">summary.glm</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(epilepsy)
+Rmod &lt;- glmrob(Ysum ~ Age10 + Base4*Trt, family = poisson,
+               data = epilepsy, method= "Mqle")
+ss &lt;- summary(Rmod)
+ss ## calls print.summary.glmrob()
+str(ss) ## internal STRucture of summary object
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Confidence intervals for proportions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyciprop {survey}"><tr><td>svyciprop {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Confidence intervals for proportions </h2>
+
+<h3>Description</h3>
+
+<p>Computes confidence intervals for proportions using methods that may be
+more accurate near 0 and 1 than simply using <code>confint(svymean())</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyciprop(formula, design, method = c("logit", "likelihood", "asin", "beta",
+"mean","xlogit"), level = 0.95, df=degf(design),...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>Model formula specifying a single binary variable</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p> survey design object</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p> See Details below. Partial matching is done on the argument.</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>Confidence level for interval</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>denominator degrees of freedom, for all methods except
+<code>"beta"</code>.  Use <code>Inf</code> for confidence intervals based on a
+Normal distribution, and for <code>"likelihood"</code> and <code>"logit"</code>
+use <code>NULL</code> for the default method in glms (currently
+<code>degf(design)-1</code>, but this may be improved in the future)</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>For <code>"mean"</code> and <code>"asin"</code>, this is passed to <code><a href="surveysummary.html">confint.svystat</a></code> </p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>"logit"</code> method fits a logistic regression model and computes a
+Wald-type interval on the log-odds scale, which is then transformed to
+the probability scale.
+</p>
+<p>The <code>"likelihood"</code> method uses the (Rao-Scott) scaled chi-squared distribution
+for the loglikelihood from a binomial distribution.
+</p>
+<p>The <code>"asin"</code> method uses the variance-stabilising transformation
+for the binomial distribution, the arcsine square root, and then
+back-transforms the interval to the probability scale
+</p>
+<p>The <code>"beta"</code> method uses the incomplete beta function as in
+<code><a href="../../stats/html/binom.test.html">binom.test</a></code>, with an effective sample size based on the
+estimated variance of the proportion. (Korn and Graubard, 1998)
+</p>
+<p>The <code>"xlogit"</code> method uses a logit transformation of the mean and
+then back-transforms to the probablity scale. This appears to be the
+method used by SUDAAN and SPSS COMPLEX SAMPLES. 
+</p>
+<p>The <code>"mean"</code> method is a Wald-type interval on the probability
+scale, the same as <code>confint(svymean())</code>
+</p>
+<p>All methods undercover for probabilities close enough to zero or one,
+but <code>"beta"</code>, <code>"likelihood"</code>, <code>"logit"</code>, and <code>"logit"</code> are noticeably
+better than the other two. None of the methods will work when the
+observed proportion is exactly 0 or 1.
+</p>
+<p>The <code>confint</code> method extracts the confidence interval; the
+<code>vcov</code> and <code>SE</code> methods just report the variance or standard
+error of the mean. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The point estimate of the proportion, with the confidence interval as
+an attribute
+</p>
+
+
+<h3>References</h3>
+
+<p>Rao, JNK, Scott, AJ (1984) &quot;On Chi-squared Tests For Multiway
+Contingency Tables with Proportions Estimated From Survey Data&quot; Annals
+of Statistics 12:46-60.
+</p>
+<p>Korn EL, Graubard BI. (1998) Confidence Intervals For Proportions With
+Small Expected Number of Positive Counts Estimated From Survey
+Data. Survey Methodology 23:193-201.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="surveysummary.html">svymean</a></code>, <code><a href="yrbs.html">yrbs</a></code> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dclus1&lt;-svydesign(id=~dnum, fpc=~fpc, data=apiclus1)
+
+svyciprop(~I(ell==0), dclus1, method="li")
+svyciprop(~I(ell==0), dclus1, method="lo")
+svyciprop(~I(ell==0), dclus1, method="as")
+svyciprop(~I(ell==0), dclus1, method="be")
+svyciprop(~I(ell==0), dclus1, method="me")
+svyciprop(~I(ell==0), dclus1, method="xl")
+
+## reproduces Stata svy: mean
+svyciprop(~I(ell==0), dclus1, method="me", df=degf(dclus1))
+## reproduces Stata svy: prop
+svyciprop(~I(ell==0), dclus1, method="lo", df=degf(dclus1))
+
+
+rclus1&lt;-as.svrepdesign(dclus1)
+svyciprop(~I(emer==0), rclus1, method="li")
+svyciprop(~I(emer==0), rclus1, method="lo")
+svyciprop(~I(emer==0), rclus1, method="as")
+svyciprop(~I(emer==0), rclus1, method="be")
+svyciprop(~I(emer==0), rclus1, method="me")
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

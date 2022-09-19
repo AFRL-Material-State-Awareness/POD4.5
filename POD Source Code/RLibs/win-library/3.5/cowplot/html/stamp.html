@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Stamp plots with a label, such as good, bad, or ugly.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for stamp {cowplot}"><tr><td>stamp {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Stamp plots with a label, such as good, bad, or ugly.</h2>
+
+<h3>Description</h3>
+
+<p>Stamp plots with a label, such as good, bad, or ugly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+stamp(
+  p,
+  label,
+  color = "black",
+  alpha = 1,
+  vjust = 1.1,
+  hjust = 1,
+  size = 14,
+  family = "",
+  fontface = "bold",
+  clip = "on",
+  colour
+)
+
+stamp_good(p, ...)
+
+stamp_bad(p, ...)
+
+stamp_wrong(p, ...)
+
+stamp_ugly(p, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>The plot to stamp</p>
+</td></tr>
+<tr valign="top"><td><code>label</code></td>
+<td>
+<p>The text label used for the stamp</p>
+</td></tr>
+<tr valign="top"><td><code>color, colour</code></td>
+<td>
+<p>The color of the stamp</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>Transparency level of the stamp</p>
+</td></tr>
+<tr valign="top"><td><code>hjust, vjust</code></td>
+<td>
+<p>Horizontal and vertical adjustment of the label</p>
+</td></tr>
+<tr valign="top"><td><code>size</code></td>
+<td>
+<p>Font size</p>
+</td></tr>
+<tr valign="top"><td><code>family</code></td>
+<td>
+<p>Font family</p>
+</td></tr>
+<tr valign="top"><td><code>fontface</code></td>
+<td>
+<p>Font face</p>
+</td></tr>
+<tr valign="top"><td><code>clip</code></td>
+<td>
+<p>Should figure be clipped (default is &quot;on&quot;)</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Arguments handed off to <code>stamp()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(ggplot2)
+
+p &lt;- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point(aes(color = factor(Petal.Width)))
+
+stamp_bad(p + guides(color = "none"))
+stamp_ugly(p)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

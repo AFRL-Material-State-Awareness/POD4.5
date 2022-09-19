@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Least Squares Problems in Surveying</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lsq {SparseM}"><tr><td>lsq {SparseM}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Least Squares Problems in Surveying</h2>
+
+<h3>Description</h3>
+
+<p>One of the four matrices from the least-squares solution of 
+problems in surveying that were used by Michael Saunders and Chris Paige 
+in the testing of LSQR</p>
+
+
+<h3>Usage</h3>
+
+<pre>data(lsq)</pre>
+
+
+<h3>Format</h3>
+
+<p>A list of class <code>matrix.csc.hb</code> or <code>matrix.ssc.hb</code> depending
+on how the coefficient matrix is stored with the following components:
+</p>
+
+<ul>
+<li><p>ra ra component of the csc or ssc format of the coefficient matrix, X.
+   </p>
+</li>
+<li><p>ja ja component of the csc or ssc format of the coefficient matrix, X.
+   </p>
+</li>
+<li><p>ia ia component of the csc or ssc format of the coefficient matrix, X.
+   </p>
+</li>
+<li><p>rhs.ra ra component of the right-hand-side, y, if stored in csc or
+ssc format; right-hand-side stored in dense vector or matrix otherwise.
+</p>
+</li>
+<li><p>rhs.ja ja component of the right-hand-side, y, if stored in csc or 
+ssc format; a null vector otherwise.
+</p>
+</li>
+<li><p>rhs.ia ia component of the right-hand-side, y, if stored in csc or
+ssc format; a null vector otherwise.
+</p>
+</li>
+<li><p>xexactvector of the exact solutions, b, if they exist; a null vector o
+therwise.  </p>
+</li>
+<li><p>guessvector of the initial guess of the solutions if they exist;
+a null vector otherwise.
+</p>
+</li>
+<li><p>dimdimenson of the coefficient matrix, X.
+</p>
+</li>
+<li><p>rhs.dimdimenson of the right-hand-side, y.
+</p>
+</li>
+<li><p>rhs.modestorage mode of the right-hand-side; can be full storage or
+same format as the coefficient matrix.
+</p>
+</li></ul>
+
+
+
+<h3>References</h3>
+
+<p>Koenker, R and Ng, P. (2002).  SparseM:  A Sparse Matrix Package for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>,<br />
+<a href="http://www.econ.uiuc.edu/~roger/research/home.html">http://www.econ.uiuc.edu/~roger/research/home.html</a>
+</p>
+<p>Matrix Market, <a href="https://math.nist.gov/MatrixMarket/data/Harwell-Boeing/lsq/lsq.html">https://math.nist.gov/MatrixMarket/data/Harwell-Boeing/lsq/lsq.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read.matrix.hb</code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(lsq)
+class(lsq) # -&gt; [1] "matrix.csc.hb"
+model.matrix(lsq)-&gt;X
+class(X) # -&gt; "matrix.csr"
+dim(X) # -&gt; [1] 1850  712
+y &lt;- model.response(lsq) # extract the rhs
+length(y) # [1] 1850 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>SparseM</em> version 1.81 <a href="00Index.html">Index</a>]</div>
+</body></html>

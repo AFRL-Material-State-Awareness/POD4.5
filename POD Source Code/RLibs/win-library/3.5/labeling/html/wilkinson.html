@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Wilkinson's labeling algorithm</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for wilkinson {labeling}"><tr><td>wilkinson {labeling}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Wilkinson's labeling algorithm</h2>
+
+<h3>Description</h3>
+
+<p>Wilkinson's labeling algorithm
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  wilkinson(dmin, dmax, m,
+    Q = c(1, 5, 2, 2.5, 3, 4, 1.5, 7, 6, 8, 9),
+    mincoverage = 0.8,
+    mrange = max(floor(m/2), 2):ceiling(6 * m))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>dmin</code></td>
+<td>
+<p>minimum of the data range</p>
+</td></tr>
+<tr valign="top"><td><code>dmax</code></td>
+<td>
+<p>maximum of the data range</p>
+</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+<p>number of axis labels</p>
+</td></tr>
+<tr valign="top"><td><code>Q</code></td>
+<td>
+<p>set of nice numbers</p>
+</td></tr>
+<tr valign="top"><td><code>mincoverage</code></td>
+<td>
+<p>minimum ratio between the the data
+range and the labeling range, controlling the whitespace
+around the labeling (default = 0.8)</p>
+</td></tr>
+<tr valign="top"><td><code>mrange</code></td>
+<td>
+<p>range of <code>m</code>, the number of tick
+marks, that should be considered in the optimization
+search</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>vector of axis label locations
+</p>
+
+
+<h3>Note</h3>
+
+<p>Ported from Wilkinson's Java implementation with some
+changes.  Changes: 1) m (the target number of ticks) is
+hard coded in Wilkinson's implementation as 5.  Here we
+allow it to vary as a parameter. Since m is fixed,
+Wilkinson only searches over a fixed range 4-13 of
+possible resulting ticks.  We broadened the search range
+to max(floor(m/2),2) to ceiling(6*m), which is a larger
+range than Wilkinson considers for 5 and allows us to
+vary m, including using non-integer values of m.  2)
+Wilkinson's implementation assumes that the scores are
+non-negative. But, his revised granularity function can
+be extremely negative. We tweaked the code to allow
+negative scores.  We found that this produced better
+labelings.  3) We added 10 to Q. This seemed to be
+necessary to get steps of size 1.  It is possible for
+this algorithm to find no solution.  In Wilkinson's
+implementation, instead of failing, he returns the
+non-nice labels spaced evenly from min to max.  We want
+to detect this case, so we return NULL. If this happens,
+the search range, mrange, needs to be increased.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Justin Talbot <a href="mailto:justintalbot@gmail.com">justintalbot@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Wilkinson, L. (2005) The Grammar of Graphics,
+Springer-Verlag New York, Inc.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>labeling</em> version 0.4.2 <a href="00Index.html">Index</a>]</div>
+</body></html>

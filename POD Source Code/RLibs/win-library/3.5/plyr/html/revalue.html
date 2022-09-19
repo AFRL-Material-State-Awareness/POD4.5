@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Replace specified values with new values, in a factor or...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for revalue {plyr}"><tr><td>revalue {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Replace specified values with new values, in a factor or character vector.</h2>
+
+<h3>Description</h3>
+
+<p>If <code>x</code> is a factor, the named levels of the factor will be
+replaced with the new values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+revalue(x, replace = NULL, warn_missing = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>factor or character vector to modify</p>
+</td></tr>
+<tr valign="top"><td><code>replace</code></td>
+<td>
+<p>named character vector, with new values as values, and
+old values as names.</p>
+</td></tr>
+<tr valign="top"><td><code>warn_missing</code></td>
+<td>
+<p>print a message if any of the old values are
+not actually present in <code>x</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function works only on character vectors and factors, but the
+related <code>mapvalues</code> function works on vectors of any type and factors,
+and instead of a named vector specifying the original and replacement values,
+it takes two separate vectors
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="mapvalues.html">mapvalues</a></code> to replace values with vectors of any type
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- c("a", "b", "c")
+revalue(x, c(a = "A", c = "C"))
+revalue(x, c("a" = "A", "c" = "C"))
+
+y &lt;- factor(c("a", "b", "c", "a"))
+revalue(y, c(a = "A", c = "C"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

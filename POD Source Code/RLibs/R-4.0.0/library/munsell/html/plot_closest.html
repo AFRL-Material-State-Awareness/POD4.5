@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plot closest Munsell colour to an sRGB colour</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot_closest {munsell}"><tr><td>plot_closest {munsell}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plot closest Munsell colour to an sRGB colour</h2>
+
+<h3>Description</h3>
+
+<p>Take an sRGB colour and plots it along with the closest Munsell colour (using <code><a href="rgb2mnsl.html">rgb2mnsl</a></code> to find it)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plot_closest(R, G = NULL, B = NULL, back.col = "white")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>R</code></td>
+<td>
+<p>a numeric vector of red values or a 3 column matrix with the 
+proportions R,  G,  B in the columns.</p>
+</td></tr>
+<tr valign="top"><td><code>G</code></td>
+<td>
+<p>numeric vector of green values</p>
+</td></tr>
+<tr valign="top"><td><code>B</code></td>
+<td>
+<p>numeric vector of blue values</p>
+</td></tr>
+<tr valign="top"><td><code>back.col</code></td>
+<td>
+<p>colour for the background</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>ggplot object
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="rgb2mnsl.html">rgb2mnsl</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+plot_closest(0.1, 0.1, 0.3)
+plot_closest(matrix(c(.1, .2, .4, .5, .6, .8),  ncol = 3)) 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>munsell</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

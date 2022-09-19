@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Set mouse callbacks in R or Javascript code</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for setUserCallbacks {rgl}"><tr><td>setUserCallbacks {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Set mouse callbacks in R or Javascript code
+</h2>
+
+<h3>Description</h3>
+
+<p>This function sets user mouse callbacks in R or
+<code><a href="rglwidget.html">rglwidget</a></code> displays.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+setUserCallbacks(button, 
+                 begin = NULL, 
+                 update = NULL, 
+                 end = NULL, 
+                 rotate = NULL,
+                 javascript = NULL, 
+                 subscene = scene$rootSubscene$id,
+                 scene = scene3d(minimal = FALSE),
+                 applyToScene = TRUE,
+			           applyToDev = missing(scene))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>button</code></td>
+<td>
+
+<p>Which button should this callback apply to? Can
+be numeric from <code>0:4</code>, or character from <code>"none", "left", "right", "center", "wheel"</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>begin, update, end, rotate</code></td>
+<td>
+
+<p>Functions to call when events occur.  See Details.
+</p>
+</td></tr>
+<tr valign="top"><td><code>javascript</code></td>
+<td>
+
+<p>Optional block of Javascript code to be
+included (at the global level).
+</p>
+</td></tr>
+<tr valign="top"><td><code>subscene</code></td>
+<td>
+
+<p>Which subscene do these callbacks apply to?
+</p>
+</td></tr>
+<tr valign="top"><td><code>scene</code></td>
+<td>
+
+<p>Which scene?
+</p>
+</td></tr>
+<tr valign="top"><td><code>applyToScene</code></td>
+<td>
+
+<p>Should these changes apply to the scene object?
+</p>
+</td></tr>
+<tr valign="top"><td><code>applyToDev</code></td>
+<td>
+
+<p>Should these changes apply to the current device?
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If <code>applyToScene</code> is <code>TRUE</code>, this function adds Javascript 
+callbacks to the <code>scene</code> object.  
+If <code>applyToDev</code> is <code>TRUE</code>, it adds R
+callbacks to the current RGL device.
+</p>
+<p>For Javascript, 
+the callbacks are specified as strings; these will be
+evaluated within the browser in the global context to define the functions, 
+which will then be called with the Javascript
+<code>this</code> object set to the current
+<code>rglwidgetClass</code> object.
+</p>
+<p>For R, they may be strings or R functions.
+</p>
+<p>Both options may be <code>TRUE</code>, in which case the
+callbacks must be specified as strings which are 
+both valid Javascript and valid R.  The usual way to
+do this is to give just a function name, with the
+function defined elsewhere, as in the Example below.
+</p>
+<p>The <code>begin</code> and <code>update</code> functions should be 
+of the form
+<code>function(x, y) { ... }</code>.  The <code>end</code> function
+will be called with no arguments.  
+</p>
+<p>The <code>rotate</code> callback can only be set on the 
+mouse wheel.  It is called when the mouse 
+wheel is rotated.  It should be of the form
+<code>function(away)</code>, where <code>away</code> will be 1
+while rotating the wheel &ldquo;away&rdquo; from you,
+and 2 while rotating it towards you.  If <code>rotate</code>
+is not set but other callbacks are set on the wheel
+&ldquo;button&rdquo;, then each click of the mouse wheel
+will trigger all <code>start</code>, <code>update</code>, 
+then <code>end</code> calls in sequence.
+</p>
+<p>The <code>javascript</code> argument is an optional block 
+of code which will be evaluated once during the 
+initialization of the widget.  It can define functions
+and assign them as members of the <code>window</code> object,
+and then the names of those functions can be given 
+in the callback arguments; this allows the callbacks
+to share information.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns an <code>rglScene</code> object.  This
+object will record the changes if <code>applyToScene</code>
+is <code>TRUE</code>.
+</p>
+<p>If <code>applyToDev</code> is <code>TRUE</code>, it will also 
+have the side effect of attempting to install the
+callbacks using <code><a href="callbacks.html">rgl.setMouseCallbacks</a></code>
+and <code><a href="callbacks.html">rgl.setWheelCallback</a></code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Duncan Murdoch
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="setAxisCallbacks.html">setAxisCallbacks</a></code> for user defined axes.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  verts &lt;- cbind(rnorm(11), rnorm(11), rnorm(11))
+  idverts &lt;- plot3d(verts, type = "s", col = "blue")["data"]
+  
+  # Plot some invisible text; the Javascript will move it
+  idtext &lt;- text3d(verts[1,,drop = FALSE], texts = 1, adj = c(0.5, -1.5), alpha = 0)
+  
+  # Define the R functions to use within R
+  fns &lt;- local({
+    idverts &lt;- idverts
+    idtext &lt;- idtext
+    closest &lt;- -1
+    update &lt;- function(x, y) {
+      save &lt;- par3d(skipRedraw = TRUE)
+      on.exit(par3d(save))
+      rect &lt;- par3d("windowRect")
+      size &lt;- rect[3:4] - rect[1:2]
+      x &lt;- x / size[1];
+      y &lt;- 1 - y / size[2];
+      verts &lt;- rgl.attrib(idverts, "vertices")
+      # Put in window coordinates
+      vw &lt;- rgl.user2window(verts)
+      dists &lt;- sqrt((x - vw[,1])^2 + (y - vw[,2])^2)
+      newclosest &lt;- which.min(dists)
+      if (newclosest != closest) {
+        if (idtext &gt; 0)
+          pop3d(id = idtext)
+        closest &lt;&lt;- newclosest
+        idtext &lt;&lt;- text3d(verts[closest,,drop = FALSE], texts = closest, adj = c(0.5, -1.5))
+      }
+    }
+    end &lt;- function() {
+      if (idtext &gt; 0)
+        pop3d(id = idtext)
+      closest &lt;&lt;- -1
+      idtext &lt;&lt;- -1
+    }
+    list(rglupdate = update, rglend = end)
+  })
+  rglupdate &lt;- fns$rglupdate
+  rglend &lt;- fns$rglend
+  
+  # Define the Javascript functions with the same names to use in WebGL
+  js &lt;-
+   ' var idverts = %id%, idtext = %idtext%, closest = -1,
+         subid = %subid%;
+   
+     window.rglupdate = function(x, y) { 
+       var   obj = this.getObj(idverts), i, newdist, dist = Infinity, pt, newclosest;
+       x = x/this.canvas.width;
+       y = y/this.canvas.height;
+       
+       for (i = 0; i &lt; obj.vertices.length; i++) {
+         pt = obj.vertices[i].concat(1);
+         pt = this.user2window(pt, subid);
+         pt[0] = x - pt[0];
+         pt[1] = y - pt[1];
+         pt[2] = 0;
+         newdist = rglwidgetClass.vlen(pt);
+         if (newdist &lt; dist) {
+           dist = newdist;
+           newclosest = i;
+         }
+       }
+
+       if (newclosest !== closest) {
+         closest = newclosest
+         var text = this.getObj(idtext);
+         text.vertices[0] = obj.vertices[closest];
+         text.colors[0][3] = 1; // alpha is here!
+         text.texts[0] = (closest + 1).toString();
+         text.initialized = false;
+         this.drawScene();
+       }
+     };
+     window.rglend = function() {
+       var text = this.getObj(idtext);
+       closest = -1;
+       text.colors[0][3] = 0;
+       text.initialized = false;
+       this.drawScene();
+     }'
+  js &lt;- sub("%id%", idverts, js)  
+  js &lt;- sub("%subid%", subsceneInfo()$id, js)
+  js &lt;- sub("%idtext%", idtext, js)
+    
+  # Install both
+  setUserCallbacks("left",
+                    begin = "rglupdate",
+                    update = "rglupdate",
+                    end = "rglend",
+                    javascript = js)
+  rglwidget()
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

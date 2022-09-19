@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Specify survey design with replicate weights</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svrepdesign {survey}"><tr><td>svrepdesign {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Specify survey design with replicate weights</h2>
+
+<h3>Description</h3>
+
+<p>Some recent large-scale surveys specify replication weights rather than
+the sampling design (partly for privacy reasons).  This function specifies the
+data structure for such a survey. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svrepdesign(variables , repweights , weights, data,...)
+## Default S3 method:
+svrepdesign(variables = NULL, repweights = NULL, weights = NULL, 
+   data = NULL, type = c("BRR", "Fay", "JK1","JKn","bootstrap",
+   "ACS","successive-difference","JK2","other"),
+   combined.weights=TRUE, rho = NULL, bootstrap.average=NULL,
+   scale=NULL, rscales=NULL,fpc=NULL, fpctype=c("fraction","correction"),
+   mse=getOption("survey.replicates.mse"),...)
+## S3 method for class 'imputationList'
+svrepdesign(variables=NULL, repweights,weights,data,
+   mse=getOption("survey.replicates.mse"),...)
+## S3 method for class 'character'
+svrepdesign(variables=NULL,repweights=NULL, weights=NULL,data=NULL,
+type=c("BRR","Fay","JK1", "JKn","bootstrap","ACS","successive-difference","JK2","other"),
+combined.weights=TRUE, rho=NULL, bootstrap.average=NULL, scale=NULL,rscales=NULL,
+fpc=NULL,fpctype=c("fraction","correction"),mse=getOption("survey.replicates.mse"),
+ dbtype="SQLite", dbname,...) 
+
+## S3 method for class 'svyrep.design'
+image(x, ...,
+				 col=grey(seq(.5,1,length=30)), type.=c("rep","total"))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>variables</code></td>
+<td>
+<p>formula or data frame specifying variables to include in the design (default is all) </p>
+</td></tr>
+<tr valign="top"><td><code>repweights</code></td>
+<td>
+<p>formula or data frame specifying replication weights, or character string specifying a regular expression that matches the names of the replication weight variables </p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>sampling weights </p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>data frame to look up variables in formulas, or character string giving name of database table</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Type of replication weights</p>
+</td></tr>
+<tr valign="top"><td><code>combined.weights</code></td>
+<td>
+<p><code>TRUE</code> if the <code>repweights</code> already
+include the sampling weights. This is usually the case.</p>
+</td></tr>
+<tr valign="top"><td><code>rho</code></td>
+<td>
+<p>Shrinkage factor for weights in Fay's method</p>
+</td></tr>
+<tr valign="top"><td><code>bootstrap.average</code></td>
+<td>
+<p>For <code>type="bootstrap"</code>, if the bootstrap
+weights have been averaged, gives the number of iterations averaged over</p>
+</td></tr>
+<tr valign="top"><td><code>scale, rscales</code></td>
+<td>
+<p>Scaling constant for variance, see Details
+below</p>
+</td></tr>
+<tr valign="top"><td><code>fpc,fpctype</code></td>
+<td>
+<p>Finite population correction information</p>
+</td></tr>
+<tr valign="top"><td><code>mse</code></td>
+<td>
+<p>If <code>TRUE</code>, compute variances based on sum of squares
+around the point estimate, rather than the mean of the replicates</p>
+</td></tr>
+<tr valign="top"><td><code>dbname</code></td>
+<td>
+<p>name of database, passed to <code>DBI::dbConnect()</code></p>
+</td></tr>
+<tr valign="top"><td><code>dbtype</code></td>
+<td>
+<p>Database driver: see Details</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>survey design with replicate weights</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments to <code><a href="../../graphics/html/image.html">image</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>Colors</p>
+</td></tr>
+<tr valign="top"><td><code>type.</code></td>
+<td>
+<p><code>"rep"</code> for only the replicate weights, <code>"total"</code> for the replicate and sampling weights combined.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>In the BRR method, the dataset is split into halves, and the
+difference between halves is used to estimate the variance. In Fay's
+method, rather than removing observations from half the sample they
+are given weight <code>rho</code> in one half-sample and <code>2-rho</code> in the
+other.  The ideal BRR analysis is restricted to a design where each
+stratum has two PSUs, however, it has been used in a much wider class
+of surveys. The <code>scale</code> and <code>rscales</code>
+arguments will be ignored (with a warning) if they are specified.
+</p>
+<p>The JK1 and JKn types are both jackknife estimators deleting one
+cluster at a time. JKn is designed for stratified and JK1 for
+unstratified designs.
+</p>
+<p>The successive-difference weights in the American Community Survey
+automatically use <code>scale = 4/ncol(repweights)</code> and <code>rscales=rep(1,
+   ncol(repweights))</code>. This can be specified as <code>type="ACS"</code> or
+<code>type="successive-difference"</code>. The <code>scale</code> and <code>rscales</code>
+arguments will be ignored (with a warning) if they are specified.
+</p>
+<p>JK2 weights (<code>type="JK2"</code>), as in the California Health Interview
+Survey, automatically use <code>scale=1</code>,  <code>rscales=rep(1, ncol(repweights))</code>.
+The <code>scale</code> and <code>rscales</code>
+arguments will be ignored (with a warning) if they are specified.
+</p>
+<p>Averaged bootstrap weights (&quot;mean bootstrap&quot;) are used for some
+surveys from Statistics Canada. Yee et al (1999) describe their
+construction and use for one such survey.
+</p>
+<p>The variance is computed as the sum of squared deviations of the
+replicates from their mean.  This may be rescaled: <code>scale</code> is an
+overall multiplier and <code>rscales</code> is a vector of
+replicate-specific multipliers for the squared deviations. That is,
+<code>rscales</code> should have one entry for each column of <code>repweights</code>
+If thereplication weights incorporate the sampling weights
+(<code>combined.weights=TRUE</code>) or for <code>type="other"</code> these must
+be specified, otherwise they can be guessed from the weights.
+</p>
+<p>A finite population correction may be specified for <code>type="other"</code>,
+<code>type="JK1"</code> and <code>type="JKn"</code>.  <code>fpc</code> must be a vector
+with one entry for each replicate. To specify sampling fractions use
+<code>fpctype="fraction"</code> and to specify the correction directly use
+<code>fpctype="correction"</code>
+</p>
+<p><code>repweights</code> may be a character string giving a regular expression
+for the replicate weight variables. For example, in the
+California Health Interview Survey public-use data, the sampling weights are
+<code>"rakedw0"</code> and the replicate weights are <code>"rakedw1"</code> to
+<code>"rakedw80"</code>.  The regular expression <code>"rakedw[1-9]"</code>
+matches the replicate weight variables (and not the sampling weight
+variable).
+</p>
+<p><code>data</code> may be a character string giving the name of a table or view
+in a relational database that can be accessed through the <code>DBI</code> 
+interface. For DBI interfaces <code>dbtype</code> should be the name of the database
+driver and <code>dbname</code> should be the name by which the driver identifies
+the specific database (eg file name for SQLite).
+</p>
+<p>The appropriate database interface package must already be loaded (eg
+<code>RSQLite</code> for SQLite).  The survey design
+object will contain the replicate weights, but actual variables will
+be loaded from the database only as needed.  Use
+<code><a href="open.DBIsvydesign.html">close</a></code> to close the database connection and
+<code><a href="open.DBIsvydesign.html">open</a></code> to reopen the connection, eg, after
+loading a saved object.
+</p>
+<p>The database interface does not attempt to modify the underlying
+database and so can be used with read-only permissions on the database.
+</p>
+<p>To generate your own replicate weights either use
+<code><a href="as.svrepdesign.html">as.svrepdesign</a></code> on a <code>survey.design</code> object, or see
+<code><a href="brrweights.html">brrweights</a></code>, <code><a href="bootweights.html">bootweights</a></code>,
+<code><a href="brrweights.html">jk1weights</a></code> and <code><a href="brrweights.html">jknweights</a></code>
+</p>
+<p>The <code>model.frame</code> method extracts the observed data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>svyrep.design</code>, with methods for <code>print</code>,
+<code>summary</code>, <code>weights</code>, <code>image</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>To use replication-weight analyses on a survey specified by
+sampling design, use <code>as.svrepdesign</code> to convert it. </p>
+
+
+<h3>References</h3>
+
+<p>Levy and Lemeshow. &quot;Sampling of Populations&quot;. Wiley.
+</p>
+<p>Shao and Tu. &quot;The Jackknife and Bootstrap.&quot; Springer.
+</p>
+<p>Yee et al (1999). Bootstrat Variance Estimation for the National
+Population Health Survey. Proceedings of the ASA Survey Research
+Methodology Section. <a href="https://web.archive.org/web/20151110170959/http://www.amstat.org/sections/SRMS/Proceedings/papers/1999_136.pdf">https://web.archive.org/web/20151110170959/http://www.amstat.org/sections/SRMS/Proceedings/papers/1999_136.pdf</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="as.svrepdesign.html">as.svrepdesign</a></code>, <code><a href="svydesign.html">svydesign</a></code>,
+<code><a href="brrweights.html">brrweights</a></code>, <code>bootweights</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(scd)
+# use BRR replicate weights from Levy and Lemeshow
+repweights&lt;-2*cbind(c(1,0,1,0,1,0), c(1,0,0,1,0,1), c(0,1,1,0,0,1),
+c(0,1,0,1,1,0))
+scdrep&lt;-svrepdesign(data=scd, type="BRR", repweights=repweights, combined.weights=FALSE)
+svyratio(~alive, ~arrests, scdrep)
+
+
+## Not run: 
+## Needs RSQLite
+library(RSQLite)
+db_rclus1&lt;-svrepdesign(weights=~pw, repweights="wt[1-9]+", type="JK1", scale=(1-15/757)*14/15,
+data="apiclus1rep",dbtype="SQLite", dbname=system.file("api.db",package="survey"), combined=FALSE)
+svymean(~api00+api99,db_rclus1)
+
+summary(db_rclus1)
+
+## closing and re-opening a connection
+close(db_rclus1)
+db_rclus1
+try(svymean(~api00+api99,db_rclus1))
+db_rclus1&lt;-open(db_rclus1)
+svymean(~api00+api99,db_rclus1)
+
+
+
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

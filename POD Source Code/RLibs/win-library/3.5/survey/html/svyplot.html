@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Plots for survey data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyplot {survey}"><tr><td>svyplot {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Plots for survey data </h2>
+
+<h3>Description</h3>
+
+<p>Because observations in survey samples may represent very different
+numbers of units in the population ordinary plots can be misleading.
+The <code>svyplot</code> function produces scatterplots adjusted in various ways
+for sampling weights. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyplot(formula, design,...)
+## Default S3 method:
+svyplot(formula, design, style = c("bubble", "hex", "grayhex","subsample","transparent"),
+sample.size = 500, subset = NULL, legend = 1, inches = 0.05,
+amount=NULL, basecol="black",
+alpha=c(0, 0.8),xbins=30,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>A model formula</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p> A survey object (svydesign or svrepdesign)</p>
+</td></tr>
+<tr valign="top"><td><code>style</code></td>
+<td>
+<p>See Details below</p>
+</td></tr>
+<tr valign="top"><td><code>sample.size</code></td>
+<td>
+<p>For <code>style="subsample"</code></p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>expression using variables in the design object</p>
+</td></tr>
+<tr valign="top"><td><code>legend</code></td>
+<td>
+<p>For <code>style="hex"</code> or <code>"grayhex"</code></p>
+</td></tr>
+<tr valign="top"><td><code>inches</code></td>
+<td>
+<p>Scale for bubble plots</p>
+</td></tr>
+<tr valign="top"><td><code>amount</code></td>
+<td>
+<p>list with <code>x</code> and <code>y</code> components for amount of
+jittering to use in subsample plots, or <code>NULL</code> for the default
+amount</p>
+</td></tr>
+<tr valign="top"><td><code>basecol</code></td>
+<td>
+<p>base color for transparent plots, or a function to
+compute the color (see below), or color for bubble plots</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>minimum and maximum opacity for transparent plots</p>
+</td></tr>
+<tr valign="top"><td><code>xbins</code></td>
+<td>
+<p>Number of (x-axis) bins for hexagonal binning</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Passed to <code>plot</code> methods</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Bubble plots are scatterplots with circles whose area is proportional
+to the sampling weight.  The two &quot;hex&quot; styles produce hexagonal
+binning scatterplots, and require the <code>hexbin</code> package from
+Bioconductor. The &quot;transparent&quot; style plots points with opacity
+proportional to sampling weight.
+</p>
+<p>The <code>subsample</code> method uses the sampling weights to create a
+sample from approximately the population distribution and passes this to <code><a href="../../graphics/html/plot.html">plot</a></code>
+</p>
+<p>Bubble plots are suited to small surveys, hexagonal binning and
+transparency to large surveys where plotting all the points would
+result in too much overlap.
+</p>
+<p><code>basecol</code> can be a function taking one data frame argument, which
+will be passed the data frame of variables from the survey object.
+This could be memory-intensive for large data sets.
+</p>
+
+
+<h3>Value</h3>
+
+<p>None
+</p>
+
+
+<h3>References</h3>
+
+<p>Korn EL, Graubard BI (1998) &quot;Scatterplots with Survey Data&quot; The American Statistician 52: 58-69
+</p>
+<p>Lumley T, Scott A (2017) &quot;Fitting Regression Models to Survey Data&quot;
+Statistical Science 32: 265-278
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../graphics/html/symbols.html">symbols</a></code> for other options (such as colour) for bubble
+plots.
+</p>
+<p><code><a href="svychisq.html">svytable</a></code> for plots of discrete data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(api)
+dstrat&lt;-svydesign(id=~1,strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+
+svyplot(api00~api99, design=dstrat, style="bubble")
+svyplot(api00~api99, design=dstrat, style="transparent",pch=19)
+
+## these two require the hexbin package 
+svyplot(api00~api99, design=dstrat, style="hex", xlab="1999 API",ylab="2000 API")
+svyplot(api00~api99, design=dstrat, style="grayhex",legend=0)
+
+
+dclus2&lt;-svydesign(id=~dnum+snum,  weights=~pw,
+                    data=apiclus2, fpc=~fpc1+fpc2)
+svyplot(api00~api99, design=dclus2, style="subsample")
+svyplot(api00~api99, design=dclus2, style="subsample",
+          amount=list(x=25,y=25))
+
+svyplot(api00~api99, design=dstrat,
+  basecol=function(df){c("goldenrod","tomato","sienna")[as.numeric(df$stype)]},
+  style="transparent",pch=19,alpha=c(0,1))
+legend("topleft",col=c("goldenrod","tomato","sienna"), pch=19, legend=c("E","H","M"))
+
+## For discrete data, estimate a population table and plot the table.
+plot(svytable(~sch.wide+comp.imp+stype,design=dstrat))
+fourfoldplot(svytable(~sch.wide+comp.imp+stype,design=dstrat,round=TRUE))
+
+
+## To draw on a hexbin plot you need grid graphics, eg,
+library(grid)
+h&lt;-svyplot(api00~api99, design=dstrat, style="hex", xlab="1999 API",ylab="2000 API")
+s&lt;-svysmooth(api00~api99,design=dstrat)
+grid.polyline(s$api99$x,s$api99$y,vp=h$plot.vp@hexVp.on,default.units="native", 
+   gp=gpar(col="red",lwd=2))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

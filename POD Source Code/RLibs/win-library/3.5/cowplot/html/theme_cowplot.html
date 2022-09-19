@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create the default cowplot theme</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for theme_cowplot {cowplot}"><tr><td>theme_cowplot {cowplot}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create the default cowplot theme</h2>
+
+<h3>Description</h3>
+
+<p>The default cowplot theme, with a simple half-open frame and no grid. This theme
+used to be set by default after loading the cowplot package, but this is no longer
+the case.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+theme_cowplot(
+  font_size = 14,
+  font_family = "",
+  line_size = 0.5,
+  rel_small = 12/14,
+  rel_tiny = 11/14,
+  rel_large = 16/14
+)
+
+theme_half_open(
+  font_size = 14,
+  font_family = "",
+  line_size = 0.5,
+  rel_small = 12/14,
+  rel_tiny = 11/14,
+  rel_large = 16/14
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>font_size</code></td>
+<td>
+<p>Overall font size.</p>
+</td></tr>
+<tr valign="top"><td><code>font_family</code></td>
+<td>
+<p>Font family for plot title, axis titles and labels, legend texts, etc.</p>
+</td></tr>
+<tr valign="top"><td><code>line_size</code></td>
+<td>
+<p>Line size for axis lines.</p>
+</td></tr>
+<tr valign="top"><td><code>rel_small</code></td>
+<td>
+<p>Relative size of small text (e.g., axis tick labels)</p>
+</td></tr>
+<tr valign="top"><td><code>rel_tiny</code></td>
+<td>
+<p>Relative size of tiny text (e.g., caption)</p>
+</td></tr>
+<tr valign="top"><td><code>rel_large</code></td>
+<td>
+<p>Relative size of large text (e.g., title)</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Both <code>theme_cowplot()</code> and <code>theme_half_open()</code> provide exactly the same styling.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The theme.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(ggplot2)
+
+ggplot(mtcars, aes(disp, mpg)) +
+  geom_point() +
+  theme_cowplot(font_size = 12)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>cowplot</em> version 1.1.1 <a href="00Index.html">Index</a>]</div>
+</body></html>

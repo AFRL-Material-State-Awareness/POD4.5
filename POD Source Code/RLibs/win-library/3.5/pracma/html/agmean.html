@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Arithmetic-geometric Mean</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for agmean {pracma}"><tr><td>agmean {pracma}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Arithmetic-geometric Mean
+</h2>
+
+<h3>Description</h3>
+
+<p>The arithmetic-geometric mean of real or complex numbers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+agmean(a, b)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>a, b</code></td>
+<td>
+<p>vectors of real or complex numbers of the same length (or scalars).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The arithmetic-geometric mean is defined as the common limit of the two
+sequences <i>a_{n+1} = (a_n + b_n)/2</i> and <i>b_{n+1} = &radic;(a_n b_n)</i>.
+</p>
+<p>When used for negative or complex numbers, the complex square root function
+is applied.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list with compoinents: <code>agm</code> a vector of arithmetic-geometric 
+means, component-wise, <code>niter</code> the number of iterations, and <code>prec</code>
+the overall estimated precision.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Gauss discovered that elliptic integrals can be effectively computed via
+the arithmetic-geometric mean (see example below), for example:
+</p>
+<p style="text-align: center;"><i>\int_0^{&pi;/2} \frac{dt}{&radic;{1 - m^2 sin^2(t)}}  = \frac{(a+b) &pi;}{4 \cdot agm(a,b)}</i></p>
+
+<p>where <i>m = (a-b)/(a+b)</i>
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://mathworld.wolfram.com/Arithmetic-GeometricMean.html">https://mathworld.wolfram.com/Arithmetic-GeometricMean.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Arithmetic, geometric, and harmonic mean.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+##  Accuracy test: Gauss constant
+1/agmean(1, sqrt(2))$agm - 0.834626841674073186  # 1.11e-16 &lt; eps = 2.22e-16
+
+## Gauss' AGM-based computation of \pi
+a &lt;- 1.0
+b &lt;- 1.0/sqrt(2)
+s &lt;- 0.5
+d &lt;- 1L
+while (abs(a-b) &gt; eps()) {
+    t &lt;- a
+    a &lt;- (a + b)*0.5
+    b &lt;- sqrt(t*b)
+    c &lt;- (a-t)*(a-t)
+    d &lt;- 2L * d
+    s &lt;- s - d*c
+}
+approx_pi &lt;- (a+b)^2 / s / 2.0
+abs(approx_pi - pi)             # 8.881784e-16 in 4 iterations
+
+##  Example: Approximate elliptic integral
+N &lt;- 20
+m &lt;- seq(0, 1, len = N+1)[1:N]
+E &lt;- numeric(N)
+for (i in 1:N) {
+    f &lt;- function(t) 1/sqrt(1 - m[i]^2 * sin(t)^2)
+    E[i] &lt;- quad(f, 0, pi/2)
+}
+A &lt;- numeric(2*N-1)
+a &lt;- 1
+b &lt;- a * (1-m) / (m+1)
+
+## Not run: 
+plot(m, E, main = "Elliptic Integrals vs. arith.-geom. Mean")
+lines(m, (a+b)*pi / 4 / agmean(a, b)$agm, col="blue")
+grid()
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>pracma</em> version 2.3.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Call function with arguments in array or data frame,...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mlply {plyr}"><tr><td>mlply {plyr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Call function with arguments in array or data frame, returning a list.</h2>
+
+<h3>Description</h3>
+
+<p>Call a multi-argument function with values taken from columns of an
+data frame or array, and combine results into a list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mlply(
+  .data,
+  .fun = NULL,
+  ...,
+  .expand = TRUE,
+  .progress = "none",
+  .inform = FALSE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>.data</code></td>
+<td>
+<p>matrix or data frame to use as source of arguments</p>
+</td></tr>
+<tr valign="top"><td><code>.fun</code></td>
+<td>
+<p>function to apply to each piece</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>other arguments passed on to <code>.fun</code></p>
+</td></tr>
+<tr valign="top"><td><code>.expand</code></td>
+<td>
+<p>should output be 1d (expand = FALSE), with an element for
+each row; or nd (expand = TRUE), with a dimension for each variable.</p>
+</td></tr>
+<tr valign="top"><td><code>.progress</code></td>
+<td>
+<p>name of the progress bar to use, see
+<code><a href="create_progress_bar.html">create_progress_bar</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>.inform</code></td>
+<td>
+<p>produce informative error messages?  This is turned off
+by default because it substantially slows processing speed, but is very
+useful for debugging</p>
+</td></tr>
+<tr valign="top"><td><code>.parallel</code></td>
+<td>
+<p>if <code>TRUE</code>, apply function in parallel, using parallel
+backend provided by foreach</p>
+</td></tr>
+<tr valign="top"><td><code>.paropts</code></td>
+<td>
+<p>a list of additional options passed into
+the <code><a href="../../foreach/html/foreach.html">foreach</a></code> function when parallel computation
+is enabled.  This is important if (for example) your code relies on
+external data or packages: use the <code>.export</code> and <code>.packages</code>
+arguments to supply them so that all cluster nodes have the correct
+environment set up for computing.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>m*ply</code> functions are the <code>plyr</code> version of <code>mapply</code>,
+specialised according to the type of output they produce.  These functions
+are just a convenient wrapper around <code>a*ply</code> with <code>margins = 1</code>
+and <code>.fun</code> wrapped in <code><a href="splat.html">splat</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>list of results
+</p>
+
+
+<h3>Input</h3>
+
+<p>Call a multi-argument function with values taken from
+columns of an data frame or array
+</p>
+
+
+<h3>Output</h3>
+
+<p>If there are no results, then this function will return
+a list of length 0 (<code>list()</code>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Hadley Wickham (2011). The Split-Apply-Combine Strategy
+for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
+<a href="https://www.jstatsoft.org/v40/i01/">https://www.jstatsoft.org/v40/i01/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other multiple arguments input: 
+<code><a href="m_ply.html">m_ply</a>()</code>,
+<code><a href="maply.html">maply</a>()</code>,
+<code><a href="mdply.html">mdply</a>()</code>
+</p>
+<p>Other list output: 
+<code><a href="alply.html">alply</a>()</code>,
+<code><a href="dlply.html">dlply</a>()</code>,
+<code><a href="llply.html">llply</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+mlply(cbind(1:4, 4:1), rep)
+mlply(cbind(1:4, times = 4:1), rep)
+
+mlply(cbind(1:4, 4:1), seq)
+mlply(cbind(1:4, length = 4:1), seq)
+mlply(cbind(1:4, by = 4:1), seq, to = 20)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plyr</em> version 1.8.7 <a href="00Index.html">Index</a>]</div>
+</body></html>

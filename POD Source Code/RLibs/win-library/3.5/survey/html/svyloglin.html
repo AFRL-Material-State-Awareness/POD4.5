@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Loglinear models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyloglin {survey}"><tr><td>svyloglin {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Loglinear models </h2>
+
+<h3>Description</h3>
+
+<p>Fit and compare hierarchical loglinear models for complex survey data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyloglin(formula, design, ...)
+## S3 method for class 'svyloglin'
+update(object,formula,...)
+## S3 method for class 'svyloglin'
+anova(object,object1,...,integrate=FALSE)
+## S3 method for class 'anova.svyloglin'
+print(x,pval=c("F","saddlepoint","lincom","chisq"),...)
+## S3 method for class 'svyloglin'
+coef(object,...,intercept=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>Model formula</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+<p>survey design object</p>
+</td></tr>
+<tr valign="top"><td><code>object,object1</code></td>
+<td>
+<p>loglinear model from <code>svyloglin</code></p>
+</td></tr>
+<tr valign="top"><td><code>pval</code></td>
+<td>
+<p>p-value approximation: see Details</p>
+</td></tr>
+<tr valign="top"><td><code>integrate</code></td>
+<td>
+<p>Compute the exact asymptotic p-value (slow)?</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>not used </p>
+</td></tr>
+<tr valign="top"><td><code>intercept</code></td>
+<td>
+<p>Report the intercept?</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>anova object</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The loglinear model is fitted to a multiway table with probabilities
+estimated by <code><a href="surveysummary.html">svymean</a></code> and with the sample size equal to the
+observed sample size, treating the resulting table as if it came from iid
+multinomial sampling, as described by Rao and Scott. The
+variance-covariance matrix does not include the intercept term, and so
+by default neither does the <code>coef</code> method.  A Newton-Raphson
+algorithm is used, rather than iterative proportional fitting, so
+starting values are not needed.
+</p>
+<p>The <code>anova</code> method computes the quantities that would be the score
+(Pearson) and likelihood ratio chi-squared statistics if the data were
+an iid sample. It computes four p-values for each of these, based on the
+exact asymptotic distribution (see <code><a href="pchisqsum.html">pchisqsum</a></code>), a
+saddlepoint approximateion to this distribution, a scaled
+chi-squared distribution, and a scaled F-distribution.  When testing the
+two-way interaction model against the main-effects model in a two-way
+table the score statistic and p-values match the Rao-Scott tests
+computed by <code><a href="svychisq.html">svychisq</a></code>.
+</p>
+<p>The <code>anova</code> method can only compare two models if they are for
+exactly the same multiway table (same variables and same order). The
+<code>update</code> method will help with this. It is also much faster to use
+<code>update</code> than <code>svyloglin</code> for a large data set: its time
+complexity depends only on the size of the model, not on the size of the
+data set.
+</p>
+<p>It is not possible to fit a model using a variable created inline, eg
+<code>I(x&lt;10)</code>, since the multiway table is based on all variables used
+in the formula. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>"svyloglin"</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>Rao, JNK, Scott, AJ (1984) &quot;On Chi-squared Tests For Multiway Contingency Tables with Proportions Estimated From Survey Data&quot; Annals of Statistics 12:46-60.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="svychisq.html">svychisq</a></code>, <code><a href="svyglm.html">svyglm</a></code>,<code><a href="pchisqsum.html">pchisqsum</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ data(api)
+ dclus1&lt;-svydesign(id=~dnum, weights=~pw, data=apiclus1, fpc=~fpc)
+ a&lt;-svyloglin(~stype+comp.imp,dclus1)
+ b&lt;-update(a,~.^2)
+ an&lt;-anova(a,b)
+ an
+ print(an, pval="saddlepoint")
+
+ ## Wald test
+ regTermTest(b, ~stype:comp.imp)
+
+ ## linear-by-linear association
+ d&lt;-update(a,~.+as.numeric(stype):as.numeric(comp.imp))
+ an1&lt;-anova(a,d)
+ an1
+
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Initiate a plotly-mapbox object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for plot_mapbox {plotly}"><tr><td>plot_mapbox {plotly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Initiate a plotly-mapbox object</h2>
+
+<h3>Description</h3>
+
+<p>Use this function instead of <code><a href="plot_ly.html">plot_ly()</a></code> to initialize
+a plotly-mapbox object. This enforces the entire plot so use
+the scattermapbox trace type, and enables higher level geometries
+like <code><a href="add_trace.html">add_polygons()</a></code> to work
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plot_mapbox(data = data.frame(), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame (optional).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>arguments passed along to <code><a href="plot_ly.html">plot_ly()</a></code>. They should be
+valid scattermapbox attributes - <a href="https://plotly.com/r/reference/#scattermapbox">https://plotly.com/r/reference/#scattermapbox</a>.
+Note that x/y can also be used in place of lat/lon.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Carson Sievert
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="plot_ly.html">plot_ly()</a></code>, <code><a href="plot_geo.html">plot_geo()</a></code>, <code><a href="ggplotly.html">ggplotly()</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+
+plot_mapbox(res_mn)
+plot_mapbox(res_mn, color = ~INDRESNAME)
+
+map_data("world", "canada") %&gt;%
+  group_by(group) %&gt;%
+  plot_mapbox(x = ~long, y = ~lat) %&gt;%
+  add_polygons() %&gt;%
+  layout(
+    mapbox = list(
+      center = list(lat = ~median(lat), lon = ~median(long))
+    )
+  )
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>plotly</em> version 4.10.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

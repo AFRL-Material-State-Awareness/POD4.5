@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Two-stage least-squares for instrumental variable regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for svyivreg {survey}"><tr><td>svyivreg {survey}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Two-stage least-squares for instrumental variable regression
+</h2>
+
+<h3>Description</h3>
+
+<p>Estimates regressions with endogenous covariates using two-stage least squares. The function uses <code>ivreg</code> from the <code>AER</code> package for the main computations, and follows the syntax of that function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+svyivreg(formula, design, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>formula specification(s) of the regression
+relationship and the instruments. See Details for details</p>
+</td></tr>
+<tr valign="top"><td><code>design</code></td>
+<td>
+
+<p>A survey design object
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>For future expansion
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Regressors and instruments for <code>svyivreg</code> are specified
+in a formula with two parts on the right-hand side, e.g., <code>y ~ x1
+     + x2 | z1 + z2 + z3</code>, where <code>x1</code> and <code>x2</code> are the regressors and
+<code>z1</code>, <code>z2</code>, and <code>z3</code> are the instruments. Note that exogenous
+regressors have to be included as instruments for themselves. For
+example, if there is one exogenous regressor <code>ex</code> and one
+endogenous regressor <code>en</code> with instrument <code>in</code>, the appropriate
+formula would be <code>y ~ ex + en | ex + in</code>. Equivalently, this can
+be specified as <code>y ~ ex + en | . - en + in</code>, i.e., by providing an
+update formula with a <code>.</code> in the second part of the formula. </p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>svyivreg</code>
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://notstatschat.rbind.io/2019/07/16/adding-new-functions-to-the-survey-package/">https://notstatschat.rbind.io/2019/07/16/adding-new-functions-to-the-survey-package/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../AER/html/ivreg.html">ivreg</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>survey</em> version 4.1-1 <a href="00Index.html">Index</a>]</div>
+</body></html>

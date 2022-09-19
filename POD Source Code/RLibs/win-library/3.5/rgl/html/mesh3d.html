@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Construct 3D mesh objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for mesh3d {rgl}"><tr><td>mesh3d {rgl}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Construct 3D mesh objects</h2>
+
+<h3>Description</h3>
+
+<p>Creates meshes containing points, segments, triangles and quads.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  mesh3d( x, y = NULL, z = NULL, vertices,
+                    material = NULL,
+                    normals = NULL, texcoords = NULL,
+                    points = NULL, segments = NULL,
+                    triangles = NULL, quads = NULL,
+                    meshColor = c("vertices", "edges", "faces", "legacy"))
+  qmesh3d(vertices, indices, homogeneous = TRUE, material = NULL, 
+         normals = NULL, texcoords = NULL,
+         meshColor = c("vertices", "edges", "faces", "legacy"))
+  tmesh3d(vertices, indices, homogeneous = TRUE, material = NULL, 
+         normals = NULL, texcoords = NULL,
+         meshColor = c("vertices", "edges", "faces", "legacy"))
+  
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, y, z</code></td>
+<td>
+<p>coordinates.  Any reasonable way of defining the
+coordinates is acceptable.  See the function <code><a href="../../grDevices/html/xyz.coords.html">xyz.coords</a></code>
+for details.</p>
+</td></tr>
+<tr valign="top"><td><code>vertices</code></td>
+<td>
+<p>A 4 row matrix of homogeneous coordinates; takes
+precedence over <code>x, y, z</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>material</code></td>
+<td>
+<p>material properties for later rendering</p>
+</td></tr>
+<tr valign="top"><td><code>normals</code></td>
+<td>
+<p>normals at each vertex</p>
+</td></tr>
+<tr valign="top"><td><code>texcoords</code></td>
+<td>
+<p>texture coordinates at each vertex</p>
+</td></tr>
+<tr valign="top"><td><code>points</code></td>
+<td>
+<p>vector of indices of vertices to draw as points</p>
+</td></tr>
+<tr valign="top"><td><code>segments</code></td>
+<td>
+<p>2 x n matrix of indices of vertices to draw as
+segments</p>
+</td></tr>
+<tr valign="top"><td><code>triangles</code></td>
+<td>
+<p>3 x n matrix of indices of vertices to draw
+as triangles</p>
+</td></tr>
+<tr valign="top"><td><code>quads</code></td>
+<td>
+<p>4 x n matrix of indices of vertices to draw as quads</p>
+</td></tr>
+<tr valign="top"><td><code>indices</code></td>
+<td>
+<p>(obsolete) 3 or 4 x n matrix of vertex indices</p>
+</td></tr>
+<tr valign="top"><td><code>homogeneous</code></td>
+<td>
+<p>(obsolete) should <code>tmesh3d</code> and <code>qmesh3d</code> vertices be assumed to be homogeneous?</p>
+</td></tr>
+<tr valign="top"><td><code>meshColor</code></td>
+<td>
+<p>how should colours be interpreted?  See details in <code><a href="shade3d.html">shade3d</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>These functions create <code>mesh3d</code> objects, which consist of a matrix
+of vertex coordinates together with a matrices of indices indicating how the vertices should be displayed, and 
+material properties.
+</p>
+<p>The <code>"shape3d"</code> class is a general class for shapes that can be plotted
+by <code>dot3d</code>, <code>wire3d</code> or <code>shade3d</code>.
+</p>
+<p>The <code>"mesh3d"</code> class is a class of objects that form meshes: the vertices
+are in member <code>vb</code>, as a 4 by <code>n</code> matrix using
+homogeneous coordinates.  Indices of these vertices are
+contained in optional components <code>ip</code> for points,
+<code>is</code> for line segments, <code>it</code> for triangles, and
+<code>ib</code> for quads.
+Individual meshes may have any combination of these.
+</p>
+<p>The functions <code>tmesh3d</code> and <code>qmesh3d</code> are included
+for back-compatibility; they produce meshes of triangles and
+quads respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Objects of class <code>c("mesh3d",
+  "shape3d")</code>. 
+</p>
+<p>See <code><a href="primitive.html">rgl.primitive</a></code> for a discussion of texture coordinates.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="shade3d.html">shade3d</a></code>, <code><a href="shapelist3d.html">shapelist3d</a></code> for multiple shapes
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  # generate a quad mesh object
+
+  vertices &lt;- c( 
+     -1.0, -1.0, 0,
+      1.0, -1.0, 0,
+      1.0,  1.0, 0,
+     -1.0,  1.0, 0
+  )
+  indices &lt;- c( 1, 2, 3, 4 )
+  
+  open3d()  
+  wire3d( mesh3d(vertices = vertices, quads = indices) )
+  
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rgl</em> version 0.109.6 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Bianco-Yohai Estimator for Robust Logistic Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for BYlogreg {robustbase}"><tr><td>BYlogreg {robustbase}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Bianco-Yohai Estimator for Robust Logistic Regression</h2>
+
+<h3>Description</h3>
+
+<p>Computation of the estimator of Bianco and Yohai (1996) in logistic regression.
+Now provides both the <em>weighted</em> and regular (unweighted) BY-estimator.
+</p>
+<p>By default, an intercept term is included and p parameters are estimated.
+For more details, see the reference.
+</p>
+<p>Note: This function is for &ldquo;back-compatibility&rdquo; with the
+<code>BYlogreg()</code> code web-published at KU Leuven, Belgium,
+
+
+
+
+
+and also available as file &lsquo;<span class="file">FunctionsRob/BYlogreg.ssc</span>&rsquo; from
+<a href="https://www.wiley.com/legacy/wileychi/robust_statistics/robust.html">https://www.wiley.com/legacy/wileychi/robust_statistics/robust.html</a>.
+</p>
+<p>However instead of using this function, the recommended interface is
+<code><a href="glmrob.html">glmrob</a>(*, method = "BY")</code> or <code>... method = "WBY" ..</code>,
+see <code><a href="glmrob.html">glmrob</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+BYlogreg(x0, y, initwml = TRUE, addIntercept = TRUE,
+         const = 0.5, kmax = 1000, maxhalf = 10, sigma.min = 1e-4,
+         trace.lev = 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x0</code></td>
+<td>
+<p>a numeric <i>n * (p-1)</i> matrix containing
+the explanatory variables.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>numeric <i>n</i>-vector of binomial (0 - 1) responses.</p>
+</td></tr>
+<tr valign="top"><td><code>initwml</code></td>
+<td>
+<p>logical for selecting one of the two possible methods
+for computing the initial value of the optimization process.
+</p>
+<p>If <code>initwml</code> is true (default), a weighted ML estimator is
+computed with weights derived from the MCD estimator
+computed on the explanatory variables.
+</p>
+<p>If <code>initwml</code> is false, a classical ML fit is perfomed.  When
+the explanatory variables contain binary observations, it is
+recommended to set initwml to FALSE or to modify the code of the
+algorithm to compute the weights only on the continuous variables.
+</p>
+</td></tr>
+<tr valign="top"><td><code>addIntercept</code></td>
+<td>
+<p>logical indicating that a column of <code>1</code> must be
+added the <i>x</i> matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>const</code></td>
+<td>
+<p>tuning constant used in the computation of the estimator
+(default=0.5).</p>
+</td></tr>
+<tr valign="top"><td><code>kmax</code></td>
+<td>
+<p>maximum number of iterations before convergence (default=1000).</p>
+</td></tr>
+<tr valign="top"><td><code>maxhalf</code></td>
+<td>
+<p>max number of step-halving (default=10).</p>
+</td></tr>
+<tr valign="top"><td><code>sigma.min</code></td>
+<td>
+<p>smallest value of the scale parameter before
+implosion (and hence non-convergence) is assumed.</p>
+</td></tr>
+<tr valign="top"><td><code>trace.lev</code></td>
+<td>
+<p>logical (or integer) indicating if intermediate results
+should be printed; defaults to <code>0</code> (the same as <code>FALSE</code>).</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>a list with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>convergence</code></td>
+<td>
+<p>logical indicating if convergence was achieved</p>
+</td></tr>
+<tr valign="top"><td><code>objective</code></td>
+<td>
+<p>the value of the objective function at the minimum</p>
+</td></tr>
+<tr valign="top"><td><code>coefficients</code></td>
+<td>
+<p>vector of parameter estimates</p>
+</td></tr>
+<tr valign="top"><td><code>vcov</code></td>
+<td>
+<p>variance-covariance matrix of the coefficients (if convergence is TRUE).</p>
+</td></tr>
+<tr valign="top"><td><code>sterror</code></td>
+<td>
+<p>standard errors, i.e., simply <code>sqrt(diag(.$vcov))</code>, if convergence.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Originally, Christophe Croux and Gentiane Haesbroeck, with
+thanks to Kristel Joossens and Valentin Todorov for improvements.
+</p>
+<p>Speedup, tweaks, more &ldquo;control&rdquo; arguments: Martin Maechler.
+</p>
+
+
+<h3>References</h3>
+
+<p>Croux, C., and Haesbroeck, G. (2003)
+Implementing the Bianco and Yohai estimator for Logistic Regression,
+<em>Computational Statistics and Data Analysis</em> <b>44</b>, 273&ndash;295.
+</p>
+<p>Ana M. Bianco and Víctor J. Yohai (1996)
+Robust estimation in the logistic regression model.
+In Helmut Rieder, <em>Robust Statistics, Data Analysis, and
+Computer Intensive Methods</em>, Lecture Notes in Statistics <b>109</b>,
+pages 17&ndash;34.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The more typical way to compute BY-estimates (via
+<code><a href="../../stats/html/formula.html">formula</a></code> and methods):
+<code><a href="glmrob.html">glmrob</a>(*, method = "WBY")</code> and <code>.. method = "BY"</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+set.seed(17)
+x0 &lt;- matrix(rnorm(100,1))
+y  &lt;- rbinom(100, size=1, prob= 0.5) # ~= as.numeric(runif(100) &gt; 0.5)
+BY &lt;- BYlogreg(x0,y)
+BY &lt;- BYlogreg(x0,y, trace.lev=TRUE)
+
+## The "Vaso Constriction"  aka "skin" data:
+data(vaso)
+vX &lt;- model.matrix( ~ log(Volume) + log(Rate), data=vaso)
+vY &lt;- vaso[,"Y"]
+head(cbind(vX, vY))# 'X' does include the intercept
+
+vWBY &lt;- BYlogreg(x0 = vX, y = vY, addIntercept=FALSE) # as 'vX' has it already
+v.BY &lt;- BYlogreg(x0 = vX, y = vY, addIntercept=FALSE, initwml=FALSE)
+## they are relatively close:
+stopifnot( all.equal(vWBY, v.BY, tolerance = 2e-4) )
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>robustbase</em> version 0.95-0 <a href="00Index.html">Index</a>]</div>
+</body></html>

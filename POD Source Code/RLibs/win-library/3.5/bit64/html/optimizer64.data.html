@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Results of performance measurement on a Core i7 Lenovo T410 8...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for optimizer64.data {bit64}"><tr><td>optimizer64.data {bit64}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Results of performance measurement on a Core i7 Lenovo T410 8 GB RAM under Windows 7 64bit
+</h2>
+
+<h3>Description</h3>
+
+<p>These are the results of calling <code><a href="benchmark64.html">optimizer64</a></code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>data(optimizer64.data)</pre>
+
+
+<h3>Format</h3>
+
+<p>The format is:
+List of 16
+$ : num [1:9, 1:3] 0 0 1.63 0.00114 2.44 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:9] &quot;match&quot; &quot;match.64&quot; &quot;hashpos&quot; &quot;hashrev&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:10, 1:3] 0 0 0 1.62 0.00114 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:10] &quot;%in%&quot; &quot;match.64&quot; &quot;%in%.64&quot; &quot;hashfin&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:10, 1:3] 0 0 0.00105 0.00313 0.00313 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:10] &quot;duplicated&quot; &quot;duplicated.64&quot; &quot;hashdup&quot; &quot;sortorderdup1&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:15, 1:3] 0 0 0 0.00104 0.00104 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:15] &quot;unique&quot; &quot;unique.64&quot; &quot;hashmapuni&quot; &quot;hashuni&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:14, 1:3] 0 0 0 0.000992 0.000992 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:14] &quot;unique&quot; &quot;unipos.64&quot; &quot;hashmapupo&quot; &quot;hashupo&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:13, 1:3] 0 0 0 0 0.000419 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:13] &quot;tabulate&quot; &quot;table&quot; &quot;table.64&quot; &quot;hashmaptab&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:7, 1:3] 0 0 0 0.00236 0.00714 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:7] &quot;rank&quot; &quot;rank.keep&quot; &quot;rank.64&quot; &quot;sortorderrnk&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:6, 1:3] 0 0 0.00189 0.00714 0 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:6] &quot;quantile&quot; &quot;quantile.64&quot; &quot;sortqtl&quot; &quot;orderqtl&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:9, 1:3] 0 0 0.00105 1.17 0 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:9] &quot;match&quot; &quot;match.64&quot; &quot;hashpos&quot; &quot;hashrev&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:10, 1:3] 0 0 0 0.00104 1.18 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:10] &quot;%in%&quot; &quot;match.64&quot; &quot;%in%.64&quot; &quot;hashfin&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:10, 1:3] 0 0 1.64 2.48 2.48 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:10] &quot;duplicated&quot; &quot;duplicated.64&quot; &quot;hashdup&quot; &quot;sortorderdup1&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:15, 1:3] 0 0 0 1.64 1.64 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:15] &quot;unique&quot; &quot;unique.64&quot; &quot;hashmapuni&quot; &quot;hashuni&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:14, 1:3] 0 0 0 1.62 1.62 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:14] &quot;unique&quot; &quot;unipos.64&quot; &quot;hashmapupo&quot; &quot;hashupo&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:13, 1:3] 0 0 0 0 0.32 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:13] &quot;tabulate&quot; &quot;table&quot; &quot;table.64&quot; &quot;hashmaptab&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:7, 1:3] 0 0 0 2.96 10.69 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:7] &quot;rank&quot; &quot;rank.keep&quot; &quot;rank.64&quot; &quot;sortorderrnk&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+$ : num [1:6, 1:3] 0 0 1.62 10.61 0 ...
+..- attr(*, &quot;dimnames&quot;)=List of 2
+.. ..$ : chr [1:6] &quot;quantile&quot; &quot;quantile.64&quot; &quot;sortqtl&quot; &quot;orderqtl&quot; ...
+.. ..$ : chr [1:3] &quot;prep&quot; &quot;both&quot; &quot;use&quot;
+- attr(*, &quot;dim&quot;)= int [1:2] 8 2
+- attr(*, &quot;dimnames&quot;)=List of 2
+..$ : chr [1:8] &quot;match&quot; &quot;%in%&quot; &quot;duplicated&quot; &quot;unique&quot; ...
+..$ : chr [1:2] &quot;65536&quot; &quot;33554432&quot;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(optimizer64.data)
+print(optimizer64.data)
+oldpar &lt;- par(no.readonly = TRUE)
+par(mfrow=c(2,1))
+par(cex=0.7)
+for (i in 1:nrow(optimizer64.data)){
+ for (j in 1:2){
+   tim &lt;- optimizer64.data[[i,j]]
+  barplot(t(tim))
+  if (rownames(optimizer64.data)[i]=="match")
+   title(paste("match", colnames(optimizer64.data)[j], "in", colnames(optimizer64.data)[3-j]))
+  else if (rownames(optimizer64.data)[i]=="%in%")
+   title(paste(colnames(optimizer64.data)[j], "%in%", colnames(optimizer64.data)[3-j]))
+  else
+   title(paste(rownames(optimizer64.data)[i], colnames(optimizer64.data)[j]))
+ }
+}
+par(mfrow=c(1,1))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>bit64</em> version 4.0.5 <a href="00Index.html">Index</a>]</div>
+</body></html>
