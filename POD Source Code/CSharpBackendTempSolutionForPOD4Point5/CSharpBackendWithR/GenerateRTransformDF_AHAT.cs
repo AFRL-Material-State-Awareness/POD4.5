@@ -33,8 +33,8 @@ namespace CSharpBackendWithR
             GenerateIndices();
             //set lambda as 0 by default - for boxcox tranformations only
             this.myREngine.Evaluate("lambdaInput<-0");
-            //don't think this is needed
-            this.myREngine.Evaluate("isLog=FALSE");
+            //
+            //this.myREngine.Evaluate("isLog=FALSE");
             //create the appropriate dataframe based on the transform type
             switch (newAHatAnalysis.ModelType)
             {

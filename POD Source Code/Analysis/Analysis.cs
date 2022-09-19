@@ -1008,8 +1008,7 @@ namespace POD.Analyze
                     if (_analysisCalculationType == RCalculationType.Full)
                     {
                         newAnalysisControl.ExecuteAnalysisAHat();
-
-                    }
+                    }                   
                     else if (_analysisCalculationType == RCalculationType.ThresholdChange)
                     {
                         newAnalysisControl.ExecuteThresholdChange();
@@ -3007,7 +3006,7 @@ namespace POD.Analyze
                 {
 
                     AnalysistypeTransform newAnalysisControlAHat = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
-                    newAnalysisControlAHat.ExecuteAnalysisAHat();
+                    newAnalysisControlAHat.ExecuteAnalysisTransforms();
                     _aHatAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
                 }
                 //_podDoc.OnFitOnlyAnalysis();

@@ -604,7 +604,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             //{
                 mainChart.SetAMaxBoundary(x, true);
             //}
-
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
 
             //controlValueChanged = false;
@@ -616,7 +616,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
             mainChart.SetAMinBoundary(x, true);
-
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
 
             //controlValueChanged = false;

@@ -1623,6 +1623,9 @@ namespace POD.Data
                 {
                     UpdateAHatOutput();
                 }
+                else if(myCalculationType == RCalculationType.Transform){
+                    UpdateAHatTransformOutput();
+                }
                 else if(myCalculationType == RCalculationType.ThresholdChange)
                 {
                     UpdateAHatThresholdChangeOuput();
@@ -1705,8 +1708,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Iterations Error");
             }
-        }
-        
+        }        
         private void UpdateAHatOutput()
         {
             var watch = new Stopwatch();
@@ -1902,6 +1904,151 @@ namespace POD.Data
                 MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
             }
 
+            watch.Stop();
+
+            var sortTime = watch.ElapsedMilliseconds;
+        }
+        //only executed when doing the analysis in the transform panel (POD curve, threshold table, etc, are omitted for 
+        //optimization purposes)
+        private void UpdateAHatTransformOutput()
+        {
+            var watch = new Stopwatch();
+
+            watch.Start();
+            TransformBackCSharpTablesAHAT BackwardsTransform = new TransformBackCSharpTablesAHAT(_aHatAnalysisObject);
+            bool printDTFlag = false;
+            //double lambda;
+            try
+            {
+                _fitResidualsTable = BackwardsTransform.ConvertFitResidualsTable(_aHatAnalysisObject.AHatResultsLinear);
+                _fitResidualsTable.DefaultView.RowFilter = "";
+                _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
+                _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_fitResidualsTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Fit Error");
+            }
+            //printDT(_fitResidualsTable);
+            try
+            {
+                _residualUncensoredTable = BackwardsTransform.TransformBackColResidualTables(_aHatAnalysisObject.AHatResultsResidUncensored);
+                _residualUncensoredTable = BackwardsTransform.DeleteCensoredPointsForRUT(_residualUncensoredTable);
+                _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
+                _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_residualUncensoredTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
+            }
+            try
+            {
+                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
+                _residualRawTable = BackwardsTransform.TransformBackColResidualTables(_residualRawTable);
+                _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
+                _residualRawTable = _residualRawTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_residualRawTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
+            }
+            try
+            {
+                _residualCensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                if (_residualCensoredTable.Rows.Count != 0)
+                {
+                    _residualCensoredTable.Rows.Clear();
+                }
+                _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
+                if (_aHatAnalysisObject.FlawsCensored.Count() != 0)
+                {
+                    int pointsLeft = _aHatAnalysisObject.FlawsCensored.Count();
+                    //TODO: need to cover the condition when two flaws have different reponses
+                    for (int i = _residualRawTable.Rows.Count - 1; i >= 0; i--)
+                    {
+                        if (pointsLeft > 0)
+                        {
+                            //Console.WriteLine(_residualUncensoredTable.Rows[i][0]);
+                            for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
+                            {
+                                if (Convert.ToDouble(_residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
+                                {
+                                    _residualCensoredTable.Rows.Add(_residualRawTable.Rows[i].ItemArray);
+                                    pointsLeft -= 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                if (printDTFlag)
+                    printDT(_residualCensoredTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Censored Error");
+            }
+
+            try
+            {
+                _residualFullCensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                if (_residualFullCensoredTable.Rows.Count != 0)
+                {
+                    _residualFullCensoredTable.Rows.Clear();
+                }
+                _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
+                if (_aHatAnalysisObject.FlawsCensored.Count() != 0)
+                {
+                    int pointsLeft = _aHatAnalysisObject.FlawsCensored.Count();
+                    //TODO: need to cover the condition when two flaws have different reponses
+                    for (int i = _residualRawTable.Rows.Count - 1; i >= 0; i--)
+                    {
+                        if (pointsLeft > 0)
+                        {
+                            //Console.WriteLine(_residualUncensoredTable.Rows[i][0]);
+                            for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
+                            {
+                                if (Convert.ToDouble(_residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
+                                {
+                                    _residualFullCensoredTable.Rows.Add(_residualRawTable.Rows[i].ItemArray);
+                                    pointsLeft -= 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_residualFullCensoredTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Full Censored Error");
+            }
+
+            try
+            {
+                _residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
+                _residualPartialCensoredTable.DefaultView.Sort = "transformFlaw, transformResponse" + " " + "ASC";
+                _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_residualPartialCensoredTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Partial Censored Error");
+            }
             watch.Stop();
 
             var sortTime = watch.ElapsedMilliseconds;

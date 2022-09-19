@@ -757,6 +757,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
             mainChart.SetAMaxBoundary(x, true);
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
 
             RunAnalysis();
 
@@ -771,7 +772,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
             mainChart.SetAMinBoundary(x, true);
-
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
 
             //controlValueChanged = false;
@@ -785,7 +786,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
             mainChart.SetLeftCensorBoundary(y, true);
-
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
 
             //controlValueChanged = false;
@@ -799,7 +800,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
             mainChart.SetRightCensorBoundary(y, true);
-
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
 
             //controlValueChanged = false;

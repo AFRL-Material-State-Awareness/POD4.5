@@ -50,10 +50,15 @@ namespace CSharpBackendWithR
             this.resultsAHatAnalysis = ExecuteaHatAnalysis();
 
         }
+        public void ExecuteAnalysisTransforms()
+        {
+            this.resultsAHatAnalysis = ExecuteTransformType();
+        }
         public void ExecuteThresholdChange()
         {
             this.resultsAHatAnalysis = UpdateThresholdChange();
         }
+        
         private HMAnalysisObject ExecutePFAnalysisTrans()
         {
             //create the class for hitMissControl
@@ -117,7 +122,7 @@ namespace CSharpBackendWithR
             //return the completed aHatAnalysisObject
             return this.newAHatAnalysisObject;
         }
-        private AHatAnalysisObject UpdateThresholdChange()
+        private AHatAnalysisObject ExecuteTransformType()
         {
             //create the class for A Hat Control
             //AHatAnalysisRControl newAHatControl = new AHatAnalysisRControl(analysisEngine);
@@ -130,11 +135,30 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
             this.newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             //execute analysis and return parameters
+            this.newAHatControl.ExecuteTransforms(this.newAHatAnalysisObject);
+            //return parameters unique to transform panel analysis
+            this.newAHatAnalysisObject.AHatResultsLinear = this.newAHatControl.GetLinearFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsResidUncensored = this.newAHatControl.GetResidualUncensoredTableForUI();
+            this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
+            //get lambda from box-cox if applicable
+            if (this.newAHatAnalysisObject.ModelType >= 5 && this.newAHatAnalysisObject.ModelType <= 7)
+            {
+                this.newAHatAnalysisObject.Lambda = this.newAHatControl.GetBoxCoxLamda();
+            }
+
+            return this.newAHatAnalysisObject;
+        }
+        private AHatAnalysisObject UpdateThresholdChange()
+        {
+            //executes only when the user changes the threshold value in signal response
+            MaxAndMinClass newMaxMin = new MaxAndMinClass();
+            //write the max and min crack size to the ahatAnalysis object
+            newMaxMin.calcCrackRange(this.newAHatAnalysisObject.Flaws);
+            this.newAHatAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            this.newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            //execute analysis and return parameters (only need to get the new a values)
             this.newAHatControl.ExecutethresholdChange(this.newAHatAnalysisObject);
             ReturnThresholdChangeAValues();
-            //clear all contents in R and restart the global environment/////Removed this for improved performance
-            //analysisEngine.clearGlobalIInREngineObject();
-            //return the completed aHatAnalysisObject
             return this.newAHatAnalysisObject;
         }
         public void ReturnHitMissObjects()

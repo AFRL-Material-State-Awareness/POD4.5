@@ -119,8 +119,11 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         
                                       )
                                       setLinearModel(linearModDF)
-                                      #peformTests
-                                      linearTests(linearM=linearModel_lm)
+                                      #don't perform linear tests if user is in transform panel
+                                      if(fullAnalysis){
+                                        #peformTests
+                                        linearTests(linearM=linearModel_lm)
+                                      }
                                       ##create the residual dataframe
                                       #ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
                                       #names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
@@ -167,19 +170,26 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                           t_diff=residuals
                                         )
                                         setResidualTable(ResidualDF)
-                                        #update the linear regression tests with the censored data
-                                        updateLinearTestsCensored(ahatvACensored)
+                                        #don't perform linear tests if user is in transform panel
+                                        if(fullAnalysis){
+                                          #update the linear regression tests with the censored data
+                                          updateLinearTestsCensored(ahatvACensored)
+                                        }
                                       }
-                                      #get the value of R-squared(TODO: check if this changes with censored data)
-                                      setRSquared(summary(linearModel_lm)$r.squared)
-                                      #calculate the standard errors for regression
-                                      calcStandardErrs(ahatvACensored)
-                                      #find the key a values and the covariance matrix
-                                      genAvaluesAndMatrix(ahatvACensored)
-                                      #generates the thesholds table for UI
-                                      genThresholdsTable(ahatvACensored)
-                                      #function that generates the POD curve and stores the results
-                                      genPODCurve()
+                                      #global flag used to speed of transforms for signal response
+                                      if(fullAnalysis){
+                                        #get the value of R-squared(TODO: check if this changes with censored data)
+                                        setRSquared(summary(linearModel_lm)$r.squared)
+                                        #calculate the standard errors for regression
+                                        calcStandardErrs(ahatvACensored)
+                                        #find the key a values and the covariance matrix
+                                        genAvaluesAndMatrix(ahatvACensored)
+                                        #generates the thesholds table for UI
+                                        genThresholdsTable(ahatvACensored)
+                                        #function that generates the POD curve and stores the results
+                                        genPODCurve()
+                                      }
+                                      
                                     },
                                     genPODCurve=function(){
                                       #calculate POD dataframe

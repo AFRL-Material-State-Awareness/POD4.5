@@ -255,6 +255,7 @@ namespace POD.Wizards
 
         protected void mainChart_RunAnalysisNeeded(object sender, EventArgs e)
         {
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
         }
 
@@ -275,8 +276,8 @@ namespace POD.Wizards
                 //    MainChart.ChartAreas[0].AxisX.Minimum = 0;
                 //}
             }
-            
-            if(!Analysis.IsFrozen)
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
+            if (!Analysis.IsFrozen)
                 RunAnalysis();
         }
 

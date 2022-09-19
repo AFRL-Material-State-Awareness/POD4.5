@@ -86,19 +86,31 @@ namespace CSharpBackendWithR
         public void ExecuteAnalysis(AHatAnalysisObject newTranformAnalysis)
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
-            //System.Diagnostics.Debug.WriteLine(this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')").ToString());
-            //this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')");
+            this.myREngine.Evaluate("fullAnalysis<-TRUE");
             //execute class with appropriate parameters
             this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", " +
                 "modelType="+newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
-            this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
+            //remove misc variables from the global environment
+            this.myREngine.Evaluate("rm(lambdaInput)");
+            this.myREngine.Evaluate("rm(fullAnalysis)");
+        }
+        public void ExecuteTransforms(AHatAnalysisObject newTranformAnalysis)
+        {
+            this.createDataFrameinGlobalEnvr(newTranformAnalysis);
+            this.myREngine.Evaluate("fullAnalysis<-FALSE");
+            //execute class with appropriate parameters
+            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold + ", " +
+                "modelType=" + newTranformAnalysis.ModelType + ", lambda=lambdaInput)");
+            this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
+            //remove misc variables from the global environment
+            this.myREngine.Evaluate("rm(lambdaInput)");
+            this.myREngine.Evaluate("rm(fullAnalysis)");
         }
         public void ExecutethresholdChange(AHatAnalysisObject newTranformAnalysis)
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
-            //System.Diagnostics.Debug.WriteLine(this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')").ToString());
-            //this.myREngine.Evaluate("str('str(as.list(.GlobalEnv)')");
+            this.myREngine.Evaluate("fullAnalysis<-FALSE");
             //execute class with appropriate parameters
             this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold + ", " +
                 "modelType=" + newTranformAnalysis.ModelType + ", lambda=lambdaInput)");
@@ -109,6 +121,7 @@ namespace CSharpBackendWithR
             //remove misc variables from the global environment
             this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("rm(ahatvACensored)");
+            this.myREngine.Evaluate("rm(fullAnalysis)");
         }
         public DataTable GetLinearFitTableForUI()
         {
