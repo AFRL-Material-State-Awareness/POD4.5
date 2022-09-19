@@ -1641,9 +1641,14 @@ namespace POD.Controls
             return finalName;
         }
 
-        public void SetXAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount = false)
+        public void SetXAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
+            bool transformResidView=false)
         {
-            AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.X);
+            //don't create buffering if user is switching between show residuals and show fit in signal response transform window
+            if (!transformResidView)
+            {
+                AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.X);
+            }
 
             if (myAxis.Max < myAxis.Min)
             {
@@ -1667,9 +1672,14 @@ namespace POD.Controls
             }
         }
 
-        public void SetYAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount=false)
+        public void SetYAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
+            bool transformResidView = false)
         {
-            AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.Y);
+            //don't create buffering if user is switching between show residuals and show fit in signal response transform window
+            if (!transformResidView)
+            {
+                AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.Y);
+            }
 
             if (myAxis.Max < myAxis.Min)
             {

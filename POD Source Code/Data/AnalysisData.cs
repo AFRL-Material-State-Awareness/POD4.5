@@ -2686,6 +2686,8 @@ namespace POD.Data
 
                 max = Math.Ceiling(max / correctedRange) * correctedRange;
                 min = Math.Floor(min / correctedRange) * correctedRange;
+                //max =Math.Round(max, 2);
+                //min = Math.Round(min, 2);
 
                 range = Math.Abs(max - min);
 

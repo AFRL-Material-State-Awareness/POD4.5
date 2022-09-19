@@ -535,8 +535,8 @@ namespace POD.Controls
 
         public void SwitchToResidualAxes(AnalysisData data)
         {
-            SetXAxisRange(_residualXAxis, data);
-            SetYAxisRange(_residualYAxis, data);
+            SetXAxisRange(_residualXAxis, data, false, false, true);
+            SetYAxisRange(_residualYAxis, data, false, false, true);
 
             RelabelAxesBetter(_residualXAxis, _residualYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 
                               Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, true, 
@@ -545,8 +545,8 @@ namespace POD.Controls
 
         public void SwitchToNormalAxes(AnalysisData data)
         {
-            SetXAxisRange(_normalXAxis, data);
-            SetYAxisRange(_normalYAxis, data);
+            SetXAxisRange(_normalXAxis, data, false, false, true);
+            SetYAxisRange(_normalYAxis, data, false, false, true);
 
             RelabelAxesBetter(_normalXAxis, _normalYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 
                               Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, 
