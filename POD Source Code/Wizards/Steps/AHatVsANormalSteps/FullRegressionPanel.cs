@@ -332,6 +332,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _xTransformLabel, _xTransformBox,
                 _yTransformLabel, _yTransformBox,
                 _labelForLamdaInput, _boxCoxLambda,
+
                 FlawRangeHeader,
                 AMaxInputLabel, aMaxControl,
                 AMinInputLabel, aMinControl,
