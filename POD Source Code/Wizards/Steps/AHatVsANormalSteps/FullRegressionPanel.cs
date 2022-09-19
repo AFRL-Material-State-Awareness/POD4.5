@@ -302,8 +302,19 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                     {
                         _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; //linlog
                     }
-                    else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //linlog
+                    else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //lin Boxcox
                     {
+                        _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; //lin Boxcox
+                        _yTransformBox.SelectedTransform = TransformTypeEnum.BoxCox;
+                    }
+                    else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox) //log Boxcox
+                    {
+                        _xTransformBox.SelectedTransform = TransformTypeEnum.Log; //log Boxcox
+                        _yTransformBox.SelectedTransform = TransformTypeEnum.BoxCox;
+                    }
+                    else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log && _yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox) //linlog
+                    {
+                        _xTransformBox.SelectedTransform = TransformTypeEnum.Linear;
                         _yTransformBox.SelectedTransform = TransformTypeEnum.Linear; //linlin
                     }
                 }

@@ -32,12 +32,14 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         NewResponseRangeForm _form;
         //used to set lambda for box-cox transformation
         private Label _labelForLamdaInput;
-        private LambdaNumericUpDown _boxCoxLambda;
+        private LambdaNumericUpDown _boxCoxLambdaQuick;
 
         private List<Control> _inputWithLabels = new List<Control>();
         private List<Control> _outputWithLabels = new List<Control>();
         //used to keep track of the previous value of lambda in case the user tries to enter 0 into the numeric text box
         private decimal _previousLambda = 1.0m;
+        // keeps track of previous threshold to ensure it does not become negative when usng log 'y' transform
+        private decimal _previousThreshold = 1.01m;
         public override bool SendKeys(Keys keyData)
         {
             var result = base.SendKeys(keyData);
@@ -238,10 +240,22 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 {
                     _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; //linlog
                 }
-                else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //linlog
+                else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //lin Boxcox
                 {
+                    _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; //lin Boxcox
+                    _yTransformBox.SelectedTransform = TransformTypeEnum.BoxCox; 
+                }
+                else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox) //log Boxcox
+                {
+                    _xTransformBox.SelectedTransform = TransformTypeEnum.Log; //log Boxcox
+                    _yTransformBox.SelectedTransform = TransformTypeEnum.BoxCox;
+                }
+                else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log && _yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox) //linlog
+                {
+                    _xTransformBox.SelectedTransform = TransformTypeEnum.Linear;
                     _yTransformBox.SelectedTransform = TransformTypeEnum.Linear; //linlin
                 }
+                /*
                 else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Inverse && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //invlog
                 {
                     _yTransformBox.SelectedTransform = TransformTypeEnum.Linear; //invlin
@@ -258,6 +272,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 {
                     _xTransformBox.SelectedTransform = TransformTypeEnum.Log; //loginv
                 }
+                */
             }
 
         }
@@ -509,12 +524,12 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             if (_yTransformBox.SelectedIndex.ToString() != "Boxcox")
             {
                 _labelForLamdaInput.Enabled = false;
-                _boxCoxLambda.Enabled = false;
+                _boxCoxLambdaQuick.Enabled = false;
             }
             else
             {
                 _labelForLamdaInput.Enabled = true;
-                _boxCoxLambda.Enabled = true;
+                _boxCoxLambdaQuick.Enabled = true;
             }
 
             Analysis.IsFrozen = false;
@@ -628,7 +643,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 AxisTransformsHeader,
                 _xTransformLabel, _xTransformBox,
                 _yTransformLabel, _yTransformBox,
-                _labelForLamdaInput, _boxCoxLambda,
+                _labelForLamdaInput, _boxCoxLambdaQuick,
 
                 FlawRangeHeader,
                 AMaxInputLabel, aMaxControl,
@@ -665,6 +680,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             StepToolTip.SetToolTip(_xTransformBox, Globals.SplitIntoLines("Transform to apply to the flaws."));
             StepToolTip.SetToolTip(_yTransformBox, Globals.SplitIntoLines("Transform to apply to the responses."));
+            StepToolTip.SetToolTip(_boxCoxLambdaQuick, Globals.SplitIntoLines("Set Lamda value for Box-cox (Used only when reponse is set to Box-Cox)"));
             aMaxControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's maximum range.");
             aMinControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's minimum range.");
             rightCensorControl.TooltipForNumeric = Globals.SplitIntoLines("Maximum response of the inspection system. Used to censor data.");
@@ -682,7 +698,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         }
         private void InitializeNumericLambda()
         {
-            PrepareLabelNumericPair(ref _labelForLamdaInput, "Lambda Value", ref _boxCoxLambda);
+            PrepareLabelNumericPair(ref _labelForLamdaInput, "Lambda Value", ref _boxCoxLambdaQuick);
+            _boxCoxLambdaQuick.Enabled = false;
         }
         protected override void SetupNumericControlEvents()
         {
@@ -693,7 +710,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             thresholdControl.NumericUpDown.ValueChanged += this.thresholdControl_ValueChanged;
             _xTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
             _yTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
-            _boxCoxLambda.ValueChanged += this.NumericUpDown_ValueChanged;
+            _boxCoxLambdaQuick.ValueChanged += this.NumericUpDown_ValueChanged;
         }
 
         private void TransformBox_ValueChanged(object sender, EventArgs e)
@@ -746,15 +763,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 Analysis.SetTempLambda = lambdaTemp;
 
                 _labelForLamdaInput.Enabled = true;
-                _boxCoxLambda.Enabled = true;
-                _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
+                _boxCoxLambdaQuick.Enabled = true;
+                _boxCoxLambdaQuick.Value = Convert.ToDecimal(lambdaTemp);
                 //keep from running the analyis twice
                 //return;
             }
             else
             {
                 _labelForLamdaInput.Enabled = false;
-                _boxCoxLambda.Enabled = false;
+                _boxCoxLambdaQuick.Enabled = false;
             }
             ForceUpdateAfterTransformChange();
         }
@@ -1142,27 +1159,32 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         private void thresholdControl_ValueChanged(object sender, EventArgs e)
         {
+            if(thresholdControl.Value < 0 && _yTransformBox.SelectedIndex == 1)
+            {
+                thresholdControl.Value = Convert.ToDecimal(_previousThreshold);
+            }
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
             mainChart.SetThresholdBoundary(y, true);
             //set to calculate threshold change only
             Analysis.AnalysisCalculationType = RCalculationType.ThresholdChange;
             RunAnalysis();
+            _previousThreshold = thresholdControl.Value;
         }
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             Analysis.AnalysisCalculationType = RCalculationType.Full;
-            if (_boxCoxLambda.Value == 0.0m)
+            if (_boxCoxLambdaQuick.Value == 0.0m)
             {
                 MessageBox.Show("Setting lambda as 0 is the same as taking a log transform of y! If lambda is already close to 0, use log transform instead.");
-                _boxCoxLambda.Value = _previousLambda;
+                _boxCoxLambdaQuick.Value = _previousLambda;
                 return;
             }
-            double customLambda = Convert.ToDouble(_boxCoxLambda.Value);
+            double customLambda = Convert.ToDouble(_boxCoxLambdaQuick.Value);
             Analysis.SetTempLambda = customLambda;
 
 
             ForceUpdateAfterTransformChange();
-            _previousLambda = _boxCoxLambda.Value;
+            _previousLambda = _boxCoxLambdaQuick.Value;
         }
 
 
