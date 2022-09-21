@@ -884,7 +884,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             double modelMStdError = Analysis.OutModelSlopeStdError;
             double modelBStdError = Analysis.OutModelInterceptStdError;
             double modelErrorStdError = Analysis.OutModelResidualErrorStdError;
-            double repeatabilityError = Analysis.OutRepeatabilityError;
+            double repeatabilityError = Analysis.OutRSquaredValue;
             double normality = Analysis.OutTestNormality_p;
             double lackOfFit = Analysis.OutTestLackOfFit_p;
             double equalVariance = Analysis.OutTestEqualVariance_p;
@@ -1015,7 +1015,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             //linearityChart.XAxis.RoundAxisValues();
             //linearityChart.XAxis.LabelStyle.Format = "F1";
             //SetXAxisRange(Analysis.Data.GetXBufferedRange(true));
-            linearityChart.FillChart(Analysis.Data, Analysis.OutModelSlope, Analysis.OutModelIntercept, Analysis.OutModelResidualError, Analysis.OutRepeatabilityError);
+            linearityChart.FillChart(Analysis.Data, Analysis.OutModelSlope, Analysis.OutModelIntercept, Analysis.OutModelResidualError, Analysis.OutRSquaredValue);
 
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
             linearityChart.ChartToolTip = StepToolTip;

@@ -34,6 +34,7 @@ namespace CSharpBackendWithR
         //linear model unique metrics
         private double intercept;
         private double slope;
+        private double residualError;
         //standard errors
         private double slopeStdErr;
         private double interceptStdErr;
@@ -273,6 +274,11 @@ namespace CSharpBackendWithR
         {
             set { this.intercept=value; }
             get { return this.intercept; }
+        }
+        public double ResidualError
+        {
+            set { this.residualError = value; }
+            get { return this.residualError; }
         }
         public double RSqaured
         {

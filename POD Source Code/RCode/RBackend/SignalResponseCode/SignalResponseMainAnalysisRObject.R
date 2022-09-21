@@ -189,10 +189,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       if(fullAnalysis){
                                         #get the value of R-squared(TODO: check if this changes with censored data)
                                         setRSquared(summary(linearModel_lm)$r.squared)
-                                        #calculate the standard errors for regression
-                                        calcStandardErrs(ahatvACensored)
                                         #find the key a values and the covariance matrix
                                         genAvaluesAndMatrix(ahatvACensored)
+                                        #calculate the standard errors for regression
+                                        calcStandardErrs(ahatvACensored)
                                         #generates the thesholds table for UI
                                         genThresholdsTable(ahatvACensored)
                                         #function that generates the POD curve and stores the results
@@ -344,7 +344,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       setThresholdDF(threshDataFrame)
                                     },
                                     calcStandardErrs=function(myLinFit){
-                                      df=2
+                                      #k=number of model parameters
+                                      k=2
                                       y_residualsSq=c()
                                       x_residualsSq=c()
                                       for(i in 1:nrow(signalRespDF)){
@@ -358,13 +359,13 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         y_residualsSq=c(y_residualsSq, thisResid_y^2)
                                         x_residualsSq=c(x_residualsSq, thisResid_x^2)
                                       }
-                                      globalXresid<<-x_residualsSq
-                                      global<<-y_residualsSq
                                       slopeStdError=summary(myLinFit)$table[2,2]
                                       interceptStdError=summary(myLinFit)$table[1,2]
-                                      residualError=sqrt(sum(y_residualsSq)/(nrow(signalRespDF)-df))
+                                      residualError=sqrt(sum(y_residualsSq)/(nrow(signalRespDF)-k-1))
+                                      #copied from python code in PODv4.0---need to validate this
+                                      residualErrorStdError=sqrt(varCovarMatrix[3,3])*residualError
                                       #stored as: slope std error, slope intercept std error, and residual error
-                                      stdErrors=list(slopeStdError, interceptStdError, residualError)
+                                      stdErrors=list(slopeStdError, interceptStdError, residualError, residualErrorStdError)
                                       setRegressionStdErrs(stdErrors)
                                     },
                                     # Inverse function of f_a. Uncomment 1

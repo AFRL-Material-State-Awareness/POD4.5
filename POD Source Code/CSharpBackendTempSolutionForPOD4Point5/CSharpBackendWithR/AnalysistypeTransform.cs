@@ -210,6 +210,7 @@ namespace CSharpBackendWithR
             Dictionary<string, double> standardErrors = this.newAHatControl.GetLinearModelStdErrors();
             this.newAHatAnalysisObject.SlopeStdErr = standardErrors["slopeStdError"];
             this.newAHatAnalysisObject.InterceptStdErr = standardErrors["interceptStdError"];
+            this.newAHatAnalysisObject.ResidualError = standardErrors["residualError"];
             this.newAHatAnalysisObject.ResidualStdErr = standardErrors["residualStdError"];
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = this.newAHatControl.GetKeyA_Values();

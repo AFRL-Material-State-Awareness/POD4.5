@@ -444,7 +444,7 @@ namespace POD.Analyze
         /// <summary>
         ///     Repeatability error for the data set
         /// </summary>
-        public double OutRepeatabilityError
+        public double OutRSquaredValue
         {
             get
             {
@@ -1132,69 +1132,16 @@ namespace POD.Analyze
         {  
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
-            try
-            {
-                //OutModelIntercept = _podDoc.GetModelIntercept(); //yes
-                OutModelInterceptStdError = _podDoc.GetModelInterceptError();
-                //OutModelSlope = _podDoc.GetModelSlope(); //yes
-                OutModelSlopeStdError = _podDoc.GetModelSlopeError();
-                OutModelResidualError = _podDoc.GetModelResidual(); //yes
-                OutModelResidualErrorStdError = _podDoc.GetModelResidualError();
-                OutRepeatabilityError = _podDoc.GetRepeatabilityError();
-                //OutTestNormality_p = _podDoc.GetNormality_p();
-                //OutTestNormality = _podDoc.GetNormality();
-                OutTestNormalityRating = _podDoc.GetNormalityRating();
-                OutTestLackOfFit_p = _podDoc.GetLackOfFit_p();
-                OutTestLackOfFit = _podDoc.GetLackOfFit();
-                OutTestLackOfFitRating = _podDoc.GetLackOfFitRating();
-                //OutTestEqualVariance_p = _podDoc.GetEqualVariance_p();
-                //OutTestEqualVariance = _podDoc.GetEqualVariance();
-                OutTestEqualVarianceRating = _podDoc.GetEqualVarianceRating();
-                //A Values and sigma
-                //OutResponseDecisionPODSigma = _podDoc.GetPODSigma();
-                //OutResponseDecisionPODA50Value = _podDoc.GetPODFlaw50();
-                //OutResponseDecisionPODLevelValue = _podDoc.GetPODFlawLevel();
-                //OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
-                OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_podDoc.GetLackOfDegreesFreedom());
-                OutTestLackOfFitCalculated = _podDoc.GetLackOfFitCalculated();
-            }
-            catch(Exception noPodDoc)
-            {
-                //OutModelIntercept = _podDoc.GetModelIntercept(); //yes
-                OutModelInterceptStdError = 0;
-                //OutModelSlope = _podDoc.GetModelSlope(); //yes
-                OutModelSlopeStdError = 0;
-                OutModelResidualError = 0; //yes
-                OutModelResidualErrorStdError = 0;
-                OutRepeatabilityError = 0;
-                //OutTestNormality_p = _podDoc.GetNormality_p();
-                //OutTestNormality = _podDoc.GetNormality();
-                OutTestNormalityRating = "";
-                OutTestLackOfFit_p = 0;
-                OutTestLackOfFit = 0;
-                OutTestLackOfFitRating = "";
-                //OutTestEqualVariance_p = _podDoc.GetEqualVariance_p();
-                //OutTestEqualVariance = _podDoc.GetEqualVariance();
-                OutTestEqualVarianceRating = "";
-                //A Values and sigma
-                //OutResponseDecisionPODSigma = _podDoc.GetPODSigma();
-                //OutResponseDecisionPODA50Value = _podDoc.GetPODFlaw50();
-                //OutResponseDecisionPODLevelValue = _podDoc.GetPODFlawLevel();
-                //OutResponseDecisionPODConfidenceValue = _podDoc.GetPODFlawConfidence();
-                OutTestLackOfFitDegreesFreedom = 0;
-                OutTestLackOfFitCalculated = true;
-            }
             
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
-                //TODO: replace the rest of the metrics
                 OutModelIntercept = _aHatAnalysisObject.Intercept;
                 OutModelInterceptStdError = _aHatAnalysisObject.InterceptStdErr;
                 OutModelSlope = _aHatAnalysisObject.Slope;
                 OutModelSlopeStdError = _aHatAnalysisObject.SlopeStdErr;
-                //OutModelResidualError
+                OutModelResidualError = _aHatAnalysisObject.ResidualError;
                 OutModelResidualErrorStdError = _aHatAnalysisObject.ResidualStdErr;
-                OutRepeatabilityError = _aHatAnalysisObject.RSqaured;
+                OutRSquaredValue = _aHatAnalysisObject.RSqaured;
                 //replaced normality test with shapiro-wilk
                 OutTestNormality_p = _aHatAnalysisObject.ShapiroPValue;
                 OutTestNormality = _aHatAnalysisObject.ShapiroTestStat;
@@ -1203,6 +1150,8 @@ namespace POD.Analyze
                 OutTestLackOfFit = _aHatAnalysisObject.LackOfFitFCalc;
                 OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit_p);
                 OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_aHatAnalysisObject.LackOfFitDegFreedom);
+                //this metric was included with the python version (not sure where its used if at all)
+                OutTestLackOfFitCalculated = true;
                 OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
                 OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
                 OutTestEqualVarianceRating= _python.GetPValueDecision(OutTestEqualVariance_p);
@@ -2418,7 +2367,7 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex+1, OutModelSlopeStdError);                
                 myWriter.SetCellValue(rowIndex, colIndex, OutModelResidualError);
                 myWriter.SetCellValue(rowIndex++, colIndex+1, OutModelResidualErrorStdError);
-                myWriter.SetCellValue(rowIndex++, colIndex, OutRepeatabilityError);
+                myWriter.SetCellValue(rowIndex++, colIndex, OutRSquaredValue);
                 myWriter.SetCellValue(rowIndex++, colIndex, OutResponseDecisionPODA50Value);
                 myWriter.SetCellValue(rowIndex++, colIndex, OutResponseDecisionPODSigma);
 

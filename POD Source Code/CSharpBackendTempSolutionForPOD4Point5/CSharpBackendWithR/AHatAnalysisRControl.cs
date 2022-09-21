@@ -168,10 +168,10 @@ namespace CSharpBackendWithR
         public Dictionary<string, double> GetLinearModelStdErrors()
         {
             Dictionary<string, double> standardErrors = new Dictionary<string, double>();
-            List<string> aValuesStrings = new List<string> { "slopeStdError", "interceptStdError","residualStdError" };
+            List<string> aValuesStrings = new List<string> { "slopeStdError", "interceptStdError","residualError", "residualStdError" };
             RDotNet.NumericVector aValuesVector;
             //current list used returns a25, a50 (muhat), a90, sigmahat (SE of a90), and a9095 
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 4; i++)
             {
                 //this.myREngine.Evaluate("print(newSRAnalysis$getKeyAValues()[" + i + "])").AsList();
                 aValuesVector = this.myREngine.Evaluate("newSRAnalysis$getRegressionStdErrs()[" + i + "]").AsNumeric();
