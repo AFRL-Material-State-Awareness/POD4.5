@@ -1336,7 +1336,7 @@ namespace POD.Analyze
             List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
             TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, _rDotNet);
             lambdaTemp = TempLambda.CalcTempLambda();
-            SetTempLambda= lambdaTemp;
+            InLambdaValue= lambdaTemp;
         }
         public void UpdateProgress(Object sender, int myProgressOutOf100)
         {
@@ -1865,7 +1865,7 @@ namespace POD.Analyze
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 _aHatAnalysisObject.Pod_threshold = InResponseDecision;
-                //_aHatAnalysisObject.Lambda = SetTempLambda;
+                //_aHatAnalysisObject.Lambda = InLambdaValue;
             }
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
@@ -2526,7 +2526,11 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, "Response Min");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Response Max");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Response Transform");
-                myWriter.SetCellValue(rowIndex++, colIndex, "Lambda Value (Box-Cox only)");
+                //only output the lambda value is boxcox transform was selected
+                if (InResponseTransform == TransformTypeEnum.BoxCox)
+                {
+                    myWriter.SetCellValue(rowIndex++, colIndex, "Lambda Value (Box-Cox only)");
+                }
             }
 
             rowIndex++;
@@ -2610,7 +2614,7 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseMin);
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseMax);
                 myWriter.SetCellValue(rowIndex++, colIndex, Data.ResponseTransform.ToString());
-                myWriter.SetCellValue(rowIndex++, colIndex, "LAMBDA VALUE HERE");
+                myWriter.SetCellValue(rowIndex++, colIndex, InLambdaValue);
             }
 
             rowIndex++;
@@ -2703,9 +2707,10 @@ namespace POD.Analyze
                 }
             }
         }
-        public double SetTempLambda
+        public double InLambdaValue
         {
             set { _aHatAnalysisObject.Lambda = value; }
+            get { return _aHatAnalysisObject.Lambda; }
         }
         public RCalculationType AnalysisCalculationType
         {

@@ -58,6 +58,8 @@ begin=Sys.time()
 end=Sys.time()
 print("execution time")
 print(end-begin)
+
+
 # if(CItype0== "Standard Wald"){
 #   a9095Wald=aValues[[5]]
 # }

@@ -62,8 +62,13 @@ newSRAnalysis$plotCI(results)
 newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=4.0, modelType=1, lambda=lambda)
 slope<-newSRAnalysis$getModelSlope()
 
-
-
+removeRows<-c()
+for (i in 1:nrow(threshDF)){
+  if(threshDF$threshold[i]<0){
+    removeRows<-c(removeRows, i)
+  }
+}
+threshDF<-threshDF[-removeRows,]
 # full<-lm(y~x, data=data_obs)
 # #constVector=rep(linearModel_lm$coefficients[[1]], nrow(data_obs))
 # #partial<-lm(constVector~x, data= data_obs)

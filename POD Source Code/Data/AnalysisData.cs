@@ -1855,7 +1855,8 @@ namespace POD.Data
                 //printDT(_podCurveTable);
                 if (printDTFlag)
                     printDT(_podCurveTable);
-                _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";              
+                _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable = _podCurveTable.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
             }
             catch (Exception exp)
@@ -1868,6 +1869,7 @@ namespace POD.Data
                 //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
                 _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_podCurveTable_All);
@@ -1881,6 +1883,7 @@ namespace POD.Data
             {
                 _thresholdPlotTable =  BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);                
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
+                _thresholdPlotTable = _thresholdPlotTable.Select("threshold > 0.0").CopyToDataTable();
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_thresholdPlotTable);
@@ -1895,6 +1898,7 @@ namespace POD.Data
                 //_thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
                 _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
+                _thresholdPlotTable_All = _thresholdPlotTable_All.Select("threshold > 0.0").CopyToDataTable();
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_thresholdPlotTable_All);

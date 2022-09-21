@@ -24,6 +24,9 @@ namespace CSharpBackendWithR
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
             //create variable for r engine
             this.rEngine = initializeRDotNet();
+            //set the path for the r libraries-used to aid the user in setting up the r backend
+            //SetLibraryPathEnv();
+
             InitializeRLibraries();
             InitializeRScripts();
             PythonLoaded = true;
@@ -120,6 +123,21 @@ namespace CSharpBackendWithR
             }
             return dtable;
         }
+        //this function is used to set the library path (libraries are contained within the program)
+
+        public void SetLibraryPathEnv()
+        {
+            try
+            {
+                this.rEngine.Evaluate("assign(\".lib.loc\",'" + this.forwardSlashAppPath + "/RLibs/win-library/3.5')" + "', envir = environment(.libPaths))");
+            }
+            catch
+            {
+                this.forwardSlashAppPath = this.forwardSlashAppPath + "/..";
+                this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/RLibs/win-library/3.5')" + "', envir = environment(.libPaths))");
+            }
+        }
+
         //This function will need to be rerun everytime the global environment is cleared
         public void InitializeRScripts()
         {

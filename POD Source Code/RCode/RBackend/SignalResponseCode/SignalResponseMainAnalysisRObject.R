@@ -36,19 +36,28 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
-                                      #ResultsPOD$case=NULL
-                                      #names(ResultsPOD)[names(ResultsPOD) == 'probabilities'] <- 'POD'
                                       ResultsPOD<<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
                                         pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
+
                                       return(ResultsPOD)
                                     },
                                     setThresholdDF=function(psThreshDF){
                                       thesholdTable<<-psThreshDF
                                     },
                                     getThresholdDF=function(){
+                                      #filter out negative threhold values
+                                      #removeRows<-c()
+                                      #for (i in 1:nrow(thesholdTable)){
+                                      #  if(thesholdTable$threshold[i]<0){
+                                      #    removeRows<-c(removeRows, i)
+                                      #  }
+                                      #}
+                                      #if(length(removeRows)>0){
+                                      #  thesholdTable<<-thesholdTable[-removeRows,]
+                                      #}
                                       return(thesholdTable)
                                     },
                                     setModelIntercept=function(psModelInt){
@@ -349,7 +358,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         y_residualsSq=c(y_residualsSq, thisResid_y^2)
                                         x_residualsSq=c(x_residualsSq, thisResid_x^2)
                                       }
-                                      #global<<-y_residualsSq
+                                      globalXresid<<-x_residualsSq
+                                      global<<-y_residualsSq
                                       slopeStdError=summary(myLinFit)$table[2,2]
                                       interceptStdError=summary(myLinFit)$table[1,2]
                                       residualError=sqrt(sum(y_residualsSq)/(nrow(signalRespDF)-df))

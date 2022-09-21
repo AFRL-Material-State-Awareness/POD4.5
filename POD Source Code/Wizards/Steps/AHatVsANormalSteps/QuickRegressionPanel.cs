@@ -760,7 +760,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
                 TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
                 lambdaTemp = TempLambda.CalcTempLambda();
-                Analysis.SetTempLambda = lambdaTemp;
+                Analysis.InLambdaValue = lambdaTemp;
 
                 _labelForLamdaInput.Enabled = true;
                 _boxCoxLambdaQuick.Enabled = true;
@@ -1180,7 +1180,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 return;
             }
             double customLambda = Convert.ToDouble(_boxCoxLambdaQuick.Value);
-            Analysis.SetTempLambda = customLambda;
+            Analysis.InLambdaValue = customLambda;
 
 
             ForceUpdateAfterTransformChange();
