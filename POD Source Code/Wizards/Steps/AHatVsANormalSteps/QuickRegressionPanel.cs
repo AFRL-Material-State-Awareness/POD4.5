@@ -521,7 +521,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin);
             rightCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMax);
 
-            if (_yTransformBox.SelectedIndex.ToString() != "Boxcox")
+            if (_yTransformBox.SelectedIndex.ToString() != "3")
             {
                 _labelForLamdaInput.Enabled = false;
                 _boxCoxLambdaQuick.Enabled = false;

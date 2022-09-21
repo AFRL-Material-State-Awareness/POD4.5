@@ -280,6 +280,16 @@ namespace POD.Wizards
             if (!Analysis.IsFrozen)
                 RunAnalysis();
         }
+        /*
+        public void ForceUpdateAfterLambdaChange()
+        {
+            MainChart.ForceReloadChartData();
+            MainChart.PickBestAxisRange();
+            Analysis.AnalysisCalculationType = RCalculationType.Full;
+            if (!Analysis.IsFrozen)
+                RunAnalysis();
+        }
+        */
 
         protected virtual void SetupNumericControlEvents()
         {

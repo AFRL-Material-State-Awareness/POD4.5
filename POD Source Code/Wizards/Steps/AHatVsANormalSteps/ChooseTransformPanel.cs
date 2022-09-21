@@ -747,21 +747,25 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 row.Cells[1].Value = Properties.Resources.question;
                 row.Cells[1].ToolTipText = Column1ToolTip(listBox);
                 listBox.Rows.Add(row);
-                /*
-                if (listBox == YAxisTransformList)
-                {
+
+                //if (listBox == YAxisTransformList)
+                //{
                     row = listBox.CreateNewCloneRow(listBox.Columns.Count);
                     row.Cells[0].Value = new TransformObj(TransformTypeEnum.BoxCox);
                     row.Cells[0].ToolTipText = Column0ToolTip(listBox);
                     row.Cells[1].Value = Properties.Resources.question;
                     row.Cells[1].ToolTipText = Column1ToolTip(listBox);
                     listBox.Rows.Add(row);
-                }
-                */
-
+                //}
 
                 listBox.Rows[0].Selected = true;
                 listBox.Rows[1].Selected = true;
+                //remove the box-cox for the x transform since it doesn't applly
+                //listbox items do not work properly if the listbox is not 'nxn'
+                if (listBox == XAxisTransformList)
+                {
+                    listBox.Rows[3].Visible = false;
+                }
 
                 listBox.SelectionChanged += myList_SelectionChanged;
                 listBox.CellMouseEnter += myList_CellEnter;

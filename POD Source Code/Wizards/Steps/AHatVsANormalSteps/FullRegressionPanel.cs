@@ -32,6 +32,9 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private int _tabIndex;
         //used to keep track of the previous value of lambda in case the user tries to enter 0 into the numeric text box
         private decimal _previousLambda = 1.0m;
+        //this flag is used in order to prevent the boxcox numeric updown from being disable if the user
+        //selects boxcox in the choose transform panel
+        private bool _startingWithBoxCox = false;
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
         {
             InitializeComponent();
@@ -174,7 +177,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin);
             rightCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMax);
 
-            if(_yTransformBox.SelectedIndex.ToString() != "Boxcox")
+            if(_yTransformBox.SelectedIndex.ToString() != "3")
             {
                 _labelForLamdaInput.Enabled = false;
                 _boxCoxLambda.Enabled = false;
@@ -471,19 +474,27 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             //get temporary lambda if box-cox is selected
             if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
             {
-                double lambdaTemp;
-                AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
-                List<double> tempFlaws = currAnalysis.Flaws;
-                List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
-                TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
-                lambdaTemp = TempLambda.CalcTempLambda();
-                Analysis.InLambdaValue = lambdaTemp;
-
+                //if statement needs to be nested in order to ensure the lambda input box is enabled upon box-cox being selected in
+                //the chooseTransform panel.
+                if(Analysis._finalAnalysisAHat != null)
+                {
+                    double lambdaTemp;
+                    AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
+                    List<double> tempFlaws = currAnalysis.Flaws;
+                    List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
+                    TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
+                    lambdaTemp = TempLambda.CalcTempLambda();
+                    Analysis.InLambdaValue = lambdaTemp;
+                    _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
+                    //keep from running the analyis twice
+                    //return;
+                }
+                else
+                {
+                    _boxCoxLambda.Value = Convert.ToDecimal(Analysis.InLambdaValue);
+                }
                 _labelForLamdaInput.Enabled = true;
                 _boxCoxLambda.Enabled = true;
-                _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
-                //keep from running the analyis twice
-                //return;
             }
             else
             {
@@ -846,6 +857,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
 
             ForceUpdateAfterTransformChange();
+            //ForceUpdateAfterLambdaChange();
             _previousLambda = _boxCoxLambda.Value;
         }
         protected override void DisableInputControls()
