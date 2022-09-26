@@ -288,7 +288,7 @@ namespace POD
         //author : Tim ---- https://stackoverflow.com/users/6785695/tim
         public static double NthRoot(double A, double root, double checkLambdaDenominator=2.0)
         {
-            if(checkLambdaDenominator % 2 != 0)
+            if(checkLambdaDenominator % 2 != 0 && A<0)
             {
                 return -Math.Pow(-A, 1.0 / root);
             }
