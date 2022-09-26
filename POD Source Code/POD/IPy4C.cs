@@ -284,9 +284,60 @@ namespace POD
             return decisionString;
         }
         //used to calculate the nth root
-        public static double NthRoot(double A, double root)
+        //source : https://stackoverflow.com/questions/55987201/calculating-the-cubic-root-for-negative-number
+        //author : Tim ---- https://stackoverflow.com/users/6785695/tim
+        public static double NthRoot(double A, double root, double checkLambdaDenominator=2.0)
         {
-            return Math.Pow(A, 1.0 / root);
+            if(checkLambdaDenominator % 2 != 0)
+            {
+                return -Math.Pow(-A, 1.0 / root);
+            }
+            else
+            {
+                return Math.Pow(A, 1.0 / root);
+            }
+        }
+        static long gcd(long a, long b)
+        {
+            if (a == 0)
+                return b;
+            else if (b == 0)
+                return a;
+            if (a < b)
+                return gcd(a, b % a);
+            else
+                return gcd(b, a % b);
+        }
+
+        // Function to convert decimal to fraction
+        public static void DecimalToFraction(double number, out long numerator, out long denominator)
+        {
+
+            // Fetch integral value of the decimal
+            double intVal = Math.Floor(number);
+
+            // Fetch fractional part of the decimal
+            double fVal = number - intVal;
+
+            // Consider precision value to
+            // convert fractional part to
+            // integral equivalent
+            long pVal = 1000000000;
+
+            // Calculate GCD of integral
+            // equivalent of fractional
+            // part and precision value
+            long gcdVal = gcd((long)Math.Round(
+                            fVal * pVal), pVal);
+
+            // Calculate num and deno
+            //long num = (long)Math.Round(fVal * pVal) / gcdVal;
+            //long deno = pVal / gcdVal;
+            numerator= (long)Math.Round(fVal * pVal) / gcdVal;
+            denominator= pVal / gcdVal;
+            // Print the fraction
+            //Console.WriteLine((long)(intVal * deno) +
+            //                      num + "/" + deno);
         }
         //convert c# dictionary to python dictionary
         //my dictionary is the c# dictionary

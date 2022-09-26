@@ -2830,10 +2830,12 @@ namespace POD.Data
             {
                 double range = Math.Abs(myMax - myMin);
                 double logRange = Math.Floor(Math.Log10(range)) - 1;
+                //double logRange = Math.Floor(Math.Log(range)) - 1;
                 double buffer = myAxis.BufferPercentage / 100.0 * range;
                 double max = myMax + buffer;
                 double min = myMin - buffer;
                 double correctedRange = Math.Pow(10.0, logRange);
+                //double correctedRange = Math.Exp(logRange);
 
                 max = Math.Ceiling(max / correctedRange) * correctedRange;
                 min = Math.Floor(min / correctedRange) * correctedRange;
@@ -2852,6 +2854,7 @@ namespace POD.Data
                     myAxis.Interval = correctedRange * multiplier;
 
                     multiplier += .5;
+                    //multiplier += .95;
                 }
 
                 myAxis.Max = max;
@@ -3125,7 +3128,18 @@ namespace POD.Data
                     transformValue = 1.0/myValue;
                     break;
                 case 5:
-                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda + 1, _aHatAnalysisObject.Lambda);
+                    //convert lambda to an improper fraction to handle negtive values with the nth root
+                    long num, den;
+                    double whole = Math.Floor(_aHatAnalysisObject.Lambda);
+                    double decimalVal = _aHatAnalysisObject.Lambda - whole;
+                    IPy4C.DecimalToFraction(decimalVal, out num, out den);
+                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda + 1, _aHatAnalysisObject.Lambda, den);
+                    if (double.IsNaN(transformValue))
+                    {
+                        //add a very small '.01' number to the denominator to return a valid value to scale      
+                        double approxLambda = whole+ Convert.ToDouble(num) /(Convert.ToDouble(den) + .000000000001);
+                        transformValue = IPy4C.NthRoot(myValue * approxLambda + 1, approxLambda, 1.0);
+                    }
                     break;
                 default:
                     transformValue = myValue;
