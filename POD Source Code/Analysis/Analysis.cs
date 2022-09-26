@@ -1199,26 +1199,14 @@ namespace POD.Analyze
                 //TODO: figure out how to get the covariance matrix for LR and MLR
                 if(_hmAnalysisObject.CovarianceMatrix != null)
                 {
-                    //if (InFlawTransform == TransformTypeEnum.Linear)
-                    //{
                     OutPFCovarianceV11 = covMatrix[0];
                     OutPFCovarianceV12 = covMatrix[1];
-                    OutPFCovarianceV22 = covMatrix[3];
-                    //}
-                    /*
-                    else if(InFlawTransform == TransformTypeEnum.Log)
-                    {
-                        OutPFCovarianceV11 =Math.Exp(covMatrix[0]);
-                        OutPFCovarianceV12 = Math.Exp(covMatrix[1]);
-                        OutPFCovarianceV22 = Math.Exp(covMatrix[3]);
-                    }
-                    */
-                    
+                    OutPFCovarianceV22 = covMatrix[3];   
                 }
                 else
                 {
                     //MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
-                    Debug.WriteLine("Warning: something went wrong with calculating the vcov matrix!");
+                    MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
                     OutPFCovarianceV11 = -1;
                     OutPFCovarianceV12 = -1;
                     OutPFCovarianceV22 = -1;
@@ -1249,8 +1237,6 @@ namespace POD.Analyze
                 {
                     throw new Exception("OOPS something went wrong with tranforming the a values back to linear space");
                 }
-                //OutPODMu = _podDoc.GetPODMu();
-                //OutPODSigma = _podDoc.GetPODSigma();
                 OutPODMu = _hmAnalysisObject.Muhat;
                 OutPODSigma = _hmAnalysisObject.Sighat;
                 OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
@@ -1822,7 +1808,7 @@ namespace POD.Analyze
                 _hmAnalysisObject.Pod_threshold = InResponseDecision;
                 _hmAnalysisObject.Pod_level = .90;
                 _hmAnalysisObject.Confidence_level = .95;
-                //used for modified wald, LR, etc. Will implement into the UI later
+                //used for modified wald, LR, etc.
                 _hmAnalysisObject.A_x_n = 500;
                 _hmAnalysisObject.CIType = InConfIntervalType.ToString(); // used to change the confidence interval if the user chooses to
                 switch (InSamplingType.ToString())
@@ -2818,7 +2804,7 @@ namespace POD.Analyze
             {
                 if (_python != null)
                 {
-                    value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                    value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
                 }
                 else
                 {
@@ -2846,7 +2832,7 @@ namespace POD.Analyze
             {
                 if (_python != null)
                 {
-                    value = Convert.ToDecimal(TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
+                    value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
                 }    
                 else
                     value = myValue;
@@ -3038,88 +3024,6 @@ namespace POD.Analyze
             return transformValue;
                 
         }
-        public double TransformBackAValue(double myValue, int transform)
-        {
-            double transformValue = 0.0;
-            switch (transform)
-            {
-                case 1:
-                    transformValue = myValue;
-                    break;
-                case 2:
-                    transformValue = Math.Exp(myValue);
-                    break;
-                case 3:
-                    transformValue = 1.0/ myValue;
-                    //transformValue = myValue;
-                    break;
-                case 5:
-                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda+1, _aHatAnalysisObject.Lambda);
-                    break;
-                default:
-                    transformValue = myValue;
-                    break;
-            }
-            return transformValue;
-
-        }
-        /// <summary>
-        /// /MAY remove this later
-        /// </summary>
-        /// <param name="myValue"></param>
-        /// <param name="transform"></param>
-        /// <returns></returns>
-        ///
-        /*
-        public double TransformAHatValue(double myValue, int transform)
-        {
-            double transformValue = 0.0;
-            switch (transform)
-            {
-                case 1:
-                    transformValue = myValue;
-                    break;
-                case 2:
-                    transformValue = Math.Log(myValue);
-                    break;
-                case 3:
-                    transformValue = 1 / myValue;
-                    break;
-                case 5:
-                    transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
-                    break;
-                default:
-                    transformValue = myValue;
-                    break;
-            }
-            return transformValue;
-
-        }
-        public double TransformBackAHatValue(double myValue, int transform)
-        {
-            double transformValue = 0.0;
-            switch (transform)
-            {
-                case 1:
-                    transformValue = myValue;
-                    break;
-                case 2:
-                    transformValue = Math.Exp(myValue);
-                    break;
-                case 3:
-                    transformValue = 1 / myValue;
-                    break;
-                case 5:
-                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda);
-                    break;
-                default:
-                    transformValue = myValue;
-                    break;
-            }
-            return transformValue;
-
-        }
-        */
 
         public void ClearInitialGuesses()
         {

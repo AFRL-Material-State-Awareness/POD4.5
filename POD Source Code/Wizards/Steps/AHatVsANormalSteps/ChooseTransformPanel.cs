@@ -897,9 +897,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             var sortedSelectedY = GetSortedSelectedIndicies(YAxisTransformList);
             var sortedSelectedX = GetSortedSelectedIndicies(XAxisTransformList);
 
-            //if (_topX < sortedSelectedX.Max() + 1 || _topY < sortedSelectedY.Max() + 1)
-            //    RunAnalyses();
-            RunAnalyses();
+            if (_topX < sortedSelectedX.Max() + 1 || _topY < sortedSelectedY.Max() + 1)
+                RunAnalyses();
+            else
+            {
+                Analysis.UpdatePythonTransforms();
+            }
+            //RunAnalyses();
             SelectVisibleCharts();
             ResizeChartsBasedOnCount();
             //RunAnalyses();

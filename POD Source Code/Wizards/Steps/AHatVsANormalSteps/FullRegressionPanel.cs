@@ -831,10 +831,6 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         private void thresholdControl_ValueChanged(object sender, EventArgs e)
         {
-            //System.Diagnostics.Stopwatch myWatch = new System.Diagnostics.Stopwatch();
-            //myWatch.Start();
-            //controlValueChanged = true;
-
             _activeControl = thresholdControl;
 
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));

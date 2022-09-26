@@ -634,10 +634,10 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 
 
 
-                foreach (Control control in graphLayoutPanel.Controls)
-                {
-                    
-                }
+                //foreach (Control control in graphLayoutPanel.Controls)
+                //{
+                //    
+                //}
 
                 //graphLayoutPanel.Width = widthDiv * _yTransforms.Count;
                 //graphLayoutPanel.Height = heightDiv * _yTransforms.Count;
@@ -981,7 +981,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             if (_topX < sortedSelectedX.Max() + 1 || _topY < sortedSelectedY.Max() + 1)
                 RunAnalyses();
-
             SelectVisibleCharts();
             ResizeChartsBasedOnCount();
             //RunAnalyses();

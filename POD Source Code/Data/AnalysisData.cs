@@ -1667,8 +1667,7 @@ namespace POD.Data
 
             try
             {
-                //table to be passed back for the transformations window in pass fail
-                
+                //table to be passed back for the transformations window in pass fail               
                 _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_hmAnalysisObject.LogitFitTable);
                 if (_podCurveTable.Columns.Contains("transformFlaw"))
                 {

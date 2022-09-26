@@ -278,15 +278,7 @@ namespace POD.Controls
             }
             Original.Enabled = false;
 
-            //var index = 0;
-
             ColorSeries(colors, colorIndex, styleIndex, Original);
-
-            //XAxisTitle = data.ActivatedFlawName;
-            //XAxisUnit = flaws[flawIndex].Unit;
-
-            //YAxisTitle = data.ActivatedResponseNames[index];
-            //YAxisUnit = responses[responseIndex].Unit;
 
             UpdateChartTitle();
 
