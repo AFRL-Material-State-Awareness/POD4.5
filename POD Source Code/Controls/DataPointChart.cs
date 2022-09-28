@@ -1262,8 +1262,8 @@ namespace POD.Controls
                 for (int subExp = 1; subExp < 10; subExp++)
                 {
                     var value = Math.Pow(10, exp) * subExp;
-                    var intv = transform(value);
-                    //var intv = TransformValue(value, );
+                    //var intv = transform(value);
+                    var intv = TransformValue(value);
                     var exponent = exp;
                     var valLabel = value.ToString();
 
@@ -1321,7 +1321,7 @@ namespace POD.Controls
             }
             return transformValue;
         }
-        public double TransformValue(double myValue, TransformTypeEnum transform)
+        public double TransformValue(double myValue, TransformTypeEnum transform= TransformTypeEnum.Log)
         {
             double transformValue = 0.0;
             switch (transform)
