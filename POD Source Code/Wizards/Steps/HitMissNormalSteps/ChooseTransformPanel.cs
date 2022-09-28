@@ -377,7 +377,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             _analysis.InFlawTransform = chart.XTransform;
             _analysis.InResponseTransform = chart.YTransform;
-            _analysis.UpdatePythonTransforms();
+            _analysis.UpdateRTransforms();
 
             chart.RelabelAxes(_analysis.Data);
         }
@@ -428,7 +428,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             _analysis.InFlawTransform = chart.XTransform;
             _analysis.InResponseTransform = chart.YTransform;
-            _analysis.UpdatePythonTransforms();
+            _analysis.UpdateRTransforms();
 
             chart.RelabelAxes(_analysis.Data);
         }

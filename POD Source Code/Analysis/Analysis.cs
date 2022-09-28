@@ -232,11 +232,6 @@ namespace POD.Analyze
         }
 
         /// <summary>
-        /// The smallest transformed crack size.
-        /// </summary>
-        //double _inFlawMin = 0.0;
-
-        /// <summary>
         ///     The smallest flaw that will be used in calculations.
         /// </summary>
         public double InFlawMin
@@ -553,33 +548,6 @@ namespace POD.Analyze
             }
         }
 
-        //double _outResponseDecisionPODLevelValue_All;
-
-        ///// <summary>
-        /////     POD flaw size for the response data decision threshold value (a90)
-        ///// </summary>
-        //public double OutResponseDecisionPODLevelValue_All
-        //{
-        //    get
-        //    {
-        //        return NoBigNumbers(_outResponseDecisionPODLevelValue_All);
-        //    }
-
-        //    private set
-        //    {
-        //        if (!IsFrozen)
-        //            _outResponseDecisionPODLevelValue_All = value;
-        //    }
-        //}
-
-        //public double OutResponseDecisionPODLevelPlot
-        //{
-        //    get
-        //    {
-        //        return _podDoc.GetTransformedFlawValue(OutResponseDecisionPODLevelValue);
-        //    }
-
-        //}
 
         double _outTestEqualVariance;
 
@@ -977,7 +945,7 @@ namespace POD.Analyze
         private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            Stopwatch watch = new Stopwatch();
+            //_data.UpdateHitMissModel(_hmAnalysisObject.ModelType);
             IsBusy = true;
             AnalysistypeTransform newAnalysisControl;
             if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
@@ -994,11 +962,9 @@ namespace POD.Analyze
                 //entry point for pod caluclation in PODv4 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    watch.Start();
                     //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
                     newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
-                    watch.Stop();
 
                 }
                 //entry point for pod calculate in PODv4 ahat
@@ -1435,18 +1401,6 @@ namespace POD.Analyze
         {
             GetMinMax(myTable, out myMin, out myMax);
 
-            /*double bufMax = myMax;
-            double range = myMax - myMin;
-            double buffer = range * .05;
-
-            double bufMin = myMin;
-
-            bufMax += buffer;
-            bufMin -= buffer;
-
-            myMin = bufMin;
-            myMax = bufMax;*/
-
             double range = Math.Abs(myMax - myMin);
             double logRange = Math.Floor(Math.Log10(range)) - 1;
             double buffer = 2.5 / 100.0 * range;
@@ -1507,22 +1461,9 @@ namespace POD.Analyze
 
             foreach (DataColumn column in myTable.Columns)
             {
-                //string columnName = column.ColumnName;
-                //string compute = "MIN(" + "[" + column.ColumnName + "]" + ")";
 
-                //var value = (double)myTable.Compute(compute, "");
                 Compute.MinMax(myTable, column, ref myMin, ref myMax);
 
-
-                /*if (value < myMin)
-                    myMin = value;
-
-                compute = "MAX(" + "[" + column.ColumnName + "]" + ")";
-
-                value = (double)myTable.Compute(compute, "");
-
-                if (value > myMax)
-                    myMax = value;*/
             }
 
             Compute.SanityCheck(ref myMin, ref myMax);
@@ -1716,11 +1657,6 @@ namespace POD.Analyze
 
         private void CopyInputToR()
         {
-            //TODO: get this working with r
-            //if (_podDoc != null && _podDoc.OnNewProgress != null && _podDoc.OnNewStatus != null)
-            //    _podDoc.RegisterUpdateProgressEvent(this);
-            // update the progress text in the python engine object object 
-            //_python.ProgressText = "Starting Analysis...";
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.ProgressText = "Starting Analysis";
@@ -1736,12 +1672,6 @@ namespace POD.Analyze
             _python.OutputWriter.StringWritten += OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten += ErrorWriter_StringWritten;
 
-            //TODO: Add code here to call python analysis code with the current analysis data and settings
-            //only use the column specified by InAnalysisFlawColumnName for the x-axis of the calculations
-            //_podDoc.analysis stores the analysis type (hit/miss or ahat)
-            //_podDoc.analysis = _python.AnalysisDataTypeEnumToInt(AnalysisDataType);
-            //_podDoc.ahat_transform = 0;
-
             //flip them so the calculation code still work properly
             //used if the censor lines cross each other
             if (InResponseMin >= InResponseMax)
@@ -1756,8 +1686,7 @@ namespace POD.Analyze
             //    InResponseDecision = Math.Log(InResponseDecision);
             //}
             //used to store the current transformation the program is performing in the 'choose transform' window
-            //TODO: rename this
-            UpdatePythonTransforms();
+            UpdateRTransforms();
             //change the model type of logistic regression to firth logistical regression if using log odds
             if (InHitMissModel.ToString() == "Normal" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
@@ -1768,12 +1697,6 @@ namespace POD.Analyze
                 _hmAnalysisObject.RegressionType = "Firth Logistic Regression";
             }
 
-
-            //if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-            //    _podDoc.model = _python.PFModelEnumToInt(InHitMissModel);
-            //add code for other tranform options here(right now it's just normal and odds)
-
-            //_podDoc.name = Name;
             //if(_hmAnalysisObject.Responses==null && _data.HMAnalysisObject.Responses != null && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             //{
             //    _fileLoadHitMiss = true;
@@ -1845,7 +1768,6 @@ namespace POD.Analyze
                 thresholds.Add(value);
             }
             */
-            //_podDoc.SetDecisionThresholds(thresholds);
             
         }
         //this function checks to see if the user is loading a saved file in which data was censored. If so, the flag is turned on
@@ -1866,7 +1788,7 @@ namespace POD.Analyze
                 }
             }
         }
-        public void UpdatePythonTransforms()
+        public void UpdateRTransforms()
         {
             Data.FlawTransform = InFlawTransform;
             Data.ResponseTransform = InResponseTransform;
@@ -1952,35 +1874,6 @@ namespace POD.Analyze
                 _aHatAnalysisObject.ModelType = 12;
             }
         }
-        /*
-        private void AHatModelUpdate()
-        {
-            switch (_aHatAnalysisObject.Ahat_transform)
-            {
-                case 1 when _aHatAnalysisObject.Ahat_transform == 1:
-                    _aHatAnalysisObject.ModelType = 1;
-                    break;
-                case 1 when _aHatAnalysisObject.Ahat_transform == 2:
-                    _aHatAnalysisObject.ModelType = 3;
-                    break;
-                case 1 when _aHatAnalysisObject.Ahat_transform == 5:
-                    _aHatAnalysisObject.ModelType = 5;
-                    break;
-                case 2 when _aHatAnalysisObject.Ahat_transform == 1:
-                    _aHatAnalysisObject.ModelType = 2;
-                    break;
-                case 2 when _aHatAnalysisObject.Ahat_transform == 2:
-                    _aHatAnalysisObject.ModelType = 4;
-                    break;
-                case 2 when _aHatAnalysisObject.Ahat_transform == 5:
-                    _aHatAnalysisObject.ModelType = 6;
-                    break;
-                default:
-                    _aHatAnalysisObject.ModelType = 1;
-                    break;
-            }
-        }
-        */
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
         {
             _python.AddErrorText(e.Value);
@@ -2067,10 +1960,7 @@ namespace POD.Analyze
 
         public override void SetPythonEngine(IPy4C myPy)
         {
-            _python = myPy;
-            //creates a new pod doc for analysis in python
-            //if (_podDoc == null)
-            //    _podDoc = _python.CPodDoc(Name);         
+            _python = myPy;     
             _data.SetPythonEngine(_python, Name);
         }
         public override void SetREngine(REngineObject myREngine)
@@ -2581,14 +2471,6 @@ namespace POD.Analyze
 
         private void WriteAnalysisName(ExcelExport myWriter, bool myPartOfProject)
         {
-            //if (myPartOfProject)
-            //{
-            //    myWriter.SetCellValue(1, 3, Name);
-            //}
-            //else
-            //{
-            //    myWriter.SetCellValue(1, 2, Name);
-            //}
 
             myWriter.SetCellValue(1, 2, Name);
         }
@@ -2607,20 +2489,6 @@ namespace POD.Analyze
         public double OutPFCovarianceV12 { get; set; }
 
         public double OutPFCovarianceV22 { get; set; }
-
-        /*public void InverseTransformXAxis(Controls.AHatVsAChart myChart)
-        {
-            double xMin = myChart.XAxis.Minimum;
-            double xMax = myChart.XAxis.Maximum;
-            double xIntv = myChart.XAxis.Interval;
-
-            myChart.XAxis.Minimum = _podDoc.GetInvtransformedFlawValue(xMin);
-            myChart.XAxis.Maximum = _podDoc.GetInvtransformedFlawValue(xMax);
-            myChart.XAxis.Interval = _podDoc.GetInvtransformedFlawValue(xIntv);
-
-            //myChart.OnlyGrowXAxis = true;
-            //myChart.AutoBufferXRange();
-        }*/
 
         public double OutPODMu { get; set; }
 
@@ -2700,10 +2568,7 @@ namespace POD.Analyze
             {
                 try
                 {
-                    //Debug.WriteLine(_podDoc.GetTransformedValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
-                    //return Convert.ToDecimal(_podDoc.GetTransformedValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
                     return Convert.ToDecimal(TransformAValue(_data.SmallestFlaw / 2.0, _python.TransformEnumToInt(InFlawTransform)));
-                    //return Convert.ToDecimal(_data.SmallestFlaw / 2.0)
                 }
                 catch (OverflowException)
                 {
@@ -2980,6 +2845,11 @@ namespace POD.Analyze
                 if (_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null)
                 {
                     _hmAnalysisObject = _data.HMAnalysisObject;
+                    //reset the model type to 1 in order to prevent a blank chart showing up(linear)
+                    if (Data.FlawTransform == TransformTypeEnum.Linear)
+                    {
+                        _hmAnalysisObject.ModelType = 1;
+                    }
                 }
             }
             //ditto for ahat versus a, signal response

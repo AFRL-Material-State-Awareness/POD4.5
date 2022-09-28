@@ -10,7 +10,7 @@ namespace CSharpBackendWithR
     {
         private HMAnalysisObject hmAnalysisObject;
         private double modelType;
-        public TransformBackCSharpTablesHITMISS(HMAnalysisObject hmAnalysisObjectInput)
+        public TransformBackCSharpTablesHITMISS(HMAnalysisObject hmAnalysisObjectInput, double modelTypeInput=0.0)
         {
             this.hmAnalysisObject = hmAnalysisObjectInput;
             this.modelType = this.hmAnalysisObject.ModelType;

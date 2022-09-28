@@ -1639,7 +1639,7 @@ namespace POD.Data
         //updates the tables in the GUI by getting the tables from python
         private void UpdateHitMissOutput()
         {
-            bool printDTFlag = false;
+            bool printDTFlag = true;
             TransformBackCSharpTablesHITMISS BackwardsTransform = new TransformBackCSharpTablesHITMISS(_hmAnalysisObject);
             //store original data for plotting
             try
@@ -2597,13 +2597,15 @@ namespace POD.Data
         /// <returns></returns>
         public double InvertTransformedFlaw(double myValue)
         {
+            //FlawTransform
             if (_hmAnalysisObject!=null || _aHatAnalysisObject != null)
             {
                 //return _podDoc.GetInvtransformedFlawValue(myValue);
 
                 if(_dataType== AnalysisDataTypeEnum.HitMiss)
                 {
-                    return TransformBackAValue(myValue, _hmAnalysisObject.ModelType);
+                    //return TransformBackAValue(myValue, _hmAnalysisObject.ModelType);
+                    return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
                 }
                 else
                 {
@@ -3184,7 +3186,10 @@ namespace POD.Data
             return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
 
         }
-
+        public void UpdateHitMissModel(int modelType)
+        {
+            _hmAnalysisObject.ModelType = modelType;
+        }
         public double SmallestFlaw
         {
             get

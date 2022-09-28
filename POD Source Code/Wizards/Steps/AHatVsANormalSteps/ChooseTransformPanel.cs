@@ -352,7 +352,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _analysis.InFlawTransform = chart.XTransform;
             _analysis.InResponseTransform = chart.YTransform;
-            _analysis.UpdatePythonTransforms();
+            _analysis.UpdateRTransforms();
 
             chart.RelabelAxes(_analysis.Data);
         }
@@ -376,7 +376,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _analysis.InFlawTransform = chart.XTransform;
             _analysis.InResponseTransform = chart.YTransform;
-            _analysis.UpdatePythonTransforms();
+            _analysis.UpdateRTransforms();
 
             chart.RelabelAxes(_analysis.Data);
         }
@@ -901,7 +901,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 RunAnalyses();
             else
             {
-                Analysis.UpdatePythonTransforms();
+                Analysis.UpdateRTransforms();
             }
             //RunAnalyses();
             SelectVisibleCharts();
