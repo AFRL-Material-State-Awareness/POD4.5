@@ -1105,7 +1105,7 @@ namespace POD.Controls
 
             if (yAxis != null && yAxisTransform != TransformTypeEnum.Log)
             {
-                LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset);
+                LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform);
             }
             else
             {
@@ -1119,7 +1119,7 @@ namespace POD.Controls
 
             if (xAxis != null && xAxisTransform != TransformTypeEnum.Log)
             {
-                LabelLinearAxis(ChartAreas[0].AxisX, xAxis, invertX, xLabelCount, xOffset);
+                LabelLinearAxis(ChartAreas[0].AxisX, xAxis, invertX, xLabelCount, xOffset, false, xAxisTransform);
             }
             else
             {
@@ -1184,7 +1184,7 @@ namespace POD.Controls
             }
         }
 
-        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false)
+        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear)
         {
             var lastString = "";
             var precision = 1;
@@ -1199,7 +1199,8 @@ namespace POD.Controls
                 string intvString = intv.ToString(format);
 
                 if (invert != null && intv != 0.0)
-                    intvString = invert(intv).ToString(format);
+                    //intvString = invert(intv).ToString(format);             
+                    intvString = TransformBackValue(intv, myTransform).ToString();
                 else
                     intvString = intv.ToString(format);
 
@@ -1236,7 +1237,7 @@ namespace POD.Controls
             {
                 axis.Interval = axis.Interval / 2.0;
                 chartAxis.CustomLabels.Clear();
-                LabelLinearAxis(chartAxis, axis, invert, labelCount*2-1, offset, true);
+                LabelLinearAxis(chartAxis, axis, invert, labelCount*2-1, offset, true, myTransform);
             }
         }
 
@@ -1262,6 +1263,7 @@ namespace POD.Controls
                 {
                     var value = Math.Pow(10, exp) * subExp;
                     var intv = transform(value);
+                    //var intv = TransformValue(value, );
                     var exponent = exp;
                     var valLabel = value.ToString();
 
@@ -1299,7 +1301,46 @@ namespace POD.Controls
                 LabelLog10Axis(chartAxis, axis, transform, true);
             }
         }
-
+        public double TransformBackValue(double myValue, TransformTypeEnum transform)
+        {
+            double transformValue = 0.0;
+            switch (transform)
+            {
+                case TransformTypeEnum.Linear:
+                    transformValue = myValue;
+                    break;
+                case TransformTypeEnum.Log:
+                    transformValue = Math.Exp(myValue);
+                    break;
+                case TransformTypeEnum.Inverse:
+                    transformValue = 1.0 / myValue;
+                    break;
+                default:
+                    transformValue = myValue;
+                    break;
+            }
+            return transformValue;
+        }
+        public double TransformValue(double myValue, TransformTypeEnum transform)
+        {
+            double transformValue = 0.0;
+            switch (transform)
+            {
+                case TransformTypeEnum.Linear:
+                    transformValue = myValue;
+                    break;
+                case TransformTypeEnum.Log:
+                    transformValue = Math.Log(myValue);
+                    break;
+                case TransformTypeEnum.Inverse:
+                    transformValue = 1.0 / myValue;
+                    break;
+                default:
+                    transformValue = myValue;
+                    break;
+            }
+            return transformValue;
+        }
         public virtual void ClearEverythingButPoints()
         {
 

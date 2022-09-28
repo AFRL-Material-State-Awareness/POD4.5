@@ -2948,8 +2948,6 @@ namespace POD.Data
             DataTable table;
             var isLinear = !myGetTransformed || _flawTransform == TransformTypeEnum.Linear || _flawTransform == TransformTypeEnum.Inverse;
             
-            //_podDoc.a_transform = _python.TransformEnumToInt(_flawTransform);
-
             if (_dataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.ModelType = _python.TransformEnumToInt(_flawTransform);

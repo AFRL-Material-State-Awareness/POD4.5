@@ -2805,7 +2805,14 @@ namespace POD.Analyze
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
-                    newAnalysisControlHM.ExecuteAnalysisTransforms_HM();
+                    if (InFlawTransform != TransformTypeEnum.Inverse)
+                    {
+                        newAnalysisControlHM.ExecuteAnalysisTransforms_HM();
+                    }
+                    else
+                    {
+                        newAnalysisControlHM.ExecuteReqSampleAnalysisTypeHitMiss();
+                    }
                     _hmAnalysisObject = newAnalysisControlHM.HMAnalsysResults;
                 }
                 else
