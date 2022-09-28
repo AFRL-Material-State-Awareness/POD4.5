@@ -36,13 +36,17 @@ namespace CSharpBackendWithR
         {
             if (this.srsOrRSS == 0)
             {
-                this.resultsHMAnalysis = ExecutePFAnalysisTrans();
+                this.resultsHMAnalysis = ExecutePFFullAnalysis();
             }
             else if (this.srsOrRSS == 1)
             {
                 this.resultsHMAnalysis = ExecuteRankedSetSampling();
             }
             //HMAnalsysResults = this.resultsHMAnalysis;
+        }
+        public void ExecuteAnalysisTransforms_HM()
+        {
+            this.resultsHMAnalysis = ExecutePFAnalysisTrans();
         }
         public void ExecuteAnalysisAHat()
         {
@@ -59,7 +63,7 @@ namespace CSharpBackendWithR
             this.resultsAHatAnalysis = UpdateThresholdChange();
         }
         
-        private HMAnalysisObject ExecutePFAnalysisTrans()
+        private HMAnalysisObject ExecutePFFullAnalysis()
         {
             //create the class for hitMissControl
             //HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
@@ -80,6 +84,19 @@ namespace CSharpBackendWithR
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
             //Console.WriteLine(newPFAnalysisObject);
             //finish analysis
+            //return object to UI
+            return this.newPFAnalysisObject;
+        }
+        private HMAnalysisObject ExecutePFAnalysisTrans()
+        {
+            //overwrite the max and min class each iteration
+            MaxAndMinClass newMaxMin = new MaxAndMinClass();
+            //write the max and min crack size to the pfanalysisObject
+            newMaxMin.calcCrackRange(this.newPFAnalysisObject.Flaws);
+            this.newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            this.newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            newHitMissControl.ExecuteTransformOnlyAnalysis(this.newPFAnalysisObject);
+            ReturnTransformHitMissObjects();
             //return object to UI
             return this.newPFAnalysisObject;
         }
@@ -180,6 +197,20 @@ namespace CSharpBackendWithR
             this.newPFAnalysisObject.CovarianceMatrix = this.newHitMissControl.GetCovarianceMatrixValues();
             //get the goodness of fit
             this.newPFAnalysisObject.GoodnessOfFit = this.newHitMissControl.GetGoodnessOfFit();
+            //set the separated flag to warn user if necessary
+            if (this.newPFAnalysisObject.RegressionType == "Logistic Regression")
+            {
+                this.newPFAnalysisObject.Is_Separated = this.newHitMissControl.GetSeparationFlag();
+            }
+            //used for error if the alogrithm doesn't converge
+            this.newPFAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
+        }
+        public void ReturnTransformHitMissObjects()
+        {
+            this.newPFAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
+            this.newPFAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
+            //store the original dataframe in the HM analysis object
+            this.newPFAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
             //set the separated flag to warn user if necessary
             if (this.newPFAnalysisObject.RegressionType == "Logistic Regression")
             {

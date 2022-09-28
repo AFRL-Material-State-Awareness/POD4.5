@@ -9,7 +9,6 @@ library(pracma) #practical math...contains some functions from matlab
 library(ggResidpanel)
 library(carData)
 library(car) # Need this for durbinWatsonTest
-#library(tibble)
 library(survival)
 library(corrplot)
 folderLocation=dirname(rstudioapi::getSourceEditorContext()$path)
@@ -19,14 +18,13 @@ source(paste(folderLocation, "/SignalResponseMainAnalysisRObject.R", sep=""))
 data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TRUE)
 data_obs=na.omit(data_obs)
 begin<-proc.time()
+###################################################### Uncomment this for boxcox transform (leave lambda in to prevent a varaible not found error)
 #bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
 lambda<-0
 #data_obs$x=log(data_obs$x)
 #lambda<-bc$x[which.max(bc$y)]
 #data_obs$y<-(data_obs$y^lambda-1)/lambda
-#data_obs$x=1/data_obs$x
-#data_obs$y=data_obs$y3
-#$y^1.11-1/1.11
+##############################################################
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0)
 data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
@@ -62,13 +60,9 @@ newSRAnalysis$plotCI(results)
 newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=4.0, modelType=1, lambda=lambda)
 slope<-newSRAnalysis$getModelSlope()
 
-removeRows<-c()
-for (i in 1:nrow(threshDF)){
-  if(threshDF$threshold[i]<0){
-    removeRows<-c(removeRows, i)
-  }
-}
-threshDF<-threshDF[-removeRows,]
+
+
+
 # full<-lm(y~x, data=data_obs)
 # #constVector=rep(linearModel_lm$coefficients[[1]], nrow(data_obs))
 # #partial<-lm(constVector~x, data= data_obs)

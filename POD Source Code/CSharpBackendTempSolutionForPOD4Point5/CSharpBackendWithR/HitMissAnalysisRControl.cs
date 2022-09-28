@@ -46,7 +46,16 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType='"+newTranformAnalysis.RegressionType+"',"
                 +"CIType='"+newTranformAnalysis.CIType+
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize)");
-            this.myREngine.Evaluate("newAnalysis$detAnalysisApproach()");
+            this.myREngine.Evaluate("newAnalysis$executeFullAnalysis()");
+        }
+        public void ExecuteTransformOnlyAnalysis(HMAnalysisObject newTranformAnalysis)
+        {
+            this.createDataFrameinGlobalEnvr(newTranformAnalysis);
+            //execute the function for transform analysis only (used to speed up the program)
+            this.myREngine.Evaluate("newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType='" + newTranformAnalysis.RegressionType + "',"
+                + "CIType='" + newTranformAnalysis.CIType +
+                "', N=nrow(hitMissDF), normSampleAmount=normSampleSize)");
+            this.myREngine.Evaluate("newAnalysis$executeFitAnalysisOnly()");
         }
 
         public void ExecuteRSS(HMAnalysisObject newTranformAnalysis)
@@ -132,9 +141,6 @@ namespace CSharpBackendWithR
         }
         public DataTable GetOrigHitMissDF()
         {
-            //myREngine.Evaluate("hitMissDF$index=NULL");
-            //myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'x'] = 'flaw'");
-            //myREngine.Evaluate("names(hitMissDF)[names(hitMissDF) == 'y'] = 'hitrate'");
             RDotNet.DataFrame origDataFrame = myREngine.Evaluate("newAnalysis$getHitMissDF()").AsDataFrame();
             DataTable originalData = myREngineObject.rDataFrameToDataTable(origDataFrame);
             return originalData;

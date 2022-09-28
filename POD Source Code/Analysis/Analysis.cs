@@ -932,9 +932,7 @@ namespace POD.Analyze
             //REngineObject.REngineRunning = true;
             analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
             analysisLauncher.ProgressChanged += new ProgressChangedEventHandler(Background_AnalysisProgressChanged);
-            analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
-
-            
+            analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);           
         }
 
         public TestRating GetTestRatingFromLabel(string myLabel)
@@ -1171,8 +1169,8 @@ namespace POD.Analyze
                 }
                 else
                 {
+                    //Debug.WriteLine("Warning: something went wrong with calculating the vcov matrix!");
                     //MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
-                    MessageBox.Show("Warning: something went wrong with calculating the vcov matrix!");
                     OutPFCovarianceV11 = -1;
                     OutPFCovarianceV12 = -1;
                     OutPFCovarianceV22 = -1;
@@ -2807,7 +2805,7 @@ namespace POD.Analyze
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
-                    newAnalysisControlHM.ExecuteReqSampleAnalysisTypeHitMiss();
+                    newAnalysisControlHM.ExecuteAnalysisTransforms_HM();
                     _hmAnalysisObject = newAnalysisControlHM.HMAnalsysResults;
                 }
                 else

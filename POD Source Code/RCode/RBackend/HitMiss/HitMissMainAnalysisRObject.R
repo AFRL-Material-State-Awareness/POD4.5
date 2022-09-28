@@ -211,7 +211,17 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               }
                               return(detRegressionResults)
                             },
-                            detAnalysisApproach=function(){
+                            executeFitAnalysisOnly=function(){
+                              regressionResults<-determineRegressionType()
+                              residualTableTemp<-data.frame(
+                                x=hitMissDF$x,
+                                transformFlaw=integer(nrow(hitMissDF)),
+                                t_trans=regressionResults$fitted.values,
+                                Confidence_Interval=rep(0,nrow(hitMissDF))
+                              )
+                              setResidualTable(residualTableTemp)
+                            },
+                            executeFullAnalysis=function(){
                               #execute regression with original dataset depending which type
                               #is called (logit, firth, lasso, etc)
                               regressionResults<-determineRegressionType()

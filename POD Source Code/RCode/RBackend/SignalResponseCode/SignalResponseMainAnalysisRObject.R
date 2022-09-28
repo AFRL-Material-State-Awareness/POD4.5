@@ -48,16 +48,6 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       thesholdTable<<-psThreshDF
                                     },
                                     getThresholdDF=function(){
-                                      #filter out negative threhold values
-                                      #removeRows<-c()
-                                      #for (i in 1:nrow(thesholdTable)){
-                                      #  if(thesholdTable$threshold[i]<0){
-                                      #    removeRows<-c(removeRows, i)
-                                      #  }
-                                      #}
-                                      #if(length(removeRows)>0){
-                                      #  thesholdTable<<-thesholdTable[-removeRows,]
-                                      #}
                                       return(thesholdTable)
                                     },
                                     setModelIntercept=function(psModelInt){
@@ -383,7 +373,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     #used for Debugging ONLY
                                     plotCI=function(df){
                                       myPlot=ggplot(data=df, mapping=aes(x=flaw, y=confidence))+geom_point()+
-                                        ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
+                                        ggtitle(paste("Confidence interval Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
                                       print(myPlot)
                                     },
                                     #used for Debugging ONLY

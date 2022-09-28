@@ -24,6 +24,7 @@ hitMissDF$y.1=NULL
 names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
 #hitMissDF$x= 1/hitMissDF$x
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
+##### Import necessary R classes to perform hitmiss analysis
 source(paste(codeLocation,"/RSSComponentsObject.R",sep=""))
 source(paste(codeLocation,"/RankedSetSamplingMainRObject.R",sep=""))
 source(paste(codeLocation,"/HitMissMainAnalysisRObject.R",sep=""))
@@ -42,7 +43,8 @@ type="Logistic Regression"
 begin=Sys.time()
 #for(i in 1:10){
   newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
-  newAnalysis$detAnalysisApproach()
+  newAnalysis$executeFullAnalysis()
+  #newAnalysis$executeFitAnalysisOnly()
   results<-newAnalysis$getResults()
   residTab<-newAnalysis$getResidualTable()
   aValues<-newAnalysis$getKeyAValues()
@@ -111,12 +113,6 @@ print(end-begin)
 # }
 # resultsDFDeBUG<-cbind(stdWald,MWald, LR, MLR )
 
-for(i in 1:detectCores()){
-  ptm <- proc.time()
-  makeCluster(i)
-  print("core time")
-  print(proc.time() - ptm)
-}
 
-assign(".lib.loc", "C:/Users/gohmancm/Desktop/newPODrepository/POD Source Code/RLibs/win-library/3.5", envir = environment(.libPaths))
+#assign(".lib.loc", "C:/Users/gohmancm/Desktop/newPODrepository/POD Source Code/RLibs/win-library/3.5", envir = environment(.libPaths))
 

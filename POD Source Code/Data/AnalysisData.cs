@@ -1633,13 +1633,20 @@ namespace POD.Data
             }
             else
             {
-                UpdateHitMissOutput();
+                if (myCalculationType == RCalculationType.Full)
+                {
+                    UpdateHitMissOutput();
+                }
+                else
+                {
+                    UpdateHitMissTransformOutput();
+                }
             }
         }
         //updates the tables in the GUI by getting the tables from python
         private void UpdateHitMissOutput()
         {
-            bool printDTFlag = true;
+            bool printDTFlag = false;
             TransformBackCSharpTablesHITMISS BackwardsTransform = new TransformBackCSharpTablesHITMISS(_hmAnalysisObject);
             //store original data for plotting
             try
@@ -1707,7 +1714,49 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Iterations Error");
             }
-        }        
+        }
+        //updates the tables in the GUI by getting the tables from python
+        private void UpdateHitMissTransformOutput()
+        {
+            bool printDTFlag = false;
+            TransformBackCSharpTablesHITMISS BackwardsTransform = new TransformBackCSharpTablesHITMISS(_hmAnalysisObject);
+            //store original data for plotting
+            try
+            {
+
+                _originalData = BackwardsTransform.TransformBackOrigData(_hmAnalysisObject.HitMissDataOrig);
+                _originalData.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                _originalData = _originalData.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_originalData);
+            }
+
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
+            }
+            try
+            {
+                _totalFlawCount = _hmAnalysisObject.Flaws.Count();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
+            }
+            try
+            {
+                _residualUncensoredTable = BackwardsTransform.TransformBackResidualUncensoredTable(_hmAnalysisObject.ResidualTable);
+                _residualUncensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_residualUncensoredTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
+            }
+
+        }
         private void UpdateAHatOutput()
         {
             var watch = new Stopwatch();

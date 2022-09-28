@@ -88,7 +88,7 @@ namespace CSharpBackendWithR
             AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(analysisEngine, newAnalysis);
             newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
             HMAnalysisObject finalAnalysis = newAnalysisControl.HMAnalsysResults;
-            //HMAnalysisObject finalAnalysis= newAnalysisControl.ExecutePFAnalysisTrans();
+            //HMAnalysisObject finalAnalysis= newAnalysisControl.ExecutePFFullAnalysis();
             watch.Stop();
             printcSharpDatatables(finalAnalysis);
             
