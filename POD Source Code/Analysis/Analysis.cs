@@ -2144,7 +2144,7 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, "Intercept");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Slope");                
                 myWriter.SetCellValue(rowIndex++, colIndex, "Residual Error");
-                myWriter.SetCellValue(rowIndex++, colIndex, "Repeatability Error");
+                myWriter.SetCellValue(rowIndex++, colIndex, "R-Squared Value");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Mu");
                 myWriter.SetCellValue(rowIndex++, colIndex, "Sigma");
             }

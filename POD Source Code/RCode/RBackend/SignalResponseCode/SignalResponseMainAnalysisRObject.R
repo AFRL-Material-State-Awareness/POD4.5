@@ -15,9 +15,18 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         residualTable="data.frame",
                                                                         modelIntercept="numeric",
                                                                         modelSlope="numeric",
-                                                                        thesholdTable="data.frame"
+                                                                        thesholdTable="data.frame",
+                                                                        #used  to keep track of the original data
+                                                                        #when more than one inspector is involved
+                                                                        originalData="data.frame"
                                                                         ),
                                   methods=list(
+                                    setOriginalData=function(psOrigData){
+                                      originalData<<-psOrigData
+                                    },
+                                    getOriginalData=function(){
+                                      return(originalData)
+                                    },
                                     setLinearModel=function(psLMObject){
                                       linearModel<<-psLMObject
                                     },
@@ -101,8 +110,16 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     getKeyAValues=function(){
                                       return(keyAValues)
                                     },
+                                    prepareData=function(){
+                                      testInstance<-PrepareData$new(signalRespDF=signalRespDF)
+                                      testInstance$getOrigDataframe()
+                                      testInstance$createAvgRespDF()
+                                      signalRespDF=testInstance$createAvgRespDF()
+                                    },
                                     executeAhatvsA=function(){
-                                      #print(signalResp)
+                                      #preprocess the input if there's more than one inspector
+                                      setOriginalData(signalRespDF)
+                                      prepareData()
                                       #perform necessary transforms
                                       performTransforms()
                                       # Fitting a linear model
@@ -113,10 +130,14 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       linearModDF=data.frame(
                                         #Index= 1:length(linearModel_lm$fitted.values),
                                         x=signalRespDF$x,
-                                        fit=linearModel_lm$fitted.values,
-                                        y=signalRespDF$y
-                                        
+                                        fit=linearModel_lm$fitted.values
                                       )
+                                      #append the responses after the fitted value
+                                      responsesAll<-subset(originalData, select = -c(Index, x, event))
+                                      linearModDF<-cbind(linearModDF, responsesAll)
+                                      setLinearModel(linearModDF)
+                                      #append the responses at the end of the flaws and fitted values
+                                      responsesOnly=or
                                       setLinearModel(linearModDF)
                                       #don't perform linear tests if user is in transform panel
                                       if(fullAnalysis){
@@ -146,12 +167,14 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         setModelSlope(ahatvACensored$coefficients[[2]])
                                         #set the linear model so it can be returned
                                         linearModDF=data.frame(
-                                          #Index= 1:length(linearModel_lm$fitted.values),
                                           x=signalRespDF$x,
                                           fit=ahatvACensored$linear.predictors,
-                                          y=signalRespDF$y
                                         )
+                                        #append the responses after the fitted value
+                                        responsesAll<-subset(originalData, select = -c(Index, x, event))
+                                        linearModDF<-cbind(linearModDF, responsesAll)
                                         setLinearModel(linearModDF)
+                                        #calculate the residuals from the linear model
                                         residuals=c()
                                         for(i in 1:nrow(linearModDF)){
                                           thisResid=signalRespDF$y[i]-ahatvACensored$linear.predictors[i]

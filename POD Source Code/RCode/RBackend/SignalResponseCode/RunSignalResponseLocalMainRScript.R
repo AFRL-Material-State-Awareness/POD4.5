@@ -14,9 +14,11 @@ library(corrplot)
 folderLocation=dirname(rstudioapi::getSourceEditorContext()$path)
 source(paste(folderLocation, "/GenPODSignalResponeRObject.R", sep=""))
 source(paste(folderLocation, "/SignalResponseMainAnalysisRObject.R", sep=""))
+source(paste(folderLocation, "/PrepareDataWithMultipleResponsesRObject.R", sep=""))
 #data_obs = read.csv(paste(folderLocation,'/Plot_Data_50.csv',sep=""), header=TRUE, col.names=c("y","x"))
 data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TRUE)
 data_obs=na.omit(data_obs)
+#data_obs$Index=NULL
 begin<-proc.time()
 ###################################################### Uncomment this for boxcox transform (leave lambda in to prevent a varaible not found error)
 #bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
@@ -57,8 +59,8 @@ newSRAnalysis$plotCI(results)
 #  thisError=data_obs$y[i]-mean(data_obs$y)
 #  residualError=c(residualError, thisError^2)
 #}
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=4.0, modelType=1, lambda=lambda)
-slope<-newSRAnalysis$getModelSlope()
+#newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=4.0, modelType=1, lambda=lambda)
+#slope<-newSRAnalysis$getModelSlope()
 
 
 
