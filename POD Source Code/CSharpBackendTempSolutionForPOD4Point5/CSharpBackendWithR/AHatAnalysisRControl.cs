@@ -140,6 +140,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("fullAnalysis<-FALSE");
             //execute class with appropriate parameters
             InitializeRClassForSignalResponse(newTranformAnalysis.Pod_threshold, newTranformAnalysis.ModelType);
+            this.myREngine.Evaluate("newSRAnalysis$prepareData()");
             this.myREngine.Evaluate("newSRAnalysis$performTransforms()");
             this.myREngine.Evaluate("ahatvACensored<-newSRAnalysis$genAhatVersusACensored()");
             this.myREngine.Evaluate("newSRAnalysis$genAvaluesAndMatrix(ahatvACensored)");

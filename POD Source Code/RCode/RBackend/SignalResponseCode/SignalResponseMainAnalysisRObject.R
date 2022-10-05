@@ -168,7 +168,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         #set the linear model so it can be returned
                                         linearModDF=data.frame(
                                           x=signalRespDF$x,
-                                          fit=ahatvACensored$linear.predictors,
+                                          fit=ahatvACensored$linear.predictors
                                         )
                                         #append the responses after the fitted value
                                         responsesAll<-subset(originalData, select = -c(Index, x, event))

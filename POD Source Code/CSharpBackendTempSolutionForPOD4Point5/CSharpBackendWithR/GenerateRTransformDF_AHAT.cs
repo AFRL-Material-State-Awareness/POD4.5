@@ -84,6 +84,15 @@ namespace CSharpBackendWithR
                 this.indices.Add(i);
             }
         }
+        private void createIndicesArray()
+        {
+            //create an indices column for the r dataframe regardless of transform type
+            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
+            for (int i = 1; i < this.cracks.Count; i++)
+            {
+                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
+            }
+        }
         private void LinearSignalGeneration()
         {
             Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
@@ -231,243 +240,64 @@ namespace CSharpBackendWithR
         private void NoTransformDF()
         {
             LinearSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(" + this.cracks[0].ToString() + ")");
-            this.myREngine.Evaluate("y<-c(" + this.signalResponse[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x," + this.cracks[i].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(y," + this.signalResponse[i].ToString() + ")");
-            }
-            */
             LinearFlawGeneration();
         }
         private void XAxisOnlyLogTransform()
         {
             LinearSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(log(" + this.cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(" + this.signalResponse[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x,log(" + this.cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y," + this.signalResponse[i].ToString() + ")");
-            }
-            */
             LogFlawGeneration();
         }
         private void YAxisOnlyLogTransform()
         {
             LogSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(" + this.cracks[0].ToString() + ")");
-            this.myREngine.Evaluate("y<-c(log(" + this.signalResponse[0].ToString() + "))");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x," + this.cracks[i].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(y, log(" + this.signalResponse[i].ToString() + "))");
-            }
-            */
             LinearFlawGeneration();
         }
         private void YAndXLogTransform()
         {
             LogSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(log(" + this.cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(log(" + this.signalResponse[0].ToString() + "))");
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x,log(" + this.cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y, log(" + this.signalResponse[i].ToString() + "))");
-            }
-            */
             LogFlawGeneration();
         }
         private void LinearXBoxcox()
         {
             BoxCoxSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(" + this.cracks[0].ToString() + ")");
-            this.myREngine.Evaluate("y<-c(" + this.signalResponse[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x," + this.cracks[i].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(y, " + this.signalResponse[i].ToString() + ")");
-            }
-            */
             LinearFlawGeneration();
             SetLambdaValueInR();
-            /*
-            //box-cox tranform has been selected. Find the optimal value for lambda!
-            this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
-            //get the value of lambda
-            this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
-            //tranform y-axis with lambda
-            this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
-            */
         }
         private void LogXBoxcox()
         {
             BoxCoxSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(log(" + cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x, log(" + cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y, " + signalResponse[i].ToString() + ")");
-            }
-            */
             LogFlawGeneration();
             SetLambdaValueInR();
-            /*
-            //box-cox tranform has been selected. Find the optimal value for lambda!
-            this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
-            //get the value of lambda
-            this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
-            //tranform y-axis with lambda
-            this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
-            */
         }
         private void InverseXBoxcox()
         {
             BoxCoxSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(1/(" + cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(" + signalResponse[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x, 1/(" + cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y, " + signalResponse[i].ToString() + ")");
-            }
-            */
             InverseFlawGeneration();
             SetLambdaValueInR();
-            /*
-            //box-cox tranform has been selected. Find the optimal value for lambda!
-            this.myREngine.Evaluate("bc<-boxcox(y~x, plotit=FALSE)");
-            //get the value of lambda
-            this.myREngine.Evaluate("lambdaInput <- bc$x[which.max(bc$y)]");
-            //tranform y-axis with lambda
-            this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
-            */
         }
         private void LinearXInverseY()
         {
             InverseSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(" + this.cracks[0].ToString() + ")");
-            this.myREngine.Evaluate("y<-c(1/(" + this.signalResponse[0].ToString() + "))");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x," + this.cracks[i].ToString() + ")");
-                this.myREngine.Evaluate("y<-c(y,1/(" + this.signalResponse[i].ToString() + "))");
-            }
-            */
             LinearFlawGeneration();
         }
         private void LogXInverseY()
         {
             InverseSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(log(" + this.cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(1/(" + this.signalResponse[0].ToString() + "))");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x,log(" + this.cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y,1/(" + this.signalResponse[i].ToString() + "))");
-            }
-            */
             LogFlawGeneration();
         }
         private void InverseXLinearY()
         {
             LinearSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(1/(" + this.cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(" + this.signalResponse[0].ToString() + ")");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x,1/(" + this.cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y," + this.signalResponse[i].ToString() + ")");
-            }
-            */
             InverseFlawGeneration();
         }
         private void InverseXLogY()
         {
             LogSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(1/(" + this.cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(log(" + this.signalResponse[0].ToString() + "))");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x,1/(" + this.cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y,log(" + this.signalResponse[i].ToString() + "))");
-            }
-            */
             InverseFlawGeneration();
         }
         private void InverseXInverseY()
         {
             InverseSignalGeneration();
-            /*
-            //initialize the matrices used to create the input dataframe
-            this.myREngine.Evaluate("Index<-matrix(" + this.indices[0].ToString() + ")");
-            this.myREngine.Evaluate("x<-c(1/(" + this.cracks[0].ToString() + "))");
-            this.myREngine.Evaluate("y<-c(1/(" + this.signalResponse[0].ToString() + "))");
-            //acumulate r matrices in order to create the dataframe
-            for (int i = 1; i < this.cracks.Count; i++)
-            {
-                this.myREngine.Evaluate("Index<-c(Index," + this.indices[i].ToString() + ")");
-                this.myREngine.Evaluate("x<-c(x,1/(" + this.cracks[i].ToString() + "))");
-                this.myREngine.Evaluate("y<-c(y,1/(" + this.signalResponse[i].ToString() + "))");
-            }
-            */
             InverseFlawGeneration();
         }
         private void SetLambdaValueInR()
