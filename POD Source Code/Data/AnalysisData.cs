@@ -1759,9 +1759,9 @@ namespace POD.Data
         }
         private void UpdateAHatOutput()
         {
-            var watch = new Stopwatch();
+            //var watch = new Stopwatch();
 
-            watch.Start();
+            //watch.Start();
             TransformBackCSharpTablesAHAT BackwardsTransform = new TransformBackCSharpTablesAHAT(_aHatAnalysisObject);
             bool printDTFlag = false;
             //double lambda;
@@ -1794,6 +1794,7 @@ namespace POD.Data
             }
             try
             {
+                //in the original code, this table does not take the average of the reponses and instead displays the results for inspector 1?
                 _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 _residualRawTable = BackwardsTransform.TransformBackColResidualTables(_residualRawTable);
                 _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
@@ -1956,9 +1957,9 @@ namespace POD.Data
                 MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
             }
 
-            watch.Stop();
+            //watch.Stop();
 
-            var sortTime = watch.ElapsedMilliseconds;
+            //var sortTime = watch.ElapsedMilliseconds;
         }
         //only executed when doing the analysis in the transform panel (POD curve, threshold table, etc, are omitted for 
         //optimization purposes)

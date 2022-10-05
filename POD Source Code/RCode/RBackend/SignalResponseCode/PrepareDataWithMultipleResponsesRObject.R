@@ -27,9 +27,3 @@ PrepareData<-setRefClass("PrepareData", fields = list(signalRespDF="data.frame",
                              setAvgRespDF(avgResponseDF)
                            }
                          ))
-
-
-#testInstance<-PrepareData$new(signalRespDF=data_obs)
-#testInstance$getOrigDataframe()
-#testInstance$createAvgRespDF()
-#data_obs2=testInstance$createAvgRespDF()

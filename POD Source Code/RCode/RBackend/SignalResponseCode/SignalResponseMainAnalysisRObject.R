@@ -114,7 +114,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       testInstance<-PrepareData$new(signalRespDF=signalRespDF)
                                       testInstance$getOrigDataframe()
                                       testInstance$createAvgRespDF()
-                                      signalRespDF=testInstance$createAvgRespDF()
+                                      signalRespDF<<-testInstance$createAvgRespDF()
                                     },
                                     executeAhatvsA=function(){
                                       #preprocess the input if there's more than one inspector

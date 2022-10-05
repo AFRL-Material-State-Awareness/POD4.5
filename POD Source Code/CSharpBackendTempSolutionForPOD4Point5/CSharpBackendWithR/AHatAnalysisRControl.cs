@@ -25,10 +25,6 @@ namespace CSharpBackendWithR
             List<double> cracksCensored = newAHatAnalysis.FlawsCensored;
             List<double> signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
-            //needed for the r code 
-            //this.myREngine.Evaluate("normSampleSize<-" + a_x_n.ToString());
-            //if (newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName].Count() != 0 || 
-            //    newAHatAnalysis.ResponsesCensoredRight[newAHatAnalysis.SignalResponseName].Count() != 0)
             if (newAHatAnalysis.ResponsesCensoredLeft.Count() != 0 || newAHatAnalysis.ResponsesCensoredRight.Count() != 0)
             {
                 List<double> responsesLeftCensored = newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName];
@@ -74,22 +70,54 @@ namespace CSharpBackendWithR
             }
             this.GenerateDataFrameInR = new GenerateRTransformDF_AHAT(this.myREngineObject, newAHatAnalysis);
             this.GenerateDataFrameInR.GenerateTransformDataframe();
-            //build the dataframe in the global environment
-            //this dataframe will remain in the global environment
-            this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y, event)");
-            this.myREngine.Evaluate("rm(Index)");
-            this.myREngine.Evaluate("rm(x)");
-            this.myREngine.Evaluate("rm(y)");
-            this.myREngine.Evaluate("rm(event)");
-            this.myREngine.Evaluate("rm(bc)");
+            try
+            {
+                BuildDataFrame(newAHatAnalysis);
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("Testing failure");
+            }
+            try
+            {
+                //build the dataframe in the global environment
+                //this dataframe will remain in the global environment
+                this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y, event)");
+                this.myREngine.Evaluate("rm(y)");
+            }
+            catch(Exception myError)
+            {
+                System.Diagnostics.Debug.WriteLine(myError);
+            }
+            finally
+            {
+                this.myREngine.Evaluate("rm(Index)");
+                this.myREngine.Evaluate("rm(x)");
+                this.myREngine.Evaluate("rm(event)");
+                this.myREngine.Evaluate("rm(bc)");
+            }
+
+        }
+        private void BuildDataFrame(AHatAnalysisObject newAHatAnalysis)
+        {
+            //add the index and flaws to the RDataframe
+            this.myREngine.Evaluate("AHatDFTest<-data.frame(Index,x)");
+            //append the number of reponses (most of the time it will just be 1
+            for(int i=0; i< newAHatAnalysis.Responses.Count; i++)
+            {
+                this.myREngine.Evaluate("AHatDFTest <- cbind(AHatDFTest, y" + i.ToString() + ")");
+                //destroy the reponse array after it's been added
+                this.myREngine.Evaluate("rm(y"+i.ToString()+")");
+            }
+            //finally append the event variable
+            this.myREngine.Evaluate("AHatDFTest <- cbind(AHatDFTest, event)");
         }
         public void ExecuteAnalysis(AHatAnalysisObject newTranformAnalysis)
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
             this.myREngine.Evaluate("fullAnalysis<-TRUE");
             //execute class with appropriate parameters
-            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold+", " +
-                "modelType="+newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
+            InitializeRClassForSignalResponse(newTranformAnalysis.Pod_threshold, newTranformAnalysis.ModelType);
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
             //remove misc variables from the global environment
             this.myREngine.Evaluate("rm(lambdaInput)");
@@ -100,8 +128,7 @@ namespace CSharpBackendWithR
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
             this.myREngine.Evaluate("fullAnalysis<-FALSE");
             //execute class with appropriate parameters
-            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold + ", " +
-                "modelType=" + newTranformAnalysis.ModelType + ", lambda=lambdaInput)");
+            InitializeRClassForSignalResponse(newTranformAnalysis.Pod_threshold, newTranformAnalysis.ModelType);
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
             //remove misc variables from the global environment
             this.myREngine.Evaluate("rm(lambdaInput)");
@@ -112,8 +139,7 @@ namespace CSharpBackendWithR
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
             this.myREngine.Evaluate("fullAnalysis<-FALSE");
             //execute class with appropriate parameters
-            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDF, y_dec=" + newTranformAnalysis.Pod_threshold + ", " +
-                "modelType=" + newTranformAnalysis.ModelType + ", lambda=lambdaInput)");
+            InitializeRClassForSignalResponse(newTranformAnalysis.Pod_threshold, newTranformAnalysis.ModelType);
             this.myREngine.Evaluate("newSRAnalysis$performTransforms()");
             this.myREngine.Evaluate("ahatvACensored<-newSRAnalysis$genAhatVersusACensored()");
             this.myREngine.Evaluate("newSRAnalysis$genAvaluesAndMatrix(ahatvACensored)");
@@ -122,6 +148,11 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("rm(ahatvACensored)");
             this.myREngine.Evaluate("rm(fullAnalysis)");
+        }
+        private void InitializeRClassForSignalResponse(double pod_threshold, int modelType)
+        {
+            this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDFTest, y_dec=" + pod_threshold + ", " +
+                "modelType=" + modelType + ", lambda=lambdaInput)");
         }
         public DataTable GetLinearFitTableForUI()
         {
