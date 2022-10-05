@@ -2620,6 +2620,7 @@ namespace POD.Analyze
                     value = 0;
                 }
             }
+            /*
             else if (myValue <= 0.0M && InResponseTransform == TransformTypeEnum.BoxCox)
             {
                 try
@@ -2636,6 +2637,7 @@ namespace POD.Analyze
                     value = 0;
                 }
             }
+            */
             try
             {
                 //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
@@ -2889,7 +2891,7 @@ namespace POD.Analyze
                     //transformValue = myValue;
                     break;
                 case 5:
-                    transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
+                    transformValue = (Math.Pow(myValue, InLambdaValue) - 1) / InLambdaValue;
                     break;
 
                 default:

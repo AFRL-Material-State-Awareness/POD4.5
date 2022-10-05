@@ -1272,7 +1272,7 @@ namespace POD.Data
                     //var maxChanged = new List<int>();
 
                     //filter or keep values to transform safe
-                    if(myTransformType == TransformTypeEnum.Inverse || myTransformType == TransformTypeEnum.Log)// || FilterTransformedDataByRanges)
+                    if(myTransformType == TransformTypeEnum.Inverse || myTransformType == TransformTypeEnum.Log || myTransformType == TransformTypeEnum.BoxCox)// || FilterTransformedDataByRanges)
                     {
                         for(int i = 0; i < values.Count; i++)
                         {
@@ -4114,7 +4114,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 5;
+            int limit = 100;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

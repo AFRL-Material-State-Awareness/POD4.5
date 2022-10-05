@@ -422,7 +422,42 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         {
             Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
             Analysis.InResponseTransform = _yTransformBox.SelectedTransform;
-
+            //used to prevent the lambda numeric up down event from firing when the user selects boxcox
+            if (_yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox)
+            {
+                _boxCoxLambda.ValueChanged -= this.NumericUpDown_ValueChanged;
+            }
+            
+            //get temporary lambda if box-cox is selected-this needs to be before the boundry line updates in order to transform back with the correct lambda value
+            if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+            {
+                //if statement needs to be nested in order to ensure the lambda input box is enabled upon box-cox being selected in
+                //the chooseTransform panel.
+                if (Analysis._finalAnalysisAHat != null)
+                {
+                    double lambdaTemp;
+                    AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
+                    List<double> tempFlaws = currAnalysis.Flaws;
+                    List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
+                    TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
+                    lambdaTemp = TempLambda.CalcTempLambda();
+                    Analysis.InLambdaValue = lambdaTemp;
+                    _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
+                    //keep from running the analyis twice
+                    //return;
+                }
+                else
+                {
+                    _boxCoxLambda.Value = Convert.ToDecimal(Analysis.InLambdaValue);
+                }
+                _labelForLamdaInput.Enabled = true;
+                _boxCoxLambda.Enabled = true;
+            }
+            else
+            {
+                _labelForLamdaInput.Enabled = false;
+                _boxCoxLambda.Enabled = false;
+            }
             if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
             {
                 var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
@@ -471,38 +506,14 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
                 mainChart.SetThresholdBoundary(y, false);
             }
-            //get temporary lambda if box-cox is selected
-            if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
-            {
-                //if statement needs to be nested in order to ensure the lambda input box is enabled upon box-cox being selected in
-                //the chooseTransform panel.
-                if(Analysis._finalAnalysisAHat != null)
-                {
-                    double lambdaTemp;
-                    AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
-                    List<double> tempFlaws = currAnalysis.Flaws;
-                    List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
-                    TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
-                    lambdaTemp = TempLambda.CalcTempLambda();
-                    Analysis.InLambdaValue = lambdaTemp;
-                    _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
-                    //keep from running the analyis twice
-                    //return;
-                }
-                else
-                {
-                    _boxCoxLambda.Value = Convert.ToDecimal(Analysis.InLambdaValue);
-                }
-                _labelForLamdaInput.Enabled = true;
-                _boxCoxLambda.Enabled = true;
-            }
-            else
-            {
-                _labelForLamdaInput.Enabled = false;
-                _boxCoxLambda.Enabled = false;
-            }
+            
 
             ForceUpdateAfterTransformChange();
+
+            if(_yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox)
+            {
+                _boxCoxLambda.ValueChanged += this.NumericUpDown_ValueChanged;
+            }
         }
         /*
         private void GetTempLambda()
@@ -841,6 +852,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         }
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
         {
+
             Analysis.AnalysisCalculationType = RCalculationType.Full;
             if (_boxCoxLambda.Value==0.0m)
             {
@@ -856,6 +868,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             //ForceUpdateAfterLambdaChange();
             _previousLambda = _boxCoxLambda.Value;
         }
+
         protected override void DisableInputControls()
         {
             //foreach (Annotation anno in MainChart.Annotations)
@@ -922,11 +935,29 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
             {
                 if (mainChart.FindValue(ControlLine.LeftCensor, ref value))
+                {
                     this.leftCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
+                    //if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox && this.leftCensorControl.Value > Convert.ToDecimal(Analysis.InResponseMin))
+                    //{
+                    //    this.leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin) - 1.0m;
+                    //}
+                }
+                
 
                 if (mainChart.FindValue(ControlLine.RightCensor, ref value))
+                {
                     this.rightCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
+                    /*
+                    if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox && Analysis._finalAnalysisAHat != null)
+                    {
+                        double newValue = Analysis._finalAnalysisAHat.Responses[Analysis._finalAnalysisAHat.SignalResponseName].Max();
+                        double transformedNewValue = Analysis.TransformValueForYAxis(newValue);
+                        this.rightCensorControl.Value = Convert.ToDecimal(transformedNewValue);
+                    }
+                    */
+                }
 
+                
                 if (mainChart.FindValue(ControlLine.Threshold, ref value))
                     this.thresholdControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
             }

@@ -94,7 +94,7 @@ namespace POD.Controls
             //fix any potential errors that would cause an invalid strip chart to be displayed
             if (Double.IsNaN(_rightCensorLine.Y) || ChartAreas[0].AxisY.Maximum < _rightCensorLine.Y)
                 _rightCensorLine.Y = ChartAreas[0].AxisY.Maximum;
-
+            
             if (Double.IsNaN(_leftCensorLine.Y) || ChartAreas[0].AxisY.Minimum > _leftCensorLine.Y)
                 _leftCensorLine.Y = ChartAreas[0].AxisY.Minimum;
 
