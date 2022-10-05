@@ -303,9 +303,9 @@ namespace CSharpBackendWithR
         private void SetLambdaValueInR()
         {
             //get the value of lambda
-            this.myREngine.Evaluate("lambdaInput <-"+ this.lambda.ToString());
+            //this.myREngine.Evaluate("lambdaInput <-"+ this.lambda.ToString());
             //tranform y-axis with lambda
-            this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
+            //this.myREngine.Evaluate("y<-(y^lambdaInput-1)/lambdaInput");
         }
         private void SetLambdaValueAndTransformInR()
         {
