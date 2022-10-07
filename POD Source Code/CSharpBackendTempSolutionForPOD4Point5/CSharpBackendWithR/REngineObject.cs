@@ -52,7 +52,7 @@ namespace CSharpBackendWithR
             string homePath;
             REngine engine;
             //initialize the R engine
-            if (true)
+            if (false)
             {
                 try
                 {
@@ -73,15 +73,15 @@ namespace CSharpBackendWithR
             {
                 try
                 {
-                    rPath = this.applicationPath + @"\R-4.1.2\bin\i386";
-                    homePath = this.applicationPath + @"\R-4.1.2\";
+                    rPath = this.applicationPath + @"\R-4.0.0\bin\i386";
+                    homePath = this.applicationPath + @"\R-4.0.0\";
                     REngine.SetEnvironmentVariables(rPath, homePath);
                     engine = REngine.GetInstance();
                 }
                 catch (Exception e)
                 {
-                    rPath = this.applicationPath + @"\R-4.1.2\bin\x64";
-                    homePath = this.applicationPath + @"\R-4.1.2\";
+                    rPath = this.applicationPath + @"\R-4.0.0\bin\x64";
+                    homePath = this.applicationPath + @"\R-4.0.0\";
                     REngine.SetEnvironmentVariables(rPath, homePath);
                     engine = REngine.GetInstance();
                 }
@@ -226,7 +226,7 @@ namespace CSharpBackendWithR
             //this.rEngine.Evaluate("library(logistf)");
             this.rEngine.Evaluate("library(parallel)");
             //used to interact with the python scripts
-            this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+            //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
             //this.rEngine.Evaluate("print(packageVersion('reticulate'))");
             //the following libraries are used for signal response
             this.rEngine.Evaluate("library(gridExtra)");

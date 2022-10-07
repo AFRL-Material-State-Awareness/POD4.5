@@ -39,7 +39,7 @@ HMFirthApproximation <- setRefClass("HMFirthApproximation", fields = list(inputD
                                  else{
                                    firth.modglm=firth.mod
                                    currRVersion=R.Version()
-                                   if(as.numeric(currRVersion$major)<4){
+                                   if(as.numeric(currRVersion$major)<=4){
                                      firth.modglm=convertTOGLMObject(firth.mod)
                                    }
                                    #firth.modglmGlobal<<-firth.modglm
