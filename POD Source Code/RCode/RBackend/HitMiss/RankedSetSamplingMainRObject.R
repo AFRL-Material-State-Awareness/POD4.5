@@ -5,6 +5,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                                       normSampleAmount="numeric",
                                                                       medianAValues="list",
                                                                       pODDataFrame="data.frame",
+                                                                      medianResidDataframe="data.frame",
                                                                       covarMatrix="matrix",
                                                                       goodnessOfFit="numeric"),
                                                         methods = list(
@@ -19,6 +20,12 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                         },
                                                         getPODDataFrame=function(){
                                                           return(pODDataFrame)
+                                                        },
+                                                        setMedianResidDataframe=function(psMedianResidDataframe){
+                                                          medianResidDataframe<<-psMedianResidDataframe
+                                                        },
+                                                        getMedianResidDataframe=function(){
+                                                          return(medianResidDataframe)
                                                         },
                                                         getMedianCovarMatrix=function(){
                                                           return(covarMatrix)
@@ -50,6 +57,8 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           #generate POD curve and store key values for a25,a50,a90, sigma, and a9095
                                                           logitResultsSet=newLogitSubsetsGen$getRSSLogitResults()
                                                           checkFailures=newLogitSubsetsGen$countBadLogits()
+                                                          #create the residual table based on the median of the regression results
+                                                          genResidualDataframe(logitResultsSet)
                                                           #if at least one logit model converged, generate a pod curve
                                                           if(checkFailures==FALSE){
                                                             newPODCurve<-GenPODCurveRSS$new()
@@ -122,5 +131,29 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           }
                                                           setMedianAValues(newAValuesCalc$getAValuesList())
                                                           
+                                                        },
+                                                        genResidualDataframe=function(logitResultsSet){
+                                                          beta0List=c()
+                                                          beta1List=c()
+                                                          for (i in 1:length(logitResultsSet)){
+                                                            beta0List=c(beta0List, logitResultsSet[[i]]$coefficients[[1]])
+                                                            beta1List=c(beta1List, logitResultsSet[[i]]$coefficients[[2]])
+                                                          }
+                                                          medianBeta0=median(beta0List)
+                                                          medianBeta1=median(beta1List)
+                                                          t_transVec=c()
+                                                          for (i in 1:nrow(dataFrame)){
+                                                            exponentVal=medianBeta0+medianBeta1*dataFrame$x[i]
+                                                            currAns=exp(exponentVal)/(1+exp(exponentVal))
+                                                            t_transVec=c(t_transVec, currAns)
+                                                          }
+                                                          makeResidualTable=data.frame(
+                                                            flaw=dataFrame$x,
+                                                            transformFlaw= integer(nrow(dataFrame)),
+                                                            hitrate= dataFrame$y,
+                                                            t_trans= t_transVec,
+                                                            diff=dataFrame$y-t_transVec
+                                                          )
+                                                          setMedianResidDataframe(makeResidualTable)
                                                         }
                                                        ))

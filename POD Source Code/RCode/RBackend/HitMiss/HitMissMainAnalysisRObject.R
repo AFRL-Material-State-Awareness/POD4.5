@@ -91,24 +91,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 )
                                 return(retResidualTable)
                               }
-                              if(CIType=="StandardWald"){
-                                retResidualTable=data.frame(
-                                  flaw=residualTable$x,
-                                  transformFlaw= residualTable$transformFlaw,
-                                  hitrate= hitMissDF$y,
-                                  t_trans= residualTable$t_trans,
-                                  diff=hitMissDF$y-residualTable$t_trans
-                                )
-                              }
-                              else{
-                                retResidualTable=data.frame(
-                                  flaw=residualTable$x,
-                                  transformFlaw= residualTable$transformFlaw,
-                                  t_trans= residualTable$t_trans,
-                                  Confidence_Interval=residualTable$Confidence_Interval
-                                )
-                              }
-                              return(retResidualTable)
+                              return(residualTable)
                             },
                             setIterationTable =function(psiterTable){
                               iterationTable<<-psiterTable
@@ -186,7 +169,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                                                       normSampleAmount=normSampleAmount)
                               newRSSMainObject$executeRSSPOD()
                               setResults(newRSSMainObject$getPODDataFrame())
-                              setResidualTable(newRSSMainObject$getPODDataFrame())
+                              setResidualTable(newRSSMainObject$getMedianResidDataframe())
                               setKeyAValues(newRSSMainObject$getMedianAValues())
                               setIterationTable(data.frame(
                                 trial=1,
@@ -211,6 +194,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               }
                               return(detRegressionResults)
                             },
+                            #executes when generating sigmoid curves in the transform panel
                             executeFitAnalysisOnly=function(){
                               regressionResults<-determineRegressionType()
                               residualTableTemp<-data.frame(
@@ -225,6 +209,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               #execute regression with original dataset depending which type
                               #is called (logit, firth, lasso, etc)
                               regressionResults<-determineRegressionType()
+                              generateResidualDF(regressionResults)
                               #add iteration metrics(TEMP)
                               setIterationTable(data.frame(
                                 trial=1,
@@ -237,7 +222,6 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               #calculate the goodness of fit
                               setGoodnessOfFit(regressionResults$deviance/regressionResults$null.deviance)
                               if(CIType=="StandardWald"){
-                                #print("start conf int")
                                 #set t_trans
                                 t_trans=regressionResults$fitted.values
                                 #calculate wald using conf intervals class and store the covariance matrix
@@ -250,7 +234,6 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 #this will be overwritten in c# sharp with the appropriate flaw transform
                                 transformFlaw=integer(nrow(hitMissDF))
                                 setResults(cbind(x, transformFlaw, t_trans, Confidence_Interval))
-                                setResidualTable(cbind(x, transformFlaw, t_trans, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=hitMissDF)
                                 new_Acalc$calcAValuesStandardWald()
@@ -276,14 +259,12 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 transformFlaw=integer(length(x))
                                 #set the dataframe to return to c#
                                 setResults(cbind(x, transformFlaw, Confidence_Interval))
-                                setResidualTable(cbind(x, transformFlaw,  Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calcAValuesModWald()
                                 setKeyAValues(new_Acalc$getAValuesList())
                               }
                               else if(CIType=="LR"){
-                                #ptm <- proc.time()
                                 #set the covariance matrix
                                 setCovMatrix(vcov(regressionResults))
                                 newLinearComboInstance=new("LinearComboGenerator", LogisticRegressionResult=regressionResults, 
@@ -293,20 +274,16 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 newLRConfInt=LikelihoodRatioConfInt$new(LogisticRegressionResult=regressionResults)
                                 newLRConfInt$setLinCombo(calcLinearCombo)
                                 newLRConfInt$executeLR()
-                                #print("Time of Calculation")
-                                #print(proc.time() - ptm)
                                 Confidence_Interval=newLRConfInt$getCIDataFrame()
                                 #this will be overwritten in c# sharp with the appropriate flaw transform
                                 transformFlaw=integer(length(x))
                                 setResults(cbind(x, transformFlaw, Confidence_Interval))
-                                setResidualTable(cbind(x, transformFlaw, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calca9095LR()
                                 setKeyAValues(new_Acalc$getAValuesList())
                               }
                               else if(CIType=="MLR"){
-                                #ptm <- proc.time()
                                 #set the covariance matrix
                                 setCovMatrix(vcov(regressionResults))
                                 newLinearComboInstance=new("LinearComboGenerator", LogisticRegressionResult=regressionResults, 
@@ -316,13 +293,10 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 newMLRConfInt=ModifiedLikelihoodRatioConfInt$new(LogisticRegressionResult=regressionResults)
                                 newMLRConfInt$setLinCombo(calcLinearCombo)
                                 newMLRConfInt$executeMLR()
-                                #print("Time of Calculation")
-                                #print(proc.time() - ptm)
                                 Confidence_Interval=newMLRConfInt$getCIDataFrame()
                                 #this will be overwritten in c# sharp with the appropriate flaw transform
                                 transformFlaw=integer(length(x))
                                 setResults(cbind(x, transformFlaw, Confidence_Interval))
-                                setResidualTable(cbind(x, transformFlaw, Confidence_Interval))
                                 #get key a values
                                 new_Acalc=GenAValuesOnPODCurve$new(LogisticRegressionResult=regressionResults,inputDataFrameLogistic=cbind(x,Confidence_Interval))
                                 new_Acalc$calca9095MLR()
@@ -331,6 +305,19 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               else{
                                 stop("Confidence interval type not found!")
                               }
+                            },
+                            #this generates the residual hit miss dataframe regardless of confidence interval type
+                            generateResidualDF=function(regressionResults){
+                              #regressionResultsGlobal<<-regressionResults
+                              #make the residual table based on the parameters
+                              makeResidualTable=data.frame(
+                                flaw=hitMissDF$x,
+                                transformFlaw= integer(nrow(hitMissDF)),
+                                hitrate= hitMissDF$y,
+                                t_trans= regressionResults$fitted.values,
+                                diff=hitMissDF$y-regressionResults$fitted.values
+                              )
+                              setResidualTable(makeResidualTable)
                             },
                             #executes the logit approximation of the hitmiss dataframe and returns
                             #the LReg.mod list
