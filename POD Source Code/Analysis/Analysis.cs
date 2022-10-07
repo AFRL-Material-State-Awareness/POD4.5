@@ -1030,7 +1030,7 @@ namespace POD.Analyze
 
                     moreInfo = Environment.NewLine + Environment.NewLine + moreInfo;
                 }
-                catch(Exception exp2)
+                catch(Exception)
                 {
                     moreInfo = string.Empty;
                 }
@@ -2620,7 +2620,7 @@ namespace POD.Analyze
                     value = 0;
                 }
             }
-            /*
+            //only used when slider becomes negative and the transform type in a_hat is boxcox
             else if (myValue <= 0.0M && InResponseTransform == TransformTypeEnum.BoxCox)
             {
                 try
@@ -2628,27 +2628,24 @@ namespace POD.Analyze
                     // this will set the signal response to -1 by default if the bottom slider becomes negative
                     return Convert.ToDecimal(TransformAValue(Convert.ToDouble(0), _python.TransformEnumToInt(InResponseTransform)) * _aHatAnalysisObject.Lambda);
                 }
-                catch (OverflowException overflow)
+                catch (OverflowException)
                 {
                     value = 0.0M;
                 }
-                catch (DivideByZeroException divide)
+                catch (DivideByZeroException)
                 {
                     value = 0;
                 }
             }
-            */
             try
             {
-                //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
-                //value = myValue;
                 value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
             }
-            catch(OverflowException overflow)
+            catch(OverflowException)
             {
                 value = myValue;
             }
-            catch (DivideByZeroException divide)
+            catch (DivideByZeroException)
             {
                 value = 0;
             }

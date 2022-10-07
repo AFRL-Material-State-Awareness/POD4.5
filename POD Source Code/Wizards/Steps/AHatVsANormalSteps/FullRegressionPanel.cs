@@ -863,9 +863,41 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             double customLambda = Convert.ToDouble(_boxCoxLambda.Value);
             Analysis.InLambdaValue = customLambda;
 
+            if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
+            {
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
+            }
+            else
+            {
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
+            }
 
+            if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
+            {
+
+                var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
+                mainChart.SetLeftCensorBoundary(y, false);
+                y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
+                mainChart.SetRightCensorBoundary(y, false);
+                y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
+                mainChart.SetThresholdBoundary(y, false);
+            }
+            else
+            {
+                var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
+                mainChart.SetLeftCensorBoundary(y, false);
+                y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
+                mainChart.SetRightCensorBoundary(y, false);
+                y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
+                mainChart.SetThresholdBoundary(y, false);
+            }
             ForceUpdateAfterTransformChange();
-            //ForceUpdateAfterLambdaChange();
             _previousLambda = _boxCoxLambda.Value;
         }
 
