@@ -101,11 +101,11 @@ namespace POD.Controls
                     break;
                case Globals.SkillNormalLabel:
                     Skill = SkillLevelEnum.Training;
-                    SkillTextBox.Text = "Normal is meant for users familar with the interface and POD concepts. They should should be able to handle any issues that arise.";
+                    SkillTextBox.Text = "LogisticRegression is meant for users familar with the interface and POD concepts. They should should be able to handle any issues that arise.";
                     break;
                 case Globals.SkillExpertLabel:
                     Skill = SkillLevelEnum.Advanced;
-                    SkillTextBox.Text = "Advanced is meant for users who would like aditional tools beyond what Normal offers.";
+                    SkillTextBox.Text = "Advanced is meant for users who would like aditional tools beyond what LogisticRegression offers.";
                     break;
                 default:
                     Skill = SkillLevelEnum.Tutorial;

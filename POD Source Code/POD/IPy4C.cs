@@ -227,16 +227,16 @@ namespace POD
             return analysisDataType;
         }
         //used to determine if the normal or odds model is to be generated (it is normal by default)
-        public int PFModelEnumToInt(PFModelEnum myModel)
+        public int PFModelEnumToInt(HitMissRegressionType myModel)
         {
             int modelType = 0;
 
             switch (myModel)
             {
-                case PFModelEnum.Normal:
+                case HitMissRegressionType.LogisticRegression:
                     modelType = 0;
                     break;
-                case PFModelEnum.Odds:
+                case HitMissRegressionType.FirthLogisticRegression:
                     modelType = 2;
                     break;
                 default:

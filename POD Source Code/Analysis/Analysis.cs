@@ -270,12 +270,12 @@ namespace POD.Analyze
             }
         }
 
-        private PFModelEnum _pfModelIn;
+        private HitMissRegressionType _hitMissModel;
 
-        public PFModelEnum InHitMissModel
+        public HitMissRegressionType InHitMissModel
         {
-            get { return _pfModelIn; }
-            set { if (!IsFrozen) _pfModelIn = value; }
+            get { return _hitMissModel; }
+            set { if (!IsFrozen) _hitMissModel = value; }
         }
 
         private ConfidenceIntervalTypeEnum _confIntHMType;
@@ -1686,11 +1686,11 @@ namespace POD.Analyze
             //used to store the current transformation the program is performing in the 'choose transform' window
             UpdateRTransforms();
             //change the model type of logistic regression to firth logistical regression if using log odds
-            if (InHitMissModel.ToString() == "Normal" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            if (InHitMissModel.ToString() == "LogisticRegression" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.RegressionType = "Logistic Regression";
             }
-            else if (InHitMissModel.ToString() == "Odds" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            else if (InHitMissModel.ToString() == "FirthLogisticRegression" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.RegressionType = "Firth Logistic Regression";
             }
@@ -2361,12 +2361,16 @@ namespace POD.Analyze
             myWriter.SetCellValue(rowIndex++, colIndex, "ANALYSIS:");
             myWriter.SetCellValue(rowIndex++, colIndex, "Time Stamp");
             myWriter.SetCellValue(rowIndex++, colIndex, "Analysis Type");
-
-            if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                myWriter.SetCellValue(rowIndex++, colIndex, "Confidence Interval Type");
+                myWriter.SetCellValue(rowIndex++, colIndex, "Sampling Type");
+                myWriter.SetCellValue(rowIndex++, colIndex, "Regression Type");
+            }
+            else if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 myWriter.SetCellValue(rowIndex++, colIndex, "POD Threshold");
             }
-
             myWriter.SetCellValue(rowIndex++, colIndex, "POD Level");
             myWriter.SetCellValue(rowIndex++, colIndex, "POD Confidence");
 
@@ -2451,7 +2455,9 @@ namespace POD.Analyze
             {
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseDecision);
             }
-
+            myWriter.SetCellValue(rowIndex++, colIndex, InConfIntervalType.ToString());
+            myWriter.SetCellValue(rowIndex++, colIndex, InSamplingType.ToString());
+            myWriter.SetCellValue(rowIndex++, colIndex, InHitMissModel.ToString());
             myWriter.SetCellValue(rowIndex++, colIndex, InPODLevel);
             myWriter.SetCellValue(rowIndex++, colIndex, InPODConfidence);
 

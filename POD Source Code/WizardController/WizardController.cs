@@ -335,7 +335,7 @@ namespace POD
             }
 
             //var analysisType = AnalysisTypeEnum.Full;
-            //var skillLevel = SkillLevelEnum.Normal;
+            //var skillLevel = SkillLevelEnum.LogisticRegression;
 
             
             myPair.Source.SkillLevel = SkillLevel;

@@ -16,13 +16,13 @@ namespace POD.Controls
         {
             InitializeComponent();
 
-            Items.Add(new PFModelObj(PFModelEnum.Normal));
-            Items.Add(new PFModelObj(PFModelEnum.Odds));
+            Items.Add(new PFModelObj(HitMissRegressionType.LogisticRegression));
+            Items.Add(new PFModelObj(HitMissRegressionType.FirthLogisticRegression));
 
             DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
-        public PFModelEnum SelectedModel
+        public HitMissRegressionType SelectedModel
         {
             get { return ((PFModelObj) SelectedItem).ModelType; }
             set
@@ -45,19 +45,19 @@ namespace POD.Controls
 
     public class PFModelObj
     {
-        private PFModelEnum _modelType;
+        private HitMissRegressionType _modelType;
         private string _label;
 
-        public PFModelObj(PFModelEnum myType)
+        public PFModelObj(HitMissRegressionType myType)
         {
             _modelType = myType;
 
             switch (ModelType)
             {
-                case PFModelEnum.Normal:
+                case HitMissRegressionType.LogisticRegression:
                     _label = "Logistic Reg";
                     break;
-                case PFModelEnum.Odds:
+                case HitMissRegressionType.FirthLogisticRegression:
                     _label = "Firth Logistic Reg";
                     break;
                 default:
@@ -71,7 +71,7 @@ namespace POD.Controls
             get { return _label; }
         }
 
-        public PFModelEnum ModelType
+        public HitMissRegressionType ModelType
         {
             get { return _modelType; }
         }

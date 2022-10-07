@@ -209,7 +209,7 @@ namespace POD.Wizards
         /// <param name="myControls">controls to add context menu to</param>
         private void AddContextMenuToControls(ControlCollection myControls)
         {
-            bool worked;
+            //bool worked;
             var temp = new ContextMenuStripConnected();
             ToolStripItem[] array = new ToolStripItem[_panel.ContextMenuStrip.Items.Count];
 

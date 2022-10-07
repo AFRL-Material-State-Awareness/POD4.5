@@ -109,7 +109,7 @@ namespace POD
         public const string WizardDockLabel = "Analysis";
 
         public const string SkillTutorialLabel = "Tutorial";
-        public const string SkillNormalLabel = "Normal";
+        public const string SkillNormalLabel = "LogisticRegression";
         public const string SkillBeginnerLabel = "Training";
         public const string SkillExpertLabel = "Advanced";
 
@@ -1183,15 +1183,16 @@ namespace POD
         LR,
         MLR
     }
+
     public enum SamplingTypeEnum
     {
         SimpleRandomSampling,
         RankedSetSampling
     }
-    public enum PFModelEnum
+    public enum HitMissRegressionType
     {
-        Normal,
-        Odds
+        LogisticRegression,
+        FirthLogisticRegression
     }
     public enum RCalculationType
     {

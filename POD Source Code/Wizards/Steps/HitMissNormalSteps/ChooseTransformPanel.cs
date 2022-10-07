@@ -840,13 +840,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             listBox.Columns.Add(columnQuestion);
 
             var row = listBox.CreateNewCloneRow(listBox.Columns.Count);
-            row.Cells[0].Value = new PFModelObj(PFModelEnum.Normal);
+            row.Cells[0].Value = new PFModelObj(HitMissRegressionType.LogisticRegression);
             row.Cells[0].ToolTipText = Column0ToolTip(listBox);
             row.Cells[1].Value = Properties.Resources.question;
             row.Cells[1].ToolTipText = Column1ToolTip(listBox);
             listBox.Rows.Add(row);
             row = listBox.CreateNewCloneRow(listBox.Columns.Count);
-            row.Cells[0].Value = new PFModelObj(PFModelEnum.Odds);
+            row.Cells[0].Value = new PFModelObj(HitMissRegressionType.FirthLogisticRegression);
             row.Cells[0].ToolTipText = Column0ToolTip(listBox);
             row.Cells[1].Value = Properties.Resources.question;
             listBox.Rows.Add(row);
@@ -1055,7 +1055,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
         }
 
-        public PFModelEnum SelectedModel
+        public HitMissRegressionType SelectedModel
         {
             get
             {
@@ -1085,7 +1085,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             return transform.TransformType;
         }
 
-        private PFModelEnum GetModelEnumFromSelectedChart(PODListBox box, bool getRowInsteadOfColumn)
+        private HitMissRegressionType GetModelEnumFromSelectedChart(PODListBox box, bool getRowInsteadOfColumn)
         {
             var chart = SelectedChart;
             var rowIndex = 0;

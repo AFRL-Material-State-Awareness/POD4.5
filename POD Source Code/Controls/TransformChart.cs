@@ -22,7 +22,7 @@ namespace POD.Controls
         AxisObject _normalYAxis = null;
         private TransformTypeEnum xTransform;
         private TransformTypeEnum yTransform;
-        private PFModelEnum hitmissModel;
+        private HitMissRegressionType hitmissModel;
         private string _originalTitle;
         private bool _compareModels = false;
 
@@ -244,7 +244,7 @@ namespace POD.Controls
             
         }
 
-        public void FillFromAnalysis(AnalysisData data, PFModelEnum model, List<Color> colors, int colorIndex, int styleIndex)
+        public void FillFromAnalysis(AnalysisData data, HitMissRegressionType model, List<Color> colors, int colorIndex, int styleIndex)
         {
             xTransform = data.FlawTransform;
             yTransform = TransformTypeEnum.Linear;
