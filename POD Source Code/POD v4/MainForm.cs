@@ -99,8 +99,15 @@ namespace POD
             _loader.Visible = false;
 
             initialForm.ShowDialog();
-
-            _loader.Visible = true;
+            try
+            {
+                _loader.Visible = true;
+            }
+            catch(ObjectDisposedException)
+            {
+                //if the loader is disposed, there was an error and the application should be terminated
+                Environment.Exit(0);
+            }
 
             ShowInTaskbar = true;
             //python engine
@@ -266,19 +273,45 @@ namespace POD
             }
             catch(Exception exp) 
             {
-
-                MessageBox.Show(exp.Message);
-                MessageBox.Show("OOPS! Something Went Wrong in initializing the main form!");
-                MessageBox.Show("Something may have went wrong with initializing the RDotNet Engine!");
-
+                string myExceptionName = exp.GetType().Name;
+                switch (myExceptionName)
+                {
+                    case "RNotInstalledException":
+                        MessageBox.Show("Error, PODv4 application was unable to find the appropriate version of R. Make sure that you have the correct version of R installed",
+                        "Error: Unable to initialize R Engine", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        break;
+                    case "ArgumentException":
+                        MessageBox.Show(exp.Message,
+                        "Bad Arguments Passed to R Environment", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        break;
+                    case "FailedLoadingLibrariesException":
+                        MessageBox.Show(exp.Message + ". " + "Be sure to make sure the rsetup script was run, and there were no errors in installing any libraries.",
+                        "Failed To Load R Libraries", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        break;
+                    case "FailedLoadingRScriptsException":
+                        MessageBox.Show(exp.Message,
+                            "Failed to Load R Scripts", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                            MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        break;
+                    default:
+                        MessageBox.Show(exp.Message + ". " + "An unknown error has occurred in loading R.NET. Contact support for assistance",
+                        "Uknown Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        break;
+                }
+                //MessageBox.Show(exp.Message);
+                //MessageBox.Show("OOPS! Something Went Wrong in initializing the main form!");
+                //MessageBox.Show("An unknown error has occurred in loading R.NET. Contact support for assistance");
                 this.Invoke((MethodInvoker)delegate()
                 {
-                    _loader.Close();
+                    _loader.Close();                   
                 });
 
                 return;
             }
-            //});
         }
 
         private void OpenAnalysis_Needed(object sender, GetProjectInfoArgs e)
