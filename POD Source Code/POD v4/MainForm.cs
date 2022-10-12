@@ -106,19 +106,20 @@ namespace POD
             catch(ObjectDisposedException)
             {
                 //if the loader is disposed, there was an error and the application should be terminated
-                Environment.Exit(0);
+                initialForm.ClosedWithoutSelection = true;
             }
 
             ShowInTaskbar = true;
             //python engine
             while (py == null && _loader.Visible);
             //REngine (although this probably is quicker than the python engine
-            while (REngineInstance == null && _loader.Visible)
+            while (REngineInstance == null && _loader.Visible);
 
             if (initialForm.ClosedWithoutSelection == true)
             {
                 _loader.Visible = false;
-                Close();
+                this.Close();
+                //Environment.Exit(0);
                 return;
             }
             
