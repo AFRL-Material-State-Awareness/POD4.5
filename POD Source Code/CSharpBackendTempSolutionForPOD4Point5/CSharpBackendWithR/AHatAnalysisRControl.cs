@@ -87,7 +87,7 @@ namespace CSharpBackendWithR
             }
             catch(Exception myError)
             {
-                System.Diagnostics.Debug.WriteLine(myError);
+                //System.Diagnostics.Debug.WriteLine(myError);
             }
             finally
             {
@@ -152,8 +152,10 @@ namespace CSharpBackendWithR
         }
         private void InitializeRClassForSignalResponse(double pod_threshold, int modelType)
         {
+            
             this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDFTest, y_dec=" + pod_threshold + ", " +
                 "modelType=" + modelType + ", lambda=lambdaInput)");
+            this.myREngine.Evaluate("newSRAnalysis$generateDefaultValues()");
         }
         public DataTable GetLinearFitTableForUI()
         {
@@ -238,32 +240,44 @@ namespace CSharpBackendWithR
         {
             //maybe make this a dictionary intead when implmemented?
             List<double> AllLinearTestResults = new List<double>();
-            //shapiro-wilk normality test
-            double shapiroStat = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[1]]$statistic[[1]]").AsNumeric()[0];
-            AllLinearTestResults.Add(shapiroStat);
-            double shapiroPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[1]]$p.value").AsNumeric()[0];
-            AllLinearTestResults.Add(shapiroPValue);
-            //non-constance variance test
-            double chiSqr = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[2]][[3]]").AsNumeric()[0];
-            AllLinearTestResults.Add(chiSqr);
-            double degreesFreedom = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[2]][[4]]").AsNumeric()[0];
-            AllLinearTestResults.Add(degreesFreedom);
-            double constVarPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[2]][[5]]").AsNumeric()[0];
-            AllLinearTestResults.Add(constVarPValue);
-            //durbin watson test
-            double durbinRVal = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[1]]").AsNumeric()[0];
-            AllLinearTestResults.Add(durbinRVal);
-            double durbinDW = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[2]]").AsNumeric()[0];
-            AllLinearTestResults.Add(durbinDW);
-            double durbinPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[3]]").AsNumeric()[0];
-            AllLinearTestResults.Add(durbinPValue);
-            //lack of fit test
-            double lackOfFitDegFreedom = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[2]]").AsNumeric()[0];
-            AllLinearTestResults.Add(lackOfFitDegFreedom);
-            double lackOfFitFCalc = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[3]]").AsNumeric()[0];
-            AllLinearTestResults.Add(lackOfFitFCalc);
-            double lackOfFitPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[4]]").AsNumeric()[0];
-            AllLinearTestResults.Add(lackOfFitPValue);
+            try
+            {
+                //shapiro-wilk normality test
+                double shapiroStat = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[1]]$statistic[[1]]").AsNumeric()[0];
+                AllLinearTestResults.Add(shapiroStat);
+                double shapiroPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[1]]$p.value").AsNumeric()[0];
+                AllLinearTestResults.Add(shapiroPValue);
+                //non-constance variance test
+                double chiSqr = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[2]][[3]]").AsNumeric()[0];
+                AllLinearTestResults.Add(chiSqr);
+                double degreesFreedom = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[2]][[4]]").AsNumeric()[0];
+                AllLinearTestResults.Add(degreesFreedom);
+                double constVarPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[2]][[5]]").AsNumeric()[0];
+                AllLinearTestResults.Add(constVarPValue);
+                //durbin watson test
+                double durbinRVal = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[1]]").AsNumeric()[0];
+                AllLinearTestResults.Add(durbinRVal);
+                double durbinDW = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[2]]").AsNumeric()[0];
+                AllLinearTestResults.Add(durbinDW);
+                double durbinPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[3]][[3]]").AsNumeric()[0];
+                AllLinearTestResults.Add(durbinPValue);
+                //lack of fit test
+                double lackOfFitDegFreedom = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[2]]").AsNumeric()[0];
+                AllLinearTestResults.Add(lackOfFitDegFreedom);
+                double lackOfFitFCalc = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[3]]").AsNumeric()[0];
+                AllLinearTestResults.Add(lackOfFitFCalc);
+                double lackOfFitPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[4]]").AsNumeric()[0];
+                AllLinearTestResults.Add(lackOfFitPValue);
+            }
+            catch (RDotNet.EvaluationException catchEmpty)
+            {
+                //add an empty array of length 11 by default
+                for(int i=0; i < 11; i++)
+                {
+                    AllLinearTestResults.Add(0);
+                }
+            }
+            
             return AllLinearTestResults;
         }
         

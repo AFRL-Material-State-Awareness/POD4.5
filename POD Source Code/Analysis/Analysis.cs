@@ -1213,7 +1213,7 @@ namespace POD.Analyze
                 _failedToConverge = _hmAnalysisObject.Failed_To_Converge;
             }
 
-            Data.UpdateOutput(_analysisCalculationType);
+            Data.UpdateOutput();
             
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
@@ -2805,7 +2805,7 @@ namespace POD.Analyze
             CheckForLoadedFile();
             try
             {
-                
+                //_analysisCalculationType = RCalculationType.Full;
                 //for the case of hit/miss data and ahat, this is where the program first enters the python program
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
@@ -2850,9 +2850,11 @@ namespace POD.Analyze
         public void CheckForLoadedFile()
         {
             //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
+            //added the check of the x and y values in case the user has an analysis open and then opens an already saved file
             if (_hmAnalysisObject != null)
             {
-                if (_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null)
+                if ((_hmAnalysisObject.Flaws_All.Count() == 0 && _hmAnalysisObject.Responses == null) 
+                    || (_hmAnalysisObject.Responses_all != _data.HMAnalysisObject.Responses_all && _hmAnalysisObject.Flaws_All != _data.HMAnalysisObject.Flaws_All))
                 {
                     _hmAnalysisObject = _data.HMAnalysisObject;
                     //reset the model type to 1 in order to prevent a blank chart showing up(linear)
@@ -2863,12 +2865,15 @@ namespace POD.Analyze
                 }
             }
             //ditto for ahat versus a, signal response
+            //added the check of the x and y values in case the user has an analysis open and then opens an already saved file
             if (_aHatAnalysisObject != null)
             {
-                if (_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null)
+                if ((_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null) || 
+                    (_aHatAnalysisObject.Responses_all != _data.AHATAnalysisObject.Responses_all && _aHatAnalysisObject.Flaws_All != _data.AHATAnalysisObject.Flaws_All))
                 {
                     _aHatAnalysisObject = _data.AHATAnalysisObject;
                 }
+
             }
         }
         public double TransformAValue(double myValue, int transform)

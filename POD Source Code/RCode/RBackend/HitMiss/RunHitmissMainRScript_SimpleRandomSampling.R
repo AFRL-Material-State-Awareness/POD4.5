@@ -17,6 +17,7 @@ hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 #hitMissDF$x<-1/hitMissDF$x
 hitMissDF$y.1=NULL
+hitMissDF[1,3]=1.5
 #hitMissDF<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")

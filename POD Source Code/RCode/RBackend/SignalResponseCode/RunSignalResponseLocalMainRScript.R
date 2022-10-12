@@ -27,9 +27,9 @@ begin<-proc.time()
 #bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
 lambda<-0
 #data_obs$x=log(data_obs$x)
-lambda<-bc$x[which.max(bc$y)]
-lambda<-1.1
-data_obs$y<-(data_obs$y^lambda-1)/lambda
+#lambda<-bc$x[which.max(bc$y)]
+#lambda<-1.1
+#data_obs$y<-(data_obs$y^lambda-1)/lambda
 ##############################################################
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0)
@@ -37,8 +37,9 @@ data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 
 
 fullAnalysis=TRUE
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=6, lambda=lambda)
-newSRAnalysis$executeAhatvsA()
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=1, lambda=lambda)
+newSRAnalysis$generateDefaultValues()
+#newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()
 critPoints<-newSRAnalysis$getCritPts()

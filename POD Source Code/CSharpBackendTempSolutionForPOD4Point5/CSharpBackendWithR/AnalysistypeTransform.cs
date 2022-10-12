@@ -153,15 +153,7 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             //execute analysis and return parameters
             this.newAHatControl.ExecuteTransforms(this.newAHatAnalysisObject);
-            //return parameters unique to transform panel analysis
-            this.newAHatAnalysisObject.AHatResultsLinear = this.newAHatControl.GetLinearFitTableForUI();
-            this.newAHatAnalysisObject.AHatResultsResidUncensored = this.newAHatControl.GetResidualUncensoredTableForUI();
-            this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
-            //get lambda from box-cox if applicable
-            if (this.newAHatAnalysisObject.ModelType >= 5 && this.newAHatAnalysisObject.ModelType <= 7)
-            {
-                this.newAHatAnalysisObject.Lambda = this.newAHatControl.GetBoxCoxLamda();
-            }
+            ReturnSignalResponseObjects();
 
             return this.newAHatAnalysisObject;
         }

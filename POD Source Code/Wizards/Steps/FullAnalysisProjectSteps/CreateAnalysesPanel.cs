@@ -749,6 +749,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             Project project = Project;
             //PODTreeNode podNode as analysesTree.Selected;
             DataSource source = project.Sources[0];
+            //Disabled the ability for the user to have multiple hit miss responses in one analysis.
             if (control.SelectedRows.Count > 1 && source.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 //testing

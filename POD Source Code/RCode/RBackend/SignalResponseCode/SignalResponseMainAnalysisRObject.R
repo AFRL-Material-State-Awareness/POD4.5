@@ -21,6 +21,60 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         originalData="data.frame"
                                                                         ),
                                   methods=list(
+                                    #used to generate default values for all the metrics in the event of an error
+                                    generateDefaultValues=function(){
+                                      #linear model DF
+                                      linearModel<<-data.frame(
+                                        x=c(0,0,0,0,0),
+                                        fit=c(0,0,0,0,0),
+                                        y= c(0,0,0,0,0)
+                                      )
+                                      #POD curve table
+                                      ResultsPOD<<-data.frame(
+                                        defect_sizes=c(1,1,1,1,1),
+                                        probabilities=c(0,0,0,0,0),
+                                        defect_sizes_upCI=c(0,0,0,0,0)
+                                      )
+                                      #residual table
+                                      residualTable<<-data.frame(
+                                        x=c(0,0,0,0,0),
+                                        y=c(0,0,0,0,0),
+                                        transformFlaw=c(0,0,0,0,0),
+                                        transformResponse=c(0,0,0,0,0),
+                                        fit=c(0,0,0,0,0),
+                                        t_diff=c(0,0,0,0,0)
+                                      )
+                                      #threshold table
+                                      thesholdTable<<-data.frame(
+                                        threshold=c(1,1,1,1,1),
+                                        a90=c(0,0,0,0,0),
+                                        a9095=c(0,0,0,0,0),
+                                        a50=c(0,0,0,0,0),
+                                        v11=c(0,0,0,0,0),
+                                        v12=c(0,0,0,0,0),
+                                        v22=c(0,0,0,0,0)
+                                      )
+                                      critPts<<-data.frame(
+                                        index=-1,
+                                        a_25_25=-1,
+                                        a_50_50=-1,
+                                        a_90_50=-1,
+                                        aSigma=-1,
+                                        a_90_95=-1
+                                      )
+                                      #return an empty matrix of negative ones if empty
+                                      aVPOD<<-matrix(0, nrow=2, ncol=2)
+                                      #blank a values array
+                                      keyAValues<<-list(0,0,0,0,0)
+                                      linearTestResults<<-list(
+                                        list(statistic=0, p.value=0.0, method="", data.name=""),
+                                        list(formula="", formula.name='', ChiSquare=0.0, Df=0, p=0.0, test=''),
+                                        list(r=0, dw=0, p=0, alternative=''),
+                                        list(`Sum Sq`=0, Df=0, `F value`=0.0, `Pr(>F)`=0.0))
+                                      modelIntercept<<-0
+                                      modelSlope<<-0
+                                      rSqaured<<-0
+                                    },
                                     setOriginalData=function(psOrigData){
                                       originalData<<-psOrigData
                                     },
@@ -50,7 +104,6 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
-
                                       return(ResultsPOD)
                                     },
                                     setThresholdDF=function(psThreshDF){
@@ -84,6 +137,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       regressionStdErrs<<-psRegStdErrs
                                     },
                                     getRegressionStdErrs=function(){
+                                      if(length(regressionStdErrs)==0){
+                                        regressionStdErrs<<-list(0,0,0,0)
+                                      }
                                       return(regressionStdErrs)
                                     },
                                     setCritPts=function(psCritPts){

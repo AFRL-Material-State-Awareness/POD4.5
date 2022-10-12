@@ -1617,12 +1617,20 @@ namespace POD.Data
 
         public void UpdateOutput(RCalculationType myCalculationType=RCalculationType.Full)
         {
+            
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
-                if (myCalculationType == RCalculationType.Full)
+                UpdateAHatOutput();
+                /*
+                if (myCalculationType == RCalculationType.ThresholdChange)
+                {
+                    UpdateAHatThresholdChangeOuput();
+                }
+                else
                 {
                     UpdateAHatOutput();
                 }
+                
                 else if(myCalculationType == RCalculationType.Transform){
                     UpdateAHatTransformOutput();
                 }
@@ -1630,9 +1638,12 @@ namespace POD.Data
                 {
                     UpdateAHatThresholdChangeOuput();
                 }
+                */
             }
             else
             {
+                UpdateHitMissOutput();
+                /*
                 if (myCalculationType == RCalculationType.Full)
                 {
                     UpdateHitMissOutput();
@@ -1641,6 +1652,7 @@ namespace POD.Data
                 {
                     UpdateHitMissTransformOutput();
                 }
+                */
             }
         }
         //updates the tables in the GUI by getting the tables from python
@@ -1715,6 +1727,7 @@ namespace POD.Data
                 MessageBox.Show(exp.Message, "POD v4 Reading Iterations Error");
             }
         }
+        /*
         //updates the tables in the GUI by getting the tables from python
         private void UpdateHitMissTransformOutput()
         {
@@ -1757,6 +1770,7 @@ namespace POD.Data
             }
 
         }
+        */
         private void UpdateAHatOutput()
         {
             //var watch = new Stopwatch();

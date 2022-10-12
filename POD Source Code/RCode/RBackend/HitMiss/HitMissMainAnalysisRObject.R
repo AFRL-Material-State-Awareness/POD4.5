@@ -17,31 +17,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         separation="numeric",
                                         convergeFailLogit="numeric"),
                           methods = list(
-                            # initialize = function(){
-                            #   #hitMissDF<<-data.frame(
-                            #   #  flaw=c(0,0,0,0,0),
-                            #   #  transformFlaw=c(0,0,0,0,0),
-                            #   #  hitrate=c(0,0,0,0,0)
-                            #   #)
-                            #   covarianceMatrix<<-matrix(0, nrow=2, ncol=2)
-                            #   if(CIType=="StandardWald"){
-                            #     retResidualTable=data.frame(
-                            #       flaw=c(0,0,0,0,0),
-                            #       transformFlaw=c(0,0,0,0,0),
-                            #       hitrate=c(0,0,0,0,0),
-                            #       t_trans= c(0,0,0,0,0),
-                            #       diff=c(0,0,0,0,0)
-                            #     )
-                            #   }
-                            #   else{
-                            #     retResidualTable=data.frame(
-                            #       flaw=c(0,0,0,0,0),
-                            #       transformFlaw= c(0,0,0,0,0),
-                            #       t_trans=c(0,0,0,0,0),
-                            #       Confidence_Interval=c(0,0,0,0,0)
-                            #     )
-                            #   }
-                            # },
+                            ##make defaults values function here
                             getHitMissDF = function(){
                               #modify table for clean excel output later
                               hitMissDF_trans=data.frame(

@@ -119,7 +119,6 @@ namespace POD
             {
                 _loader.Visible = false;
                 this.Close();
-                //Environment.Exit(0);
                 return;
             }
             
@@ -1226,9 +1225,11 @@ namespace POD
             }
             else if(result == DialogResult.No)
             {
+                ///_analysis
+                var lol = 0.0;
                 return true;
             }
-
+            
             return false;            
         }
 
