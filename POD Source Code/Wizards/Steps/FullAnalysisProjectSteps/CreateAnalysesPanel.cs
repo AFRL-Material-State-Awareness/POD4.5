@@ -743,9 +743,18 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             bool useAutoName = true;// UsingAutoName;
             List<PODListBoxItemWithProps> names = new List<PODListBoxItemWithProps>();
             All2_Click(sender, e);
-
+            
             PODListBox control = this.GetCurrentDataList();
             PODListBoxItemWithProps flaw = null;
+            Project project = Project;
+            //PODTreeNode podNode as analysesTree.Selected;
+            DataSource source = project.Sources[0];
+            if (control.SelectedRows.Count > 1 && source.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                //testing
+                MessageBox.Show("Cannot add multiple responses in one Analysis when using HitMiss Data");
+                return;
+            }
             var indices = control.GetSelectedIndicies();
 
             if (AvailableFlawsListBox.Rows.Count > 0)

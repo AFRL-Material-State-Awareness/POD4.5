@@ -51,7 +51,7 @@ namespace CSharpBackendWithR
             string rPath;
             string homePath;
             REngine engine;
-            string rVersion = "4.1.22";
+            string rVersion = "4.1.2";
             //initialize the R engine
             if (rVersion == "3.5.3")
             {
