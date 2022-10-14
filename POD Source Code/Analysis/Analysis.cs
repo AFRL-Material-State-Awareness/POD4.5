@@ -2849,6 +2849,7 @@ namespace POD.Analyze
         }
         public void CheckForLoadedFile()
         {
+            /*
             //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
             //added the check of the x and y values in case the user has an analysis open and then opens an already saved file
             if (_hmAnalysisObject != null)
@@ -2870,6 +2871,29 @@ namespace POD.Analyze
             {
                 if ((_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null) || 
                     (_aHatAnalysisObject.Responses_all != _data.AHATAnalysisObject.Responses_all && _aHatAnalysisObject.Flaws_All != _data.AHATAnalysisObject.Flaws_All))
+                {
+                    _aHatAnalysisObject = _data.AHATAnalysisObject;
+                }
+
+            }
+            */
+            //if flaws and responses are not identical between Analyis.cs and AnalysisData.cs, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
+            if (_hmAnalysisObject != null)
+            {
+                if ((_hmAnalysisObject.Responses_all != _data.HMAnalysisObject.Responses_all && _hmAnalysisObject.Flaws_All != _data.HMAnalysisObject.Flaws_All))
+                {
+                    _hmAnalysisObject = _data.HMAnalysisObject;
+                    //reset the model type to 1 in order to prevent a blank chart showing up(linear)
+                    if (Data.FlawTransform == TransformTypeEnum.Linear)
+                    {
+                        _hmAnalysisObject.ModelType = 1;
+                    }
+                }
+            }
+            //ditto for ahat versus a, signal response
+            if (_aHatAnalysisObject != null)
+            {
+                if ((_aHatAnalysisObject.Responses_all != _data.AHATAnalysisObject.Responses_all && _aHatAnalysisObject.Flaws_All != _data.AHATAnalysisObject.Flaws_All))
                 {
                     _aHatAnalysisObject = _data.AHATAnalysisObject;
                 }

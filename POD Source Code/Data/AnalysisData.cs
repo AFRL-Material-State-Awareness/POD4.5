@@ -1621,38 +1621,10 @@ namespace POD.Data
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
                 UpdateAHatOutput();
-                /*
-                if (myCalculationType == RCalculationType.ThresholdChange)
-                {
-                    UpdateAHatThresholdChangeOuput();
-                }
-                else
-                {
-                    UpdateAHatOutput();
-                }
-                
-                else if(myCalculationType == RCalculationType.Transform){
-                    UpdateAHatTransformOutput();
-                }
-                else if(myCalculationType == RCalculationType.ThresholdChange)
-                {
-                    UpdateAHatThresholdChangeOuput();
-                }
-                */
             }
             else
             {
                 UpdateHitMissOutput();
-                /*
-                if (myCalculationType == RCalculationType.Full)
-                {
-                    UpdateHitMissOutput();
-                }
-                else
-                {
-                    UpdateHitMissTransformOutput();
-                }
-                */
             }
         }
         //updates the tables in the GUI by getting the tables from python
@@ -1727,50 +1699,6 @@ namespace POD.Data
                 MessageBox.Show(exp.Message, "POD v4 Reading Iterations Error");
             }
         }
-        /*
-        //updates the tables in the GUI by getting the tables from python
-        private void UpdateHitMissTransformOutput()
-        {
-            bool printDTFlag = false;
-            TransformBackCSharpTablesHITMISS BackwardsTransform = new TransformBackCSharpTablesHITMISS(_hmAnalysisObject);
-            //store original data for plotting
-            try
-            {
-
-                _originalData = BackwardsTransform.TransformBackOrigData(_hmAnalysisObject.HitMissDataOrig);
-                _originalData.DefaultView.Sort = "transformFlaw" + " " + "ASC";
-                _originalData = _originalData.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_originalData);
-            }
-
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
-            }
-            try
-            {
-                _totalFlawCount = _hmAnalysisObject.Flaws.Count();
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
-            }
-            try
-            {
-                _residualUncensoredTable = BackwardsTransform.TransformBackResidualUncensoredTable(_hmAnalysisObject.ResidualTable);
-                _residualUncensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
-                _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_residualUncensoredTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
-            }
-
-        }
-        */
         private void UpdateAHatOutput()
         {
             //var watch = new Stopwatch();
@@ -1974,151 +1902,6 @@ namespace POD.Data
             //watch.Stop();
 
             //var sortTime = watch.ElapsedMilliseconds;
-        }
-        //only executed when doing the analysis in the transform panel (POD curve, threshold table, etc, are omitted for 
-        //optimization purposes)
-        private void UpdateAHatTransformOutput()
-        {
-            var watch = new Stopwatch();
-
-            watch.Start();
-            TransformBackCSharpTablesAHAT BackwardsTransform = new TransformBackCSharpTablesAHAT(_aHatAnalysisObject);
-            bool printDTFlag = false;
-            //double lambda;
-            try
-            {
-                _fitResidualsTable = BackwardsTransform.ConvertFitResidualsTable(_aHatAnalysisObject.AHatResultsLinear);
-                _fitResidualsTable.DefaultView.RowFilter = "";
-                _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
-                _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_fitResidualsTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Fit Error");
-            }
-            //printDT(_fitResidualsTable);
-            try
-            {
-                _residualUncensoredTable = BackwardsTransform.TransformBackColResidualTables(_aHatAnalysisObject.AHatResultsResidUncensored);
-                _residualUncensoredTable = BackwardsTransform.DeleteCensoredPointsForRUT(_residualUncensoredTable);
-                _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
-                _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_residualUncensoredTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
-            }
-            try
-            {
-                _residualRawTable = _aHatAnalysisObject.AHatResultsResid;
-                _residualRawTable = BackwardsTransform.TransformBackColResidualTables(_residualRawTable);
-                _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
-                _residualRawTable = _residualRawTable.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_residualRawTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
-            }
-            try
-            {
-                _residualCensoredTable = _aHatAnalysisObject.AHatResultsResid;
-                if (_residualCensoredTable.Rows.Count != 0)
-                {
-                    _residualCensoredTable.Rows.Clear();
-                }
-                _residualCensoredTable = _residualCensoredTable.DefaultView.ToTable();
-                if (_aHatAnalysisObject.FlawsCensored.Count() != 0)
-                {
-                    int pointsLeft = _aHatAnalysisObject.FlawsCensored.Count();
-                    //TODO: need to cover the condition when two flaws have different reponses
-                    for (int i = _residualRawTable.Rows.Count - 1; i >= 0; i--)
-                    {
-                        if (pointsLeft > 0)
-                        {
-                            //Console.WriteLine(_residualUncensoredTable.Rows[i][0]);
-                            for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
-                            {
-                                if (Convert.ToDouble(_residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
-                                {
-                                    _residualCensoredTable.Rows.Add(_residualRawTable.Rows[i].ItemArray);
-                                    pointsLeft -= 1;
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-                //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
-                if (printDTFlag)
-                    printDT(_residualCensoredTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Censored Error");
-            }
-
-            try
-            {
-                _residualFullCensoredTable = _aHatAnalysisObject.AHatResultsResid;
-                if (_residualFullCensoredTable.Rows.Count != 0)
-                {
-                    _residualFullCensoredTable.Rows.Clear();
-                }
-                _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
-                if (_aHatAnalysisObject.FlawsCensored.Count() != 0)
-                {
-                    int pointsLeft = _aHatAnalysisObject.FlawsCensored.Count();
-                    //TODO: need to cover the condition when two flaws have different reponses
-                    for (int i = _residualRawTable.Rows.Count - 1; i >= 0; i--)
-                    {
-                        if (pointsLeft > 0)
-                        {
-                            //Console.WriteLine(_residualUncensoredTable.Rows[i][0]);
-                            for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
-                            {
-                                if (Convert.ToDouble(_residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
-                                {
-                                    _residualFullCensoredTable.Rows.Add(_residualRawTable.Rows[i].ItemArray);
-                                    pointsLeft -= 1;
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-                //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
-                _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_residualFullCensoredTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Full Censored Error");
-            }
-
-            try
-            {
-                _residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
-                _residualPartialCensoredTable.DefaultView.Sort = "transformFlaw, transformResponse" + " " + "ASC";
-                _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
-                if (printDTFlag)
-                    printDT(_residualPartialCensoredTable);
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message, "POD v4 Reading Residual Partial Censored Error");
-            }
-            watch.Stop();
-
-            var sortTime = watch.ElapsedMilliseconds;
         }
         //this method is used if the user changes the threshold for optimization
         private void UpdateAHatThresholdChangeOuput()
@@ -2520,15 +2303,6 @@ namespace POD.Data
 
         private void WriteAnalysisName(ExcelExport myWriter, string myAnalysisName, bool myPartOfProject)
         {
-            //if (myPartOfProject)
-            //{
-            //    myWriter.SetCellValue(1, 3, myAnalysisName);
-            //}
-            //else
-            //{
-            //    myWriter.SetCellValue(1, 2, myAnalysisName);
-            //}
-
             myWriter.SetCellValue(1, 2, myAnalysisName);
         }
 
@@ -2754,7 +2528,8 @@ namespace POD.Data
             }
         }
         //**********IMPORTANT NOTE
-        // lines 2486 to 2524 are used for writing to excel only(will need to implement this in r
+        // lines 2486 to 2524 are used for writing to excel only(will need to implement this in r)
+        //does not seem to return anything special in python code either
         public int ResponsePartialBelowMinCount
         {
             get
@@ -2971,8 +2746,6 @@ namespace POD.Data
             {
                 _aHatAnalysisObject.A_transform= _python.TransformEnumToInt(_flawTransform);
             }
-
-            //_podDoc.ahat_transform = _python.TransformEnumToInt(_responseTransform);
 
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
@@ -3216,7 +2989,6 @@ namespace POD.Data
             if (myValue <= 0.0 && (_flawTransform == TransformTypeEnum.Log || _flawTransform == TransformTypeEnum.Inverse))
                 return 0.0;
 
-            //return _podDoc.GetTransformedValue(myValue, _python.TransformEnumToInt(_flawTransform));
             return TransformAValue(myValue, _python.TransformEnumToInt(_flawTransform));
         }
         
@@ -3225,7 +2997,6 @@ namespace POD.Data
             if (myValue <= 0.0 && (_responseTransform == TransformTypeEnum.Log || _responseTransform == TransformTypeEnum.Inverse))
                 return 0.0;
 
-            //return _podDoc.GetTransformedValue(myValue, _python.TransformEnumToInt(_responseTransform));
             return TransformAValue(myValue, _python.TransformEnumToInt(_responseTransform));
         }
 
@@ -3234,7 +3005,6 @@ namespace POD.Data
             if (myValue == 0.0 && _flawTransform == TransformTypeEnum.Inverse)
                 return 0.0;
 
-            //return _podDoc.GetInvtTransformedValue(myValue, _python.TransformEnumToInt(_flawTransform));
             return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
 
         }
@@ -3243,8 +3013,6 @@ namespace POD.Data
         {
             if (myValue == 0.0 && _responseTransform == TransformTypeEnum.Inverse)
                 return 0.0;
-
-            //return _podDoc.GetInvtTransformedValue(myValue, _python.TransformEnumToInt(_responseTransform));
             return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
 
         }
@@ -3662,14 +3430,6 @@ namespace POD.Data
                     belowDoesNotInclude = true;
                 }
 
-                //if (xBelowIndex < _prevBelow && xAboveIndex > _prevAbove)
-                //    MessageBox.Show("Flipped");
-
-                //if (xAboveIndex >= sortByX.Count)
-                //{
-                //    xAboveIndex = sortByX.Count - 1;
-                //}
-
                 // remove points from out of bounds
                 // else add points to out of bounds
                 if (xAboveIndex > _prevAbove)
@@ -3869,31 +3629,7 @@ namespace POD.Data
                             responseTable.Rows[i].ItemArray[
                                 responseTable.Columns.IndexOf(seriesName)])
                 };
-
-                //series.Points[sp.SeriesPtIndex].Tag = "SORTED";
-
                 sortPoints.Add(sp);
-
-                /*try
-                {
-                    //added '<=' for comparison for first y-value being equal to zero 
-                    //'<' becomes an impossible condition to satisfy in that case - TRB, 12-04-2014
-                    sp.SeriesPtIndex =
-                        series.Points.IndexOf(
-                            series.Points.First(
-                                p =>
-                                    (Math.Abs(p.XValue - sp.XValue) <= Math.Abs(sp.XValue * FLOATING_POINT_EQ_THRESHOLD))
-                                    && (Math.Abs(p.YValues.First() - sp.YValue)
-                                        <= Math.Abs(sp.YValue * FLOATING_POINT_EQ_THRESHOLD)) && p.Tag == null));
-
-                    series.Points[sp.SeriesPtIndex].Tag = "SORTED";
-
-                    sortPoints.Add(sp);
-                }
-                catch(Exception e)
-                {
-                    //MessageBox.Show(e.Message);
-                }*/
             }
         }
 
