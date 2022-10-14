@@ -15,13 +15,13 @@ namespace CSharpBackendWithR
         /// </summary> 
         private DataTable hitMissDataOrig;
         private List<double> covarMatrix;
-        //private List<double> uncensoredFlaws;
-        private int modelType;
         //used for logit, firth, or lasso
         private string regressionType;
         //parameter for ranked set sampling
         private int srsOrRSS;
+        //numeber of resamples for ranked set sampling
         private int maxResamples;
+        //used to store the goodness of fit test value
         private double goodnessOfFit;
         //tables
         private DataTable logitFitTable;
@@ -29,7 +29,7 @@ namespace CSharpBackendWithR
         //flag used for separated Data and whether or not the alogrithm converged
         private bool isSeparated;
         private bool failureToConverge;
-        public HMAnalysisObject(string nameInput="")
+        public HMAnalysisObject(string nameInput="") : base()
         {
             //original HMDataframe
             this.hitMissDataOrig = null;
@@ -41,10 +41,12 @@ namespace CSharpBackendWithR
             Podfile = null;
             //name of the analysis
             Name = nameInput;
-            Info_row = 0;
-            //becomes 1 if linear
-            // 2 if log
-            // 3 if inverse
+            //Info_row = 0;
+            /// <summary>
+            /// becomes 1 if linear
+            /// 2 if log
+            /// 3 if inverse
+            /// </summary>
             this.modelType = 1; 
             this.regressionType = "Logistic Regression";//becomes logit, firth, or lasso (logit by default)
             Flaw_name = ""; //holds the name of the flaw in the datatable
@@ -52,29 +54,16 @@ namespace CSharpBackendWithR
             //TODO: these may not be necessary
             HitMissMin = 0;
             HitMissMax = 1;
-            //decision_thesholds = .5; //this was its value in PODv4 whenever hit/miss is used
-            Titles = new List<string>();
             //holds the flaw sizes
             Flaws_All = new List<double>();
             Flaws = new List<double>();
             ExcludedFlaws = new List<double>();
-            //ExcludedFlaws= new List<double>()
-            //current crack size list to be sent to r(can be either normal or log transformed
-            //List<double> currFlawsAnalysis;
-            //TODO: temporary varaible used to store flaws array until the class is working
-            //this.uncensoredFlaws = new List<double>();
+            Responses = new Dictionary<string, List<double>>();
             Responses_all = new Dictionary<string, List<double>>();
-            Nsets = 0;
-            Count = 0; //the original number of data points in a given analysis
-            //max and min crack sizes
-            Crckmin = 0.0;
-            Crckmax = 0.0;
+            //Nsets = 0;
             //log of the max and min crack sizes
             //LogCrckmin = 0.0;
             //LogCrckmax = 0.0;
-            //xmin and xmax
-            Xmin = 0.0;
-            Xmax = 0.0;
 
             //stored the number of points for the censored data (if none its equal to count)
             Npts = 0;
@@ -82,25 +71,6 @@ namespace CSharpBackendWithR
             //variable used for determining if the logit is solvable
             this.isSeparated = false;
             this.failureToConverge = false;
-            //key a values
-            A25 = 0.0;
-            A50 = 0.0;
-            A90 = 0.0;
-            //sighat --- standard error at a90
-            Sighat = 0.0;
-            //muhat --- value at a50
-            Muhat = 0.0;
-            A9095 = 0.0;
-            //thesholds
-            Pod_threshold = .5;
-            Pod_level = .9;
-            Confidence_level = .95;
-            Asize = "a90";
-            Alevel = "a090/95";
-            Clevel = "95% confidence bound";
-
-            Pfit = new List<double>();
-            Diff = new List<double>(); //found by taking the response value - pfit
 
             //used for ranked set sampling, modified wald, lr, and mlr
             A_x_n = 0;
@@ -110,12 +80,13 @@ namespace CSharpBackendWithR
             Set_m = 6;
             //m=number of cycles
             Set_r = 10;
+            //use this variable for the user to pass in the confidence interval technique they want to use
+            //standard wald, modified wald, etc
             //default to standard wald unless overwritten
             CIType = "StandardWald";
             //datatables that will be sent back to the UI
             this.logitFitTable = new DataTable();
             this.residualTable = new DataTable();
-            //DataTable LogLogitHMFitTable = new DataTable();
 
             //0=simple random sampling selected, 1= ranked set sampling(indexed based)
             this.srsOrRSS = 0; //simple random sampling by default
@@ -134,41 +105,19 @@ namespace CSharpBackendWithR
             set { this.residualTable = value; }
             get { return this.residualTable; }
         }
-        public new List<double> CovarianceMatrix
+        public List<double> CovarianceMatrix
         {
             set { this.covarMatrix = value; }
             get { return this.covarMatrix; }
-        }
-        public new bool Pts_censored { set; get; }
-        public new dynamic Podfile { set; get; }
-        public new string Name { set; get; }
-        public new int Info_row { set; get; }
-        public new int ModelType
-        {
-            
-            set { this.modelType = value; }
-            get { return this.modelType; }
         }
         public string RegressionType
         {
             set { this.regressionType = value; }
             get { return this.regressionType; }
         }
-        public new string Flaw_name { set; get; }
         public string HitMiss_name { set; get; }
-        public new int HitMissMin { set; get; }
-        public new int HitMissMax { set; get; }
-        public new List<string> Titles { set; get; }
-        //public List<HMCrackData> Flaws { set; get; }
-        public new List<double> Flaws { set; get; }
-        public new List<double> Flaws_All { set; get; }
-        public new List<double> LogFlaws_All { set; get; }
-        public new List<double> InverseFlaws_All { set; get; }
-        public new List<double> ExcludedFlaws { set; get; }
-        //TODO: FIX THIS TO MAKE THIS ONLY integers since this object controls hitmiss data only
-        public new Dictionary<string, List<double>> Responses { set; get; }
-        public new Dictionary<string, List<double>> Responses_all { set; get; }
-        public new int Nsets { set; get; }
+        public int HitMissMin { set; get; }
+        public int HitMissMax { set; get; }
         public bool Is_Separated
         {
             set { this.isSeparated = value; }
@@ -179,32 +128,12 @@ namespace CSharpBackendWithR
             set { this.failureToConverge = value; }
             get { return this.failureToConverge; }
         }
-        public new int Count { set; get; }
-        public new double Crckmax { set; get; }
-        public new double Crckmin { set; get; }
-
-        public new double Xmin { set; get; }
-        public new double Xmax { set; get; }
         public double Npts { set; get; }
-        public new double A25 { set; get; }
-        public new double A50 { set; get; }
-        public new double A90 { set; get; }
-        public new double Sighat { set; get; }
-        public new double Muhat { set; get; }
-        public new double A9095 { set; get; }
-        public new double Pod_threshold { set; get; }
-        public new double Pod_level { set; get; }
-        public new double Confidence_level { set;  get; }
 
-        public new string Clevel { set; get; }
-        public new List<double> Pfit { set; get; }
-        public new List<double> Diff { set; get; }
         public int A_x_n { set; get; }
         public int Set_m { set; get; }
         public int Set_r { set; get; }
-        public new string CIType { set; get; }
-        //progress text
-        public new string ProgressText { set; get; }
+        public string CIType { set; get; }
 
         //get or set DataTables
         public DataTable LogitFitTable {
@@ -231,7 +160,7 @@ namespace CSharpBackendWithR
         
         public void ClearMetrics()
         {
-            /*
+
             A25 = -1;
             A50 = -1;
             A90 = -1;
@@ -241,7 +170,6 @@ namespace CSharpBackendWithR
             LogitFitTable = null;
             ResidualTable = null;
             IterationTable = null;
-            */
         }
     }
     

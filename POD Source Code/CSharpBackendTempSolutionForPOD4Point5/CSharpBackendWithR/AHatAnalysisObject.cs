@@ -9,7 +9,7 @@ namespace CSharpBackendWithR
     [Serializable]
     public class AHatAnalysisObject : ParentAnalysisObject
     {
-        private int modelType;
+        
         private double shapiroTestStat;//Shapiro-Wilk normality test
         private double shapiroPValue;
         private double chiSqValue; //non-constant variance test (the null hypothesis is constant variance)
@@ -47,12 +47,12 @@ namespace CSharpBackendWithR
         private Dictionary<string, List<double>> responsesCensoredRight;
         //box cox
         private double lambda;
-        public AHatAnalysisObject(string nameInput = "")
+        public AHatAnalysisObject(string nameInput = "") : base()
         {
             //name of the analysis
             Name = nameInput;
             Flaw_name = ""; //holds the name of the flaw in the datatable
-            Info_row = 0;
+            //Info_row = 0;
             //KEY:
             //1=no transform,
             //2=x-axis only transform,
@@ -70,11 +70,6 @@ namespace CSharpBackendWithR
             //stores the max and min signal reponses
             Signalmin = -1.0;
             Signalmax = -1.0;
-            Decision_thresholds = new List<double>();
-            //Decision_table_thesholds = new List<string>();
-            //Decision_a50 = new List<string>();
-            //Decision_level = new List<string>();
-            Titles = new List<string>();
             //holds the flaw sizes
             Flaws = new List<double>();
             Flaws_All = new List<double>();
@@ -84,41 +79,9 @@ namespace CSharpBackendWithR
             this.responsesCensoredLeft = new Dictionary<string, List<double>>();
             this.responsesCensoredRight = new Dictionary<string, List<double>>();
             ///this.uncensoredFlaws = new List<double>();
-            //Responses = new Dictionary<string, List<double>>();
+            Responses = new Dictionary<string, List<double>>();
             Responses_all = new Dictionary<string, List<double>>();
-            Nsets = 0;
-            Count = 0; //the original number of data points in a given analysis
-            //max and min crack sizes
-            Crckmin = 0.0;
-            Crckmax = 0.0;
-            //flaw ranges for log transform
-            //log of the max and min crack sizes
-            //protected double LogCrckmin;
-            //protected double LogCrckmax;
-            Xmin = 0.0;
-            Xmax = 0.0;
-            Calcmin = 0.0;
-            Calcmax = 0.0;
-            //key a values
-            A25 = 0.0;
-            A50 = 0.0;
-            A90 = 0.0;
-            //sighat --- standard error at a90
-            Sighat = 0.0;
-            //muhat --- value at a50
-            Muhat = 0.0;
-            A9095 = 0.0;
-            //thesholds
-            Pod_threshold = .5;
-            Pod_level = .9;
-            Confidence_level = .95;
-            Asize = "a90";
-            Alevel = "a090/95";
-            Clevel = "95% confidence bound";
-
-            Pfit = new List<double>();
-            Diff = new List<double>(); //found by taking the response value - pfit
-
+            
             A_transform = 1; //1=no transform, 2=log transform
             Ahat_transform = 1; //1=no transform, 2=log transform, 3= box-cox transform
             //lambda is used for box cox transformation only(normalizes the y-values)
@@ -159,21 +122,8 @@ namespace CSharpBackendWithR
             //used to store the results dataframe
             this.aHatResultsPOD = new DataTable();
         }
-        public new string ProgressText { set; get; }
-        public new string Name { set; get; }
-        public new string Flaw_name { set; get; }
-        public new int ModelType
-        {
-            set { this.modelType = value; }
-            get { return this.modelType; }
-        }
-        public new double Pod_threshold { set; get; }
-        public new double Signalmin { set; get; }
-        public new double Signalmax { set; get; }
-        public new List<double> Flaws { set; get; }
-        public new List<double> Flaws_All { set; get; }
-        public new List<double> ExcludedFlaws { set; get; }
-        public new List<double> LogFlaws_All { set; get; }
+        public double Signalmin { set; get; }
+        public double Signalmax { set; get; }
         public List<double> FlawsCensored
         {
             set { this.flawsCensored = value; }
@@ -189,18 +139,8 @@ namespace CSharpBackendWithR
             set { this.responsesCensoredRight = value; }
             get { return this.responsesCensoredRight; }
         }
-        public new Dictionary<string, List<double>> Responses { set; get; }
-        public new Dictionary<string, List<double>> Responses_all { set; get; }
-        public new double Crckmin { set; get; }
-        public new double Crckmax { set; get; }
-        public new double A25 { set; get; }
-        public new double A50 { set; get; }
-        public new double A90 { set; get; }
-        public new double Sighat { set; get; }
-        public new double Muhat { set; get; }
-        public new double A9095 { set; get; }
-        public new int A_transform { set; get; }
-        public new int Ahat_transform { set; get; }
+        public int A_transform { set; get; }  //identifies transformation on the x-axis
+        public int Ahat_transform { set; get; } //identifies transformation on the y-axis (although not really applicable in hit/miss data)
         public double Lambda
         {
             set { this.lambda = value; }
@@ -332,7 +272,7 @@ namespace CSharpBackendWithR
             A50 = -1;
             A90 = -1;
             A9095 = -1;
-            CovarianceMatrix = null;
+            //CovarianceMatrix = null;
             this.residualStdErr = -1;
             this.durbinWatsonDW = -1;
             this.shapiroTestStat = -1;

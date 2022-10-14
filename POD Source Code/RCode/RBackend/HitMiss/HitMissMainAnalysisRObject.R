@@ -42,14 +42,14 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 results$Index <<- NULL
                                 names(results)[names(results) == 'x'] <<- 'flaw'
                                 names(results)[names(results) == 't_trans'] <<- 'pod'
-                                names(results)[names(results) == 'y'] <<- 'hitrate'
+                                names(results)[names(results) == 'y'] <<- 'Confidence_Interval'
                               }
                               #return dataframe with 0's to prevent erros in c#
                               else{
                                 results <<- data.frame(
                                   flaw= c(0,0,0,0,0),
                                   pod=c(0,0,0,0,0),
-                                  confidence=c(0,0,0,0,0)
+                                  Confidence_Interval=c(0,0,0,0,0)
                                 )
                               }
                               return(results)

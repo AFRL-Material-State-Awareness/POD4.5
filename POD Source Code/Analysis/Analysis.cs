@@ -2441,7 +2441,10 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseMin);
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseMax);
                 myWriter.SetCellValue(rowIndex++, colIndex, Data.ResponseTransform.ToString());
-                myWriter.SetCellValue(rowIndex++, colIndex, InLambdaValue);
+                if (InResponseTransform == TransformTypeEnum.BoxCox)
+                {
+                    myWriter.SetCellValue(rowIndex++, colIndex, InLambdaValue);
+                }
             }
 
             rowIndex++;
@@ -2455,9 +2458,13 @@ namespace POD.Analyze
             {
                 myWriter.SetCellValue(rowIndex++, colIndex, InResponseDecision);
             }
-            myWriter.SetCellValue(rowIndex++, colIndex, InConfIntervalType.ToString());
-            myWriter.SetCellValue(rowIndex++, colIndex, InSamplingType.ToString());
-            myWriter.SetCellValue(rowIndex++, colIndex, InHitMissModel.ToString());
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            {
+                myWriter.SetCellValue(rowIndex++, colIndex, InConfIntervalType.ToString());
+                myWriter.SetCellValue(rowIndex++, colIndex, InSamplingType.ToString());
+                myWriter.SetCellValue(rowIndex++, colIndex, InHitMissModel.ToString());
+            }
+            
             myWriter.SetCellValue(rowIndex++, colIndex, InPODLevel);
             myWriter.SetCellValue(rowIndex++, colIndex, InPODConfidence);
 
@@ -2849,7 +2856,6 @@ namespace POD.Analyze
         }
         public void CheckForLoadedFile()
         {
-            /*
             //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
             //added the check of the x and y values in case the user has an analysis open and then opens an already saved file
             if (_hmAnalysisObject != null)
@@ -2876,7 +2882,9 @@ namespace POD.Analyze
                 }
 
             }
-            */
+            /*
+            //NOTE: cannot compare the whole _hmAnalysisObjects and _ahatAnalysis objects between Analysis.cs and AnalysisData.cs respectively. The multi-threading causes additional bugs
+            //It's best just to compare the x, y data directly to determine if there is a file being loaded or not.
             //if flaws and responses are not identical between Analyis.cs and AnalysisData.cs, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
             if (_hmAnalysisObject != null)
             {
@@ -2899,6 +2907,7 @@ namespace POD.Analyze
                 }
 
             }
+            */
         }
         public double TransformAValue(double myValue, int transform)
         {
