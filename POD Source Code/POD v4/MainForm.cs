@@ -1100,11 +1100,33 @@ namespace POD
             var name = GetFileNameForSaving(defaultName, true);
 
             name = _export.AskUserToSave(name, out shouldSave);
-
+            if(name == null && !shouldSave)
+            {
+                MessageBox.Show("Cannot export to excel because file is being used by another process! If you have the file open in excel, " +
+                    "close excel and retry.");
+                return;
+            }
             if (shouldSave)
             {
                 this.Cursor = Cursors.WaitCursor;
-                _controller.WriteToExcel(_export);
+                //keep the program from crashing
+                try
+                {
+                    _controller.WriteToExcel(_export);
+                }
+                catch (InvalidOperationException operationException)
+                {
+                    MessageBox.Show("Unable to export Data to excel ERROR. " + '\n'+"Make sure that all Analyses are complete before exporting: " + '\n' + operationException);
+                    this.Cursor = Cursors.Default;
+                    return;
+                }
+                catch(Exception noExcelForYou)
+                {
+                    MessageBox.Show("Unable to export Data to excel ERROR: "+'\n'+ noExcelForYou);
+                    this.Cursor = Cursors.Default;
+                    return;
+                }
+                
                 _export.SaveToFile(name);
                 this.Cursor = Cursors.Default;
             }
@@ -1226,7 +1248,6 @@ namespace POD
             else if(result == DialogResult.No)
             {
                 ///_analysis
-                var lol = 0.0;
                 return true;
             }
             

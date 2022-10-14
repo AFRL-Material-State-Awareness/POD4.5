@@ -159,11 +159,19 @@ namespace POD
 
         public void WriteToExcel(ExcelExport myWriter)
         {
-            List<string> names = myWriter.Workbook.GetSheetNames(false);
-            if(names.Contains("Project") == false)
+            try
             {
-                myWriter.Workbook.AddWorksheet("Project");
+                List<string> names = myWriter.Workbook.GetSheetNames(false);
+                if (names.Contains("Project") == false)
+                {
+                    myWriter.Workbook.AddWorksheet("Project");
+                }
             }
+            catch
+            {
+
+            }
+            
 
             myWriter.RemoveDefaultSheet();
 

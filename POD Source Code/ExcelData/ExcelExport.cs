@@ -10,6 +10,8 @@ using SpreadsheetLight.Charts;
 using System.Windows.Forms;
 using System.Data;
 using DocumentFormat;
+//used to check valid file
+using System.IO;
 
 namespace POD.ExcelData
 {
@@ -44,7 +46,7 @@ namespace POD.ExcelData
         public string AskUserToSave(string myDefaultFileName, out bool shouldSave)
         {
             SaveFileDialog dialog = new SaveFileDialog();
-
+            
             dialog.Filter = "Excel File (*.xlsx)|*.xlsx";
             dialog.FileName = myDefaultFileName;
 
@@ -53,7 +55,13 @@ namespace POD.ExcelData
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 string name = dialog.FileName;
-
+                //get file info and check to make sure the file isn't in use by anotherProcess
+                FileInfo excelFileInfo = new FileInfo(name);
+                if (IsFileLocked(excelFileInfo))
+                {
+                    shouldSave = false;
+                    return null;
+                }
                 shouldSave = true;
 
                 return name;
@@ -65,7 +73,40 @@ namespace POD.ExcelData
                 return "";
             }
         }
+        /// <summary>
+        /// source: https://stackoverflow.com/questions/876473/is-there-a-way-to-check-if-a-file-is-in-use
+        /// author: ChrisW , edited by Collin Dauphinee
+        /// link to author: https://stackoverflow.com/users/79271/chrisw
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                //if the file is not found, we know we are not overwriting so return false
+                return false;
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            
 
+            //file is not locked
+            return false;
+        }
         public void SaveToFileWithDefaultName(string myDefaultFileName)
         {
             SaveFileDialog dialog = new SaveFileDialog();

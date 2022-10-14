@@ -623,7 +623,10 @@ namespace POD.Data
         {
             get { return _originalData; }
         }
-
+        public double LambdaValue
+        {
+            get { return _aHatAnalysisObject.Lambda; }
+        }
         /// <summary>
         ///     Get/set the response data transform type
         /// </summary>

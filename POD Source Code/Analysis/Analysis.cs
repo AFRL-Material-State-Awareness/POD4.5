@@ -1983,6 +1983,7 @@ namespace POD.Analyze
 
         public void WriteToExcel(ExcelExport myWriter, bool myPartOfProject = true, DataTable table = null)
         {
+
             string temp = WorksheetName;
 
 
@@ -2443,7 +2444,7 @@ namespace POD.Analyze
                 myWriter.SetCellValue(rowIndex++, colIndex, Data.ResponseTransform.ToString());
                 if (InResponseTransform == TransformTypeEnum.BoxCox)
                 {
-                    myWriter.SetCellValue(rowIndex++, colIndex, InLambdaValue);
+                    myWriter.SetCellValue(rowIndex++, colIndex, Data.LambdaValue);
                 }
             }
 
