@@ -18,10 +18,10 @@ source(paste(folderLocation, "/PrepareDataWithMultipleResponsesRObject.R", sep="
 #data_obs = read.csv(paste(folderLocation,'/Plot_Data_50.csv',sep=""), header=TRUE, col.names=c("y","x"))
 data_obs = read.csv(paste(folderLocation,"/dataFromPlots.csv",sep=""), header=TRUE)
 data_obs=na.omit(data_obs)
-data_obs$y2=NULL
+#data_obs$y2=NULL
 #log both
-#data_obs$y=log(data_obs$y)
-#data_obs$y2=log(data_obs$y2)
+data_obs$y=log(data_obs$y)
+data_obs$y2=log(data_obs$y2)
 begin<-proc.time()
 ###################################################### Uncomment this for boxcox transform (leave lambda in to prevent a varaible not found error)
 #bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
@@ -37,9 +37,9 @@ data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 
 
 fullAnalysis=TRUE
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=1.145, modelType=1, lambda=lambda)
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=5.0, modelType=3, lambda=lambda)
 newSRAnalysis$generateDefaultValues()
-#newSRAnalysis$executeAhatvsA()
+newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
 results<-newSRAnalysis$getResults()
 critPoints<-newSRAnalysis$getCritPts()

@@ -1213,7 +1213,7 @@ namespace POD.Analyze
                 _failedToConverge = _hmAnalysisObject.Failed_To_Converge;
             }
 
-            Data.UpdateOutput();
+            Data.UpdateOutput(_analysisCalculationType);
             
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
@@ -1507,9 +1507,9 @@ namespace POD.Analyze
         }
         public void UpdateCensoredData()
         {
-            
+            //_aHatAnalysisObject.SignalResponseName = _aHatAnalysisObject.Responses_all.ElementAt(i).Key;
             //hitmiss analysis
-            if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 List<double> hmInludedFlaws = new List<double>();
                 List<double> hmIncludedResponses = new List<double>();

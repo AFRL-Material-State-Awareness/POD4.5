@@ -1623,7 +1623,14 @@ namespace POD.Data
             
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
-                UpdateAHatOutput();
+                if (myCalculationType == RCalculationType.ThresholdChange)
+                {
+                    updatePODCurve();
+                }
+                else
+                {
+                    UpdateAHatOutput();
+                }
             }
             else
             {
@@ -1700,6 +1707,40 @@ namespace POD.Data
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Iterations Error");
+            }
+        }
+        private void updatePODCurve()
+        {
+            TransformBackCSharpTablesAHAT BackwardsTransform = new TransformBackCSharpTablesAHAT(_aHatAnalysisObject);
+            bool printDTFlag = false;
+            try
+            {
+                _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
+                //printDT(_podCurveTable);
+                //if (printDTFlag)
+                //    printDT(_podCurveTable);
+                _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable = _podCurveTable.Select("flaw > 0.0").CopyToDataTable();
+                _podCurveTable = _podCurveTable.DefaultView.ToTable();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
+            }
+            //printDT(PodCurveTable);
+            try
+            {
+                //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
+                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
+                _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
+                _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
+                //if (printDTFlag)
+                //    printDT(_podCurveTable_All);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
             }
         }
         private void UpdateAHatOutput()
@@ -1878,6 +1919,8 @@ namespace POD.Data
                 _thresholdPlotTable =  BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);                
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
                 _thresholdPlotTable = _thresholdPlotTable.Select("threshold > 0.0").CopyToDataTable();
+                //remove infiniti values
+                _thresholdPlotTable = _thresholdPlotTable.Select("threshold < 1.7976931348623157E+308").CopyToDataTable();
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_thresholdPlotTable);
@@ -1892,7 +1935,10 @@ namespace POD.Data
                 //_thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
                 _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
+                //remove negative values
                 _thresholdPlotTable_All = _thresholdPlotTable_All.Select("threshold > 0.0").CopyToDataTable();
+                //remove infiniti values
+                _thresholdPlotTable_All = _thresholdPlotTable_All.Select("threshold <  1.7976931348623157E+308").CopyToDataTable();
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
                 if (printDTFlag)
                     printDT(_thresholdPlotTable_All);
@@ -3867,7 +3913,7 @@ namespace POD.Data
             //Console.WriteLine();
             Debug.WriteLine('\n');
             int rowCounter = 0;
-            int limit = 100;
+            int limit = 200;
             foreach (DataRow dataRow in data.Rows)
             {
                 for (int j = 0; j < dataRow.ItemArray.Length; j++)

@@ -63,7 +63,7 @@ namespace CSharpBackendWithR
                     REngine.SetEnvironmentVariables(rPath, homePath);
                     engine = REngine.GetInstance();
                 }
-                catch
+                catch (Exception e)
                 {
                     rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
                     homePath = this.applicationPath + @"\R-3.5.3\";
