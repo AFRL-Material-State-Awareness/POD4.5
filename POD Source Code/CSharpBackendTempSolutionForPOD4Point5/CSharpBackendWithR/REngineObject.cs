@@ -14,7 +14,8 @@ namespace CSharpBackendWithR
         private string applicationPathScripts;
         private string applicationPath;
         private string forwardSlashAppPath;
-        
+        string rPath;
+        string homePath;
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
@@ -47,44 +48,31 @@ namespace CSharpBackendWithR
         
         private REngine initializeRDotNet()
         {
-            string rPath;
-            string homePath;
+            
             REngine engine;
-            string rVersion = "4.1.3";
+            string rVersion = "4.1.2";
             //initialize the R engine
             if (rVersion == "3.5.3")
             {
                 //NOTE installing all necessary packages for r 3.5.3 has become nearly impossible for the 'car' package
                 try
                 {
-                    rPath = this.applicationPath + @"\R-3.5.3\bin\i386";
-                    homePath = this.applicationPath + @"\R-3.5.3\";
-                    REngine.SetEnvironmentVariables(rPath, homePath);
-                    engine = REngine.GetInstance();
+                    StartREngine(rVersion, out engine);
                 }
                 catch (Exception e)
                 {
-                    rPath = this.applicationPath + @"\R-3.5.3\bin\x64";
-                    homePath = this.applicationPath + @"\R-3.5.3\";
-                    REngine.SetEnvironmentVariables(rPath, homePath);
-                    engine = REngine.GetInstance();
+                    StartREngine(rVersion, out engine, "x64");
                 }
             }
             else if(rVersion=="4.0.0")
             {
                 try
                 {
-                    rPath = this.applicationPath + @"\R-4.0.0\bin\i386";
-                    homePath = this.applicationPath + @"\R-4.0.0\";
-                    REngine.SetEnvironmentVariables(rPath, homePath);
-                    engine = REngine.GetInstance();
+                    StartREngine(rVersion, out engine);
                 }
                 catch (Exception e)
                 {
-                    rPath = this.applicationPath + @"\R-4.0.0\bin\x64";
-                    homePath = this.applicationPath + @"\R-4.0.0\";
-                    REngine.SetEnvironmentVariables(rPath, homePath);
-                    engine = REngine.GetInstance();
+                    StartREngine(rVersion, out engine, "x64");
                 }
 
             }
@@ -92,10 +80,7 @@ namespace CSharpBackendWithR
             {
                 try
                 {
-                    rPath = this.applicationPath + @"\R-4.1.2\bin\i386";
-                    homePath = this.applicationPath + @"\R-4.1.2\";
-                    REngine.SetEnvironmentVariables(rPath, homePath);
-                    engine = REngine.GetInstance();
+                    StartREngine(rVersion, out engine);
                 }
                 catch (Exception RSetupEnvironmentException)
                 {
@@ -104,10 +89,7 @@ namespace CSharpBackendWithR
                         throw RSetupEnvironmentException;
                     }
                     else {
-                        rPath = this.applicationPath + @"\R-4.1.2\bin\x64";
-                        homePath = this.applicationPath + @"\R-4.1.2\";
-                        REngine.SetEnvironmentVariables(rPath, homePath);
-                        engine = REngine.GetInstance();
+                        StartREngine(rVersion, out engine, "x64");
                     }
                     
                 }
@@ -116,36 +98,37 @@ namespace CSharpBackendWithR
             {
                 try
                 {
-                    rPath = this.applicationPath + @"\R-4.1.3\bin\i386";
-                    homePath = this.applicationPath + @"\R-4.1.3\";
-                    REngine.SetEnvironmentVariables(rPath, homePath);
-                    engine = REngine.GetInstance();
+                    StartREngine(rVersion, out engine);
                 }
                 catch (Exception RSetupEnvironmentException)
                 {
+
                     if (RSetupEnvironmentException.GetType().Name == "ArgumentException")
                     {
                         throw RSetupEnvironmentException;
                     }
                     else
                     {
-                        rPath = this.applicationPath + @"\R-4.1.3\bin\x64";
-                        homePath = this.applicationPath + @"\R-4.1.3\";
-                        REngine.SetEnvironmentVariables(rPath, homePath);
-                        engine = REngine.GetInstance();
+                        StartREngine(rVersion, out engine, "x64");
                     }
-
                 }
             }
             else
             {
                 engine = null;
             }
-            ValidateRInstalled(engine);
+            ValidateRInstalled(ref engine);
             engine.Initialize();
             //ensure the REngine global environment is cleared when the program starts
             //engine.ClearGlobalEnvironment();
             return engine;
+        }
+        private void StartREngine(string rVersion, out REngine engine, string programType = "i386")
+        {
+            this.rPath = this.applicationPath + @"\R-"+rVersion+@"\bin\" + programType;
+            this.homePath = this.applicationPath + @"\R-" + rVersion + @"\";
+            REngine.SetEnvironmentVariables(this.rPath, this.homePath);
+            engine = REngine.GetInstance();
         }
         /// <summary>
         /// https://stackoverflow.com/questions/45537671/dataframe-to-datatable-r-net-fastly
@@ -157,14 +140,7 @@ namespace CSharpBackendWithR
             for (int i = 0; i < myDataFrame.ColumnCount; ++i)
             {
                 dtable.Columns.Add(myDataFrame.ColumnNames[i]);
-                //if (dtable.Columns[i].ColumnName == "hitrate")
-                //{
-                //    dtable.Columns[i].DataType = typeof(Int32);
-                //}
-                //else
-                //{
-                    dtable.Columns[i].DataType = typeof(Double);
-                //}
+                dtable.Columns[i].DataType = typeof(Double);
             }
             for (int i = 0; i < myDataFrame.RowCount; i++)
             {
@@ -176,8 +152,8 @@ namespace CSharpBackendWithR
             }
             return dtable;
         }
-        //this function is used to set the library path (libraries are contained within the program)
 
+        //this function is used to set the library path (libraries are contained within the program)
         public void SetLibraryPathEnv()
         {
             try
@@ -197,35 +173,7 @@ namespace CSharpBackendWithR
             bool scriptsLoaded = false;
             try
             {
-                //import necessary R classes for analysis
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMLogitApproximationRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenNormFitClassR.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LinearComboGeneratorClassR.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LRConfIntRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MLRConfIntRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
-                //Ranked Set Sampling scripts
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RSSComponentsObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetSamplingMainRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetRegGen.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenPODCurveRSS.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenRSS_A_Values.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MainRSSamplingDataInR.R')");
-                //this is the main Hit miss R analysis object
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
-                //minimcprofile(used for parallel processing
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
-                //Firth script classs- added june 6th
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
-                //AHat Analysis R scripts
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
-                this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
-                //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
-                //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
-                scriptsLoaded = true;
+                EvaluateRScripts(ref scriptsLoaded);
             }
             catch
             {
@@ -237,32 +185,47 @@ namespace CSharpBackendWithR
                 {
                     this.forwardSlashAppPath = this.forwardSlashAppPath + "/..";
                     //this may get used instead of the platform target is purely x86
+                    EvaluateRScripts(ref scriptsLoaded);
+                }
+                catch
+                {
+                    //check other paths
+                }             
+            }
+            if (!scriptsLoaded)
+            {
+                try
+                {
+                    //this try is when the user has installed PODv4.5
+                    string applicationPathScriptsExe = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    //convert the application path to forward slashes (when using file paths in r)
+                    string forwardSlashAppPathExe = applicationPathScriptsExe.Replace(@"\", "/");
                     //import necessary R classes for analysis
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMLogitApproximationRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenNormFitClassR.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LinearComboGeneratorClassR.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LRConfIntRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MLRConfIntRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/HMLogitApproximationRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/GenNormFitClassR.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/LinearComboGeneratorClassR.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/LRConfIntRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/MLRConfIntRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
                     //Ranked Set Sampling scripts
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RSSComponentsObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetSamplingMainRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetRegGen.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenPODCurveRSS.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenRSS_A_Values.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MainRSSamplingDataInR.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/RSSComponentsObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/RankedSetSamplingMainRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/RankedSetRegGen.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/GenPODCurveRSS.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/GenRSS_A_Values.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/MainRSSamplingDataInR.R')");
                     //this is the main Hit miss R analysis object
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
-                    //minimcprofile(used for parallel processing
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
+                    //minimcprofile(used for parallel processing)
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
                     //Firth script classs- added june 6th
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
                     //AHat Analysis R scripts
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
-                    this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
+                    this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
                     //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
                     //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
                     //this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/fakeScript.R')");
@@ -280,11 +243,45 @@ namespace CSharpBackendWithR
                     }
                 }
             }
-            
 
 
 
 
+
+        }
+        //replace and debug with this later in order to make code more compact
+        private void EvaluateRScripts(ref bool scriptsLoaded)
+        {
+            //import necessary R classes for analysis
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMLogitApproximationRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenNormFitClassR.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LinearComboGeneratorClassR.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/LRConfIntRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MLRConfIntRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenAValuesOnPODCurveRObject.R')");
+            //Ranked Set Sampling scripts
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RSSComponentsObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetSamplingMainRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/RankedSetRegGen.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenPODCurveRSS.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/GenRSS_A_Values.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MainRSSamplingDataInR.R')");
+            //this is the main Hit miss R analysis object
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
+            //minimcprofile(used for parallel processing
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
+            //Firth script classs- added june 6th
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
+            //AHat Analysis R scripts
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
+            this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
+            //this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/fakeScript.R')");
+            //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
+            //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
+            scriptsLoaded = true;
         }
         private void InitializeRLibraries()
         {
@@ -364,7 +361,7 @@ namespace CSharpBackendWithR
             //InitializeRScripts();
             //InitializePythonScripts();
         }
-        private void ValidateRInstalled(REngine engine)
+        private void ValidateRInstalled(ref REngine engine)
         {
             if (engine == null)
             {
