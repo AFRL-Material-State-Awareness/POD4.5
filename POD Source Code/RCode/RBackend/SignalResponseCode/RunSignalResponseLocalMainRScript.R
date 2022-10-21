@@ -55,17 +55,14 @@ threshDF<-newSRAnalysis$getThresholdDF()
 end<-proc.time()
 print("total time:")
 print(end-begin)
+
+
+
+
 newSRAnalysis$plotSimdata(results)
 newSRAnalysis$plotCI(results)
 
-#newSRAnalysis$plotSimdata(linResults)
-#residualError=c()
-#for(i in 1:nrow(data_obs)){
-#  thisError=data_obs$y[i]-mean(data_obs$y)
-#  residualError=c(residualError, thisError^2)
-#}
-#newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=4.0, modelType=1, lambda=lambda)
-#slope<-newSRAnalysis$getModelSlope()
+
 
 
 

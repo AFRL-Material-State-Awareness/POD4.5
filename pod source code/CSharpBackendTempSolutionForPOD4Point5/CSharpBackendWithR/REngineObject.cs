@@ -43,7 +43,6 @@ namespace CSharpBackendWithR
                 PythonLoaded = false;
             }
             */
-
         }
         
         private REngine initializeRDotNet()
@@ -51,7 +50,7 @@ namespace CSharpBackendWithR
             string rPath;
             string homePath;
             REngine engine;
-            string rVersion = "4.1.2";
+            string rVersion = "4.1.3";
             //initialize the R engine
             if (rVersion == "3.5.3")
             {
@@ -111,6 +110,31 @@ namespace CSharpBackendWithR
                         engine = REngine.GetInstance();
                     }
                     
+                }
+            }
+            else if (rVersion == "4.1.3")
+            {
+                try
+                {
+                    rPath = this.applicationPath + @"\R-4.1.3\bin\i386";
+                    homePath = this.applicationPath + @"\R-4.1.3\";
+                    REngine.SetEnvironmentVariables(rPath, homePath);
+                    engine = REngine.GetInstance();
+                }
+                catch (Exception RSetupEnvironmentException)
+                {
+                    if (RSetupEnvironmentException.GetType().Name == "ArgumentException")
+                    {
+                        throw RSetupEnvironmentException;
+                    }
+                    else
+                    {
+                        rPath = this.applicationPath + @"\R-4.1.3\bin\x64";
+                        homePath = this.applicationPath + @"\R-4.1.3\";
+                        REngine.SetEnvironmentVariables(rPath, homePath);
+                        engine = REngine.GetInstance();
+                    }
+
                 }
             }
             else
@@ -281,7 +305,7 @@ namespace CSharpBackendWithR
                                                              //this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
-                //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+                this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
                 //this.rEngine.Evaluate("print(packageVersion('reticulate'))");
                 //the following libraries are used for signal response
                 this.rEngine.Evaluate("library(gridExtra)");
@@ -313,7 +337,8 @@ namespace CSharpBackendWithR
         {
             //this.rEngine.Evaluate("use_python('C:/Users/gohmancm/AppData/Local/Continuum/anaconda3')");
             //this.rEngine.Evaluate("use_python('C:/ProgramData/Anaconda3')");
-            this.rEngine.Evaluate("use_condaenv('C:/ProgramData/Anaconda3')");
+            //this.rEngine.Evaluate("use_condaenv('C:/ProgramData/Anaconda3')");
+            this.rEngine.Evaluate("use_python('C:/Users/colin/AppData/Local/Programs/Python/Python310-32')");
         }
         //used to initialize helper python scripts
         private void InitializePythonScripts()

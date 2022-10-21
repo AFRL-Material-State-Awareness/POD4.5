@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/POD4.5OCtober2022/v16/.suo
+/.vs/POD4.5OCtober2022/v16/Browse.VC.db
+/.vs/ProjectSettings.json
+/.vs/slnx.sqlite
+/POD Source Code/UpgradeLog5.htm

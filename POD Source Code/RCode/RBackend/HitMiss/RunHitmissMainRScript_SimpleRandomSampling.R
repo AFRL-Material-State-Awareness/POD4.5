@@ -1,6 +1,3 @@
-# #Test Code
-#flag used for genNormFitClassR
-isLog=FALSE
 #import necessary libraries
 library(methods)
 #dependencies from original R code
@@ -12,17 +9,16 @@ library(splines)
 library(parallel)
 library(roxygen2)
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
-hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
+#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 #hitMissDF$x<-1/hitMissDF$x
-hitMissDF$y.1=NULL
-hitMissDF[1,3]=1.5
-#hitMissDF<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
+#hitMissDF$y.1=NULL
+#hitMissDF[1,3]=1.5
+hitMissDF<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
 #hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")
-#get the working directory, used for debugging only
-names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
+
 #hitMissDF$x= 1/hitMissDF$x
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
 ##### Import necessary R classes to perform hitmiss analysis
@@ -38,82 +34,90 @@ source(paste(codeLocation,"/MLRConfIntRObject.R",sep=""))
 source(paste(codeLocation,"/GenAValuesOnPODCurveRObject.R",sep=""))
 source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
+source(paste(codeLocation,"/TransformBackFunctions_ForRunningInOnly_R.R", sep = ""))
+source(paste(codeLocation,"/HitMissInternalRGraphingOutputFunctions_NO_UI.R", sep = ""))
+#get the working directory, used for debugging only
+transformType=2
+hitMissDF<-TransformHitMiss_HM(hitMissDF, transformType)
+if(transformType==2){
+  isLog=TRUE
+}else{
+  isLog=FALSE
+}
+names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
+
 CItype0="ModifiedWald"
-type="Firth Logistic Regression"
-#type="Logistic Regression"
-begin=Sys.time()
-#for(i in 1:10){
-  newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
+#CHOOSE MODEL TYPE(comment out the one you don't want)
+#type="Firth Logistic Regression"
+type="Logistic Regression"
+#begin analysis
+
+oneInspector=function(){
+  newAnalysis<<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
   newAnalysis$executeFullAnalysis()
   #newAnalysis$executeFitAnalysisOnly()
-  results<-newAnalysis$getResults()
-  residTab<-newAnalysis$getResidualTable()
-  aValues<-newAnalysis$getKeyAValues()
-  orig<-newAnalysis$getHitMissDF()
-  covarianceMatrix<-newAnalysis$getCovMatrix()
-  goodnessOfFit<-newAnalysis$getGoodnessOfFit()
-  iterationTable<-newAnalysis$getIterationTable()
-  separatedQuestion<-newAnalysis$getSeparation()
-  failedtoConverge<-newAnalysis$getConvergedFail()
+  results<<-TransformResultsBack_HM(newAnalysis$getResults(),transformType)
+  residTab<<-TransformResidualTableBack_HM(newAnalysis$getResidualTable(), transformType)
+  aValues<<-TransformBackAValues_HM(newAnalysis$getKeyAValues(), transformType)
+  orig<<-TransformOriginalDataFrameBack_HM(newAnalysis$getHitMissDF(), transformType)
+  covarianceMatrix<<-newAnalysis$getCovMatrix()
+  goodnessOfFit<<-newAnalysis$getGoodnessOfFit()
+  iterationTable<<-newAnalysis$getIterationTable()
+  separatedQuestion<<-newAnalysis$getSeparation()
+  failedtoConverge<<-newAnalysis$getConvergedFail()
   newAnalysis$plotSimdata(results)
   newAnalysis$plotCI(results)
-#}
+}
+MultipleInspectors=function(){
+  results<<-list()
+  residTab<<-list()
+  aValues<<-list()
+  orig<<-list()
+  covarianceMatrix<<-list()
+  goodnessOfFit<<-list()
+  iterationTable<<-list()
+  separatedQuestion<<-list()
+  failedtoConverge<<-list()
+  responsesOnly<<-subset(hitMissDF, select = -c(Index,x) )
+  for (i in 1:ncol(responsesOnly)){
+    thisAnalysis=data.frame(
+      Index=hitMissDF$Index,
+      x=hitMissDF$x,
+      y=responsesOnly[,i]
+    )
+    newAnalysis<<-HMAnalysis$new(hitMissDF=thisAnalysis, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
+    newAnalysis$executeFullAnalysis()
+    results<<-append(results,list(TransformResultsBack_HM(newAnalysis$getResults(),transformType)))
+    residTab<<-append(residTab,list(TransformResidualTableBack_HM(newAnalysis$getResidualTable(), transformType)))
+    aValues<<-append(aValues,list(TransformBackAValues_HM(newAnalysis$getKeyAValues(), transformType)))
+    orig<<-append(orig,list(TransformOriginalDataFrameBack_HM(newAnalysis$getHitMissDF(), transformType)))
+    covarianceMatrix<<-append(covarianceMatrix,list(newAnalysis$getCovMatrix()))
+    goodnessOfFit<<-append(goodnessOfFit,list(newAnalysis$getGoodnessOfFit()))
+    iterationTable<<-append(iterationTable,list(newAnalysis$getIterationTable()))
+    separatedQuestion<<-append(separatedQuestion,list(newAnalysis$getSeparation()))
+    failedtoConverge<<-append(failedtoConverge,list(newAnalysis$getConvergedFail()))
+  }
+}
+
+begin=Sys.time()
+#oneInspector()
+MultipleInspectors()
+WriteOutResultsMuliple_POD(results)
+WriteOutResultsMuliple_Confidence(results)
 end=Sys.time()
 print("execution time")
 print(end-begin)
 
-
-# if(CItype0== "Standard Wald"){
-#   a9095Wald=aValues[[5]]
-# }
-# if(CItype0== "Modified Wald"){
-#   a9095MWald=aValues[[5]]
-# }
-# if(CItype0== "LR"){
-#   a9095LR=aValues[[5]]
-# }
-# if(CItype0== "MLR"){
-#   a9095MLR=aValues[[5]]
-# }
-#debugging
-#$plotSimdata(results)
-#newAnalysis$plotCI(results)
+show(plottingData)
+show(plottingDataC)
 
 
-# CITypeList=list("Standard Wald", "Modified Wald", "LR", "MLR")
-# ###loops through all the CIs and returns the values
-# for(i in CITypeList){
-#   newAnalysis<-HMAnalysis$new(hitMissDF=hitMissDF, CIType=i, N=nrow(hitMissDF), normSampleAmount=250)
-#   newAnalysis$detAnalysisApproach()
-#   results<-newAnalysis$getResults()
-#   aValues<-newAnalysis$getKeyAValues()
-#   if(i== "Standard Wald"){
-#     stdWald=data.frame(
-#       a9095Wald=as.numeric(aValues)
-#     )
-#    
-#   }
-#   if(i== "Modified Wald"){
-#     MWald=data.frame(
-#       a9095MWald=as.numeric(aValues)
-#       )
-#   }
-#   if(i== "LR"){
-#     LR=data.frame(
-#       a9095LR=as.numeric(aValues)
-#     )
-#   }
-#   if(i== "MLR"){
-#     MLR=data.frame(
-#       a9095MLR=as.numeric(aValues)
-#     )
-#   }
-#   #debugging
-#   newAnalysis$plotSimdata(results)
-#   newAnalysis$plotCI(results)
-# }
-# resultsDFDeBUG<-cbind(stdWald,MWald, LR, MLR )
 
 
-#assign(".lib.loc", "C:/Users/gohmancm/Desktop/newPODrepository/POD Source Code/RLibs/win-library/3.5", envir = environment(.libPaths))
+
+
+
+
+
+
 
