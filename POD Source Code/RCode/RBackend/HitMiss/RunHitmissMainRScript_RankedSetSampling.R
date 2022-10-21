@@ -65,9 +65,9 @@ if(transformType==2){
 regression="Logistic Regression"
 
 normSamp=500
-resamplesMax=500
+resamplesMax=30
 #conf int type
-ciType="StandardWald"
+ciType="ModifiedWald"
 start.time <- Sys.time()
 set_m=6
 
