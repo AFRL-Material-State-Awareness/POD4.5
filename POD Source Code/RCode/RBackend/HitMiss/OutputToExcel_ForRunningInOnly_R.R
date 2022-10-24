@@ -77,12 +77,12 @@ outputToExcel_HM=function(){
   }
   
   #make a POD table with al inspectors
-  sheet=createSheet(excelOuputWK, "POD_Inspectors_ALL")
-  addDataFrame(outputExcelPODAndConfidence_All_HM()[[1]], sheet = sheet, startRow = 1, startColumn = 1, row.names = FALSE)
-  autoSizeColumn(sheet=sheet, colIndex = 1:100)
-  sheet=createSheet(excelOuputWK, "POD_Confidence_ALL")
-  addDataFrame(outputExcelPODAndConfidence_All_HM()[[2]], sheet = sheet, startRow = 1, startColumn = 1, row.names = FALSE)
-  autoSizeColumn(sheet=sheet, colIndex = 1:100)
+  # sheet=createSheet(excelOuputWK, "POD_Inspectors_ALL")
+  # addDataFrame(outputExcelPODAndConfidence_All_HM()[[1]], sheet = sheet, startRow = 1, startColumn = 1, row.names = FALSE)
+  # autoSizeColumn(sheet=sheet, colIndex = 1:100)
+  # sheet=createSheet(excelOuputWK, "POD_Confidence_ALL")
+  # addDataFrame(outputExcelPODAndConfidence_All_HM()[[2]], sheet = sheet, startRow = 1, startColumn = 1, row.names = FALSE)
+  # autoSizeColumn(sheet=sheet, colIndex = 1:100)
   saveWorkbook(excelOuputWK, "C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/myExcelOutput.xlsx")
 }
 outputExcelPODAndConfidence_All_HM=function(){
@@ -100,6 +100,7 @@ outputExcelPODAndConfidence_All_HM=function(){
   for (i in 1:length(results)){
     currPODConf=results[[i]]$Confidence_Interval
     Confidence_Dataframe_All=cbind(Confidence_Dataframe_All, currPODConf)
+    names(POD_Dataframe_All)[names(POD_Dataframe_All) == 'currPODConf'] <- paste("Inspector", i, sep = '')
   }
   return(list(POD_Dataframe_All, Confidence_Dataframe_All))
 }

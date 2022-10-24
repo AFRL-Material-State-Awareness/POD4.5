@@ -491,12 +491,14 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                     //Source.Python.AddErrorText("Output values out of range.");
                     Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a Statistician if Necessary");
                 }
-                
+
 
                 MainChart.ClearEverythingButPoints();
+                //mainChart.UpdateBestFitLine();
                 linearityChart.ClearEverythingButPoints();
                 podChart.ClearEverythingButPoints();
-
+                //if there is an error, allow the user to open another analysis tab since it is no longer running
+                CSharpBackendWithR.REngineObject.REngineRunning = false;
                 return;
             }
             

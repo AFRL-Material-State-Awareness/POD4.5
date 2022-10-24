@@ -699,7 +699,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 linearityChart.ClearEverythingButPoints();
                 thresholdChart.ClearEverythingButPoints();
                 podChart.ClearEverythingButPoints();
-
+                //if there is an error, allow the user to open another analysis tab since it is no longer running
+                REngineObject.REngineRunning = false;
                 return;
             }
 
