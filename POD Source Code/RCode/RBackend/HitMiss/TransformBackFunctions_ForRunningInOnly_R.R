@@ -66,8 +66,9 @@ TransformBackAValues_HM=function(aValues, transformType){
     }else{
       aValues[[i]]=1/aValues[[i]]
     }
-    return(aValues)
+    
   }
+  return(aValues)
 }
 ####################OLD CODE
 # if(CItype0== "Standard Wald"){

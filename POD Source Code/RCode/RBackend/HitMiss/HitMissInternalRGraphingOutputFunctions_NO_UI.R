@@ -15,7 +15,8 @@ WriteOutResultsMuliple_POD=function(results){
   plottingData<<-ggplot(combinedPODDataframe, aes(flaw))+xlim(0, max(orig[[1]]$flaw)+.1*max(orig[[1]]$flaw))
   podOnly=subset(combinedPODDataframe, select = -c(flaw) )
   booleanArray=c()
-  for(i in 1:10){ booleanArray=append(booleanArray, TRUE)}
+  for(i in 1:length(podOnly)){ booleanArray=append(booleanArray, TRUE)}
+  print(length(booleanArray))
   for(i in 1:length(podOnly)){
     #plottingData<<-plottingData+geom_point(aes_(y=combinedPODDataframe[,i+1]), color=colorList[[i]], show.legend = TRUE)
     if(booleanArray[i]){
@@ -43,7 +44,8 @@ WriteOutResultsMuliple_Confidence=function(results){
   plottingDataC<<-ggplot(combinedConfidenceDataframe, aes(flaw))+xlim(0, max(orig[[1]]$flaw)+.1*max(orig[[1]]$flaw))
   ConfidenceIntervalOnly=subset(combinedConfidenceDataframe, select = -c(flaw) )
   booleanArray=c()
-  for(i in 1:10){ booleanArray=append(booleanArray, TRUE)}
+  for(i in 1:length(podOnly)){ booleanArray=append(booleanArray, TRUE)}
+  print(length(booleanArray))
   for(i in 1:length(ConfidenceIntervalOnly)){
     #plottingData<<-plottingData+geom_point(aes_(y=combinedPODDataframe[,i+1]), color=colorList[[i]], show.legend = TRUE)
     if(booleanArray[i]){

@@ -8,17 +8,15 @@ library(logistf)
 library(splines)
 library(parallel)
 library(roxygen2)
-#hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Bad_2.csv")
+library(xlsx)
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 #hitMissDF$x<-1/hitMissDF$x
 #hitMissDF$y.1=NULL
 #hitMissDF[1,3]=1.5
-hitMissDF<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
-#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/PODv4Point5Attemp1/PODv4/POD Source Code/RCode/RBackend/HitMiss/HitMissInfo_BadLL.csv")
-#hitMissDF <- read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/RCode/RBackend/HitMissData_Good_1TestSet.csv")
-
+hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
+hitMissDF<-hitMissDF[ , colSums(is.na(hitMissDF))==0]
 #hitMissDF$x= 1/hitMissDF$x
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
 ##### Import necessary R classes to perform hitmiss analysis
@@ -36,24 +34,27 @@ source(paste(codeLocation,"/HMFirthApproximationRObject.R",sep=""))
 source(paste(codeLocation,"/miniMcprofile.R",sep=""))
 source(paste(codeLocation,"/TransformBackFunctions_ForRunningInOnly_R.R", sep = ""))
 source(paste(codeLocation,"/HitMissInternalRGraphingOutputFunctions_NO_UI.R", sep = ""))
+source(paste(codeLocation,"/OutputToExcel_ForRunningInOnly_R.R", sep = ""))
+
 #get the working directory, used for debugging only
-transformType=2
+transformType=1
 hitMissDF<-TransformHitMiss_HM(hitMissDF, transformType)
 if(transformType==2){
   isLog=TRUE
 }else{
   isLog=FALSE
 }
-names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
-
-CItype0="ModifiedWald"
+names(hitMissDF)[names(hitMissDF) == 'IN.1.HM'] <- 'y'
+#hitMissDF<-subset(hitMissDF, select = c(Index, x, Inspector1, Inspector2))
+#names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
+CItype0="StandardWald"
 #CHOOSE MODEL TYPE(comment out the one you don't want)
-#type="Firth Logistic Regression"
-type="Logistic Regression"
+type="Firth Logistic Regression"
+#type="Logistic Regression"
 #begin analysis
 
 oneInspector=function(){
-  newAnalysis<<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=500)
+  newAnalysis<<-HMAnalysis$new(hitMissDF=hitMissDF, modelType=type, CIType=CItype0, N=nrow(hitMissDF), normSampleAmount=1500)
   newAnalysis$executeFullAnalysis()
   #newAnalysis$executeFitAnalysisOnly()
   results<<-TransformResultsBack_HM(newAnalysis$getResults(),transformType)
@@ -90,6 +91,7 @@ MultipleInspectors=function(){
     results<<-append(results,list(TransformResultsBack_HM(newAnalysis$getResults(),transformType)))
     residTab<<-append(residTab,list(TransformResidualTableBack_HM(newAnalysis$getResidualTable(), transformType)))
     aValues<<-append(aValues,list(TransformBackAValues_HM(newAnalysis$getKeyAValues(), transformType)))
+    #aValues<<-append(aValues,list(newAnalysis$getKeyAValues(), transformType))
     orig<<-append(orig,list(TransformOriginalDataFrameBack_HM(newAnalysis$getHitMissDF(), transformType)))
     covarianceMatrix<<-append(covarianceMatrix,list(newAnalysis$getCovMatrix()))
     goodnessOfFit<<-append(goodnessOfFit,list(newAnalysis$getGoodnessOfFit()))
@@ -103,21 +105,22 @@ begin=Sys.time()
 #oneInspector()
 MultipleInspectors()
 WriteOutResultsMuliple_POD(results)
-WriteOutResultsMuliple_Confidence(results)
+#WriteOutResultsMuliple_Confidence(results)
 end=Sys.time()
 print("execution time")
 print(end-begin)
 
 show(plottingData)
-show(plottingDataC)
+#show(plottingDataC)
+
+
+filename= 'C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/myExcelOutput.xlsx'
+
+#outputList=list(orig[[1]], residTab[[1]], results[[1]], aValues[[1]])
+#write.xlsx(orig[[1]], "C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/myExcelOutput.xlsx", sheetName="Sheet1", append = FALSE)
+#write.xlsx(aValues[[1]], "C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/myExcelOutput.xlsx", sheetName="Sheet2", append = TRUE)
 
 
 
-
-
-
-
-
-
-
+outputToExcel_HM()
 

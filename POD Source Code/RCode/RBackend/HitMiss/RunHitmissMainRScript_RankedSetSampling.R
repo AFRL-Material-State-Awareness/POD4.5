@@ -8,8 +8,8 @@ library(logistf)
 
 #Sys.which("python")
 #use_python('C:/ProgramData/Anaconda3')
-#use_condaenv('C:/ProgramData/Anaconda3')
-use_python('C:/Users/colin/AppData/Local/Programs/Python/Python310-32')
+use_condaenv('C:/ProgramData/Anaconda3')
+#use_python('C:/Users/colin/AppData/Local/Programs/Python/Python310-32')
 filepath=dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(filepath,"/../PythonRankedSetSampling/RSSRowSorter.py", sep=""))
 source_python(paste(filepath,"/../PythonRankedSetSampling/CyclesArrayGenerator.py", sep=""))
@@ -31,9 +31,12 @@ source(paste(filepath,"/GenAValuesOnPODCurveRObject.R", sep = ""))
 source(paste(filepath,"/LRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/MLRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/TransformBackFunctions_ForRunningInOnly_R.R", sep = ""))
+source(paste(filepath,"/OutputToExcel_ForRunningInOnly_R.R", sep = ""))
 
 #LOAD in data as CSV for POD Analysis
-testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Good.csv")
+#testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Good.csv")
+testData<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
+testData<-testData[ , colSums(is.na(testData))==0]
 #testData<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/RCode/RBackend/HitMissInfo_BadLL.csv")
@@ -44,11 +47,12 @@ testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CShar
 #testData<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 ##############################################################
-testData<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
-testData=subset(testData, select = c(Index, x, Inspector1))
-names(testData)[names(testData) == 'Inspector1'] <- 'y'
+#testData<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
+#testData=subset(testData, select = c(Index, x, Inspector1))
+#names(testData)[names(testData) == 'Inspector1'] <- 'y'
+names(testData)[names(testData) == 'IN.1.HM'] <- 'y'
 #############################################################
-transformType=2
+transformType=1
 testData<-TransformHitMiss_HM(testData, transformType)
 #flag used for genNormFitClassR
 if(transformType==2){
@@ -61,31 +65,31 @@ if(transformType==2){
 #used for modified wald
 
 #CHOOSE MODEL TYPE(comment out the one you don't want)
-#regression="Firth Logistic Regression"
-regression="Logistic Regression"
+type="Firth Logistic Regression"
+#regression="Logistic Regression"
 
 normSamp=500
 resamplesMax=30
 #conf int type
-ciType="ModifiedWald"
+CItype0="ModifiedWald"
 start.time <- Sys.time()
 set_m=6
 
-if(ciType=="StandardWald"){
+if(CItype0=="StandardWald"){
   set_r=floor(nrow(testData)/set_m)
-}else if(ciType=="ModifiedWald"){
+}else if(CItype0=="ModifiedWald"){
   set_r=floor(normSamp/set_m)
-}else if(ciType=="LR"){
+}else if(CItype0=="LR"){
   set_r=floor(normSamp/set_m)
-}else if(ciType=="MLR"){
+}else if(CItype0=="MLR"){
   set_r=floor(normSamp/set_m)
 }else{
   stop("CI type not valid!")
 }
 oneInspector=function(){
   newRSSComponent<-RSSComponents$new()
-  newRSSComponent$initialize(maxResamples=resamplesMax, set_mInput=set_m, set_rInput=set_r,regressionType=regression, excludeNAInput=TRUE)
-  newHMRSSInstance<-HMAnalysis$new(hitMissDF=testData, CIType=ciType, modelType=regression, N=nrow(testData),
+  newRSSComponent$initialize(maxResamples=resamplesMax, set_mInput=set_m, set_rInput=set_r,regressionType=type, excludeNAInput=TRUE)
+  newHMRSSInstance<-HMAnalysis$new(hitMissDF=testData, CIType=CItype0, modelType=type, N=nrow(testData),
                                    normSampleAmount=normSamp, rankedSetSampleObject=newRSSComponent)
   newHMRSSInstance$initializeRSS()
   resultDF<-TransformResultsBack_HM(na.omit(newHMRSSInstance$getResults()), transformType)
@@ -168,10 +172,11 @@ WriteOutResultsMuliple=function(results){
 }
 
 begin=Sys.time()
-oneInspector()
-#MultipleInspectors(testData)
+#oneInspector()
+MultipleInspectors(testData)
 end=Sys.time()
 print("execution time")
 print(end-begin)
 #WriteOutResultsMuliple(results)
 #show(plottingData)
+outputToExcel_HM()
