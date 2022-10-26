@@ -492,6 +492,7 @@
     </Compile>
     <Compile Include="AnalysisWizard.cs" />
     <Compile Include="Wizards\AHatvsAAnalysis\AHatvsAQuickWizard.cs" />
+    <None Include="Wizards\HitMissAnalysis\HitMissSolveAllWizard" />
     <Compile Include="Wizards\HitMissAnalysis\HitMissNormalWizard.cs" />
     <Compile Include="Wizards\HitMissAnalysis\HitMissQuickWizard.cs" />
     <Compile Include="Wizards\Project\FullAnalysisProjectWizard.cs" />
