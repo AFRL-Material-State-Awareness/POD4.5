@@ -89,6 +89,7 @@
     <Compile Include="Analysis.cs" />
     <Compile Include="AnalysisList.cs" />
     <Compile Include="AnalysisListArg.cs" />
+    <Compile Include="RunAllAnalysis.cs" />
     <Compile Include="HitMissAnalysis.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

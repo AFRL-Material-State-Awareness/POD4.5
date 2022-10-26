@@ -28,7 +28,7 @@ namespace POD
     public class WizardController : SkillTypeHolder
     {
         #region Fields
-
+        private RunAllAnalysis runAllAnalysisInstance;
         /// <summary>
         /// A pair of analyses with the corresponding wizard and dock
         /// </summary>
@@ -68,10 +68,11 @@ namespace POD
         /// </summary>
         [NonSerialized]
         IPy4C _py;
-        #endregion
         ///create a private variable for the Rengine
         [NonSerialized]
         REngineObject _r;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Create a controller with an empty project and no analyses
@@ -213,7 +214,14 @@ namespace POD
                 ResyncWorkbookNames();
             }
         }
+        private void InsertAnalysesAll(AnalysisList myAnalysisList, int listIndex)
+        {
+            var runAllAnalysisInstance = new RunAllAnalysis(myAnalysisList);
+            runAllAnalysisInstance.Name = "All_HitMiss_Analyses";
+            InsertAnalysis(runAllAnalysisInstance, listIndex);
 
+
+        }
         private void CreatedAnalysis_Analysis(object sender, AnalysisListArg e)
         {
             var createdFrom = sender as Analysis;
@@ -238,7 +246,8 @@ namespace POD
                 
                 InsertAnalysis(analysis, listIndex);
             }
-
+            listIndex++;
+            InsertAnalysesAll(e.Analyses, listIndex);
             OnProjectUpdated(this, e);
         }
 
@@ -501,12 +510,15 @@ namespace POD
                 {
                     DeleteAnalysis(analysis);
                 }
-
+                
                 foreach (Analysis analysis in args.Analyses)
                 {
                     AddAnalysis(analysis);
                 }
-
+                runAllAnalysisInstance = new RunAllAnalysis(args.Analyses);
+                runAllAnalysisInstance.Name = "Run All analyses";
+                runAllAnalysisInstance.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+                AddAnalysis(runAllAnalysisInstance);
                 args.Removed.Clear();
             }
 

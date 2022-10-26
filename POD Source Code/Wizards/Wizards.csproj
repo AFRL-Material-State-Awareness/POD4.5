@@ -332,6 +332,24 @@
     <Compile Include="Steps\HitMissNormalSteps\FullRegressionTutorial.Designer.cs">
       <DependentUpon>FullRegressionTutorial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesBar.Designer.cs">
+      <DependentUpon>RunAllAnalysesBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesPanel.Designer.cs">
+      <DependentUpon>RunAllAnalysesPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesStep.Designer.cs">
+      <DependentUpon>RunAllAnalysesStep.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewInfoPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -492,7 +510,7 @@
     </Compile>
     <Compile Include="AnalysisWizard.cs" />
     <Compile Include="Wizards\AHatvsAAnalysis\AHatvsAQuickWizard.cs" />
-    <None Include="Wizards\HitMissAnalysis\HitMissSolveAllWizard" />
+    <Compile Include="Wizards\HitMissAnalysis\HitMissSolveAllWizard.cs" />
     <Compile Include="Wizards\HitMissAnalysis\HitMissNormalWizard.cs" />
     <Compile Include="Wizards\HitMissAnalysis\HitMissQuickWizard.cs" />
     <Compile Include="Wizards\Project\FullAnalysisProjectWizard.cs" />
@@ -568,6 +586,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Steps\HitMissNormalSteps\FullRegressionPanel.resx">
       <DependentUpon>FullRegressionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Steps\HitMissNormalSteps\RunAllAnalysesPanel.resx">
+      <DependentUpon>RunAllAnalysesPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ViewInfoPanel.resx">
       <DependentUpon>ViewInfoPanel.cs</DependentUpon>
