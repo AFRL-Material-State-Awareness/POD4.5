@@ -142,6 +142,11 @@ namespace POD.Wizards
         protected PODButton cancelButton;
         protected PODButton snapShotButton;
         protected PODButton switchViewButton;
+        // used to solve all models at once in either hit miss or signal response
+        protected PODButton _solveAllModelsButton;
+        protected ToolTip _solveAllModelsToolTip;
+        private PODBooleanButton _snapToGridButton;
+
         private WizardPanel _panel;
         private WizardTitle _title;
         protected ButtonHandlerList _leftButtons;
@@ -383,7 +388,14 @@ namespace POD.Wizards
 
             return myList.Count - 1;
         }
-
+        protected void AddSolveAllModelsButton()
+        {
+            //add in the button used to solve all models with default transform settings
+            _solveAllModelsButton = new PODButton("Solve All Models");
+            this._solveAllModelsToolTip = new ToolTip(this.components);
+            this._solveAllModelsToolTip.SetToolTip(this._solveAllModelsButton, "Solve all models contained within the project manager with default parameters");
+            AddLeftButton(_solveAllModelsButton, SolveAllModels_Click);
+        }
         private void SwitchView_Click(object sender, EventArgs e)
         {
             if(NeedSwitchHelpView != null)
@@ -461,6 +473,13 @@ namespace POD.Wizards
         private void RightOverflow_Click(object sender, EventArgs e)
         {
             ShowOverflowMenu(rightOverflowButton, rightFlowPanel, rightOverflowMenu, _rightButtons);
+        }
+
+        protected void SolveAllModels_Click(object sender, EventArgs e)
+        {
+            //execute solving all analysis from here
+            Analysis.RunAnalysis();
+            //finishButton+= finishButton_Click;
         }
 
         internal void SyncStepContextMenu(List<ToolStripItem> myMenu)

@@ -59,7 +59,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             //_normalityButton = new PODBooleanButton("Show Normality", "Hide Normality", false);
             ////AddLeftButton(_normalityButton, Normality_Click);
-            
+
             //_equalVarianceButton = new PODBooleanButton("Show Equal Variance", "Hide Equal Variance", false);
             ////AddLeftButton(_equalVarianceButton, EqualVariance_Click);
 
@@ -71,7 +71,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             //_hideAllButton = new PODBooleanButton("Show All", "Hide All", true);
             //AddLeftButton(_hideAllButton, HideAll_Click);
-            
+
             //_boxcoxButton = new PODButton("Apply Box Cox");
             ////AddLeftButton(_boxcoxButton, BoxCox_Click);
 
@@ -83,10 +83,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             ////_hideAllButton.Enabled = false;
             //_boxcoxButton.Enabled = false;
             //_snapToGridButton.Enabled = false;
-
+            AddSolveAllModelsButton();
             AddIconsToButtons();
 
             AddEventToRightButton(nextButton, nextButton_Click);
+            //AddEventToRightButton(finishButton, finishButton_Click);
         }
 
         private void View_Click(object sender, EventArgs e)
@@ -103,17 +104,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             MyPanel.UpdateAnalysis();
         }
-
-        //private void finishButton_Click(object sender, EventArgs e)
-        //{
-        //    if (!MyPanel.Stuck)
-        //    {
-        //        if (Source.FinishArg == null)
-        //        {
-        //            Source.FinishArg = new AnalysisFinishArgs();
-        //        }
-        //    }
-        //}
+        /*
+        private void finishButton_Click(object sender, EventArgs e)
+        {
+            Analysis.RunAnalysis();
+            if (!MyPanel.Stuck)
+            {
+                if (Source.FinishArg == null)
+                {
+                    Source.FinishArg = new AnalysisFinishArgs();
+                }
+            }
+        }
+        */
 
         //private void SnapGrid_Click(object sender, EventArgs e)
         //{

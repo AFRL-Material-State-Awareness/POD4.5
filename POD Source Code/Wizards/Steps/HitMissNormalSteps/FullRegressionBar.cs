@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using POD.Controls;
-
 namespace POD.Wizards.Steps.HitMissNormalSteps
 {
     public partial class FullRegressionBar : WizardActionBar
@@ -20,9 +19,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         //PODBooleanButton _thresholdButton;
         PODBooleanButton _hideAllButton;
         //PODButton _boxcoxButton;
-
-        private PODBooleanButton _snapToGridButton;
-
+        // Solve all models contained within the project manager with default parameters
+        
+        
         public override bool SendKeys(Keys keyData)
         {
             var result = base.SendKeys(keyData);
@@ -88,9 +87,14 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             //_thresholdButton = new PODBooleanButton("Show Threshold", "Hide Threshold", false);
             //AddLeftButton(_thresholdButton, Threshold_Click);
-
-            
-
+            /*
+            //add in the button used to solve all models with default transform settings
+            _solveAllModelsButton = new PODButton("Solve All Models");
+            this._solveAllModelsToolTip = new ToolTip(this.components);
+            this._solveAllModelsToolTip.SetToolTip(this._solveAllModelsButton, "Solve all models contained within the project manager with default parameters");
+            AddLeftButton(_solveAllModelsButton, SolveAllModels_Click);
+            */
+            AddSolveAllModelsButton();
             //_boxcoxButton = new PODButton("Apply Box Cox");
             //AddLeftButton(_boxcoxButton, BoxCox_Click);
 
@@ -133,7 +137,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             MyPanel.RunAnalysis();
         }
-
+        
         private void HideAll_Click(object sender, EventArgs e)
         {
             if (_linearityButton.ButtonState == _hideAllButton.ButtonState) 
