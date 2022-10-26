@@ -83,7 +83,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             ////_hideAllButton.Enabled = false;
             //_boxcoxButton.Enabled = false;
             //_snapToGridButton.Enabled = false;
-            AddSolveAllModelsButton();
+            //AddSolveAllModelsButton();
             AddIconsToButtons();
 
             AddEventToRightButton(nextButton, nextButton_Click);

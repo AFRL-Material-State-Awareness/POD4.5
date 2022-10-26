@@ -94,7 +94,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this._solveAllModelsToolTip.SetToolTip(this._solveAllModelsButton, "Solve all models contained within the project manager with default parameters");
             AddLeftButton(_solveAllModelsButton, SolveAllModels_Click);
             */
-            AddSolveAllModelsButton();
+            //AddSolveAllModelsButton();
             //_boxcoxButton = new PODButton("Apply Box Cox");
             //AddLeftButton(_boxcoxButton, BoxCox_Click);
 

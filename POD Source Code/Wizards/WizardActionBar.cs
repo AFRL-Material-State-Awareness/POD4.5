@@ -143,9 +143,9 @@ namespace POD.Wizards
         protected PODButton snapShotButton;
         protected PODButton switchViewButton;
         // used to solve all models at once in either hit miss or signal response
-        protected PODButton _solveAllModelsButton;
-        protected ToolTip _solveAllModelsToolTip;
-        private PODBooleanButton _snapToGridButton;
+        //protected PODButton _solveAllModelsButton;
+        //protected ToolTip _solveAllModelsToolTip;
+        //private PODBooleanButton _snapToGridButton;
 
         private WizardPanel _panel;
         private WizardTitle _title;
@@ -388,6 +388,7 @@ namespace POD.Wizards
 
             return myList.Count - 1;
         }
+        /*
         protected void AddSolveAllModelsButton()
         {
             //add in the button used to solve all models with default transform settings
@@ -396,6 +397,7 @@ namespace POD.Wizards
             this._solveAllModelsToolTip.SetToolTip(this._solveAllModelsButton, "Solve all models contained within the project manager with default parameters");
             AddLeftButton(_solveAllModelsButton, SolveAllModels_Click);
         }
+        */
         private void SwitchView_Click(object sender, EventArgs e)
         {
             if(NeedSwitchHelpView != null)

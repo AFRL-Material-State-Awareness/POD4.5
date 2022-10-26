@@ -1159,6 +1159,7 @@ namespace POD
         HitMissBeginner,
         HitMissIntermediate,
         HitMissExpert,
+        HitMissSolveAllAnalyses,
         QuickAHatTutorial,
         QuickAHatBeginner,
         QuickHitMissTutorial,

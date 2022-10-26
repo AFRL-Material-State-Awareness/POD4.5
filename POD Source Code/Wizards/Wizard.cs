@@ -223,6 +223,8 @@ namespace POD.Wizards
                     case WizardEnum.HitMissExpert:
                         wizard = new HitMissNormalWizard((HitMissAnalysis)mySource, ref myOrganize);
                         break;
+                    case WizardEnum.HitMissSolveAllAnalyses:
+                        break;
                     case WizardEnum.QuickAHatTutorial:
                         break;
                     case WizardEnum.QuickAHatBeginner:

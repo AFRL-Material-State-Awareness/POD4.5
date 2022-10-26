@@ -200,8 +200,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 string warningSepMessage = "Warning: Hit Miss data has total(or almost total) separation!" + '\n' + "Please consider using the following metrics:" + 
                     '\n' + "-Firth Logistic Regression" + '\n' +"-Likelihood Ratio(LR)" + '\n' + "-Modified Likelihood Ratio (MLR)" + 
                     '\n' + "-Ranked Set Sampling" + '\n' + "-Or a combination of these.";
-                MessageBox.Show(warningSepMessage,"Separated Data Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                //MessageBox.Show(warningSepMessage,"Separated Data Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                //        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                WarningTextBox.Text = warningSepMessage;
+                WarningTextBox.BackColor = Color.Red;
+            }
+            else
+            {
+                WarningTextBox.Clear();
+                WarningTextBox.BackColor = Color.White;
             }
             REngineObject.REngineRunning = false;
             this.Invoke((MethodInvoker)delegate()

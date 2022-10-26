@@ -759,6 +759,10 @@ namespace POD
 
             return;
         }
+        private void OpenAnalysesAll()
+        {
+
+        }
 
         private void Project_Updated(object sender, EventArgs e)
         {
