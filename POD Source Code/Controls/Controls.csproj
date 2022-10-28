@@ -78,24 +78,21 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CellTag.cs" />
+    <Compile Include="ComboBoxListEx.cs" />
     <Compile Include="ColorMap.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
     </Compile>
-    <Compile Include="SamplingTypeBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="SamplingTypeBox.cs" />
     <Compile Include="SamplingTypeBox.Designer.cs">
       <DependentUpon>SamplingTypeBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ContextMenuStripConnected.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ConfidenceBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ConfidenceBox.cs" />
     <Compile Include="ConfidenceBox.Designer.cs">
       <DependentUpon>ConfidenceBox.cs</DependentUpon>
     </Compile>
@@ -183,9 +180,7 @@
     <Compile Include="MixedCheckBoxesTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PFModelBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PFModelBox.cs" />
     <Compile Include="PFModelBox.Designer.cs">
       <DependentUpon>PFModelBox.cs</DependentUpon>
     </Compile>
@@ -303,9 +298,7 @@
     <Compile Include="TransformBoxYHat.Designer.cs">
       <DependentUpon>TransformBoxYHat.cs</DependentUpon>
     </Compile>
-    <Compile Include="TransformBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="TransformBox.cs" />
     <Compile Include="TransformBox.Designer.cs">
       <DependentUpon>TransformBox.cs</DependentUpon>
     </Compile>

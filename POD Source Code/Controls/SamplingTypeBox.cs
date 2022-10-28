@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class SamplingTypeBox : ComboBox
+    public partial class SamplingTypeBox : ComboBoxListEx
     {
         public SamplingTypeBox()
         {

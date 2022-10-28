@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class ConfidenceBox : ComboBox
+    public partial class ConfidenceBox : ComboBoxListEx
     {
         public ConfidenceBox()
         {
