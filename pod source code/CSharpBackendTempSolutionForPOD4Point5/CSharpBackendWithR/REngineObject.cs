@@ -169,7 +169,9 @@ namespace CSharpBackendWithR
             try
             {
                 //this.rEngine.Evaluate("assign(\".lib.loc\",'" + this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
-                this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R_4.1_LibPath')");
+                //this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R_4.1_LibPath')");
+                this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R - 4.1.2/library')");
+                
             }
             catch
             {
