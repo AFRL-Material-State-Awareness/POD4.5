@@ -20,12 +20,21 @@ namespace CSharpBackendWithR
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
             //this.applicationPath=@"C:\Program Files\R";
-            this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\..";
+            this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\..\..";
             //this.applicationPath = @"C:\Users\gohmancm\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\R";
             //convert the application path to forward slashes (when using file paths in r)
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
-            //create variable for r engine
-            this.rEngine = initializeRDotNet();
+            try
+            {
+                //create variable for r engine
+                this.rEngine = initializeRDotNet();
+            }
+            catch
+            {
+                this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                this.rEngine = initializeRDotNet();
+            }
+            
             //set the path for the r libraries-used to aid the user in setting up the r backend
             SetLibraryPathEnv();
 
