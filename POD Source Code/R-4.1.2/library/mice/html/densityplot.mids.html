@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Density plot of observed and imputed data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for densityplot.mids {mice}"><tr><td>densityplot.mids {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Density plot of observed and imputed data</h2>
+
+<h3>Description</h3>
+
+<p>Plotting methods for imputed data using <span class="pkg">lattice</span>. <code>densityplot</code>
+produces plots of the densities. The function
+automatically separates the observed and imputed data. The
+functions extend the usual features of <span class="pkg">lattice</span>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'mids'
+densityplot(
+  x,
+  data,
+  na.groups = NULL,
+  groups = NULL,
+  as.table = TRUE,
+  plot.points = FALSE,
+  theme = mice.theme(),
+  mayreplicate = TRUE,
+  thicker = 2.5,
+  allow.multiple = TRUE,
+  outer = TRUE,
+  drop.unused.levels = lattice::lattice.getOption("drop.unused.levels"),
+  panel = lattice::lattice.getOption("panel.densityplot"),
+  default.prepanel = lattice::lattice.getOption("prepanel.default.densityplot"),
+  ...,
+  subscripts = TRUE,
+  subset = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A <code>mids</code> object, typically created by <code>mice()</code> or
+<code>mice.mids()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>Formula that selects the data to be plotted.  This argument
+follows the <span class="pkg">lattice</span> rules for <em>formulas</em>, describing the primary
+variables (used for the per-panel display) and the optional conditioning
+variables (which define the subsets plotted in different panels) to be used
+in the plot.
+</p>
+<p>The formula is evaluated on the complete data set in the <code>long</code> form.
+Legal variable names for the formula include <code>names(x$data)</code> plus the
+two administrative factors <code>.imp</code> and <code>.id</code>.
+</p>
+<p><b>Extended formula interface:</b> The primary variable terms (both the LHS
+<code>y</code> and RHS <code>x</code>) may consist of multiple terms separated by a
+&lsquo;+&rsquo; sign, e.g., <code>y1 + y2 ~ x | a * b</code>.  This formula would be
+taken to mean that the user wants to plot both <code>y1 ~ x | a * b</code> and
+<code>y2 ~ x | a * b</code>, but with the <code>y1 ~ x</code> and <code>y2 ~ x</code> in
+<em>separate panels</em>. This behavior differs from standard <span class="pkg">lattice</span>.
+<em>Only combine terms of the same type</em>, i.e. only factors or only
+numerical variables. Mixing numerical and categorical data occasionally
+produces odds labeling of vertical axis.
+</p>
+<p>The function <code>densityplot</code> does not use the <code>y</code> terms in the
+formula. Density plots for <code>x1</code> and <code>x2</code> are requested as <code>~
+x1 + x2</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>na.groups</code></td>
+<td>
+<p>An expression evaluating to a logical vector indicating
+which two groups are distinguished (e.g. using different colors) in the
+display. The environment in which this expression is evaluated in the
+response indicator <code>is.na(x$data)</code>.
+</p>
+<p>The default <code>na.group = NULL</code> contrasts the observed and missing data
+in the LHS <code>y</code> variable of the display, i.e. groups created by
+<code>is.na(y)</code>. The expression <code>y</code> creates the groups according to
+<code>is.na(y)</code>. The expression <code>y1 &amp; y2</code> creates groups by
+<code>is.na(y1) &amp; is.na(y2)</code>, and <code>y1 | y2</code> creates groups as
+<code>is.na(y1) | is.na(y2)</code>, and so on.</p>
+</td></tr>
+<tr valign="top"><td><code>groups</code></td>
+<td>
+<p>This is the usual <code>groups</code> arguments in <span class="pkg">lattice</span>. It
+differs from <code>na.groups</code> because it evaluates in the completed data
+<code>data.frame(complete(x, "long", inc=TRUE))</code> (as usual), whereas
+<code>na.groups</code> evaluates in the response indicator. See
+<code><a href="../../mice/help/xyplot.html">xyplot</a></code> for more details. When both <code>na.groups</code> and
+<code>groups</code> are specified, <code>na.groups</code> takes precedence, and
+<code>groups</code> is ignored.</p>
+</td></tr>
+<tr valign="top"><td><code>as.table</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>plot.points</code></td>
+<td>
+<p>A logical used in <code>densityplot</code> that signals whether
+the points should be plotted.</p>
+</td></tr>
+<tr valign="top"><td><code>theme</code></td>
+<td>
+<p>A named list containing the graphical parameters. The default
+function <code>mice.theme</code> produces a short list of default colors, line
+width, and so on. The extensive list may be obtained from
+<code>trellis.par.get()</code>. Global graphical parameters like <code>col</code> or
+<code>cex</code> in high-level calls are still honored, so first experiment with
+the global parameters. Many setting consists of a pair. For example,
+<code>mice.theme</code> defines two symbol colors. The first is for the observed
+data, the second for the imputed data. The theme settings only exist during
+the call, and do not affect the trellis graphical parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>mayreplicate</code></td>
+<td>
+<p>A logical indicating whether color, line widths, and so
+on, may be replicated. The graphical functions attempt to choose
+&quot;intelligent&quot; graphical parameters. For example, the same color can be
+replicated for different element, e.g. use all reds for the imputed data.
+Replication may be switched off by setting the flag to <code>FALSE</code>, in order
+to allow the user to gain full control.</p>
+</td></tr>
+<tr valign="top"><td><code>thicker</code></td>
+<td>
+<p>Used in <code>densityplot</code>. Multiplication factor of the line
+width of the observed density. <code>thicker=1</code> uses the same thickness for
+the observed and imputed data.</p>
+</td></tr>
+<tr valign="top"><td><code>allow.multiple</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>outer</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>drop.unused.levels</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>panel</code></td>
+<td>
+<p>See <code><a href="../../mice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>default.prepanel</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further arguments, usually not directly processed by the
+high-level functions documented here, but instead passed on to other
+functions.</p>
+</td></tr>
+<tr valign="top"><td><code>subscripts</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>See <code><a href="../../lattice/help/xyplot.html">xyplot</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The argument <code>na.groups</code> may be used to specify (combinations of)
+missingness in any of the variables. The argument <code>groups</code> can be used
+to specify groups based on the variable values themselves. Only one of both
+may be active at the same time. When both are specified, <code>na.groups</code>
+takes precedence over <code>groups</code>.
+</p>
+<p>Use the <code>subset</code> and <code>na.groups</code> together to plots parts of the
+data. For example, select the first imputed data set by by
+<code>subset=.imp==1</code>.
+</p>
+<p>Graphical parameters like <code>col</code>, <code>pch</code> and <code>cex</code> can be
+specified in the arguments list to alter the plotting symbols. If
+<code>length(col)==2</code>, the color specification to define the observed and
+missing groups. <code>col[1]</code> is the color of the 'observed' data,
+<code>col[2]</code> is the color of the missing or imputed data. A convenient color
+choice is <code>col=mdc(1:2)</code>, a transparent blue color for the observed
+data, and a transparent red color for the imputed data. A good choice is
+<code>col=mdc(1:2), pch=20, cex=1.5</code>. These choices can be set for the
+duration of the session by running <code>mice.theme()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The high-level functions documented here, as well as other high-level
+Lattice functions, return an object of class <code>"trellis"</code>.  The
+<code><a href="../../lattice/help/update.trellis.html">update</a></code> method can be used to
+subsequently update components of the object, and the
+<code><a href="../../lattice/help/print.trellis.html">print</a></code> method (usually called by default)
+will plot it on an appropriate plotting device.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The first two arguments (<code>x</code> and <code>data</code>) are reversed
+compared to the standard Trellis syntax implemented in <span class="pkg">lattice</span>. This
+reversal was necessary in order to benefit from automatic method dispatch.
+</p>
+<p>In <span class="pkg">mice</span> the argument <code>x</code> is always a <code>mids</code> object, whereas
+in <span class="pkg">lattice</span> the argument <code>x</code> is always a formula.
+</p>
+<p>In <span class="pkg">mice</span> the argument <code>data</code> is always a formula object, whereas in
+<span class="pkg">lattice</span> the argument <code>data</code> is usually a data frame.
+</p>
+<p>All other arguments have identical interpretation.
+</p>
+<p><code>densityplot</code> errs on empty groups, which occurs if all observations in
+the subgroup contain <code>NA</code>. The relevant error message is: <code>Error in
+density.default: ... need at least 2 points to select a bandwidth
+automatically</code>. There is yet no workaround for this problem. Use the more
+robust <code>bwplot</code> or <code>stripplot</code> as a replacement.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren
+</p>
+
+
+<h3>References</h3>
+
+<p>Sarkar, Deepayan (2008) <em>Lattice: Multivariate Data
+Visualization with R</em>, Springer.
+</p>
+<p>van Buuren S and Groothuis-Oudshoorn K (2011). <code>mice</code>: Multivariate
+Imputation by Chained Equations in <code>R</code>. <em>Journal of Statistical
+Software</em>, <b>45</b>(3), 1-67. doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/mice.html">mice</a></code>, <code><a href="../../mice/help/xyplot.html">xyplot</a></code>, <code><a href="../../mice/help/stripplot.html">stripplot</a></code>,
+<code><a href="../../mice/help/bwplot.html">bwplot</a></code>, <code><a href="../../lattice/html/Lattice.html">lattice</a></code> for an overview of the
+package, as well as <code><a href="../../lattice/help/histogram.html">densityplot</a></code>,
+<code><a href="../../lattice/help/panel.densityplot.html">panel.densityplot</a></code>,
+<code><a href="../../lattice/help/print.trellis.html">print.trellis</a></code>,
+<code><a href="../../lattice/help/trellis.par.get.html">trellis.par.set</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+imp &lt;- mice(boys, maxit = 1)
+
+### density plot of head circumference per imputation
+### blue is observed, red is imputed
+densityplot(imp, ~ hc | .imp)
+
+### All combined in one panel.
+densityplot(imp, ~hc)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

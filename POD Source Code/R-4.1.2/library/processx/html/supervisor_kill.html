@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Terminate all supervised processes and the supervisor process...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for supervisor_kill {processx}"><tr><td>supervisor_kill {processx}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Terminate all supervised processes and the supervisor process itself as
+well</h2>
+
+<h3>Description</h3>
+
+<p>On Unix the supervisor sends a <code>SIGTERM</code> signal to all supervised
+processes, and gives them five seconds to quit, before sending a
+<code>SIGKILL</code> signal. Then the supervisor itself terminates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+supervisor_kill()
+</pre>
+
+
+<h3>Details</h3>
+
+<p>Windows is similar, but instead of <code>SIGTERM</code>, a console CTRL+C interrupt
+is sent first, then a <code>WM_CLOSE</code> message is sent to the windows of the
+supervised processes, if they have windows.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>processx</em> version 3.8.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

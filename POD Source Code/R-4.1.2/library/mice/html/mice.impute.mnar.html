@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Imputation under MNAR mechanism by NARFCS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for mice.impute.mnar.logreg {mice}"><tr><td>mice.impute.mnar.logreg {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Imputation under MNAR mechanism by NARFCS</h2>
+
+<h3>Description</h3>
+
+<p>Imputes univariate data under a user-specified MNAR mechanism by
+linear or logistic regression and NARFCS. Sensitivity analysis under
+different model specifications may shed light on the impact of
+different MNAR assumptions on the conclusions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mice.impute.mnar.logreg(y, ry, x, wy = NULL, ums = NULL, umx = NULL, ...)
+
+mice.impute.mnar.norm(y, ry, x, wy = NULL, ums = NULL, umx = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Vector to be imputed</p>
+</td></tr>
+<tr valign="top"><td><code>ry</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code> indicating the
+the subset <code>y[ry]</code> of elements in <code>y</code> to which the imputation
+model is fitted. The <code>ry</code> generally distinguishes the observed
+(<code>TRUE</code>) and missing values (<code>FALSE</code>) in <code>y</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric design matrix with <code>length(y)</code> rows with predictors for
+<code>y</code>. Matrix <code>x</code> may have no missing values.</p>
+</td></tr>
+<tr valign="top"><td><code>wy</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code>. A <code>TRUE</code> value
+indicates locations in <code>y</code> for which imputations are created.</p>
+</td></tr>
+<tr valign="top"><td><code>ums</code></td>
+<td>
+<p>A string containing the specification of the
+unidentifiable part of the imputation model (the *unidentifiable
+model specification&quot;), that is, the desired <i>&delta;</i>-adjustment
+(offset) as a function of other variables and values for the
+corresponding deltas (sensitivity parameters). See details.</p>
+</td></tr>
+<tr valign="top"><td><code>umx</code></td>
+<td>
+<p>An auxiliary data matrix containing variables that do
+not appear in the identifiable part of the imputation procedure
+but that have been specified via <code>ums</code> as being predictors
+in the unidentifiable part of the imputation model. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function imputes data that are thought to be Missing Not at
+Random (MNAR) by the NARFCS method. The NARFCS procedure
+(Tompsett et al, 2018) generalises the so-called
+<i>&delta;</i>-adjustment sensitivity analysis method of Van Buuren,
+Boshuizen &amp; Knook (1999) to the case with multiple incomplete
+variables within the FCS framework. In practical terms, the
+NARFCS procedure shifts the imputations drawn at each
+iteration of <code>mice</code> by a user-specified quantity that can
+vary across subjects, to reflect systematic departures of the
+missing data from the data distribution imputed under MAR.
+</p>
+<p>Specification of the NARFCS model is done by the <code>blots</code>
+argument of <code>mice()</code>. The <code>blots</code> parameter is a named
+list. For each variable to be imputed by
+<code>mice.impute.mnar.norm()</code> or <code>mice.impute.mnar.logreg()</code>
+the corresponding element in <code>blots</code> is a list with
+at least one argument <code>ums</code> and, optionally, a second
+argument <code>umx</code>.
+For example, the high-level call might like something like
+<code>mice(nhanes[, c(2, 4)], method = c("pmm", "mnar.norm"),
+blots = list(chl = list(ums = "-3+2*bmi")))</code>.
+</p>
+<p>The <code>ums</code> parameter is required, and might look like this:
+<code>"-4+1*Y"</code>. The <code>ums</code> specifcation must have the
+following characteristics:
+</p>
+
+<ol>
+<li><p>A single term corresponding to the intercept (constant) term,
+not multiplied by any variable name, must be included in the
+expression;
+</p>
+</li>
+<li><p>Each term in the expression (corresponding to the intercept
+or a predictor variable) must be separated by either a <code>"+"</code>
+or <code>"-"</code> sign, depending on the sign of the sensitivity
+parameter;
+</p>
+</li>
+<li><p>Within each non-intercept term, the sensitivity parameter
+value comes first and the predictor variable comes second, and these
+must be separated by a <code>"*"</code> sign;
+</p>
+</li>
+<li><p>For categorical predictors, for example a variable <code>Z</code>
+with K + 1 categories <code>("Cat0","Cat1", ...,"CatK")</code>, K
+category-specific terms are needed, and those not in <code>umx</code>
+(see below) must be specified by concatenating the variable name
+with the name of the category (e.g. <code>ZCat1</code>) as this is how
+they are named in the design matrix (argument <code>x</code>) passed
+to the univariate imputation function. An example is
+<code>"2+1*ZCat1-3*ZCat2"</code>.
+</p>
+</li></ol>
+
+<p>If given, the <code>umx</code> specification must have the following
+characteristics:
+</p>
+
+<ol>
+<li><p>It contains only complete variables, with no missing values;
+</p>
+</li>
+<li><p>It is a numeric matrix. In particular, categorical variables
+must be represented as dummy indicators with names corresponding
+to what is used in <code>ums</code> to refer to the category-specific terms
+(see above);
+</p>
+</li>
+<li><p>It has the same number of rows as the <code>data</code> argument
+passed on to the main <code>mice</code> function;
+</p>
+</li>
+<li><p>It does not contain variables that were already predictors
+in the identifiable part of the model for the variable under
+imputation.
+</p>
+</li></ol>
+
+<p>Limitation: The present implementation can only condition on variables
+that appear in the identifiable part of the imputation model (<code>x</code>) or
+in complete auxiliary variables passed on via the <code>umx</code> argument.
+It is not possible to specify models where the offset depends on
+incomplete auxiliary variables.
+</p>
+<p>For an MNAR alternative see also <code><a href="../../mice/help/mice.impute.ri.html">mice.impute.ri</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector with imputed data, same type as <code>y</code>, and of length
+<code>sum(wy)</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Margarita Moreno-Betancur, Stef van Buuren, Ian R. White, 2020.
+</p>
+
+
+<h3>References</h3>
+
+<p>Tompsett, D. M., Leacy, F., Moreno-Betancur, M., Heron, J., &amp;
+White, I. R. (2018). On the use of the not-at-random fully
+conditional specification (NARFCS) procedure in practice.
+<em>Statistics in Medicine</em>, <b>37</b>(15), 2338-2353.
+doi: <a href="https://doi.org/10.1002/sim.7643">10.1002/sim.7643</a>.
+</p>
+<p>Van Buuren, S., Boshuizen, H.C., Knook, D.L. (1999) Multiple
+imputation of missing blood pressure covariates in survival analysis.
+<em>Statistics in Medicine</em>, <b>18</b>, 681&ndash;694.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other univariate imputation functions: 
+<code><a href="../../mice/help/mice.impute.cart.html">mice.impute.cart</a>()</code>,
+<code><a href="../../mice/help/mice.impute.lasso.logreg.html">mice.impute.lasso.logreg</a>()</code>,
+<code><a href="../../mice/help/mice.impute.lasso.norm.html">mice.impute.lasso.norm</a>()</code>,
+<code><a href="../../mice/help/mice.impute.lasso.select.logreg.html">mice.impute.lasso.select.logreg</a>()</code>,
+<code><a href="../../mice/help/mice.impute.lasso.select.norm.html">mice.impute.lasso.select.norm</a>()</code>,
+<code><a href="../../mice/help/mice.impute.lda.html">mice.impute.lda</a>()</code>,
+<code><a href="../../mice/help/mice.impute.logreg.boot.html">mice.impute.logreg.boot</a>()</code>,
+<code><a href="../../mice/help/mice.impute.logreg.html">mice.impute.logreg</a>()</code>,
+<code><a href="../../mice/help/mice.impute.mean.html">mice.impute.mean</a>()</code>,
+<code><a href="../../mice/help/mice.impute.midastouch.html">mice.impute.midastouch</a>()</code>,
+<code><a href="../../mice/help/mice.impute.norm.boot.html">mice.impute.norm.boot</a>()</code>,
+<code><a href="../../mice/help/mice.impute.norm.nob.html">mice.impute.norm.nob</a>()</code>,
+<code><a href="../../mice/help/mice.impute.norm.predict.html">mice.impute.norm.predict</a>()</code>,
+<code><a href="../../mice/help/mice.impute.norm.html">mice.impute.norm</a>()</code>,
+<code><a href="../../mice/help/mice.impute.pmm.html">mice.impute.pmm</a>()</code>,
+<code><a href="../../mice/help/mice.impute.polr.html">mice.impute.polr</a>()</code>,
+<code><a href="../../mice/help/mice.impute.polyreg.html">mice.impute.polyreg</a>()</code>,
+<code><a href="../../mice/help/mice.impute.quadratic.html">mice.impute.quadratic</a>()</code>,
+<code><a href="../../mice/help/mice.impute.rf.html">mice.impute.rf</a>()</code>,
+<code><a href="../../mice/help/mice.impute.ri.html">mice.impute.ri</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# 1: Example with no auxiliary data: only pass unidentifiable model specification (ums)
+
+# Specify argument to pass on to mnar imputation functions via "blots" argument
+mnar.blot &lt;- list(X = list(ums = "-4"), Y = list(ums = "2+1*ZCat1-3*ZCat2"))
+
+# Run NARFCS by using mnar imputation methods and passing argument via blots
+impNARFCS &lt;- mice(mnar_demo_data,
+  method = c("mnar.logreg", "mnar.norm", ""),
+  blots = mnar.blot, seed = 234235, print = FALSE
+)
+
+# Obtain MI results: Note they coincide with those from old version at
+# https://github.com/moreno-betancur/NARFCS
+pool(with(impNARFCS, lm(Y ~ X + Z)))$pooled$estimate
+
+# 2: Example passing also auxiliary data to MNAR procedure (umx)
+# Assumptions:
+# - Auxiliary data are complete, no missing values
+# - Auxiliary data are a numeric matrix
+# - Auxiliary data have same number of rows as x
+# - Auxiliary data have no overlapping variable names with x
+
+# Specify argument to pass on to mnar imputation functions via "blots" argument
+aux &lt;- matrix(0:1, nrow = nrow(mnar_demo_data))
+dimnames(aux) &lt;- list(NULL, "even")
+mnar.blot &lt;- list(
+  X = list(ums = "-4"),
+  Y = list(ums = "2+1*ZCat1-3*ZCat2+0.5*even", umx = aux)
+)
+
+# Run NARFCS by using mnar imputation methods and passing argument via blots
+impNARFCS &lt;- mice(mnar_demo_data,
+  method = c("mnar.logreg", "mnar.norm", ""),
+  blots = mnar.blot, seed = 234235, print = FALSE
+)
+
+# Obtain MI results: As expected they differ (slightly) from those
+# from old version at https://github.com/moreno-betancur/NARFCS
+pool(with(impNARFCS, lm(Y ~ X + Z)))$pooled$estimate
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

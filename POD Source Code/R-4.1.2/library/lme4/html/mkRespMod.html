@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create an lmerResp, glmResp or nlsResp instance</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for mkRespMod {lme4}"><tr><td>mkRespMod {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create an lmerResp, glmResp or nlsResp instance</h2>
+
+<h3>Description</h3>
+
+<p>Create an lmerResp, glmResp or nlsResp instance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  mkRespMod(fr, REML = NULL, family = NULL, nlenv = NULL,
+    nlmod = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fr</code></td>
+<td>
+<p>a model frame</p>
+</td></tr>
+<tr valign="top"><td><code>REML</code></td>
+<td>
+<p>logical scalar, value of REML for an lmerResp
+instance</p>
+</td></tr>
+<tr valign="top"><td><code>family</code></td>
+<td>
+<p>the optional glm family (glmResp only)</p>
+</td></tr>
+<tr valign="top"><td><code>nlenv</code></td>
+<td>
+<p>the nonlinear model evaluation environment
+(nlsResp only)</p>
+</td></tr>
+<tr valign="top"><td><code>nlmod</code></td>
+<td>
+<p>the nonlinear model function (nlsResp only)</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>where to look for response information if
+<code>fr</code> is missing.  Can contain a model response,
+<code>y</code>, offset, <code>offset</code>, and weights,
+<code>weights</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an lmerResp or glmResp or nlsResp instance
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other utilities: <code><a href="../../lme4/help/findbars.html">findbars</a></code>,
+<code><a href="../../lme4/help/mkReTrms.html">mkReTrms</a></code>, <code><a href="../../lme4/help/nlformula.html">nlformula</a></code>,
+<code><a href="../../lme4/help/nobars.html">nobars</a></code>, <code><a href="../../lme4/help/subbars.html">subbars</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

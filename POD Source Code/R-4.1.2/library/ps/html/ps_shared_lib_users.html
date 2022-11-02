@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: List all processes that loaded a shared library</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for ps_shared_lib_users {ps}"><tr><td>ps_shared_lib_users {ps}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>List all processes that loaded a shared library</h2>
+
+<h3>Description</h3>
+
+<p>List all processes that loaded a shared library
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ps_shared_lib_users(paths, user = ps_username(), filter = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>paths</code></td>
+<td>
+<p>Character vector of paths of shared libraries to
+look up. They must be absolute paths. They don't need to exist.
+Forward slashes are converted to backward slashes on Windows, and
+the output will always have backward slashes in the paths.</p>
+</td></tr>
+<tr valign="top"><td><code>user</code></td>
+<td>
+<p>Character scalar or <code>NULL</code>. If not <code>NULL</code>, then only
+the processes of this user are considered. It defaults to the
+current user.</p>
+</td></tr>
+<tr valign="top"><td><code>filter</code></td>
+<td>
+<p>Character vector or <code>NULL</code>. If not NULL, then it is
+a vector of glob expressions, used to filter the process names.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<h4>Notes:</h4>
+
+<p>This function currently only works on Windows.
+</p>
+<p>On Windows, a 32 bit R process can only list other 32 bit processes.
+Similarly, a 64 bit R process can only list other 64 bit processes.
+This is a limitation of the Windows API.
+</p>
+<p>Even though Windows file systems are (almost always) case
+insensitive, the matching of <code>paths</code>, <code>user</code> and also <code>filter</code>
+are case sensitive. This might change in the future.
+</p>
+<p>This function can be very slow on Windows, because it needs to
+enumerate all shared libraries of all processes in the system,
+unless the <code>filter</code> argument is set. Make sure you set <code>filter</code>
+if you can.
+</p>
+<p>If you want to look up multiple shared libraries, list all of them
+in <code>paths</code>, instead of calling <code>ps_shared_lib_users</code> for each
+individually.
+</p>
+<p>If you are after libraries loaded by R processes, you might want to
+set <code>filter</code> to <code>c("Rgui.exe", "Rterm.exe", "rsession.exe")</code> The
+last one is for RStudio.
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>A data frame with columns:
+</p>
+
+<ul>
+<li> <p><code>dll</code>: the file name of the dll file, without the path,
+</p>
+</li>
+<li> <p><code>path</code>: path to the shared library,
+</p>
+</li>
+<li> <p><code>pid</code>: process ID of the process,
+</p>
+</li>
+<li> <p><code>name</code>: name of the process,
+</p>
+</li>
+<li> <p><code>username</code>: username of process owner,
+</p>
+</li>
+<li> <p><code>ps_handle</code>: <code>ps_handle</code> object, that can be used to further
+query and manipulate the process.
+</p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p>Other shared library tools: 
+<code><a href="../../ps/help/ps_shared_libs.html">ps_shared_libs</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+dlls &lt;- vapply(getLoadedDLLs(), "[[", character(1), "path")
+psdll &lt;- dlls[["ps"]][[1]]
+r_procs &lt;- c("Rgui.exe", "Rterm.exe", "rsession.exe")
+ps_shared_lib_users(psdll, filter = r_procs)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ps</em> version 1.7.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Statistics about system memory usage</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for ps_system_memory {ps}"><tr><td>ps_system_memory {ps}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Statistics about system memory usage</h2>
+
+<h3>Description</h3>
+
+<p>Statistics about system memory usage
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ps_system_memory()
+</pre>
+
+
+<h3>Value</h3>
+
+<p>Named list. All numbers are in bytes:
+</p>
+
+<ul>
+<li> <p><code>total</code>: total physical memory (exclusive swap).
+</p>
+</li>
+<li> <p><code>avail</code> the memory that can be given instantly to processes without
+the system going into swap. This is calculated by summing different
+memory values depending on the platform and it is supposed to be used
+to monitor actual memory usage in a cross platform fashion.
+</p>
+</li>
+<li> <p><code>percent</code>: Percentage of memory that is taken.
+</p>
+</li>
+<li> <p><code>used</code>: memory used, calculated differently depending on
+the platform and designed for informational purposes only.
+<code>total</code> - <code>free</code> does not necessarily match <code>used</code>.
+</p>
+</li>
+<li> <p><code>free</code>: memory not being used at all (zeroed) that is
+readily available; note that this doesn’t reflect the actual memory
+available (use <code>available</code> instead). <code>total</code> - <code>used</code> does not
+necessarily match <code>free</code>.
+</p>
+</li>
+<li> <p><code>active</code>: (Unix only) memory currently in use or very recently used,
+and so it is in RAM.
+</p>
+</li>
+<li> <p><code>inactive</code>: (Unix only) memory that is marked as not used.
+</p>
+</li>
+<li> <p><code>wired</code>: (macOS only) memory that is marked to always stay in RAM. It
+is never moved to disk.
+</p>
+</li>
+<li> <p><code>buffers</code>: (Linux only) cache for things like file system metadata.
+</p>
+</li>
+<li> <p><code>cached</code>: (Linux only) cache for various things.
+</p>
+</li>
+<li> <p><code>shared</code>: (Linux only) memory that may be simultaneously accessed by
+multiple processes.
+</p>
+</li>
+<li> <p><code>slab</code>:  (Linux only) in-kernel data structures cache.
+</p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p>Other memory functions: 
+<code><a href="../../ps/help/ps_system_swap.html">ps_system_swap</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ps_system_memory()
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ps</em> version 1.7.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

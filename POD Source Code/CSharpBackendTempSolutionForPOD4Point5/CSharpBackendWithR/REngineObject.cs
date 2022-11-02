@@ -19,14 +19,15 @@ namespace CSharpBackendWithR
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
-            this.applicationPath=@"C:\Program Files\R";
+            //this.applicationPath=@"C:\Program Files\R";
+            this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\..";
             //this.applicationPath = @"C:\Users\gohmancm\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\R";
             //convert the application path to forward slashes (when using file paths in r)
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
             //create variable for r engine
             this.rEngine = initializeRDotNet();
             //set the path for the r libraries-used to aid the user in setting up the r backend
-            //SetLibraryPathEnv();
+            SetLibraryPathEnv();
 
             InitializeRLibraries();
             InitializeRScripts();
@@ -158,12 +159,13 @@ namespace CSharpBackendWithR
         {
             try
             {
-                this.rEngine.Evaluate("assign(\".lib.loc\",'" + this.forwardSlashAppPath + "/RLibs/win-library/3.5')" + "', envir = environment(.libPaths))");
+                //this.rEngine.Evaluate("assign(\".lib.loc\",'" + this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
+                this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R_4.1_LibPath')");
             }
             catch
             {
                 this.forwardSlashAppPath = this.forwardSlashAppPath + "/..";
-                this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/RLibs/win-library/3.5')" + "', envir = environment(.libPaths))");
+                this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
             }
         }
 
@@ -243,11 +245,6 @@ namespace CSharpBackendWithR
                     }
                 }
             }
-
-
-
-
-
         }
         //replace and debug with this later in order to make code more compact
         private void EvaluateRScripts(ref bool scriptsLoaded)
@@ -302,7 +299,7 @@ namespace CSharpBackendWithR
                                                              //this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
-                this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+                //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
                 //this.rEngine.Evaluate("print(packageVersion('reticulate'))");
                 //the following libraries are used for signal response
                 this.rEngine.Evaluate("library(gridExtra)");
@@ -314,7 +311,14 @@ namespace CSharpBackendWithR
                 //temporary
                 this.rEngine.Evaluate("library(ggResidpanel)");
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(corrplot))");
-                this.rEngine.Evaluate("library(roxygen2)");
+                try
+                {
+                    this.rEngine.Evaluate("library(roxygen2)");
+                }
+                catch
+                {
+                    this.rEngine.Evaluate("library.dynam('roxygen2', 'roxygen2', lib.loc = 'C:/Users/gohmancm/Desktop/newPODrepository/POD Source Code/R_4.1_LibPath')");
+                }
             }
             catch(Exception failedLibrariesLoad)
             {

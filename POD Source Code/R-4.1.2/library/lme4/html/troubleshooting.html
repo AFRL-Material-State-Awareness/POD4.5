@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Troubleshooting</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for troubleshooting {lme4}"><tr><td>troubleshooting {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Troubleshooting</h2>
+
+<h3>Description</h3>
+
+<p>This page attempts to summarize some of the common problems with
+fitting <code>[gn]lmer</code> models and how to troubleshoot them.
+</p>
+<p>Most of the symptoms/diagnoses/workarounds listed below are due to
+various issues in the actual mixed model fitting process. You may
+run into problems due to multicollinearity or variables that are
+incorrectly typed (e.g. a variable is accidentally coded as character
+or factor rather than numeric). These problems can often be isolated
+by trying a <code>lm</code> or <code>glm</code> fit or attempting to construct the
+design matrix via <code>model.matrix()</code> (in each case with the random
+effects in your model excluded). If these tests fail then the problem
+is likely not specifically an <code>lme4</code> issue.
+</p>
+
+<ul>
+<li> <p><code>failure to converge in (xxxx) evaluations</code> The
+optimizer hit its maximum limit of function evaluations.  To
+increase this, use the <code>optControl</code> argument of
+<code>[g]lmerControl</code> &ndash; for <code>Nelder_Mead</code> and <code>bobyqa</code>
+the relevant parameter is <code>maxfun</code>; for <code>optim</code> and
+<code>optimx</code>-wrapped optimizers, including
+<code>nlminbwrap</code>, it's <code>maxit</code>; for
+<code>nloptwrap</code>, it's <code>maxeval</code>.
+</p>
+</li>
+<li> <p><code>Model failed to converge with max|grad| ...</code> The scaled
+gradient at the fitted (RE)ML estimates
+is worryingly large. Try
+</p>
+
+<ul>
+<li><p> refitting the parameters starting at the current
+estimates: getting consistent results (with no warning)
+suggests a false positive
+</p>
+</li>
+<li><p> switching optimizers: getting consistent
+results suggests there is not really a problem; getting a similar
+log-likelihood with different parameter estimates suggests that
+the parameters are poorly determined (possibly the result of
+a misspecified or overfitted model)
+</p>
+</li>
+<li><p> compute values of the deviance in the neighbourhood of the estimated
+parameters to double-check that <code>lme4</code> has really found a
+local optimum.
+</p>
+</li></ul>
+
+</li>
+<li> <p><code>Hessian is numerically singular: parameters are not
+      uniquely determined</code>
+The Hessian (inverse curvature matrix) at the maximum likelihood or REML
+estimates has a very large eigenvalue, indicating that (within numerical
+tolerances) the surface is completely flat in some direction.
+The model may be misspecified, or extremely badly scaled (see
+<code>"Model is nearly unidentifiable"</code>).
+</p>
+</li>
+<li> <p><code>Model is nearly unidentifiable ... Rescale variables?</code>
+The Hessian (inverse curvature matrix) at the maximum likelihood or REML
+estimates has a large eigenvalue, indicating that the surface is
+nearly flat in some direction. Consider centering and/or scaling
+continuous predictor variables.
+</p>
+</li>
+<li> <p><code>Contrasts can be applied only to factors with 2 or more levels</code>
+One or more of the categorical predictors in the model has fewer than two
+levels. This may be due to user error when converting these predictors to 
+factors prior to modeling, or it may result from some factor levels being
+eliminated due to <code>NA</code>s in other predictors. Double-check the number
+of data points in each factor level to see which one is the culprit:
+<code>lapply(na.omit(df[,vars]), table)</code> (where <code>df</code> is the 
+<code>data.frame</code> and <code>vars</code> are the column names of your predictor
+variables).
+</p>
+</li></ul>
+
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

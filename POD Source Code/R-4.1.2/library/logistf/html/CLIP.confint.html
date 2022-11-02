@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Confidence Intervals after Multiple Imputation: Combination...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for CLIP.confint {logistf}"><tr><td>CLIP.confint {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Confidence Intervals after Multiple Imputation: Combination of Likelihood Profiles
+</h2>
+
+<h3>Description</h3>
+
+<p>This function implements the new combination of likelihood profiles (CLIP) method described in Heinze, Ploner and Beyea (2013). This method is useful for computing confidence intervals for parameters after multiple imputation of data sets,
+if the normality assumption on parameter estimates and consequently the validity of applying Rubin's rules (pooling of variances) is in doubt. It consists of combining the profile likelihoods into a posterior. The function <code>CLIP.confint</code>
+searches for those values of a regression coefficient, at which the cumulative distribution function of the posterior is equal to the values specified in the argument <code>ci.level</code> (usually 0.025 and 0.975).
+The search is performed using R's <code>optimize</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+CLIP.confint(obj = NULL, variable = NULL, data, firth = TRUE, weightvar = NULL, 
+   control = logistf.control(), ci.level = c(0.025, 0.975), pvalue = TRUE,
+   offset = NULL,    bound.lo = NULL, bound.up = NULL, legacy = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+
+<p>Either a list of logistf fits (on multiple imputed data sets), or the result of analysis of a  <code>mice</code> (multiply imputed) object using <code>with.mids</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>variable</code></td>
+<td>
+
+<p>The variable of interest, for which confidence intervals should be computed. If missing, confidence intervals for all variables will be computed.
+</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+
+<p>A list of data set corresponding to the model fits. Can be left blank if <code>obj</code> was obtained with the <code>dataout=TRUE</code> option or if <code>obj</code> was obtained by <code>mice</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>firth</code></td>
+<td>
+
+<p>If TRUE, applies the Firth correction. Should correspond to the entry in <code>obj</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>weightvar</code></td>
+<td>
+
+<p>An optional weighting variable for each observation.
+</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+
+<p>control parameters for <code>logistf</code>, usually obtained by <code>logistf.control()</code>
+</p>
+</td></tr>
+<tr valign="top"><td><code>ci.level</code></td>
+<td>
+
+<p>The two confidence levels for each tail of the posterior distribution.
+</p>
+</td></tr>
+<tr valign="top"><td><code>pvalue</code></td>
+<td>
+
+<p>If TRUE, will also compute a P-value from the posterior.
+</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+
+<p>An optional offset variable
+</p>
+</td></tr>
+<tr valign="top"><td><code>bound.lo</code></td>
+<td>
+
+<p>Bounds (vector of length 2) for the lower limit. Can be left blank. Use only if problems are encountered.
+</p>
+</td></tr>
+<tr valign="top"><td><code>bound.up</code></td>
+<td>
+
+<p>Bounds (vector of length 2) for the upper limit. Can be left blank. Use only if problems are encountered.
+</p>
+</td></tr>
+<tr valign="top"><td><code>legacy</code></td>
+<td>
+
+<p>If TRUE, will use pure R code for all model fitting. Can be slow. Not recommended.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For each confidence limit, this function performs a binary search to evaluate the combined posterior, which is obtained by first transforming the imputed-data likelihood profiles into cumulative distribution functions (CDFs),
+and then averaging the CDFs to obtain the CDF of the posterior. Usually, the binary search manages to find the confidence intervals very quickly. The number of iterations (mean and maximum) will be supplied in the output object.
+Further details on the method can be found in Heinze, Ploner and Beyea (2013).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>CLIP.confint</code>, with items
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>variable</code></td>
+<td>
+<p>the variable(s) which were analyzed</p>
+</td></tr>
+<tr valign="top"><td><code>estimate</code></td>
+<td>
+<p>the pooled estimate (average over imputations</p>
+</td></tr>
+<tr valign="top"><td><code>ci</code></td>
+<td>
+<p>the confidence interval(s)</p>
+</td></tr>
+<tr valign="top"><td><code>pvalue</code></td>
+<td>
+<p>the pvalue(s)</p>
+</td></tr>
+<tr valign="top"><td><code>imputations</code></td>
+<td>
+<p>the number of imputed data sets</p>
+</td></tr>
+<tr valign="top"><td><code>ci.level</code></td>
+<td>
+<p>the confidence level (input)</p>
+</td></tr>
+<tr valign="top"><td><code>bound.lo</code></td>
+<td>
+<p>The bounds used for finding the lower confidence limit; usually not of interest. May be useful for error-tracing.</p>
+</td></tr>
+<tr valign="top"><td><code>bound.up</code></td>
+<td>
+<p>The bounds used for finding the upper confidence limit.</p>
+</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+<p>The number of iterations (for each variable and each tail (lower or upper)).</p>
+</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>the call to <code>CLIP.confint</code></p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Georg Heinze and Meinhard Ploner
+</p>
+
+
+<h3>References</h3>
+
+<p>Heinze G, Ploner M, Beyea J (2013). Confidence intervals after multiple imputation: combining profile likelihood information from logistic regressions. Statistics in Medicine, to appear. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#generate data set with NAs
+freq=c(5,2,2,7,5,4)
+y&lt;-c(rep(1,freq[1]+freq[2]), rep(0,freq[3]+freq[4]), rep(1,freq[5]), rep(0,freq[6]))
+x&lt;-c(rep(1,freq[1]), rep(0,freq[2]), rep(1,freq[3]), rep(0,freq[4]), rep(NA,freq[5]),
+   rep(NA,freq[6]))
+toy&lt;-data.frame(x=x,y=y)
+
+
+# impute data set 5 times
+set.seed(169)
+toymi&lt;-list(0)
+for(i in 1:5){
+  toymi[[i]]&lt;-toy
+  y1&lt;-toymi[[i]]$y==1 &amp; is.na(toymi[[i]]$x)
+  y0&lt;-toymi[[i]]$y==0 &amp; is.na(toymi[[i]]$x)
+  xnew1&lt;-rbinom(sum(y1),1,freq[1]/(freq[1]+freq[2]))
+  xnew0&lt;-rbinom(sum(y0),1,freq[3]/(freq[3]+freq[4]))
+  toymi[[i]]$x[y1==TRUE]&lt;-xnew1
+  toymi[[i]]$x[y0==TRUE]&lt;-xnew0
+}
+
+
+# logistf analyses of each imputed data set
+fit.list&lt;-lapply(1:5, function(X) logistf(data=toymi[[X]], y~x, pl=TRUE, dataout=TRUE))
+
+# CLIP confidence limits
+CLIP.confint(obj=fit.list)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Backward Elimination of Model Terms in 'logistf' Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for backward {logistf}"><tr><td>backward {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Backward Elimination of Model Terms in <code>logistf</code> Models
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions provide simple backward elimination/forward selection procedures for logistf models
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+backward(object, scope, steps = 1000, slstay = 0.05, trace = TRUE,
+   printwork = FALSE, ...)
+forward(object, scope, steps = 1000, slentry = 0.05, trace = TRUE, 
+ printwork = FALSE, pl = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+
+<p>A fitted logistf model object. To start with an empty model, create a model fit with a formula=&lt;y&gt;~1, pl=FALSE. (Replace &lt;y&gt; by your response variable.)</p>
+</td></tr>
+<tr valign="top"><td><code>scope</code></td>
+<td>
+
+<p>The scope of variables to add/drop from the model. If left blank, <code>backward</code> will use the terms of the <code>object</code> fit, and <code>forward</code> will use all variables in <code>object$data</code> not identified as
+the response variable. Alternatively, an arbitrary vector of variable names can be given, to allow that only some of the variables will be competitively selected or dropped.
+</p>
+</td></tr>
+<tr valign="top"><td><code>steps</code></td>
+<td>
+
+<p>The number of forward selection/backward elimination steps.
+</p>
+</td></tr>
+<tr valign="top"><td><code>slstay</code></td>
+<td>
+
+<p>For <code>backward</code>, the significance level to stay in the model.</p>
+</td></tr>
+<tr valign="top"><td><code>slentry</code></td>
+<td>
+
+<p>For <code>forward</code>, the significance level to enter the model.</p>
+</td></tr>
+<tr valign="top"><td><code>trace</code></td>
+<td>
+
+<p>If TRUE, protocols selection steps.
+</p>
+</td></tr>
+<tr valign="top"><td><code>printwork</code></td>
+<td>
+
+<p>If TRUE, prints each working model that is visited by the selection procedure.
+</p>
+</td></tr>
+<tr valign="top"><td><code>pl</code></td>
+<td>
+
+<p>For <code>forward</code>, computes profile likelihood confidence intervals for the final model if TRUE.
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Further arguments to be passed to methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The variable selection is simply performed by repeatedly calling add1 or drop1 methods for logistf, and is based on penalized likelihood ratio test. It can also properly handle variables that were defined as factors in the original
+data set.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An updated logistf fit with the finally selected model.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Georg Heinze
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(sex2)
+fit&lt;-logistf(data=sex2, case~1, pl=FALSE)
+fitf&lt;-forward(fit)
+
+fit2&lt;-logistf(data=sex2, case~age+oc+vic+vicl+vis+dia)
+fitb&lt;-backward(fit2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Get or set the priority of a process</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for ps_windows_nice_values {ps}"><tr><td>ps_windows_nice_values {ps}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Get or set the priority of a process</h2>
+
+<h3>Description</h3>
+
+<p><code>ps_get_nice()</code> returns the current priority, <code>ps_set_nice()</code> sets a
+new priority, <code>ps_windows_nice_values()</code> list the possible priority
+values on Windows.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ps_windows_nice_values()
+
+ps_get_nice(p = ps_handle())
+
+ps_set_nice(p = ps_handle(), value)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Process handle.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>On Windows it must be a string, one of the values of
+<code>ps_windows_nice_values()</code>. On Unix it is a priority value that is
+smaller than or equal to 20.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Priority values are different on Windows and Unix.
+</p>
+<p>On Unix, priority is an integer, which is maximum 20. 20 is the lowest
+priority.
+</p>
+
+
+<h4>Rules:</h4>
+
+
+<ul>
+<li><p> On Windows you can only set the priority of the processes the current
+user has <code>PROCESS_SET_INFORMATION</code> access rights to. This typically
+means your own processes.
+</p>
+</li>
+<li><p> On Unix you can only set the priority of the your own processes.
+The superuser can set the priority of any process.
+</p>
+</li>
+<li><p> On Unix you cannot set a higher priority, unless you are the superuser.
+(I.e. you cannot set a lower number.)
+</p>
+</li>
+<li><p> On Unix the default priority of a process is zero.
+</p>
+</li></ul>
+
+
+
+
+<h3>Value</h3>
+
+<p><code>ps_windows_nice_values()</code> return a character vector of possible
+priority values on Windows.
+</p>
+<p><code>ps_get_nice()</code> returns a string from
+<code>ps_windows_nice_values()</code> on Windows. On Unix it returns an integer
+smaller than or equal to 20.
+</p>
+<p><code>ps_set_nice()</code> return <code>NULL</code> invisibly.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>ps</em> version 1.7.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

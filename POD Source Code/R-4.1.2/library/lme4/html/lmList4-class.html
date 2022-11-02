@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Class &quot;lmList4&quot; of 'lm' Objects on Common Model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for lmList4-class {lme4}"><tr><td>lmList4-class {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Class &quot;lmList4&quot; of 'lm' Objects on Common Model</h2>
+
+<h3>Description</h3>
+
+<p>Class <code>"lmList4"</code> is an S4 class with basically a
+<code><a href="../../base/html/list.html">list</a></code> of objects of class <code><a href="../../stats/html/lm.html">lm</a></code> with a common
+model (but different data); see <code><a href="../../lme4/help/lmList.html">lmList</a>()</code> which returns
+these.
+</p>
+<p>Package <span class="pkg">nlme</span>'s <code><a href="../../nlme/help/lmList.html">lmList</a>()</code> returns objects of
+S3 class <code>"lmList"</code> and provides methods for them, on which our
+methods partly build.
+</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>Objects can be created by calls of the form
+<code>new("lmList4", ...)</code> or, more commonly, by a call to
+<code><a href="../../lme4/help/lmList.html">lmList</a>()</code>.
+</p>
+
+
+<h3>Methods</h3>
+
+<p>A dozen <code><a href="../../utils/html/methods.html">methods</a></code> are provided.  Currently, S4
+methods for <code><a href="../../methods/html/show.html">show</a></code>, coercion (<code><a href="../../methods/html/as.html">as</a>(.,.)</code>) and
+others inherited via <code>"list"</code>,  and S3 methods for
+<code><a href="../../stats/html/coef.html">coef</a></code>, <code><a href="../../stats/html/confint.html">confint</a></code>, <code><a href="../../stats/html/fitted.values.html">fitted</a></code>,
+<code><a href="../../lme4/help/fixef.html">fixef</a></code>, <code><a href="../../stats/html/formula.html">formula</a></code>, <code><a href="../../stats/html/logLik.html">logLik</a></code>,
+<code><a href="../../graphics/html/pairs.html">pairs</a></code>, <code><a href="../../graphics/html/plot.default.html">plot</a></code>, <code><a href="../../stats/html/predict.html">predict</a></code>,
+<code><a href="../../base/html/print.html">print</a></code>, <code><a href="../../stats/html/qqnorm.html">qqnorm</a></code>, <code><a href="../../lme4/help/ranef.html">ranef</a></code>,
+<code><a href="../../stats/html/residuals.html">residuals</a></code>, <code><a href="../../lme4/help/sigma.html">sigma</a></code>, <code><a href="../../base/html/summary.html">summary</a></code>,
+and <code><a href="../../stats/html/update.html">update</a></code>.
+</p>
+
+<dl>
+<dt>sigma(object)</dt><dd><p>returns the standard deviation
+<i>&sigma;-hat</i> (of the errors in the linear models), assuming a
+<em>common</em> variance <i>&sigma;^2</i> by pooling (even when
+<code>pool = FALSE</code> was used in the fit).</p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../lme4/help/lmList.html">lmList</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+if(getRversion() &gt;= "3.2.0") {
+  (mm &lt;- methods(class = "lmList4"))
+  ## The S3 ("not S4") ones :
+  mm[!attr(mm,"info")[,"isS4"]]
+}
+## For more examples:  example(lmList)  i.e., ?lmList
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Finds an imputed value from matches in the predictive metric...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for .pmm.match {mice}"><tr><td>.pmm.match {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Finds an imputed value from matches in the predictive metric (deprecated)</h2>
+
+<h3>Description</h3>
+
+<p>This function finds matches among the observed data in the predictive
+mean metric. It selects the <code>donors</code> closest matches, randomly
+samples one of the donors, and returns the observed value of the
+match.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+.pmm.match(z, yhat = yhat, y = y, donors = 5, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>z</code></td>
+<td>
+<p>A scalar containing the predicted value for the current case
+to be imputed.</p>
+</td></tr>
+<tr valign="top"><td><code>yhat</code></td>
+<td>
+<p>A vector containing the predicted values for all cases with an observed
+outcome.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>A vector of <code>length(yhat)</code> elements containing the observed outcome</p>
+</td></tr>
+<tr valign="top"><td><code>donors</code></td>
+<td>
+<p>The size of the donor pool among which a draw is made. The default is
+<code>donors = 5</code>. Setting <code>donors = 1</code> always selects the closest match. Values
+between 3 and 10 provide the best results. Note: This setting was changed from
+3 to 5 in version 2.19, based on simulation work by Tim Morris (UCL).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other parameters (not used).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is included for backward compatibility. It was
+used up to <code>mice 2.21</code>. The current <code>mice.impute.pmm()</code>
+function calls the faster <code>C</code> function <code>matcher</code> instead of
+<code>.pmm.match()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A scalar containing the observed value of the selected donor.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren
+</p>
+
+
+<h3>References</h3>
+
+<p>Schenker N \&amp; Taylor JMG (1996) Partially parametric techniques
+for multiple imputation. <em>Computational Statistics and Data Analysis</em>, 22, 425-446.
+</p>
+<p>Little RJA (1988) Missing-data adjustments in large surveys (with discussion).
+<em>Journal of Business Economics and Statistics</em>, 6, 287-301.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

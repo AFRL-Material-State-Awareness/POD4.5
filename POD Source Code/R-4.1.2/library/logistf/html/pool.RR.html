@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compute Pooled Normal Confidence Intervals (following Rubin's...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for pool.RR {logistf}"><tr><td>pool.RR {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compute Pooled Normal Confidence Intervals (following Rubin's Rules) after Multiple Imputation</h2>
+
+<h3>Description</h3>
+
+<p>Computes pooled normal (symmetric) confidence intervals after multiple imputation, following Rubin's rules.</p>
+
+
+<h3>Usage</h3>
+
+<pre>pool.RR(object, method = "plain")</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>A list of fits from logistf.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>A string describing the method to compute the degrees of freedom, 
+<code>"plain"</code> produces the conventional degrees of freedom as in Rubin (1987), and this is required for fits from logistf.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This is a slightly modified version of the <code>pool()</code> function of the <code>mice</code> package, for use with a list of <code>logistf</code>-fits. 
+If logistf fits on multiple imputed versions of a data set are on hand in a list object, use this function to pool results using Rubin's rules.
+If logistf fits on multiple imputed versions of a data set are on hand in a <code>mira</code> object, use <code>mice</code>'s  <code>pool(..., method="plain")</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class mipo, which stands for 'multiple imputation pooled outcome'. The object is a list containing the following items:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p> 	The call to the pool function.</p>
+</td></tr>
+<tr valign="top"><td><code>call1</code></td>
+<td>
+<p> 	The original call how the mira object was calculated.</p>
+</td></tr>
+<tr valign="top"><td><code>call2</code></td>
+<td>
+<p> 	The original call to the mice function to calculate the underlying midsobject. (NA)</p>
+</td></tr>
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p> 	The formula that is used in call1.</p>
+</td></tr>
+<tr valign="top"><td><code>nmis</code></td>
+<td>
+<p> 	The number of missing entries for each variable. (NA)</p>
+</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+<p> 	The number of imputations</p>
+</td></tr>
+<tr valign="top"><td><code>qhat</code></td>
+<td>
+<p> 	A matrix, containing the estimated coeffients of the m repeated complete data analyses</p>
+</td></tr>
+<tr valign="top"><td><code>u</code></td>
+<td>
+<p> 	The corresponding m variancematrices of the estimates in an three dimensional array.</p>
+</td></tr>
+<tr valign="top"><td><code>qbar</code></td>
+<td>
+<p> 	The pooled estimate, formula (3.1.2) Rubin (1987).</p>
+</td></tr>
+<tr valign="top"><td><code>ubar</code></td>
+<td>
+<p> 	The mean of the variances, formula (3.1.3), Rubin (1987).</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p> 	The within imputation variance, formula (3.1.4), Rubin (1987).</p>
+</td></tr>
+<tr valign="top"><td><code>t</code></td>
+<td>
+<p> 	Total variance of the pooled estimates, formula (3.1.5), Rubin (1987).</p>
+</td></tr>
+<tr valign="top"><td><code>r</code></td>
+<td>
+<p> 	Relative increase in variance due to nonresponse, formula (3.1.7), Rubin (1987).</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p> 	Degrees of freedom for t reference distribution, calculated according to the article of Barnard and Rubin (1999).</p>
+</td></tr>
+<tr valign="top"><td><code>f</code></td>
+<td>
+<p> 	Fraction missing information due to nonresponse, formula (3.1.10), Rubin (1987).</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>adapted from <code><a href="../../mice/html/mice.html">mice</a></code> package for use with <code>logistf</code> objects by Georg Heinze</p>
+
+
+<h3>References</h3>
+
+<p>Barnard, J. and Rubin, D.B. (1999). Small sample degrees of freedom with multiple imputation. Biometrika, 86, 948-955.
+</p>
+<p>Rubin, D.B. (1987). Multiple Imputation for Nonresponse in Surveys. New York: John Wiley and Sons.
+</p>
+<p>Van Buuren, S., Groothuis-Oudshoorn, K. (2011) mice: Multivariate Imputation by Chained Equations in R. 
+Journal of Statistical Software, Volume 45, Issue 3.
+</p>
+<p>Pinheiro, J.C. and Bates, D.M. (2000). Mixed-Effects Models in S and S-PLUS. Berlin: Springer. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/html/mice.html">mice</a></code>, <code><a href="../../logistf/help/CLIP.confint.html">CLIP.confint</a></code>, <code><a href="../../logistf/help/PVR.confint.html">PVR.confint</a></code>
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#generate data set with NAs
+freq=c(5,2,2,7,5,4)
+y&lt;-c(rep(1,freq[1]+freq[2]), rep(0,freq[3]+freq[4]), rep(1,freq[5]), rep(0,freq[6]))
+x&lt;-c(rep(1,freq[1]), rep(0,freq[2]), rep(1,freq[3]), rep(0,freq[4]), rep(NA,freq[5]),
+   rep(NA,freq[6]))
+toy&lt;-data.frame(x=x,y=y)
+
+
+# impute data set 5 times
+set.seed(169)
+toymi&lt;-list(0)
+for(i in 1:5){
+  toymi[[i]]&lt;-toy
+  y1&lt;-toymi[[i]]$y==1 &amp; is.na(toymi[[i]]$x)
+  y0&lt;-toymi[[i]]$y==0 &amp; is.na(toymi[[i]]$x)
+  xnew1&lt;-rbinom(sum(y1),1,freq[1]/(freq[1]+freq[2]))
+  xnew0&lt;-rbinom(sum(y0),1,freq[3]/(freq[3]+freq[4]))
+  toymi[[i]]$x[y1==TRUE]&lt;-xnew1
+  toymi[[i]]$x[y0==TRUE]&lt;-xnew0
+}
+
+
+# logistf analyses of each imputed data set
+fit.list&lt;-lapply(1:5, function(X) logistf(data=toymi[[X]], y~x, pl=TRUE, dataout=TRUE))
+summary(pool.RR(fit.list))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

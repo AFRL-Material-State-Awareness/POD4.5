@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Creates a 'post' argument</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for make.post {mice}"><tr><td>make.post {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Creates a <code>post</code> argument</h2>
+
+<h3>Description</h3>
+
+<p>This helper function creates a valid <code>post</code> vector. The
+<code>post</code> vector is an argument to the <code>mice</code> function that
+specifies post-processing for a variable after each iteration of imputation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+make.post(data)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame or a matrix containing the incomplete data.  Missing
+values are coded as <code>NA</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Character vector of <code>ncol(data)</code> element
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/mice.html">mice</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+make.post(nhanes2)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

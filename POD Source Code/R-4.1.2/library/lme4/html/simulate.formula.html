@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A 'simulate' Method for 'formula' objects that dispatches...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for simulate.formula {lme4}"><tr><td>simulate.formula {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A <code>simulate</code> Method for <code>formula</code> objects that dispatches based on the Left-Hand Side</h2>
+
+<h3>Description</h3>
+
+<p>This method evaluates the left-hand side (LHS) of the given formula and
+dispatches it to an appropriate method based on the result by
+setting an nonce class name on the formula.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'formula'
+simulate(object, nsim = 1 , seed = NULL, ...,
+basis, newdata, data)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>a one- or two-sided <code><a href="../../stats/html/formula.html">formula</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>nsim,seed</code></td>
+<td>
+<p>number of realisations to simulate and the random
+seed to use; see <code><a href="../../stats/html/simulate.html">simulate</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>additional arguments to methods</p>
+</td></tr>
+<tr valign="top"><td><code>basis</code></td>
+<td>
+<p>if given, overrides the LHS of the formula for the
+purposes of dispatching</p>
+</td></tr>
+<tr valign="top"><td><code>newdata,data</code></td>
+<td>
+<p>if passed, the <code>object</code>'s LHS is evaluated in
+this environment; at most one of the two may be passed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The dispatching works as follows:
+</p>
+
+<ol>
+<li><p> If <code>basis</code> is not passed, and the formula has an LHS the
+expression on the LHS of the formula in the <code>object</code> is
+evaluated in the environment <code>newdata</code> or <code>data</code> (if given), in
+any case enclosed by the environment of <code>object</code>. Otherwise,
+<code>basis</code> is used.
+</p>
+</li>
+<li><p> The result is set as an attribute <code>".Basis"</code> on <code>object</code>. If
+there is no <code>basis</code> or LHS, it is not set.
+</p>
+</li>
+<li><p> The class vector of <code>object</code> has <code>c("formula_lhs_<var>CLASS</var>",
+   "formula_lhs")</code> prepended to it, where <var>CLASS</var> is the class
+of the LHS value or <code>basis</code>. If LHS or <code>basis</code> has multiple
+classes, they are all prepended; if there is no LHS or <code>basis</code>,
+<code>c("formula_lhs_", "formula_lhs")</code> is.
+</p>
+</li>
+<li> <p><code><a href="../../stats/html/simulate.html">simulate</a></code> generic is evaluated on the new <code>object</code>, with all
+arguments passed on, excluding <code>basis</code>; if <code>newdata</code> or <code>data</code>
+are missing, they too are not passed on. The evaluation takes
+place in the parent's environment.
+</p>
+</li></ol>
+
+<p>A &quot;method&quot; to receive a formula whose LHS evaluates to <var>CLASS</var>
+can therefore be implemented by a function
+<code>simulate.formula_lhs_<var>CLASS</var>()</code>. This function can expect a
+<code><a href="../../stats/html/formula.html">formula</a></code> object, with additional attribute <code>.Basis</code> giving the
+evaluated LHS (so that it does not need to be evaluated again).
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

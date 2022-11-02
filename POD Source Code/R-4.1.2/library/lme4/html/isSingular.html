@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Test Fitted Model for (Near) Singularity</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for isSingular {lme4}"><tr><td>isSingular {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Test Fitted Model for (Near) Singularity</h2>
+
+<h3>Description</h3>
+
+<p>Evaluates whether a fitted mixed model is (almost / near) singular, i.e.,
+the parameters are on the boundary of the feasible
+parameter space: variances of one or more linear combinations of effects
+are (close to) zero.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+isSingular(x, tol = 1e-4)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted <code>merMod</code> object (result of <code>lmer</code> or <code>glmer</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>tol</code></td>
+<td>
+<p>numerical tolerance for detecting singularity.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Complex mixed-effect models (i.e., those with a
+large number of variance-covariance parameters) frequently result in
+<em>singular</em> fits, i.e. estimated variance-covariance matrices with
+less than full rank. Less technically, this means that some
+&quot;dimensions&quot; of the variance-covariance matrix have been estimated as
+exactly zero. For scalar random effects such as intercept-only models,
+or 2-dimensional random effects such as intercept+slope models,
+singularity is relatively easy to detect because it leads to
+random-effect variance estimates of (nearly) zero, or estimates of
+correlations that are (almost) exactly -1 or 1. However, for more
+complex models (variance-covariance matrices of dimension &gt;=3)
+singularity can be hard to detect; models can often be singular
+without any of their individual variances being close to zero
+or correlations being close to +/-1.
+</p>
+<p>This function performs a simple test to determine whether any of the
+random effects covariance matrices of a fitted model are singular.
+The <code><a href="../../lme4/help/rePCA.html">rePCA</a></code> method provides more detail about the
+singularity pattern, showing the standard deviations
+of orthogonal variance components and the mapping from
+variance terms in the model to orthogonal components
+(i.e., eigenvector/rotation matrices).
+</p>
+<p>While singular models are statistically well defined (it is
+theoretically sensible for the true maximum likelihood estimate
+to correspond to a singular fit), there are real concerns
+that (1) singular fits correspond to overfitted models that may
+have poor power; (2) chances of numerical problems and mis-convergence
+are higher for singular models (e.g. it may be computationally
+difficult to compute profile confidence intervals for such
+models); (3) standard inferential procedures such as Wald statistics
+and likelihood ratio tests may be inappropriate.
+</p>
+<p>There is not yet consensus about how to deal with singularity, or
+more generally to choose which random-effects specification (from
+a range of choices of varying complexity) to use.  Some proposals
+include:
+</p>
+
+<ul>
+<li><p> avoid fitting overly complex models in the first place,
+i.e. design experiments/restrict models <em>a priori</em> such that the
+variance-covariance matrices can be estimated precisely enough
+to avoid singularity (Matuschek et al 2017)
+</p>
+</li>
+<li><p> use some form of model selection to choose a model that
+balances predictive accuracy and overfitting/type I error
+(Bates et al 2015, Matuschek et al 2017)
+</p>
+</li>
+<li> <p>&ldquo;keep it maximal&rdquo;, i.e. fit the most complex
+model consistent with the experimental design, removing only
+terms required to allow a non-singular fit (Barr et al. 2013),
+or removing further terms based on p-values or AIC
+</p>
+</li>
+<li><p> use a partially Bayesian method
+that produces maximum <em>a posteriori</em> (MAP)
+estimates using <em>regularizing</em> priors to force
+the estimated random-effects variance-covariance matrices
+away from singularity (Chung et al 2013, <a href="https://CRAN.R-project.org/package=blme"><span class="pkg">blme</span></a> package)
+</p>
+</li>
+<li><p> use a fully Bayesian method that both regularizes the
+model via informative priors and gives estimates
+and credible intervals for all parameters that average
+over the uncertainty in the random effects parameters
+(Gelman and Hill 2006, McElreath 2015;
+<a href="https://CRAN.R-project.org/package=MCMCglmm"><span class="pkg">MCMCglmm</span></a>, <a href="https://CRAN.R-project.org/package=rstanarm"><span class="pkg">rstanarm</span></a> and <a href="https://CRAN.R-project.org/package=brms"><span class="pkg">brms</span></a> packages)
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>a logical value
+</p>
+
+
+<h3>References</h3>
+
+<p>Dale J. Barr, Roger Levy, Christoph Scheepers, and Harry J. Tily (2013).
+Random effects structure for confirmatory hypothesis testing: Keep it maximal;
+<em>Journal of Memory and Language</em> <b>68</b>(3), 255&ndash;278.
+</p>
+<p>Douglas Bates, Reinhold Kliegl, Shravan Vasishth, and Harald Baayen (2015).
+<em>Parsimonious Mixed Models</em>; preprint (<a href="https://arxiv.org/abs/1506.04967">https://arxiv.org/abs/1506.04967</a>).
+</p>
+<p>Yeojin Chung, Sophia Rabe-Hesketh, Vincent Dorie, Andrew Gelman, and Jingchen Liu (2013).
+A nondegenerate penalized likelihood estimator for variance parameters in multilevel models;
+<em>Psychometrika</em> <b>78</b>, 685&ndash;709; doi: <a href="https://doi.org/10.1007/S11336-013-9328-2">10.1007/S11336-013-9328-2</a>.
+</p>
+<p>Andrew Gelman and Jennifer Hill (2006).
+<em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em>.
+Cambridge University Press.
+</p>
+<p>Hannes Matuschek, Reinhold Kliegl, Shravan Vasishth, Harald Baayen, and Douglas Bates (2017).
+Balancing type I error and power in linear mixed models.
+<em>Journal of Memory and Language</em> <b>94</b>, 305–315.
+</p>
+<p>Richard McElreath (2015)
+<em>Statistical Rethinking: A Bayesian Course with Examples in R and Stan</em>.
+Chapman and Hall/CRC.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../lme4/help/getME.html">getME</a></code>, <code><a href="../../lme4/help/rePCA.html">rePCA</a></code></p>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

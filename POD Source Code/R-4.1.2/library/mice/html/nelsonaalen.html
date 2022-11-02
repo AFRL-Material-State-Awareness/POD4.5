@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Cumulative hazard rate or Nelson-Aalen estimator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for nelsonaalen {mice}"><tr><td>nelsonaalen {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Cumulative hazard rate or Nelson-Aalen estimator</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the cumulative hazard rate (Nelson-Aalen estimator)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+nelsonaalen(data, timevar, statusvar)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A data frame containing the data.</p>
+</td></tr>
+<tr valign="top"><td><code>timevar</code></td>
+<td>
+<p>The name of the time variable in <code>data</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>statusvar</code></td>
+<td>
+<p>The name of the event variable, e.g. death in <code>data</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function is useful for imputing variables that depend on survival time.
+White and Royston (2009) suggested using the cumulative hazard to the
+survival time H0(T) rather than T or log(T) as a predictor in imputation
+models.  See section 7.1 of Van Buuren (2012) for an example.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector with <code>nrow(data)</code> elements containing the Nelson-Aalen
+estimates of the cumulative hazard function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stef van Buuren, 2012
+</p>
+
+
+<h3>References</h3>
+
+<p>White, I. R., Royston, P. (2009). Imputing missing covariate
+values for the Cox model.  <em>Statistics in Medicine</em>, <em>28</em>(15),
+1982-1998.
+</p>
+<p>Van Buuren, S. (2018).
+<a href="https://stefvanbuuren.name/fimd/sec-toomany.html#a-further-improvement-survival-as-predictor-variable"><em>Flexible Imputation of Missing Data. Second Edition.</em></a>
+Chapman &amp; Hall/CRC. Boca Raton, FL.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+require(MASS)
+
+leuk$status &lt;- 1 ## no censoring occurs in leuk data (MASS)
+ch &lt;- nelsonaalen(leuk, time, status)
+plot(x = leuk$time, y = ch, ylab = "Cumulative hazard", xlab = "Time")
+
+### See example on http://www.engineeredsoftware.com/lmar/pe_cum_hazard_function.htm
+time &lt;- c(43, 67, 92, 94, 149, rep(149, 7))
+status &lt;- c(rep(1, 5), rep(0, 7))
+eng &lt;- data.frame(time, status)
+ch &lt;- nelsonaalen(eng, time, status)
+plot(x = time, y = ch, ylab = "Cumulative hazard", xlab = "Time")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,50 @@
+## Imports.
+importFrom("graphics", "abline", "axis", "grid", "legend", "lines",
+             "mtext", "par", "plot", "points", "segments", "title")
+importFrom("stats", "add1", "anova", "as.formula", "binomial", "coef",
+             "density", "drop1", "glm", "lm", "model.frame",
+             "model.matrix", "model.offset", "model.response",
+             "model.weights", "pchisq", "pnorm", "prcomp", "predict",
+             "qchisq", "qnorm", "terms", "uniroot", "update", "vcov")
+importFrom("utils", "capture.output", "head")
+importFrom(stats, nobs)
+importFrom(mgcv, uniquecombs)
+importFrom(mice, complete)
+
+## Export of public functions.
+export(
+logistf, 
+logistf.control, 
+logistftest, 
+logistpl.control, 
+CLIP.confint, 
+CLIP.profile, 
+PVR.confint, 
+pool.RR, 
+is.logistf, 
+backward, 
+forward)
+
+## Definition of S3 methods.
+S3method(print, logistf)
+S3method(summary, logistf)
+S3method(coef, logistf)
+S3method(confint, logistf)
+S3method(vcov, logistf)
+S3method(profile, logistf)
+S3method(nobs, logistf)
+S3method(drop1, logistf)
+S3method(add1, logistf)
+S3method(anova, logistf)
+S3method(extractAIC, logistf)
+S3method(terms, logistf)
+S3method(print, logistftest)
+S3method(plot, logistf.profile)
+S3method(print, anova.logistf)
+S3method(print, CLIP.confint)
+S3method(print, PVR.confint)
+
+
+#### register shared objects (C++ DLL):
+useDynLib(logistf)       
+

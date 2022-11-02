@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Export 'mids' object to SPSS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for mids2spss {mice}"><tr><td>mids2spss {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Export <code>mids</code> object to SPSS</h2>
+
+<h3>Description</h3>
+
+<p>Converts a <code>mids</code> object into a format recognized by SPSS, and writes
+the data and the SPSS syntax files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mids2spss(
+  imp,
+  filename = "midsdata",
+  path = getwd(),
+  compress = FALSE,
+  silent = FALSE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>imp</code></td>
+<td>
+<p>The <code>imp</code> argument is an object of class <code>mids</code>,
+typically produced by the <code>mice()</code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>filename</code></td>
+<td>
+<p>A character string describing the name of the output data
+file and its extension.</p>
+</td></tr>
+<tr valign="top"><td><code>path</code></td>
+<td>
+<p>A character string containing the path of the output file. The
+value in <code>path</code> is appended to <code>filedat</code>. By
+default, files are written to the current <code>R</code> working directory. If
+<code>path=NULL</code> then no file path appending is done.</p>
+</td></tr>
+<tr valign="top"><td><code>compress</code></td>
+<td>
+<p>A logical flag stating whether the resulting SPSS set should
+be a compressed <code>.zsav</code> file.</p>
+</td></tr>
+<tr valign="top"><td><code>silent</code></td>
+<td>
+<p>A logical flag stating whether the location of the saved file should be
+printed.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function automates most of the work needed to export a <code>mids</code>
+object to SPSS. It uses <code>haven::write_sav()</code> to facilitate the export to an
+SPSS <code>.sav</code> or <code>.zsav</code> file.
+</p>
+<p>Below are some things to pay attention to.
+</p>
+<p>The <code>SPSS</code> syntax file has the proper file names and separators set, so
+in principle it should run and read the data without alteration. <code>SPSS</code>
+is more strict than <code>R</code> with respect to the paths. Always use the full
+path, otherwise <code>SPSS</code> may not be able to find the data file.
+</p>
+<p>Factors in <code>R</code> translate into categorical variables in <code>SPSS</code>. The
+internal coding of factor levels used in <code>R</code> is exported. This is
+generally acceptable for <code>SPSS</code>. However, when the data are to be
+combined with existing <code>SPSS</code> data, watch out for any changes in the
+factor levels codes.
+</p>
+<p><code>SPSS</code> will recognize the data set as a multiply imputed data set, and
+do automatic pooling in procedures where that is supported. Note however that
+pooling is an extra option only available to those who license the
+<code>MISSING VALUES</code> module. Without this license, <code>SPSS</code> will still
+recognize the structure of the data, but it will not pool the multiply imputed
+estimates into a single inference.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The return value is <code>NULL</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gerko Vink, dec 2020.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/mids-class.html">mids</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

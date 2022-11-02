@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Shrink images to a maximum width</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for shrink_images {xfun}"><tr><td>shrink_images {xfun}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Shrink images to a maximum width</h2>
+
+<h3>Description</h3>
+
+<p>Use <code><a href="../../magick/help/image_resize.html">magick::image_resize</a>()</code> to shrink an
+image if its width is larger than the value specified by the argument
+<code>width</code>, and optionally call <code><a href="../../xfun/help/tinify.html">tinify</a>()</code> to compress it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+shrink_images(
+  width = 800,
+  dir = ".",
+  files = all_files("[.](png|jpe?g|webp)$", dir),
+  tinify = FALSE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>width</code></td>
+<td>
+<p>The desired maximum width of images.</p>
+</td></tr>
+<tr valign="top"><td><code>dir</code></td>
+<td>
+<p>The directory of images.</p>
+</td></tr>
+<tr valign="top"><td><code>files</code></td>
+<td>
+<p>A vector of image file paths. By default, this is all
+&lsquo;<span class="file">.png</span>&rsquo;, &lsquo;<span class="file">.jpeg</span>&rsquo;, and &lsquo;<span class="file">.webp</span>&rsquo; images under <code>dir</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tinify</code></td>
+<td>
+<p>Whether to compress images using <code><a href="../../xfun/help/tinify.html">tinify</a>()</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+f = xfun:::all_files("[.](png|jpe?g)$", R.home("doc"))
+file.copy(f, tempdir())
+f = file.path(tempdir(), basename(f))
+magick::image_info(magick::image_read(f))  # some widths are larger than 300
+xfun::shrink_images(300, files = f)
+magick::image_info(magick::image_read(f))  # all widths &lt;= 300 now
+file.remove(f)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>xfun</em> version 0.34 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

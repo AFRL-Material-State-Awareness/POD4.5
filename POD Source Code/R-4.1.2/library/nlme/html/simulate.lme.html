@@ -81,14 +81,13 @@ and <code>m2</code> to each simulated set of data.  Defaults to <code>c(40,200)<
 <tr valign="top"><td><code>useGen</code></td>
 <td>
 
-<p>an optional logical value.  If <code>TRUE</code>, numerical derivatives are
-used to obtain the gradient and the Hessian of the log-likelihood in
-the optimization algorithm in the <code>ms</code> function.  If
-<code>FALSE</code>, the default algorithm in <code>ms</code> for functions that
-do not incorporate gradient and Hessian attributes is used.  Default
+<p>an optional logical value.  If <code>TRUE</code>, the <code><a href="../../stats/html/nlminb.html">nlminb</a></code>
+optimizer is used with numerical derivatives of the log-likelihood. If
+<code>FALSE</code>, the <code><a href="../../stats/html/nlm.html">nlm</a></code> algorithm is used with an
+analytic gradient.  The default
 depends on the <code>"<a href="../../nlme/help/pdMat.html">pdMat</a>"</code> classes used in <code>object</code> and <code>m2</code>:
 if both are standard classes (see <code><a href="../../nlme/help/pdClasses.html">pdClasses</a></code>) then
-defaults to <code>TRUE</code>, otherwise defaults to <code>FALSE</code>.
+defaults to <code>FALSE</code>, otherwise defaults to <code>TRUE</code>.
 </p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
@@ -102,7 +101,7 @@ defaults to <code>TRUE</code>, otherwise defaults to <code>FALSE</code>.
 
 <p>an object of class <code>simulate.lme</code> with components <code>null</code> and
 <code>alt</code>.  Each of these has components <code>ML</code> and/or <code>REML</code>
-which are matrices.  An attribute called <code>Random.seed</code> contains
+which are matrices.  An attribute called <code>seed</code> contains
 the seed that was used for the random number generator.
 </p>
 
@@ -135,5 +134,5 @@ orthSim &lt;-
 
 </pre>
 
-<hr /><div style="text-align: center;">[Package <em>nlme</em> version 3.1-153 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>nlme</em> version 3.1-160 <a href="00Index.html">Index</a>]</div>
 </div></body></html>

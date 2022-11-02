@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Mixed-Effects Profile Plots (Regular / Density / Pairs)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for plots.thpr {lme4}"><tr><td>plots.thpr {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Mixed-Effects Profile Plots (Regular / Density / Pairs)</h2>
+
+<h3>Description</h3>
+
+<p>Xyplot, Densityplot, and Pairs plot methods for a mixed-effects model
+profile.
+</p>
+<p><code>xyplot()</code> draws &ldquo;zeta diagrams&rdquo;, also visualizing
+confidence intervals and their asymmetry.
+</p>
+<p><code>densityplot()</code> draws the profile densities.
+</p>
+<p><code>splom()</code> draws profile pairs plots.  Contours are for the
+marginal two-dimensional regions (i.e. using df = 2).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'thpr'
+xyplot(x, data = NULL,
+       levels = sqrt(qchisq(pmax.int(0, pmin.int(1, conf)), df = 1)),
+       conf = c(50, 80, 90, 95, 99)/100,
+       absVal = FALSE, scales=NULL,
+       which = 1:nptot, ...)
+
+## S3 method for class 'thpr'
+densityplot(x, data, npts = 201, upper = 0.999, ...)
+
+## S3 method for class 'thpr'
+splom(x, data,
+      levels = sqrt(qchisq(pmax.int(0, pmin.int(1, conf)), 2)),
+      conf = c(50, 80, 90, 95, 99)/100,  which = 1:nptot,
+      draw.lower = TRUE, draw.upper = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a mixed-effects profile, i.e., of class <code>"thpr"</code>,
+typically resulting from <code><a href="../../stats/html/profile.html">profile</a>(fm)</code> where <code>fm</code>
+is a fitted model from <code><a href="../../lme4/help/lmer.html">lmer</a></code> (or its generalizations).</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>unused - only for compatibility with generic.</p>
+</td></tr>
+<tr valign="top"><td><code>npts</code></td>
+<td>
+<p>the number of points to use for the <code>densityplot()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>upper</code></td>
+<td>
+<p>a number in <i>(0,1)</i> to specify upper (and lower)
+boundaries as <code>+/- qnorm(upper)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>levels</code></td>
+<td>
+<p>the contour levels to be shown; usually
+derived from <code>conf</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>conf</code></td>
+<td>
+<p>numeric vector of confidence levels to be
+shown as contours.</p>
+</td></tr>
+<tr valign="top"><td><code>absVal</code></td>
+<td>
+<p>logical indicating if <code><a href="../../base/html/MathFun.html">abs</a>(.)</code>olute values
+should be plotted, often preferred for confidence interval
+visualization.</p>
+</td></tr>
+<tr valign="top"><td><code>scales</code></td>
+<td>
+<p>plotting options to be passed to <code><a href="../../lattice/html/xyplot.html">xyplot</a></code></p>
+</td></tr>
+<tr valign="top"><td><code>which</code></td>
+<td>
+<p>integer or character vector indicating which parameters
+to profile: default is all parameters (see
+<code><a href="../../lme4/help/profile-methods.html">profile-methods</a></code>
+for details).</p>
+</td></tr>
+<tr valign="top"><td><code>draw.lower</code></td>
+<td>
+<p>(logical) draw lower-triangle (zeta scale) panels?</p>
+</td></tr>
+<tr valign="top"><td><code>draw.upper</code></td>
+<td>
+<p>(logical) draw upper-triangle (standard dev/cor scale) panels?</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>further arguments passed to <code><a href="../../lattice/html/xyplot.html">xyplot</a></code>,
+<code><a href="../../lattice/html/histogram.html">densityplot</a></code>, or <code><a href="../../lattice/html/splom.html">splom</a></code> from package
+<a href="https://CRAN.R-project.org/package=lattice"><span class="pkg">lattice</span></a>, respectively.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+
+<dl>
+<dt>xyplot:</dt><dd><p>a density plot, a <code>"trellis"</code> object (<span class="pkg">lattice</span> package)
+which when <code><a href="../../base/html/print.html">print</a>()</code>ed produces plots on the current
+graphic device.</p>
+</dd>
+<dt>densityplot:</dt><dd><p>a density plot, a <code>"trellis"</code> object, see above.</p>
+</dd>
+<dt>splom:</dt><dd><p>a pairs plot, aka <b>s</b>catter<b>plo</b>t
+<b>m</b>atrix, a <code>"trellis"</code> object, see above.</p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+ <p><code><a href="../../lme4/help/profile-methods.html">profile</a></code>, notably for an
+example.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## see   example("profile.merMod")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

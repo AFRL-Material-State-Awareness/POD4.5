@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Creates a 'formulas' argument</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for make.formulas {mice}"><tr><td>make.formulas {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Creates a <code>formulas</code> argument</h2>
+
+<h3>Description</h3>
+
+<p>This helper function creates a valid <code>formulas</code> object. The
+<code>formulas</code> object is an argument to the <code>mice</code> function.
+It is a list of formula's that specifies the target variables and
+the predictors by means of the standard <code>~</code> operator.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+make.formulas(data, blocks = make.blocks(data), predictorMatrix = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> with the source data</p>
+</td></tr>
+<tr valign="top"><td><code>blocks</code></td>
+<td>
+<p>An optional specification for blocks of variables in
+the rows. The default assigns each variable in its own block.</p>
+</td></tr>
+<tr valign="top"><td><code>predictorMatrix</code></td>
+<td>
+<p>A <code>predictorMatrix</code> specified by the user.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A list of formula's.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/make.blocks.html">make.blocks</a></code>, <code><a href="../../mice/help/make.predictorMatrix.html">make.predictorMatrix</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+f1 &lt;- make.formulas(nhanes)
+f1
+f2 &lt;- make.formulas(nhanes, blocks = make.blocks(nhanes, "collect"))
+f2
+
+# for editing, it may be easier to work with the character vector
+c1 &lt;- as.character(f1)
+c1
+
+# fold it back into a formula list
+f3 &lt;- name.formulas(lapply(c1, as.formula))
+f3
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

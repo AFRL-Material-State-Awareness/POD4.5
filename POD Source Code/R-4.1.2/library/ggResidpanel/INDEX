@@ -1,0 +1,9 @@
+penguins                Penguins Dataset
+resid_auxpanel          Panel of Diagnostic Residual Plots.
+resid_compare           Panel of Diagnostic Residual Plots Across
+                        Multiple Models.
+resid_interact          Panel of Interactive Versions of Diagnostic
+                        Residual Plots.
+resid_panel             Panel of Diagnostic Residual Plots.
+resid_xpanel            Panel of Plots of Residuals or Response
+                        Variable versus Predictor Variables.

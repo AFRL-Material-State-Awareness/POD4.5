@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Fitting Generalized Linear Mixed-Effects Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for glmer {lme4}"><tr><td>glmer {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fitting Generalized Linear Mixed-Effects Models</h2>
+
+<h3>Description</h3>
+
+<p>Fit a generalized linear mixed-effects model (GLMM).  Both fixed
+effects and random effects are specified via the model <code>formula</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+glmer(formula, data = NULL, family = gaussian
+    , control = glmerControl()
+    , start = NULL
+    , verbose = 0L
+    , nAGQ = 1L
+    , subset, weights, na.action, offset, contrasts = NULL
+    , mustart, etastart
+    , devFunOnly = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+<p>a two-sided linear formula object describing both the
+fixed-effects and random-effects part of the model, with the response
+on the left of a <code>~</code> operator and the terms, separated by
+<code>+</code> operators, on the right.  Random-effects terms are
+distinguished by vertical bars (<code>"|"</code>) separating expressions
+for design matrices from grouping factors.</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>an optional data frame containing the variables named in
+<code>formula</code>.  By default the variables are taken from the
+environment from which <code>lmer</code> is called.  While <code>data</code> is
+optional, the package authors <em>strongly</em> recommend its use,
+especially when later applying methods such as <code>update</code> and
+<code>drop1</code> to the fitted model (<em>such methods are not
+guaranteed to work properly if <code>data</code> is omitted</em>).  If
+<code>data</code> is omitted, variables will be taken from the environment
+of <code>formula</code> (if specified as a formula) or from the parent
+frame (if specified as a character vector).</p>
+</td></tr>
+<tr valign="top"><td><code>family</code></td>
+<td>
+<p>a GLM family, see <code><a href="../../stats/help/glm.html">glm</a></code> and
+<code><a href="../../stats/help/family.html">family</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>control</code></td>
+<td>
+<p>a list (of correct class, resulting from
+<code><a href="../../lme4/help/lmerControl.html">lmerControl</a>()</code> or <code><a href="../../lme4/help/glmerControl.html">glmerControl</a>()</code>
+respectively) containing control parameters, including the nonlinear
+optimizer to be used and parameters to be passed through to the
+nonlinear optimizer, see the <code>*lmerControl</code> documentation for
+details.</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>a named list of starting values for the parameters in the
+model, or a numeric vector.  A numeric <code>start</code> argument will be
+used as the starting value of <code>theta</code>.  If <code>start</code> is a
+list, the <code>theta</code> element (a numeric vector) is used as the
+starting value for the first optimization step (default=1 for
+diagonal elements and 0 for off-diagonal elements of the lower
+Cholesky factor); the fitted value of <code>theta</code> from the first
+step, plus <code>start[["fixef"]]</code>, are used as starting values for
+the second optimization step.  If <code>start</code> has both <code>fixef</code>
+and <code>theta</code> elements, the first optimization step is skipped.
+For more details or finer control of optimization, see
+<code><a href="../../lme4/help/modular.html">modular</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>integer scalar.  If <code>&gt; 0</code> verbose output is
+generated during the optimization of the parameter estimates.  If
+<code>&gt; 1</code> verbose output is generated during the individual
+penalized iteratively reweighted least squares (PIRLS) steps.</p>
+</td></tr>
+<tr valign="top"><td><code>nAGQ</code></td>
+<td>
+<p>integer scalar - the number of points per axis for
+evaluating the adaptive Gauss-Hermite approximation to the
+log-likelihood.  Defaults to 1, corresponding to the Laplace
+approximation.  Values greater than 1 produce greater accuracy in
+the evaluation of the log-likelihood at the expense of speed.  A
+value of zero uses a faster but less exact form of parameter
+estimation for GLMMs by optimizing the random effects and the
+fixed-effects coefficients in the penalized iteratively reweighted
+least squares step. (See Details.)</p>
+</td></tr>
+<tr valign="top"><td><code>subset</code></td>
+<td>
+<p>an optional expression indicating the subset of the rows
+of <code>data</code> that should be used in the fit. This can be a logical
+vector, or a numeric vector indicating which observation numbers are
+to be included, or a character vector of the row names to be
+included.  All observations are included by default.</p>
+</td></tr>
+<tr valign="top"><td><code>weights</code></td>
+<td>
+<p>an optional vector of &lsquo;prior weights&rsquo; to be used
+in the fitting process.  Should be <code>NULL</code> or a numeric
+vector.</p>
+</td></tr>
+<tr valign="top"><td><code>na.action</code></td>
+<td>
+<p>a function that indicates what should happen when the
+data contain <code>NA</code>s.  The default action (<code>na.omit</code>,
+inherited from the &lsquo;factory fresh&rsquo; value of
+<code>getOption("na.action")</code>) strips any observations with any
+missing values in any variables.</p>
+</td></tr>
+<tr valign="top"><td><code>offset</code></td>
+<td>
+<p>this can be used to specify an <em>a priori</em> known
+component to be included in the linear predictor during
+fitting. This should be <code>NULL</code> or a numeric vector of length
+equal to the number of cases.  One or more <code><a href="../../stats/html/offset.html">offset</a></code>
+terms can be included in the formula instead or as well, and if more
+than one is specified their sum is used.  See <code><a href="../../stats/html/model.extract.html">model.offset</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>contrasts</code></td>
+<td>
+<p>an optional list.  See the <code>contrasts.arg</code> of
+<code><a href="../../stats/html/model.matrix.html">model.matrix.default</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>mustart</code></td>
+<td>
+<p>optional starting values on the scale of the
+conditional mean, as in <code><a href="../../stats/help/glm.html">glm</a></code>; see there for
+details.</p>
+</td></tr>
+<tr valign="top"><td><code>etastart</code></td>
+<td>
+<p>optional starting values on the scale of the unbounded
+predictor as in <code><a href="../../stats/help/glm.html">glm</a></code>; see there for details.</p>
+</td></tr>
+<tr valign="top"><td><code>devFunOnly</code></td>
+<td>
+<p>logical - return only the deviance evaluation
+function. Note that because the deviance function operates on
+variables stored in its environment, it may not return
+<em>exactly</em> the same values on subsequent calls (but the results
+should always be within machine tolerance).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Fit a generalized linear mixed model, which incorporates both
+fixed-effects parameters and random effects in a linear predictor, via
+maximum likelihood.  The linear predictor is related to the
+conditional mean of the response through the inverse link function
+defined in the GLM <code>family</code>.
+</p>
+<p>The expression for the likelihood of a mixed-effects model is an
+integral over the random effects space.  For a linear mixed-effects
+model (LMM), as fit by <code><a href="../../lme4/help/lmer.html">lmer</a></code>, this integral can be
+evaluated exactly.  For a GLMM the integral must be approximated.  The
+most reliable approximation for GLMMs
+is adaptive Gauss-Hermite quadrature,
+at present implemented only for models with
+a single scalar random effect.  The
+<code>nAGQ</code> argument controls the number of nodes in the quadrature
+formula.  A model with a single, scalar random-effects term could
+reasonably use up to 25 quadrature points per scalar integral.
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../../lme4/help/merMod-class.html">merMod</a></code> (more specifically,
+an object of <em>subclass</em> <code>glmerMod</code>) for which many
+methods are available (e.g. <code>methods(class="merMod")</code>)
+</p>
+
+
+<h3>Note</h3>
+
+<p>In earlier version of the <span class="pkg">lme4</span> package, a <code>method</code> argument was
+used.  Its functionality has been replaced by the <code>nAGQ</code> argument.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../lme4/help/lmer.html">lmer</a></code> (for details on formulas and
+parameterization); <code><a href="../../stats/help/glm.html">glm</a></code> for Generalized Linear
+Models (<em>without</em> random effects).
+<code><a href="../../lme4/help/nlmer.html">nlmer</a></code> for nonlinear mixed-effects models.
+</p>
+<p><code><a href="../../lme4/help/glmer.nb.html">glmer.nb</a></code> to fit negative binomial GLMMs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## generalized linear mixed model
+library(lattice)
+xyplot(incidence/size ~ period|herd, cbpp, type=c('g','p','l'),
+       layout=c(3,5), index.cond = function(x,y)max(y))
+(gm1 &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+              data = cbpp, family = binomial))
+## using nAGQ=0 only gets close to the optimum
+(gm1a &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+               cbpp, binomial, nAGQ = 0))
+## using  nAGQ = 9  provides a better evaluation of the deviance
+## Currently the internal calculations use the sum of deviance residuals,
+## which is not directly comparable with the nAGQ=0 or nAGQ=1 result.
+## 'verbose = 1' monitors iteratin a bit; (verbose = 2 does more):
+(gm1a &lt;- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+               cbpp, binomial, verbose = 1, nAGQ = 9))
+
+## GLMM with individual-level variability (accounting for overdispersion)
+## For this data set the model is the same as one allowing for a period:herd
+## interaction, which the plot indicates could be needed.
+cbpp$obs &lt;- 1:nrow(cbpp)
+(gm2 &lt;- glmer(cbind(incidence, size - incidence) ~ period +
+    (1 | herd) +  (1|obs),
+              family = binomial, data = cbpp))
+anova(gm1,gm2)
+
+## glmer and glm log-likelihoods are consistent
+gm1Devfun &lt;- update(gm1,devFunOnly=TRUE)
+gm0 &lt;- glm(cbind(incidence, size - incidence) ~ period,
+           family = binomial, data = cbpp)
+## evaluate GLMM deviance at RE variance=theta=0, beta=(GLM coeffs)
+gm1Dev0 &lt;- gm1Devfun(c(0,coef(gm0)))
+## compare
+stopifnot(all.equal(gm1Dev0,c(-2*logLik(gm0))))
+## the toenail oncholysis data from Backer et al 1998
+## these data are notoriously difficult to fit
+## Not run: 
+if (require("HSAUR3")) {
+    gm2 &lt;- glmer(outcome~treatment*visit+(1|patientID),
+                 data=toenail,
+                 family=binomial,nAGQ=20)
+}
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

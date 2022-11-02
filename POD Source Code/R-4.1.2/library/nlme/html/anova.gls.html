@@ -11,7 +11,7 @@
 <h3>Description</h3>
 
 <p>When only one fitted model object is present, a data frame with the
-sums of squares, numerator degrees of freedom, F-values, and P-values
+numerator degrees of freedom, F-values, and P-values
 for Wald tests for the terms in the model (when <code>Terms</code> and
 <code>L</code> are <code>NULL</code>), a combination of model terms (when
 <code>Terms</code> in not <code>NULL</code>), or linear combinations of the model
@@ -21,8 +21,8 @@ the degrees of freedom, the (restricted) log-likelihood, the
 Akaike Information Criterion (AIC), and the Bayesian Information
 Criterion (BIC) of each object is returned. If <code>test=TRUE</code>,
 whenever two consecutive  objects have different number of degrees of
-freedom, a likelihood ratio statistic, with the associated p-value is
-included in the returned data frame.   
+freedom, a likelihood ratio statistic with the associated p-value is
+included in the returned data frame.
 </p>
 
 
@@ -39,7 +39,7 @@ anova(object, ..., test, type, adjustSigma, Terms, L, verbose)
 <table summary="R argblock">
 <tr valign="top"><td><code>object</code></td>
 <td>
-<p>a fitted model object inheriting from class <code>gls</code>,
+<p>an object inheriting from class <code>"<a href="../../nlme/help/gls.html">gls</a>"</code>,
 representing a generalized least squares fit.</p>
 </td></tr>
 <tr valign="top"><td><code>...</code></td>
@@ -137,7 +137,7 @@ and S-PLUS</em>, Springer, New York.
 
 <h3>See Also</h3>
 
-<p><code><a href="../../nlme/help/gls.html">gls</a></code>, <code><a href="../../nlme/help/gnls.html">gnls</a></code>,
+<p><code><a href="../../nlme/help/gls.html">gls</a></code>, <code><a href="../../nlme/help/gnls.html">gnls</a></code>, <code><a href="../../nlme/help/nlme.html">nlme</a></code>,
 <code><a href="../../nlme/help/lme.html">lme</a></code>, <code><a href="../../nlme/help/logLik.gls.html">logLik.gls</a></code>,
 <code><a href="../../stats/html/AIC.html">AIC</a></code>, <code><a href="../../stats/html/AIC.html">BIC</a></code>,
 <code><a href="../../nlme/help/print.anova.lme.html">print.anova.lme</a></code>
@@ -194,5 +194,5 @@ anova(fm3Wheat2, L = c(-1, 0, 1))
 
 </pre>
 
-<hr /><div style="text-align: center;">[Package <em>nlme</em> version 3.1-153 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>nlme</em> version 3.1-160 <a href="00Index.html">Index</a>]</div>
 </div></body></html>

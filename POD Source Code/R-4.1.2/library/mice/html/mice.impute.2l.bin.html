@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Imputation by a two-level logistic model using 'glmer'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for mice.impute.2l.bin {mice}"><tr><td>mice.impute.2l.bin {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Imputation by a two-level logistic model using <code>glmer</code></h2>
+
+<h3>Description</h3>
+
+<p>Imputes univariate systematically and sporadically missing data
+using a two-level logistic model using <code>lme4::glmer()</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mice.impute.2l.bin(y, ry, x, type, wy = NULL, intercept = TRUE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Vector to be imputed</p>
+</td></tr>
+<tr valign="top"><td><code>ry</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code> indicating the
+the subset <code>y[ry]</code> of elements in <code>y</code> to which the imputation
+model is fitted. The <code>ry</code> generally distinguishes the observed
+(<code>TRUE</code>) and missing values (<code>FALSE</code>) in <code>y</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric design matrix with <code>length(y)</code> rows with predictors for
+<code>y</code>. Matrix <code>x</code> may have no missing values.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Vector of length <code>ncol(x)</code> identifying random and class
+variables.  Random variables are identified by a '2'. The class variable
+(only one is allowed) is coded as '-2'. Fixed effects are indicated by
+a '1'.</p>
+</td></tr>
+<tr valign="top"><td><code>wy</code></td>
+<td>
+<p>Logical vector of length <code>length(y)</code>. A <code>TRUE</code> value
+indicates locations in <code>y</code> for which imputations are created.</p>
+</td></tr>
+<tr valign="top"><td><code>intercept</code></td>
+<td>
+<p>Logical determining whether the intercept is automatically
+added.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Arguments passed down to <code>glmer</code></p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Data are missing systematically if they have not been measured, e.g., in the
+case where we combine data from different sources. Data are missing sporadically
+if they have been partially observed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector with imputed data, same type as <code>y</code>, and of length
+<code>sum(wy)</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Shahab Jolani, 2015; adapted to mice, SvB, 2018
+</p>
+
+
+<h3>References</h3>
+
+<p>Jolani S., Debray T.P.A., Koffijberg H., van Buuren S., Moons K.G.M. (2015).
+Imputation of systematically missing predictors in an individual
+participant data meta-analysis: a generalized approach using MICE.
+<em>Statistics in Medicine</em>, 34:1841-1863.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other univariate-2l: 
+<code><a href="../../mice/help/mice.impute.2l.lmer.html">mice.impute.2l.lmer</a>()</code>,
+<code><a href="../../mice/help/mice.impute.2l.norm.html">mice.impute.2l.norm</a>()</code>,
+<code><a href="../../mice/help/mice.impute.2l.pan.html">mice.impute.2l.pan</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(tidyr)
+library(dplyr)
+data("toenail2")
+data &lt;- tidyr::complete(toenail2, patientID, visit) %&gt;%
+  tidyr::fill(treatment) %&gt;%
+  dplyr::select(-time) %&gt;%
+  dplyr::mutate(patientID = as.integer(patientID))
+## Not run: 
+pred &lt;- mice(data, print = FALSE, maxit = 0, seed = 1)$pred
+pred["outcome", "patientID"] &lt;- -2
+imp &lt;- mice(data, method = "2l.bin", pred = pred, maxit = 1, m = 1, seed = 1)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

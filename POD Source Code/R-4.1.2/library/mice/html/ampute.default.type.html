@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Default 'type' in 'ampute()'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for ampute.default.type {mice}"><tr><td>ampute.default.type {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Default <code>type</code> in <code>ampute()</code></h2>
+
+<h3>Description</h3>
+
+<p>Defines the default type vector for the multivariate amputation function
+<code>ampute</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ampute.default.type(patterns)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>patterns</code></td>
+<td>
+<p>A matrix of size #patterns by #variables where 0 indicates a
+variable should have missing values and 1 indicates a variable should remain
+complete. Could be the result of <code><a href="../../mice/help/ampute.default.patterns.html">ampute.default.patterns</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A string vector of length #patterns containing the missingness types.
+Each pattern will be amputed with a &quot;RIGHT&quot; missingness.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rianne Schouten, 2016
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/ampute.html">ampute</a></code>, <code><a href="../../mice/help/ampute.default.patterns.html">ampute.default.patterns</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

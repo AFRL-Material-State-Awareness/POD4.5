@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Compare two nested models using D1-statistic</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for D1 {mice}"><tr><td>D1 {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Compare two nested models using D1-statistic</h2>
+
+<h3>Description</h3>
+
+<p>The D1-statistics is the multivariate Wald test.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+D1(fit1, fit0 = NULL, dfcom = NULL, df.com = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fit1</code></td>
+<td>
+<p>An object of class <code>mira</code>, produced by <code>with()</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>fit0</code></td>
+<td>
+<p>An object of class <code>mira</code>, produced by <code>with()</code>. The
+model in <code>fit0</code> is a nested within <code>fit1</code>. The default null
+model <code>fit0 = NULL</code> compares <code>fit1</code> to the intercept-only model.</p>
+</td></tr>
+<tr valign="top"><td><code>dfcom</code></td>
+<td>
+<p>A single number denoting the
+complete-data degrees of freedom of model <code>fit1</code>. If not specified,
+it is set equal to <code>df.residual</code> of model <code>fit1</code>. If that cannot
+be done, the procedure assumes (perhaps incorrectly) a large sample.</p>
+</td></tr>
+<tr valign="top"><td><code>df.com</code></td>
+<td>
+<p>Deprecated</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+<p>Li, K. H., T. E. Raghunathan, and D. B. Rubin. 1991.
+Large-Sample Significance Levels from Multiply Imputed Data Using
+Moment-Based Statistics and an F Reference Distribution.
+<em>Journal of the American Statistical Association</em>, 86(416): 1065–73.
+</p>
+<p><a href="https://stefvanbuuren.name/fimd/sec-multiparameter.html#sec:wald">https://stefvanbuuren.name/fimd/sec-multiparameter.html#sec:wald</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mitml/help/testModels.html">testModels</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Compare two linear models:
+imp &lt;- mice(nhanes2, seed = 51009, print = FALSE)
+mi1 &lt;- with(data = imp, expr = lm(bmi ~ age + hyp + chl))
+mi0 &lt;- with(data = imp, expr = lm(bmi ~ age + hyp))
+D1(mi1, mi0)
+## Not run: 
+# Compare two logistic regression models
+imp &lt;- mice(boys, maxit = 2, print = FALSE)
+fit1 &lt;- with(imp, glm(gen &gt; levels(gen)[1] ~ hgt + hc + reg, family = binomial))
+fit0 &lt;- with(imp, glm(gen &gt; levels(gen)[1] ~ hgt + hc, family = binomial))
+D1(fit1, fit0)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

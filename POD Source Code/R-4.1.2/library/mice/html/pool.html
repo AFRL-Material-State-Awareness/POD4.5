@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Combine estimates by pooling rules</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for pool {mice}"><tr><td>pool {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Combine estimates by pooling rules</h2>
+
+<h3>Description</h3>
+
+<p>The <code>pool()</code> function combines the estimates from <code>m</code>
+repeated complete data analyses. The typical sequence of steps to
+perform a multiple imputation analysis is:
+</p>
+
+<ol>
+<li><p> Impute the missing data by the <code>mice()</code> function, resulting in
+a multiple imputed data set (class <code>mids</code>);
+</p>
+</li>
+<li><p> Fit the model of interest (scientific model) on each imputed data set
+by the <code>with()</code> function, resulting an object of class <code>mira</code>;
+</p>
+</li>
+<li><p> Pool the estimates from each model into a single set of estimates
+and standard errors, resulting in an object of class <code>mipo</code>;
+</p>
+</li>
+<li><p> Optionally, compare pooled estimates from different scientific models
+by the <code>D1()</code> or <code>D3()</code> functions.
+</p>
+</li></ol>
+
+<p>A common error is to reverse steps 2 and 3, i.e., to pool the
+multiply-imputed data instead of the estimates. Doing so may severely bias
+the estimates of scientific interest and yield incorrect statistical
+intervals and p-values. The <code>pool()</code> function will detect
+this case.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+pool(object, dfcom = NULL, rule = NULL)
+
+pool.syn(object, dfcom = NULL, rule = "reiter2003")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class <code>mira</code> (produced by <code>with.mids()</code>
+or <code>as.mira()</code>), or a <code>list</code> with model fits.</p>
+</td></tr>
+<tr valign="top"><td><code>dfcom</code></td>
+<td>
+<p>A positive number representing the degrees of freedom in the
+complete-data analysis. Normally, this would be the number of independent
+observation minus the number of fitted parameters. The default
+(<code>dfcom = NULL</code>) extract this information in the following
+order: 1) the component
+<code>residual.df</code> returned by <code>glance()</code> if a <code>glance()</code>
+function is found, 2) the result of <code>df.residual(</code> applied to
+the first fitted model, and 3) as <code>999999</code>.
+In the last case, the warning <code>"Large sample assumed"</code> is printed.
+If the degrees of freedom is incorrect, specify the appropriate value
+manually.</p>
+</td></tr>
+<tr valign="top"><td><code>rule</code></td>
+<td>
+<p>A string indicating the pooling rule. Currently supported are
+<code>"rubin1987"</code> (default, for missing data) and <code>"reiter2003"</code>
+(for synthetic data created from a complete data set).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>pool()</code> function averages the estimates of the complete
+data model, computes the total variance over the repeated analyses
+by Rubin's rules (Rubin, 1987, p. 76), and computes the following
+diagnostic statistics per estimate:
+</p>
+
+<ol>
+<li><p> Relative increase in variance due to nonresponse <code>r</code>;
+</p>
+</li>
+<li><p> Residual degrees of freedom for hypothesis testing <code>df</code>;
+</p>
+</li>
+<li><p> Proportion of total variance due to missingness <code>lambda</code>;
+</p>
+</li>
+<li><p> Fraction of missing information <code>fmi</code>.
+</p>
+</li></ol>
+
+<p>The degrees of freedom calculation for the pooled estimates uses the
+Barnard-Rubin adjustment for small samples (Barnard and Rubin, 1999).
+</p>
+<p>The <code>pool.syn()</code> function combines estimates by Reiter's partially
+synthetic data pooling rules (Reiter, 2003). This combination rule
+assumes that the data that is synthesised is completely observed.
+Pooling differs from Rubin's method in the calculation of the total
+variance and the degrees of freedom.
+</p>
+<p>Pooling requires the following input from each fitted model:
+</p>
+
+<ol>
+<li><p> the estimates of the model;
+</p>
+</li>
+<li><p> the standard error of each estimate;
+</p>
+</li>
+<li><p> the residual degrees of freedom of the model.
+</p>
+</li></ol>
+
+<p>The <code>pool()</code> and <code>pool.syn()</code> functions rely on the
+<code>broom::tidy</code> and <code>broom::glance</code> for extracting these
+parameters.
+</p>
+<p>Since <code>mice 3.0+</code>, the <code>broom</code>
+package takes care of filtering out the relevant parts of the
+complete-data analysis. It may happen that you'll see the messages
+like <code>Error: No tidy method for objects of class ...</code> or
+<code>Error: No glance method for objects of class ...</code>. The message
+means that your complete-data method used in <code>with(imp, ...)</code> has
+no <code>tidy</code> or <code>glance</code> method defined in the <code>broom</code> package.
+</p>
+<p>The <code>broom.mixed</code> package contains <code>tidy</code> and <code>glance</code> methods
+for mixed models. If you are using a mixed model, first run
+<code>library(broom.mixed)</code> before calling <code>pool()</code>.
+</p>
+<p>If no <code>tidy</code> or <code>glance</code> methods are defined for your analysis
+tabulate the <code>m</code> parameter estimates and their variance
+estimates (the square of the standard errors) from the <code>m</code> fitted
+models stored in <code>fit$analyses</code>. For each parameter, run
+<code><a href="../../mice/help/pool.scalar.html">pool.scalar</a></code> to obtain the pooled parameters estimate, its variance, the
+degrees of freedom, the relative increase in variance and the fraction of missing
+information.
+</p>
+<p>An alternative is to write your own <code>glance()</code> and <code>tidy()</code>
+methods and add these to <code>broom</code> according to the specifications
+given in <a href="https://broom.tidymodels.org">https://broom.tidymodels.org</a>.
+In versions prior to <code>mice 3.0</code> pooling required that
+<code>coef()</code> and <code>vcov()</code> methods were available for fitted
+objects. <em>This feature is no longer supported</em>. The reason is that
+<code>vcov()</code> methods are inconsistent across packages, leading to
+buggy behaviour of the <code>pool()</code> function.
+</p>
+<p>Since <code>mice 3.13.2</code> function <code>pool()</code> uses the robust
+the standard error estimate for pooling when it can extract
+<code>robust.se</code> from the <code>tidy()</code> object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>mipo</code>, which stands for 'multiple imputation
+pooled outcome'.
+For rule <code>"reiter2003"</code> values for <code>lambda</code> and <code>fmi</code> are
+set to 'NA', as these statistics do not apply for data synthesised from
+fully observed data.
+</p>
+
+
+<h3>References</h3>
+
+<p>Barnard, J. and Rubin, D.B. (1999). Small sample degrees of
+freedom with multiple imputation. <em>Biometrika</em>, 86, 948-955.
+</p>
+<p>Rubin, D.B. (1987). <em>Multiple Imputation for Nonresponse in Surveys</em>.
+New York: John Wiley and Sons.
+</p>
+<p>Reiter, J.P. (2003). Inference for Partially Synthetic,
+Public Use Microdata Sets. <em>Survey Methodology</em>, <b>29</b>, 181-189.
+</p>
+<p>van Buuren S and Groothuis-Oudshoorn K (2011). <code>mice</code>: Multivariate
+Imputation by Chained Equations in <code>R</code>. <em>Journal of Statistical
+Software</em>, <b>45</b>(3), 1-67. doi: <a href="https://doi.org/10.18637/jss.v045.i03">10.18637/jss.v045.i03</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/with.mids.html">with.mids</a></code>, <code><a href="../../mice/help/as.mira.html">as.mira</a></code>, <code><a href="../../mice/help/pool.scalar.html">pool.scalar</a></code>,
+<code><a href="../../broom/help/reexports.html">glance</a></code>, <code><a href="../../broom/help/reexports.html">tidy</a></code>
+<a href="https://github.com/amices/mice/issues/142">https://github.com/amices/mice/issues/142</a>,
+<a href="https://github.com/amices/mice/issues/274">https://github.com/amices/mice/issues/274</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# impute missing data, analyse and pool using the classic MICE workflow
+imp &lt;- mice(nhanes, maxit = 2, m = 2)
+fit &lt;- with(data = imp, exp = lm(bmi ~ hyp + chl))
+summary(pool(fit))
+
+# generate fully synthetic data, analyse and pool
+imp &lt;- mice(cars, maxit = 2, m = 2,
+            where = matrix(TRUE, nrow(cars), ncol(cars)))
+fit &lt;- with(data = imp, exp = lm(speed ~ dist))
+summary(pool.syn(fit))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Generator objects for the response classes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for lmResp {lme4}"><tr><td>lmResp {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Generator objects for the response classes</h2>
+
+<h3>Description</h3>
+
+<p>The generator objects for the
+<code><a href="../../lme4/help/lmResp-class.html">lmResp</a></code>,
+<code><a href="../../lme4/help/lmerResp-class.html">lmerResp</a></code>,
+<code><a href="../../lme4/help/glmResp-class.html">glmResp</a></code> and
+<code><a href="../../lme4/help/nlsResp-class.html">nlsResp</a></code> reference classes. Such
+objects are primarily used through their <code>new</code>
+methods.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  lmResp(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>List of arguments (see Note).</p>
+</td></tr>
+</table>
+
+
+<h3>Methods</h3>
+
+ <dl>
+<dt><code>new(y=y)</code>:</dt><dd><p>Create a new
+<code><a href="../../lme4/help/lmResp-class.html">lmResp</a></code> or
+<code><a href="../../lme4/help/lmerResp-class.html">lmerResp</a></code> object.</p>
+</dd>
+<dt><code>new(family=family, y=y)</code>:</dt><dd><p>Create a new
+<code><a href="../../lme4/help/glmResp-class.html">glmResp</a></code> object.</p>
+</dd>
+<dt><code>new(y=y, nlmod=nlmod, nlenv=nlenv,
+  pnames=pnames, gam=gam)</code>:</dt><dd><p>Create a new
+<code><a href="../../lme4/help/nlsResp-class.html">nlsResp</a></code> object.</p>
+</dd> </dl>
+
+
+
+<h3>Note</h3>
+
+<p>Arguments to the <code>new</code> methods must be named
+arguments. </p>
+ <ul>
+<li><p>y the numeric response
+vector </p>
+</li>
+<li><p>family a <code><a href="../../stats/html/family.html">family</a></code> object
+</p>
+</li>
+<li><p>nlmod the nonlinear model function </p>
+</li>
+<li><p>nlenv
+an environment holding data objects for evaluation of
+<code>nlmod</code> </p>
+</li>
+<li><p>pnames a character vector of
+parameter names </p>
+</li>
+<li><p>gam a numeric vector - the
+initial linear predictor </p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../lme4/help/lmResp-class.html">lmResp</a></code>,
+<code><a href="../../lme4/help/lmerResp-class.html">lmerResp</a></code>,
+<code><a href="../../lme4/help/glmResp-class.html">glmResp</a></code>,
+<code><a href="../../lme4/help/nlsResp-class.html">nlsResp</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

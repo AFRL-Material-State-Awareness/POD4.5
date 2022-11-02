@@ -54,6 +54,7 @@ coxph.getdata	coxph
 coxph.object	coxph.object
 coxph.penalty	coxph
 coxph.wtest	coxph.wtest
+coxphms.object	coxphms.object
 coxsurv.fit	coxsurv.fit
 cracks	reliability
 diabetic	diabetic
@@ -96,6 +97,7 @@ Math.ratetable	is.ratetable
 Math.Surv	Survmethods
 mean.Surv	Survmethods
 median.Surv	Survmethods
+median.survfit	quantile.survfit
 mgus	mgus
 mgus1	mgus
 mgus2	mgus2
@@ -204,6 +206,7 @@ survexp.us	survexp.us
 survexp.usr	survexp.us
 survfit	survfit
 survfit.coxph	survfit.coxph
+survfit.coxphms	survfit.coxph
 survfit.formula	survfit.formula
 survfit.matrix	survfit.matrix
 survfit.object	survfit.object

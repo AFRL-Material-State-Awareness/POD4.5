@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Drop empty elements from a list</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for list_drop_empty {vctrs}"><tr><td>list_drop_empty {vctrs}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Drop empty elements from a list</h2>
+
+<h3>Description</h3>
+
+<p><code>list_drop_empty()</code> removes empty elements from a list. This includes <code>NULL</code>
+elements along with empty vectors, like <code>integer(0)</code>. This is equivalent to,
+but faster than, <code>vec_slice(x, list_sizes(x) != 0L)</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+list_drop_empty(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A list.</p>
+</td></tr>
+</table>
+
+
+<h3>Dependencies</h3>
+
+
+<ul>
+<li> <p><code><a href="../../vctrs/help/vec_slice.html">vec_slice()</a></code>
+</p>
+</li></ul>
+
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- list(1, NULL, integer(), 2)
+list_drop_empty(x)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>vctrs</em> version 0.5.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -37,7 +37,7 @@ optimization algorithm. Default is 50.</p>
 <tr valign="top"><td><code>msMaxIter</code></td>
 <td>
 <p>maximum number of iterations
-for the optimization step inside the <code>gls</code>
+for the <code>opt</code>imization step inside the <code>gls</code>
 optimization. Default is 50.</p>
 </td></tr>
 <tr valign="top"><td><code>tolerance</code></td>
@@ -52,8 +52,8 @@ iteration when <code>optim</code> is used.  Default is 1e-7.</p>
 </td></tr>
 <tr valign="top"><td><code>msVerbose</code></td>
 <td>
-<p>a logical value passed as the <code>trace</code> argument to
-<code>ms</code> (see documentation on that function). Default is
+<p>a logical value passed as the <code>trace</code> control value to
+the chosen <code>opt</code>imizer (see documentation on that function). Default is
 <code>FALSE</code>.</p>
 </td></tr>
 <tr valign="top"><td><code>singular.ok</code></td>
@@ -129,10 +129,9 @@ If <code>NULL</code>, as by default, or <code>0</code>, sigma is estimated.</p>
 <h3>Examples</h3>
 
 <pre>
-# decrease the maximum number iterations in the optimization call and
-# request that information on the evolution of the ms iterations be printed
+# decrease the maximum number of iterations and request tracing
 glsControl(msMaxIter = 20, msVerbose = TRUE)
 </pre>
 
-<hr /><div style="text-align: center;">[Package <em>nlme</em> version 3.1-153 <a href="00Index.html">Index</a>]</div>
+<hr /><div style="text-align: center;">[Package <em>nlme</em> version 3.1-160 <a href="00Index.html">Index</a>]</div>
 </div></body></html>

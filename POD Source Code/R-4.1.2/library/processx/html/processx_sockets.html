@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Unix domain sockets</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for conn_create_unix_socket {processx}"><tr><td>conn_create_unix_socket {processx}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Unix domain sockets</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt='[Experimental]' /></a>
+</p>
+<p>Cross platform point-to-point inter-process communication with
+Unix=domain sockets, implemented via named pipes on Windows.
+These connection are always bidirectional, i.e. you can read from them
+and also write to them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+conn_create_unix_socket(filename = NULL, encoding = "")
+
+conn_connect_unix_socket(filename, encoding = "")
+
+conn_accept_unix_socket(con)
+
+conn_unix_socket_state(con)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>filename</code></td>
+<td>
+<p>File name of the socket. On Windows it the name of the
+pipe within the <code style="white-space: pre;">\\?\pipe\</code> namespace, either the full name, or the
+part after that prefix. If <code>NULL</code>, then a random name
+is used, on Unix in the R temporary directory: <code><a href="../../base/help/tempfile.html">base::tempdir()</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>Encoding to assume when reading from the socket.</p>
+</td></tr>
+<tr valign="top"><td><code>con</code></td>
+<td>
+<p>Connection. An error is thrown if not a socket connection.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>conn_create_unix_socket()</code> creates a server socket. The new socket
+is listening at <code>filename</code>. See <code>filename</code> above.
+</p>
+<p><code>conn_connect_unix_socket()</code> creates a client socket and connects it to
+a server socket.
+</p>
+<p><code>conn_accept_unix_socket()</code> accepts a client connection at a server
+socket.
+</p>
+<p><code>conn_unix_socket_state()</code> returns the state of the socket. Currently it
+can return: <code>"listening"</code>, <code>"connected_server"</code>, <code>"connected_client"</code>.
+It is possible that other states (e.g. for a closed socket) will be added
+in the future.
+</p>
+
+
+<h4>Notes</h4>
+
+
+<ul>
+<li> <p><code><a href="../../processx/help/poll.html">poll()</a></code> works on sockets, but only polls for data to read, and
+currently ignores the write-end of the socket.
+</p>
+</li>
+<li> <p><code><a href="../../processx/help/poll.html">poll()</a></code> also works for accepting client connections. It will return
+<code>"connect"</code>is a client connection is available for a server socket.
+After this you can call <code>conn_accept_unix_socket()</code> to accept the
+client connection.
+</p>
+</li></ul>
+
+
+
+
+<h3>Value</h3>
+
+<p>A new socket connection.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="https://processx.r-lib.org/dev/articles/internals.html">processx internals</a>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>processx</em> version 3.8.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

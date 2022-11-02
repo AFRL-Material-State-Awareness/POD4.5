@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Manipulate a Nonlinear Model Formula</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for nlformula {lme4}"><tr><td>nlformula {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Manipulate a Nonlinear Model Formula</h2>
+
+<h3>Description</h3>
+
+<p>Check and manipulate the formula for a nonlinear model, such as
+specified in <code><a href="../../lme4/help/nlmer.html">nlmer</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  nlformula(mc)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>mc</code></td>
+<td>
+<p>matched call from the calling function, typically
+<code><a href="../../lme4/help/nlmer.html">nlmer</a>()</code>.  Should have arguments named
+</p>
+
+<dl>
+<dt>formula:</dt><dd><p>a formula of the form <code>resp ~ nlmod ~ meform</code>
+where <code>resp</code> is an expression for the response,
+<code>nlmod</code> is the nonlinear model expression and
+<code>meform</code> is the mixed-effects model formula.
+<code>resp</code> can be omitted when, e.g., optimizing a design.</p>
+</dd>
+<dt>data:</dt><dd><p>a data frame in which to evaluate the model function</p>
+</dd>
+<dt>start:</dt><dd><p>either a numeric vector containing initial estimates
+for the nonlinear model parameters or a list with components
+</p>
+
+<dl>
+<dt><code>nlpars</code>:</dt><dd><p>the initial estimates of the nonlinear
+model parameters</p>
+</dd>
+<dt><code>theta</code>:</dt><dd><p>the initial estimates of the variance
+component parameters</p>
+</dd> 
+</dl>
+
+</dd>
+</dl>
+
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The model formula for a nonlinear mixed-effects model is
+of the form <code>resp ~ nlmod ~ mixed</code> where
+<code>resp</code> is an expression (usually just a name) for
+the response, <code>nlmod</code> is the call to the nonlinear
+model function, and <code>mixed</code> is the mixed-effects
+formula defining the linear predictor for the parameter
+matrix.  If the formula is to be used for optimizing
+designs, the <code>resp</code> part can be omitted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list with components
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>&quot;respMod&quot;</code></td>
+<td>
+<p>a response module of class <code>"<a href="../../lme4/help/nlsResp-class.html">nlsResp</a>"</code></p>
+</td></tr> 
+<tr valign="top"><td><code>&quot;frame&quot;</code></td>
+<td>
+<p>the model frame, including a terms attribute</p>
+</td></tr>
+<tr valign="top"><td><code>&quot;X&quot;</code></td>
+<td>
+<p>the fixed-effects model matrix</p>
+</td></tr>
+<tr valign="top"><td><code>&quot;reTrms&quot;</code></td>
+<td>
+<p>the random-effects terms object</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p>Other utilities: <code><a href="../../lme4/help/findbars.html">findbars</a></code>,
+<code><a href="../../lme4/help/mkRespMod.html">mkRespMod</a></code>, <code><a href="../../lme4/help/mkReTrms.html">mkReTrms</a></code>,
+<code><a href="../../lme4/help/nobars.html">nobars</a></code>, <code><a href="../../lme4/help/subbars.html">subbars</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

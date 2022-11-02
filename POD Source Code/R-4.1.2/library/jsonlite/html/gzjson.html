@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Gzipped JSON</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for gzjson {jsonlite}"><tr><td>gzjson {jsonlite}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Gzipped JSON</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper to generate and parse gzipped JSON, in order to save some disk or
+network space. This is mainly effective for larger json objects with many
+repeated keys, as is common in serialized data frames.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as_gzjson_raw(x, ...)
+
+as_gzjson_b64(x, ...)
+
+parse_gzjson_raw(buf, ...)
+
+parse_gzjson_b64(b64, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>R data object to be converted to JSON</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>passed down to <a href="../../jsonlite/help/toJSON.html">toJSON</a> or <a href="../../jsonlite/help/fromJSON.html">fromJSON</a></p>
+</td></tr>
+<tr valign="top"><td><code>buf</code></td>
+<td>
+<p>raw vector with gzip compressed data</p>
+</td></tr>
+<tr valign="top"><td><code>b64</code></td>
+<td>
+<p>base64 encoded string containing gzipped json data</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <a href="../../jsonlite/help/as_gzjson_raw.html">as_gzjson_raw</a> and <a href="../../jsonlite/help/parse_gzjson_raw.html">parse_gzjson_raw</a> functions work with raw (binary)
+vectors of compressed data. To use this in a place where only text is allowed
+you can wrap the output again in <a href="../../jsonlite/help/base64.html">base64</a> as done by <a href="../../jsonlite/help/as_gzjson_b64.html">as_gzjson_b64</a> and
+<a href="../../jsonlite/help/parse_gzjson_b64.html">parse_gzjson_b64</a>. This increases the size again with about 33%.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+str &lt;- as_gzjson_b64(iris[1:5,])
+cat(str)
+parse_gzjson_b64(str)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>jsonlite</em> version 1.8.3 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

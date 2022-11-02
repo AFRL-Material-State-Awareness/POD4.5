@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Univariate Gauss-Hermite quadrature rule</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for GHrule {lme4}"><tr><td>GHrule {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Univariate Gauss-Hermite quadrature rule</h2>
+
+<h3>Description</h3>
+
+<p>Create a univariate Gauss-Hermite quadrature rule.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  GHrule(ord, asMatrix = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>ord</code></td>
+<td>
+<p>scalar integer between 1 and 100 - the order,
+or number of nodes and weights, in the rule.  When the
+function being multiplied by the standard normal density
+is a polynomial of order <i>2k-1</i> the rule of order <i>k</i>
+integrates the product exactly.</p>
+</td></tr>
+<tr valign="top"><td><code>asMatrix</code></td>
+<td>
+<p>logical scalar - should the result be
+returned as a matrix.  If <code>FALSE</code> a data frame is
+returned.  Defaults to <code>TRUE</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This version of Gauss-Hermite quadrature provides the node positions
+and weights for a scalar integral of a function multiplied by the
+standard normal density.
+</p>
+<p>Originally based on package <a href="https://CRAN.R-project.org/package=SparseGrid"><span class="pkg">SparseGrid</span></a>'s hidden <code>GQN()</code>,
+then on <a href="https://CRAN.R-project.org/package=fastGHQuad"><span class="pkg">fastGHQuad</span></a>'s <code>gaussHermiteData(.)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix (or data frame, is <code>asMatrix</code> is false) with <code>ord</code>
+rows and three columns which are <code>z</code> the node positions, <code>w</code>
+the weights and <code>ldnorm</code>, the logarithm of the normal density
+evaluated at the nodes.
+</p>
+
+
+<h3>References</h3>
+
+<p>Qing Liu and Donald A. Pierce (1994).
+A Note on Gauss-Hermite Quadrature. <em>Biometrika</em> <b>81</b>(3), 624&ndash;629.
+doi: <a href="https://doi.org/10.2307/2337136">10.2307/2337136</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>a different interface is available via <code><a href="../../lme4/help/GQdk.html">GQdk</a>()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+(r5  &lt;- GHrule( 5, asMatrix=FALSE))
+(r12 &lt;- GHrule(12, asMatrix=FALSE))
+
+## second, fourth, sixth, eighth and tenth central moments of the
+## standard Gaussian N(0,1) density:
+ps &lt;- seq(2, 10, by = 2)
+cbind(p = ps, "E[X^p]" = with(r5,  sapply(ps, function(p) sum(w * z^p)))) # p=10 is wrong for 5-rule
+p &lt;- 1:15
+GQ12 &lt;- with(r12, sapply(p, function(p) sum(w * z^p)))
+cbind(p = p, "E[X^p]" = zapsmall(GQ12))
+## standard R numerical integration can do it too:
+intL &lt;- lapply(p, function(p) integrate(function(x) x^p * dnorm(x),
+                                        -Inf, Inf, rel.tol=1e-11))
+integR &lt;- sapply(intL, `[[`, "value")
+cbind(p, "E[X^p]" = integR)# no zapsmall() needed here
+all.equal(GQ12, integR, tol=0)# =&gt; shows small difference
+stopifnot(all.equal(GQ12, integR, tol = 1e-10))
+(xactMom &lt;- cumprod(seq(1,13, by=2)))
+stopifnot(all.equal(xactMom, GQ12[2*(1:7)], tol=1e-14))
+## mean relative errors :
+mean(abs(GQ12  [2*(1:7)] / xactMom - 1)) # 3.17e-16
+mean(abs(integR[2*(1:7)] / xactMom - 1)) # 9.52e-17 {even better}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Pseudo-Variance Modification of Rubin's Rules</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for PVR.confint {logistf}"><tr><td>PVR.confint {logistf}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>
+Pseudo-Variance Modification of Rubin's Rules 
+</h2>
+
+<h3>Description</h3>
+
+<p>The pseudo-variance modification proposed by Heinze, Ploner and Beyea (2013) provides a quick way to adapt Rubin's rules to situations of a non-normal distribution
+of a regression coefficient. However, the approxiation is less accurate than that of the CLIP method.</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+PVR.confint(obj, variable, skewbeta = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+
+<p>A list of objects fitted by <code>logistf</code>.
+</p>
+</td></tr>
+<tr valign="top"><td><code>variable</code></td>
+<td>
+
+<p>The variable(s) to compute the PVR confidence intervals, either provided as names or as numbers.
+</p>
+</td></tr>
+<tr valign="top"><td><code>skewbeta</code></td>
+<td>
+
+<p>If TRUE, incorporates information on the skewness of the parameter estimates across the imputed data sets.
+</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The pseudo-variance modification computes a lower and an upper pseudo-variance, which are based on the distance between profile likelihood limits and the parameter estimates.
+These are then plugged into the usual Rubin's rules method of variance combination.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>PVR.confint</code> with items
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>estimate</code></td>
+<td>
+<p>the pooled parameter estimate(s) (the average across completed-data estimates)</p>
+</td></tr> 
+<tr valign="top"><td><code>ci</code></td>
+<td>
+<p>the confidence intervals based on the PVR method</p>
+</td></tr> 
+<tr valign="top"><td><code>lower.var</code></td>
+<td>
+<p>the lower pseudo-variance(s)</p>
+</td></tr> 
+<tr valign="top"><td><code>upper.var</code></td>
+<td>
+<p>the upper pseudo-variance(s)</p>
+</td></tr> 
+<tr valign="top"><td><code>conflev</code></td>
+<td>
+<p>the confidence level: this is determined by the confidence level (1-alpha) used in the input fit objects</p>
+</td></tr> 
+<tr valign="top"><td><code>call</code></td>
+<td>
+<p>the function call</p>
+</td></tr> 
+<tr valign="top"><td><code>variable</code></td>
+<td>
+<p>the variable(s) for which confidence intervals were computed</p>
+</td></tr> 
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Georg Heinze
+</p>
+
+
+<h3>References</h3>
+
+<p>Heinze G, Ploner M, Beyea J (2013). Confidence intervals after multiple imputation: combining profile likelihood information from logistic regressions. Statistics in Medicine, to appear. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#generate data set with NAs
+freq=c(5,2,2,7,5,4)
+y&lt;-c(rep(1,freq[1]+freq[2]), rep(0,freq[3]+freq[4]), rep(1,freq[5]), rep(0,freq[6]))
+x&lt;-c(rep(1,freq[1]), rep(0,freq[2]), rep(1,freq[3]), rep(0,freq[4]), rep(NA,freq[5]),
+   rep(NA,freq[6]))
+toy&lt;-data.frame(x=x,y=y)
+
+
+# impute data set 5 times
+set.seed(169)
+toymi&lt;-list(0)
+for(i in 1:5){
+  toymi[[i]]&lt;-toy
+  y1&lt;-toymi[[i]]$y==1 &amp; is.na(toymi[[i]]$x)
+  y0&lt;-toymi[[i]]$y==0 &amp; is.na(toymi[[i]]$x)
+  xnew1&lt;-rbinom(sum(y1),1,freq[1]/(freq[1]+freq[2]))
+  xnew0&lt;-rbinom(sum(y0),1,freq[3]/(freq[3]+freq[4]))
+  toymi[[i]]$x[y1==TRUE]&lt;-xnew1
+  toymi[[i]]$x[y0==TRUE]&lt;-xnew0
+}
+
+
+# logistf analyses of each imputed data set
+fit.list&lt;-lapply(1:5, function(X) logistf(data=toymi[[X]], y~x, pl=TRUE, dataout=TRUE))
+
+# CLIP confidence limits
+PVR.confint(obj=fit.list)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>logistf</em> version 1.22 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Creates a 'blots' argument</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for make.blots {mice}"><tr><td>make.blots {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Creates a <code>blots</code> argument</h2>
+
+<h3>Description</h3>
+
+<p>This helper function creates a valid <code>blots</code> object. The
+<code>blots</code> object is an argument to the <code>mice</code> function.
+The name <code>blots</code> is a contraction of blocks-dots.
+Through <code>blots</code>, the user can specify any additional
+arguments that are specifically passed down to the lowest level
+imputation function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+make.blots(data, blocks = make.blocks(data))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> with the source data</p>
+</td></tr>
+<tr valign="top"><td><code>blocks</code></td>
+<td>
+<p>An optional specification for blocks of variables in
+the rows. The default assigns each variable in its own block.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A matrix
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../mice/help/make.blocks.html">make.blocks</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+make.predictorMatrix(nhanes)
+make.blots(nhanes, blocks = name.blocks(c("age", "hyp"), "xxx"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

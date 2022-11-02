@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Extract fixed-effects estimates</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for fixef {lme4}"><tr><td>fixef {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Extract fixed-effects estimates</h2>
+
+<h3>Description</h3>
+
+<p>Extract the fixed-effects estimates
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+  ## S3 method for class 'merMod'
+ fixef(object, add.dropped=FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>any fitted model object from which fixed
+effects estimates can be extracted.</p>
+</td></tr>
+<tr valign="top"><td><code>add.dropped</code></td>
+<td>
+<p>for models with rank-deficient design
+matrix, reconstitute the full-length parameter vector by
+adding <code>NA</code> values in appropriate locations?</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional additional arguments. Currently
+none are used in any methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Extract the estimates of the fixed-effects parameters
+from a fitted model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a named, numeric vector of fixed-effects estimates.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+fixef(lmer(Reaction ~ Days + (1|Subject) + (0+Days|Subject), sleepstudy))
+fm2 &lt;- lmer(Reaction ~ Days + Days2 + (1|Subject),
+            data=transform(sleepstudy,Days2=Days))
+fixef(fm2,add.dropped=TRUE)
+## first two parameters are the same ...
+stopifnot(all.equal(fixef(fm2,add.dropped=TRUE)[1:2],
+                    fixef(fm2)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

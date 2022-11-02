@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Deviance Function in Terms of Standard...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for devfun2 {lme4}"><tr><td>devfun2 {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Deviance Function in Terms of Standard Deviations/Correlations</h2>
+
+<h3>Description</h3>
+
+<p>The deviance is profiled with respect to the fixed-effects
+parameters but not with respect to sigma; that is, the
+function takes parameters for the variance-covariance parameters
+and for the residual standard deviation.  The random-effects
+variance-covariance parameters are on the standard deviation/correlation
+scale, not the theta (Cholesky factor) scale.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+devfun2(fm, useSc = if(isLMM(fm)) TRUE else NA,
+        transfuns = list(from.chol = Cv_to_Sv,
+                           to.chol = Sv_to_Cv,
+                             to.sd = identity), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fm</code></td>
+<td>
+<p>a fitted model inheriting from  class <code>"<a href="../../lme4/help/merMod-class.html">merMod</a>"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>useSc</code></td>
+<td>
+<p>(<code><a href="../../base/html/logical.html">logical</a></code>) indicating whether a scale parameter
+has been in the model or should be used.</p>
+</td></tr></table>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>transfuns</code></td>
+<td>
+<p>a <code><a href="../../base/html/list.html">list</a></code> of <code><a href="../../base/html/function.html">function</a></code>s
+for converting parameters to and from the Cholesky-factor scale
+</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>arguments passed to the internal <code>profnames</code> function
+(<code>signames=TRUE</code> to use old-style <code>.sigxx names</code>,
+<code>FALSE</code> uses (sd_cor|xx);
+also <code>prefix=c("sd","cor")</code>)
+</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Returns a function that takes a vector of standard deviations and
+correlations and returns the deviance (or REML criterion).  The
+function has additional attributes
+</p>
+
+<dl>
+<dt>optimum</dt><dd><p>a named vector giving the parameter values
+at the optimum</p>
+</dd>
+<dt>basedev</dt><dd><p>the deviance at the optimum, (i.e., <em>not</em> the
+REML criterion).</p>
+</dd>
+<dt>thopt</dt><dd><p>the optimal variance-covariance parameters on the
+&ldquo;theta&rdquo; (Cholesky factor) scale</p>
+</dd>
+<dt>stderr</dt><dd><p>standard errors of fixed effect parameters</p>
+</dd>
+</dl>
+
+
+
+<h3>Note</h3>
+
+<p>Even if the original model was fitted using <code>REML=TRUE</code> as by default
+with <code><a href="../../lme4/help/lmer.html">lmer</a>()</code>, this returns the deviance, i.e., the objective
+function for maximum (log) likelihood (ML).
+</p>
+<p>For the REML objective function, use <code><a href="../../lme4/help/getME.html">getME</a>(fm, "devfun")</code>
+instead.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+m1 &lt;- lmer(Reaction~Days+(Days|Subject),sleepstudy)
+dd &lt;- devfun2(m1, useSc=TRUE)
+pp &lt;- attr(dd,"optimum")
+## extract variance-covariance and residual std dev parameters
+sigpars &lt;- pp[grepl("^\\.sig",names(pp))]
+all.equal(unname(dd(sigpars)),deviance(refitML(m1)))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

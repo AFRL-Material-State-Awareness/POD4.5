@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Query or set CPU affinity</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for ps_get_cpu_affinity {ps}"><tr><td>ps_get_cpu_affinity {ps}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Query or set CPU affinity</h2>
+
+<h3>Description</h3>
+
+<p><code>ps_get_cpu_affinity()</code> queries the
+<a href="https://www.linuxjournal.com/article/6799?page=0,0">CPU affinity</a> of
+a process. <code>ps_set_cpu_affinity()</code> sets the CPU affinity of a process.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ps_get_cpu_affinity(p = ps_handle())
+
+ps_set_cpu_affinity(p = ps_handle(), affinity)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Process handle.</p>
+</td></tr>
+<tr valign="top"><td><code>affinity</code></td>
+<td>
+<p>Integer vector of CPU numbers to restrict a process to.
+CPU numbers start with zero, and they have to be smaller than the
+number of (logical) CPUs, see <code><a href="../../ps/help/ps_cpu_count.html">ps_cpu_count()</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>CPU affinity consists in telling the OS to run a process on a limited
+set of CPUs only (on Linux cmdline, the <code>taskset</code> command is typically
+used).
+</p>
+<p>These functions are only supported on Linux and Windows. They error on macOS.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ps_get_cpu_affinity()</code> returns an integer vector of CPU
+numbers, starting with zero.
+</p>
+<p><code>ps_set_cpu_affinity()</code> returns <code>NULL</code>, invisibly.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# current
+orig &lt;- ps_get_cpu_affinity()
+orig
+
+# restrict
+ps_set_cpu_affinity(affinity = 0:0)
+ps_get_cpu_affinity()
+
+# restore
+ps_set_cpu_affinity(affinity = orig)
+ps_get_cpu_affinity()
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>ps</em> version 1.7.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

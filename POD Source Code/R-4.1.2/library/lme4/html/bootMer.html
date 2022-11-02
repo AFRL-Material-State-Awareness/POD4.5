@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Model-based (Semi-)Parametric Bootstrap for Mixed Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for bootMer {lme4}"><tr><td>bootMer {lme4}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Model-based (Semi-)Parametric Bootstrap for Mixed Models</h2>
+
+<h3>Description</h3>
+
+<p>Perform model-based (Semi-)parametric bootstrap for mixed
+models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bootMer(x, FUN, nsim = 1, seed = NULL, use.u = FALSE, re.form=NA,
+	type = c("parametric", "semiparametric"),
+	verbose = FALSE, .progress = "none", PBargs = list(),
+	parallel = c("no", "multicore", "snow"),
+	ncpus = getOption("boot.ncpus", 1L), cl = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a fitted <code>merMod</code> object: see
+<code><a href="../../lme4/help/lmer.html">lmer</a></code>, <code><a href="../../lme4/help/glmer.html">glmer</a></code>, etc.</p>
+</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+<p>a function taking a fitted
+<code>merMod</code> object as input and returning the
+<em>statistic</em> of interest, which must be a (possibly named)
+numeric vector.</p>
+</td></tr>
+<tr valign="top"><td><code>nsim</code></td>
+<td>
+<p>number of simulations, positive integer; the
+bootstrap <i>B</i> (or <i>R</i>).</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>optional argument to <code><a href="../../base/html/Random.html">set.seed</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>use.u</code></td>
+<td>
+<p>logical, indicating whether the spherical
+random effects should be simulated / bootstrapped as
+well.  If <code>TRUE</code>, they are not changed, and all
+inference is conditional on these values. If
+<code>FALSE</code>, new normal deviates are drawn (see
+Details).</p>
+</td></tr>
+<tr valign="top"><td><code>re.form</code></td>
+<td>
+<p>formula, <code>NA</code> (equivalent to <code>use.u=FALSE</code>),
+or <code>NULL</code> (equivalent to <code>use.u=TRUE</code>):
+alternative to <code>use.u</code> for
+specifying which random effects to incorporate.
+See <code><a href="../../lme4/help/simulate.merMod.html">simulate.merMod</a></code> for details.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>character string specifying the type of
+bootstrap, <code>"parametric"</code> or
+<code>"semiparametric"</code>; partial matching is allowed.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>logical indicating if progress should
+print output</p>
+</td></tr>
+<tr valign="top"><td><code>.progress</code></td>
+<td>
+<p>character string - type of progress bar
+to display.  Default is <code>"none"</code>; the function will
+look for a relevant <code>*ProgressBar</code> function, so
+<code>"txt"</code> will work in general; <code>"tk"</code> is
+available if the <span class="pkg">tcltk</span> package is loaded; or
+<code>"win"</code> on Windows systems. Progress bars are
+disabled (with a message) for parallel operation.</p>
+</td></tr>
+<tr valign="top"><td><code>PBargs</code></td>
+<td>
+<p>a list of additional arguments to the
+progress bar function (the package authors like
+<code>list(style=3)</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>parallel</code></td>
+<td>
+<p>The type of parallel operation to be used (if any).
+If missing, the
+default is taken from the option <code>"boot.parallel"</code> (and if that
+is not set, <code>"no"</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>ncpus</code></td>
+<td>
+<p>integer: number of processes to be used in parallel operation:
+typically one would choose this to be the number of available CPUs.</p>
+</td></tr>
+<tr valign="top"><td><code>cl</code></td>
+<td>
+<p>An optional <span class="pkg">parallel</span> or <span class="pkg">snow</span> cluster for use if
+<code>parallel = "snow"</code>.  If not supplied, a cluster on the
+local machine is created for the duration of the <code>boot</code> call.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The semi-parametric variant is only partially implemented, and
+we only provide a method for <code><a href="../../lme4/help/lmer.html">lmer</a></code> and
+<code><a href="../../lme4/help/glmer.html">glmer</a></code> results.
+</p>
+<p>The working name for bootMer() was
+&ldquo;simulestimate()&rdquo;, as it is an extension of <code>simulate</code>
+(see <a href="../../lme4/help/simulate.merMod.html">simulate.merMod</a>), but we want to emphasize its potential
+for valid inference.
+</p>
+
+<ul>
+<li><p> If <code>use.u</code> is <code>FALSE</code> and <code>type</code> is
+<code>"parametric"</code>, each simulation generates new values of both
+the &ldquo;<em>spherical</em>&rdquo; random effects <i>u</i> and the
+i.i.d. errors <i>&epsilon;</i>, using <code><a href="../../stats/html/Normal.html">rnorm</a>()</code>
+with parameters corresponding to the fitted model <code>x</code>.
+</p>
+</li>
+<li><p> If <code>use.u</code> is <code>TRUE</code> and <code>type=="parametric"</code>,
+only the i.i.d. errors (or, for GLMMs, response values drawn from
+the appropriate distributions) are resampled, with the values of
+<i>u</i> staying fixed at their estimated values.
+</p>
+</li>
+<li><p> If <code>use.u</code> is <code>TRUE</code> and <code>type=="semiparametric"</code>,
+the i.i.d. errors are sampled from the distribution of (response)
+residuals.  (For GLMMs, the resulting
+sample will no longer have the same properties as the original
+sample, and the method may not make sense; a warning is generated.)
+The semiparametric bootstrap is currently an experimental feature,
+and therefore may not be stable.
+</p>
+</li>
+<li><p> The case where <code>use.u</code> is <code>FALSE</code> and
+<code>type=="semiparametric"</code> is not implemented; Morris (2002)
+suggests that resampling from the estimated values of <i>u</i> is not
+good practice.
+</p>
+</li></ul>
+ 
+
+
+<h3>Value</h3>
+
+<p>an object of S3 <code><a href="../../base/html/class.html">class</a></code> <code>"boot"</code>,
+compatible with <a href="https://CRAN.R-project.org/package=boot"><span class="pkg">boot</span></a> package's
+<code><a href="../../boot/help/boot.html">boot</a>()</code> result.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If you are using <code>parallel="snow"</code>, you will need to run
+<code>clusterEvalQ(cl,library("lme4"))</code> before calling
+<code>bootMer</code> to make sure that the
+<code>lme4</code> package is loaded on all of the workers; you may
+additionally need to use <code><a href="../../parallel/help/clusterExport.html">clusterExport</a></code>
+if you are using a summary function that calls any objects
+from the environment.
+</p>
+
+
+<h3>References</h3>
+
+<p>Davison, A.C. and Hinkley, D.V. (1997)
+<em>Bootstrap Methods and Their Application</em>.
+Cambridge University Press.
+</p>
+<p>Morris, J. S. (2002).
+The BLUPs Are Not &lsquo;best&rsquo; When It Comes to Bootstrapping.
+<em>Statistics &amp; Probability Letters</em> <b>56</b>(4): 425&ndash;430.
+doi:10.1016/S0167-7152(02)00041-X.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<ul>
+<li> <p><code><a href="../../lme4/help/confint.merMod.html">confint.merMod</a></code>,
+for a more specific approach to bootstrap confidence
+intervals on parameters.
+</p>
+</li>
+<li> <p><code><a href="../../lme4/help/refit.html">refit</a>()</code>, or <code><a href="../../pbkrtest/help/PBmodcomp.html">PBmodcomp</a>()</code>
+from the <a href="https://CRAN.R-project.org/package=pbkrtest"><span class="pkg">pbkrtest</span></a> package, for parametric bootstrap comparison
+of models.
+</p>
+</li>
+<li> <p><code><a href="../../boot/help/boot.html">boot</a>()</code>, and then
+<code><a href="../../boot/help/boot.ci.html">boot.ci</a></code>, from the <span class="pkg">boot</span> package.
+</p>
+</li>
+<li> <p><code><a href="../../lme4/help/profile-methods.html">profile-methods</a></code>, for likelihood-based inference,
+including confidence intervals.
+</p>
+</li>
+<li> <p><code><a href="../../lme4/help/pvalues.html">pvalues</a></code>,
+for more general approaches to inference and p-value computation
+in mixed models.
+</p>
+</li></ul>
+
+
+
+<h3>Examples</h3>
+
+<pre>
+if (interactive()) {
+fm01ML &lt;- lmer(Yield ~ 1|Batch, Dyestuff, REML = FALSE)
+## see ?"profile-methods"
+mySumm &lt;- function(.) { s &lt;- sigma(.)
+    c(beta =getME(., "beta"), sigma = s, sig01 = unname(s * getME(., "theta"))) }
+(t0 &lt;- mySumm(fm01ML)) # just three parameters
+## alternatively:
+mySumm2 &lt;- function(.) {
+    c(beta=fixef(.),sigma=sigma(.), sig01=sqrt(unlist(VarCorr(.))))
+}
+
+set.seed(101)
+## 3.8s (on a 5600 MIPS 64bit fast(year 2009) desktop "AMD Phenom(tm) II X4 925"):
+system.time( boo01 &lt;- bootMer(fm01ML, mySumm, nsim = 100) )
+
+## to "look" at it
+if (requireNamespace("boot")) {
+    boo01
+    ## note large estimated bias for sig01
+    ## (~30% low, decreases _slightly_ for nsim = 1000)
+
+    ## extract the bootstrapped values as a data frame ...
+    head(as.data.frame(boo01))
+
+    ## ------ Bootstrap-based confidence intervals ------------
+
+    ## warnings about "Some ... intervals may be unstable" go away
+    ##   for larger bootstrap samples, e.g. nsim=500
+
+    ## intercept
+    (bCI.1 &lt;- boot::boot.ci(boo01, index=1, type=c("norm", "basic", "perc")))# beta
+
+    ## Residual standard deviation - original scale:
+    (bCI.2  &lt;- boot::boot.ci(boo01, index=2, type=c("norm", "basic", "perc")))
+    ## Residual SD - transform to log scale:
+    (bCI.2L &lt;- boot::boot.ci(boo01, index=2, type=c("norm", "basic", "perc"),
+                       h = log, hdot = function(.) 1/., hinv = exp))
+
+    ## Among-batch variance:
+    (bCI.3 &lt;- boot::boot.ci(boo01, index=3, type=c("norm", "basic", "perc"))) # sig01
+
+    
+    confint(boo01)
+    confint(boo01,type="norm")
+    confint(boo01,type="basic")
+
+    ## Graphical examination:
+    plot(boo01,index=3)
+
+    ## Check stored values from a longer (1000-replicate) run:
+    (load(system.file("testdata","boo01L.RData", package="lme4")))# "boo01L"
+    plot(boo01L, index=3)
+    mean(boo01L$t[,"sig01"]==0) ## note point mass at zero!
+} 
+} 
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>lme4</em> version 1.1-31 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

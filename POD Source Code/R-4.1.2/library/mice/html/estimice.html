@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Computes least squares parameters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for estimice {mice}"><tr><td>estimice {mice}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Computes least squares parameters</h2>
+
+<h3>Description</h3>
+
+<p>This function computes least squares estimates, variance/covariance matrices,
+residuals and degrees of freedom according to ridge regression, QR decomposition
+or Singular Value Decomposition. This function is internally called by .norm.draw(),
+but can be called by any user-specified imputation function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+estimice(x, y, ls.meth = "qr", ridge = 1e-05, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Matrix (<code>n</code> x <code>p</code>) of complete covariates.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>Incomplete data vector of length <code>n</code></p>
+</td></tr>
+<tr valign="top"><td><code>ls.meth</code></td>
+<td>
+<p>the method to use for obtaining the least squares estimates. By
+default parameters are drawn by means of QR decomposition.</p>
+</td></tr>
+<tr valign="top"><td><code>ridge</code></td>
+<td>
+<p>A small numerical value specifying the size of the ridge used.
+The default value <code>ridge = 1e-05</code> represents a compromise between stability
+and unbiasedness. Decrease <code>ridge</code> if the data contain many junk variables.
+Increase <code>ridge</code> for highly collinear data.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other named arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>When calculating the inverse of the crossproduct of the predictor matrix,
+problems may arise. For example, taking the inverse is not possible when the
+predictor matrix is rank deficient, or when the estimation problem is
+computationally singular. This function detects such error cases and
+automatically falls back to adding a ridge penalty to the diagonal of the
+crossproduct to allow for proper calculation of the inverse.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>list</code> containing components <code>c</code> (least squares estimate),
+<code>r</code> (residuals), <code>v</code> (variance/covariance matrix) and <code>df</code>
+(degrees of freedom).
+</p>
+
+
+<h3>Note</h3>
+
+<p>This functions adds a star to variable names in the mice iteration
+history to signal that a ridge penalty was added. In that case, it
+also adds an entry to <code>loggedEvents</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gerko Vink, 2018
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>mice</em> version 3.14.0 <a href="00Index.html">Index</a>]</div>
+</div></body></html>
