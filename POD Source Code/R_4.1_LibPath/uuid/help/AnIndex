@@ -1,7 +1,0 @@
-as.UUID	UUID
-is.UUID	UUID
-UUID	UUID
-uuid	UUID
-UUIDgenerate	UUIDgenerate
-UUIDparse	UUIDgenerate
-UUIDvalidate	UUIDgenerate
