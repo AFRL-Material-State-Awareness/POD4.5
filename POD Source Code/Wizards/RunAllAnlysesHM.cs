@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using POD.Controls;
-namespace POD.Wizards.Steps.HitMissNormalSteps
+
+namespace POD.Wizards
 {
-    public partial class RunAllAnalysesBar : WizardActionBar
+    public partial class RunAllAnlysesHM : SideChartPanel
     {
-        public RunAllAnalysesBar(PODToolTip tooltip)
+        public RunAllAnlysesHM() : base()
         {
             InitializeComponent();
         }

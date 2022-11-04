@@ -350,6 +350,12 @@
     <Compile Include="Steps\HitMissNormalSteps\RunAllAnalysesStep.Designer.cs">
       <DependentUpon>RunAllAnalysesStep.cs</DependentUpon>
     </Compile>
+    <Compile Include="RunAllAnlysesHM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RunAllAnlysesHM.Designer.cs">
+      <DependentUpon>RunAllAnlysesHM.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewInfoPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

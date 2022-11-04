@@ -243,7 +243,7 @@ namespace POD.Wizards
                         break;
                 }
             }
-            catch
+            catch(Exception e)
             {
                 MessageBox.Show("Invalid analysis type. Wizard creation failed.", "POD v4 Error");
             }

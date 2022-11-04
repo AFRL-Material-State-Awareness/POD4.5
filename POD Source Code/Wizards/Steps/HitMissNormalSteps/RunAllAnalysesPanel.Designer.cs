@@ -44,7 +44,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // podChart1
             // 
             this.podChart1.CanUnselect = false;
-            chartArea1.Name = "podArea";
+            chartArea1.Name = "PODAllAnalyses";
             this.podChart1.ChartAreas.Add(chartArea1);
             this.podChart1.ChartTitle = "";
             this.podChart1.ChartToolTip = null;
@@ -60,7 +60,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.podChart1.Size = new System.Drawing.Size(456, 444);
             this.podChart1.TabIndex = 0;
             this.podChart1.TabStop = false;
-            this.podChart1.Text = "podChart1";
+            this.podChart1.Text = "podChartAll";
             this.podChart1.XAxisTitle = "";
             this.podChart1.XAxisUnit = "";
             this.podChart1.YAxisTitle = "";

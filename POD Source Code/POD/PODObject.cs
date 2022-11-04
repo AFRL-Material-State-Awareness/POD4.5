@@ -76,6 +76,9 @@ namespace POD
                     case PODObjectTypeEnum.Project:
                         type = Project();
                         break;
+                    case PODObjectTypeEnum.RunAllAnalysis:
+                        type = RunHitMissAll();
+                        break;
                     case PODObjectTypeEnum.None:
                     default: 
                         type = WizardEnum.None;
@@ -112,6 +115,10 @@ namespace POD
             }
 
             return type;
+        }
+        private WizardEnum RunHitMissAll()
+        {
+            return WizardEnum.HitMissSolveAllAnalyses;
         }
 
         private WizardEnum HitMissQuick()

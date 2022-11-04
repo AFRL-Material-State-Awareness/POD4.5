@@ -1115,6 +1115,7 @@ namespace POD
     {
         Project,
         Analysis,
+        RunAllAnalysis,
         None
     }
 

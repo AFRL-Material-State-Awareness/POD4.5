@@ -7,13 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using POD.Controls;
 namespace POD.Wizards.Steps.HitMissNormalSteps
 {
-    public partial class RunAllAnalysesPanel : UserControl
+    public partial class RunAllAnalysesPanel : WizardPanel
     {
-        public RunAllAnalysesPanel()
+        public RunAllAnalysesPanel(PODToolTip tooltip)
+            : base(tooltip)
         {
+            StepToolTip = new PODToolTip();
+
             InitializeComponent();
         }
     }

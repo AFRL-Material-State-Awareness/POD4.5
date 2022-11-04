@@ -17,6 +17,10 @@ namespace POD.Analyze
             this.flawName = flawNameInput;
             this.allAnalyses = allAnalysesInput;
         }
+        //public new WizardEnum WizardType
+        //{
+            
+        //}
 
     }
 }
