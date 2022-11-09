@@ -1,296 +1,295 @@
-Package,License
-abind,LGPL (>= 2)
-foreach,Apache License (== 2.0)
-iterators,Apache License (== 2.0)
-foreach,Apache License (== 2.0)
-iterators,Apache License (== 2.0)
-utf8,Apache License (== 2.0) | file LICENSE
-utf8,Apache License (== 2.0) | file LICENSE
-RColorBrewer,Apache License 2.0
-reticulate,Apache License 2.0
-RColorBrewer,Apache License 2.0
-commonmark,BSD_2_clause + file LICENSE
-commonmark,BSD_2_clause + file LICENSE
-selectr,BSD_3_clause + file LICENCE
-colorspace,BSD_3_clause + file LICENSE
-yaml,BSD_3_clause + file LICENSE
-colorspace,BSD_3_clause + file LICENSE
-yaml,BSD_3_clause + file LICENSE
-stringi,file LICENSE
-stringi,file LICENSE
-highr,GPL-2 | GPL-3
-knitr,GPL-2 | GPL-3
-logistf,GPL-2 | GPL-3
-mime,GPL-2 | GPL-3
-codetools,GPL-2 | GPL-3
-car,GPL (>= 2)
-carData,GPL (>= 2)
-DEoptimR,GPL (>= 2)
-digest,GPL (>= 2)
-goftest,GPL (>= 2)
-gridExtra,GPL (>= 2)
-htmltools,GPL (>= 2)
-LearnBayes,GPL (>= 2)
-lme4,GPL (>= 2)
-lubridate,GPL (>= 2)
-maptools,GPL (>= 2)
-MatrixModels,GPL (>= 2)
-mcprofile,GPL (>= 2)
-nortest,GPL (>= 2)
-pbkrtest,GPL (>= 2)
-quadprog,GPL (>= 2)
-quantreg,GPL (>= 2)
-Rcpp,GPL (>= 2)
-RcppTOML,GPL (>= 2)
-robustbase,GPL (>= 2)
-sp,GPL (>= 2)
-SparseM,GPL (>= 2)
-car,GPL (>= 2)
-carData,GPL (>= 2)
-cluster,GPL (>= 2)
-DEoptimR,GPL (>= 2)
-digest,GPL (>= 2)
-foreign,GPL (>= 2)
-gridExtra,GPL (>= 2)
-htmltools,GPL (>= 2)
-lattice,GPL (>= 2)
-lme4,GPL (>= 2)
-MatrixModels,GPL (>= 2)
-mcprofile,GPL (>= 2)
-mgcv,GPL (>= 2)
-nlme,GPL (>= 2)
-pbkrtest,GPL (>= 2)
-quadprog,GPL (>= 2)
-quantreg,GPL (>= 2)
-Rcpp,GPL (>= 2)
-robustbase,GPL (>= 2)
-SparseM,GPL (>= 2)
-Matrix,GPL (>= 2) | file LICENCE
-RcppEigen,GPL (>= 2) | file LICENSE
-RcppEigen,GPL (>= 2) | file LICENSE
-pracma,GPL (>= 3)
-shape,GPL (>= 3)
-pracma,GPL (>= 3)
-brew,GPL-2
-cowplot,GPL-2
-glmnet,GPL-2
-gtable,GPL-2
-markdown,GPL-2
-minqa,GPL-2
-multcomp,GPL-2
-mvtnorm,GPL-2
-numDeriv,GPL-2
-RSSampling,GPL-2
-brew,GPL-2
-cowplot,GPL-2
-minqa,GPL-2
-mvtnorm,GPL-2
-numDeriv,GPL-2
-formula.tools,GPL-2 | file LICENSE
-operator.tools,GPL-2 | file LICENSE
-stringr,GPL-2 | file LICENSE
-stringr,GPL-2 | file LICENSE
-backports,GPL-2 | GPL-3
-base64enc,GPL-2 | GPL-3
-bit,GPL-2 | GPL-3
-bit64,GPL-2 | GPL-3
-diffobj,GPL-2 | GPL-3
-fansi,GPL-2 | GPL-3
-mice,GPL-2 | GPL-3
-png,GPL-2 | GPL-3
-sandwich,GPL-2 | GPL-3
-zoo,GPL-2 | GPL-3
-backports,GPL-2 | GPL-3
-base64enc,GPL-2 | GPL-3
-class,GPL-2 | GPL-3
-diffobj,GPL-2 | GPL-3
-fansi,GPL-2 | GPL-3
-MASS,GPL-2 | GPL-3
-mice,GPL-2 | GPL-3
-nnet,GPL-2 | GPL-3
-rpart,GPL-2 | GPL-3
-spatial,GPL-2 | GPL-3
-zoo,GPL-2 | GPL-3
-assertthat,GPL-3
-clipr,GPL-3
-lazyeval,GPL-3
-modelr,GPL-3
-pkgload,GPL-3
-rmarkdown,GPL-3
-TH.data,GPL-3
-xlsx,GPL-3
-xlsxjars,GPL-3
-lazyeval,GPL-3
-pkgload,GPL-3
-purrr,GPL-3 | file LICENSE
-qqplotr,GPL-3 | file LICENSE
-purrr,GPL-3 | file LICENSE
-qqplotr,GPL-3 | file LICENSE
-abind,LGPL (>= 2)
-survival,LGPL (>= 2)
-DBI,LGPL (>= 2.1)
-nloptr,LGPL (>= 3)
-nloptr,LGPL (>= 3)
-rJava,LGPL-2.1
-askpass,MIT + file LICENSE
-blob,MIT + file LICENSE
-brio,MIT + file LICENSE
-broom,MIT + file LICENSE
-bslib,MIT + file LICENSE
-callr,MIT + file LICENSE
-cellranger,MIT + file LICENSE
-cli,MIT + file LICENSE
-corrplot,MIT + file LICENSE
-cpp11,MIT + file LICENSE
-crayon,MIT + file LICENSE
-crosstalk,MIT + file LICENSE
-curl,MIT + file LICENSE
-dbplyr,MIT + file LICENSE
-desc,MIT + file LICENSE
-dplyr,MIT + file LICENSE
-dtplyr,MIT + file LICENSE
-ellipsis,MIT + file LICENSE
-evaluate,MIT + file LICENSE
-farver,MIT + file LICENSE
-fastmap,MIT + file LICENSE
-forcats,MIT + file LICENSE
-fs,MIT + file LICENSE
-gargle,MIT + file LICENSE
-generics,MIT + file LICENSE
-ggplot2,MIT + file LICENSE
-ggResidpanel,MIT + file LICENSE
-glue,MIT + file LICENSE
-googledrive,MIT + file LICENSE
-googlesheets4,MIT + file LICENSE
-haven,MIT + file LICENSE
-here,MIT + file LICENSE
-hms,MIT + file LICENSE
-htmlwidgets,MIT + file LICENSE
-httr,MIT + file LICENSE
-ids,MIT + file LICENSE
-isoband,MIT + file LICENSE
-jquerylib,MIT + file LICENSE
-jsonlite,MIT + file LICENSE
-later,MIT + file LICENSE
-lifecycle,MIT + file LICENSE
-magrittr,MIT + file LICENSE
-munsell,MIT + file LICENSE
-olsrr,MIT + file LICENSE
-openssl,MIT + file LICENSE
-pillar,MIT + file LICENSE
-pkgconfig,MIT + file LICENSE
-plotly,MIT + file LICENSE
-praise,MIT + file LICENSE
-prettyunits,MIT + file LICENSE
-processx,MIT + file LICENSE
-progress,MIT + file LICENSE
-promises,MIT + file LICENSE
-ps,MIT + file LICENSE
-R6,MIT + file LICENSE
-rappdirs,MIT + file LICENSE
-readr,MIT + file LICENSE
-readxl,MIT + file LICENSE
-rematch,MIT + file LICENSE
-rematch2,MIT + file LICENSE
-remotes,MIT + file LICENSE
-reprex,MIT + file LICENSE
-rlang,MIT + file LICENSE
-roxygen2,MIT + file LICENSE
-rprojroot,MIT + file LICENSE
-rstudioapi,MIT + file LICENSE
-rvest,MIT + file LICENSE
-sass,MIT + file LICENSE
-scales,MIT + file LICENSE
-sys,MIT + file LICENSE
-testthat,MIT + file LICENSE
-tibble,MIT + file LICENSE
-tidyr,MIT + file LICENSE
-tidyselect,MIT + file LICENSE
-tidyverse,MIT + file LICENSE
-tinytex,MIT + file LICENSE
-tzdb,MIT + file LICENSE
-uuid,MIT + file LICENSE
-vctrs,MIT + file LICENSE
-viridisLite,MIT + file LICENSE
-vroom,MIT + file LICENSE
-waldo,MIT + file LICENSE
-withr,MIT + file LICENSE
-xfun,MIT + file LICENSE
-xml2,MIT + file LICENSE
-askpass,MIT + file LICENSE
-brio,MIT + file LICENSE
-broom,MIT + file LICENSE
-callr,MIT + file LICENSE
-cli,MIT + file LICENSE
-corrplot,MIT + file LICENSE
-cpp11,MIT + file LICENSE
-crayon,MIT + file LICENSE
-crosstalk,MIT + file LICENSE
-curl,MIT + file LICENSE
-desc,MIT + file LICENSE
-dplyr,MIT + file LICENSE
-ellipsis,MIT + file LICENSE
-evaluate,MIT + file LICENSE
-farver,MIT + file LICENSE
-fastmap,MIT + file LICENSE
-fs,MIT + file LICENSE
-generics,MIT + file LICENSE
-ggplot2,MIT + file LICENSE
-ggResidpanel,MIT + file LICENSE
-glue,MIT + file LICENSE
-gtable,MIT + file LICENSE
-htmlwidgets,MIT + file LICENSE
-httr,MIT + file LICENSE
-isoband,MIT + file LICENSE
-jsonlite,MIT + file LICENSE
-later,MIT + file LICENSE
-lifecycle,MIT + file LICENSE
-magrittr,MIT + file LICENSE
-munsell,MIT + file LICENSE
-openssl,MIT + file LICENSE
-pillar,MIT + file LICENSE
-pkgconfig,MIT + file LICENSE
-plotly,MIT + file LICENSE
-praise,MIT + file LICENSE
-processx,MIT + file LICENSE
-promises,MIT + file LICENSE
-ps,MIT + file LICENSE
-R6,MIT + file LICENSE
-rematch2,MIT + file LICENSE
-remotes,MIT + file LICENSE
-rlang,MIT + file LICENSE
-roxygen2,MIT + file LICENSE
-rprojroot,MIT + file LICENSE
-scales,MIT + file LICENSE
-sys,MIT + file LICENSE
-testthat,MIT + file LICENSE
-tibble,MIT + file LICENSE
-tidyr,MIT + file LICENSE
-tidyselect,MIT + file LICENSE
-vctrs,MIT + file LICENSE
-viridisLite,MIT + file LICENSE
-waldo,MIT + file LICENSE
-withr,MIT + file LICENSE
-xfun,MIT + file LICENSE
-xml2,MIT + file LICENSE
-labeling,MIT + file LICENSE | Unlimited
-labeling,MIT + file LICENSE | Unlimited
-data.table,MPL-2.0 | file LICENSE
-data.table,MPL-2.0 | file LICENSE
-base,Part of R 4.1.2
-compiler,Part of R 4.1.2
-datasets,Part of R 4.1.2
-graphics,Part of R 4.1.2
-grDevices,Part of R 4.1.2
-grid,Part of R 4.1.2
-methods,Part of R 4.1.2
-parallel,Part of R 4.1.2
-splines,Part of R 4.1.2
-stats,Part of R 4.1.2
-stats4,Part of R 4.1.2
-tcltk,Part of R 4.1.2
-tools,Part of R 4.1.2
-translations,Part of R 4.1.2
-utils,Part of R 4.1.2
-boot,Unlimited
-KernSmooth,Unlimited
+Package,License,
+abind,LGPL (>= 2),
+foreach,Apache License (== 2.0),
+iterators,Apache License (== 2.0),
+foreach,Apache License (== 2.0),
+iterators,Apache License (== 2.0),
+utf8,Apache License (== 2.0) | file LICENSE,
+utf8,Apache License (== 2.0) | file LICENSE,
+RColorBrewer,Apache License 2.0,
+reticulate,Apache License 2.0,
+RColorBrewer,Apache License 2.0,
+commonmark,BSD_2_clause + file LICENSE,
+commonmark,BSD_2_clause + file LICENSE,
+selectr,BSD_3_clause + file LICENCE,
+colorspace,BSD_3_clause + file LICENSE,
+yaml,BSD_3_clause + file LICENSE,
+colorspace,BSD_3_clause + file LICENSE,
+yaml,BSD_3_clause + file LICENSE,
+stringi,file LICENSE,
+stringi,file LICENSE,
+highr,GPL-2 | GPL-3,
+knitr,GPL-2 | GPL-3,
+logistf,GPL-2 | GPL-3,
+mime,GPL-2 | GPL-3,
+codetools,GPL-2 | GPL-3,
+car,GPL (>= 2),
+carData,GPL (>= 2),
+DEoptimR,GPL (>= 2),
+digest,GPL (>= 2),
+goftest,GPL (>= 2),
+gridExtra,GPL (>= 2),
+htmltools,GPL (>= 2),
+LearnBayes,GPL (>= 2),
+lme4,GPL (>= 2),
+lubridate,GPL (>= 2),
+maptools,GPL (>= 2),
+MatrixModels,GPL (>= 2),
+mcprofile,GPL (>= 2),
+nortest,GPL (>= 2),
+pbkrtest,GPL (>= 2),
+quadprog,GPL (>= 2),
+quantreg,GPL (>= 2),
+Rcpp,GPL (>= 2),
+RcppTOML,GPL (>= 2),
+robustbase,GPL (>= 2),
+sp,GPL (>= 2),
+SparseM,GPL (>= 2),
+car,GPL (>= 2),
+carData,GPL (>= 2),
+cluster,GPL (>= 2),
+DEoptimR,GPL (>= 2),
+digest,GPL (>= 2),
+foreign,GPL (>= 2),
+gridExtra,GPL (>= 2),
+htmltools,GPL (>= 2),
+lattice,GPL (>= 2),
+lme4,GPL (>= 2),
+MatrixModels,GPL (>= 2),
+mcprofile,GPL (>= 2),
+mgcv,GPL (>= 2),
+nlme,GPL (>= 2),
+pbkrtest,GPL (>= 2),
+quadprog,GPL (>= 2),
+quantreg,GPL (>= 2),
+Rcpp,GPL (>= 2),
+robustbase,GPL (>= 2),
+SparseM,GPL (>= 2),
+Matrix,GPL (>= 2) | file LICENCE,
+RcppEigen,GPL (>= 2) | file LICENSE,
+RcppEigen,GPL (>= 2) | file LICENSE,
+pracma,GPL (>= 3),
+shape,GPL (>= 3),
+pracma,GPL (>= 3),
+brew,GPL-2,
+cowplot,GPL-2,
+glmnet,GPL-2,
+gtable,MIT,(Relicensed in 2020)
+markdown,GPL-2,
+minqa,GPL-2,
+multcomp,GPL-2,
+mvtnorm,GPL-2,
+numDeriv,GPL-2,
+RSSampling,GPL-2,
+brew,GPL-2,
+cowplot,GPL-2,
+minqa,GPL-2,
+mvtnorm,GPL-2,
+numDeriv,GPL-2,
+formula.tools,GPL-2 | file LICENSE,
+operator.tools,GPL-2 | file LICENSE,
+stringr,MIT,(Relicensed from GPLv2)
+backports,GPL-2 | GPL-3,
+base64enc,GPL-2 | GPL-3,
+bit,GPL-2 | GPL-3,
+bit64,GPL-2 | GPL-3,
+diffobj,GPL-2 | GPL-3,
+fansi,GPL-2 | GPL-3,
+mice,GPL-2 | GPL-3,
+png,GPL-2 | GPL-3,
+sandwich,GPL-2 | GPL-3,
+zoo,GPL-2 | GPL-3,
+backports,GPL-2 | GPL-3,
+base64enc,GPL-2 | GPL-3,
+class,GPL-2 | GPL-3,
+diffobj,GPL-2 | GPL-3,
+fansi,GPL-2 | GPL-3,
+MASS,GPL-2 | GPL-3,
+mice,GPL-2 | GPL-3,
+nnet,GPL-2 | GPL-3,
+rpart,GPL-2 | GPL-3,
+spatial,GPL-2 | GPL-3,
+zoo,GPL-2 | GPL-3,
+assertthat,GPL-3,
+clipr,GPL-3,
+lazyeval,GPL-3,
+modelr,GPL-3,
+pkgload,GPL-3,
+rmarkdown,GPL-3,
+TH.data,GPL-3,
+xlsx,GPL-3,
+xlsxjars,GPL-3,
+lazyeval,GPL-3,
+pkgload,GPL-3,
+purrr,GPL-3 | file LICENSE,
+qqplotr,GPL-3 | file LICENSE,
+purrr,GPL-3 | file LICENSE,
+qqplotr,GPL-3 | file LICENSE,
+abind,LGPL (>= 2),
+survival,LGPL (>= 2),
+DBI,LGPL (>= 2.1),
+nloptr,LGPL (>= 3),
+nloptr,LGPL (>= 3),
+rJava,LGPL-2.1,
+askpass,MIT + file LICENSE,
+blob,MIT + file LICENSE,
+brio,MIT + file LICENSE,
+broom,MIT + file LICENSE,
+bslib,MIT + file LICENSE,
+callr,MIT + file LICENSE,
+cellranger,MIT + file LICENSE,
+cli,MIT + file LICENSE,
+corrplot,MIT + file LICENSE,
+cpp11,MIT + file LICENSE,
+crayon,MIT + file LICENSE,
+crosstalk,MIT + file LICENSE,
+curl,MIT + file LICENSE,
+dbplyr,MIT + file LICENSE,
+desc,MIT + file LICENSE,
+dplyr,MIT + file LICENSE,
+dtplyr,MIT + file LICENSE,
+ellipsis,MIT + file LICENSE,
+evaluate,MIT + file LICENSE,
+farver,MIT + file LICENSE,
+fastmap,MIT + file LICENSE,
+forcats,MIT + file LICENSE,
+fs,MIT + file LICENSE,
+gargle,MIT + file LICENSE,
+generics,MIT + file LICENSE,
+ggplot2,MIT + file LICENSE,
+ggResidpanel,MIT + file LICENSE,
+glue,MIT + file LICENSE,
+googledrive,MIT + file LICENSE,
+googlesheets4,MIT + file LICENSE,
+haven,MIT + file LICENSE,
+here,MIT + file LICENSE,
+hms,MIT + file LICENSE,
+htmlwidgets,MIT + file LICENSE,
+httr,MIT + file LICENSE,
+ids,MIT + file LICENSE,
+isoband,MIT + file LICENSE,
+jquerylib,MIT + file LICENSE,
+jsonlite,MIT + file LICENSE,
+later,MIT + file LICENSE,
+lifecycle,MIT + file LICENSE,
+magrittr,MIT + file LICENSE,
+munsell,MIT + file LICENSE,
+olsrr,MIT + file LICENSE,
+openssl,MIT + file LICENSE,
+pillar,MIT + file LICENSE,
+pkgconfig,MIT + file LICENSE,
+plotly,MIT + file LICENSE,
+praise,MIT + file LICENSE,
+prettyunits,MIT + file LICENSE,
+processx,MIT + file LICENSE,
+progress,MIT + file LICENSE,
+promises,MIT + file LICENSE,
+ps,MIT + file LICENSE,
+R6,MIT + file LICENSE,
+rappdirs,MIT + file LICENSE,
+readr,MIT + file LICENSE,
+readxl,MIT + file LICENSE,
+rematch,MIT + file LICENSE,
+rematch2,MIT + file LICENSE,
+remotes,MIT + file LICENSE,
+reprex,MIT + file LICENSE,
+rlang,MIT + file LICENSE,
+roxygen2,MIT + file LICENSE,
+rprojroot,MIT + file LICENSE,
+rstudioapi,MIT + file LICENSE,
+rvest,MIT + file LICENSE,
+sass,MIT + file LICENSE,
+scales,MIT + file LICENSE,
+sys,MIT + file LICENSE,
+testthat,MIT + file LICENSE,
+tibble,MIT + file LICENSE,
+tidyr,MIT + file LICENSE,
+tidyselect,MIT + file LICENSE,
+tidyverse,MIT + file LICENSE,
+tinytex,MIT + file LICENSE,
+tzdb,MIT + file LICENSE,
+uuid,MIT + file LICENSE,
+vctrs,MIT + file LICENSE,
+viridisLite,MIT + file LICENSE,
+vroom,MIT + file LICENSE,
+waldo,MIT + file LICENSE,
+withr,MIT + file LICENSE,
+xfun,MIT + file LICENSE,
+xml2,MIT + file LICENSE,
+askpass,MIT + file LICENSE,
+brio,MIT + file LICENSE,
+broom,MIT + file LICENSE,
+callr,MIT + file LICENSE,
+cli,MIT + file LICENSE,
+corrplot,MIT + file LICENSE,
+cpp11,MIT + file LICENSE,
+crayon,MIT + file LICENSE,
+crosstalk,MIT + file LICENSE,
+curl,MIT + file LICENSE,
+desc,MIT + file LICENSE,
+dplyr,MIT + file LICENSE,
+ellipsis,MIT + file LICENSE,
+evaluate,MIT + file LICENSE,
+farver,MIT + file LICENSE,
+fastmap,MIT + file LICENSE,
+fs,MIT + file LICENSE,
+generics,MIT + file LICENSE,
+ggplot2,MIT + file LICENSE,
+ggResidpanel,MIT + file LICENSE,
+glue,MIT + file LICENSE,
+gtable,MIT + file LICENSE,
+htmlwidgets,MIT + file LICENSE,
+httr,MIT + file LICENSE,
+isoband,MIT + file LICENSE,
+jsonlite,MIT + file LICENSE,
+later,MIT + file LICENSE,
+lifecycle,MIT + file LICENSE,
+magrittr,MIT + file LICENSE,
+munsell,MIT + file LICENSE,
+openssl,MIT + file LICENSE,
+pillar,MIT + file LICENSE,
+pkgconfig,MIT + file LICENSE,
+plotly,MIT + file LICENSE,
+praise,MIT + file LICENSE,
+processx,MIT + file LICENSE,
+promises,MIT + file LICENSE,
+ps,MIT + file LICENSE,
+R6,MIT + file LICENSE,
+rematch2,MIT + file LICENSE,
+remotes,MIT + file LICENSE,
+rlang,MIT + file LICENSE,
+roxygen2,MIT + file LICENSE,
+rprojroot,MIT + file LICENSE,
+scales,MIT + file LICENSE,
+sys,MIT + file LICENSE,
+testthat,MIT + file LICENSE,
+tibble,MIT + file LICENSE,
+tidyr,MIT + file LICENSE,
+tidyselect,MIT + file LICENSE,
+vctrs,MIT + file LICENSE,
+viridisLite,MIT + file LICENSE,
+waldo,MIT + file LICENSE,
+withr,MIT + file LICENSE,
+xfun,MIT + file LICENSE,
+xml2,MIT + file LICENSE,
+labeling,MIT + file LICENSE | Unlimited,
+labeling,MIT + file LICENSE | Unlimited,
+data.table,MPL-2.0 | file LICENSE,
+data.table,MPL-2.0 | file LICENSE,
+base,Part of R 4.1.2,
+compiler,Part of R 4.1.2,
+datasets,Part of R 4.1.2,
+graphics,Part of R 4.1.2,
+grDevices,Part of R 4.1.2,
+grid,Part of R 4.1.2,
+methods,Part of R 4.1.2,
+parallel,Part of R 4.1.2,
+splines,Part of R 4.1.2,
+stats,Part of R 4.1.2,
+stats4,Part of R 4.1.2,
+tcltk,Part of R 4.1.2,
+tools,Part of R 4.1.2,
+translations,Part of R 4.1.2,
+utils,Part of R 4.1.2,
+boot,Unlimited,
+KernSmooth,Unlimited,
