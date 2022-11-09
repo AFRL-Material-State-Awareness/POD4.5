@@ -19,5 +19,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             InitializeComponent();
         }
+        
     }
 }
