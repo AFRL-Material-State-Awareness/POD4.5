@@ -17,13 +17,22 @@ namespace POD.Analyze
         {
             this.flawName = flawNameInput;
             this.allAnalyses = allAnalysesInput;
+            //this.allAnalyses.RemoveAt(this.allAnalyses.Count - 1);
+            
         }
         public void RunAllAnalyses()
         {
             UpdateTransformsAll();
+            this.allAnalyses.RemoveAt(this.allAnalyses.Count - 1);
             foreach (Analysis analysis in this.allAnalyses)
             {
                 analysis.RunAnalysis();
+                //PODTables.Add(analysis.Data.PodCurveTable);
+            }
+            var number = 0;
+            foreach (Analysis analysis in this.allAnalyses)
+            {
+                //analysis.RunAnalysis();
                 PODTables.Add(analysis.Data.PodCurveTable);
             }
         }

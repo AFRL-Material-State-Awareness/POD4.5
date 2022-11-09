@@ -501,12 +501,15 @@ namespace POD
         protected void Analyses_Created(object sender, FinishArgs e)
         {
             ProjectFinishArgs args = (ProjectFinishArgs)e;
-            //add in the RunAllAnalysisClass Containing a list of the Analyses the user inputted
-            runAllAnalysisInstance = new RunAllAnalysis(args.Analyses);
-            runAllAnalysisInstance.Name = "Run All analyses";
-            runAllAnalysisInstance.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
-            runAllAnalysisInstance.ObjectType = PODObjectTypeEnum.RunAllAnalysis;
-            args.Analyses.Add(runAllAnalysisInstance);
+            if(runAllAnalysisInstance== null)
+            {
+                //add in the RunAllAnalysisClass Containing a list of the Analyses the user inputted
+                runAllAnalysisInstance = new RunAllAnalysis(args.Analyses);
+                runAllAnalysisInstance.Name = "Run All analyses";
+                runAllAnalysisInstance.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+                runAllAnalysisInstance.ObjectType = PODObjectTypeEnum.RunAllAnalysis;
+                args.Analyses.Add(runAllAnalysisInstance);
+            }
             //finish the wizard by adding the analyses that were generated
             //to the controller
             if (args != null && args.Analyses != null)
