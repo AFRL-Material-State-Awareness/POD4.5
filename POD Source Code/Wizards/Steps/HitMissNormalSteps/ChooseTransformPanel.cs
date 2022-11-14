@@ -207,8 +207,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             else
             {
-                WarningTextBox.Clear();
-                WarningTextBox.BackColor = Color.White;
+                //WarningTextBox.Clear();
+                //WarningTextBox.BackColor = Color.White;
+                if (WarningTextBox.InvokeRequired)
+                {
+                    WarningTextBox.Invoke(new MethodInvoker(delegate {
+                        WarningTextBox.Clear();
+                        WarningTextBox.BackColor = Color.White;
+                    }));
+                }
             }
             REngineObject.REngineRunning = false;
             this.Invoke((MethodInvoker)delegate()
