@@ -49,8 +49,8 @@ namespace POD.Docks
             pdfiumViewer.MouseWheel += new MouseEventHandler(this.podPdfViewer1_MouseWheel);
             pdfiumViewer.LostFocus += new EventHandler(this.podPdfViewer1_LostFocus);
             //pdfiumViewer.Scroll += PdfiumViewer_Scroll;
-            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
-            this.btnZoonIn.Click += new System.EventHandler(this.btnZoonIn_Click);
+            this.btnZoomOut.Click += new System.EventHandler(this.bttnZoomIn_Click);
+            this.btnZoonIn.Click += new System.EventHandler(this.bttnZoomInOut_Click);
             this.btnDynamic.Click += new System.EventHandler(this.btnDynamic_Click);
             this.btnActural.Click += new System.EventHandler(this.btnActural_Click);
             this.btnFitPage.Click += new System.EventHandler(this.btnFitPage_Click);
@@ -222,14 +222,14 @@ namespace POD.Docks
             }
         }
 
-        private void btnZoomOut_Click(object sender, EventArgs e)
+        private void bttnZoomIn_Click(object sender, EventArgs e)
         {
             if (this.pdfiumViewer.PageCount > 0)
             {
                 int delta = 10;
                 this._zoom += delta;
-                //this.podPdfViewer1.ZoomTo(this._zoom);
                 //pdfiumViewer.Zoom = this._zoom;
+                
                 pdfiumViewer.ZoomIn();
             }
 
@@ -237,7 +237,7 @@ namespace POD.Docks
             _synced = false;
         }
 
-        private void btnZoonIn_Click(object sender, EventArgs e)
+        private void bttnZoomInOut_Click(object sender, EventArgs e)
         {
             if (this.pdfiumViewer.PageCount > 0)
             {
@@ -245,7 +245,6 @@ namespace POD.Docks
                 this._zoom -= delta;
                 if (this._zoom < 0)
                     this._zoom = 0;
-                //this.podPdfViewer1.ZoomTo(this._zoom);
                 pdfiumViewer.ZoomOut();
             }
 
@@ -261,6 +260,8 @@ namespace POD.Docks
             if (this.pdfiumViewer.PageCount > 0)
             {
                 pdfiumViewer.Zoom = fullZoom;
+                
+                //pdfiumViewer.ZoomMode = PdfViewerZoomMode.
             }
 
             ClickForSibling(sender as ToolStripItem);
@@ -274,6 +275,7 @@ namespace POD.Docks
             if (this.pdfiumViewer.PageCount > 0)
             {
                 this.pdfiumViewer.ZoomMode = PdfViewerZoomMode.FitBest;
+                this.pdfiumViewer.OpenPDF();
             }
             ClickForSibling(sender as ToolStripItem);
             _synced = false;
@@ -284,6 +286,7 @@ namespace POD.Docks
             if (this.pdfiumViewer.PageCount > 0)
             {
                 this.pdfiumViewer.ZoomMode = PdfViewerZoomMode.FitWidth;
+
             }
             ClickForSibling(sender as ToolStripItem);
             _synced = false;

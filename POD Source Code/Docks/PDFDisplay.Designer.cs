@@ -82,7 +82,7 @@
             this.btnZoomOut.Name = "btnZoomOut";
             this.btnZoomOut.Size = new System.Drawing.Size(23, 22);
             this.btnZoomOut.Text = "Zoom Out";
-            this.btnZoomOut.ToolTipText = "Zoom Out ";
+            this.btnZoomOut.ToolTipText = "Zoom In";
             // 
             // btnZoonIn
             // 
@@ -92,7 +92,7 @@
             this.btnZoonIn.Name = "btnZoonIn";
             this.btnZoonIn.Size = new System.Drawing.Size(23, 22);
             this.btnZoonIn.Text = "ZoonIn";
-            this.btnZoonIn.ToolTipText = "Zoon In ";
+            this.btnZoonIn.ToolTipText = "Zoom Out";
             // 
             // btnDynamic
             // 
