@@ -82,9 +82,9 @@ namespace POD
         void MainForm_Load(object loadSender, EventArgs loadE)
         {
 
-            var pdf = new Controls.PODPdfViewer();
+            //var pdf = new Controls.PODPdfViewer();
 
-            pdf.Dispose();
+            //pdf.Dispose();
 
             _controller = new WizardController();           
 
