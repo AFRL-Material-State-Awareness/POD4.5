@@ -114,6 +114,7 @@ namespace POD.Docks
 
             var bookmarks = pdfiumViewer.Bookmarks;
             int index = 0;
+            
             foreach (PdfBookmark bookmark in bookmarks)
             {
                 string checkString = path[index];

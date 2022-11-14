@@ -183,6 +183,7 @@
             // pdfiumViewer
             // 
             this.pdfiumViewer.BackColor = System.Drawing.Color.SlateGray;
+            this.pdfiumViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pdfiumViewer.Location = new System.Drawing.Point(0, 25);
             this.pdfiumViewer.Name = "pdfiumViewer";
             this.pdfiumViewer.Page = 0;
@@ -191,6 +192,7 @@
             this.pdfiumViewer.Size = new System.Drawing.Size(876, 659);
             this.pdfiumViewer.TabIndex = 3;
             this.pdfiumViewer.Text = "podPdfiumViewer1";
+            this.toolTip1.SetToolTip(this.pdfiumViewer, "Double click to switch back analysis/project.");
             this.pdfiumViewer.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitWidth;
             // 
             // PDFDisplay
