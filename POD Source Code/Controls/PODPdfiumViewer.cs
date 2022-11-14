@@ -25,8 +25,8 @@ namespace POD.Controls
         {
             //PdfLoaded += PODPdfViewer_PdfLoaded;
             //_myPdfRender = new PdfRenderer();
-
-
+            
+            
         }
 
         void PODPdfViewer_PdfLoaded(object sender, EventArgs args)
@@ -132,6 +132,33 @@ namespace POD.Controls
             }
 
             return false;
+        }
+        public int PageCount
+        {
+            get {                
+                if(_mypdfDoucment != null)
+                {
+                    return _mypdfDoucment.PageCount;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+        public PdfBookmarkCollection Bookmarks
+        {
+            get
+            {
+                if(_mypdfDoucment != null)
+                {
+                    return _mypdfDoucment.Bookmarks;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
     }
 
