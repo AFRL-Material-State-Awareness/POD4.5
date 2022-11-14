@@ -119,9 +119,6 @@
     <Compile Include="PODFlowLayoutPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PODPdfViewer.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="PODToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
