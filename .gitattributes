@@ -1,2 +1,2 @@
 *.msi filter=lfs diff=lfs merge=lfs -text
-POD4.5/'POD Source Code'/'R-4.1.2'/** linguist-vendored=false
+POD4.5/POD Source Code/R-4.1.2/** linguist-vendored=false
