@@ -53,6 +53,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
+    </Reference>
     <Reference Include="Spire.PdfViewer.Forms">
       <HintPath>..\Spire\Spire.PdfViewer.Forms.dll</HintPath>
     </Reference>
@@ -84,6 +87,9 @@
     </Compile>
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODPdfViewerNew.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SamplingTypeBox.cs" />
     <Compile Include="SamplingTypeBox.Designer.cs">
@@ -329,6 +335,7 @@
     <EmbeddedResource Include="OverviewChart.resx">
       <DependentUpon>OverviewChart.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\licenses.licx" />
     <EmbeddedResource Include="QuickDataGridView.resx">
       <DependentUpon>QuickDataGridView.cs</DependentUpon>
