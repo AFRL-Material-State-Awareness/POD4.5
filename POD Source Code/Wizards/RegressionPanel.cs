@@ -272,7 +272,7 @@ namespace POD.Wizards
                 //if (MainChart.ChartAreas[0].AxisX.Maximum< MainChart.ChartAreas[0].AxisX.Minimum)
                 //{
                 //    //MainChart.ChartAreas[0].AxisX.Maximum = MainChart.ChartAreas[0].AxisX.Minimum;
-                //    MainChart.ChartAreas[0].AxisX.Maximum = 1.0/Analysis.MinFlawSize;
+                //    MainChart.ChartAreas[0].AxisX.Maximum = 1.0/Analysis.MinFlawSizeHM;
                 //    MainChart.ChartAreas[0].AxisX.Minimum = 0;
                 //}
             }

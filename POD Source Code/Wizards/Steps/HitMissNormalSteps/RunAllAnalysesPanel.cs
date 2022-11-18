@@ -64,7 +64,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
             _runAllAnalyses.IsBusy = true;
-            _runAllAnalyses.RunAllAnalyses();
+            _runAllAnalyses.RunAllAnalyses();         
         }
         private void Background_AnalysisProgressChanged(object sender, ProgressChangedEventArgs e)
         {

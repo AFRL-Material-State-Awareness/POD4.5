@@ -1632,7 +1632,7 @@ namespace POD.Analyze
                 }
             }
         }
-
+        public bool IsAnalysisBusy => analysisLauncher.IsBusy;
         private void Show_R_CodeStuckMessage()
         {
             var result = MessageBox.Show("POD v4 analysis code has not terminated.  " +
@@ -2951,7 +2951,7 @@ namespace POD.Analyze
             _initialResponseMinGuess = Double.MaxValue;
         }
         //get the min flaw size for inverse
-        public double MinFlawSize
+        public double MinFlawSizeHM
         {
             get { return _hmAnalysisObject.Flaws_All.Min(); }
         }

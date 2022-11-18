@@ -258,7 +258,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             else
             {
-                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(Analysis.MinFlawSize- (.02)*Analysis.MinFlawSize));
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(Analysis.MinFlawSizeHM- (.02)*Analysis.MinFlawSizeHM));
                 mainChart.SetAMaxBoundary(x, false);
                 x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
                 mainChart.SetAMinBoundary(x, false);
@@ -434,7 +434,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             else
             {
-                aMaxControl.Value = Convert.ToDecimal(1.0 / Analysis.MinFlawSize);
+                aMaxControl.Value = Convert.ToDecimal(1.0 / Analysis.MinFlawSizeHM);
                 aMinControl.Value = Convert.ToDecimal(Analysis.InFlawMin);
             }
             */
@@ -600,7 +600,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
             //if(Analysis.InFlawTransform == TransformTypeEnum.Inverse)
             //{
-            //    mainChart.SetAMaxBoundary(1/Analysis.MinFlawSize, true);
+            //    mainChart.SetAMaxBoundary(1/Analysis.MinFlawSizeHM, true);
             //}
             //else
             //{
