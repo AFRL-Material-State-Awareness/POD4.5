@@ -1,6 +1,2 @@
 *.msi filter=lfs diff=lfs merge=lfs -text
-*.html linguist-vendored
-*.css linguist-vendored
-*.cpp linguist-vendored
-*.h linguist-vendored
-*.tex linguist-vendored
+POD4.5/POD Source Code/R-4.1.2/*linguist-vendored
