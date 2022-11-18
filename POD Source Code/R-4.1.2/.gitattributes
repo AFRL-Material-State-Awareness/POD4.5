@@ -5,9 +5,12 @@
 *.cpp linguist-vendored
 *.h linguist-vendored
 *.tex linguist-vendored
+*.sty linguist-vendored
 *.js linguist-vendored
 *.R linguist-vendored
 *.Rd linguist-vendored
 *.Rmd linguist-vendored
 *.svg linguist-vendored
 *.txt linguist-vendored
+
+/* linguist-vendored
