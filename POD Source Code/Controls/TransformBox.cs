@@ -37,7 +37,10 @@ namespace POD.Controls
         {
             get
             {
-                return ((TransformObj) SelectedItem).TransformType; 
+                if (SelectedItem != null)
+                    return ((TransformObj)SelectedItem).TransformType;
+                else
+                    return TransformTypeEnum.Linear;
             }
             set
             {

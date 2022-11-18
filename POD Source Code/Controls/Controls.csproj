@@ -77,12 +77,21 @@
     <Compile Include="BookmarkLink.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="BothTransformBoxes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BothTransformBoxes.Designer.cs">
+      <DependentUpon>BothTransformBoxes.cs</DependentUpon>
+    </Compile>
     <Compile Include="CellTag.cs" />
     <Compile Include="ColorMap.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PODChartAll.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SamplingTypeBox.cs">
       <SubType>Component</SubType>
@@ -329,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AnalysisType.resx">
       <DependentUpon>AnalysisType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BothTransformBoxes.resx">
+      <DependentUpon>BothTransformBoxes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ColorMap.resx">
       <DependentUpon>ColorMap.cs</DependentUpon>

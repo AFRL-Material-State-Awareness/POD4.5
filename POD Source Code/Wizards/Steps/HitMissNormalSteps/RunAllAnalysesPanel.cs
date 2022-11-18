@@ -16,12 +16,22 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
     {
         private RunAllAnalysis _runAllAnalyses;
         private BackgroundWorker _analysisLauncherAll;
+        private TransformTypeEnum xTransformAll=TransformTypeEnum.Linear;
+        private TransformTypeEnum yTransformAll=TransformTypeEnum.Linear;
+        //private PODChart _chart;
         public RunAllAnalysesPanel(PODToolTip tooltip)
             : base(tooltip)
         {
             StepToolTip = new PODToolTip();
-
+            
             InitializeComponent();
+        }
+        private void CheckAnalysisType()
+        {
+            if(_runAllAnalyses.AnalysisDataType== AnalysisDataTypeEnum.HitMiss)
+            {
+                bothTransformBoxes1.YTransformVisible = false;
+            }
         }
         public override void RefreshValues()
         {
@@ -46,7 +56,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 _source = value;
 
                 _runAllAnalyses = _source as RunAllAnalysis;
-
+                CheckAnalysisType();
 
             }
         }
@@ -64,7 +74,28 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
             _runAllAnalyses.IsBusy = true;
-            _runAllAnalyses.RunAllAnalyses();         
+            _runAllAnalyses.RunAllAnalyses();
+            
+            
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                this.xTransformAll = bothTransformBoxes1.xTransformSelected;
+                if (_runAllAnalyses.AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                    this.yTransformAll = bothTransformBoxes1.yTransformSelected;
+                
+                podChart1.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart1, false), _runAllAnalyses.OverallFlawMin,
+                    _runAllAnalyses.OverallFlawMax, _runAllAnalyses.Data, this.xTransformAll, this.yTransformAll);
+                //var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
+                //var chart = podChart1;
+                //watch.Restart();
+
+
+                //watch.Stop();
+                //MessageBox.Show(xTrans.ConfIntervalType.ToString() + " " + yTrans.ConfIntervalType.ToString() + " " + watch.ElapsedMilliseconds + "ms");
+                //chart.FillChart();
+                //UpdateChartsWithCurrentView(chart);
+                podChart1.Update();
+            });
         }
         private void Background_AnalysisProgressChanged(object sender, ProgressChangedEventArgs e)
         {

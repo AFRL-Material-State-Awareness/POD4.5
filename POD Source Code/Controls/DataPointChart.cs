@@ -1743,7 +1743,7 @@ namespace POD.Controls
             }
         }
 
-        private void CopyAxisObjectToAxis(Axis myAxis, AxisObject myAxisObj)
+        protected void CopyAxisObjectToAxis(Axis myAxis, AxisObject myAxisObj)
         {
             myAxis.Maximum = myAxisObj.Max;
             myAxis.Minimum = myAxisObj.Min;
