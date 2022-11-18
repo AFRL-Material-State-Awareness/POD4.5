@@ -1,1 +1,7 @@
-* linguist-vendored
+*.html linguist-vendored
+*.css linguist-vendored
+*.cpp linguist-vendored
+*.h linguist-vendored
+*.tex linguist-vendored
+*.js linguist-vendored
+*.R linguist-vendored
