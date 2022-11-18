@@ -61,32 +61,8 @@ namespace CSharpBackendWithR
             
             REngine engine;
             string rVersion = "4.1.2";
-            //initialize the R engine
-            if (rVersion == "3.5.3")
-            {
-                //NOTE installing all necessary packages for r 3.5.3 has become nearly impossible for the 'car' package
-                try
-                {
-                    StartREngine(rVersion, out engine);
-                }
-                catch (Exception e)
-                {
-                    StartREngine(rVersion, out engine, "x64");
-                }
-            }
-            else if(rVersion=="4.0.0")
-            {
-                try
-                {
-                    StartREngine(rVersion, out engine);
-                }
-                catch (Exception e)
-                {
-                    StartREngine(rVersion, out engine, "x64");
-                }
 
-            }
-            else if (rVersion == "4.1.2")
+            if (rVersion == "4.1.2")
             {
                 try
                 {
@@ -102,25 +78,6 @@ namespace CSharpBackendWithR
                         StartREngine(rVersion, out engine, "x64");
                     }
                     
-                }
-            }
-            else if (rVersion == "4.1.3")
-            {
-                try
-                {
-                    StartREngine(rVersion, out engine);
-                }
-                catch (Exception RSetupEnvironmentException)
-                {
-
-                    if (RSetupEnvironmentException.GetType().Name == "ArgumentException")
-                    {
-                        throw RSetupEnvironmentException;
-                    }
-                    else
-                    {
-                        StartREngine(rVersion, out engine, "x64");
-                    }
                 }
             }
             else
@@ -168,10 +125,7 @@ namespace CSharpBackendWithR
         {
             try
             {
-                //this.rEngine.Evaluate("assign(\".lib.loc\",'" + this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
-                //this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R_4.1_LibPath')");
-                this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R - 4.1.2/library')");
-                
+                this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R - 4.1.2/library')");   
             }
             catch
             {
@@ -306,8 +260,6 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("library(methods)");
                 this.rEngine.Evaluate("library(MASS)");
                 this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
-                                                             //this.rEngine.Evaluate("library(glmnet)"); //LICENSED UNDER GPLv2 only, may end up not using this
-                                                             //this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
                 //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0

@@ -13,4 +13,4 @@
 *.svg linguist-vendored
 *.txt linguist-vendored
 
-/* linguist-vendored
+/** linguist-vendored
