@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpBackendWithR", "CShar
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "POD4PointInstaller", "POD4PointInstaller\POD4PointInstaller.vdproj", "{4C06C04A-594A-4A2C-B3D3-16D15CF85DC3}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PODv4Point5Installer", "PODv4Point5Installer\PODv4Point5Installer.vdproj", "{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -615,6 +617,21 @@ Global
 		{4C06C04A-594A-4A2C-B3D3-16D15CF85DC3}.SingleImage|Any CPU.ActiveCfg = Debug
 		{4C06C04A-594A-4A2C-B3D3-16D15CF85DC3}.SingleImage|x64.ActiveCfg = Debug
 		{4C06C04A-594A-4A2C-B3D3-16D15CF85DC3}.SingleImage|x86.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.CD_ROM|Any CPU.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.CD_ROM|x64.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.CD_ROM|x86.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.Debug|Any CPU.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.Debug|x64.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.Debug|x86.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.DVD-5|Any CPU.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.DVD-5|x64.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.DVD-5|x86.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.Release|Any CPU.ActiveCfg = Release
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.Release|x64.ActiveCfg = Release
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.Release|x86.ActiveCfg = Release
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.SingleImage|Any CPU.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.SingleImage|x64.ActiveCfg = Debug
+		{B50AADD6-44BC-4A0A-B94E-3055E0272EC0}.SingleImage|x86.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
