@@ -1,0 +1,16 @@
+#### This file is used to exclude all of the file types in the main R program in order to prevent it from skewing the stats for PODv4.5
+*.html linguist-vendored
+*.htm linguist-vendored
+*.css linguist-vendored
+*.cpp linguist-vendored
+*.h linguist-vendored
+*.tex linguist-vendored
+*.sty linguist-vendored
+*.js linguist-vendored
+*.R linguist-vendored
+*.Rd linguist-vendored
+*.Rmd linguist-vendored
+*.svg linguist-vendored
+*.txt linguist-vendored
+
+/* linguist-vendored
