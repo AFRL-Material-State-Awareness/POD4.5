@@ -12,3 +12,5 @@
 /hooks/post-merge
 /hooks/post-commit
 /hooks/post-checkout
+/POD Source Code/PODv4Point5Installer/Release
+/POD Source Code/PODv4Point5Installer/Debug
