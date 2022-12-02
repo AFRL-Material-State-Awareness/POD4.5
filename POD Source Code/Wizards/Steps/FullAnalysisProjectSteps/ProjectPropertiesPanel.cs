@@ -286,6 +286,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             foreach (Analysis analysis in reverseList)
             {
+                if(analysis is RunAllAnalysis) { continue; }
                 if (!_graphsAndLabels.ContainsKey(analysis.Name))
                 {
                     var chart = new PODChart();
