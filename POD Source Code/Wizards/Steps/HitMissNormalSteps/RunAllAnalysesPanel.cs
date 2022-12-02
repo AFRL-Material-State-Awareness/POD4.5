@@ -25,6 +25,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             StepToolTip = new PODToolTip();
             
             InitializeComponent();
+            //podChart1.SetupChart();
         }
         private void CheckAnalysisType()
         {
@@ -79,20 +80,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             
             this.Invoke((MethodInvoker)delegate ()
             {
+                podChart1.InitSetupChart();
                 this.xTransformAll = bothTransformBoxes1.xTransformSelected;
                 if (_runAllAnalyses.AnalysisDataType == AnalysisDataTypeEnum.AHat)
                     this.yTransformAll = bothTransformBoxes1.yTransformSelected;
                 
-                podChart1.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart1, false), _runAllAnalyses.OverallFlawMin,
-                    _runAllAnalyses.OverallFlawMax, _runAllAnalyses.Data, this.xTransformAll, this.yTransformAll);
+                podChart1.SetXAxisWindow(_runAllAnalyses.OverallFlawMin, _runAllAnalyses.OverallFlawMax, _runAllAnalyses.OverallResponseMin, _runAllAnalyses.OverallResponseMax);
                 //var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
                 //var chart = podChart1;
                 //watch.Restart();
 
 
                 //watch.Stop();
-                //MessageBox.Show(xTrans.ConfIntervalType.ToString() + " " + yTrans.ConfIntervalType.ToString() + " " + watch.ElapsedMilliseconds + "ms");
-                //chart.FillChart();
+                podChart1.FillChartAll(_runAllAnalyses.PODTables);
                 //UpdateChartsWithCurrentView(chart);
                 podChart1.Update();
             });

@@ -155,7 +155,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             Project.RequestAnalyses(ref _currentAnalyses);
 
             UpdateProjectOverview();
-
+            //UpdatePODChartAll();
             UpdateDropLists();
 
             if (NeedsRefresh(Source))
@@ -176,7 +176,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             Invalidate();
         }
-
+        
         public bool HideProperties(bool doHide)
         {
             if(doHide)
@@ -447,7 +447,15 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             stopWatch.Stop();
         }
-
+        public void UpdatePODChartAll()
+        {
+            var chart = new PODChartAll();
+            List<string> myPOD = new List<string>();
+            myPOD.Add("pod");
+            List<string> myPODUnits = new List<string>();
+            myPODUnits.Add("");
+            chart.SetupChart("flaw", "", myPOD, myPODUnits);
+        }
         private void RemoveLabel(Label label, int index)
         {
             //remove zero panel

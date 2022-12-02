@@ -1062,6 +1062,14 @@ namespace POD
         public const string POD9095_All = "POD9095_All";
 
     }
+    public static class PODAllChartLabels
+    {
+        public const string POD = "POD90";
+        public const string POD9095 = "POD9095";
+        public const string POD_All = "POD90_All";
+        public const string POD9095_All = "POD9095_All";
+
+    }
 
     public static class PODThresholdChartLabels
     {
