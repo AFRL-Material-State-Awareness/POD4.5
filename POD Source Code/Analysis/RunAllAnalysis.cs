@@ -14,7 +14,7 @@ namespace POD.Analyze
         private string flawName;
         private AnalysisList allAnalyses;
         private List<DataTable> podTables;
-        private List<string> ResponseLabelNames;
+        private List<string> responseLabelNames;
         private double maxFlawSize;
         private double minFlawSize;
         private double maxReponseSize;
@@ -24,10 +24,13 @@ namespace POD.Analyze
             this.flawName = flawNameInput;
             this.allAnalyses = allAnalysesInput;
             this.podTables = new List<DataTable>();
+            this.responseLabelNames = new List<string>();
             this.maxFlawSize = -1;
             this.minFlawSize = Double.MaxValue;
             this.maxReponseSize = -1;
             this.minReponseSize = Double.MaxValue;
+            //get the reponse names from the analysis
+            GatherResponsesNames();
         }
         public void RunAllAnalyses()
         {
@@ -44,7 +47,6 @@ namespace POD.Analyze
                 //podTables.Add(analysis.Data.PodCurveTable);
                 while (analysis.IsAnalysisBusy) { Thread.Sleep(100); }
             }
-            var number = 0;
             foreach (Analysis analysis in this.allAnalyses)
             {
                 //analysis.RunAnalysis();
@@ -61,6 +63,17 @@ namespace POD.Analyze
         {
             //This will need to iterate through all the tab with analysis objects to add the 
             //appropriate transforms and/or model types
+        }
+        public void GatherResponsesNames()
+        {
+            foreach(Analysis analysis in this.allAnalyses)
+            {
+                if (analysis is RunAllAnalysis)
+                {
+                    continue;
+                }
+                responseLabelNames.Add(analysis.ResponseNames[0]);
+            }
         }
         private void GenerateMinMaxFlaws()
         {
@@ -101,6 +114,7 @@ namespace POD.Analyze
 
         }
         public List<DataTable> PODTables => this.podTables;
+        public List<string> ResponseNamesAll => this.responseLabelNames;
         public double OverallFlawMax => this.maxFlawSize;
         public double OverallFlawMin => this.minFlawSize;
         public double OverallResponseMin => this.minReponseSize;
