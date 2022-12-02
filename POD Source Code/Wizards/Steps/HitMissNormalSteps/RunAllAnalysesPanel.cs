@@ -80,7 +80,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             
             this.Invoke((MethodInvoker)delegate ()
             {
-                podChart1.InitSetupChart();
+                podChart1.InitSetupChart(_runAllAnalyses.PODTables.Count);
                 this.xTransformAll = bothTransformBoxes1.xTransformSelected;
                 if (_runAllAnalyses.AnalysisDataType == AnalysisDataTypeEnum.AHat)
                     this.yTransformAll = bothTransformBoxes1.yTransformSelected;

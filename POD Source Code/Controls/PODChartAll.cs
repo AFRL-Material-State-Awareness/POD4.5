@@ -17,13 +17,17 @@ namespace POD.Controls
             ChartAreas.Clear();
             Series.Clear();
         }
-        public void InitSetupChart()
+        public void InitSetupChart(int numOfAnalysis)
         {
             List<string> myPOD = new List<string>();
             myPOD.Add("pod");
             List<string> myPODUnits = new List<string>();
             myPODUnits.Add("");
             SetupChart("flaw", "", myPOD, myPODUnits);
+            for (int i =0; i<numOfAnalysis-1; i++)
+            {
+                AddSeries(i+2);
+            }
         }
         public override void SetupChart(string flawName, string flawUnit, List<string> responseNames, List<string> responseUnits)
         {
@@ -63,10 +67,23 @@ namespace POD.Controls
             XAxisUnit = flawUnit;
             ChartTitle = "POD Curve";
         }
-        public void FillChartAll(List<DataTable> myData)
+        public void AddSeries(int index)
         {
-            FillChart(myData[0], "flaw", "pod");
+            Series series;
+            //draw POD Line
+            Series.Add(new Series(PODAllChartLabels.POD));
+            series = Series.Last();
+            series.ChartType = SeriesChartType.Line;
+            series.MarkerStyle = MarkerStyle.None;
+            series.MarkerSize = 0;
+            series.IsXValueIndexed = false;
+            series.YValuesPerPoint = 1;
+            series.BorderWidth = 3;
+            series.Color = Color.FromArgb(ChartColors.LineAlpha, ChartColors.POD90Color);
+            series.BorderDashStyle = ChartDashStyle.Solid;
+            series.IsVisibleInLegend = false;
         }
+        
         public void SetXAxisRange(AxisObject myAxis,double minFlaw, double maxFlaw,AnalysisData data,  TransformTypeEnum xTrans, TransformTypeEnum yTrans,bool forceLinear = false, bool keepLabelCount = false,
             bool transformResidView = false)
         {
@@ -99,15 +116,24 @@ namespace POD.Controls
             YAxis.Maximum = responseMax + responseMax * .1;
             
         }
+        public void FillChartAll(List<DataTable> myData)
+        {
+            for(int i=0; i< myData.Count;i++)
+            {
+                FillChart(myData[0], "flaw", "pod", i);
 
-        public void FillChart(DataTable myTable, string my90X, string my90Y)
+            }
+
+        }
+        public void FillChart(DataTable myTable, string my90X, string my90Y, int index)
         {
             DataView view = myTable.DefaultView;
 
-            CurrPOD.Points.DataBindXY(view, my90X, view, my90Y);
-
+            Series[index].Points.DataBindXY(view, my90X, view, my90Y);
+            
             //POD9095.Points.DataBindXY(view, my95X, view, my95Y);
         }
+        /*
         public Series CurrPOD
         {
             get
@@ -115,5 +141,6 @@ namespace POD.Controls
                 return Series[PODAllChartLabels.POD];
             }
         }
+        */
     }
 }
