@@ -18,6 +18,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private BackgroundWorker _analysisLauncherAll;
         private TransformTypeEnum xTransformAll=TransformTypeEnum.Linear;
         private TransformTypeEnum yTransformAll=TransformTypeEnum.Linear;
+        private bool chartInitialized = false;
         //private PODChart _chart;
         public RunAllAnalysesPanel(PODToolTip tooltip)
             : base(tooltip)
@@ -25,7 +26,37 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             StepToolTip = new PODToolTip();
             
             InitializeComponent();
+            SetupNumericControlEvents();
             //podChart1.SetupChart();
+            //set default radio buttom to 'All POD curves'
+            radioButton2.Checked = true;
+            
+        }
+        private void SetupNumericControlEvents()
+        {
+            bothTransformBoxes1.xTransformBox.SelectedIndexChanged += TransformBox_ValueChanged;
+            bothTransformBoxes1.yTransformBox.SelectedIndexChanged += TransformBox_ValueChanged;
+        }
+        public void TransformBox_ValueChanged(object sender, EventArgs e)
+        {
+            _runAllAnalyses.IsBusy = true;
+            this.xTransformAll = bothTransformBoxes1.xTransformSelected;
+            if (_runAllAnalyses.AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                this.yTransformAll = bothTransformBoxes1.yTransformSelected;
+
+            RefreshValues();
+            /*
+            _runAllAnalyses.RunAllAnalyses(this.xTransformAll, this.yTransformAll);
+
+
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                podChart1.SetXAxisWindow(_runAllAnalyses.OverallFlawMin, _runAllAnalyses.OverallFlawMax, _runAllAnalyses.OverallResponseMin, _runAllAnalyses.OverallResponseMax);
+                podChart1.FillChartAll(_runAllAnalyses.PODTables);
+                //UpdateChartsWithCurrentView(chart);
+                podChart1.Update();
+            });
+            */
         }
         private void CheckAnalysisType()
         {
@@ -36,7 +67,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         }
         public override void RefreshValues()
         {
-            //base.RefreshValues();
+            ClearMetrics();
             SetupAnalysisLauncher();
             if (_analysisLauncherAll.IsBusy == false)
             {
@@ -75,22 +106,24 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
             _runAllAnalyses.IsBusy = true;
-            _runAllAnalyses.RunAllAnalyses();
-            
+            _runAllAnalyses.RunAllAnalyses(xTransformAll, yTransformAll);
+
             
             this.Invoke((MethodInvoker)delegate ()
             {
-                podChart1.ResponseNamesAll = _runAllAnalyses.ResponseNamesAll;
-                podChart1.InitSetupChart(_runAllAnalyses.PODTables.Count);
-                this.xTransformAll = bothTransformBoxes1.xTransformSelected;
-                if (_runAllAnalyses.AnalysisDataType == AnalysisDataTypeEnum.AHat)
-                    this.yTransformAll = bothTransformBoxes1.yTransformSelected;
-                
+                if (!chartInitialized)
+                {
+                    podChart1.ResponseNamesAll = _runAllAnalyses.ResponseNamesAll;
+                    podChart1.InitSetupChart(_runAllAnalyses.AnalysisCount);
+                    chartInitialized = true;
+                }               
                 podChart1.SetXAxisWindow(_runAllAnalyses.OverallFlawMin, _runAllAnalyses.OverallFlawMax, _runAllAnalyses.OverallResponseMin, _runAllAnalyses.OverallResponseMax);
                 podChart1.FillChartAll(_runAllAnalyses.PODTables);
                 //UpdateChartsWithCurrentView(chart);
                 podChart1.Update();
             });
+            _runAllAnalyses.IsBusy = false;
+            _runAllAnalyses.IsBusy = false;
         }
         private void Background_AnalysisProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -111,6 +144,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             //_updatingTransformResults = false;
 
             _runAllAnalyses.IsBusy = false;
+        }
+        private void ClearMetrics()
+        {
+            _runAllAnalyses.PODTables.Clear();
+            podChart1.Legends.Clear();
+            if(podChart1.Series.Count > 0)
+            {
+                for (int i = 0; i < _runAllAnalyses.AnalysisCount; i++)
+                {
+                    podChart1.Series[i].Points.Clear();
+                }
+            }
+            
         }
 
     }

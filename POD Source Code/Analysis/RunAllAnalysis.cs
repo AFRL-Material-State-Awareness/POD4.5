@@ -13,6 +13,7 @@ namespace POD.Analyze
     {
         private string flawName;
         private AnalysisList allAnalyses;
+        private int analysisCount;
         private List<DataTable> podTables;
         private List<string> responseLabelNames;
         private double maxFlawSize;
@@ -23,6 +24,8 @@ namespace POD.Analyze
         {
             this.flawName = flawNameInput;
             this.allAnalyses = allAnalysesInput;
+            // -1 is so that the RunAllAnalysisObject is excluded from the list
+            this.analysisCount = this.allAnalyses.Count;
             this.podTables = new List<DataTable>();
             this.responseLabelNames = new List<string>();
             this.maxFlawSize = -1;
@@ -32,7 +35,7 @@ namespace POD.Analyze
             //get the reponse names from the analysis
             GatherResponsesNames();
         }
-        public void RunAllAnalyses()
+        public void RunAllAnalyses(TransformTypeEnum xTransformAll, TransformTypeEnum yTransformAll)
         {
             UpdateTransformsAll();
             //this.allAnalyses.RemoveAt(this.allAnalyses.Count - 1);
@@ -43,6 +46,8 @@ namespace POD.Analyze
                     continue;
                 }
                 analysis.AnalysisCalculationType = RCalculationType.Full;
+                analysis.InFlawTransform = xTransformAll;
+                analysis.InResponseTransform= yTransformAll;
                 analysis.RunAnalysis();
                 //podTables.Add(analysis.Data.PodCurveTable);
                 while (analysis.IsAnalysisBusy) { Thread.Sleep(100); }
@@ -114,6 +119,7 @@ namespace POD.Analyze
 
         }
         public List<DataTable> PODTables => this.podTables;
+        public int AnalysisCount => this.analysisCount;
         public List<string> ResponseNamesAll => this.responseLabelNames;
         public double OverallFlawMax => this.maxFlawSize;
         public double OverallFlawMin => this.minFlawSize;

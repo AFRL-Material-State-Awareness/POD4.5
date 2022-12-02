@@ -54,15 +54,9 @@ namespace POD.Controls
                 series.Color = Color.FromArgb(ChartColors.LineAlpha, ChartColors.POD90Color);
                 series.BorderDashStyle = ChartDashStyle.Solid;
                 series.IsVisibleInLegend = false;
-                //series.YAxisType = AxisType.Primary;
             }
-
-
-
             ChartAreas[0].AxisY.MajorGrid.Enabled = false;
             ChartAreas[0].AxisX.MajorGrid.Enabled = false;
-
-            
 
             AutoNameYAxis = false;
             YAxisNameIsUnitlessConstant = true;
@@ -109,9 +103,7 @@ namespace POD.Controls
         {
             DataView view = myTable.DefaultView;
 
-            Series[index].Points.DataBindXY(view, my90X, view, my90Y);
-            
-            //POD9095.Points.DataBindXY(view, my95X, view, my95Y);
+            Series[index].Points.DataBindXY(view, my90X, view, my90Y);           
         }
         private void SetLegend()
         {
@@ -137,14 +129,5 @@ namespace POD.Controls
         {
             set { this.responseNamesLegend = value; }
         }
-        /*
-        public Series CurrPOD
-        {
-            get
-            {
-                return Series[PODAllChartLabels.POD];
-            }
-        }
-        */
     }
 }

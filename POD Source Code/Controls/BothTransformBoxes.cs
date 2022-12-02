@@ -24,6 +24,8 @@ namespace POD.Controls
         }
         public TransformTypeEnum xTransformSelected => transformBox1.SelectedTransform;
         public TransformTypeEnum yTransformSelected => transformBoxYHat1.SelectedTransform;
+        public TransformBox xTransformBox => transformBox1;
+        public TransformBoxYHat yTransformBox => transformBoxYHat1;
         public bool YTransformVisible
         {
             set {
