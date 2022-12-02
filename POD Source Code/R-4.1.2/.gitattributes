@@ -14,7 +14,7 @@
 *.txt linguist-vendored
 
 
-doc/manual/*.html linguist-vendored
+doc/manual/*.html linguist-vendored=false
 library/*.html linguist-vendored
 
 
