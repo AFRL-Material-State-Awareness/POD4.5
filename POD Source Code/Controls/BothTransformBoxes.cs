@@ -15,6 +15,12 @@ namespace POD.Controls
         public BothTransformBoxes()
         {
             InitializeComponent();
+            InitializeTransforms();
+        }
+        private void InitializeTransforms()
+        {
+            transformBox1.SelectedTransform = TransformTypeEnum.Linear;
+            transformBoxYHat1.SelectedTransform = TransformTypeEnum.Linear;
         }
         public TransformTypeEnum xTransformSelected => transformBox1.SelectedTransform;
         public TransformTypeEnum yTransformSelected => transformBoxYHat1.SelectedTransform;
