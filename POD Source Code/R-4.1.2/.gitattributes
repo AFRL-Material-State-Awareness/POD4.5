@@ -13,4 +13,9 @@
 *.svg linguist-vendored
 *.txt linguist-vendored
 
+
+POD Source Code/R-4.1.2/doc/manual/*.html linguist-vendored
+POD Source Code/R-4.1.2/library/** linguist-vendored
+
+
 /** linguist-vendored
