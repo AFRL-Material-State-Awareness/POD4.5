@@ -16,6 +16,7 @@ namespace POD.Controls
         {
             ChartAreas.Clear();
             Series.Clear();
+            //this.Palette = ChartColorPalette.Excel;
         }
         public void InitSetupChart(int numOfAnalysis)
         {
@@ -51,6 +52,7 @@ namespace POD.Controls
                 series.Color = Color.FromArgb(ChartColors.LineAlpha, ChartColors.POD90Color);
                 series.BorderDashStyle = ChartDashStyle.Solid;
                 series.IsVisibleInLegend = false;
+                //series.YAxisType = AxisType.Primary;
             }
 
 
@@ -69,9 +71,10 @@ namespace POD.Controls
         }
         public void AddSeries(int index)
         {
+            Random RandGen = new Random();
             Series series;
             //draw POD Line
-            Series.Add(new Series(PODAllChartLabels.POD));
+            Series.Add(new Series(PODAllChartLabels.POD+index.ToString()));
             series = Series.Last();
             series.ChartType = SeriesChartType.Line;
             series.MarkerStyle = MarkerStyle.None;
@@ -79,9 +82,10 @@ namespace POD.Controls
             series.IsXValueIndexed = false;
             series.YValuesPerPoint = 1;
             series.BorderWidth = 3;
-            series.Color = Color.FromArgb(ChartColors.LineAlpha, ChartColors.POD90Color);
+            series.Color = Color.FromArgb(RandGen.Next(40, 210), RandGen.Next(60, 245), RandGen.Next(50, 220));
             series.BorderDashStyle = ChartDashStyle.Solid;
             series.IsVisibleInLegend = false;
+            //series.YAxisType = AxisType.Secondary;
         }
         
         public void SetXAxisRange(AxisObject myAxis,double minFlaw, double maxFlaw,AnalysisData data,  TransformTypeEnum xTrans, TransformTypeEnum yTrans,bool forceLinear = false, bool keepLabelCount = false,
@@ -118,10 +122,11 @@ namespace POD.Controls
         }
         public void FillChartAll(List<DataTable> myData)
         {
-            for(int i=0; i< myData.Count;i++)
+            //FillChart(myData[0], "flaw", "pod", 0);
+            for (int i=0; i< myData.Count;i++)
             {
-                FillChart(myData[0], "flaw", "pod", i);
-
+                FillChart(myData[i], "flaw", "pod", i);
+                //FillChartMore(myData[0],"pod", i);
             }
 
         }
@@ -131,6 +136,14 @@ namespace POD.Controls
 
             Series[index].Points.DataBindXY(view, my90X, view, my90Y);
             
+            //POD9095.Points.DataBindXY(view, my95X, view, my95Y);
+        }
+        public void FillChartMore(DataTable myTable, string my90Y, int index)
+        {
+            DataView view = myTable.DefaultView;
+
+            Series[index].Points.DataBindY(view, my90Y);
+
             //POD9095.Points.DataBindXY(view, my95X, view, my95Y);
         }
         /*

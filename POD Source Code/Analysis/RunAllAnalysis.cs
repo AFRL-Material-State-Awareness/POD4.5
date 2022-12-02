@@ -14,6 +14,7 @@ namespace POD.Analyze
         private string flawName;
         private AnalysisList allAnalyses;
         private List<DataTable> podTables;
+        private List<string> ResponseLabelNames;
         private double maxFlawSize;
         private double minFlawSize;
         private double maxReponseSize;
