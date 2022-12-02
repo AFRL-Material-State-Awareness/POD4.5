@@ -14,8 +14,8 @@
 *.txt linguist-vendored
 
 
-/doc/manual/*.html linguist-vendored
-/library/*.html linguist-vendored
+doc/manual/*.html linguist-vendored
+library/*.html linguist-vendored
 
 
 /** linguist-vendored
