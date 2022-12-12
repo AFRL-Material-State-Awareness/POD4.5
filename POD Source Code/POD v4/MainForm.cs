@@ -1332,10 +1332,10 @@ namespace POD
             Process.Start(path);
         }
 
-        
-
-        
-
-        
+        private void licenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LicensingInfo form = new LicensingInfo();
+            form.ShowDialog();
+        }
     }
 }
