@@ -203,7 +203,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 //MessageBox.Show(warningSepMessage,"Separated Data Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
                 //        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 WarningTextBox.Text = warningSepMessage;
-                WarningTextBox.BackColor = Color.Red;
+                //WarningTextBox.BackColor = Color.Red;
             }
             else
             {
