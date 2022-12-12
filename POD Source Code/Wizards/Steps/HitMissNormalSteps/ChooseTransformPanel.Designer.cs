@@ -40,6 +40,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.graphLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ModelList = new POD.Controls.PODListBox();
+
+            this.dataGridViewTextBoxColumn31 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn29 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,6 +61,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.InputLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.XAxisTransformList = new POD.Controls.PODListBox();
+
+            this.dataGridViewTextBoxColumn32 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn30 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -187,6 +191,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.ModelList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ModelList.ColumnHeadersVisible = false;
             this.ModelList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+
+            this.dataGridViewTextBoxColumn31,
             this.dataGridViewTextBoxColumn29,
             this.dataGridViewTextBoxColumn27,
             this.dataGridViewTextBoxColumn25,
@@ -215,6 +221,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.ModelList.StandardTab = true;
             this.ModelList.TabIndex = 15;
             // 
+
+            // dataGridViewTextBoxColumn31
+            // 
+            this.dataGridViewTextBoxColumn31.Name = "dataGridViewTextBoxColumn31";
+            this.dataGridViewTextBoxColumn31.ReadOnly = true;
+            // 
+
             // dataGridViewTextBoxColumn29
             // 
             this.dataGridViewTextBoxColumn29.Name = "dataGridViewTextBoxColumn29";
@@ -338,6 +351,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.XAxisTransformList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.XAxisTransformList.ColumnHeadersVisible = false;
             this.XAxisTransformList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+
+            this.dataGridViewTextBoxColumn32,
             this.dataGridViewTextBoxColumn30,
             this.dataGridViewTextBoxColumn28,
             this.dataGridViewTextBoxColumn26,
@@ -365,6 +380,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.XAxisTransformList.Size = new System.Drawing.Size(209, 63);
             this.XAxisTransformList.StandardTab = true;
             this.XAxisTransformList.TabIndex = 14;
+            // 
+            // dataGridViewTextBoxColumn32
+            // 
+            this.dataGridViewTextBoxColumn32.Name = "dataGridViewTextBoxColumn32";
+            this.dataGridViewTextBoxColumn32.ReadOnly = true;
             // 
             // dataGridViewTextBoxColumn30
             // 
@@ -561,7 +581,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.WarningTextBox, 3);
-            this.WarningTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.WarningTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+
             this.WarningTextBox.Location = new System.Drawing.Point(3, 274);
             this.WarningTextBox.Name = "WarningTextBox";
             this.WarningTextBox.Size = new System.Drawing.Size(209, 206);
@@ -636,6 +657,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private RichTextBox WarningTextBox;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn29;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn30;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn31;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn32;
 
 
 

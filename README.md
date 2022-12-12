@@ -1,1 +1,1 @@
-POD4.5 is the new and improved version of PODv4 which incorporates advanced statistics and an r backend.
+PODv4.5 (Probability of Detection version 4.5) is the new and improved version of PODv4 which incorporates advanced statistics and an r backend. There have also been bug fixes related to the original PODv4.

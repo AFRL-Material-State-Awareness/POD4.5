@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class TransformBox : ComboBox
+    public partial class TransformBox : ComboBoxListEx
     {
         public TransformBox()
         {

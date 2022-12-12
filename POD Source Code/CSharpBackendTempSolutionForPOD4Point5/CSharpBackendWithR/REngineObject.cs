@@ -19,14 +19,24 @@ namespace CSharpBackendWithR
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
-            this.applicationPath=@"C:\Program Files\R";
+            //this.applicationPath=@"C:\Program Files\R";
+            this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\..";
             //this.applicationPath = @"C:\Users\gohmancm\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\R";
             //convert the application path to forward slashes (when using file paths in r)
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
-            //create variable for r engine
-            this.rEngine = initializeRDotNet();
+            try
+            {
+                //create variable for r engine
+                this.rEngine = initializeRDotNet();
+            }
+            catch
+            {
+                this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                this.rEngine = initializeRDotNet();
+            }
+            
             //set the path for the r libraries-used to aid the user in setting up the r backend
-            //SetLibraryPathEnv();
+            SetLibraryPathEnv();
 
             InitializeRLibraries();
             InitializeRScripts();
@@ -51,32 +61,8 @@ namespace CSharpBackendWithR
             
             REngine engine;
             string rVersion = "4.1.2";
-            //initialize the R engine
-            if (rVersion == "3.5.3")
-            {
-                //NOTE installing all necessary packages for r 3.5.3 has become nearly impossible for the 'car' package
-                try
-                {
-                    StartREngine(rVersion, out engine);
-                }
-                catch (Exception e)
-                {
-                    StartREngine(rVersion, out engine, "x64");
-                }
-            }
-            else if(rVersion=="4.0.0")
-            {
-                try
-                {
-                    StartREngine(rVersion, out engine);
-                }
-                catch (Exception e)
-                {
-                    StartREngine(rVersion, out engine, "x64");
-                }
 
-            }
-            else if (rVersion == "4.1.2")
+            if (rVersion == "4.1.2")
             {
                 try
                 {
@@ -92,25 +78,6 @@ namespace CSharpBackendWithR
                         StartREngine(rVersion, out engine, "x64");
                     }
                     
-                }
-            }
-            else if (rVersion == "4.1.3")
-            {
-                try
-                {
-                    StartREngine(rVersion, out engine);
-                }
-                catch (Exception RSetupEnvironmentException)
-                {
-
-                    if (RSetupEnvironmentException.GetType().Name == "ArgumentException")
-                    {
-                        throw RSetupEnvironmentException;
-                    }
-                    else
-                    {
-                        StartREngine(rVersion, out engine, "x64");
-                    }
                 }
             }
             else
@@ -158,12 +125,12 @@ namespace CSharpBackendWithR
         {
             try
             {
-                this.rEngine.Evaluate("assign(\".lib.loc\",'" + this.forwardSlashAppPath + "/RLibs/win-library/3.5')" + "', envir = environment(.libPaths))");
+                this.rEngine.Evaluate(".libPaths('" + this.forwardSlashAppPath + "/R - 4.1.2/library')");   
             }
             catch
             {
                 this.forwardSlashAppPath = this.forwardSlashAppPath + "/..";
-                this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/RLibs/win-library/3.5')" + "', envir = environment(.libPaths))");
+                this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
             }
         }
 
@@ -243,11 +210,6 @@ namespace CSharpBackendWithR
                     }
                 }
             }
-
-
-
-
-
         }
         //replace and debug with this later in order to make code more compact
         private void EvaluateRScripts(ref bool scriptsLoaded)
@@ -298,11 +260,9 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("library(methods)");
                 this.rEngine.Evaluate("library(MASS)");
                 this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
-                                                             //this.rEngine.Evaluate("library(glmnet)"); //LICENSED UNDER GPLv2 only, may end up not using this
-                                                             //this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
-                this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
+                //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
                 //this.rEngine.Evaluate("print(packageVersion('reticulate'))");
                 //the following libraries are used for signal response
                 this.rEngine.Evaluate("library(gridExtra)");
@@ -314,7 +274,14 @@ namespace CSharpBackendWithR
                 //temporary
                 this.rEngine.Evaluate("library(ggResidpanel)");
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(corrplot))");
-                this.rEngine.Evaluate("library(roxygen2)");
+                try
+                {
+                    this.rEngine.Evaluate("library(roxygen2)");
+                }
+                catch
+                {
+                    this.rEngine.Evaluate("library.dynam('roxygen2', 'roxygen2', lib.loc = '"+this.applicationPath+"/R_4.1_LibPath')");
+                }
             }
             catch(Exception failedLibrariesLoad)
             {

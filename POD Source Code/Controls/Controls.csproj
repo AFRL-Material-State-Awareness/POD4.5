@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86.v8-xfa.props" Condition="Exists('..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86.v8-xfa.props')" />
+  <Import Project="..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props" Condition="Exists('..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,6 +14,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +57,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
+    </Reference>
     <Reference Include="Spire.PdfViewer.Forms">
       <HintPath>..\Spire\Spire.PdfViewer.Forms.dll</HintPath>
     </Reference>
@@ -84,27 +91,28 @@
       <DependentUpon>BothTransformBoxes.cs</DependentUpon>
     </Compile>
     <Compile Include="CellTag.cs" />
+    <Compile Include="ComboBoxListEx.cs" />
     <Compile Include="ColorMap.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
     </Compile>
+
     <Compile Include="PODChartAll.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SamplingTypeBox.cs">
+    <Compile Include="PODPdfiumViewer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SamplingTypeBox.cs" />
     <Compile Include="SamplingTypeBox.Designer.cs">
       <DependentUpon>SamplingTypeBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ContextMenuStripConnected.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ConfidenceBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ConfidenceBox.cs" />
     <Compile Include="ConfidenceBox.Designer.cs">
       <DependentUpon>ConfidenceBox.cs</DependentUpon>
     </Compile>
@@ -119,9 +127,6 @@
       <DependentUpon>OverviewChart.cs</DependentUpon>
     </Compile>
     <Compile Include="PODFlowLayoutPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="PODPdfViewer.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PODToolTip.cs">
@@ -192,9 +197,7 @@
     <Compile Include="MixedCheckBoxesTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PFModelBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PFModelBox.cs" />
     <Compile Include="PFModelBox.Designer.cs">
       <DependentUpon>PFModelBox.cs</DependentUpon>
     </Compile>
@@ -312,9 +315,7 @@
     <Compile Include="TransformBoxYHat.Designer.cs">
       <DependentUpon>TransformBoxYHat.cs</DependentUpon>
     </Compile>
-    <Compile Include="TransformBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="TransformBox.cs" />
     <Compile Include="TransformBox.Designer.cs">
       <DependentUpon>TransformBox.cs</DependentUpon>
     </Compile>
@@ -348,6 +349,7 @@
     <EmbeddedResource Include="OverviewChart.resx">
       <DependentUpon>OverviewChart.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\licenses.licx" />
     <EmbeddedResource Include="QuickDataGridView.resx">
       <DependentUpon>QuickDataGridView.cs</DependentUpon>
@@ -423,6 +425,13 @@
     <None Include="Resources\Delete Row.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props'))" />
+    <Error Condition="!Exists('..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86.v8-xfa.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86.v8-xfa.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

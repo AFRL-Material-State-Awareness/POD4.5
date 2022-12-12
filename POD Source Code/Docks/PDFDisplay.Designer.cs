@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PDFDisplay));
-            this.podPdfViewer1 = new POD.Controls.PODPdfViewer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnZoomOut = new System.Windows.Forms.ToolStripButton();
             this.btnZoonIn = new System.Windows.Forms.ToolStripButton();
@@ -44,6 +43,7 @@
             this.btnLrgMntr = new System.Windows.Forms.ToolStripButton();
             this.RtnToAnlysBtn = new System.Windows.Forms.ToolStripButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.pdfiumViewer = new POD.Controls.PODPdfiumViewer();
             ((System.ComponentModel.ISupportInitialize)(this._blendBox)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -51,23 +51,6 @@
             // _blendBox
             // 
             this._blendBox.Size = new System.Drawing.Size(876, 684);
-            // 
-            // podPdfViewer1
-            // 
-            this.podPdfViewer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.podPdfViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.podPdfViewer1.Location = new System.Drawing.Point(0, 25);
-            this.podPdfViewer1.MultiPagesThreshold = 60;
-            this.podPdfViewer1.Name = "podPdfViewer1";
-            this.podPdfViewer1.PdfFileName = null;
-            this.podPdfViewer1.Size = new System.Drawing.Size(876, 659);
-            this.podPdfViewer1.TabIndex = 0;
-            this.podPdfViewer1.Text = "podPdfViewer1";
-            this.podPdfViewer1.Threshold = 60;
-            this.toolTip1.SetToolTip(this.podPdfViewer1, "Double click to switch back analysis/project.");
-            this.podPdfViewer1.ZoomMode = Spire.PdfViewer.Forms.ZoomMode.FitWidth;
-            this.podPdfViewer1.Click += new System.EventHandler(this.podPdfViewer1_Click);
-            this.podPdfViewer1.DoubleClick += new System.EventHandler(this.pdf_DoubleClick);
             // 
             // toolStrip1
             // 
@@ -99,7 +82,7 @@
             this.btnZoomOut.Name = "btnZoomOut";
             this.btnZoomOut.Size = new System.Drawing.Size(23, 22);
             this.btnZoomOut.Text = "Zoom Out";
-            this.btnZoomOut.ToolTipText = "Zoom Out ";
+            this.btnZoomOut.ToolTipText = "Zoom In";
             // 
             // btnZoonIn
             // 
@@ -109,7 +92,7 @@
             this.btnZoonIn.Name = "btnZoonIn";
             this.btnZoonIn.Size = new System.Drawing.Size(23, 22);
             this.btnZoonIn.Text = "ZoonIn";
-            this.btnZoonIn.ToolTipText = "Zoon In ";
+            this.btnZoonIn.ToolTipText = "Zoom Out";
             // 
             // btnDynamic
             // 
@@ -197,12 +180,27 @@
             this.RtnToAnlysBtn.Text = "Return to Analysis (Double Click PDF)";
             this.RtnToAnlysBtn.Click += new System.EventHandler(this.RtnToAnlysBtn_Click);
             // 
+            // pdfiumViewer
+            // 
+            this.pdfiumViewer.BackColor = System.Drawing.Color.SlateGray;
+            this.pdfiumViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pdfiumViewer.Location = new System.Drawing.Point(0, 25);
+            this.pdfiumViewer.Name = "pdfiumViewer";
+            this.pdfiumViewer.Page = 0;
+            this.pdfiumViewer.PdfFileName = null;
+            this.pdfiumViewer.Rotation = PdfiumViewer.PdfRotation.Rotate0;
+            this.pdfiumViewer.Size = new System.Drawing.Size(876, 659);
+            this.pdfiumViewer.TabIndex = 3;
+            this.pdfiumViewer.Text = "podPdfiumViewer1";
+            this.toolTip1.SetToolTip(this.pdfiumViewer, "Double click to switch back analysis/project.");
+            this.pdfiumViewer.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitWidth;
+            // 
             // PDFDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(876, 684);
-            this.Controls.Add(this.podPdfViewer1);
+            this.Controls.Add(this.pdfiumViewer);
             this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -211,7 +209,7 @@
             this.Text = "1823A Help Viewer";
             this.Controls.SetChildIndex(this._blendBox, 0);
             this.Controls.SetChildIndex(this.toolStrip1, 0);
-            this.Controls.SetChildIndex(this.podPdfViewer1, 0);
+            this.Controls.SetChildIndex(this.pdfiumViewer, 0);
             ((System.ComponentModel.ISupportInitialize)(this._blendBox)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -221,8 +219,6 @@
         }
 
         #endregion
-
-        private Controls.PODPdfViewer podPdfViewer1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btnZoomOut;
         private System.Windows.Forms.ToolStripButton btnZoonIn;
@@ -236,7 +232,6 @@
         private System.Windows.Forms.ToolStripButton btnSmllMntr;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripButton RtnToAnlysBtn;
-
-
+        private Controls.PODPdfiumViewer pdfiumViewer;
     }
 }

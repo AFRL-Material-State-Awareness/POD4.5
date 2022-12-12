@@ -21,12 +21,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
     {
         private TransformBox _xTransformBox;
         private Label _xTransformLabel;
-
+        
         private ConfidenceBox _confIntBox;
         private Label _confIntLabel;
 
         private SamplingTypeBox _sampleTypeBox;
         private Label _sampleTypeLabel;
+
+        //rich text box used to give the user helpful hints with the Analysis
+        private RichTextBox _helpfulRTF;
         //use to keep track of the previously selected confidence interval
         private ConfidenceIntervalTypeEnum previousConfInt= ConfidenceIntervalTypeEnum.StandardWald;
         //flags used to prevent the analysis from running again if the user selects NO
@@ -119,7 +122,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         protected override void AddOutputControls()
         {
             base.AddOutputControls();
-
+            PrepareRichTextBox();
             var list = new List<Control> { PodModelParametersHeader,
                                            a50label, a50Out,
                                            a90Label, a90Out,
@@ -134,7 +137,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                                            TestOfAssumptionsHeader,
                                            lackOfFitTestLabel, likelihoodRatioTestOut,
-                                           TestColorMap};
+                                           TestColorMap, 
+                                           _helpfulRTF};
 
             foreach (Control control in list)
             {
@@ -233,6 +237,41 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             PrepareLabelBoxPairSamplingType(ref _sampleTypeLabel, "Sampling Type", ref _sampleTypeBox);
             _sampleTypeBox.SelectedIndex = 0;
         }
+        public void PrepareRichTextBox()
+        {
+            _helpfulRTF = new RichTextBox();
+            _helpfulRTF.Text = "This text box displays information about transform types, confidence intervals, sampling types, and more!";
+            //_helpfulRTF.Width = 209;
+            _helpfulRTF.Height = 250;
+            _helpfulRTF.RightMargin = 0;
+            _helpfulRTF.ReadOnly = true;
+            RightControlsTablePanel.SetColumnSpan(_helpfulRTF, 2);
+            //RightControlsTablePanel.add
+            //_helpfulRTF.Layout
+            _helpfulRTF.Font = new Font("Microsoft Sans Serif", 12.0f);
+            //_helpfulRTF.Focus
+            colorTextInHelpfulRTF();
+            //_helpfulRTF.Size = "auto";
+        }
+        private void DefaultRTFMessage()
+        {
+            _helpfulRTF.Text = "This text box displays information about transform types, confidence intervals, sampling types, and more!";
+            _helpfulRTF.SelectAll();
+            _helpfulRTF.SelectionColor = Color.DarkGray;
+            _helpfulRTF.DeselectAll();
+        }
+        private void colorTextInHelpfulRTF()
+        {
+            _helpfulRTF.SelectAll();
+            _helpfulRTF.SelectionColor = Color.DarkGray;
+            _helpfulRTF.DeselectAll();
+        }
+        private void colorBackTextInHelpfulRTF()
+        {
+            _helpfulRTF.SelectAll();
+            _helpfulRTF.SelectionColor = Color.Black;
+            _helpfulRTF.DeselectAll();
+        }
         /// <summary>
         /// Sets up event handling for right side numeric controls. Only call after InitializeComponent().
         /// </summary>
@@ -241,9 +280,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             aMaxControl.NumericUpDown.ValueChanged += this.aMaxControl_ValueChanged;
             aMinControl.NumericUpDown.ValueChanged += this.aMinControl_ValueChanged;
             _xTransformBox.SelectedIndexChanged += XTransformBox_ValueChanged;
+            _xTransformBox.ListItemSelectionChanged += XTransformBox_Mousehover;
             ModelBox.SelectedIndexChanged += ModelBox_ValueChanged;
-            _confIntBox.SelectedIndexChanged += ConfIntBox_ValueChanged;
+            ModelBox.ListItemSelectionChanged += ModelBox_Mousehover;
+            _confIntBox.SelectedIndexChanged += ConfIntBox_ValueChanged; 
+            _confIntBox.ListItemSelectionChanged += ConfIntBox_Mousehover;
             _sampleTypeBox.SelectedIndexChanged += SamplingTypeBox_ValueChanged;
+            _sampleTypeBox.ListItemSelectionChanged += SamplingTypeBox_Mousehover;
+
+
         }
        
         private void XTransformBox_ValueChanged(object sender, EventArgs e)
@@ -265,6 +310,27 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             ForceUpdateAfterTransformChange();
         }
+        private void XTransformBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
+        {
+            _helpfulRTF.Text = " ";
+            colorBackTextInHelpfulRTF();
+            switch (e.ItemIndex)
+            {
+                case 0:
+                    _helpfulRTF.Text = "Perform a linear transform on the flaws (i.e. no transform).";
+                    break;
+                case 1:
+                    _helpfulRTF.Text = "Perform a log (base e) transform on the flaws.";
+                    break;
+                case 2:
+                    _helpfulRTF.Text = "Perform an inverse (1/x) transform on the flaws.";
+                    break;
+                default:
+                    DefaultRTFMessage();
+                    break;
+
+            }
+        }
 
         private void ModelBox_ValueChanged(object sender, EventArgs e)
         {
@@ -276,6 +342,27 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             mainChart.SetAMinBoundary(x, false);
 
             ForceUpdateAfterTransformChange();
+        }
+        private void ModelBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
+        {
+            _helpfulRTF.Text = " ";
+            colorBackTextInHelpfulRTF();
+            switch (e.ItemIndex)
+            {
+                case 0:
+                    _helpfulRTF.Text = "Calculate the POD curve using traditional logistic regression. This algorithm uses an iterative re-weighted " +
+                        "least squares algorithm until convergence is found.";
+                    break;
+                case 1:
+                    _helpfulRTF.Text = "Calculate the POD curve using Firth's bias reduction. This is an alternative to traditional logistic regression that " +
+                        "utilizes a penalized likelihood approach. This is especially useful for handling separated data and/or rare events where traditional" +
+                        "logistic regression does not converge.";
+                    break;
+                default:
+                    DefaultRTFMessage();
+                    break;
+
+            }
         }
 
         private void ConfIntBox_ValueChanged(object sender, EventArgs e)
@@ -304,6 +391,34 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             previousConfInt = _confIntBox.SelectedConfInt;
         }
+        private void ConfIntBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
+        {
+            _helpfulRTF.Text = " ";
+            colorBackTextInHelpfulRTF();
+            switch (e.ItemIndex)
+            {
+
+                case 0:
+                    _helpfulRTF.Text = "Performs a standard wald 95% confidence interval on the POD curve. This is the defualt option.";
+                    break;
+                case 1:
+                    _helpfulRTF.Text = "Performs modified wald confidence interval. Calculated the same way as standard wald, but first generates " +
+                        "normally distributed crack sizes to address smoothing issues with the confidence interval curve when linear interpolating.";
+                    break;
+                case 2:
+                    _helpfulRTF.Text = "Performs a likelihood ratio confidence interval. This is the theoretically correct way to calculate the confidence " +
+                        "interval when dealing with binomial data. It is compuational intense optimization that takes around 5-10 seconds to run. ";
+                    break;
+                case 3:
+                    _helpfulRTF.Text = "Performs a modified likelihood ratio confidence interval. Similar to the likelihood ratio confidence interval " +
+                        "except that it uses higher order approximation to deal with potential smoothing issues. It is compuational intense optimization that takes around 10-15 seconds to run. ";
+                    break;
+                default:
+                    DefaultRTFMessage();
+                    break;
+
+            }
+        }
 
         private void SamplingTypeBox_ValueChanged(object sender, EventArgs e)
         {
@@ -329,6 +444,26 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             {
                 noSamplingRepeat = true;
                 _sampleTypeBox.SelectedSamplingType = SamplingTypeEnum.SimpleRandomSampling;
+            }
+        }
+        private void SamplingTypeBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
+        {
+            _helpfulRTF.Text = " ";
+            colorBackTextInHelpfulRTF();
+            switch (e.ItemIndex)
+            {
+                case 0:
+                    _helpfulRTF.Text = "Performs a HitMiss Analysis using simple random sampling (i.e. the data 'as is')";
+                    break;
+                case 1:
+                    _helpfulRTF.Text = "Performes a HitMiss Analysis using ranked set sampling. Ranked set sampling is an alternative to " +
+                        "simple random sampling in which a certain number of 'resamples' are generated (30 by default) using ranked set sampling techniques " +
+                        "(see manual for more information). This metric is especially useful when the original dataset has a relatively small sample size";
+                    break;
+                default:
+                    _helpfulRTF.Text = "This text box displays information about transform types, confidence intervals, sampling types, and more!";
+                    break;
+
             }
         }
         public DialogResult CheckLongRuntime()

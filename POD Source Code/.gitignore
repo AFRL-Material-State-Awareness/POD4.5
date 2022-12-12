@@ -2,4 +2,5 @@
 *.user
 _ReSharper.*
 bin
+!R-4.1.2/bin
 obj

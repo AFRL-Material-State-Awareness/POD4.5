@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Spire.PdfViewer.Forms;
-
+using PdfiumViewer;
 namespace POD.Docks
 {
     public delegate void SwitchHelpViewHandler(object sender, HelpView view);
@@ -23,7 +22,7 @@ namespace POD.Docks
         public SwitchHelpViewHandler SwitchHelpView = null;
         [NonSerialized]
         public EventHandler SwitchBack = null;
-
+        //private Controls.PODPdfiumViewer pdfiumViewer;
         public PDFDisplay(string name)
         {
             InitializeComponent();
@@ -34,18 +33,24 @@ namespace POD.Docks
             AutoScroll = true;
             HideOnClose = true;
             Load += PDFDisplay_Load;
-        }
 
+            PdfiumViwerInitialize();
+        }
+        void PdfiumViwerInitialize()
+        {
+            this.Controls.SetChildIndex(this.pdfiumViewer, 0);
+            
+        }
         void PDFDisplay_Load(object sender, EventArgs e)
         {
           
             //pdfDocumentViewer mouseWheel event
 
-            podPdfViewer1.MouseWheel += new MouseEventHandler(this.podPdfViewer1_MouseWheel);
-            podPdfViewer1.LostFocus += new EventHandler(this.podPdfViewer1_LostFocus);
-
-            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
-            this.btnZoonIn.Click += new System.EventHandler(this.btnZoonIn_Click);
+            pdfiumViewer.MouseWheel += new MouseEventHandler(this.podPdfViewer1_MouseWheel);
+            pdfiumViewer.LostFocus += new EventHandler(this.podPdfViewer1_LostFocus);
+            //pdfiumViewer.Scroll += PdfiumViewer_Scroll;
+            this.btnZoomOut.Click += new System.EventHandler(this.bttnZoomIn_Click);
+            this.btnZoonIn.Click += new System.EventHandler(this.bttnZoomInOut_Click);
             this.btnDynamic.Click += new System.EventHandler(this.btnDynamic_Click);
             this.btnActural.Click += new System.EventHandler(this.btnActural_Click);
             this.btnFitPage.Click += new System.EventHandler(this.btnFitPage_Click);
@@ -54,6 +59,11 @@ namespace POD.Docks
             this.btnLrgMntr.Click += new System.EventHandler(this.btnLrgMntr_Click);
             this.btnSmllMntr.Click += new System.EventHandler(this.btnSmllMntr_Click);
 
+        }
+
+        private void PdfiumViewer_Scroll(object sender, ScrollEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void btnSmllMntr_Click(object sender, EventArgs e)
@@ -93,38 +103,38 @@ namespace POD.Docks
         {
             set
             {
-                podPdfViewer1.PdfFileName = value;
-
-                
+                pdfiumViewer.PdfFileName = value;
             }
         }
 
         internal void OpenBookmark(List<string> path)
         {
-            if(podPdfViewer1.OpenPDF())
+            if (pdfiumViewer.OpenPDF())
                 btnFitWidth.PerformClick();
 
-
-
-            var bookmarks = podPdfViewer1.GetBookmarkContainer();
-
+            var bookmarks = pdfiumViewer.Bookmarks;
             int index = 0;
-
-            foreach (PdfDocumentBookmark bookmark in bookmarks.Childs)
+            
+            foreach (PdfBookmark bookmark in bookmarks)
             {
-                if (bookmark.Title.Trim() == path[index])
+                string checkString = path[index];
+                if (checkString.Contains("\u0085"))
+                {
+                    checkString=path[index].Replace("\u0085", "–");
+                }
+                if (bookmark.Title.Trim() == checkString)
                 {
                     if (index < path.Count - 1)
                     {
                         var finalBookamrk = ProcessBookmark(bookmark, path, ++index);
 
                         //finalBookamrk.Destination.Locaton = new PointF(1440.3F, 660.0F);
-
-                        podPdfViewer1.GoToBookmark(finalBookamrk);
+                        
+                        pdfiumViewer.Page = finalBookamrk.PageIndex;
                     }
                     else
                     {
-                        podPdfViewer1.GoToBookmark(bookmark);
+                        pdfiumViewer.Page = bookmark.PageIndex;
                     }
                     break;
                 }
@@ -133,12 +143,12 @@ namespace POD.Docks
 
         public void OpenSimplePDF()
         {
-            podPdfViewer1.OpenPDF();
+            pdfiumViewer.OpenPDF();
         }
 
-        private PdfDocumentBookmark ProcessBookmark(PdfDocumentBookmark bookmark, List<string> path, int index)
+        private PdfBookmark ProcessBookmark(PdfBookmark bookmark, List<string> path, int index)
         {
-            foreach (PdfDocumentBookmark childMark in bookmark.Children)
+            foreach (PdfBookmark childMark in bookmark.Children)
             {
                 if (childMark.Title.Trim() == path[index] || childMark.Title.Trim() == ("ColorFound" + path[index]))
                 {
@@ -209,44 +219,34 @@ namespace POD.Docks
 
                 if (this._zoom < 0)
                     this._zoom = 0;
-                this.podPdfViewer1.ZoomTo(this._zoom);
+                pdfiumViewer.Zoom=this._zoom;
             }
-            //else
-            //{
-            //    int wheelValue = -(Int32)args.Delta / 12;
-            //    this._zoom += wheelValue;
-            //    if (this._zoom < 0)
-            //        this._zoom = 0;
-            //   // MessageBox.Show(this._zoom.ToString());
-            //    this.podPdfViewer1.ZoomTo(this._zoom);
-            //}
-
-
-
         }
 
-        private void btnZoomOut_Click(object sender, EventArgs e)
+        private void bttnZoomIn_Click(object sender, EventArgs e)
         {
-            if (this.podPdfViewer1.PageCount > 0)
+            if (this.pdfiumViewer.PageCount > 0)
             {
                 int delta = 10;
                 this._zoom += delta;
-                this.podPdfViewer1.ZoomTo(this._zoom);
+                //pdfiumViewer.Zoom = this._zoom;
+                
+                pdfiumViewer.ZoomIn();
             }
 
             ClickForSibling(sender as ToolStripItem);
             _synced = false;
         }
 
-        private void btnZoonIn_Click(object sender, EventArgs e)
+        private void bttnZoomInOut_Click(object sender, EventArgs e)
         {
-            if (this.podPdfViewer1.PageCount > 0)
+            if (this.pdfiumViewer.PageCount > 0)
             {
                 int delta = 5;
                 this._zoom -= delta;
                 if (this._zoom < 0)
                     this._zoom = 0;
-                this.podPdfViewer1.ZoomTo(this._zoom);
+                pdfiumViewer.ZoomOut();
             }
 
             ClickForSibling(sender as ToolStripItem);
@@ -255,13 +255,14 @@ namespace POD.Docks
 
         private void btnActural_Click(object sender, EventArgs e)
         {
-            this._zoom = 100;
+            double fullZoom = 1.0;
             this._isZoomDynamic = false;
             this.btnDynamic.Text = "Zoom Dynamic";
-
-            if (this.podPdfViewer1.PageCount > 0)
+            if (this.pdfiumViewer.PageCount > 0)
             {
-                this.podPdfViewer1.ZoomTo(100);
+                pdfiumViewer.Zoom = fullZoom;
+                
+                //pdfiumViewer.ZoomMode = PdfViewerZoomMode.
             }
 
             ClickForSibling(sender as ToolStripItem);
@@ -272,22 +273,22 @@ namespace POD.Docks
 
         private void btnFitPage_Click(object sender, EventArgs e)
         {
-            if (this.podPdfViewer1.PageCount > 0)
+            if (this.pdfiumViewer.PageCount > 0)
             {
-                this.podPdfViewer1.ZoomTo(ZoomMode.FitPage);
+                this.pdfiumViewer.ZoomMode = PdfViewerZoomMode.FitBest;
+                this.pdfiumViewer.OpenPDF();
             }
-
             ClickForSibling(sender as ToolStripItem);
             _synced = false;
         }
 
         private void btnFitWidth_Click(object sender, EventArgs e)
         {
-            if (this.podPdfViewer1.PageCount > 0)
+            if (this.pdfiumViewer.PageCount > 0)
             {
-                this.podPdfViewer1.ZoomTo(ZoomMode.FitWidth);
-            }
+                this.pdfiumViewer.ZoomMode = PdfViewerZoomMode.FitWidth;
 
+            }
             ClickForSibling(sender as ToolStripItem);
             _synced = false;
         }

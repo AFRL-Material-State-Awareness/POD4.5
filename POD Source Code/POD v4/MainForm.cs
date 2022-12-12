@@ -82,9 +82,9 @@ namespace POD
         void MainForm_Load(object loadSender, EventArgs loadE)
         {
 
-            var pdf = new Controls.PODPdfViewer();
+            //var pdf = new Controls.PODPdfViewer();
 
-            pdf.Dispose();
+            //pdf.Dispose();
 
             _controller = new WizardController();           
 
@@ -1332,10 +1332,10 @@ namespace POD
             Process.Start(path);
         }
 
-        
-
-        
-
-        
+        private void licenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LicensingInfo form = new LicensingInfo();
+            form.ShowDialog();
+        }
     }
 }

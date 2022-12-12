@@ -9,13 +9,19 @@ library(splines)
 library(parallel)
 library(roxygen2)
 library(xlsx)
-#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
+hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Good.csv")
+hitMissDF<-
+  data.frame(
+    Index=hitMissDF$Index,
+    x=hitMissDF$x,
+    y=hitMissDF$Inspector1
+  )
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 #hitMissDF$x<-1/hitMissDF$x
 #hitMissDF$y.1=NULL
 #hitMissDF[1,3]=1.5
-hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
+#hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
 hitMissDF<-hitMissDF[ , colSums(is.na(hitMissDF))==0]
 #hitMissDF$x= 1/hitMissDF$x
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
@@ -44,13 +50,13 @@ if(transformType==2){
 }else{
   isLog=FALSE
 }
-names(hitMissDF)[names(hitMissDF) == 'IN.1.HM'] <- 'y'
+#names(hitMissDF)[names(hitMissDF) == 'IN.1.HM'] <- 'y'
 #hitMissDF<-subset(hitMissDF, select = c(Index, x, Inspector1, Inspector2))
 #names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
-CItype0="MLR"
+CItype0="StandardWald"
 #CHOOSE MODEL TYPE(comment out the one you don't want)
-type="Firth Logistic Regression"
-#type="Logistic Regression"
+#type="Firth Logistic Regression"
+type="Logistic Regression"
 #begin analysis
 
 oneInspector=function(){
@@ -102,9 +108,9 @@ MultipleInspectors=function(){
 }
 
 begin=Sys.time()
-#oneInspector()
-MultipleInspectors()
-WriteOutResultsMuliple_POD(results)
+oneInspector()
+#MultipleInspectors()
+#WriteOutResultsMuliple_POD(results)
 #WriteOutResultsMuliple_Confidence(results)
 end=Sys.time()
 print("execution time")
@@ -122,5 +128,5 @@ filename= 'C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/myExcelOutput.xlsx'
 
 
 
-outputToExcel_HM()
+#outputToExcel_HM()
 

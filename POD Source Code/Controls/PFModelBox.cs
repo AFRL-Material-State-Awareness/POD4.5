@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class PFModelBox : ComboBox
+    public partial class PFModelBox : ComboBoxListEx
     {
         public PFModelBox()
         {

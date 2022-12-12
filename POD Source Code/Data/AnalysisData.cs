@@ -183,11 +183,6 @@ namespace POD.Data
         private IPy4C _python;
 
         /// <summary>
-        /// Reference to the CPodDoc Python class
-        /// </summary>
-        //[NonSerialized]
-        //private dynamic _podDoc;
-        /// <summary>
         /// RDotEngineObjectInstance
         /// </summary>
         [NonSerialized]
@@ -1248,7 +1243,7 @@ namespace POD.Data
         private void TransformData(DataTable mySourceTable, ref DataTable myTransformTable,
                                    TransformTypeEnum myTransformType, string myCustomEquation)
         {
-            if ((/*_podDoc != null*/ _hmAnalysisObject != null || _aHatAnalysisObject != null) && _python != null)
+            if ((_hmAnalysisObject != null || _aHatAnalysisObject != null) && _python != null)
             {
                 myTransformTable = mySourceTable.DefaultView.ToTable();
 
@@ -1695,6 +1690,18 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
             }
+            try
+            {
+                _residualPartialCensoredTable = _hmAnalysisObject.ResidualTable;
+                _residualPartialCensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
+                if (printDTFlag)
+                    printDT(_residualPartialCensoredTable);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Residual Partial Censored Error");
+            }
 
             try
             {
@@ -1708,6 +1715,7 @@ namespace POD.Data
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading Iterations Error");
             }
+
         }
         private void updatePODCurve()
         {
@@ -1735,13 +1743,12 @@ namespace POD.Data
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
-                //if (printDTFlag)
-                //    printDT(_podCurveTable_All);
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message, "POD v4 Reading POD Error");
             }
+
         }
         private void UpdateAHatOutput()
         {
