@@ -65,8 +65,11 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                   t_trans= c(0,0,0,0,0),
                                   Confidence_Interval=c(0,0,0,0,0)
                                 )
+                                
                                 return(retResidualTable)
                               }
+                              #rename column to flaw before returning
+                              names(residualTable)[names(residualTable) == 'x'] <<- 'flaw'
                               return(residualTable)
                             },
                             setIterationTable =function(psiterTable){
