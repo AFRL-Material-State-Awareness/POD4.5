@@ -1,7 +1,5 @@
 #this class is used to calculate Firth logistic regression
 #for hitmiss data
-#library(logistf)
-#library(roxygen2)
 HMFirthApproximation <- setRefClass("HMFirthApproximation", fields = list(inputDataFrameFirth="data.frame", 
                                                                           modelFailed="logical", 
                                                                           separated="numeric",
@@ -30,9 +28,6 @@ HMFirthApproximation <- setRefClass("HMFirthApproximation", fields = list(inputD
                                  # FIRTH'S BIAS ADJUSTED #####
                                  firth.mod=try(logistf(y ~ x, data=inputDataFrameFirth, firth=TRUE,dataout=TRUE),FALSE)
                                  modelFailed<<-inherits(firth.mod,"try-error")
-                                 #firth.modList=list()
-                                 #firth.modList=append(firth.modList, firth.mod)
-                                 #setFirthResults(firth.modList)
                                  if(modelFailed){
                                    print("firth model failed!")
                                  }
@@ -42,26 +37,6 @@ HMFirthApproximation <- setRefClass("HMFirthApproximation", fields = list(inputD
                                    if(as.numeric(currRVersion$major)<=4){
                                      firth.modglm=convertTOGLMObject(firth.mod)
                                    }
-                                   #firth.modglmGlobal<<-firth.modglm
-                                   
-                                   #TRY and fix this? much more efficent code (doesn't work with mcprofile because p>0 error)
-                                   #unclass(firth.modglm)
-                                   #class(firth.modglm)<-"glm"
-                                   #firth.modglm$family$family="binomial"
-                                   #firth.modglm$family$link="logit"
-                                   ### ****** functions within glm not getting passed to firth properly which is 
-                                   ### causing mcprofile to error out
-                                   #tempglmObject = glm(formula = y ~ x, family = binomial, data = inputDataFrameFirth)
-                                   #add family attribute
-                                   #firth.modglm$family=tempglmObject$family
-                                   ##
-                                   #firth.modglm$qr=tempglmObject$qr
-                                   #rank is used to calculate vcov
-                                   #firth.modglm$rank=tempglmObject$rank
-                                   #add the df.residual
-                                   #firth.modglm$df.residual=tempglmObject$df.residual
-                                   #firth.modGlobal<<-firth.modglm
-                                   #print("DONE")
                                  }
                                  setFirthResults(firth.modglm)
                                },

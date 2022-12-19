@@ -69,12 +69,10 @@ RSSamplingMain_R<-setRefClass("RSSamplingMain", fields=list(testData="data.frame
                                 grabIndex=grabIndex+1
                                 currRow=currRow+1
                               }
-                              #global<<-arrayOfDiagonals
                               resultsDataFrame=arrayOfDiagonals[[1]]
                               for(i in 2:length(arrayOfDiagonals)){
                                 resultsDataFrame=rbind(resultsDataFrame, arrayOfDiagonals[[i]])
                               }
                               setRSSDataFrame(resultsDataFrame)
-                              #setRSSDataFrame(resultsDataFrame[order(resultsDataFrame[,2]),])
                             }
                             ))

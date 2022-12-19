@@ -3,11 +3,6 @@
 GenNormFit <- setRefClass("GenNormFit", fields = list(cracks="numeric", sampleSize="numeric", 
                                                       Nsample="numeric", simCrackSizesArray="numeric"), 
                                   methods = list(
-                                    #initialize=function(cracksInput, sampleSizeInput, NsampleInput){
-                                    #  cracks<<-cracksInput
-                                    #  cracks<<-sampleSizeInput
-                                    #  cracks<<-NsampleInput
-                                    #},
                                     getSimCrackSizesArray=function(){
                                       return(simCrackSizesArray)
                                     },

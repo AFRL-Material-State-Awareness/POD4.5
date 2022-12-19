@@ -23,65 +23,9 @@ LinearComboGenerator <- setRefClass("LinearComboGenerator", fields = list(Logist
                                                               #print("mcprofile time calc parallel")
                                                               p=proc.time() - ptm
                                                               print(p)
-                                                              #linearComboGlobal<<-linearCombo
                                                               return(linearCombo)
                                                             },
                                                             getSimCracks=function(){
                                                               return(simCracks)
-                                                            }#,
-                                                            # parallelAttempt=function(KMatrix){
-                                                            #   #get number of cores
-                                                            #   no_cores = detectCores()
-                                                            #   #print("starting new lin combo")
-                                                            #   # k1=KMatrix[1:250,]
-                                                            #   # k2=KMatrix[251:500,]
-                                                            #   # k3=KMatrix[501:750,]
-                                                            #   # k4=KMatrix[751:1000,]
-                                                            #   #ptm <- proc.time()
-                                                            #   k1=KMatrix[1:100,]
-                                                            #   k2=KMatrix[101:200,]
-                                                            #   k3=KMatrix[201:300,]
-                                                            #   k4=KMatrix[301:500,]
-                                                            #   # k1=KMatrix[1:50,]
-                                                            #   # k2=KMatrix[51:100,]
-                                                            #   # k3=KMatrix[101:150,]
-                                                            #   # k4=KMatrix[151:200,]
-                                                            #   # k5=KMatrix[201:250,]
-                                                            #   # k6=KMatrix[251:300,]
-                                                            #   # k7=KMatrix[301:350,]
-                                                            #   # k8=KMatrix[351:400,]
-                                                            #   # k9=KMatrix[401:450,]
-                                                            #   # k10=KMatrix[451:500,]
-                                                            #   linearcombos=c()
-                                                            #   matrices=list(k1,k2,k3,k4)
-                                                            #   #matrices=list(k1,k2,k3,k4, k5, k6, k7, k8, k9, k10)
-                                                            #   MATRIXGLOBAL<<-matrices
-                                                            #   logit<<-LogisticRegressionResult
-                                                            #   matrices<<-matrices
-                                                            #   LogisticRegressionResultG<<-LogisticRegressionResult
-                                                            #   linearcombos<<-linearcombos
-                                                            #   #setup cluster
-                                                            #   clust= makeCluster(no_cores)
-                                                            #   clusterEvalQ(clust,library(quadprog))
-                                                            #   #print("time taken parallel")
-                                                            #   #print(proc.time() - ptm)
-                                                            #   clusterExport(cl = clust, list("linearcombos", "LogisticRegressionResultG", "matrices",
-                                                            #                                  "constructGrid", "glm_profiling", "minimcprofile",
-                                                            #                                  "minimcprofileControl", "orglm.fit"))
-                                                            # 
-                                                            #   linearcombos=parLapply(clust, 1:4, function(i){
-                                                            #     linearcombos=append(linearcombos,
-                                                            #                         minimcprofile(object = LogisticRegressionResultG,
-                                                            #                                        CM = matrices[[i]]))
-                                                            #   })
-                                                            #   stopCluster(clust)
-                                                            #   finalLinCombo=linearcombos[[1]]
-                                                            #   for(i in 2:4){
-                                                            #     finalLinCombo[[2]]=rbind(finalLinCombo[[2]], linearcombos[[i]][[2]])
-                                                            #     finalLinCombo$srdp=append(finalLinCombo$srdp, linearcombos[[i]]$srdp)
-                                                            #     finalLinCombo$optpar=append(finalLinCombo$optpar, linearcombos[[i]]$optpar)
-                                                            #     finalLinCombo$cobject=append(finalLinCombo$cobject, linearcombos[[i]]$cobject)
-                                                            #   }                                                              
-                                                            #   return(finalLinCombo)
-                                                            # }
+                                                            }
                                                         ))

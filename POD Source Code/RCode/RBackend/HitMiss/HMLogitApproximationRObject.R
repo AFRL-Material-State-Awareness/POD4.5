@@ -44,7 +44,6 @@ HMLogitApproximation <- setRefClass("HMLogitApproximation", fields = list(inputD
                                                                           #Build whatever model is possible
                                                                           options(warn=0)
                                                                           LRegModel <- glm(formula= y ~ x, data=inputDataFrameLogistic, family=binomial)
-                                                                          #LRegModelGlobal<<-LRegModel
                                                                           #set the results for the class instance
                                                                           setLogitResults(LRegModel)
                                                                         }

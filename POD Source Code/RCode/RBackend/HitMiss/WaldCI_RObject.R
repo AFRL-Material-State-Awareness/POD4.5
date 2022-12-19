@@ -12,10 +12,6 @@ WaldConfInt <- setRefClass("WaldConfInt", fields = list(LogisticRegressionResult
                                                                             covarMatrix<<-psMatrix
                                                                           },
                                                                           getCovarMatrix=function(){
-                                                                            #if(is.null(covarMatrix)){
-                                                                            #  #return an empty matrix of negative ones if empty
-                                                                            #  covarMatrix<<-matrix(0, nrow=2, ncol=2)
-                                                                            #}
                                                                             return(covarMatrix)
                                                                           },
                                                                           #determines standard wald confidence interval (no simulated points were generated)

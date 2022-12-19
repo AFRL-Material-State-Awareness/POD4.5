@@ -3,7 +3,6 @@
 GenAValuesOnPODCurve <- setRefClass("GenAValuesOnPODCurve", 
                                               fields = list(LogisticRegressionResult="glm",
                                                             inputDataFrameLogistic="data.frame",
-                                                            #simFlawSizes="numeric",
                                                             a_Values="list"), methods = list(
                                               setAValuesList=function(psAValues){
                                                 a_Values<<-psAValues
