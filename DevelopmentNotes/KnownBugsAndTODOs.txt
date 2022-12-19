@@ -5,6 +5,8 @@ KNOWN BUGS
 
 1. When user tries to paste more than one column into the quick Analysis, the excel throws and error even though it works fine in the UI.(inconsistant)
 2. Export to excel is greyed out randomly in the file menu strip. Export to excel button at the bottom still works though
+3. When duplicating analyses, the confidence interval and the sampling boxes will get messed up when the user selects other options
+before clicking the duplicate analysis button.
 
 ===========================
 TODOs and feature updates
