@@ -60,9 +60,6 @@
     <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
       <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
     </Reference>
-    <Reference Include="Spire.PdfViewer.Forms">
-      <HintPath>..\Spire\Spire.PdfViewer.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -337,7 +334,6 @@
       <DependentUpon>OverviewChart.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Properties\licenses.licx" />
     <EmbeddedResource Include="QuickDataGridView.resx">
       <DependentUpon>QuickDataGridView.cs</DependentUpon>
     </EmbeddedResource>
