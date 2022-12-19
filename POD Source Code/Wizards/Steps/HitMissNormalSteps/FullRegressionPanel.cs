@@ -246,12 +246,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             _helpfulRTF.RightMargin = 0;
             _helpfulRTF.ReadOnly = true;
             RightControlsTablePanel.SetColumnSpan(_helpfulRTF, 2);
-            //RightControlsTablePanel.add
-            //_helpfulRTF.Layout
             _helpfulRTF.Font = new Font("Microsoft Sans Serif", 12.0f);
-            //_helpfulRTF.Focus
             colorTextInHelpfulRTF();
-            //_helpfulRTF.Size = "auto";
         }
         private void DefaultRTFMessage()
         {
@@ -391,6 +387,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }
             previousConfInt = _confIntBox.SelectedConfInt;
         }
+        /// <summary>
+        /// This event handler function diplays useful information when the user hovers over the confidence box options
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConfIntBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
         {
             _helpfulRTF.Text = " ";
@@ -446,6 +447,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 _sampleTypeBox.SelectedSamplingType = SamplingTypeEnum.SimpleRandomSampling;
             }
         }
+        /// <summary>
+        /// displays useful information when the user hovers over the sampling type box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SamplingTypeBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
         {
             _helpfulRTF.Text = " ";
@@ -466,6 +472,10 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             }
         }
+        /// <summary>
+        /// this function is used as a check to warn the user ahead of time if the analysis config selected is going to take an excessive amount of time
+        /// </summary>
+        /// <returns></returns>
         public DialogResult CheckLongRuntime()
         {
             //dialog will be yes by default in case the user uses either standard wald or modified wald with ranked set sampling
@@ -661,47 +671,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             CSharpBackendWithR.REngineObject.REngineRunning = false;
         }
-        /*
-        public void SearhForHitMissErrors(double a9095Original) {
-            //get the info for the current stats of the hit miss object
-            CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
-            if(!(Analysis.FailToConverge) && Double.IsNaN(a9095Original))
-            {
-                _errorFound = true;
-                Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity. " + '\n' +
-                    "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n'+ "Confidence intervals and/or Ranked Set Sampling");
-            }
-            else if (Analysis.FailToConverge)
-            {
-                _errorFound = true;
-                Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge. " + '\n' +
-                    "Try the Firth Logistic Regression Model Type Instead");
-            }
-            else if (currHitMissSettings.RegressionType == "Firth Logistic Regression" && Double.IsNaN(a9095Original))
-            {
-                _errorFound = true;
-                if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
-                {
-                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! You could try" + '\n' +
-                        "to combine Ranked Set Sampling with the current Confidence Interval" + '\n' +
-                        "(WARNING: can take anywhere from 5-20min)");
-                }
-                else if (currHitMissSettings.SrsOrRSS == 1 && (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR"))
-                {
-                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful" + '\n' +
-                        "Try switching between LR and MLR with the current settings." + '\n' +
-                        "Otherwise, it is likely impossible for PODv4.5 to produce better results " +'\n' +
-                        "Data's sample size may be too small and/or the data does not have enough overlap");
-                }
-                else
-                {
-                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! Try Likelihood Ratio (LR) or" + '\n' +
-                        "Modified Likelihood Ratio (MLR) Confidence Intervals for best results.");
-                }
-
-            }
-        }
-        */
 
         public int LinearityIndex
         {
