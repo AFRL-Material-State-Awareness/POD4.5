@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using RDotNet;
 namespace CSharpBackendWithR
 {
-
+    /// <summary>
+    /// auto-calculates a default lambda if the user selected a box-cox transformation in the choose transform panel or the full regression panel
+    /// </summary>
     public class TemporaryLambdaCalc
     {
         private List<double> cracks;
@@ -43,7 +45,15 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("rm(x)");
             this.myREngine.Evaluate("rm(y)");
             this.myREngine.Evaluate("rm(bc)");
-            return tempLambda;
+            if (No_0_Lambda(tempLambda))
+                return tempLambda;
+            else
+                return tempLambda += .1;
+        }
+        private bool No_0_Lambda (double lambda)
+        {
+            if (lambda != 0.0) return true;
+            else return false;
         }
     }
 }
