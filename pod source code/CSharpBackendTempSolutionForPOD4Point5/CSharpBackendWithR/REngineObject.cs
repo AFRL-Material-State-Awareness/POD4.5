@@ -272,7 +272,7 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(car))");
                 this.rEngine.Evaluate("library(survival)");
                 //temporary
-                this.rEngine.Evaluate("library(ggResidpanel)");
+                //this.rEngine.Evaluate("library(ggResidpanel)");
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(corrplot))");
                 try
                 {
