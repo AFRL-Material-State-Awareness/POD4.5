@@ -7,6 +7,8 @@ KNOWN BUGS
 2. Export to excel is greyed out randomly in the file menu strip. Export to excel button at the bottom still works though
 3. When duplicating analyses, the confidence interval and the sampling boxes will get messed up when the user selects other options
 before clicking the duplicate analysis button.
+4. The axes labels are completely wrong when switching from linear to box-cox in signal response. This mainly occurs when the signal response values are 
+very large
 
 ===========================
 TODOs and feature updates
