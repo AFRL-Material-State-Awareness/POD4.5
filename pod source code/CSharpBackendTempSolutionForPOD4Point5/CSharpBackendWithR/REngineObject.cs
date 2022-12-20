@@ -282,6 +282,7 @@ namespace CSharpBackendWithR
                 {
                     this.rEngine.Evaluate("library.dynam('roxygen2', 'roxygen2', lib.loc = '"+this.applicationPath+"/R_4.1_LibPath')");
                 }
+                var myStop = 0.0;
             }
             catch(Exception failedLibrariesLoad)
             {
