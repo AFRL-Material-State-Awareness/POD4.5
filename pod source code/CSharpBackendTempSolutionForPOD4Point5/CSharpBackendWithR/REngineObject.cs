@@ -35,7 +35,8 @@ namespace CSharpBackendWithR
                 this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 this.rEngine = initializeRDotNet();
             }
-            
+            //Potential solution to the licensing issues within the mcprofile dependency (mvtnorm - GPLv2)
+            //CheckMCProfileLibrary()
             //set the path for the r libraries-used to aid the user in setting up the r backend
             SetLibraryPathEnv();
 
@@ -112,9 +113,9 @@ namespace CSharpBackendWithR
             }
             return dtable;
         }
-
+        
         //this function is used to set the library path (libraries are contained within the program)
-        public void SetLibraryPathEnv()
+        private void SetLibraryPathEnv()
         {
             try
             {
@@ -126,9 +127,30 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
             }
         }
+        private void CheckMCProfileLibrary()
+        {
+            try
+            {
+                this.rEngine.Evaluate("library(mcprofile");
+            }
+            catch (Exception failedLibrariesLoad)
+            {
+                if (failedLibrariesLoad.GetType().Name == "EvaluationException")
+                {
+                    //if mcprofile fails to load, then we need to install the mvtnorm package 
+                    this.rEngine.Evaluate("install.packages(\"mvtnorm\")");
+                    //now try loading mcprofile
+                    this.rEngine.Evaluate("library(mcprofile");
+                }
+                else
+                {
+                    throw new Exception("Uknown error occured");
+                }
+            }
 
+        }
         //This function will need to be rerun everytime the global environment is cleared
-        public void InitializeRScripts()
+        private void InitializeRScripts()
         {
             bool scriptsLoaded = false;
             try
