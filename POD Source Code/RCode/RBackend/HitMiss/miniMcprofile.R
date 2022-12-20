@@ -1,4 +1,8 @@
-
+###########################################
+# The following code in this R script is from the mcprofile package and is licensed under GPLv2 OR GPLv3
+# The methods were pulled and the library was excluded due to a license incompatible dependency (mvtnorm)
+# For more information on mcprofile, see : https://cran.r-project.org/web/packages/mcprofile/index.html
+###########################################
 #main function for linear combo generator
 minimcprofile <-
   function(object, CM, control=minimcprofileControl(), grid=NULL){
@@ -302,3 +306,84 @@ orglm.fit <- function (x, y, weights = rep(1, nobs), start = NULL, etastart = NU
   class(fit) <- c("orglm", "glm", "lm")
   return(fit)
 }
+########################
+## Higher order approximation function
+hoa <- function(object, maxstat=10){
+  model <- object$object
+  CM <- object$CM
+  sumobj <- summary(model)
+  Kuv <- sumobj$cov.unscaled
+  r <- lapply(object$srdp, function(sr) sr[, 2])
+  q <- lapply(wald(object)$srdp, function(sr) sr[, 2])
+  j <- (1/det(Kuv))
+  vc <- apply(CM, 1, function(cm) det(rbind(Kuv[cm != 0, cm != 0])))
+  j.1 <- j * vc
+  
+  j.0 <- lapply(object$cobject, function(vm) sapply(vm, function(x) {
+    xt <- try(1/(detvarorglm(x)), silent = TRUE)
+    if (class(xt)[1] == "try-error") xt <- NA
+    xt[xt > 10^12] <- NA
+    return(xt)
+  }))
+  rho <- lapply(1:length(j.0), function(i) sqrt(j.1[i]/j.0[[i]]))
+  adjr <- lapply(1:length(rho), function(i) r[[i]] + log(rho[[i]] * q[[i]]/r[[i]])/r[[i]])
+  adjr <- lapply(adjr, function(x){
+    x[is.infinite(x)] <- NA
+    return(x)
+  })
+  
+  rsrdp <- lapply(1:length(adjr), function(i) {
+    srdpi <- object$srdp[[i]]
+    b <- srdpi[, 1]
+    rstar <- adjr[[i]]    
+    srdpi[, 2] <- rstar
+    return(na.omit(srdpi))
+  })  
+  
+  rsrdp <- lapply(rsrdp, function(hsrdp){
+    hsrdp[abs(hsrdp[,2]) < maxstat,]        
+  })
+  
+  rest <- sapply(rsrdp, function(x) {
+    x <- na.omit(x)
+    ispl <- try(interpSpline(x[, 1], x[, 2]), silent = TRUE)
+    pfun <- function(xc, obj) predict(obj, xc)$y
+    try(uniroot(pfun, range(predict(ispl)$x), obj = ispl)$root, 
+        silent = TRUE)
+  })
+  
+  object$srdp <- rsrdp
+  object$adjestimates <- rest
+  return(object)           
+}
+##################################
+#confidence interval function for mcprofile without the additional settings
+confint.mcprofile <-
+  function(object, parm, level=0.95, adjust=c("single-step","none","bonferroni"), alternative=c("two.sided","less","greater"), ...){
+    pam <- c("bonferroni", "none", "single-step")
+    if (!(adjust[1] %in% pam)) stop(paste("adjust has to be one of:", paste(pam, collapse=", ")))
+    CM <- object$CM
+    df <- object$df
+    cr <- NULL
+    sdlist <- object$srdp  
+    spl <- lapply(sdlist, function(x){
+      x <- na.omit(x)
+      try(interpSpline(x[,1], x[,2]))
+    })
+    
+    if (adjust[1] == "none" | nrow(CM) == 1){
+      if (alternative[1] == "two.sided") alpha <- (1-level)/2 else alpha <- 1-level
+      if (is.null(df)) quant <- qnorm(1-alpha) else quant <- qt(1-alpha, df=df)
+    }
+    out <- list()
+    out$estimate <- data.frame(Estimate=CM %*% coefficients(object$object))
+    out$confint <- ci
+    out$cr <- cr
+    out$CM <- CM
+    out$quant <- quant
+    out$alternative <- alternative[1]
+    out$level <- level
+    out$adjust <- adjust[1]
+    class(out) <- "mcpCI"
+    return(out)
+  }
