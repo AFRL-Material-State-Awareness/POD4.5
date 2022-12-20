@@ -4,15 +4,16 @@ using System.Data;
 using System.Text;
 namespace CSharpBackendWithR
 {
+    /// <summary>
+    /// This is the HMAnalysis Tranform object. Many of these variables 
+    /// are inherited from the ParentAnalysisObjectClass.
+    /// the ones that are not are listed below...
+    /// </summary> 
     [Serializable]
     public class HMAnalysisObject : ParentAnalysisObject
     {
         //bool Is_solvableHitMiss;
-        /// <summary>
-        /// This is the HMAnalysis Tranform object. Many of these variables 
-        /// are inherited from the ParentAnalysisObjectClass.
-        /// the ones that are not are listed below...
-        /// </summary> 
+        
         private DataTable hitMissDataOrig;
         private List<double> covarMatrix;
         //used for logit, firth, or lasso

@@ -5,9 +5,12 @@ using System.Text;
 using System.Linq;
 namespace CSharpBackendWithR
 {
+    /// <summary>
+    /// used to get the maximum and minimum crack size for any given analysis
+    /// </summary>
     class MaxAndMinClass
     {
-        //use to get the maximum and minimum crack size for any given analysis
+        
         private Dictionary<string, double> maxAndMinDict;
         private double maxValue;
         private double minValue;
