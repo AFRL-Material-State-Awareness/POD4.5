@@ -85,7 +85,7 @@ namespace CSharpBackendWithR
                 this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y, event)");
                 this.myREngine.Evaluate("rm(y)");
             }
-            catch(Exception myError)
+            catch(Exception)
             {
                 //System.Diagnostics.Debug.WriteLine(myError);
             }
@@ -269,7 +269,7 @@ namespace CSharpBackendWithR
                 double lackOfFitPValue = this.myREngine.Evaluate("newSRAnalysis$getLinearTestResults()[[4]][[4]]").AsNumeric()[0];
                 AllLinearTestResults.Add(lackOfFitPValue);
             }
-            catch (RDotNet.EvaluationException catchEmpty)
+            catch (RDotNet.EvaluationException)
             {
                 //add an empty array of length 11 by default
                 for(int i=0; i < 11; i++)
