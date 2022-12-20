@@ -358,6 +358,7 @@ hoa <- function(object, maxstat=10){
 }
 ##################################
 #confidence interval function for mcprofile without the additional settings
+#the default parameters for adjust are "none" and "greater" for the purpose of PODv4.5
 confint.mcprofile <-
   function(object, parm, level=0.95, adjust=c("single-step","none","bonferroni"), alternative=c("two.sided","less","greater"), ...){
     pam <- c("bonferroni", "none", "single-step")
@@ -375,6 +376,15 @@ confint.mcprofile <-
       if (alternative[1] == "two.sided") alpha <- (1-level)/2 else alpha <- 1-level
       if (is.null(df)) quant <- qnorm(1-alpha) else quant <- qt(1-alpha, df=df)
     }
+    if (alternative[1] == "greater"){
+      ci <- data.frame(sapply(spl, function(x, quant){
+        pfun <- function(xc, obj, quant) predict(obj, xc)$y-quant
+        lower <- try(uniroot(pfun, range(predict(x)$x), obj=x, quant=-quant)$root, silent=TRUE)
+        if (class(lower)[1] == "try-error") lower <- NA
+        cbind(c(lower))
+      }, quant=quant))
+      names(ci) <- "lower"
+    } 
     out <- list()
     out$estimate <- data.frame(Estimate=CM %*% coefficients(object$object))
     out$confint <- ci
