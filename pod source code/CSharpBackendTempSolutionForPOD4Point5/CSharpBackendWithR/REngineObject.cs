@@ -8,6 +8,9 @@ using System.Diagnostics;
 using RDotNet;
 namespace CSharpBackendWithR
 {
+    /// <summary>
+    /// This class controls everything related to the R backend including initializing the R.NET engine, importing the necessary libaries, and running the appropriate scripts
+    /// </summary>
     public class REngineObject
     {
         private REngine rEngine;
@@ -19,9 +22,7 @@ namespace CSharpBackendWithR
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
-            //this.applicationPath=@"C:\Program Files\R";
             this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\..";
-            //this.applicationPath = @"C:\Users\gohmancm\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\R";
             //convert the application path to forward slashes (when using file paths in r)
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
             try
@@ -61,30 +62,21 @@ namespace CSharpBackendWithR
             
             REngine engine;
             string rVersion = "4.1.2";
-
-            if (rVersion == "4.1.2")
+            try
             {
-                try
+                StartREngine(rVersion, out engine);
+            }
+            catch (Exception RSetupEnvironmentException)
+            {
+                if(RSetupEnvironmentException.GetType().Name== "ArgumentException")
                 {
-                    StartREngine(rVersion, out engine);
+                    throw RSetupEnvironmentException;
                 }
-                catch (Exception RSetupEnvironmentException)
-                {
-                    if(RSetupEnvironmentException.GetType().Name== "ArgumentException")
-                    {
-                        throw RSetupEnvironmentException;
-                    }
-                    else {
-                        StartREngine(rVersion, out engine, "x64");
-                    }
+                else {
+                    StartREngine(rVersion, out engine, "x64");
+                }
                     
-                }
             }
-            else
-            {
-                engine = null;
-            }
-            ValidateRInstalled(ref engine);
             engine.Initialize();
             //ensure the REngine global environment is cleared when the program starts
             //engine.ClearGlobalEnvironment();
@@ -100,6 +92,7 @@ namespace CSharpBackendWithR
         /// <summary>
         /// https://stackoverflow.com/questions/45537671/dataframe-to-datatable-r-net-fastly
         /// Author username: jdweng
+        /// Author URL: https://stackoverflow.com/users/5015238/jdweng
         /// </summary>
         public DataTable rDataFrameToDataTable(RDotNet.DataFrame myDataFrame)
         {
@@ -259,7 +252,7 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(methods)");
                 this.rEngine.Evaluate("library(MASS)");
-                this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
+                this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals *** uses a package licensed under GPLv2 only
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
                 //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
@@ -319,37 +312,24 @@ namespace CSharpBackendWithR
             watch.Stop();
             var time = watch.ElapsedMilliseconds / 1000.00;
             Debug.WriteLine("The runtime was: " + time + " seconds");
-        } 
-        //used to get the rEngine in its current state
-        public REngine RDotNetEngine => this.rEngine; 
-        //used to clear the global environment for the rEngine objects and recalls all scripts
+        }
+        /// <summary>
+        /// used to get the rEngine in its current state
+        /// </summary>
+        public REngine RDotNetEngine => this.rEngine;
+        /// <summary>
+        /// used to clear the global environment for the rEngine objects and recalls all scripts
+        /// </summary>
         public void clearGlobalIInREngineObject()
         {
-            //this.rEngine.ClearGlobalEnvironment();
-            //InitializeRScripts();
-            //InitializePythonScripts();
-        }
-        private void ValidateRInstalled(ref REngine engine)
-        {
-            if (engine == null)
-            {
-                throw new RNotInstalledException();
-            }
+            this.rEngine.ClearGlobalEnvironment();
+            InitializeRScripts();
+            InitializePythonScripts();
         }
         public static bool REngineRunning=false;
         public static bool PythonLoaded { get; set; }
     }
     //custom exception handling classes to aid the user in figuring out why the application backend didn't initialize properly
-    [Serializable]
-    public class RNotInstalledException : Exception
-    {
-        //public InvalidStudentNameException() { }
-
-        public RNotInstalledException()
-            : base(String.Format("Correct R Version Not Installed"))
-        {
-        }
-    }
     [Serializable]
     public class FailedLoadingLibrariesException : Exception
     {
