@@ -71,9 +71,9 @@ RcppEigen,GPL (>= 2) | file LICENSE,
 pracma,GPL (>= 3),
 shape,GPL (>= 3),
 pracma,GPL (>= 3),
-brew,GPL-2,
+brew,GPL-2,GONE
 cowplot,GPL-2,
-glmnet,GPL-2,
+glmnet,GPL-2,GONE
 gtable,MIT,(Relicensed in 2020)
 markdown,GPL-2,
 minqa,GPL-2,
@@ -81,7 +81,7 @@ multcomp,GPL-2,
 mvtnorm,GPL-2,
 numDeriv,GPL-2,
 RSSampling,GPL-2,
-brew,GPL-2,
+brew,GPL-2,GONE
 cowplot,GPL-2,
 minqa,GPL-2,
 mvtnorm,GPL-2,
