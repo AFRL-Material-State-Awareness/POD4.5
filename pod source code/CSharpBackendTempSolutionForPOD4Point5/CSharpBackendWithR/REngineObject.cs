@@ -35,8 +35,6 @@ namespace CSharpBackendWithR
                 this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 this.rEngine = initializeRDotNet();
             }
-            //Potential solution to the licensing issues within the mcprofile dependency (mvtnorm - GPLv2)
-            //CheckMCProfileLibrary()
             //set the path for the r libraries-used to aid the user in setting up the r backend
             SetLibraryPathEnv();
 
@@ -127,28 +125,6 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
             }
         }
-        private void CheckMCProfileLibrary()
-        {
-            try
-            {
-                this.rEngine.Evaluate("library(mcprofile");
-            }
-            catch (Exception failedLibrariesLoad)
-            {
-                if (failedLibrariesLoad.GetType().Name == "EvaluationException")
-                {
-                    //if mcprofile fails to load, then we need to install the mvtnorm package 
-                    this.rEngine.Evaluate("install.packages(\"mvtnorm\")");
-                    //now try loading mcprofile
-                    this.rEngine.Evaluate("library(mcprofile");
-                }
-                else
-                {
-                    throw new Exception("Uknown error occured");
-                }
-            }
-
-        }
         //This function will need to be rerun everytime the global environment is cleared
         private void InitializeRScripts()
         {
@@ -208,9 +184,6 @@ namespace CSharpBackendWithR
                     this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
                     this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
                     this.rEngine.Evaluate("source('" + forwardSlashAppPathExe + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
-                    //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
-                    //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
-                    //this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/fakeScript.R')");
                     scriptsLoaded = true;
                 }
                 catch (Exception failedScriptsLoad)
@@ -255,9 +228,6 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
-            //this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/SignalResponseCode/fakeScript.R')");
-            //this.rEngine.Evaluate("setwd('" + this.forwardSlashAppPath + "')");
-            //this.rEngine.Evaluate("source('/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
             scriptsLoaded = true;
         }
         private void InitializeRLibraries()
@@ -274,7 +244,8 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(methods)");
                 this.rEngine.Evaluate("library(MASS)");
-                //this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals *** uses a package licensed under GPLv2 only
+                //used for LR and MLR confidence intervals *** uses a package licensed under GPLv2 only-The necessary functions are included in the minimcprofile.R script
+                //this.rEngine.Evaluate("library(mcprofile)"); 
                 this.rEngine.Evaluate("library(splines)");
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
@@ -287,8 +258,6 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("library(carData)");
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(car))");
                 this.rEngine.Evaluate("library(survival)");
-                //temporary
-                //this.rEngine.Evaluate("library(ggResidpanel)");
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(corrplot))");
                 try
                 {
