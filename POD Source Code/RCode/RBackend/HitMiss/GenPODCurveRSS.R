@@ -205,8 +205,6 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                               genLinearCombosRSS=function(LogisticRegressionResult, KMatrix){
                                 print("combo time!")
                                 ptm <- proc.time()
-                                global1<<-LogisticRegressionResult
-                                global2<<-KMatrix
                                 linearCombo<-mcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
                                 #linearCombo<-minimcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
                                 print("combo done!")
