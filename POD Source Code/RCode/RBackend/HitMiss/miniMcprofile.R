@@ -314,7 +314,7 @@ hoa <- function(object, maxstat=10){
   sumobj <- summary(model)
   Kuv <- sumobj$cov.unscaled
   r <- lapply(object$srdp, function(sr) sr[, 2])
-  q <- lapply(wald(object)$srdp, function(sr) sr[, 2])
+  q <- lapply(wald.mlr(object)$srdp, function(sr) sr[, 2])
   j <- (1/det(Kuv))
   vc <- apply(CM, 1, function(cm) det(rbind(Kuv[cm != 0, cm != 0])))
   j.1 <- j * vc
@@ -397,3 +397,44 @@ confint.mcprofile <-
     class(out) <- "mcpCI"
     return(out)
   }
+#wald.mlr function used for calculating MLR
+wald.mlr <-
+  function(object){
+    srdp <- object$srdp
+    est <- object$CM %*% coefficients(object$object)
+    sde <- sqrt(diag(object$CM %*% vcov(object$object) %*% t(object$CM)))
+    wsrdp <- lapply(1:length(srdp), function(i){
+      srdpi <- srdp[[i]]
+      b <- srdpi[,1]
+      srdpi[,2] <- (b-est[i])/sde[i]
+      srdpi 
+    })
+    object$srdp <- wsrdp
+    return(object)
+  }
+#this function is needed for applying higher order approximation to the MLR confidence interval
+detvarorglm <- function(object){
+  eta <- object$X %*% object$coefficients
+  y <- object$y
+  z <- as.vector(eta  + (y - object$family$linkinv(eta))/object$family$mu.eta(eta))
+  w <- sqrt(object$weights)  
+  xm <- object$X*w
+  A <- object$constr
+  lmf <- lm(z * w ~ xm-1)  
+  
+  sx <- summary(lmf)$cov.unscaled
+  sA <- qr.solve(A %*% sx %*% t(A))
+  M <- diag(ncol(xm)) - sx %*% t(A) %*% sA %*% A
+  Ms <- (diag(ncol(xm)) - t(A) %*% sA %*% A %*% sx)
+  vc <- M %*% sx %*% Ms
+  
+  svdd <- svd(vc)$d
+  eok <- svdd > 2 * .Machine$double.eps  
+  
+  evv <- svd(vc[A!=0,A!=0])$d
+  evok <- evv > 2 * .Machine$double.eps  
+  
+  dvv <- prod(evv[evok])
+  dvca <- prod(svdd[eok])/dvv
+  return(dvca)
+}

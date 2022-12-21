@@ -18,7 +18,9 @@ ModifiedLikelihoodRatioConfInt <- setRefClass("ModifiedLikelihoodRatioConfInt", 
                                           ptm <- proc.time()
                                           castCalcLinCombo<-calcLinearCombo
                                           class(castCalcLinCombo)<-"mcprofile"
-                                          ci.logit.profile.mlr = try(confint(hoa(castCalcLinCombo), level = 0.95, adjust = "none",
+                                          #print(castCalcLinCombo)
+                                          #cat('\n')
+                                          ci.logit.profile.mlr = try(confint.mcprofile(hoa(castCalcLinCombo), level = 0.95, adjust = "none",
                                                                              alternative="greater",
                                                                              #make this a parameter to let the user choose the number of cores
                                                                              parallel = "parallel",ncpus=getOption("profile.ncpus", detectCores()),full=TRUE))

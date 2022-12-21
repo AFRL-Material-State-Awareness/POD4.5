@@ -247,7 +247,7 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/MainRSSamplingDataInR.R')");
             //this is the main Hit miss R analysis object
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HitMissMainAnalysisRObject.R')");
-            //minimcprofile(used for parallel processing
+            //minimcprofile(used for parallel processing)
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/miniMcprofile.R')");
             //Firth script classs- added june 6th
             this.rEngine.Evaluate("source('" + this.forwardSlashAppPath + "/RCode/RBackend/HitMiss/HMFirthApproximationRObject.R')");
@@ -267,14 +267,15 @@ namespace CSharpBackendWithR
                 //supress warnings in r (change to zero if wanting to see them)
                 this.rEngine.Evaluate("options( warn = -1 )");
                 //dependency of MCProfile
-                this.rEngine.Evaluate("library(ggplot2)");
+                //this.rEngine.Evaluate("library(ggplot2)");
                 //dependency of glmnet
                 this.rEngine.Evaluate("library(foreach)");
                 //dependency for logistf
                 this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(methods)");
                 this.rEngine.Evaluate("library(MASS)");
-                this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals *** uses a package licensed under GPLv2 only
+                //this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals *** uses a package licensed under GPLv2 only
+                this.rEngine.Evaluate("library(splines)");
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
                 //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
@@ -297,6 +298,7 @@ namespace CSharpBackendWithR
                 {
                     this.rEngine.Evaluate("library.dynam('roxygen2', 'roxygen2', lib.loc = '"+this.applicationPath+"/R_4.1_LibPath')");
                 }
+                var endingVar = 0.0;
             }
             catch(Exception failedLibrariesLoad)
             {
