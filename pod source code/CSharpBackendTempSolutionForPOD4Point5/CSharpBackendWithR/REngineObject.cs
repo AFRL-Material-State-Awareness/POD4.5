@@ -8,6 +8,9 @@ using System.Diagnostics;
 using RDotNet;
 namespace CSharpBackendWithR
 {
+    /// <summary>
+    /// This class controls everything related to the R backend including initializing the R.NET engine, importing the necessary libaries, and running the appropriate scripts
+    /// </summary>
     public class REngineObject
     {
         private REngine rEngine;
@@ -19,9 +22,7 @@ namespace CSharpBackendWithR
         public REngineObject()
         {
             this.applicationPathScripts = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+ @"\..\..\..";
-            //this.applicationPath=@"C:\Program Files\R";
             this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\..\..\..\..";
-            //this.applicationPath = @"C:\Users\gohmancm\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\R";
             //convert the application path to forward slashes (when using file paths in r)
             this.forwardSlashAppPath = this.applicationPathScripts.Replace(@"\", "/");
             try
@@ -34,7 +35,8 @@ namespace CSharpBackendWithR
                 this.applicationPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 this.rEngine = initializeRDotNet();
             }
-            
+            //Potential solution to the licensing issues within the mcprofile dependency (mvtnorm - GPLv2)
+            //CheckMCProfileLibrary()
             //set the path for the r libraries-used to aid the user in setting up the r backend
             SetLibraryPathEnv();
 
@@ -61,30 +63,21 @@ namespace CSharpBackendWithR
             
             REngine engine;
             string rVersion = "4.1.2";
-
-            if (rVersion == "4.1.2")
+            try
             {
-                try
+                StartREngine(rVersion, out engine);
+            }
+            catch (Exception RSetupEnvironmentException)
+            {
+                if(RSetupEnvironmentException.GetType().Name== "ArgumentException")
                 {
-                    StartREngine(rVersion, out engine);
+                    throw RSetupEnvironmentException;
                 }
-                catch (Exception RSetupEnvironmentException)
-                {
-                    if(RSetupEnvironmentException.GetType().Name== "ArgumentException")
-                    {
-                        throw RSetupEnvironmentException;
-                    }
-                    else {
-                        StartREngine(rVersion, out engine, "x64");
-                    }
+                else {
+                    StartREngine(rVersion, out engine, "x64");
+                }
                     
-                }
             }
-            else
-            {
-                engine = null;
-            }
-            ValidateRInstalled(ref engine);
             engine.Initialize();
             //ensure the REngine global environment is cleared when the program starts
             //engine.ClearGlobalEnvironment();
@@ -100,6 +93,7 @@ namespace CSharpBackendWithR
         /// <summary>
         /// https://stackoverflow.com/questions/45537671/dataframe-to-datatable-r-net-fastly
         /// Author username: jdweng
+        /// Author URL: https://stackoverflow.com/users/5015238/jdweng
         /// </summary>
         public DataTable rDataFrameToDataTable(RDotNet.DataFrame myDataFrame)
         {
@@ -119,9 +113,9 @@ namespace CSharpBackendWithR
             }
             return dtable;
         }
-
+        
         //this function is used to set the library path (libraries are contained within the program)
-        public void SetLibraryPathEnv()
+        private void SetLibraryPathEnv()
         {
             try
             {
@@ -133,9 +127,30 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("assign('.lib.loc','"+ this.forwardSlashAppPath + "/R_4.1_LibPath')" + "', envir = environment(.libPaths))");
             }
         }
+        private void CheckMCProfileLibrary()
+        {
+            try
+            {
+                this.rEngine.Evaluate("library(mcprofile");
+            }
+            catch (Exception failedLibrariesLoad)
+            {
+                if (failedLibrariesLoad.GetType().Name == "EvaluationException")
+                {
+                    //if mcprofile fails to load, then we need to install the mvtnorm package 
+                    this.rEngine.Evaluate("install.packages(\"mvtnorm\")");
+                    //now try loading mcprofile
+                    this.rEngine.Evaluate("library(mcprofile");
+                }
+                else
+                {
+                    throw new Exception("Uknown error occured");
+                }
+            }
 
+        }
         //This function will need to be rerun everytime the global environment is cleared
-        public void InitializeRScripts()
+        private void InitializeRScripts()
         {
             bool scriptsLoaded = false;
             try
@@ -259,7 +274,7 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("library(logistf)");
                 this.rEngine.Evaluate("library(methods)");
                 this.rEngine.Evaluate("library(MASS)");
-                this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals
+                this.rEngine.Evaluate("library(mcprofile)"); //used for LR and MLR confidence intervals *** uses a package licensed under GPLv2 only
                 this.rEngine.Evaluate("library(parallel)");
                 //used to interact with the python scripts
                 //this.rEngine.Evaluate("library(reticulate)");//caution: Licensed under Apache 2.0
@@ -272,7 +287,7 @@ namespace CSharpBackendWithR
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(car))");
                 this.rEngine.Evaluate("library(survival)");
                 //temporary
-                this.rEngine.Evaluate("library(ggResidpanel)");
+                //this.rEngine.Evaluate("library(ggResidpanel)");
                 this.rEngine.Evaluate("suppressPackageStartupMessages(library(corrplot))");
                 try
                 {
@@ -318,37 +333,24 @@ namespace CSharpBackendWithR
             watch.Stop();
             var time = watch.ElapsedMilliseconds / 1000.00;
             Debug.WriteLine("The runtime was: " + time + " seconds");
-        } 
-        //used to get the rEngine in its current state
-        public REngine RDotNetEngine => this.rEngine; 
-        //used to clear the global environment for the rEngine objects and recalls all scripts
+        }
+        /// <summary>
+        /// used to get the rEngine in its current state
+        /// </summary>
+        public REngine RDotNetEngine => this.rEngine;
+        /// <summary>
+        /// used to clear the global environment for the rEngine objects and recalls all scripts
+        /// </summary>
         public void clearGlobalIInREngineObject()
         {
-            //this.rEngine.ClearGlobalEnvironment();
-            //InitializeRScripts();
-            //InitializePythonScripts();
-        }
-        private void ValidateRInstalled(ref REngine engine)
-        {
-            if (engine == null)
-            {
-                throw new RNotInstalledException();
-            }
+            this.rEngine.ClearGlobalEnvironment();
+            InitializeRScripts();
+            InitializePythonScripts();
         }
         public static bool REngineRunning=false;
         public static bool PythonLoaded { get; set; }
     }
     //custom exception handling classes to aid the user in figuring out why the application backend didn't initialize properly
-    [Serializable]
-    public class RNotInstalledException : Exception
-    {
-        //public InvalidStudentNameException() { }
-
-        public RNotInstalledException()
-            : base(String.Format("Correct R Version Not Installed"))
-        {
-        }
-    }
     [Serializable]
     public class FailedLoadingLibrariesException : Exception
     {

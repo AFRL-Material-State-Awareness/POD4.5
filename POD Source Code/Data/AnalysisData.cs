@@ -1724,9 +1724,9 @@ namespace POD.Data
             try
             {
                 _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
-                //printDT(_podCurveTable);
-                //if (printDTFlag)
-                //    printDT(_podCurveTable);
+                printDT(_podCurveTable);
+                if (printDTFlag)
+                    printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable = _podCurveTable.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace CSharpBackendWithR
 {
+    /// <summary>
+    /// This class contains analysis metrics that are shared by both hit/miss and signal response analyses.
+    /// </summary>
     [Serializable]
     public class ParentAnalysisObject
     {

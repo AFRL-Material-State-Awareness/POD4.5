@@ -835,7 +835,7 @@ namespace POD
                     analyses.Add(analysis);
                 }
             }
-            catch (SerializationException exp)
+            catch (SerializationException)
             {
                 
             }
