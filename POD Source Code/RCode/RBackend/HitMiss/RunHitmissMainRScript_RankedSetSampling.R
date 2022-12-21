@@ -1,7 +1,7 @@
 library(ggplot2)
 library(reticulate)
 library(MASS)
-library(mcprofile)
+#(mcprofile)
 library(parallel)
 library(logistf)
 # #Test Code
@@ -32,10 +32,11 @@ source(paste(filepath,"/LRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/MLRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/TransformBackFunctions_ForRunningInOnly_R.R", sep = ""))
 source(paste(filepath,"/OutputToExcel_ForRunningInOnly_R.R", sep = ""))
+source(paste(filepath,"/miniMcprofile.R",sep=""))
 
 #LOAD in data as CSV for POD Analysis
-#testData<-read.csv("C:/Users/gohmancm/Desktop/PODv4Point5FullProjectFolder/CSharpBackendTempSolution/CSharpBackendTempSolutionForPOD4Point5/RCode/RBackend/HitMissData_Good.csv")
-testData<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
+testData<-read.csv("C:/Users/gohmancm/Desktop/POD4.5Project/POD4.5/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Good.csv")
+#testData<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
 testData<-testData[ , colSums(is.na(testData))==0]
 #testData<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
@@ -65,13 +66,13 @@ if(transformType==2){
 #used for modified wald
 
 #CHOOSE MODEL TYPE(comment out the one you don't want)
-type="Firth Logistic Regression"
-#regression="Logistic Regression"
+#regression="Firth Logistic Regression"
+regression="Logistic Regression"
 
 normSamp=500
-resamplesMax=30
+resamplesMax=5
 #conf int type
-CItype0="ModifiedWald"
+CItype0="LR"
 start.time <- Sys.time()
 set_m=6
 
@@ -88,8 +89,8 @@ if(CItype0=="StandardWald"){
 }
 oneInspector=function(){
   newRSSComponent<-RSSComponents$new()
-  newRSSComponent$initialize(maxResamples=resamplesMax, set_mInput=set_m, set_rInput=set_r,regressionType=type, excludeNAInput=TRUE)
-  newHMRSSInstance<-HMAnalysis$new(hitMissDF=testData, CIType=CItype0, modelType=type, N=nrow(testData),
+  newRSSComponent$initialize(maxResamples=resamplesMax, set_mInput=set_m, set_rInput=set_r,regressionType=regression, excludeNAInput=TRUE)
+  newHMRSSInstance<-HMAnalysis$new(hitMissDF=testData, CIType=CItype0, modelType=regression, N=nrow(testData),
                                    normSampleAmount=normSamp, rankedSetSampleObject=newRSSComponent)
   newHMRSSInstance$initializeRSS()
   resultDF<-TransformResultsBack_HM(na.omit(newHMRSSInstance$getResults()), transformType)
@@ -127,7 +128,7 @@ MultipleInspectors=function(hitMissDF){
     )
     newRSSComponent<<-RSSComponents$new()
     newRSSComponent$initialize(maxResamples=resamplesMax, set_mInput=set_m, set_rInput=set_r,regressionType=regression, excludeNAInput=TRUE)
-    newHMRSSInstance<<-HMAnalysis$new(hitMissDF=testData, CIType=ciType, modelType=regression, N=nrow(testData),
+    newHMRSSInstance<<-HMAnalysis$new(hitMissDF=testData, CIType=CItype0, modelType=regression, N=nrow(testData),
                                      normSampleAmount=normSamp, rankedSetSampleObject=newRSSComponent)
     newHMRSSInstance$executeFullAnalysis()
     results<<-append(results,list(TransformResultsBack_HM(newHMRSSInstance$getResults(),transformType)))
@@ -172,11 +173,11 @@ WriteOutResultsMuliple=function(results){
 }
 
 begin=Sys.time()
-#oneInspector()
-MultipleInspectors(testData)
+oneInspector()
+#MultipleInspectors(testData)
 end=Sys.time()
 print("execution time")
 print(end-begin)
 #WriteOutResultsMuliple(results)
-#show(plottingData)
-outputToExcel_HM()
+show(plottingData)
+#outputToExcel_HM()

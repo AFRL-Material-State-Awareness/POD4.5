@@ -53,7 +53,7 @@ if(transformType==2){
 #names(hitMissDF)[names(hitMissDF) == 'IN.1.HM'] <- 'y'
 #hitMissDF<-subset(hitMissDF, select = c(Index, x, Inspector1, Inspector2))
 #names(hitMissDF)[names(hitMissDF) == 'Inspector1'] <- 'y'
-CItype0="MLR"
+CItype0="LR"
 #CHOOSE MODEL TYPE(comment out the one you don't want)
 #type="Firth Logistic Regression"
 type="Logistic Regression"

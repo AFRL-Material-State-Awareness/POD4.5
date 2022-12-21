@@ -19,17 +19,12 @@ LikelihoodRatioConfInt <- setRefClass("LikelihoodRatioConfInt",#contains="mcprof
                              ptm <- proc.time()
                              castCalcLinCombo<-calcLinearCombo
                              class(castCalcLinCombo)<-"mcprofile"
-                             #print(detectCores())
-                             #print(castCalcLinCombo)
-                             #cat('\n')
                              ci.logit.profile<-try(confint.mcprofile(object = castCalcLinCombo, level = 0.95, adjust = "none",
                                                            alternative="greater", trace=TRUE, 
                                                            parallel = "parallel",ncpus=getOption("profile.ncpus", 
                                                            detectCores()-1) , full=TRUE))  # CI for beta_0 + beta_1 * x
                              print("confint time calc for LR")
                              print(proc.time() - ptm)
-                             #cat(is.numeric(ci.logit.profile$confint$lower))
-                             #cat('\n')
                              if(is.numeric(ci.logit.profile$confint$lower)){
                                #print(ci.logit.profile)
                                profile.lr.int <- try(data.frame(
