@@ -74,7 +74,7 @@ regression="Logistic Regression"
 normSamp=500
 resamplesMax=5
 #conf int type
-CItype0="LR"
+CItype0="MLR"
 start.time <- Sys.time()
 set_m=6
 

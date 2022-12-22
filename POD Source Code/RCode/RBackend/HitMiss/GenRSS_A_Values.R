@@ -65,11 +65,7 @@ GenRSS_A_Values<- setRefClass("GenRSS_A_Values", fields = list(pODRSSDF="data.fr
                                     sigmas=c(sigmas, c(currAValues[4]))
                                     a9095s=c(a9095s, c(currAValues[5]))
                                   }
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a25s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a50s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a90s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
+                                  a_ValuesLocal=CalcAValueMedians(a_ValuesLocal,a25s, a50s, a90s, sigmas, a9095s)
                                   setAvaluesList(a_ValuesLocal)
                                 },
                                 genAValuesModWald=function(){
@@ -90,11 +86,7 @@ GenRSS_A_Values<- setRefClass("GenRSS_A_Values", fields = list(pODRSSDF="data.fr
                                     sigmas=c(sigmas, c(currAValues[4]))
                                     a9095s=c(a9095s, c(currAValues[5]))
                                   }
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a25s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a50s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a90s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
+                                  a_ValuesLocal=CalcAValueMedians(a_ValuesLocal,a25s, a50s, a90s, sigmas, a9095s)
                                   setAvaluesList(a_ValuesLocal)
                                 },
                                 genAValuesLR=function(){
@@ -115,11 +107,7 @@ GenRSS_A_Values<- setRefClass("GenRSS_A_Values", fields = list(pODRSSDF="data.fr
                                     sigmas=c(sigmas, c(currAValues[4]))
                                     a9095s=c(a9095s, c(currAValues[5]))
                                   }
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a25s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a50s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a90s), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
-                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
+                                  a_ValuesLocal=CalcAValueMedians(a_ValuesLocal,a25s, a50s, a90s, sigmas, a9095s)
                                   setAvaluesList(a_ValuesLocal)
                                 },
                                 genAValuesMLR=function(){
@@ -140,11 +128,15 @@ GenRSS_A_Values<- setRefClass("GenRSS_A_Values", fields = list(pODRSSDF="data.fr
                                     sigmas=c(sigmas, c(currAValues[4]))
                                     a9095s=c(a9095s, c(currAValues[5]))
                                   }
+                                  a_ValuesLocal=CalcAValueMedians(a_ValuesLocal,a25s, a50s, a90s, sigmas, a9095s)
+                                  setAvaluesList(a_ValuesLocal)
+                                },
+                                CalcAValueMedians=function(a_ValuesLocal, a25s, a50s, a90s, sigmas, a9095s){
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a25s), na.rm=TRUE))
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a50s), na.rm=TRUE))
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a90s), na.rm=TRUE))
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
-                                  setAvaluesList(a_ValuesLocal)
+                                  return(a_ValuesLocal)
                                 }
                               ))
