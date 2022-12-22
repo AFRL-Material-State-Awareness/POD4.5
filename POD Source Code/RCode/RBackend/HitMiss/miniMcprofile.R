@@ -89,8 +89,6 @@
 # make it effectively proprietary.  To prevent this, the GPL assures that
 # patents cannot be used to render the program non-free.
 # 
-#   The precise terms and conditions for copying, distribution and
-# modification follow.
 #
 ###########################################
 #main function for linear combo generator- this function implements parallelization to speed up the process slightly
@@ -183,7 +181,7 @@ mcprofile <-
     fam <- family(object)
     etastart <- X %*% est
     glmcontrol <- object$control
-    clust= makeCluster(detectCores())
+    clust= makeCluster(detectCores()-1)
     clusterEvalQ(clust,library(quadprog))
     clusterExport(cl = clust, list("constructGrid", "glm_profiling", "orglm.fit"))
     prolist <- parLapply(clust, 1:nrow(CM), function(i){
