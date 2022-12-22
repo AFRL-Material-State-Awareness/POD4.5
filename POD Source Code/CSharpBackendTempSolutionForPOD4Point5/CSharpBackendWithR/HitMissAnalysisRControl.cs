@@ -57,7 +57,10 @@ namespace CSharpBackendWithR
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize)");
             this.myREngine.Evaluate("newAnalysis$executeFitAnalysisOnly()");
         }
-
+        /// <summary>
+        /// executes analysis with ranked set sampling in R
+        /// </summary>
+        /// <param name="newTranformAnalysis"></param>
         public void ExecuteRSS(HMAnalysisObject newTranformAnalysis)
         {
             //create and load the dataframe into the r.NET global environment
