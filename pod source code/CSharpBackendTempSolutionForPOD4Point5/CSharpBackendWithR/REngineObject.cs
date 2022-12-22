@@ -70,7 +70,14 @@ namespace CSharpBackendWithR
             {
                 if(RSetupEnvironmentException.GetType().Name== "ArgumentException")
                 {
-                    throw RSetupEnvironmentException;
+                    if(RSetupEnvironmentException.Message== "This 64-bit process failed to load the library R.dll. Native error message is 'The handle is invalid'")
+                    {
+                        StartREngine(rVersion, out engine, "x64");
+                    }
+                    else
+                    {
+                        throw RSetupEnvironmentException;
+                    }
                 }
                 else {
                     StartREngine(rVersion, out engine, "x64");
