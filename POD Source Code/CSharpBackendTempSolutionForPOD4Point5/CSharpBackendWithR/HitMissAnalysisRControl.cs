@@ -36,6 +36,10 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("rm(y)");
 
         }
+        /// <summary>
+        /// Sends a full analysisto the R backend using simple random sampling
+        /// </summary>
+        /// <param name="newTranformAnalysis"></param>
         public void ExecuteAnalysis(HMAnalysisObject newTranformAnalysis)
         {
             
@@ -47,7 +51,12 @@ namespace CSharpBackendWithR
                 +"CIType='"+newTranformAnalysis.CIType+
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize)");
             this.myREngine.Evaluate("newAnalysis$executeFullAnalysis()");
+            RGarbageCollection();
         }
+        /// <summary>
+        /// Executes analysis for the choose transform panel (omits metrics to speed up the analyses)
+        /// </summary>
+        /// <param name="newTranformAnalysis"></param>
         public void ExecuteTransformOnlyAnalysis(HMAnalysisObject newTranformAnalysis)
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis);
@@ -75,7 +84,19 @@ namespace CSharpBackendWithR
                 "', N=nrow(hitMissDF), normSampleAmount=normSampleSize, rankedSetSampleObject= newRSSComponent)");
             this.myREngine.Evaluate("rm(normSampleSize)");
             this.myREngine.Evaluate("newAnalysis$initializeRSS()");
+            RGarbageCollection();
         }
+        /// <summary>
+        /// call to perform garbage collection on R objects
+        /// </summary>
+        public void RGarbageCollection()
+        {
+            this.myREngine.Evaluate("gc()");
+        }
+        /// <summary>
+        /// return logistic regression table from R
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetLogitFitTableForUI()
         {
             //ShowResults();
@@ -83,6 +104,10 @@ namespace CSharpBackendWithR
             DataTable LogitFitDataTable= this.myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return LogitFitDataTable;
         }
+        /// <summary>
+        /// Return residual table in R (will generate POD for the original crack sizes with a diff)
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetResidualFitTableForUI()
         {
             RDotNet.DataFrame returnDataFrame = this.myREngine.Evaluate("newAnalysis$getResidualTable()").AsDataFrame();
@@ -97,6 +122,10 @@ namespace CSharpBackendWithR
             DataTable IterationDatatable = this.myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return IterationDatatable;
         }
+        /// <summary>
+        /// gets the values for the covariance matrix from R
+        /// </summary>
+        /// <returns></returns>
         public List<double> GetCovarianceMatrixValues()
         {
             RDotNet.DataFrame returnCovMatrix = myREngine.Evaluate("newAnalysis$getCovMatrix()").AsDataFrame();
@@ -113,6 +142,10 @@ namespace CSharpBackendWithR
             }
             return CovarianceMatrix;
         }
+        /// <summary>
+        /// gets teh goodness of fit value from R
+        /// </summary>
+        /// <returns></returns>
         public double GetGoodnessOfFit()
         {
             double goodFit = Convert.ToDouble(myREngine.Evaluate("newAnalysis$getGoodnessOfFit()").AsNumeric()[0]);
@@ -130,6 +163,10 @@ namespace CSharpBackendWithR
                 return false;
             }
         }
+        /// <summary>
+        /// Flag generated in R to warn the user if the logistic regression does not converge
+        /// </summary>
+        /// <returns></returns>
         public bool GetConvergenceFlag()
         {
             int convergedFail = Convert.ToInt32(myREngine.Evaluate("newAnalysis$getConvergedFail()").AsNumeric()[0]);

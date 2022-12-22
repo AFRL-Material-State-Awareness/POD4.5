@@ -132,6 +132,9 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           else if(CITypeRSS=="LR"){
                                                             newAValuesCalc$genAValuesLR()
                                                           }
+                                                          else if(CITypeRSS=="MLR"){
+                                                            newAValuesCalc$genAValuesMLR()
+                                                          }
                                                           setMedianAValues(newAValuesCalc$getAValuesList())
                                                           
                                                         },
