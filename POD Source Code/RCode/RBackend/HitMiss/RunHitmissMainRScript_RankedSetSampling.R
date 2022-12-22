@@ -4,6 +4,7 @@ library(MASS)
 #(mcprofile)
 library(parallel)
 library(logistf)
+library(splines)
 # #Test Code
 
 #Sys.which("python")
@@ -71,10 +72,10 @@ if(transformType==2){
 #regression="Firth Logistic Regression"
 regression="Logistic Regression"
 
-normSamp=500
+normSamp=250
 resamplesMax=5
 #conf int type
-CItype0="MLR"
+CItype0="LR"
 start.time <- Sys.time()
 set_m=6
 

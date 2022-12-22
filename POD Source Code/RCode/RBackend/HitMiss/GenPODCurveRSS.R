@@ -2,7 +2,8 @@
 #NOTE: the increment and step size plots 198 points total. It is designed to capture the critical A values to save time in the calculation
 #the default constructor for c(0,0,0) is simply to fill the simCrackSizes metric
 GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="list", excludeNA="logical",RSSDataFrames="list",
-                            simCrackSizes="numeric",origDataSet= "data.frame", pODCurveDF="data.frame", covarMatrix="matrix", goodnessOfFit="numeric"),
+                            simCrackSizes="numeric",origDataSet= "data.frame", pODCurveDF="data.frame", covarMatrix="matrix", goodnessOfFit="numeric", t_transDataFrameMed=
+                              "data.frame", probsAt95CIDataFrameMed= "data.frame"),
                             methods = list(
                               initialize=function(logitResultsPODInput=list(),excludeNAInput=TRUE,RSSDataFramesInput=list() ,
                                                   simCrackSizesInput=c(0,0,0),origDataSetInput=data.frame(matrix(ncol = 1, nrow = 0))){
@@ -31,8 +32,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 return(goodnessOfFit)
                               },
                               newWaldGen=function(){
-                                t_transDataFrameMed=data.frame("Index"=1:length(nrow(origDataSet)))
-                                probsAt95CIDataFrameMed=data.frame("Index"=1:length(nrow(origDataSet)))
+                                t_transDataFrameMed<<-data.frame("Index"=1:length(nrow(origDataSet)))
+                                probsAt95CIDataFrameMed<<-data.frame("Index"=1:length(nrow(origDataSet)))
                                 #store all of the values for the covariance matrices
                                 covar11=c()
                                 covar12=c()
@@ -58,8 +59,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   currProbs = logitResultsPOD[[i]]$family$linkinv(linear_pred$fit)
                                   currProbsAt95CI = logitResultsPOD[[i]]$family$linkinv(linear_pred$fit-qnorm(0.95)*sigmaOfCrack_i)
                                   #print(length(probsAt95CI))
-                                  t_transDataFrameMed=cbind(t_transDataFrameMed, currProbs)
-                                  probsAt95CIDataFrameMed=cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
+                                  t_transDataFrameMed<<-cbind(t_transDataFrameMed, currProbs)
+                                  probsAt95CIDataFrameMed<<-cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
                                 }
                                 setGoodnessOfFit(median(goodnessOfFitValues))
                                 medianCovarMatrix=matrix(nrow=2, ncol=2)
@@ -69,8 +70,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 medianCovarMatrix[2,2]=median(covar22)
                                 setMedianCovarMatrix(medianCovarMatrix)
                                 #create the POD and confint columns by taking the medians
-                                t_transDataFrameMed$Index=NULL
-                                probsAt95CIDataFrameMed$Index=NULL
+                                t_transDataFrameMed$Index<<-NULL
+                                probsAt95CIDataFrameMed$Index<<-NULL
                                 #calculate medians and store them in final DF column 
                                 t_trans=c()
                                 Confidence_Interval=c()
@@ -91,8 +92,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                               genPODModWald=function(){
                                 #Get the median values for the goodness of fit and varcovar matrix
                                 genGoodFitAndMatrixSimCracks()
-                                t_transDataFrameMed$Index=NULL
-                                probsAt95CIDataFrameMed$Index=NULL
+                                t_transDataFrameMed$Index<<-NULL
+                                probsAt95CIDataFrameMed$Index<<-NULL
                                 #calculate medians and store them in final DF column 
                                 t_trans=c()
                                 Confidence_Interval=c()
@@ -214,6 +215,9 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 setPODCurveDF(PODCurve)
                                 
                               },
+                              #In addition to getting the goodness of fit and varcovar matrix,
+                              #this function also gets the t_trans and confint values from each logit (only used in Modified wald)
+                              #split up this function for better readability
                               genGoodFitAndMatrixSimCracks=function(){
                                 #store all of the values for the covariance matrices
                                 covar11=c()
@@ -222,8 +226,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 covar22=c()
                                 #used to store the goodness of fit values
                                 goodnessOfFitValues=c()
-                                t_transDataFrameMed=data.frame("Index"=1:length(simCrackSizes))
-                                probsAt95CIDataFrameMed=data.frame("Index"=1:length(simCrackSizes))
+                                t_transDataFrameMed<<-data.frame("Index"=1:length(simCrackSizes))
+                                probsAt95CIDataFrameMed<<-data.frame("Index"=1:length(simCrackSizes))
                                 for(i in 1:length(logitResultsPOD)){
                                   linear_pred=predict(logitResultsPOD[[i]], type="link", se.fit=TRUE, 
                                                       newdata=data.frame(x=simCrackSizes))
@@ -240,8 +244,8 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   currt_trans = logitResultsPOD[[i]]$family$linkinv(linear_pred$fit)
                                   currProbsAt95CI = logitResultsPOD[[i]]$family$linkinv(linear_pred$fit-qnorm(0.95)*sigmaOfCrack_i)
                                   
-                                  t_transDataFrameMed=cbind(t_transDataFrameMed, currt_trans)
-                                  probsAt95CIDataFrameMed=cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
+                                  t_transDataFrameMed<<-cbind(t_transDataFrameMed, currt_trans)
+                                  probsAt95CIDataFrameMed<<-cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
                                 }
                                 setGoodnessOfFit(median(goodnessOfFitValues))
                                 #globalVarCovar<<-varCovarMatrixList
