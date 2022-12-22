@@ -16,7 +16,6 @@ source_python(paste(filepath,"/../PythonRankedSetSampling/CyclesArrayGenerator.p
 source_python(paste(filepath,"/../PythonRankedSetSampling/MainRSSamplingClass.py", sep=""))
 source_python(paste(filepath,"/../PythonRankedSetSampling/RSS2DArrayGenerator.py", sep=""))
 #rscripts
-source(paste(filepath,"/RankedSetSamplingMainRObject.R", sep = ""))
 source(paste(filepath,"/MainRSSamplingDataInR.R", sep = ""))
 source(paste(filepath,"/RSSComponentsObject.R", sep = ""))
 source(paste(filepath,"/RankedSetRegGen.R", sep = ""))
@@ -28,15 +27,18 @@ source(paste(filepath,"/WaldCI_RObject.R", sep = ""))
 source(paste(filepath,"/HitMissMainAnalysisRObject.R", sep = ""))
 source(paste(filepath,"/GenNormFitClassR.R", sep = ""))
 source(paste(filepath,"/GenAValuesOnPODCurveRObject.R", sep = ""))
+source(paste(filepath,"/LinearComboGeneratorClassR.R",sep=""))
+
 source(paste(filepath,"/LRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/MLRConfIntRObject.R", sep = ""))
 source(paste(filepath,"/TransformBackFunctions_ForRunningInOnly_R.R", sep = ""))
 source(paste(filepath,"/OutputToExcel_ForRunningInOnly_R.R", sep = ""))
 source(paste(filepath,"/miniMcprofile.R",sep=""))
-
+source(paste(filepath,"/RankedSetSamplingMainRObject.R", sep = ""))
 #LOAD in data as CSV for POD Analysis
-testData<-read.csv("C:/Users/gohmancm/Desktop/POD4.5Project/POD4.5/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Good.csv")
+#testData<-read.csv("C:/Users/gohmancm/Desktop/POD4.5Project/POD4.5/POD Source Code/RCode/RBackend/HitMiss/HitMissData_Good.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
+testData<-read.csv("C:/Users/colin/Desktop/AFRL code-SECUREDONOTOPEN/PODv4.5/POD4.5/HitMiss/HitMissData_Good_1.csv")
 testData<-testData[ , colSums(is.na(testData))==0]
 #testData<-read.csv("C:/Users/gohmancm/Desktop/RSS/HitMissData_Bad.csv")
 #testData<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
@@ -49,9 +51,9 @@ testData<-testData[ , colSums(is.na(testData))==0]
 #testData<-read.csv("C:/Users/gohmancm/Desktop/newPODrepository/HitMiss/HitMissData_Bad.csv")
 ##############################################################
 #testData<-read.csv("C:/Users/colin/Desktop/HitMissResults_Good_1.csv")
-#testData=subset(testData, select = c(Index, x, Inspector1))
-#names(testData)[names(testData) == 'Inspector1'] <- 'y'
-names(testData)[names(testData) == 'IN.1.HM'] <- 'y'
+testData=subset(testData, select = c(Index, x, Inspector1))
+names(testData)[names(testData) == 'Inspector1'] <- 'y'
+#names(testData)[names(testData) == 'IN.1.HM'] <- 'y'
 #############################################################
 transformType=1
 testData<-TransformHitMiss_HM(testData, transformType)
@@ -93,17 +95,17 @@ oneInspector=function(){
   newHMRSSInstance<-HMAnalysis$new(hitMissDF=testData, CIType=CItype0, modelType=regression, N=nrow(testData),
                                    normSampleAmount=normSamp, rankedSetSampleObject=newRSSComponent)
   newHMRSSInstance$initializeRSS()
-  resultDF<-TransformResultsBack_HM(na.omit(newHMRSSInstance$getResults()), transformType)
-  aValResults<-TransformBackAValues_HM(newHMRSSInstance$getKeyAValues(), transformType)
-  resid<-newHMRSSInstance$getGoodnessOfFit()
-  residualDF<-TransformResidualTableBack_HM(newHMRSSInstance$getResidualTable(), transformType)
-  iteration<-newHMRSSInstance$getIterationTable()
-  end.time <- Sys.time()
-  time.taken <- end.time - start.time
+  resultDF<<-TransformResultsBack_HM(na.omit(newHMRSSInstance$getResults()), transformType)
+  aValResults<<-TransformBackAValues_HM(newHMRSSInstance$getKeyAValues(), transformType)
+  goodnessOfFit<<-newHMRSSInstance$getGoodnessOfFit()
+  residualDF<<-TransformResidualTableBack_HM(newHMRSSInstance$getResidualTable(), transformType)
+  iteration<<-newHMRSSInstance$getIterationTable()
+  end.time <<- Sys.time()
+  time.taken <<- end.time - start.time
   print("total execution time was:")
   print(time.taken)
-  covarMatrix=newHMRSSInstance$getCovMatrix()
-  goodFitYAY=newHMRSSInstance$getGoodnessOfFit()
+  covarMatrix<<-newHMRSSInstance$getCovMatrix()
+  #goodFitYAY=newHMRSSInstance$getGoodnessOfFit()
   #newHMRSSInstance$plotSimdata(resultDF)
   newHMRSSInstance$plotCI(resultDF)
 }

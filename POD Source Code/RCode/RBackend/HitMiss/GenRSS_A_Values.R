@@ -96,5 +96,55 @@ GenRSS_A_Values<- setRefClass("GenRSS_A_Values", fields = list(pODRSSDF="data.fr
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
                                   a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
                                   setAvaluesList(a_ValuesLocal)
+                                },
+                                genAValuesLR=function(){
+                                  a_ValuesLocal=list()
+                                  a25s=c()
+                                  a50s=c()
+                                  a90s=c()
+                                  sigmas=c()
+                                  a9095s=c()
+                                  for(i in 1:length(logitResultsList)){
+                                    newAValuesModObject=GenAValuesOnPODCurve$new(LogisticRegressionResult=logitResultsList[[i]],
+                                                                                 inputDataFrameLogistic=pODRSSDF)
+                                    newAValuesModObject$calca9095LR()
+                                    currAValues=newAValuesModObject$getAValuesList()
+                                    a25s=c(a25s, c(currAValues[1]))
+                                    a50s=c(a50s, c(currAValues[2]))
+                                    a90s=c(a90s, c(currAValues[3]))
+                                    sigmas=c(sigmas, c(currAValues[4]))
+                                    a9095s=c(a9095s, c(currAValues[5]))
+                                  }
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a25s), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a50s), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a90s), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
+                                  setAvaluesList(a_ValuesLocal)
+                                },
+                                genAValuesMLR=function(){
+                                  a_ValuesLocal=list()
+                                  a25s=c()
+                                  a50s=c()
+                                  a90s=c()
+                                  sigmas=c()
+                                  a9095s=c()
+                                  for(i in 1:length(logitResultsList)){
+                                    newAValuesModObject=GenAValuesOnPODCurve$new(LogisticRegressionResult=logitResultsList[[i]],
+                                                                                 inputDataFrameLogistic=pODRSSDF)
+                                    newAValuesModObject$calca9095MLR()
+                                    currAValues=newAValuesModObject$getAValuesList()
+                                    a25s=c(a25s, c(currAValues[1]))
+                                    a50s=c(a50s, c(currAValues[2]))
+                                    a90s=c(a90s, c(currAValues[3]))
+                                    sigmas=c(sigmas, c(currAValues[4]))
+                                    a9095s=c(a9095s, c(currAValues[5]))
+                                  }
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a25s), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a50s), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a90s), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(sigmas), na.rm=TRUE))
+                                  a_ValuesLocal=append(a_ValuesLocal, median(as.numeric(a9095s), na.rm=TRUE))
+                                  setAvaluesList(a_ValuesLocal)
                                 }
                               ))

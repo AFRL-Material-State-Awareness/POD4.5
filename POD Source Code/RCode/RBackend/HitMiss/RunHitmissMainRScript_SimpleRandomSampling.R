@@ -22,7 +22,10 @@ hitMissDF<-
 #hitMissDF$y.1=NULL
 #hitMissDF[1,3]=1.5
 #hitMissDF<-read.csv("C:/Users/gohmancm/Desktop/Ryan Moores- POD Data/PODDataRHF-HitMiss.csv")
+hitMissDF<-read.csv("C:/Users/colin/Desktop/AFRL code-SECUREDONOTOPEN/PODv4.5/POD4.5/HitMiss/HitMissData_Good_1.csv")
+
 hitMissDF<-hitMissDF[ , colSums(is.na(hitMissDF))==0]
+
 #hitMissDF$x= 1/hitMissDF$x
 codeLocation=dirname(rstudioapi::getSourceEditorContext()$path)
 ##### Import necessary R classes to perform hitmiss analysis
@@ -108,8 +111,8 @@ MultipleInspectors=function(){
 }
 
 begin=Sys.time()
-oneInspector()
-#MultipleInspectors()
+#oneInspector()
+MultipleInspectors()
 #WriteOutResultsMuliple_POD(results)
 #WriteOutResultsMuliple_Confidence(results)
 end=Sys.time()

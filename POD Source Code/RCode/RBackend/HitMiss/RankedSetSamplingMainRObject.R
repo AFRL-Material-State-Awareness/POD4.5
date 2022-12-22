@@ -129,6 +129,9 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                           else if(CITypeRSS=="ModifiedWald"){
                                                             newAValuesCalc$genAValuesModWald()
                                                           }
+                                                          else if(CITypeRSS=="LR"){
+                                                            newAValuesCalc$genAValuesLR()
+                                                          }
                                                           setMedianAValues(newAValuesCalc$getAValuesList())
                                                           
                                                         },

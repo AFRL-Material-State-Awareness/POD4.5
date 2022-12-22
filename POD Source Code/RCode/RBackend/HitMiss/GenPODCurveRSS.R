@@ -148,9 +148,45 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 setPODCurveDF(PODCurve)
                               },
                               genPODLR=function(){
-                                #logitResultsPODG<<-logitResultsPOD
+                                #store all of the values for the covariance matrices
+                                covar11=c()
+                                covar12=c()
+                                covar21=c()
+                                covar22=c()
+                                #used to store the goodness of fit values
+                                goodnessOfFitValues=c()
+                                t_transDataFrameMed=data.frame("Index"=1:length(simCrackSizes))
+                                probsAt95CIDataFrameMed=data.frame("Index"=1:length(simCrackSizes))
+                                for(i in 1:length(logitResultsPOD)){
+                                  linear_pred=predict(logitResultsPOD[[i]], type="link", se.fit=TRUE, 
+                                                      newdata=data.frame(x=simCrackSizes))
+                                  varcovmat =vcov(logitResultsPOD[[i]])
+                                  #varCovarMatrixList=append(varCovarMatrixList, list(varcovmat))
+                                  covar11=append(covar11, varcovmat[1,1])
+                                  covar12=append(covar12, varcovmat[1,2])
+                                  covar21=append(covar21, varcovmat[2,1])
+                                  covar22=append(covar22, varcovmat[2,2])
+                                  thisGoodnessOfFit=logitResultsPOD[[i]]$deviance/logitResultsPOD[[i]]$null.deviance
+                                  goodnessOfFitValues=append(goodnessOfFitValues, thisGoodnessOfFit)
+                                  sigmaOfCrack_i = sqrt(varcovmat[1,1]+2*varcovmat[1,2]*
+                                                          simCrackSizes+varcovmat[2,2]*
+                                                          simCrackSizes^2)
+                                  currt_trans = logitResultsPOD[[i]]$family$linkinv(linear_pred$fit)
+                                  currProbsAt95CI = logitResultsPOD[[i]]$family$linkinv(linear_pred$fit-qnorm(0.95)*sigmaOfCrack_i)
+                                  
+                                  t_transDataFrameMed=cbind(t_transDataFrameMed, currt_trans)
+                                  probsAt95CIDataFrameMed=cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
+                                }
+                                setGoodnessOfFit(median(goodnessOfFitValues))
+                                #globalVarCovar<<-varCovarMatrixList
+                                medianCovarMatrix=matrix(nrow=2, ncol=2)
+                                medianCovarMatrix[1,1]=median(covar11)
+                                medianCovarMatrix[1,2]=median(covar12)
+                                medianCovarMatrix[2,1]=median(covar21)
+                                medianCovarMatrix[2,2]=median(covar22)
+                                #globalcovar<<-medianCovarMatrix
+                                setMedianCovarMatrix(medianCovarMatrix)
                                 print("starting LR RSS")
-                                ##TODO: apply parallel processing to speed things up
                                 #generate the Lr conf interval with RSS(WARNING: VERY SLOW)
                                 #Initialize the K matrix
                                 a=simCrackSizes
@@ -202,20 +238,10 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 setPODCurveDF(PODCurve)
                                 
                               },
-                              genLinearCombosRSS=function(LogisticRegressionResult, KMatrix){
-                                print("combo time!")
-                                ptm <- proc.time()
-                                linearCombo<-mcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
-                                #linearCombo<-minimcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
-                                print("combo done!")
-                                print(proc.time() - ptm)
-                                return(linearCombo)
-                              },
                               genPODMLR=function(){
                                 print("starting MLR RSS")
                                 options(warn=-1)
-                                ##TODO: apply parallel processing to speed things up
-                                #generate the Lr conf interval with RSS(WARNING: VERY SLOW)
+                                #generate the MLr conf interval with RSS(WARNING: VERY SLOW)
                                 #Initialize the K matrix
                                 a=simCrackSizes
                                 a_i_2 = sort(a)[seq(from=1,to=length(a),length.out=length(simCrackSizes))]
@@ -261,8 +287,11 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 
                               },
                               genLinearCombosRSS=function(LogisticRegressionResult, KMatrix){
+                                print("combo time!")
                                 ptm <- proc.time()
                                 linearCombo<-mcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
+                                #linearCombo<-minimcprofile(object = LogisticRegressionResult, CM = KMatrix)# Calculate -2log(Lambda)
+                                print("combo done!")
                                 print(proc.time() - ptm)
                                 return(linearCombo)
                               }
