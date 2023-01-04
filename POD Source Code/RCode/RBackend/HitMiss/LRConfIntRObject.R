@@ -19,7 +19,7 @@ LikelihoodRatioConfInt <- setRefClass("LikelihoodRatioConfInt",#contains="mcprof
                              ptm <- proc.time()
                              castCalcLinCombo<-calcLinearCombo
                              class(castCalcLinCombo)<-"mcprofile"
-                             ci.logit.profile<-try(confint.mcprofile(object = castCalcLinCombo, level = 0.95, adjust = "none",
+                             ci.logit.profile<-try(confintmcprofile(object = castCalcLinCombo, level = 0.95, adjust = "none",
                                                            alternative="greater", trace=TRUE, 
                                                            parallel = "parallel",ncpus=getOption("profile.ncpus", 
                                                            detectCores()-1) , full=TRUE))  # CI for beta_0 + beta_1 * x

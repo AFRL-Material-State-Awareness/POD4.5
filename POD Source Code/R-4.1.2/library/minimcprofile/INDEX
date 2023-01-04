@@ -1,0 +1,9 @@
+confintmcprofile        Simultaneous Confidence Intervals for Multiple
+                        Contrast Profiles
+hoa                     Higher order asymptotics using the modified
+                        likelihood root
+mcprofile               Construction of Multiple Contrast Profiles
+minimcprofile           Construction of Multiple Contrast Profiles.
+                        SAME AS MCPROFILE BUT WITH PARALLELIZATION
+minimcprofileControl    mcprofile Control Arguments
+wald.mlr                Calculate Wald-Profiles
