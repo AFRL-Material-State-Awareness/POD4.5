@@ -589,6 +589,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         public override void ProcessAnalysisOutput(Object sender, EventArgs e)
         {
+            bool analysisFailed = false;
             if (MainChart != null)
                 MainChart.ClearProgressBar();
 
@@ -626,24 +627,47 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             catch
             {
                 //ADD click to continue? in order to ensure the user doesn't think the program is broken
-                _errorFound = false;
+                _knownErrorFound = false;
                 if (Analysis.AnalysisDataType.ToString() == "HitMiss")
                 {
                     SearhForHitMissErrors(a9095Original);
                 }
-                if (!_errorFound)
+                if (!_knownErrorFound)
                 {
                     //Source.Python.AddErrorText("Output values out of range.");
                     Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a Statistician if Necessary");
                 }
 
-
+                /*
                 MainChart.ClearEverythingButPoints();
-                //mainChart.UpdateBestFitLine();
-                linearityChart.ClearEverythingButPoints();
+                mainChart.UpdateBestFitLine();
+                //linearityChart.ClearEverythingButPoints();
                 podChart.ClearEverythingButPoints();
+                */
                 //if there is an error, allow the user to open another analysis tab since it is no longer running
                 CSharpBackendWithR.REngineObject.REngineRunning = false;
+                analysisFailed = true;
+                try
+                {
+                    ReattemptOutput(ref a90Transformed, ref a9095Transformed, ref a50Transformed, ref a50Original, ref a90Original, ref a9095Original, ref  lackOfFit);
+                }
+                finally
+                {
+                    //give the user as much data as possible without messing up charts
+                    podChart.FillChart(Analysis.Data, false, analysisFailed);
+                    podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
+                    podChart.UpdateLevelConfidenceLines(a50Original,
+                                                        a90Original,
+                                                        a9095Original);
+                    StepToolTip.SetToolTip(podChart, podChart.TooltipText);
+                    podChart.ChartToolTip = StepToolTip;
+
+                    likelihoodRatioTestOut.Rating = Analysis.GetTestRatingFromLabel(Analysis.OutTestLackOfFitRating);
+
+                    mainChart.UpdateBestFitLine();
+
+                    linearityChart.FillChart(Analysis.Data, Analysis.OutPODMu, Analysis.OutPODSigma);
+                }
                 return;
             }
             
@@ -670,6 +694,51 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             linearityChart.ChartToolTip = StepToolTip;
 
             CSharpBackendWithR.REngineObject.REngineRunning = false;
+        }
+        private void ReattemptOutput(ref double a90Transformed, ref double a9095Transformed, ref double a50Transformed, ref double a50Original,ref double a90Original,
+            ref double a9095Original, ref double lackOfFit)
+        {
+            a90Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a90Transformed)));
+            if (Double.IsNaN(a9095Original) && Double.IsNaN(a9095Transformed))
+            {
+                a9095Original = -9999999999.0;
+                a9095Transformed = -9999999999.0;
+                a90_95Out.Value = Convert.ToDecimal(-9999999999.0);
+            }    
+            else
+                a9095Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a9095Transformed)));
+            a50Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a50Transformed)));
+            
+            a90Out.Value = Convert.ToDecimal(a90Original);
+
+            a50Out.Value = Convert.ToDecimal(a50Original);
+            MuOut.Value = Convert.ToDecimal(Analysis.OutPODMu);
+            SigmaOut.Value = Convert.ToDecimal(Analysis.OutPODSigma);
+            likelihoodRatioTestOut.Value = Convert.ToDecimal(lackOfFit);
+            try
+            {
+                covV11Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV11);
+            }
+            catch
+            {
+                covV11Out.Value = -9999999999.0m;
+            }
+            try
+            {
+                covV12Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV12);
+            }
+            catch
+            {
+                covV12Out.Value = -9999999999.0m;
+            }
+            try
+            {
+                covV22Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV22);
+            }
+            catch
+            {
+                covV22Out.Value = -9999999999.0m;
+            }
         }
 
         public int LinearityIndex

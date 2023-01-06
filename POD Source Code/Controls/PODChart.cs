@@ -332,7 +332,7 @@ namespace POD.Controls
             }
         }
 
-        public void FillChart(AnalysisData myData, bool usingLoadedFromFileData = false)
+        public void FillChart(AnalysisData myData, bool usingLoadedFromFileData = false, bool analysisFailed=false)
         {
             //_lastUsedData = myData;
 
@@ -352,7 +352,7 @@ namespace POD.Controls
                     case AnalysisDataTypeEnum.HitMiss:
                         //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence pod", 0.0, 1.0);
                         //FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
-                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0);
+                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0, analysisFailed);
                         break;
                 }
             }
@@ -389,12 +389,14 @@ namespace POD.Controls
             FillChart(myData.PodCurveTable, my90X, my90Y, my95X, my95Y, 0.0, 1.0);
         }
 
-        public void FillChart(DataTable myTable, string my90X, string my90Y, string my95X, string my95Y, double myYMin, double myYMax)
+        public void FillChart(DataTable myTable, string my90X, string my90Y, string my95X, string my95Y, double myYMin, double myYMax, bool analysisFailed = false)
         {
             DataView view = myTable.DefaultView;
 
             POD.Points.DataBindXY(view, my90X, view, my90Y);
-            POD9095.Points.DataBindXY(view, my95X, view, my95Y);
+            //only plot the confidence interval curve if the analysis doesn't fail
+            if(!analysisFailed)
+                POD9095.Points.DataBindXY(view, my95X, view, my95Y);
 
             
 

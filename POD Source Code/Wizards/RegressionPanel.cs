@@ -23,7 +23,7 @@ namespace POD.Wizards
         protected int _nineCharWidth = 100;
         protected Control _activeControl;
         //use to indicate if a known error was found - current only for hitmiss
-        protected bool _errorFound;
+        protected bool _knownErrorFound;
         public RegressionPanel()
             : base()
         {
@@ -625,19 +625,19 @@ namespace POD.Wizards
             CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
             if (!(Analysis.FailToConverge) && Double.IsNaN(a9095Original))
             {
-                _errorFound = true;
+                _knownErrorFound = true;
                 Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity. " + '\n' +
                     "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n' + "Confidence intervals and/or Ranked Set Sampling");
             }
             else if (Analysis.FailToConverge)
             {
-                _errorFound = true;
+                _knownErrorFound = true;
                 Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge. " + '\n' +
                     "Try the Firth Logistic Regression Model Type Instead");
             }
             else if (currHitMissSettings.RegressionType == "Firth Logistic Regression" && Double.IsNaN(a9095Original))
             {
-                _errorFound = true;
+                _knownErrorFound = true;
                 if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
                 {
                     Source.Python.AddErrorText("A9095 is either infinity or a very large number! You could try" + '\n' +

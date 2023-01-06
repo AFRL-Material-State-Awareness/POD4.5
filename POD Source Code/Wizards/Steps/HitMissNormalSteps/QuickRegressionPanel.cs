@@ -943,12 +943,12 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 //MessageBox.Show("Analysis Error caused invalid output values that are out of range.");
                 //Source.Python.AddErrorText("Output values out of range.");
                 //ADD click to continue? in order to ensure the user doesn't think the program is broken
-                _errorFound = false;
+                _knownErrorFound = false;
                 if (Analysis.AnalysisDataType.ToString() == "HitMiss")
                 {
                     SearhForHitMissErrors(a9095Original);
                 }
-                if (!_errorFound)
+                if (!_knownErrorFound)
                 {
                     //Source.Python.AddErrorText("Output values out of range.");
                     Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a Statistician if Necessary");
