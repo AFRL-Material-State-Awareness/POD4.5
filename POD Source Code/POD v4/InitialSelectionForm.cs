@@ -486,14 +486,21 @@ namespace POD
 
             if(label == NewProjectLabel)
             {
+                //change text until combining is supported
+                /*
                 OverviewTextBox.Text = "Start a new project containing one or more POD analyses. Each project contains a set of data sources and analyses." + Environment.NewLine + Environment.NewLine +
                                        "The entire project or individual analyses can be exported to an Exceil file so the results can be easily shared with others." + Environment.NewLine + Environment.NewLine + 
                                        "Both aHat vs a and Hit/Miss analyses can be mixed together in a single project.";
+                */
+                OverviewTextBox.Text = "Start a new project containing one or more POD analyses. Each project contains a set of data sources and analyses." + Environment.NewLine + Environment.NewLine +
+                                       "The entire project or individual analyses can be exported to an Excel file so the results can be easily shared with others." + Environment.NewLine + Environment.NewLine +
+                                       "aHat vs a and Hit/Miss analyses CANNOT be mixed together in a single project.";
             }
             else if (label == HitMissQuickAnalysisLabel)
             {
                 OverviewTextBox.Text = "Start a quick Hit/Miss analysis. Quick analyses are not to be used in place of a traditional analysis found in a POD project. It is meant to only be used for reference while generating data." + 
-                                       Environment.NewLine + Environment.NewLine + "It is not possible to export the results to Excel but the data entered can be exported for later reference.";
+                                       Environment.NewLine + Environment.NewLine + "It is not possible to export the results to Excel but the data entered can be exported for later reference."+Environment.NewLine + Environment.NewLine+
+                                       "Many new advanced features used in hit/miss cannot be used in quick analysis. If you wish to use these features, create a new full analysis project.";
             }
             else if (label == AHatQuickAnalysisLabel)
             {
