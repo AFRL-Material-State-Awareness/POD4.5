@@ -283,7 +283,7 @@ namespace POD
             }
             return decisionString;
         }
-        //used to calculate the nth root
+        //used to calculate the nth root given a double 'A'
         //source : https://stackoverflow.com/questions/55987201/calculating-the-cubic-root-for-negative-number
         //author : Tim ---- https://stackoverflow.com/users/6785695/tim
         public static double NthRoot(double A, double root, double checkLambdaDenominator=2.0)
