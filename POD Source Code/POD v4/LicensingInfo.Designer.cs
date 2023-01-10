@@ -81,6 +81,7 @@ namespace POD
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 450);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LicensingInfo";
             this.Text = "LicensingInfo";
             this.tableLayoutPanel1.ResumeLayout(false);
