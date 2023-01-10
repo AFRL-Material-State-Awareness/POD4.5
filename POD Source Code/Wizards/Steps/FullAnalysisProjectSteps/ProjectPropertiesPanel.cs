@@ -300,7 +300,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                     if (analysis.Data.PodCurveTable.Rows.Count > 0)
                     {
-                        chart.FillChart(analysis.Data, true);
+                        chart.FillChart(analysis.Data, true, analysis.ErrorInAnalysis);
                         chart.SetXAxisRange(analysis.Data.GetUncensoredXBufferedRange(chart, false), analysis.Data, true);
                         chart.UpdateLevelConfidenceLines(analysis.OutResponseDecisionPODA50Value,
                                                          analysis.OutResponseDecisionPODLevelValue,
@@ -333,7 +333,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                             if (analysis.Data.PodCurveTable.Rows.Count > 0)
                             {
                                 _propertiesToolTip.SetToolTip(chart, analysis.ToolTipText);
-                                chart.FillChart(analysis.Data, true);
+                                chart.FillChart(analysis.Data, true, analysis.ErrorInAnalysis);
                                 chart.SetXAxisRange(analysis.Data.GetUncensoredXBufferedRange(chart, false), analysis.Data, true);
                                 chart.UpdateLevelConfidenceLines(analysis.OutResponseDecisionPODA50Value,
                                                                     analysis.OutResponseDecisionPODLevelValue,

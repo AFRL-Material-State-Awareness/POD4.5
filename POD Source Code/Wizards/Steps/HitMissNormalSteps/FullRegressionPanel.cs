@@ -589,7 +589,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         public override void ProcessAnalysisOutput(Object sender, EventArgs e)
         {
-            bool analysisFailed = false;
+            //bool analysisFailed = false;
             if (MainChart != null)
                 MainChart.ClearProgressBar();
 
@@ -646,7 +646,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 */
                 //if there is an error, allow the user to open another analysis tab since it is no longer running
                 CSharpBackendWithR.REngineObject.REngineRunning = false;
-                analysisFailed = true;
+                Analysis.ErrorInAnalysis = true;
                 try
                 {
                     ReattemptOutput(ref a90Transformed, ref a9095Transformed, ref a50Transformed, ref a50Original, ref a90Original, ref a9095Original, ref  lackOfFit);
@@ -654,7 +654,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 finally
                 {
                     //give the user as much data as possible without messing up charts
-                    podChart.FillChart(Analysis.Data, false, analysisFailed);
+                    podChart.FillChart(Analysis.Data, false, Analysis.ErrorInAnalysis);
                     podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
                     podChart.UpdateLevelConfidenceLines(a50Original,
                                                         a90Original,
@@ -670,7 +670,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 }
                 return;
             }
-            
+            //finished the analysis without issues! Set the error in analysis to false
+            Analysis.ErrorInAnalysis = false;
             podChart.FillChart(Analysis.Data);
             podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
             podChart.UpdateLevelConfidenceLines(a50Original,

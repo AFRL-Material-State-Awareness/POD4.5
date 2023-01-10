@@ -21,6 +21,8 @@ namespace POD.Analyze
     [Serializable]
     public class Analysis : WizardSource
     {
+        //flag used to keep track of if there is a current error in the Analysis(gets overwritten in the full regression panel every time it is executed
+        private bool _errorPresentInAnalysis = false;
         //TODO: decide if Analysis is going to manage the archived analyses or if an external archive manager will manage everything instead
         private Analysis _activeAnalysis;
         private int _activeAnalysisIndex;
@@ -2965,6 +2967,15 @@ namespace POD.Analyze
         public string Instrument { get; set; }
 
         public string InstrumentUnit { get; set; }
+        /// <summary>
+        /// the setter and getter for error present in analysis flag
+        /// </summary>
+        /// <returns></returns>
+        public bool ErrorInAnalysis
+        {
+            get { return _errorPresentInAnalysis; }
+            set { _errorPresentInAnalysis = value; }   
+        }
 
         public override string GenerateFileName()
         {
