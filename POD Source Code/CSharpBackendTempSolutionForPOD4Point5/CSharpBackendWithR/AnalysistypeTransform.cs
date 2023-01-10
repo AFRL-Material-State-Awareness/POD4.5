@@ -85,6 +85,8 @@ namespace CSharpBackendWithR
             //Console.WriteLine(newPFAnalysisObject);
             //finish analysis
             //return object to UI
+            //this.newPFAnalysisObject.Confidence_level
+            //analysisEngine.clearGlobalIInREngineObject();
             return this.newPFAnalysisObject;
         }
         private HMAnalysisObject ExecutePFAnalysisTrans()

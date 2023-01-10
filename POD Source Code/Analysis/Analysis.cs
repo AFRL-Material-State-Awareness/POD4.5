@@ -2837,7 +2837,6 @@ namespace POD.Analyze
                     newAnalysisControlAHat.ExecuteAnalysisTransforms();
                     _aHatAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
                 }
-                //_podDoc.OnFitOnlyAnalysis();
             }
             catch(Exception executeProblemAnalysis)
             {

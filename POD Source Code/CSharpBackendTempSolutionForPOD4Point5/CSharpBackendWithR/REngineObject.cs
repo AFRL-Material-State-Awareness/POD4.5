@@ -324,7 +324,7 @@ namespace CSharpBackendWithR
         {
             this.rEngine.ClearGlobalEnvironment();
             InitializeRScripts();
-            InitializePythonScripts();
+            //InitializePythonScripts();
         }
         public static bool REngineRunning=false;
         public static bool PythonLoaded { get; set; }
