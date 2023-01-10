@@ -14,5 +14,3 @@ very large
 TODOs and feature updates
 ===========================
 1. should add in new POD hitmiss features into quick analysis tab (users seem to gravitate towards it)
-2. Need to update the installation file while targeting 'any CPU'. This will allow the program to work correct for heavy computations.
-This is particularily helpful for combining ranked set sampling and LR/MLR
