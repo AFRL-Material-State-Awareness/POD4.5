@@ -648,7 +648,6 @@ namespace POD.Wizards
                 {
                     Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful" + '\n' +
                         "Try switching between LR and MLR with the current settings." + '\n' +
-                        "Otherwise, it is likely impossible for PODv4.5 to produce better results " + '\n' +
                         "Data's sample size may be too small and/or the data does not have enough overlap");
                 }
                 else
