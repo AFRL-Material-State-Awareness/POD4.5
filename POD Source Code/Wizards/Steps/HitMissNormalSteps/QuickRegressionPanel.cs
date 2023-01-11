@@ -513,7 +513,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             base.AddInputControls();
 
             //set image list so context menu has same pictures
-            MainChart.ContextMenuImageList = aMaxControl.RatingImages;
+            DataPointChart.ContextMenuImageList = aMaxControl.RatingImages;
 
             IntitalizeTransformBoxes();
             InitializeCITypeBox();

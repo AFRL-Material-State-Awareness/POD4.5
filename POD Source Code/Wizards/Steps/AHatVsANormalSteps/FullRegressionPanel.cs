@@ -334,7 +334,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             base.AddInputControls();
 
             //set image list so context menu has same pictures
-            MainChart.ContextMenuImageList = aMaxControl.RatingImages;
+            DataPointChart.ContextMenuImageList = aMaxControl.RatingImages;
 
             inputTablePanel.Controls.Clear();
 

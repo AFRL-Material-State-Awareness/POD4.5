@@ -17,6 +17,18 @@ namespace POD.Controls
 {
     public partial class DataPointChart : Chart
     {
+     
+        /// <summary>
+        /// image lists
+        /// </summary>
+        public static System.Windows.Forms.ImageList ContextMenuImageList;
+        private static System.Windows.Forms.ImageList ButtonImageList;
+        private static System.Windows.Forms.ImageList MenuOffImageList;
+        private static System.Windows.Forms.ImageList MenuOnImageList;
+        private static System.Windows.Forms.ImageList MenuPressedImageList;
+        private static System.Windows.Forms.ImageList WideImageList;
+        private static System.Windows.Forms.ImageList FullSizeImageList;
+        //
         bool _isSelected = false;
         bool _isHighlighted = false;
         bool mouseInside = false;
@@ -68,8 +80,12 @@ namespace POD.Controls
 
         public DataPointChart()
         {
+            
             InitializeComponent();
-
+            if (ContextMenuImageList == null)
+            {
+                SetUpImageLists();
+            }
             _errorsList = new List<string>();
 
             MouseEnter += AHatVsAChart_MouseEnter;
@@ -124,6 +140,8 @@ namespace POD.Controls
             TurnOffAllMenuButtons();
 
             TabStop = false;
+
+            
         }
 
         int ImageSize = 20;
@@ -132,7 +150,111 @@ namespace POD.Controls
         int MenuMinY = 20;
         int MenuMinX = 0;
         public bool MenuIsOpen = false;
-
+        public void SetUpImageLists()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataPointChart));
+            ContextMenuImageList = new System.Windows.Forms.ImageList(this.components);
+            ButtonImageList = new System.Windows.Forms.ImageList(this.components);
+            MenuOffImageList = new System.Windows.Forms.ImageList(this.components);
+            MenuOnImageList = new System.Windows.Forms.ImageList(this.components);
+            MenuPressedImageList = new System.Windows.Forms.ImageList(this.components);
+            WideImageList = new System.Windows.Forms.ImageList(this.components);
+            FullSizeImageList = new System.Windows.Forms.ImageList(this.components);
+            ContextMenuImageList = new System.Windows.Forms.ImageList(this.components);
+            ButtonImageList = new System.Windows.Forms.ImageList(this.components);
+            MenuOffImageList = new System.Windows.Forms.ImageList(this.components);
+            MenuOnImageList = new System.Windows.Forms.ImageList(this.components);
+            MenuPressedImageList = new System.Windows.Forms.ImageList(this.components);
+            WideImageList = new System.Windows.Forms.ImageList(this.components);
+            FullSizeImageList = new System.Windows.Forms.ImageList(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // ContextMenuImageList
+            // 
+            ContextMenuImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ContextMenuImageList.ImageStream")));
+            ContextMenuImageList.TransparentColor = System.Drawing.Color.Transparent;
+            ContextMenuImageList.Images.SetKeyName(0, "Paste.png");
+            ContextMenuImageList.Images.SetKeyName(1, "Clipboard Selected.png");
+            // 
+            // ButtonImageList
+            // 
+            ButtonImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ButtonImageList.ImageStream")));
+            ButtonImageList.TransparentColor = System.Drawing.Color.Transparent;
+            ButtonImageList.Images.SetKeyName(0, "Paste.png");
+            ButtonImageList.Images.SetKeyName(1, "Clipboard Selected.png");
+            // 
+            // MenuOffImageList
+            // 
+            MenuOffImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("MenuOffImageList.ImageStream")));
+            MenuOffImageList.TransparentColor = System.Drawing.Color.Transparent;
+            MenuOffImageList.Images.SetKeyName(0, "Size Top.png");
+            MenuOffImageList.Images.SetKeyName(1, "Size Middle.png");
+            MenuOffImageList.Images.SetKeyName(2, "Size Bottom.png");
+            MenuOffImageList.Images.SetKeyName(3, "Small 11 OFF.png");
+            MenuOffImageList.Images.SetKeyName(4, "Medium 11 OFF.png");
+            MenuOffImageList.Images.SetKeyName(5, "Large 11 OFF.png");
+            MenuOffImageList.Images.SetKeyName(6, "Small 4 3 OFF.png");
+            MenuOffImageList.Images.SetKeyName(7, "Medium 4 3 OFF.png");
+            MenuOffImageList.Images.SetKeyName(8, "Large 4 3 OFF.png");
+            MenuOffImageList.Images.SetKeyName(9, "Small 16 9 OFF.png");
+            MenuOffImageList.Images.SetKeyName(10, "Medium 16 9 OFF.png");
+            MenuOffImageList.Images.SetKeyName(11, "Large 16 9 OFF.png");
+            // 
+            // MenuOnImageList
+            // 
+            MenuOnImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("MenuOnImageList.ImageStream")));
+            MenuOnImageList.TransparentColor = System.Drawing.Color.Transparent;
+            MenuOnImageList.Images.SetKeyName(0, "Size Top.png");
+            MenuOnImageList.Images.SetKeyName(1, "Size Middle.png");
+            MenuOnImageList.Images.SetKeyName(2, "Size Bottom.png");
+            MenuOnImageList.Images.SetKeyName(3, "Small 11 ON.png");
+            MenuOnImageList.Images.SetKeyName(4, "Medium 11 ON.png");
+            MenuOnImageList.Images.SetKeyName(5, "Large 11 ON.png");
+            MenuOnImageList.Images.SetKeyName(6, "Small 4 3 ON.png");
+            MenuOnImageList.Images.SetKeyName(7, "Medium 4 3 ON.png");
+            MenuOnImageList.Images.SetKeyName(8, "Large 4 3 ON.png");
+            MenuOnImageList.Images.SetKeyName(9, "Small 16 9 ON.png");
+            MenuOnImageList.Images.SetKeyName(10, "Medium 16 9 ON.png");
+            MenuOnImageList.Images.SetKeyName(11, "Large 16 9 ON.png");
+            // 
+            // MenuPressedImageList
+            // 
+            MenuPressedImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("MenuPressedImageList.ImageStream")));
+            MenuPressedImageList.TransparentColor = System.Drawing.Color.Transparent;
+            MenuPressedImageList.Images.SetKeyName(0, "Size Top.png");
+            MenuPressedImageList.Images.SetKeyName(1, "Size Middle.png");
+            MenuPressedImageList.Images.SetKeyName(2, "Size Bottom.png");
+            MenuPressedImageList.Images.SetKeyName(3, "Small 11 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(4, "Medium 11 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(5, "Large 11 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(6, "Small 4 3 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(7, "Medium 4 3 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(8, "Large 4 3 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(9, "Small 16 9 PRESSED.png");
+            MenuPressedImageList.Images.SetKeyName(10, "Medium 16 9 PRESS.png");
+            MenuPressedImageList.Images.SetKeyName(11, "Large 16 9 PRESS.png");
+            // 
+            // WideImageList
+            // 
+            WideImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("WideImageList.ImageStream")));
+            WideImageList.TransparentColor = System.Drawing.Color.Transparent;
+            WideImageList.Images.SetKeyName(0, "CopyChart.png");
+            WideImageList.Images.SetKeyName(1, "RatioLabelChart.png");
+            WideImageList.Images.SetKeyName(2, "11 Label.png");
+            WideImageList.Images.SetKeyName(3, "43 Label.png");
+            WideImageList.Images.SetKeyName(4, "169 Label.png");
+            WideImageList.Images.SetKeyName(5, "0 Label.png");
+            WideImageList.Images.SetKeyName(6, "480.png");
+            WideImageList.Images.SetKeyName(7, "720.png");
+            WideImageList.Images.SetKeyName(8, "1080.png");
+            // 
+            // FullSizeImageList
+            // 
+            FullSizeImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("FullSizeImageList.ImageStream")));
+            FullSizeImageList.TransparentColor = System.Drawing.Color.Transparent;
+            FullSizeImageList.Images.SetKeyName(0, "Shadow.png");
+        }
         protected override void OnMouseMove(MouseEventArgs e)
         {
             
