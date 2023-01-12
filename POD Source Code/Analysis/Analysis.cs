@@ -1162,7 +1162,6 @@ namespace POD.Analyze
             {
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
                 List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
-                //TODO: figure out how to get the covariance matrix for LR and MLR
                 if(_hmAnalysisObject.CovarianceMatrix != null)
                 {
                     OutPFCovarianceV11 = covMatrix[0];

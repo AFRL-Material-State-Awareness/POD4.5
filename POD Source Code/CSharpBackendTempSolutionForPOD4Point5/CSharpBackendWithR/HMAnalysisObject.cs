@@ -52,7 +52,6 @@ namespace CSharpBackendWithR
             this.regressionType = "Logistic Regression";//becomes logit, firth, or lasso (logit by default)
             Flaw_name = ""; //holds the name of the flaw in the datatable
             HitMiss_name = "";
-            //TODO: these may not be necessary
             HitMissMin = 0;
             HitMissMax = 1;
             //holds the flaw sizes

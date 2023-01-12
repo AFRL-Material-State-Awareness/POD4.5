@@ -1263,9 +1263,6 @@ namespace POD.Data
                         values.Add(value);
                     }
 
-                    //TODO: transform list of data here
-                    //_python, values, myTransformType, myCustomEquation 
-
                     var minChanged = new List<int>();
                     //var maxChanged = new List<int>();
 
