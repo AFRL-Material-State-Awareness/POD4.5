@@ -2170,16 +2170,18 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             var currentItem = (PODListBoxItem)listBox.Rows[e.Index].Cells[0].Value;
 
             Bitmap bitmap = new Bitmap(e.Bounds.Width, e.Bounds.Height);
-            Graphics graph = Graphics.FromImage(bitmap);
+            using (Graphics graph = Graphics.FromImage(bitmap))
+            {
 
-            graph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                graph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-            Brush backBrush = new SolidBrush(listBox.BackColor);
+                Brush backBrush = new SolidBrush(listBox.BackColor);
 
-            graph.FillRectangle(backBrush, 0.0F, 0.0F, e.Bounds.Width, e.Bounds.Height);
-            graph.DrawString(currentItem.ResponseColumnName, this.GetCurrentDataList().Font, new SolidBrush(currentItem.RowColor), 0.0F, 0.0F);
+                graph.FillRectangle(backBrush, 0.0F, 0.0F, e.Bounds.Width, e.Bounds.Height);
+                graph.DrawString(currentItem.ResponseColumnName, this.GetCurrentDataList().Font, new SolidBrush(currentItem.RowColor), 0.0F, 0.0F);
 
-            e.Graphics.DrawImageUnscaled(bitmap, e.Bounds);
+                e.Graphics.DrawImageUnscaled(bitmap, e.Bounds);
+            }
         }
 
         private void AnalaysisName_KeyDown(object sender, KeyEventArgs e)
