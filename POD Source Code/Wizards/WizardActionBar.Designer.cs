@@ -37,7 +37,7 @@ namespace POD.Wizards
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WizardActionBar));
+            //System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WizardActionBar));
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.leftFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.leftOverflowButton = new POD.Controls.PODOverButton();
@@ -45,7 +45,7 @@ namespace POD.Wizards
             this.rightOverflowButton = new POD.Controls.PODOverButton();
             this.leftOverflowMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.rightOverflowMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ActionIcons = new System.Windows.Forms.ImageList(this.components);
+            //this.ActionIcons = new System.Windows.Forms.ImageList(this.components);
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.mainTableLayout.SuspendLayout();
             this.leftFlowPanel.SuspendLayout();
@@ -141,37 +141,6 @@ namespace POD.Wizards
             this.rightOverflowMenu.ShowImageMargin = false;
             this.rightOverflowMenu.Size = new System.Drawing.Size(36, 4);
             // 
-            // ActionIcons
-            // 
-            this.ActionIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ActionIcons.ImageStream")));
-            this.ActionIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ActionIcons.Images.SetKeyName(0, "Next.png");
-            this.ActionIcons.Images.SetKeyName(1, "Previous.png");
-            this.ActionIcons.Images.SetKeyName(2, "Finish.png");
-            this.ActionIcons.Images.SetKeyName(3, "Duplicate.png");
-            this.ActionIcons.Images.SetKeyName(4, "Use Last.png");
-            this.ActionIcons.Images.SetKeyName(5, "Paste.png");
-            this.ActionIcons.Images.SetKeyName(6, "New Source.png");
-            this.ActionIcons.Images.SetKeyName(7, "Delete Source.png");
-            this.ActionIcons.Images.SetKeyName(8, "Restore Source.png");
-            this.ActionIcons.Images.SetKeyName(9, "Restore Analysis.png");
-            this.ActionIcons.Images.SetKeyName(10, "Fit All Graphs.png");
-            this.ActionIcons.Images.SetKeyName(11, "Group By Flaw.png");
-            this.ActionIcons.Images.SetKeyName(12, "Show Fits.png");
-            this.ActionIcons.Images.SetKeyName(13, "Show Residuals.png");
-            this.ActionIcons.Images.SetKeyName(14, "Show All Charts.png");
-            this.ActionIcons.Images.SetKeyName(15, "Show Residual.png");
-            this.ActionIcons.Images.SetKeyName(16, "Show Threshold.png");
-            this.ActionIcons.Images.SetKeyName(17, "Overlay Models.png");
-            this.ActionIcons.Images.SetKeyName(18, "Show Model Fit.png");
-            this.ActionIcons.Images.SetKeyName(19, "Refresh Charts.png");
-            this.ActionIcons.Images.SetKeyName(20, "Delete Row.png");
-            this.ActionIcons.Images.SetKeyName(21, "Insert Row.png");
-            this.ActionIcons.Images.SetKeyName(22, "Cycle Transforms.png");
-            this.ActionIcons.Images.SetKeyName(23, "Export to Excel.png");
-            this.ActionIcons.Images.SetKeyName(24, "Show POD Curve.png");
-            this.ActionIcons.Images.SetKeyName(25, "Select Empty.png");
-            // 
             // WizardActionBar
             // 
             this.AutoSize = true;
@@ -196,7 +165,7 @@ namespace POD.Wizards
         private PODOverButton leftOverflowButton;
         private FlowLayoutPanel rightFlowPanel;
         private PODOverButton rightOverflowButton;
-        private ImageList ActionIcons;
+        //private ImageList ActionIcons;
         public ToolTip tooltip;
     }
 }

@@ -24,6 +24,11 @@ namespace POD.Wizards
 
         static ToolStripControlHost _navigateButtons = null;
 
+        /// <summary>
+        /// stores the action icons (this variable is static so that they are only loaded in once)
+        /// </summary>
+        public static ImageList ActionIcons=null;
+
         public static ToolStripControlHost NavigateButtons
         {
             get { return WizardActionBar._navigateButtons; }
@@ -186,7 +191,10 @@ namespace POD.Wizards
         private void Initialize()
         {
             InitializeComponent();
-
+            if (ActionIcons == null)
+            {
+                AddImages();
+            }
             if (StepToolTip == null)
                 StepToolTip = new PODToolTip();
 
@@ -221,7 +229,42 @@ namespace POD.Wizards
             AddIconsToButtons();
         }
 
-
+        private void AddImages()
+        {
+            ActionIcons = new ImageList();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WizardActionBar));
+            // 
+            // ActionIcons
+            // 
+            ActionIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ActionIcons.ImageStream")));
+            ActionIcons.TransparentColor = System.Drawing.Color.Transparent;
+            ActionIcons.Images.SetKeyName(0, "Next.png");
+            ActionIcons.Images.SetKeyName(1, "Previous.png");
+            ActionIcons.Images.SetKeyName(2, "Finish.png");
+            ActionIcons.Images.SetKeyName(3, "Duplicate.png");
+            ActionIcons.Images.SetKeyName(4, "Use Last.png");
+            ActionIcons.Images.SetKeyName(5, "Paste.png");
+            ActionIcons.Images.SetKeyName(6, "New Source.png");
+            ActionIcons.Images.SetKeyName(7, "Delete Source.png");
+            ActionIcons.Images.SetKeyName(8, "Restore Source.png");
+            ActionIcons.Images.SetKeyName(9, "Restore Analysis.png");
+            ActionIcons.Images.SetKeyName(10, "Fit All Graphs.png");
+            ActionIcons.Images.SetKeyName(11, "Group By Flaw.png");
+            ActionIcons.Images.SetKeyName(12, "Show Fits.png");
+            ActionIcons.Images.SetKeyName(13, "Show Residuals.png");
+            ActionIcons.Images.SetKeyName(14, "Show All Charts.png");
+            ActionIcons.Images.SetKeyName(15, "Show Residual.png");
+            ActionIcons.Images.SetKeyName(16, "Show Threshold.png");
+            ActionIcons.Images.SetKeyName(17, "Overlay Models.png");
+            ActionIcons.Images.SetKeyName(18, "Show Model Fit.png");
+            ActionIcons.Images.SetKeyName(19, "Refresh Charts.png");
+            ActionIcons.Images.SetKeyName(20, "Delete Row.png");
+            ActionIcons.Images.SetKeyName(21, "Insert Row.png");
+            ActionIcons.Images.SetKeyName(22, "Cycle Transforms.png");
+            ActionIcons.Images.SetKeyName(23, "Export to Excel.png");
+            ActionIcons.Images.SetKeyName(24, "Show POD Curve.png");
+            ActionIcons.Images.SetKeyName(25, "Select Empty.png");
+        }
         protected void AddIconsToButtons()
         {
             foreach(Control control in rightFlowPanel.Controls)
