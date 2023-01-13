@@ -696,6 +696,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             CSharpBackendWithR.REngineObject.REngineRunning = false;
         }
+        //get as many valid values as possible (error value defaults to -9999999999.0m;)
         private void ReattemptOutput(ref double a90Transformed, ref double a9095Transformed, ref double a50Transformed, ref double a50Original,ref double a90Original,
             ref double a9095Original, ref double lackOfFit)
         {
@@ -708,14 +709,54 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             }    
             else
                 a9095Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a9095Transformed)));
+            try
+            {
             a50Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a50Transformed)));
-            
-            a90Out.Value = Convert.ToDecimal(a90Original);
-
-            a50Out.Value = Convert.ToDecimal(a50Original);
-            MuOut.Value = Convert.ToDecimal(Analysis.OutPODMu);
-            SigmaOut.Value = Convert.ToDecimal(Analysis.OutPODSigma);
-            likelihoodRatioTestOut.Value = Convert.ToDecimal(lackOfFit);
+            }
+            catch
+            {
+                a50Transformed= -9999999999.0;
+            }
+            try
+            {
+                a90Out.Value = Convert.ToDecimal(a90Original);
+            }
+            catch
+            {
+                a90Out.Value = -9999999999.0m;
+            }
+            try
+            {
+                a50Out.Value = Convert.ToDecimal(a50Original);
+            }
+            catch
+            {
+                a50Out.Value= -9999999999.0m;
+            }
+            try
+            {
+                MuOut.Value = Convert.ToDecimal(Analysis.OutPODMu);
+            }
+            catch
+            {
+                MuOut.Value = -9999999999.0m;
+            }
+            try
+            {
+                SigmaOut.Value = Convert.ToDecimal(Analysis.OutPODSigma);
+            }
+            catch
+            {
+                SigmaOut.Value = -9999999999.0m;
+            }
+            try
+            {
+                likelihoodRatioTestOut.Value = Convert.ToDecimal(lackOfFit);
+            }
+            catch
+            {
+                likelihoodRatioTestOut.Value = -9999999999.0m;
+            }
             try
             {
                 covV11Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV11);
