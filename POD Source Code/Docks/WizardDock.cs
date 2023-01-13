@@ -324,7 +324,9 @@ namespace POD.Docks
             nextTitleBox.Hide();
             nextBarBox.Hide();
             nextPanelBox.Hide();
-            if (!(NavBarEnabled.TransitionTo is Wizards.Steps.HitMissNormalSteps.FullRegressionStep))
+            //don't renable the nav bar in the full regression panel(it will be renabled after the Analysis is done
+            if (!(NavBarEnabled.TransitionTo is Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
+                !(NavBarEnabled.TransitionTo is Wizards.Steps.AHatVsANormalSteps.FullRegressionStep))
                 NavBarEnabled.TransitionTo.ActionBar.Enabled = true;
         }
 
