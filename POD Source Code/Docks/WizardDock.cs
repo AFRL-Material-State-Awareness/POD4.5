@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using POD.Wizards;
 using WeifenLuo.WinFormsUI.Docking;
 using Transitions;
+using System.Threading;
 
 namespace POD.Docks
 {
@@ -20,7 +21,7 @@ namespace POD.Docks
     /// </summary>
     public partial class WizardDock : PodDock
     {
-
+        private static SwapStepsEventArgs NavBarEnabled;
 
         #region Fields
         /// <summary>
@@ -205,6 +206,10 @@ namespace POD.Docks
 
         public void OnTransitionSteps(object sender, SwapStepsEventArgs args)
         {
+            NavBarEnabled = args;
+            //disable nav bar while transitioning
+            NavBarEnabled.TransitionTo.ActionBar.Enabled = false;
+
             WizardStep wizTo = args.TransitionTo;
             WizardStep wizFrom = args.TransitionFrom;
             Transition transition;
@@ -226,7 +231,7 @@ namespace POD.Docks
 
 
             transition.TransitionCompletedEvent += t_TransitionCompletedEvent;
-
+            
             _args = args;
 
             wizTo.Height = wizFrom.Height;
@@ -319,6 +324,8 @@ namespace POD.Docks
             nextTitleBox.Hide();
             nextBarBox.Hide();
             nextPanelBox.Hide();
+            if (!(NavBarEnabled.TransitionTo is Wizards.Steps.HitMissNormalSteps.FullRegressionStep))
+                NavBarEnabled.TransitionTo.ActionBar.Enabled = true;
         }
 
         #endregion

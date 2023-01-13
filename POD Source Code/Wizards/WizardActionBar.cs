@@ -473,6 +473,7 @@ namespace POD.Wizards
 
         private void Next_Click(object sender, EventArgs e)
         {
+
             OnNextClick(sender, e);
         }
 
@@ -481,6 +482,14 @@ namespace POD.Wizards
             OnFinishClick(sender, e);
         }
 
+        public void DisableNav()
+        {
+            this.Enabled = false;
+        }
+        public void EnableNav()
+        {
+            this.Enabled = true;
+        }
         private void ShowOverflowMenu(PODOverButton myButton, FlowLayoutPanel myPanel, ContextMenuStrip myMenu, ButtonHandlerList myList)
         {
             ToolStripMenuItem item;
