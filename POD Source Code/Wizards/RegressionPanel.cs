@@ -365,6 +365,7 @@ namespace POD.Wizards
                 if (label == null)
                     control.Enabled = false;
             }
+            WizActionBar.Enabled = false;
         }
 
         protected virtual void EnableInputControls()
@@ -384,6 +385,8 @@ namespace POD.Wizards
 
             if(_activeControl != null)
                 _activeControl.Focus();
+
+            WizActionBar.Enabled = true;
         }
         /*
         protected void HandleNaN(ref double myValue, double mySafeValue)
