@@ -217,9 +217,12 @@ namespace POD
                 }
                 while (after != before);                
             }
+            else
+            {
+                //force one more press to do a check
+                Wizard.CurrentStep.PressNextButton();
+            }
 
-            //force one more press to do a check
-            Wizard.CurrentStep.PressNextButton();
 
             //if()
 
@@ -344,7 +347,6 @@ namespace POD
 
             if (MoveToEnd())
                 return;
-
             //if e = null, then finish was pressed before the end
             //so we need to press the finish button now that
             //we are at the right step
@@ -402,6 +404,7 @@ namespace POD
             {
 
                 SyncDock();
+                //issue #5 occuring here
                 OnStepChanged(Wizard, e);
             }
 

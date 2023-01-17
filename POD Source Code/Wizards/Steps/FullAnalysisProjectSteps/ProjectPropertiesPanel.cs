@@ -583,7 +583,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
         {
             get
             {
-                return projectComboBox.Text.Length == 0 || projectComboBox.Text == InsertString;
+                return projectComboBox.Text == InsertString || projectComboBox.Text.Trim()=="";
             }
         }
 
@@ -591,7 +591,10 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
         {
 
         }
-
+        public override bool Stuck
+        {
+            get { return HasInvalidProjectName; }
+        }
         
     }
 }
