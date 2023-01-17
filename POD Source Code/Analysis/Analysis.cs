@@ -959,7 +959,7 @@ namespace POD.Analyze
             }
             try
             {
-                //entry point for pod caluclation in PODv4 hit miss
+                //entry point for pod caluclation in PODv4.5 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
@@ -967,7 +967,7 @@ namespace POD.Analyze
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
 
                 }
-                //entry point for pod calculate in PODv4 ahat
+                //entry point for pod calculate in PODv4.5 ahat
                 else
                 {
                     //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);

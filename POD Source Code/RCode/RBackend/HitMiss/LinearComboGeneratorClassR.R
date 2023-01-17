@@ -4,7 +4,6 @@ LinearComboGenerator <- setRefClass("LinearComboGenerator", fields = list(Logist
                                                             ####This function generates the linear combinations for either LR or MLR
                                                             genLinearCombinations=function(){
                                                               print("Starting linear Combos")
-                                                              print("Btw, Did you know geico can save you 15% or more on car insurance?")
                                                               # PROFILE LIKELIHOOD RATIO CONFIDENCE INTERVALS
                                                               # Create a matrix of linear combinations to profile
                                                               # NOTE: The "linear.combo" variable can be used for both the LR and MLR CIs 

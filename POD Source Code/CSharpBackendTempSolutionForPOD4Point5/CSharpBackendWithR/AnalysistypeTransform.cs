@@ -36,7 +36,7 @@ namespace CSharpBackendWithR
         {
             if (this.srsOrRSS == 0)
             {
-                this.resultsHMAnalysis = ExecutePFFullAnalysis();
+                this.resultsHMAnalysis = ExecuteHMFullAnalysis();
             }
             else if (this.srsOrRSS == 1)
             {
@@ -63,7 +63,7 @@ namespace CSharpBackendWithR
             this.resultsAHatAnalysis = UpdateThresholdChange();
         }
         
-        private HMAnalysisObject ExecutePFFullAnalysis()
+        private HMAnalysisObject ExecuteHMFullAnalysis()
         {
             //create the class for hitMissControl
             //HitMissAnalysisRControl newHitMissControl = new HitMissAnalysisRControl(analysisEngine);

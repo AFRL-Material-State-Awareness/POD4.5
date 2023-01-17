@@ -52,7 +52,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             FixPutControlsHere();
             AddInputControls();
-            AddOutputControls();            
+            AddOutputControls();
             ColorNumericControls();
             SetupNumericControlPrecision();
             SetupNumericControlEvents();
@@ -60,10 +60,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             SetupLabels();
 
             mainChart.FreezeThresholdLine(.5);
-
-            
         }
-
         protected override void SetupLabels()
         {
             var labels = new List<Control>
@@ -566,6 +563,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             _xTransformBox.SelectedTransform = Analysis.InFlawTransform;
             ModelBox.SelectedModel = Analysis.InHitMissModel;
+            _confIntBox.SelectedConfInt = Analysis.InConfIntervalType;
+            _sampleTypeBox.SelectedSamplingType = Analysis.InSamplingType;
+
 
             MainChart.SetAMaxBoundary(Analysis.TransformValueForXAxis(Analysis.InFlawMax), false);
             MainChart.SetAMinBoundary(Analysis.TransformValueForXAxis(Analysis.InFlawMin), false);
