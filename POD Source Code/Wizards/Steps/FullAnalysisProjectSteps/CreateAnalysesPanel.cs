@@ -756,6 +756,10 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                 MessageBox.Show("Cannot add multiple responses in one Analysis when using HitMiss Data");
                 return;
             }
+            if (analysesTree.GetNodeCount(false) >= 25)
+            {
+                MessageBox.Show("The maximum amount of analyses that can fit into one project in PODv4.5.0 is 25.");
+            }
             var indices = control.GetSelectedIndicies();
 
             if (AvailableFlawsListBox.Rows.Count > 0)
@@ -804,7 +808,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             var primarySource = string.Empty;
             var originalFlaw = "";
             var flawDidntMatch = false;
-            var indicies = GetIndiciesFromNames(names); ;
+            var indicies = GetIndiciesFromNames(names);
 
             if (flaw != null)
                 flawName = flaw.FlawColumnName;
