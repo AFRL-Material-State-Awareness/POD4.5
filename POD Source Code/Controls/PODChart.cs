@@ -334,25 +334,22 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData, bool usingLoadedFromFileData = false, bool analysisFailed=false)
         {
-            //_lastUsedData = myData;
-
-            //FillChart(myData.PodCurveTable, "flaw", "pod", "confidenceFlawAtPOD", "confidence", 0.0, 1.0);
-            //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence", 0.0, 1.0);
 
             if (!usingLoadedFromFileData)
             {
+                var flaw = myData.PodCurveTable.Columns[0].ColumnName;
+                var pod = myData.PodCurveTable.Columns[1].ColumnName;
+                var conf = myData.PodCurveTable.Columns[2].ColumnName;
                 switch (myData.DataType)
                 {
                     case AnalysisDataTypeEnum.AHat:
-                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence", 0.0, 1.0);
+                        FillChart(myData.PodCurveTable, flaw, pod, flaw, conf, 0.0, 1.0);
                         var view = myData.PodCurveTable_All.DefaultView;
-                        POD_All.Points.DataBindXY(view, "flaw", view, "pod");
-                        POD9095_All.Points.DataBindXY(view, "flaw", view, "confidence");
+                        POD_All.Points.DataBindXY(view, flaw, view, pod);
+                        POD9095_All.Points.DataBindXY(view, flaw, view, conf);
                         break;
                     case AnalysisDataTypeEnum.HitMiss:
-                        //FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "confidence pod", 0.0, 1.0);
-                        //FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
-                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0, analysisFailed);
+                        FillChart(myData.PodCurveTable, flaw, pod, flaw, conf, 0.0, 1.0, analysisFailed);
                         break;
                 }
             }
@@ -368,10 +365,7 @@ namespace POD.Controls
                         FillChart(myData.PodCurveTable, flaw, pod, flaw, conf, 0.0, 1.0);                        
                         break;
                     case AnalysisDataTypeEnum.HitMiss:
-                        //FillChart(myData.PodCurveTable, "flaw", "pod", "confidence flaw", "confidence pod", 0.0, 1.0);
-                        //FillChart(myData.PodCurveTable, flaw, pod, flaw, conf, 0.0, 1.0);
-                        //FillChart(myData.PodCurveTable, "transformFlaw", "pod", "transformFlaw", "Confidence_Interval", 0.0, 1.0);
-                        FillChart(myData.PodCurveTable, "flaw", "pod", "flaw", "Confidence_Interval", 0.0, 1.0, analysisFailed);
+                        FillChart(myData.PodCurveTable, flaw, pod, flaw, conf, 0.0, 1.0, analysisFailed);
                         break;
                 }
             }
