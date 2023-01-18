@@ -758,7 +758,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             }
             if (analysesTree.GetNodeCount(false) >= 20)
             {
-                MessageBox.Show("The maximum amount of analyses that can fit into one project in PODv4.5.0 is 25.");
+                MessageBox.Show("The maximum amount of analyses that can fit into one project in PODv4.5.0 is 20.");
             }
             var indices = control.GetSelectedIndicies();
 
