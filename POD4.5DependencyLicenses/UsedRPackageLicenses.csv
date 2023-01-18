@@ -1,22 +1,22 @@
 Packages that are actually loaded and used in podv4	
-Package	License
-roxygen2	MIT
-corrplot	MIT
-ggResidpanel	MIT
-car	GPLv2 | GPLv3
-carData	GPLv2 | GPLv3
-pracma	GPL >= 3
-nlme	GPLv2 | GPLv3
-gridExtra	GPLv2 | GPLv3
-parallel	* Part of R Core
-mcprofile	GPLv2 | GPLv3
-MASS	GPLv2 | GPLv3
-foreach	Apache 2.0
-ggplot2	MIT
-stats	* Part of R Core
-graphics	* Part of R Core
-grDevices	* Part of R Core
-utils	* Part of R Core
-datasets	* Part of R Core
-methods	* Part of R Core
-base	* Part of R Core
+Package,	License
+roxygen2,	MIT
+corrplot,	MIT
+ggResidpanel,	MIT
+car,	GPLv2 | GPLv3
+carData,	GPLv2 | GPLv3
+pracma,	GPL >= 3
+nlme,	GPLv2 | GPLv3
+gridExtra,	GPLv2 | GPLv3
+parallel,	* Part of R Core
+mcprofile,	GPLv2 | GPLv3
+MASS,	GPLv2 | GPLv3
+foreach,	Apache 2.0
+ggplot2,	MIT
+stats,	* Part of R Core
+graphics,	* Part of R Core
+grDevices,	* Part of R Core
+utils,	* Part of R Core
+datasets,	* Part of R Core
+methods,	* Part of R Core
+base,	* Part of R Core
