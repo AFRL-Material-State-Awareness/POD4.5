@@ -145,7 +145,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _xTransformBox.SelectedTransform = Analysis.InFlawTransform;
             _yTransformBox.SelectedTransform = Analysis.InResponseTransform;
-
+            
             if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
             {
                 MainChart.SetAMaxBoundary(Analysis.TransformValueForXAxis(Analysis.InFlawMax), false);
@@ -177,7 +177,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin);
             rightCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMax);
 
-            if(_yTransformBox.SelectedIndex.ToString() != "3")
+            if(_yTransformBox.SelectedIndex != 3)
             {
                 _labelForLamdaInput.Enabled = false;
                 _boxCoxLambda.Enabled = false;
@@ -186,6 +186,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             {
                 _labelForLamdaInput.Enabled = true;
                 _boxCoxLambda.Enabled = true;
+            }
+            if (Analysis.Data.AHATAnalysisObject.Lambda != 0.0)
+            {
+                _boxCoxLambda.Value = Convert.ToDecimal(Analysis.Data.AHATAnalysisObject.Lambda);
+                //_yTransformBox.SelectedTransform = TransformTypeEnum.BoxCox;
             }
 
             Analysis.IsFrozen = false;

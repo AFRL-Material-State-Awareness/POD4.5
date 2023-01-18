@@ -13,3 +13,4 @@ very large
 ===========================
 TODOs and feature updates
 ===========================
+1. if the user saves an analysis as a boxcox and changes the lambda value, that same analysis needs to have the same metrics when reloaded
