@@ -119,7 +119,6 @@
     <Compile Include="HMAnalysisObject.cs" />
     <Compile Include="MaxAndMinClass.cs" />
     <Compile Include="ParentAnalysisObject.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REngineObject.cs" />
     <Compile Include="TransformBackCSharpTablesHITMISS.cs" />
