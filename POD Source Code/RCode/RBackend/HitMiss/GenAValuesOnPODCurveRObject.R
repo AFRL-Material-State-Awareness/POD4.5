@@ -1,5 +1,32 @@
-#this class is used to calculate the Likelihood ratio confidence interval and
-#the MODIFIED Likelihood ratio confidence interval of the POD curve (WARNING: VERY SLOW)
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# this class is used to calculate the Likelihood ratio confidence interval and
+# the MODIFIED Likelihood ratio confidence interval of the POD curve (WARNING: VERY SLOW)
+
+# parameters:
+# ~Logistic Regression result= the result of the logistic regression (either firth or maximum likelihood) as an S3 object
+# ~inputDataFrameLogistic= the input dataframe with the flaw sizes. This can either be the original hitmiss dataframe if standard
+# wald is used or simulated cracks (normally distributed) if modified wald, LR, or MLR is used
+# ~a_Values= The list of critical a values along with the value of sigma in this order...
+# a25 
+# a50
+# a90
+# sigma
+# a9095
 GenAValuesOnPODCurve <- setRefClass("GenAValuesOnPODCurve", 
                                               fields = list(LogisticRegressionResult="glm",
                                                             inputDataFrameLogistic="data.frame",

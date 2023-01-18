@@ -1,3 +1,28 @@
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# This class is used to get the critical A values when ranked set sampling is used
+
+# parameters: 
+# pODRSSDF = The POD curve generated from taking the medians of the logisitc regression results
+# logitResultsList = a list of the logistic regression result objects (firth or maximum likelihood). This should
+# be of size 30 by default (maxresamples is typically set to 30)
+# excludeNA = boolean flag to determine if NA values are excluded when taking the median (should always be set to true)
+# RSSDataFrmaes = a list of the ranked set sample dataframes generated (should also be 30 like logitResultsList)
+# aValuesList = a list of the median aValues based on the ranked set sample dataframes
 
 GenRSS_A_Values<- setRefClass("GenRSS_A_Values", fields = list(pODRSSDF="data.frame", logitResultsList="list", 
                                                                excludeNA= "logical", RSSDataFrames="list", aValuesList="list"),

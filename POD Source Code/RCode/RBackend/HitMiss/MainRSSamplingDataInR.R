@@ -1,4 +1,31 @@
-#used to generate the ranked set samples in R (might replace with numpy and python later since it's faster)
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>
+
+# used to generate the ranked set samples in R (might replace with numpy and python later since it's faster)
+# For additional information on ranked set sampling, see "A method for unbiased selective sampling, using ranked sets"
+# by GA McIntyre (1952)
+
+# parameters:
+# testData = the original input dataframe to be used for Ranked set sampling
+# set_r = the value for r when generating the ranked set samples
+# set_m = the value for m when generating the ranked set samples
+# rssDataFrame = the resulting ranked set sample dataframe (equivalent to 1 resample)
+# oneCycle = one cycle in the ranked set sampling array
+# fullRSSArray = the full ranked set sampling matrix generated to created a ranked set sample dataset
+
 RSSamplingMain_R<-setRefClass("RSSamplingMain", fields=list(testData="data.frame",
                                                           set_r="numeric",
                                                           set_m="numeric",

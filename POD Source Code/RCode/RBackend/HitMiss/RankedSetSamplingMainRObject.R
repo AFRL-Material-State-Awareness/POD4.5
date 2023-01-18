@@ -1,4 +1,33 @@
-#This is the main Ranked Set Sampling R Object Class
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses>
+
+# This is the main class used to control and execute ranked set sampling analyses
+# Ranked Set Sampling R Object Class
+
+# parameters:
+# dataFrme = the original input hit/miss dataframe
+# rssComponentFromMain = the class containing the components unique to ranked set sampling (max resamples, m, r, regressionType, includeNAInput)
+# CITypeRSS = the confidence interval to be applied to the ranked set samples
+# normSampleAmount = also known as a_x_n, this is the number of normally distributed crack sizes to generate
+# medianAValues = the output a values found by taking the median of the critical a values found for each ranked set sample
+# pODDataFrame = the output ranked set sample dataframe to be outputted to the UI
+# medianResidDataframe = the output ranked set sample residual dataframe to be outputted to UI
+# covarMatrix = the median values of the variance-covariance matrices found for each ranked set sample
+# goodnessOfFit = the median values of the goodnessOfFits found for each ranked set sample
+
 RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame="data.frame",
                                                                       rsSComponentFromMain= "RSSComponents",
                                                                       CITypeRSS="character",

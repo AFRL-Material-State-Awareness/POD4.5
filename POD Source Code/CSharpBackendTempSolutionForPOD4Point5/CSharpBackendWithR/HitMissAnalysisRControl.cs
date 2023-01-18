@@ -37,7 +37,7 @@ namespace CSharpBackendWithR
 
         }
         /// <summary>
-        /// Sends a full analysisto the R backend using simple random sampling
+        /// Sends a full analysis to the R backend using simple random sampling
         /// </summary>
         /// <param name="newTranformAnalysis"></param>
         public void ExecuteAnalysis(HMAnalysisObject newTranformAnalysis)

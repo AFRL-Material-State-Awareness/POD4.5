@@ -1,4 +1,41 @@
-#main hitmiss analysis object when pass into R ( entry point is detAnalysisApproach() )
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# main hitmiss analysis object when passed into R. The entry point is at initializeRSS() for ranked set sampling, executeFitAnalysisOnly() when
+# the user is selecting a transform, and executeFullAnalysis() when the user does a full analysis with simple random sampling
+
+# parameters:
+# ~hitMissDF = the original hitmiss dataframe that was put into the analysis (index, flaw, hit/miss)
+# ~CIType= The confidence interval type used when executing an analysis (does not apply when executeFitAnalysisOnly is being used). Options
+# are "StandardWald", "ModifiedWald", "LR", and "MLR"
+# ~N = The profile size, this is simply the amount of samples the hitmiss dataframe contains.
+# ~normSampleAmount= Also known as a_x_n, this is the amount of normally distributed crack sizes generated in the event the user uses modified wald,
+# LR, or MLR.
+# ~iterationTable= the table that contains the number of iterations the algorithm performed before converging (or until it gave up on trying 
+# to converge)
+# ~results = The POD table (flaw, transformedflaw, POD, confidence_interval)
+# ~residualTable = The table containing the difference between a hit/miss value and the t_trans for (i.e. how far away is a hit or miss from 
+# a certain point on the POD curve)
+# ~a_values = the list of critical a_values to be returned to the UI (a25, a50, a90, sigma, a9095)
+# ~rankedSetSamplingObject= a class containing all of the unique components used for ranked set sampling (max resamples, m, r, regressionType, includeNAInput)
+# ~covarianceMatrix = the values of the variance-covariance matrix as a list
+# ~goodnessOfFit = the value for the goodness of fit. Found by taking the likelihood ratio
+# ~separation = flag used to inform the user if the data is separated or not (0 = no sepeartion, 1 = separation)
+# ~convergenceFailLogit = flag used to inform the user if the logistic regression failed to converge (0 = alogirithm converged, 1 =algorithm did not converge)
+
 HMAnalysis <- setRefClass("HMAnalysis",
                           fields = list(hitMissDF = "data.frame", 
                                         CIType = "character",
