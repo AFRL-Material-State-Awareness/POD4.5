@@ -1,5 +1,6 @@
 # Probability of Detection version 4.5 (PODv4.5)                                                        
-![alt text](https://github.com/gohmann174442049/POD4.5/blob/PODv4.5.0BackupBranch/POD4.5DependencyLicenses/pod%20logo.ico?raw=true)
+![alt text](https://github.com/gohmann174442049/POD4.5/blob/PODv4.5.0BackupBranch/POD4.5DependencyLicenses/POD%20icons.ico?raw=true)
+
   PODv4.5 (Probability of Detection version 4.5) is the new and improved version of PODv4 which incorporates advanced statistics and an r backend. There have also been bug fixes related to the original PODv4.
 
   Unlike PODv4, PODv4.5 is open-source-software licensed under the GNU General Public License version 3 or later (GPLv3+). This means that anyone has the right to change, copy, modify, use, or study all of the code within PODv4.5 under the terms of GPLv3. 
