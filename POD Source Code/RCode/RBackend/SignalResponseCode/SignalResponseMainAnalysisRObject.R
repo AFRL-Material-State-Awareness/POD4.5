@@ -1,3 +1,51 @@
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# SignalRespDF = the original signal response dataframe
+# y_dec = The y decision threshold value (set by the user in the UI)
+# modelType = the transformation to be performed on the analyses
+# //KEY:
+#   //1=no transform,
+#   //2=x-axis only transform,
+#   //3=y-axis only transform,
+#   //4=both axis tranform, 
+#   //5= Box-cox tranform with linear x;
+#   //6= Box-cox tranform with log x
+#   //7= Box-cox transform with inverse x
+#   //8= linear x with inverse y
+#   //9= log x with inverse y
+#   //10= inverse x with linear y
+#   //11= inverse x with log y
+#   //12= inverse x with inverse y
+# The value of lambda if the user selects a boxcox transformation
+# varCovarMatrix= the values of the variance-covariance matrix for the linear fit model
+# keyAValues = a list of the critical a values (a25, a50, a90, sigma, a9095) for the linear fit model
+# linearModel = The dataframe that holds the linear model fit for the signal response data (i.e. the predict reponses using the linear fit)
+# rSquared = the value of R-squared for the linear fit model
+# regressionStdErrs = the standard error of the linear regression
+# linearTestResults = a list of the p-values found of taking linear tests on the linear fit model
+# aVPOD = the values of the variance-covariance matrix for the POD
+# ResultsPOD = a dataframe of the POD and confidence interval values
+# critPts = the key aValues for POD transformation
+# residuallTable = a dataframe containing the residuals for the linear fit
+# modelIntercept = the y-intercept of the straight line
+# modelSlope = the slope of the straight line
+# threshold table = a table containing the values of a90 and a9095 at various thresholds (should never display negative flaw sizes)
+# original Data = used  to keep track of the original data when more than one inspector is involved
+
 AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame", 
                                                                         y_dec="numeric", 
                                                                         modelType="numeric",
