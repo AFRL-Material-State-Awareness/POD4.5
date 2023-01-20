@@ -173,7 +173,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                         _analysis.InFlawTransform = xTrans.TransformType;
                         _analysis.InResponseTransform = yTrans.TransformType;
 
-                        if (_analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+                        if (_analysis.InResponseTransform == TransformTypeEnum.BoxCox && _analysis.InLambdaValue ==0)
                         {
                             _analysis.SetUpLambda();
                         }
@@ -688,7 +688,6 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             if (XAxisTransformList.SelectedRows.Count == 0 ||
                 YAxisTransformList.SelectedRows.Count == 0)
                 return;
-
             if (analysisLauncher == null)
             {
                 SetupAnalysisLauncher();

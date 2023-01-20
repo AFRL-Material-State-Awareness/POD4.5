@@ -85,6 +85,8 @@ namespace CSharpBackendWithR
             A_transform = 1; //1=no transform, 2=log transform
             Ahat_transform = 1; //1=no transform, 2=log transform, 3= box-cox transform
             //lambda is used for box cox transformation only(normalizes the y-values)
+            //lambda can never actually be zero in the program (0 would mean that log transform is best),
+            //but it starts at 0 so that the program knows if the user already assigned a value for lambda or not
             this.lambda = 0.0;
             //ahat tests
             this.shapiroTestStat = 0.0;//Shapiro-Wilk normality test
