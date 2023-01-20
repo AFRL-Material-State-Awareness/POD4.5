@@ -489,6 +489,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _xTransformBox.SelectedTransform = Analysis.InFlawTransform;
             _yTransformBox.SelectedTransform = Analysis.InResponseTransform;
+            if(Analysis.Data.LambdaValue != 0)
+                _boxCoxLambdaQuick.Value = Convert.ToDecimal(Analysis.Data.LambdaValue);
 
             if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
             {
@@ -521,7 +523,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin);
             rightCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMax);
 
-            if (_yTransformBox.SelectedIndex.ToString() != "3")
+            if (_yTransformBox.SelectedIndex != 3)
             {
                 _labelForLamdaInput.Enabled = false;
                 _boxCoxLambdaQuick.Enabled = false;
@@ -752,10 +754,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 mainChart.SetThresholdBoundary(y, false);
             }
             //get temporary lambda if box-cox is selected
-            if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+            if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox && Analysis.Data.AHATAnalysisObject.Lambda ==  0.0)
             {
                 double lambdaTemp;
-                AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
+                AHatAnalysisObject currAnalysis = Analysis.Data.AHATAnalysisObject;
                 List<double> tempFlaws = currAnalysis.Flaws;
                 List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
                 TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);

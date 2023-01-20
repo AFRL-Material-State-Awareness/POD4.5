@@ -883,6 +883,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             _xTransformBox.SelectedTransform = Analysis.InFlawTransform;
             ModelBox.SelectedModel = Analysis.InHitMissModel;
+            _confIntBox.SelectedConfInt = Analysis.InConfIntervalType;
+            _sampleTypeBox.SelectedSamplingType = Analysis.InSamplingType;
 
             MainChart.SetAMaxBoundary(Analysis.TransformValueForXAxis(Analysis.InFlawMax), false);
             MainChart.SetAMinBoundary(Analysis.TransformValueForXAxis(Analysis.InFlawMin), false);
