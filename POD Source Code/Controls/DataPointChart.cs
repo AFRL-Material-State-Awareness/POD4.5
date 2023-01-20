@@ -82,7 +82,7 @@ namespace POD.Controls
         {
             
             InitializeComponent();
-            if (ContextMenuImageList == null)
+            if (ContextMenuImageList == null || ContextMenuImageList.Images.Count==0)
             {
                 SetUpImageLists();
             }
