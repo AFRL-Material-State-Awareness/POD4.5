@@ -5,12 +5,12 @@ KNOWN BUGS
 
 1. When user tries to paste more than one column into the quick Analysis, the excel throws and error even though it works fine in the UI.(inconsistant)
 2. Export to excel is greyed out randomly in the file menu strip. Export to excel button at the bottom still works though
-3. When duplicating analyses, the confidence interval and the sampling boxes will get messed up when the user selects other options
-before clicking the duplicate analysis button.
-4. The axes labels are completely wrong when switching from linear to box-cox in signal response. This mainly occurs when the signal response values are 
+3. The axes labels are completely wrong when switching from linear to box-cox in signal response. This mainly occurs when the signal response values are 
 very large
+4. When you open a saved Quick Analysis for either AHat or HitMiss and then click new quick project, the wizard creation fails and the program breaks.
+The error message is System.NullReferenceException: 'Object reference not set to an instance of an object.'
 
 ===========================
 TODOs and feature updates
 ===========================
-1. if the user saves an analysis as a boxcox and changes the lambda value, that same analysis needs to have the same metrics when reloaded
+None At this time
