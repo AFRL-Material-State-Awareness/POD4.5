@@ -2376,13 +2376,6 @@ namespace POD.Analyze
             myWriter.SetCellValue(rowIndex++, colIndex, "POD Level");
             myWriter.SetCellValue(rowIndex++, colIndex, "POD Confidence");
 
-            //if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
-            //{
-            //    myWriter.SetCellValue(rowIndex++, colIndex, "POD Threshold Range Min");
-            //    myWriter.SetCellValue(rowIndex++, colIndex, "POD Threshold Range Max");
-            //    myWriter.SetCellValue(rowIndex++, colIndex, "POD Threshold Range Increment Count");
-            //}
-
             rowIndex = 1;
             colIndex = 2;
 
@@ -2469,13 +2462,6 @@ namespace POD.Analyze
             
             myWriter.SetCellValue(rowIndex++, colIndex, InPODLevel);
             myWriter.SetCellValue(rowIndex++, colIndex, InPODConfidence);
-
-            //if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
-            //{
-            //    myWriter.SetCellValue(rowIndex++, colIndex, InResponseDecisionMin);
-            //    myWriter.SetCellValue(rowIndex++, colIndex, InResponseDecisionMax);
-            //    myWriter.SetCellValue(rowIndex++, colIndex, InResponseDecisionIncCount);
-            //}
 
             myWriter.Workbook.AutoFitColumn(1, 2);
 
@@ -2844,16 +2830,8 @@ namespace POD.Analyze
 
             CopyOutputFromR();
 
-            //TRB removed because it kept causing regression analysis panel to update causing cross thread violation
-            //despite the fact that I removed the event handler everytime I switched between steps
-            //RaiseAnalysisDone();
-            //TRB removing this also since there is no good reason to display errors on chart for fits
-            //_python.NotifyFinishAnalysis();  
-
-
             stillRunningAnalysis = false;
 
-            //MessageBox.Show("IN: " + inputTime + " OUT: " + outputTime + " RUN: " + runTime);
         }
         public void CheckForLoadedFile()
         {
@@ -2883,32 +2861,6 @@ namespace POD.Analyze
                 }
 
             }
-            /*
-            //NOTE: cannot compare the whole _hmAnalysisObjects and _ahatAnalysis objects between Analysis.cs and AnalysisData.cs respectively. The multi-threading causes additional bugs
-            //It's best just to compare the x, y data directly to determine if there is a file being loaded or not.
-            //if flaws and responses are not identical between Analyis.cs and AnalysisData.cs, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
-            if (_hmAnalysisObject != null)
-            {
-                if ((_hmAnalysisObject.Responses_all != _data.HMAnalysisObject.Responses_all && _hmAnalysisObject.Flaws_All != _data.HMAnalysisObject.Flaws_All))
-                {
-                    _hmAnalysisObject = _data.HMAnalysisObject;
-                    //reset the model type to 1 in order to prevent a blank chart showing up(linear)
-                    if (Data.FlawTransform == TransformTypeEnum.Linear)
-                    {
-                        _hmAnalysisObject.ModelType = 1;
-                    }
-                }
-            }
-            //ditto for ahat versus a, signal response
-            if (_aHatAnalysisObject != null)
-            {
-                if ((_aHatAnalysisObject.Responses_all != _data.AHATAnalysisObject.Responses_all && _aHatAnalysisObject.Flaws_All != _data.AHATAnalysisObject.Flaws_All))
-                {
-                    _aHatAnalysisObject = _data.AHATAnalysisObject;
-                }
-
-            }
-            */
         }
         public double TransformAValue(double myValue, int transform)
         {
@@ -3059,18 +3011,6 @@ namespace POD.Analyze
                 {
                     name = name.Substring(0, 40);
                     name += "...";
-                    
-                    //var lastIndex = name.LastIndexOf(" ", 0);
-
-                    //if(lastIndex != -1 || lastIndex < 40)
-                    //{
-                    //    name = name.Substring(0, lastIndex + 1) + Environment.NewLine + name.Substring(lastIndex + 1);
-                    //}
-                    //else
-                    //{
-                    //    name = name.Substring(0, 40);
-                    //    name += "...";
-                    //}
                 }
 
                 text += name + Environment.NewLine;
@@ -3078,7 +3018,11 @@ namespace POD.Analyze
 
                 if (Data.DataType == AnalysisDataTypeEnum.AHat)
                 {
-                    text += "Response Transform: " + InResponseTransform.ToString() + Environment.NewLine + Environment.NewLine;
+                    text += "Response Transform: " + InResponseTransform.ToString() + Environment.NewLine;
+                    if(InResponseTransform == TransformTypeEnum.BoxCox)
+                    {
+                        text += "Lambda Value:\t" + InLambdaValue.ToString() + Environment.NewLine + Environment.NewLine;
+                    }
                     text += "POD Decision:\t" + InResponseDecision.ToString("F3") + " " + ResponseUnits[0] + Environment.NewLine;
                     text += "a50:\t\t" + OutResponseDecisionPODA50Value.ToString("F3") + " " + FlawUnit + Environment.NewLine;
                     text += "a90:\t\t" + OutResponseDecisionPODLevelValue.ToString("F3") + " " + FlawUnit + Environment.NewLine;
@@ -3086,7 +3030,9 @@ namespace POD.Analyze
                 }
                 else
                 {
-                    text += "POD Model: " + InHitMissModel.ToString() + Environment.NewLine + Environment.NewLine;
+                    text += "POD Model:\t" + InHitMissModel.ToString() + Environment.NewLine;
+                    text += "Conf Int Type:\t" + InConfIntervalType.ToString() + Environment.NewLine;
+                    text += "Sampling Type:\t" + InSamplingType.ToString() + Environment.NewLine + Environment.NewLine;
                     text += "a50:\t" + OutResponseDecisionPODA50Value.ToString("F3") + " " + FlawUnit + Environment.NewLine;
                     text += "a90:\t" + OutResponseDecisionPODLevelValue.ToString("F3") + " " + FlawUnit + Environment.NewLine;
                     text += "a90/95:\t" + OutResponseDecisionPODConfidenceValue.ToString("F3") + " " + FlawUnit + Environment.NewLine;

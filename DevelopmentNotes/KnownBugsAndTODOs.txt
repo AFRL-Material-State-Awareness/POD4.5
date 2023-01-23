@@ -13,4 +13,4 @@ The error message is System.NullReferenceException: 'Object reference not set to
 ===========================
 TODOs and feature updates
 ===========================
-None At this time
+1. The tool tip when hovering over a completed analysis does not show the flaw sizes transform back from log/inverse (it does for the original PODv4)
