@@ -1006,7 +1006,11 @@ namespace POD
         {
             if (_lastFile.Length > 0)
             {
+                //show the waiting cursor if save is clicked
+                Cursor.Current = Cursors.WaitCursor;
                 SaveFile(_lastFile);
+                //revert back when save is done
+                Cursor.Current = Cursors.Default;
             }
             else
             {
