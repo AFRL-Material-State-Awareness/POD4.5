@@ -494,7 +494,7 @@ namespace POD
                 */
                 OverviewTextBox.Text = "Start a new project containing one or more POD analyses. Each project contains a set of data sources and analyses." + Environment.NewLine + Environment.NewLine +
                                        "The entire project or individual analyses can be exported to an Excel file so the results can be easily shared with others." + Environment.NewLine + Environment.NewLine +
-                                       "aHat vs a and Hit/Miss analyses CANNOT be mixed together in a single project.";
+                                       "aHat vs a and Hit/Miss analyses can be mixed together in a single project as long as their part of different data sources.";
             }
             else if (label == HitMissQuickAnalysisLabel)
             {
