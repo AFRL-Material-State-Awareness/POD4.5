@@ -1209,45 +1209,10 @@ namespace POD
         public static string FlawSize = "Flaw Size";
         public static string Response = "Response";
     }
-
-    public class ExtColProperty
+    public static class PrintingToConsole
     {
-        public static string Unit = "Unit";
-        public static string Max = "Maximum";
-        public static string Min = "Minimum";
-        public static string Thresh = "Threshold";
-        public static string MaxPrev = "Previous Maximum";
-        public static string MinPrev = "Previous Minimum";
-        public static string ThreshPrev = "Previous Threshold";
-        public static string Original = "Original";
-        public static string NewName = "NewName";
-
-        public static string UnitDefault = "";
-        public static double MaxDefault = 0.0;
-        public static double MinDefault = 0.0;
-        public static double ThreshDefault = 0.0;
-        public static string OriginalDefault(DataColumn column)
-        {
-            return column.ColumnName;
-        }
-
-        public static string GetDefaultValue(string colType)
-        {
-            if (colType == ExtColProperty.Unit)
-                return ExtColProperty.UnitDefault;
-            else if (colType == ExtColProperty.Max)
-                return ExtColProperty.MaxDefault.ToString();
-            else if (colType == ExtColProperty.Min)
-                return ExtColProperty.MinDefault.ToString();
-            else if (colType == ExtColProperty.Thresh)
-                return ExtColProperty.ThreshDefault.ToString();
-            else
-                return "";
-        }
         //This method is for debugging purpose
-        //should be removed in the final product
-        //should be removed in the final product
-        static void printDT(DataTable data)
+        public static void printDT(DataTable data)
         {
             //Console.WriteLine();
             Debug.WriteLine('\n');
@@ -1287,5 +1252,42 @@ namespace POD
             }
             Debug.WriteLine('\n');
         }
+    }
+
+    public class ExtColProperty
+    {
+        public static string Unit = "Unit";
+        public static string Max = "Maximum";
+        public static string Min = "Minimum";
+        public static string Thresh = "Threshold";
+        public static string MaxPrev = "Previous Maximum";
+        public static string MinPrev = "Previous Minimum";
+        public static string ThreshPrev = "Previous Threshold";
+        public static string Original = "Original";
+        public static string NewName = "NewName";
+
+        public static string UnitDefault = "";
+        public static double MaxDefault = 0.0;
+        public static double MinDefault = 0.0;
+        public static double ThreshDefault = 0.0;
+        public static string OriginalDefault(DataColumn column)
+        {
+            return column.ColumnName;
+        }
+
+        public static string GetDefaultValue(string colType)
+        {
+            if (colType == ExtColProperty.Unit)
+                return ExtColProperty.UnitDefault;
+            else if (colType == ExtColProperty.Max)
+                return ExtColProperty.MaxDefault.ToString();
+            else if (colType == ExtColProperty.Min)
+                return ExtColProperty.MinDefault.ToString();
+            else if (colType == ExtColProperty.Thresh)
+                return ExtColProperty.ThreshDefault.ToString();
+            else
+                return "";
+        }
+        
     }
 }
