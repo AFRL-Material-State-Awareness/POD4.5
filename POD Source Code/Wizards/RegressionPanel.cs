@@ -630,7 +630,7 @@ namespace POD.Wizards
             {
                 _knownErrorFound = true;
                 Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity. " + '\n' +
-                    "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n' + "Confidence intervals and/or Ranked Set Sampling");
+                    "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n' + "Confidence intervals and/or Ranked Set Sampling for potentially better results");
             }
             else if (Analysis.FailToConverge)
             {
@@ -641,17 +641,17 @@ namespace POD.Wizards
             else if (currHitMissSettings.RegressionType == "Firth Logistic Regression" && Double.IsNaN(a9095Original))
             {
                 _knownErrorFound = true;
-                if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
+                if (currHitMissSettings.SrsOrRSS == 1 && (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR"))
+                {
+                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful." + '\n' +
+                        "You could try switching between LR and MLR with the current settings." + '\n' +
+                        "Otherwise the true value for A9095 for the data is likely infinity.");
+                }
+                else if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
                 {
                     Source.Python.AddErrorText("A9095 is either infinity or a very large number! You could try" + '\n' +
                         "to combine Ranked Set Sampling with the current Confidence Interval" + '\n' +
                         "(WARNING: can take anywhere from 5-20min)");
-                }
-                else if (currHitMissSettings.SrsOrRSS == 1 && (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR"))
-                {
-                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful" + '\n' +
-                        "Try switching between LR and MLR with the current settings." + '\n' +
-                        "Data's sample size may be too small and/or the data does not have enough overlap");
                 }
                 else
                 {
