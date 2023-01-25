@@ -1506,12 +1506,27 @@ namespace POD.Analyze
             _activeAnalysis = this;
             _activeAnalysisIndex = -1;
         }
+        public bool CheckForTurnedOffPoints(int index)
+        {
+            //assume the data point is turned on 
+            bool turnedOn= true;
+            foreach(DataPointIndex dataPointIndex in Data.TurnedOffPoints)
+            {
+                if(dataPointIndex.RowIndex == index)
+                {
+                    turnedOn = false;
+                    break;
+                }
+            }
+            return turnedOn;
+        }
         public void UpdateCensoredData()
         {
             //_aHatAnalysisObject.SignalResponseName = _aHatAnalysisObject.Responses_all.ElementAt(i).Key;
             //hitmiss analysis
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
+                int index = 0;
                 List<double> hmInludedFlaws = new List<double>();
                 List<double> hmIncludedResponses = new List<double>();
                 if (_hmAnalysisObject.ModelType==3)
@@ -1520,7 +1535,7 @@ namespace POD.Analyze
                 }
                 foreach (double flaw in _hmAnalysisObject.Flaws_All)
                 {
-                    if(flaw >= InFlawMin && flaw <= InFlawMax)
+                    if(flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
                     {
                         hmInludedFlaws.Add(flaw);
                         int responseIndex = _hmAnalysisObject.Flaws_All.IndexOf(flaw);
@@ -1531,6 +1546,7 @@ namespace POD.Analyze
                         //store the list of exluded flaws
                         _hmAnalysisObject.ExcludedFlaws.Add(flaw);
                     }
+                    index += 1;
                 }
                 //overwrite the temporary flaw variables in HitMiss object
                 _hmAnalysisObject.Flaws = hmInludedFlaws;
@@ -1541,6 +1557,7 @@ namespace POD.Analyze
             //ahat analysis
             else
             {
+                int index = 0;
                 //used for storing the excluded flaws
                 List<double> aHatIncludedFlaws = new List<double>();
                 List<double> aHatIncludedResponses = new List<double>();
@@ -1551,15 +1568,7 @@ namespace POD.Analyze
                 foreach (double flaw in _aHatAnalysisObject.Flaws_All)
                 {
                     int responseIndex = _aHatAnalysisObject.Flaws_All.IndexOf(flaw);
-                    /*
-                    if (flaw >= InFlawMin && flaw <= InFlawMax && _aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] >= InResponseMin &&
-                        _aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] <= InResponseMax)
-                    {
-                        aHatIncludedFlaws.Add(flaw);
-                        aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
-                    }
-                    */
-                    if (flaw >= InFlawMin && flaw <= InFlawMax)
+                    if (flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
                     {
                         aHatIncludedFlaws.Add(flaw);
                         aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
@@ -1578,6 +1587,7 @@ namespace POD.Analyze
                     {
                         _aHatAnalysisObject.ExcludedFlaws.Add(flaw);
                     }
+                    index += 1;
                 }
                 //overwrite the temporary flaw variables in HitMiss object
                 _aHatAnalysisObject.Flaws = aHatIncludedFlaws;

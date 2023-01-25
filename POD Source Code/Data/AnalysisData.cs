@@ -1642,7 +1642,7 @@ namespace POD.Data
                 _originalData.DefaultView.Sort = "transformFlaw" + " " + "ASC";
                 _originalData = _originalData.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_originalData);
+                    POD.PrintingToConsole.printDT(_originalData);
             }
             
             catch (Exception exp)
@@ -1669,7 +1669,7 @@ namespace POD.Data
                 _podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
                 if(printDTFlag)
-                    printDT(_podCurveTable);
+                    POD.PrintingToConsole.printDT(_podCurveTable);
             }
             catch (Exception exp)
             {
@@ -1681,7 +1681,7 @@ namespace POD.Data
                 _residualUncensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_residualUncensoredTable);
+                    POD.PrintingToConsole.printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1693,7 +1693,7 @@ namespace POD.Data
                 _residualPartialCensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_residualPartialCensoredTable);
+                    POD.PrintingToConsole.printDT(_residualPartialCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1706,7 +1706,7 @@ namespace POD.Data
                 //TODO: will end up removing this table later
                 _iterationsTable = _hmAnalysisObject.IterationTable;
                 if (printDTFlag)
-                    printDT(_iterationsTable);
+                    POD.PrintingToConsole.printDT(_iterationsTable);
             }
             catch (Exception exp)
             {
@@ -1721,9 +1721,8 @@ namespace POD.Data
             try
             {
                 _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
-                printDT(_podCurveTable);
                 if (printDTFlag)
-                    printDT(_podCurveTable);
+                    POD.PrintingToConsole.printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable = _podCurveTable.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1762,7 +1761,7 @@ namespace POD.Data
                 _fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
                 _fitResidualsTable = _fitResidualsTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_fitResidualsTable);
+                    POD.PrintingToConsole.printDT(_fitResidualsTable);
             }
             catch(Exception exp)
             {
@@ -1776,7 +1775,7 @@ namespace POD.Data
                 _residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualUncensoredTable = _residualUncensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_residualUncensoredTable);
+                    POD.PrintingToConsole.printDT(_residualUncensoredTable);
             }
             catch (Exception exp)
             {
@@ -1790,7 +1789,7 @@ namespace POD.Data
                 _residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 _residualRawTable = _residualRawTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_residualRawTable);
+                    POD.PrintingToConsole.printDT(_residualRawTable);
             }
             catch (Exception exp)
             {
@@ -1828,7 +1827,7 @@ namespace POD.Data
                 }
                 //_residualCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 if (printDTFlag)
-                    printDT(_residualCensoredTable);
+                    POD.PrintingToConsole.printDT(_residualCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1868,7 +1867,7 @@ namespace POD.Data
                 //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
                 _residualFullCensoredTable = _residualFullCensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_residualFullCensoredTable);
+                    POD.PrintingToConsole.printDT(_residualFullCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1881,7 +1880,7 @@ namespace POD.Data
                 _residualPartialCensoredTable.DefaultView.Sort = "transformFlaw, transformResponse" + " " + "ASC";
                 _residualPartialCensoredTable = _residualPartialCensoredTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_residualPartialCensoredTable);
+                    POD.PrintingToConsole.printDT(_residualPartialCensoredTable);
             }
             catch (Exception exp)
             {
@@ -1893,7 +1892,7 @@ namespace POD.Data
                 _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
                 //printDT(_podCurveTable);
                 if (printDTFlag)
-                    printDT(_podCurveTable);
+                    POD.PrintingToConsole.printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable = _podCurveTable.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
@@ -1911,7 +1910,7 @@ namespace POD.Data
                 _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_podCurveTable_All);
+                    POD.PrintingToConsole.printDT(_podCurveTable_All);
             }
             catch (Exception exp)
             {
@@ -1927,7 +1926,7 @@ namespace POD.Data
                 _thresholdPlotTable = _thresholdPlotTable.Select("threshold < 1.7976931348623157E+308").CopyToDataTable();
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_thresholdPlotTable);
+                    POD.PrintingToConsole.printDT(_thresholdPlotTable);
             }
             catch (Exception exp)
             {
@@ -1945,7 +1944,7 @@ namespace POD.Data
                 _thresholdPlotTable_All = _thresholdPlotTable_All.Select("threshold <  1.7976931348623157E+308").CopyToDataTable();
                 _thresholdPlotTable_All = _thresholdPlotTable_All.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_thresholdPlotTable_All);
+                    POD.PrintingToConsole.printDT(_thresholdPlotTable_All);
             }
             catch (Exception exp)
             {
@@ -1966,7 +1965,7 @@ namespace POD.Data
                 _podCurveTable = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
                 //printDT(_podCurveTable);
                 if (printDTFlag)
-                    printDT(_podCurveTable);
+                    POD.PrintingToConsole.printDT(_podCurveTable);
                 _podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable = _podCurveTable.DefaultView.ToTable();
             }
@@ -1982,7 +1981,7 @@ namespace POD.Data
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
                 if (printDTFlag)
-                    printDT(_podCurveTable_All);
+                    POD.PrintingToConsole.printDT(_podCurveTable_All);
             }
             catch (Exception exp)
             {
