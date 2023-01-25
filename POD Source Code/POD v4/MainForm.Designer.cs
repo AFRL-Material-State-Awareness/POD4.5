@@ -516,7 +516,7 @@
             // 
             this.pODQuickHelpToolStripMenuItem.Name = "pODQuickHelpToolStripMenuItem";
             this.pODQuickHelpToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.pODQuickHelpToolStripMenuItem.Text = "POD v4 Quick Help...";
+            this.pODQuickHelpToolStripMenuItem.Text = "POD v4.5 Quick Help...";
             this.pODQuickHelpToolStripMenuItem.Click += new System.EventHandler(this.QuickHelp_Show);
             // 
             // openManualToolStripMenuItem

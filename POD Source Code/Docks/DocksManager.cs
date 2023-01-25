@@ -139,7 +139,7 @@ namespace POD.Docks
             _quickHelpDock.LinkWindow.BackColor = Color.FromArgb(215, 237, 255);
 
             _show1823ADock.PdfFilename = "MIL-HDBK-1823A (POD).pdf";
-            _showQuickHelp.PdfFilename = "POD v4 Quick Help.pdf";
+            _showQuickHelp.PdfFilename = "POD v4.5 Quick Help.pdf";
 
             _handbookDock.NeedViewer += GetViewer;
             _quickHelpDock.NeedViewer += GetViewer;

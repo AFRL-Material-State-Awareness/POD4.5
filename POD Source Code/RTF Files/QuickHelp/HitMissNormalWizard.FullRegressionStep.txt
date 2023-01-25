@@ -6,6 +6,9 @@ Hit Miss Regression Step|Tasks|Steps to Changing Numeric Input Values (Three Met
 Hit Miss Regression Step|Tasks|Steps to Changing Numeric Input Values (Three Methods)|Tips Changing Numeric Input Values|
 Hit Miss Regression Step|Tasks|Steps for Changing Your Transform or Model|
 Hit Miss Regression Step|Tasks|Steps for Changing Your Transform or Model|Tips for Changing Your Transforms|
+Hit Miss Regression Step|Tasks|Steps for Changing Your Confidence Interval Method or Sampling Method|
+Hit Miss Regression Step|Tasks|Steps for Changing Your Confidence Interval Method or Sampling Method|Tips for Changing Conf-Int type|
+Hit Miss Regression Step|Tasks|Steps for Changing Your Confidence Interval Method or Sampling Method|Tips for Changing Sampling Type|
 Hit Miss Regression Step|Tasks|Steps for Toggling Data Points|
 Hit Miss Regression Step|Tasks|Steps for Toggling Data Points|Considerations When Toggling Data Points|
 Hit Miss Regression Step|Tasks|Steps for Toggling Data Points|Tips for Toggling Data Points|

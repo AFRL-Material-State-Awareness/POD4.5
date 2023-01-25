@@ -1323,7 +1323,7 @@ namespace POD
 
         private void QuickHelp_Show(object sender, EventArgs e)
         {
-            OpenExternalPDF("POD v4 Quick Help.pdf");
+            OpenExternalPDF("POD v4.5 Quick Help.pdf");
         }
 
         private void PODv3_Show(object sender, EventArgs e)
