@@ -1058,9 +1058,12 @@ namespace POD.Controls
 
             //RelabelAxes(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis, 
             //            _analysisData.InvertTransformValueForYAxis, 10, 10);
-
-            RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
+            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
+            else
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                  _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
             if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
             {
                 if (ChartAreas[0].AxisX.Maximum < ChartAreas[0].AxisX.Minimum)

@@ -1205,7 +1205,7 @@ namespace POD.Controls
                                                  TransformTypeEnum xAxisTransform = TransformTypeEnum.Linear,
                                                  TransformTypeEnum yAxisTransform = TransformTypeEnum.Linear, 
                                                  Globals.InvertAxisFunction transformX = null, Globals.InvertAxisFunction transformY = null,
-                                                 bool forceKeepCountX = false, bool forceKeepCountY = false)
+                                                 bool forceKeepCountX = false, bool forceKeepCountY = false, double lambda=Double.NaN)
         {
             double xOffset = 0.0;
             double yOffset = 0.0;
@@ -1227,7 +1227,7 @@ namespace POD.Controls
 
             if (yAxis != null && yAxisTransform != TransformTypeEnum.Log)
             {
-                LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform);
+                LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform, lambda);
             }
             else
             {
@@ -1235,6 +1235,7 @@ namespace POD.Controls
                 {
                     LabelLog10Axis(ChartAreas[0].AxisY, yAxis, transformY);
                 }
+
             }
 
             ChartAreas[0].AxisY.LabelAutoFitMinFontSize = 5;
@@ -1305,8 +1306,8 @@ namespace POD.Controls
                 return "";
             }
         }
-
-        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear)
+        //private void LabelBoxCoxAxis(Axis chartaxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offest, bool redoing= false, Transform)
+        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
         {
             var lastString = "";
             var precision = 1;
@@ -1321,8 +1322,8 @@ namespace POD.Controls
                 string intvString = intv.ToString(format);
 
                 if (invert != null && intv != 0.0)
-                    //intvString = invert(intv).ToString(format);             
-                    intvString = TransformBackValue(intv, myTransform).ToString();
+                    //intvString = invert(intv).ToString(format);                   
+                    intvString = TransformBackValue(intv, myTransform, lambdaValue).ToString();
                 else
                     intvString = intv.ToString(format);
 
@@ -1423,7 +1424,7 @@ namespace POD.Controls
                 LabelLog10Axis(chartAxis, axis, transform, true);
             }
         }
-        public double TransformBackValue(double myValue, TransformTypeEnum transform)
+        public double TransformBackValue(double myValue, TransformTypeEnum transform, double lambdaValue= Double.NaN)
         {
             double transformValue = 0.0;
             switch (transform)
@@ -1436,6 +1437,27 @@ namespace POD.Controls
                     break;
                 case TransformTypeEnum.Inverse:
                     transformValue = 1.0 / myValue;
+                    break;
+                case TransformTypeEnum.BoxCox:
+                    if(!double.IsNaN(lambdaValue))
+                    {
+                        //convert lambda to an improper fraction to handle negtive values with the nth root
+                        long num, den;
+                        double whole = Math.Floor(lambdaValue);
+                        double decimalVal = lambdaValue - whole;
+                        IPy4C.DecimalToFraction(decimalVal, out num, out den);
+                        transformValue = IPy4C.NthRoot(myValue * lambdaValue + 1, lambdaValue, den);
+                        if (double.IsNaN(transformValue))
+                        {
+                            //add a very small '.01' number to the denominator to return a valid value to scale      
+                            double approxLambda = whole + Convert.ToDouble(num) / (Convert.ToDouble(den) + .000000000001);
+                            transformValue = IPy4C.NthRoot(myValue * approxLambda + 1, approxLambda, 1.0);
+                        }
+                    }
+                    else
+                    {
+                        transformValue = myValue;
+                    }
                     break;
                 default:
                     transformValue = myValue;
@@ -1457,6 +1479,10 @@ namespace POD.Controls
                 case TransformTypeEnum.Inverse:
                     transformValue = 1.0 / myValue;
                     break;
+                //case TransformTypeEnum.BoxCox:
+                //case 5:
+                    //transformValue = (Math.Pow(myValue, InLambdaValue) - 1) / InLambdaValue;
+                //    break;
                 default:
                     transformValue = myValue;
                     break;
@@ -1855,13 +1881,21 @@ namespace POD.Controls
 
             if (!forceLinear)
             {
-                RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount);
+                if(data.ResponseTransform==TransformTypeEnum.BoxCox)
+                    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
+                else
+                    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                      false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount);
             }
             else
             {
-                RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                  false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
+                if (data.ResponseTransform == TransformTypeEnum.BoxCox)
+                    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
+                else
+                    RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                      false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
             }
         }
 
