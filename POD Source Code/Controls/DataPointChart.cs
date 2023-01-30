@@ -1225,7 +1225,15 @@ namespace POD.Controls
             
             Random rand = new Random();
 
-            if (yAxis != null && yAxisTransform != TransformTypeEnum.Log)
+            //if (yAxis != null && yAxisTransform != TransformTypeEnum.Log)
+            //{
+            //    LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform, lambda);
+            //}
+            if (yAxis != null && yAxisTransform == TransformTypeEnum.Linear)
+            {
+                LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform);
+            }
+            else if (yAxis != null && yAxisTransform == TransformTypeEnum.BoxCox)
             {
                 LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform, lambda);
             }
@@ -1240,9 +1248,13 @@ namespace POD.Controls
 
             ChartAreas[0].AxisY.LabelAutoFitMinFontSize = 5;
 
-            if (xAxis != null && xAxisTransform != TransformTypeEnum.Log)
+            if (xAxis != null && xAxisTransform == TransformTypeEnum.Linear)
             {
                 LabelLinearAxis(ChartAreas[0].AxisX, xAxis, invertX, xLabelCount, xOffset, false, xAxisTransform);
+            }
+            else if (xAxis != null && xAxisTransform == TransformTypeEnum.BoxCox)
+            {
+                LabelLinearAxis(ChartAreas[0].AxisX, xAxis, invertX, xLabelCount, xOffset, false, xAxisTransform, lambda);
             }
             else
             {
@@ -1850,13 +1862,13 @@ namespace POD.Controls
 
             if (!forceLinear)
             {
-                RelabelAxesBetter(myAxis, null, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                    false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, keepLabelCount, false);
+                RelabelAxesBetter(myAxis, null, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 
+                    Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, keepLabelCount, false);
             }
             else
             {
                 RelabelAxesBetter(myAxis, null, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                    false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, keepLabelCount, false);
+                    false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, keepLabelCount, false);
 
             }
         }
@@ -1881,19 +1893,19 @@ namespace POD.Controls
 
             if (!forceLinear)
             {
-                if(data.ResponseTransform==TransformTypeEnum.BoxCox)
+                //if(data.ResponseTransform==TransformTypeEnum.BoxCox)
+                //    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                //                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
+                //else
                     RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
-                else
-                    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                      false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount);
+                                      false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
             }
             else
             {
-                if (data.ResponseTransform == TransformTypeEnum.BoxCox)
-                    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
-                else
+                //if (data.ResponseTransform == TransformTypeEnum.BoxCox)
+                //    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                //                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
+                //else
                     RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
                                       false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
             }

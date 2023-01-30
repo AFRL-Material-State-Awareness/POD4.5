@@ -345,7 +345,8 @@ namespace CSharpBackendWithR
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
-                        _thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+                        //_thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+                        _thresholdPlotTable.Rows[i][0] = TransformBackBoxCox(currThreshold, this.lambda);
                     }
                     break;
                 case 6:
@@ -353,7 +354,8 @@ namespace CSharpBackendWithR
                     {
                         //transform back y thresholds
                         currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
-                        _thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+                        //_thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+                        _thresholdPlotTable.Rows[i][0] = TransformBackBoxCox(currThreshold, this.lambda);
                         //transform back 'a' flaw sizes
                         _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
                         _thresholdPlotTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][2]));
@@ -365,7 +367,8 @@ namespace CSharpBackendWithR
                     {
                         //transform back y thresholds
                         currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
-                        _thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+                        //_thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+                        _thresholdPlotTable.Rows[i][0] = TransformBackBoxCox(currThreshold, this.lambda);
                         //transform back 'a' flaw sizes
                         _thresholdPlotTable.Rows[i][1] = 1.0 / Convert.ToDouble(_thresholdPlotTable.Rows[i][1]);
                         _thresholdPlotTable.Rows[i][2] = 1.0 / Convert.ToDouble(_thresholdPlotTable.Rows[i][2]);
@@ -427,6 +430,76 @@ namespace CSharpBackendWithR
         private double NthRoot(double A, double root)
         {
             return Math.Pow(A, 1.0 / root);
+        }
+        private static long gcd(long a, long b)
+        {
+            if (a == 0)
+                return b;
+            else if (b == 0)
+                return a;
+            if (a < b)
+                return gcd(a, b % a);
+            else
+                return gcd(b, a % b);
+        }
+        // Function to convert decimal to fraction
+        private static void DecimalToFraction(double number, out long numerator, out long denominator)
+        {
+
+            // Fetch integral value of the decimal
+            double intVal = Math.Floor(number);
+
+            // Fetch fractional part of the decimal
+            double fVal = number - intVal;
+
+            // Consider precision value to
+            // convert fractional part to
+            // integral equivalent
+            long pVal = 1000000000;
+
+            // Calculate GCD of integral
+            // equivalent of fractional
+            // part and precision value
+            long gcdVal = gcd((long)Math.Round(
+                            fVal * pVal), pVal);
+
+            // Calculate num and deno
+            //long num = (long)Math.Round(fVal * pVal) / gcdVal;
+            //long deno = pVal / gcdVal;
+            numerator = (long)Math.Round(fVal * pVal) / gcdVal;
+            denominator = pVal / gcdVal;
+            // Print the fraction
+            //Console.WriteLine((long)(intVal * deno) +
+            //                      num + "/" + deno);
+        }
+        public static double NthRoot(double A, double root, double checkLambdaDenominator = 2.0)
+        {
+            if (checkLambdaDenominator % 2 != 0 && A < 0)
+            {
+                return -Math.Pow(-A, 1.0 / root);
+            }
+            else
+            {
+                return Math.Pow(A, 1.0 / root);
+            }
+        }
+        private static double TransformBackBoxCox(double myValue, double lambda)
+        {
+            double transformValue = 0.0;
+            //convert lambda to an improper fraction to handle negtive values with the nth root
+            long num, den;
+            double whole = Math.Floor(transformValue);
+            double decimalVal = lambda - whole;
+            DecimalToFraction(decimalVal, out num, out den);
+           // _thresholdPlotTable.Rows[i][0] = NthRoot(currThreshold * this.lambda + 1, this.lambda);
+            transformValue = NthRoot(myValue * lambda + 1, lambda, den);
+            if (double.IsNaN(transformValue))
+            {
+                //add a very small '.01' number to the denominator to return a valid value to scale      
+                double approxLambda = whole + Convert.ToDouble(num) / (Convert.ToDouble(den) + .000000000001);
+                transformValue = NthRoot(myValue * approxLambda + 1, approxLambda, 1.0);
+            }
+            return transformValue;
         }
     }
 }
