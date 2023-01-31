@@ -383,7 +383,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       if(modelType==3 || modelType==4){
                                         a.hat.decision=log(a.hat.decision)
                                       }
-                                      else if(modelType==5){
+                                      else if(modelType==5 || modelType==6 || modelType==7){
                                         a.hat.decision=(a.hat.decision^lambda-1)/lambda
                                       }
                                       else if(modelType==8 || modelType==9 || modelType==12){
