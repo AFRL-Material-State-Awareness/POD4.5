@@ -187,6 +187,8 @@ namespace CSharpBackendWithR
         //replace and debug with this later in order to make code more compact
         private void EvaluateRScripts(String path, ref bool scriptsLoaded)
         {
+            //precision functions 
+            this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/HitMiss/GetHighestPrecision.R')");
             //import necessary R classes for analysis
             this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/HitMiss/WaldCI_RObject.R')");
             this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/HitMiss/HMLogitApproximationRObject.R')");
