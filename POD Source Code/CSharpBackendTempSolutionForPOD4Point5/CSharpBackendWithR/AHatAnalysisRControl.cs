@@ -78,6 +78,7 @@ namespace CSharpBackendWithR
             {
                 System.Diagnostics.Debug.WriteLine("Testing failure");
             }
+            /*
             try
             {
                 //build the dataframe in the global environment
@@ -89,6 +90,7 @@ namespace CSharpBackendWithR
             {
                 //System.Diagnostics.Debug.WriteLine(myError);
             }
+            */
             finally
             {
                 this.myREngine.Evaluate("rm(Index)");

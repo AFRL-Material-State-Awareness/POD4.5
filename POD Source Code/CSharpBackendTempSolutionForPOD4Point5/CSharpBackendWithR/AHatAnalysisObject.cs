@@ -267,6 +267,22 @@ namespace CSharpBackendWithR
             set { this.aHatResultsPOD=value; }
             get { return this.aHatResultsPOD; }
         }
+        public double GetMaxResponse()
+        {
+            double overallMax = -1;
+            double currMax = -1;
+            // iterate over C# Dictionary Keys and Values
+            foreach (KeyValuePair<string, List<double>> entry in Responses_all)
+            {
+                currMax = entry.Value.Max();
+                if (currMax > overallMax)
+                {
+                    overallMax = currMax;
+                }
+            }
+            return overallMax;
+
+        }
         public void ClearMetrics()
         {
 

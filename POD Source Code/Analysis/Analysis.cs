@@ -1557,6 +1557,10 @@ namespace POD.Analyze
             //ahat analysis
             else
             {
+                if(_aHatAnalysisObject.Signalmax==-1)
+                {
+                    _aHatAnalysisObject.Signalmax = _aHatAnalysisObject.GetMaxResponse();
+                }
                 int index = 0;
                 //used for storing the excluded flaws
                 List<double> aHatIncludedFlaws = new List<double>();
