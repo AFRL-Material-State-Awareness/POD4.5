@@ -1323,13 +1323,17 @@ namespace POD.Controls
         {
             var lastString = "";
             var precision = 1;
-
+            // when lambda value is negative. The top label will be negative due to the nature of the backwards transform function
+            // thus, the top label is simply omitted. DO NOT DELETE.
+            if(lambdaValue < 0)
+            {
+                labelCount -=1;
+            }
             for (int i = 0; i < labelCount; i++)
             {                
                 var modify = 0.0;
                 
                 var format = GetFormat(precision);
-
                 double intv = (axis.Interval * i + axis.Min + axis.IntervalOffset + offset + modify);
                 string intvString = intv.ToString(format);
 

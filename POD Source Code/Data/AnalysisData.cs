@@ -1919,19 +1919,29 @@ namespace POD.Data
 
             try
             {
-                _thresholdPlotTable =  BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);                
+                _thresholdPlotTable = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
                 _thresholdPlotTable.DefaultView.Sort = "threshold" + " " + "ASC";
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
+            }
+            try {
                 _thresholdPlotTable = _thresholdPlotTable.Select("threshold > 0.0").CopyToDataTable();
+                //_thresholdPlotTable = _thresholdPlotTable.Select("a50 > 0.0").CopyToDataTable();
+                //_thresholdPlotTable = _thresholdPlotTable.Select("a90 > 0.0").CopyToDataTable();
+                //_thresholdPlotTable = _thresholdPlotTable.Select("a9095 > 0.0").CopyToDataTable();
                 //remove infiniti values
                 _thresholdPlotTable = _thresholdPlotTable.Select("threshold < 1.7976931348623157E+308").CopyToDataTable();
                 _thresholdPlotTable = _thresholdPlotTable.DefaultView.ToTable();
                 if (printDTFlag)
                     POD.PrintingToConsole.printDT(_thresholdPlotTable);
             }
-            catch (Exception exp)
+            catch (Exception)
             {
-                MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
+                Debug.WriteLine("warning: no valid datapoints found threshold table");
             }
+            
             //printDT(_thresholdPlotTable);
             try
             {
@@ -3016,6 +3026,12 @@ namespace POD.Data
                     transformValue = 1.0/myValue;
                     break;
                 case 5:
+                    // prevents the threshold line from becoming negative when the lambda value is negative
+                    // DO NOT DELETE
+                    if (myValue >= -(1 / _aHatAnalysisObject.Lambda) && _aHatAnalysisObject.Lambda < 0)
+                    {
+                        return AHATAnalysisObject.Signalmax*10;
+                    }
                     //convert lambda to an improper fraction to handle negtive values with the nth root
                     long num, den;
                     double whole = Math.Floor(_aHatAnalysisObject.Lambda);
@@ -3027,7 +3043,7 @@ namespace POD.Data
                         //add a very small '.01' number to the denominator to return a valid value to scale      
                         double approxLambda = whole+ Convert.ToDouble(num) /(Convert.ToDouble(den) + .000000000001);
                         transformValue = IPy4C.NthRoot(myValue * approxLambda + 1, approxLambda, 1.0);
-                    }
+                    }                   
                     break;
                 default:
                     transformValue = myValue;

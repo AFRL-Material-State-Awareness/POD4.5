@@ -345,10 +345,17 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       #test for lack of fit (compare the models when using slope and without)
                                       full<-lm(y~x, data=signalRespDF)
                                       partial<-lm(y~1, data= signalRespDF)
-                                      lackOfFitTest<-Anova(full, partial)
-                                      #lackOfFitTest[1,4]= 1-lackOfFitTest[1,4]
-                                      #lackOfFitTest<-Anova(partial, full)
-                                      #lackOfFitTest=1-ANOVATable$`Pr(>F)`[1]
+                                      #lackOfFitTest<-Anova(full, partial)
+                                      lackOfFitTest<-data.frame(
+                                        'Sum sq'=c(0,0),
+                                        'Df'=c(1,0),
+                                        'F value'=c(0,0),
+                                        'Pr(>F)'=c(0, 0)
+                                      )
+                                      tryCatch(expr = {lackOfFitTest<-Anova(full, partial)},
+                                               error = function(e){
+                                                 #cat("error ocurred!")
+                                               })
                                       setLinearTestResults(list(shapiro,nonConst,durbinWTest,lackOfFitTest[1,]))
                                     },
                                     genAhatVersusACensored=function(){
