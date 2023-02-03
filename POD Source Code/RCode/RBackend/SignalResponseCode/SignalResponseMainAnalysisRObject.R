@@ -344,6 +344,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       durbinWTest=durbinWatsonTest(linearM)
                                       #test for lack of fit (compare the models when using slope and without)
                                       full<-lm(y~x, data=signalRespDF)
+                                      #partial<-lm(y~rep(full$coefficients[[1]], nrow(signalRespDF)), data= signalRespDF)
                                       partial<-lm(y~1, data= signalRespDF)
                                       #lackOfFitTest<-Anova(full, partial)
                                       lackOfFitTest<-data.frame(

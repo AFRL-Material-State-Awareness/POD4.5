@@ -284,9 +284,16 @@ namespace POD.Controls
                 if (ChartToolTip != null && ChartToolTip.Active == false)
                     ChartToolTip.Active = true;
             }
+            try
+            {
+                base.OnMouseMove(e);
+            }
+            catch(OverflowException)
+            {
+                //var uhoh = 0.0;
+            }
 
-            base.OnMouseMove(e);
-            
+
         }
 
         private void HighlightMenuOption(int x, int y)
@@ -1458,6 +1465,10 @@ namespace POD.Controls
                     if(!double.IsNaN(lambdaValue))
                     {
                         //convert lambda to an improper fraction to handle negtive values with the nth root
+                        if (myValue >= -(1 / lambdaValue) && lambdaValue < 0)
+                        {
+                            return lambdaValue * 10;
+                        }
                         long num, den;
                         double whole = Math.Floor(lambdaValue);
                         double decimalVal = lambdaValue - whole;
