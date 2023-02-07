@@ -13,15 +13,12 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
     public partial class FullRegressionBar : WizardActionBar
     {
         PODBooleanButton _linearityButton;
-        //PODBooleanButton _normalityButton;
-        //PODBooleanButton _equalVarianceButton;
         PODBooleanButton _podButton;
-        //PODBooleanButton _thresholdButton;
         PODBooleanButton _hideAllButton;
-        //PODButton _boxcoxButton;
+        PODButton _cycleButton;
         // Solve all models contained within the project manager with default parameters
-        
-        
+
+
         public override bool SendKeys(Keys keyData)
         {
             var result = base.SendKeys(keyData);
@@ -73,39 +70,14 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             _linearityButton = new PODBooleanButton("Show Model Fit", "Hide Model Fit", true, "Show or hide Model Fit side chart. (Ctrl + 1)", StepToolTip);
             AddLeftButton(_linearityButton, Linear_Click);
 
-            //_normalityButton = new PODBooleanButton("Show Normality", "Hide Normality", false);
-            //AddLeftButton(_normalityButton, Normality_Click);
-
-            //_equalVarianceButton = new PODBooleanButton("Show Equal Variance", "Hide Equal Variance", false);
-            //AddLeftButton(_equalVarianceButton, EqualVariance_Click);
-
             _podButton = new PODBooleanButton("Show POD Curve", "Hide POD Curve", true, "Show or hide POD side chart. (Ctrl + 2)", StepToolTip);
             AddLeftButton(_podButton, Pod_Click);
 
             _hideAllButton = new PODBooleanButton("Show All Charts", "Hide All Charts", true, "Show or hide all side charts. (Ctrl + 0)", StepToolTip);
             AddLeftButton(_hideAllButton, HideAll_Click);
 
-            //_thresholdButton = new PODBooleanButton("Show Threshold", "Hide Threshold", false);
-            //AddLeftButton(_thresholdButton, Threshold_Click);
-            /*
-            //add in the button used to solve all models with default transform settings
-            _solveAllModelsButton = new PODButton("Solve All Models");
-            this._solveAllModelsToolTip = new ToolTip(this.components);
-            this._solveAllModelsToolTip.SetToolTip(this._solveAllModelsButton, "Solve all models contained within the project manager with default parameters");
-            AddLeftButton(_solveAllModelsButton, SolveAllModels_Click);
-            */
-            //AddSolveAllModelsButton();
-            //_boxcoxButton = new PODButton("Apply Box Cox");
-            //AddLeftButton(_boxcoxButton, BoxCox_Click);
-
-            //_snapToGridButton = new PODBooleanButton("Freeform", "Snap to Grid", false);
-            //this.AddLeftButton(_snapToGridButton, SnapGrid_Click);
-
-            //_normalityButton.Enabled = false;
-            //_equalVarianceButton.Enabled = false;
-            //_hideAllButton.Enabled = false;
-            //_boxcoxButton.Enabled = false;
-            //_snapToGridButton.Enabled = false;
+            _cycleButton = new PODButton("Cycle Transforms", "Cycle through log and linear combinations. (Ctrl + T)", StepToolTip);
+            AddLeftButton(_cycleButton, CycleButton_Click);
 
             AddIconsToButtons();
 
@@ -122,6 +94,18 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 }
 
                 MyPanel.UpdateAnalysis();
+            }
+        }
+
+        private void CycleButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                MyPanel.CycleTransforms();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show("CycleTransforms: " + exp.Message);
             }
         }
 

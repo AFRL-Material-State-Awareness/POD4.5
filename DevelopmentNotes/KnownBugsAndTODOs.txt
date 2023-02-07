@@ -12,6 +12,8 @@ throw two alerts (maybe disable finish button on the first wizard step?)
 5. The ghost curve is missing when the user removes a specific point in the datset
 6. Random overflow error occurs when working with a negative lambda value in boxcox. It appear to occur two different ways. One breaks the application (temporarily resolved with commit d7fd565 as of 2/7/2023).
 Another way it occurs it is causes the main chart to fail. However,  this does not break the application. If the user switches between the wizard steps the main chart will fix itself.
+7. Threshold ends up in a weird spot going from log boxcox to linear using the cycle transforms button.
+
 ===========================
 TODOs and feature updates
 ===========================

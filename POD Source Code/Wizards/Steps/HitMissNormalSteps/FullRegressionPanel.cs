@@ -219,6 +219,25 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             aMinControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's minimum range.");
         }
 
+        public void CycleTransforms()
+        {
+            try
+            {
+                if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear) 
+                {
+                    _xTransformBox.SelectedTransform = TransformTypeEnum.Log; 
+                }
+                else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log ) 
+                {
+                    _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; 
+                }
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show("CycleTransforms: " + exp.Message);
+            }
+        }
+
         private void IntitalizeTransformBoxes()
         {
             PrepareLabelBoxPair(ref _xTransformLabel, "Flaw", ref _xTransformBox);

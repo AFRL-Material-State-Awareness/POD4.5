@@ -11,12 +11,9 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
     public partial class FullRegressionBar : WizardActionBar
     {
         PODBooleanButton _linearityButton;
-        //PODBooleanButton _normalityButton;
-        //PODBooleanButton _equalVarianceButton;
         PODBooleanButton _podButton;
         PODBooleanButton _thresholdButton;
         PODBooleanButton _hideAllButton;
-        //PODButton _boxcoxButton;
         PODButton _cycleButton;
 
         private PODBooleanButton _snapToGridButton;
