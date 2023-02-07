@@ -1908,10 +1908,10 @@ namespace POD.Controls
 
             if (!forceLinear)
             {
-                //if(data.ResponseTransform==TransformTypeEnum.BoxCox)
-                //    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                //                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
-                //else
+                if(data.DataType== AnalysisDataTypeEnum.HitMiss)
+                    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount);
+                else
                     RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
                                       false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
             }
@@ -1925,7 +1925,7 @@ namespace POD.Controls
                                       false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
             }
         }
-
+        
         private void CopyAxisObjectToAxis(Axis myAxis, AxisObject myAxisObj)
         {
             myAxis.Maximum = myAxisObj.Max;

@@ -1063,7 +1063,7 @@ namespace POD.Controls
                               _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
             else
                 RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                  _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false);
             if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
             {
                 if (ChartAreas[0].AxisX.Maximum < ChartAreas[0].AxisX.Minimum)
