@@ -72,12 +72,12 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelBStdErrLabel = new System.Windows.Forms.Label();
             this.modelMStdErrOut = new POD.Controls.PODChartNumericUpDown();
             this.modelMStdErrLabel = new System.Windows.Forms.Label();
-            this.normalityTestOut = new POD.Controls.PODRatedNumericUpDown();
+            this.normalityTestOut = new POD.Controls.PODRatedNumericUpDown(false);
             this.normalityTestLabel = new System.Windows.Forms.Label();
             this.lackOfFitTestLabel = new System.Windows.Forms.Label();
-            this.lackOfFitTestOut = new POD.Controls.PODRatedNumericUpDown();
+            this.lackOfFitTestOut = new POD.Controls.PODRatedNumericUpDown(true);
             this.equalVarianceTestLabel = new System.Windows.Forms.Label();
-            this.equalVarianceTestOut = new POD.Controls.PODRatedNumericUpDown();
+            this.equalVarianceTestOut = new POD.Controls.PODRatedNumericUpDown(false);
             this.TestColorMap = new POD.Controls.ColorMap();
             this.repeatabilityErrorLabel = new System.Windows.Forms.Label();
             this.repeatabilityErrorOut = new POD.Controls.PODChartNumericUpDown();

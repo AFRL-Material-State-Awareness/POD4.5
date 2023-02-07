@@ -65,7 +65,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.ModelLabel = new System.Windows.Forms.Label();
             this.ModelBox = new POD.Controls.PFModelBox();
             this.TestColorMap = new POD.Controls.ColorMap();
-            this.likelihoodRatioTestOut = new POD.Controls.PODRatedNumericUpDown();
+            this.likelihoodRatioTestOut = new POD.Controls.PODRatedNumericUpDown(false);
             this.lackOfFitTestLabel = new System.Windows.Forms.Label();
             this.FlawRangeHeader = new System.Windows.Forms.Label();
             this.TestOfAssumptionsHeader = new System.Windows.Forms.Label();
