@@ -5,12 +5,19 @@ KNOWN BUGS
 
 1. When user tries to paste more than one column into the quick Analysis, the excel throws and error even though it works fine in the UI.(inconsistant)
 2. Export to excel is greyed out randomly in the file menu strip. Export to excel button at the bottom still works though
-3. The axes labels are completely wrong when switching from linear to box-cox in signal response. This mainly occurs when the signal response values are 
-very large
-4. When you open a saved Quick Analysis for either AHat or HitMiss and then click new quick project, the wizard creation fails and the program breaks.
+3. When you open a saved Quick Analysis for either AHat or HitMiss and then click new quick project, the wizard creation fails and the program breaks.
 The error message is System.NullReferenceException: 'Object reference not set to an instance of an object.'
-
+4. In project properties, if the user clicks finish with a valid project name, the program will stop on the second step. If the user goes back, removes the name, and clicks finish, the program will 
+throw two alerts (maybe disable finish button on the first wizard step?)
+5. The ghost curve is missing when the user removes a specific point in the datset
+6. Random overflow error occurs when working with a negative lambda value in boxcox. It appear to occur two different ways. One breaks the application (temporarily resolved with commit d7fd565 as of 2/7/2023).
+Another way it occurs it is causes the main chart to fail. However,  this does not break the application. If the user switches between the wizard steps the main chart will fix itself.
 ===========================
 TODOs and feature updates
 ===========================
 1. The tool tip when hovering over a completed analysis does not show the flaw sizes transform back from log/inverse (it does for the original PODv4)
+4. Program crashes when loading a large projet and then loading another large project (too many user handles > 10,000)
+5. Add cycle transforms to HitMiss
+6. Check ranked set sampling with standard wald
+7. wait cursor still present when export to excel fails
+8. Add normality chart to singal response (potentially)
