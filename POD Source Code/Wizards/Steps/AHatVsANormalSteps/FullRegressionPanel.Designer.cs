@@ -73,7 +73,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.normalityTestOut = new POD.Controls.PODRatedNumericUpDown();
             this.normalityTestLabel = new System.Windows.Forms.Label();
             this.lackOfFitTestLabel = new System.Windows.Forms.Label();
-            this.lackOfFitTestOut = new POD.Controls.PODRatedNumericUpDown();
+            this.lackOfFitTestOut = new POD.Controls.PODRatedNumericUpDown(true);
             this.equalVarianceTestLabel = new System.Windows.Forms.Label();
             this.equalVarianceTestOut = new POD.Controls.PODRatedNumericUpDown();
             this.TestColorMap = new POD.Controls.ColorMap();
