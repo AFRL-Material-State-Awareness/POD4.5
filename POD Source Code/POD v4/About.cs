@@ -23,7 +23,18 @@ namespace POD
         {
             try
             {
-                System.Diagnostics.Process.Start("mailto:pod@udri.udayton.edu");
+                System.Diagnostics.Process.Start("mailto:Christine.Henry@us.af.mil");
+            }
+            catch
+            {
+
+            }
+        }
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("mailto:christine.henry@afrl.af.mil");
             }
             catch
             {
@@ -33,7 +44,24 @@ namespace POD
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("MIT License for DockPanelSuite"  + System.Environment.NewLine + 
+            MessageBox.Show(
+                "GNU General Public License Version 3 for the PODv4.5 program as a whole: "+System.Environment.NewLine+
+                "Probability of Detection Version 4.5 (PODv4.5)" + System.Environment.NewLine +
+               "Copyright (C) 2023  University of Dayton Research Institute (UDRI)" + System.Environment.NewLine +
+                "This program is free software: you can redistribute it and/or modify" + System.Environment.NewLine +
+                "it under the terms of the GNU General Public License as published by" + System.Environment.NewLine +
+                "the Free Software Foundation, either version 3 of the License, or" + System.Environment.NewLine +
+                "(at your option) any later version." + '\n' + System.Environment.NewLine +
+
+                "This program is distributed in the hope that it will be useful," + System.Environment.NewLine +
+                "but WITHOUT ANY WARRANTY; without even the implied warranty of" + System.Environment.NewLine +
+                "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" + System.Environment.NewLine +
+                "GNU General Public License for more details." + System.Environment.NewLine +
+
+                "You should have received a copy of the GNU General Public License" + System.Environment.NewLine +
+                "along with this program.  If not, see <https://www.gnu.org/licenses/>" + System.Environment.NewLine + System.Environment.NewLine +
+
+                "MIT License for DockPanelSuite"  + System.Environment.NewLine + 
                 "Copyright (c) 2007 Weifen Luo (email: weifenluo@yahoo.com)" + System.Environment.NewLine  + System.Environment.NewLine +
 
                 "MIT License for Spreadsheet Light" + System.Environment.NewLine + 
@@ -53,5 +81,12 @@ namespace POD
                 "OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR "  + 
                 "OTHER DEALINGS IN THE SOFTWARE.", "License Information");
         }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }
