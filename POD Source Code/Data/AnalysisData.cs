@@ -2418,13 +2418,17 @@ namespace POD.Data
                 //return _podDoc.GetFlawRangeMin();
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    return _hmAnalysisObject.Flaws.Min();
+                    if (_hmAnalysisObject.Flaws.Count > 0)
+                        return _hmAnalysisObject.Flaws.Min();
+                    else
+                        return double.NaN;
                 }
-                else
+                else 
                 {
-                    //return _aHatAnalysisObject.Flaws_All.Max();
-                    return _aHatAnalysisObject.Flaws.Min();
-
+                    if (_aHatAnalysisObject.Flaws.Count > 0)
+                        return _aHatAnalysisObject.Flaws.Min();
+                    else
+                        return double.NaN;
                 }
 
             }
@@ -2478,14 +2482,17 @@ namespace POD.Data
             {
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    return _hmAnalysisObject.Flaws.Max();
-
+                    if (_hmAnalysisObject.Flaws.Count > 0)
+                        return _hmAnalysisObject.Flaws.Max();
+                    else
+                        return double.NaN;
                 }
                 else
                 {
-                    //return _aHatAnalysisObject.Flaws_All.Max();
-                    return _aHatAnalysisObject.Flaws.Max();
-
+                    if (_aHatAnalysisObject.Flaws.Count > 0)
+                        return _aHatAnalysisObject.Flaws.Max();
+                    else
+                        return double.NaN;
                 }
             }
         }

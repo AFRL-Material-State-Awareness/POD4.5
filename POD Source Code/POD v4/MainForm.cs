@@ -1122,19 +1122,13 @@ namespace POD
                 {
                     _controller.WriteToExcel(_export);
                 }
-                catch (InvalidOperationException operationException)
-                {
-                    MessageBox.Show("Unable to export Data to excel ERROR. " + '\n'+"Make sure that all Analyses are complete before exporting: " + '\n' + operationException);
-                    this.Cursor = Cursors.Default;
-                    return;
-                }
                 catch(Exception noExcelForYou)
                 {
                     MessageBox.Show("Unable to export Data to excel ERROR: "+'\n'+ noExcelForYou);
+                    Application.UseWaitCursor = false;
                     this.Cursor = Cursors.Default;
                     return;
-                }
-                
+                }                
                 _export.SaveToFile(name);
                 this.Cursor = Cursors.Default;
             }
