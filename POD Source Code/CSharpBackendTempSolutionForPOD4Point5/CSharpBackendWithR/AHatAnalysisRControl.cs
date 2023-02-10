@@ -191,6 +191,13 @@ namespace CSharpBackendWithR
             DataTable AHatPODTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return AHatPODTable;
         }
+        public DataTable GetLogitFitTableForUIAll()
+        {
+            //ShowResults();
+            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newSRAnalysis$getResultsAll()").AsDataFrame();
+            DataTable AHatPODTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            return AHatPODTable;
+        }
         public double GetRSquaredValue()
         {
             double rSqaured= this.myREngine.Evaluate("newSRAnalysis$getRSquared()").AsNumeric()[0];

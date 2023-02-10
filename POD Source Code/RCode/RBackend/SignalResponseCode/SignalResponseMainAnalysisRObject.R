@@ -39,6 +39,7 @@
 # linearTestResults = a list of the p-values found of taking linear tests on the linear fit model
 # aVPOD = the values of the variance-covariance matrix for the POD
 # ResultsPOD = a dataframe of the POD and confidence interval values
+# ResultsPOD = Original POD dataframe used to keep track of the ghost curve
 # critPts = the key aValues for POD transformation
 # residuallTable = a dataframe containing the residuals for the linear fit
 # modelIntercept = the y-intercept of the straight line
@@ -58,6 +59,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         linearTestResults="list",
                                                                         aVPOD="matrix",
                                                                         ResultsPOD="data.frame",
+                                                                        ResultsPOD_All="data.frame",
                                                                         critPts="data.frame",
                                                                         #copyoutputfrompython
                                                                         residualTable="data.frame",
@@ -79,6 +81,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       )
                                       #POD curve table
                                       ResultsPOD<<-data.frame(
+                                        defect_sizes=c(1,1,1,1,1),
+                                        probabilities=c(0,0,0,0,0),
+                                        defect_sizes_upCI=c(0,0,0,0,0)
+                                      )
+                                      #PODCurveTableAll
+                                      ResultsPOD_All<<-data.frame(
                                         defect_sizes=c(1,1,1,1,1),
                                         probabilities=c(0,0,0,0,0),
                                         defect_sizes_upCI=c(0,0,0,0,0)
@@ -147,12 +155,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
-                                      ResultsPOD<<-data.frame(
+                                      resultsPOD<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
                                         pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
-                                      return(ResultsPOD)
+                                      return(resultsPOD)
                                     },
                                     setThresholdDF=function(psThreshDF){
                                       thesholdTable<<-psThreshDF

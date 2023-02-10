@@ -30,7 +30,9 @@ namespace CSharpBackendWithR
         private DataTable aHatResidualResultsUncensored;
         private DataTable aHatResidualResults;
         private DataTable aHatThresholdsTable;
+        private DataTable aHatThresholdsTableAll;
         private DataTable aHatResultsPOD;
+        private DataTable aHatResultsPODAll;
         //linear model unique metrics
         private double intercept;
         private double slope;
@@ -121,8 +123,12 @@ namespace CSharpBackendWithR
             this.aHatResidualResults = new DataTable();
             //used to store and plot the POD at various thresholds in ahat vs a
             this.aHatThresholdsTable = new DataTable();
+            //keeps track of the original threshold lines
+            this.aHatThresholdsTableAll = new DataTable();
             //used to store the results dataframe
             this.aHatResultsPOD = new DataTable();
+            //keeps track of the original POD curve in order to plot the ghost curve
+            this.aHatResultsPODAll = new DataTable();
         }
         public double Signalmin { set; get; }
         public double Signalmax { set; get; }
@@ -252,6 +258,21 @@ namespace CSharpBackendWithR
             set { this.aHatThresholdsTable = value; }
             get { return this.aHatThresholdsTable; }
         }
+        public DataTable AHatThresholdsTable_All
+        {
+            set
+            {
+                if (this.Flaws.Count == this.Flaws_All.Count)
+                {
+                    this.aHatThresholdsTableAll = value;
+                }
+            }
+            get
+            {
+                return this.aHatThresholdsTableAll;
+            }
+
+        }
         public DataTable AHatResultsResidUncensored
         {
             set { this.aHatResidualResultsUncensored = value; }
@@ -266,6 +287,21 @@ namespace CSharpBackendWithR
         {
             set { this.aHatResultsPOD=value; }
             get { return this.aHatResultsPOD; }
+        }
+        public DataTable AHatResultsPOD_All
+        {
+            set
+            {
+                if(this.Flaws.Count == this.Flaws_All.Count)
+                {
+                    this.aHatResultsPODAll = value;
+                }
+            }
+            get
+            {
+                return this.aHatResultsPODAll;
+            }
+            
         }
         public double GetMaxResponse()
         {
@@ -301,6 +337,7 @@ namespace CSharpBackendWithR
             this.aHatLinearResults = null;
             this.aHatResidualResults = null;
             this.aHatResultsPOD = null;
+            
         }
     }
 }
