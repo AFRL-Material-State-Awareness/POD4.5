@@ -119,7 +119,7 @@ namespace CSharpBackendWithR
             //execute class with appropriate parameters
             InitializeRClassForSignalResponse(newTranformAnalysis.Pod_threshold, newTranformAnalysis.ModelType);
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
-            RecalculateGhostCurve(ref newTranformAnalysis);
+            RecalculateGhostCurve(ref newTranformAnalysis, true);
             //remove misc variables from the global environment
             this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("rm(fullAnalysis)");
@@ -164,12 +164,19 @@ namespace CSharpBackendWithR
         /// the AHATDFTest variable is overwritten with no omitted points and calculated below.
         /// </summary>
         /// <param name="newTranformAnalysis"></param>
-        private void RecalculateGhostCurve(ref AHatAnalysisObject newTranformAnalysis)
+        private void RecalculateGhostCurve(ref AHatAnalysisObject newTranformAnalysis, bool recreateThreshTable=false)
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis, true);
             this.myREngine.Evaluate("recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=AHatDFTest,y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+
                 newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
-            this.myREngine.Evaluate("recalcPODClass$recalcPOD()");
+            //recalculates the POD curve with or without the threshold table
+            //when the user changes the threshold, the threshold table is not regenerated
+            if (recreateThreshTable)
+                this.myREngine.Evaluate("recalcPODClass$recalcPOD(TRUE)");
+            else
+                this.myREngine.Evaluate("recalcPODClass$recalcPOD()");
+            
+
         }
         public DataTable GetLinearFitTableForUI()
         {
@@ -193,6 +200,16 @@ namespace CSharpBackendWithR
         public DataTable GetThresholdsTableForUI()
         {
             RDotNet.DataFrame returnDataFrameThresh = myREngine.Evaluate("newSRAnalysis$getThresholdDF()").AsDataFrame();
+            DataTable AHatThresholds = myREngineObject.rDataFrameToDataTable(returnDataFrameThresh);
+            return AHatThresholds;
+        }
+        public DataTable GetThresholdsTable_ALL_ForUI()
+        {
+            RDotNet.DataFrame returnDataFrameThresh;
+            if (Convert.ToBoolean(myREngine.Evaluate("exists(\"recalcPODClass\")").AsLogical()[0]))
+                returnDataFrameThresh = myREngine.Evaluate("recalcPODClass$getGhostThresholdDF()").AsDataFrame();
+            else
+                returnDataFrameThresh = myREngine.Evaluate("newSRAnalysis$getThresholdDF()").AsDataFrame();
             DataTable AHatThresholds = myREngineObject.rDataFrameToDataTable(returnDataFrameThresh);
             return AHatThresholds;
         }

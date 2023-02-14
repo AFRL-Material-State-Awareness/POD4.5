@@ -219,7 +219,7 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.AHatResultsResidUncensored = this.newAHatControl.GetResidualUncensoredTableForUI();
             this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
             this.newAHatAnalysisObject.AHatThresholdsTable = this.newAHatControl.GetThresholdsTableForUI();
-            this.newAHatAnalysisObject.AHatThresholdsTable_All = this.newAHatControl.GetThresholdsTableForUI();
+            this.newAHatAnalysisObject.AHatThresholdsTable_All = this.newAHatControl.GetThresholdsTable_ALL_ForUI();
             //get slope and intercept (need to add the errors for each as well)
             List<double> linearMetrics = this.newAHatControl.GetLinearModelMetrics();
             this.newAHatAnalysisObject.Intercept = linearMetrics[0];
@@ -261,7 +261,6 @@ namespace CSharpBackendWithR
         }
         public void ReturnThresholdChangeAValues()
         {
-            this.newAHatAnalysisObject.RecalcPODAll = true;
             //store the new POD curve table
             this.newAHatAnalysisObject.AHatResultsPOD = this.newAHatControl.GetLogitFitTableForUI();
             this.newAHatAnalysisObject.AHatResultsPOD_All = this.newAHatControl.GetRecalcPODCurveAll();
@@ -273,7 +272,6 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
             this.newAHatAnalysisObject.A9095 = finalAValuesDict["a9095"];
             this.newAHatAnalysisObject.Muhat = finalAValuesDict["a50"];
-            this.newAHatAnalysisObject.RecalcPODAll = false;
         }
         public HMAnalysisObject HMAnalsysResults
         {

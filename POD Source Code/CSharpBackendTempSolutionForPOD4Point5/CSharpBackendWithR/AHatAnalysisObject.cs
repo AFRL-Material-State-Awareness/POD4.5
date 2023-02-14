@@ -262,10 +262,10 @@ namespace CSharpBackendWithR
         {
             set
             {
-                if (this.Flaws.Count == this.Flaws_All.Count)
-                {
+                //if (this.Flaws.Count == this.Flaws_All.Count)
+                //{
                     this.aHatThresholdsTableAll = value;
-                }
+                //}
             }
             get
             {
@@ -300,10 +300,6 @@ namespace CSharpBackendWithR
             }
             
         }
-        /// <summary>
-        /// flag used to allow the aHatResultsPODAll table to be overwritten
-        /// </summary>
-        public bool RecalcPODAll { set; get; }
         public double GetMaxResponse()
         {
             double overallMax = -1;
