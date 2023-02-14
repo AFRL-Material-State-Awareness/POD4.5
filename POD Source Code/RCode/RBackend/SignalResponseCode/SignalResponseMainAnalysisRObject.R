@@ -462,9 +462,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                          a90, 
                                                                          a9095, 
                                                                          a50, 
-                                                                         v11=varCovarMatrix[[1]],  
-                                                                         v12=varCovarMatrix[1,2],
-                                                                         v22=varCovarMatrix[2,2]))
+                                                                         v11=a.V_POD[[1]],  
+                                                                         v12=a.V_POD[1,2],
+                                                                         v22=a.V_POD[2,2]))
                                       }
                                       setThresholdDF(threshDataFrame)
                                     },
