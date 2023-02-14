@@ -59,6 +59,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         linearTestResults="list",
                                                                         aVPOD="matrix",
                                                                         ResultsPOD="data.frame",
+                                                                        ResultsPOD_All="data.frame",
                                                                         critPts="data.frame",
                                                                         #copyoutputfrompython
                                                                         residualTable="data.frame",
@@ -80,6 +81,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       )
                                       #POD curve table
                                       ResultsPOD<<-data.frame(
+                                        defect_sizes=c(1,1,1,1,1),
+                                        probabilities=c(0,0,0,0,0),
+                                        defect_sizes_upCI=c(0,0,0,0,0)
+                                      )
+                                      #PODCurveTableAll
+                                      ResultsPOD_All<<-data.frame(
                                         defect_sizes=c(1,1,1,1,1),
                                         probabilities=c(0,0,0,0,0),
                                         defect_sizes_upCI=c(0,0,0,0,0)
