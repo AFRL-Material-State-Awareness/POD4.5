@@ -214,7 +214,7 @@ namespace CSharpBackendWithR
         public void ReturnSignalResponseObjects()
         {
             this.newAHatAnalysisObject.AHatResultsPOD = this.newAHatControl.GetLogitFitTableForUI();
-            this.newAHatAnalysisObject.AHatResultsPOD_All = this.newAHatControl.GetLogitFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsPOD_All = this.newAHatControl.GetRecalcPODCurveAll();
             this.newAHatAnalysisObject.AHatResultsLinear = this.newAHatControl.GetLinearFitTableForUI();
             this.newAHatAnalysisObject.AHatResultsResidUncensored = this.newAHatControl.GetResidualUncensoredTableForUI();
             this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
@@ -261,9 +261,10 @@ namespace CSharpBackendWithR
         }
         public void ReturnThresholdChangeAValues()
         {
+            this.newAHatAnalysisObject.RecalcPODAll = true;
             //store the new POD curve table
             this.newAHatAnalysisObject.AHatResultsPOD = this.newAHatControl.GetLogitFitTableForUI();
-            this.newAHatAnalysisObject.AHatResultsPOD_All = this.newAHatControl.GetLogitFitTableForUI();
+            this.newAHatAnalysisObject.AHatResultsPOD_All = this.newAHatControl.GetRecalcPODCurveAll();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = this.newAHatControl.GetKeyA_Values();
             this.newAHatAnalysisObject.A25 = finalAValuesDict["a25"];
@@ -272,7 +273,7 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
             this.newAHatAnalysisObject.A9095 = finalAValuesDict["a9095"];
             this.newAHatAnalysisObject.Muhat = finalAValuesDict["a50"];
-            
+            this.newAHatAnalysisObject.RecalcPODAll = false;
         }
         public HMAnalysisObject HMAnalsysResults
         {

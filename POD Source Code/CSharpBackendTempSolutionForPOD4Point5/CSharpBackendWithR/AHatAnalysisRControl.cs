@@ -18,13 +18,24 @@ namespace CSharpBackendWithR
             this.myREngine = myREngineObject.RDotNetEngine;
         }
         //convert to a dataframe by adding strings
-        private void createDataFrameinGlobalEnvr(AHatAnalysisObject newAHatAnalysis)
+        private void createDataFrameinGlobalEnvr(AHatAnalysisObject newAHatAnalysis, bool usingAll=false)
         {
+            
             //create private variable names to shorten length
             List<double> cracks = newAHatAnalysis.Flaws;
             List<double> cracksCensored = newAHatAnalysis.FlawsCensored;
             List<double> signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             List<int> indices = new List<int>();
+            if (usingAll)
+            {
+                //cracks.Clear();
+                //cracksCensored.Clear();
+                //signalResponse.Clear();
+                //create private variable names to shorten length
+                cracks = newAHatAnalysis.Flaws_All;
+                cracksCensored = newAHatAnalysis.FlawsCensored;
+                signalResponse = newAHatAnalysis.Responses_all[newAHatAnalysis.SignalResponseName];
+            }
             if (newAHatAnalysis.ResponsesCensoredLeft.Count() != 0 || newAHatAnalysis.ResponsesCensoredRight.Count() != 0)
             {
                 List<double> responsesLeftCensored = newAHatAnalysis.ResponsesCensoredLeft[newAHatAnalysis.SignalResponseName];
@@ -68,7 +79,7 @@ namespace CSharpBackendWithR
                     this.myREngine.Evaluate("event<- c(event, 1)");
                 }
             }
-            this.GenerateDataFrameInR = new GenerateRTransformDF_AHAT(this.myREngineObject, newAHatAnalysis);
+            this.GenerateDataFrameInR = new GenerateRTransformDF_AHAT(this.myREngineObject, newAHatAnalysis, usingAll);
             this.GenerateDataFrameInR.GenerateTransformDataframe();
             try
             {
@@ -78,19 +89,6 @@ namespace CSharpBackendWithR
             {
                 System.Diagnostics.Debug.WriteLine("Testing failure");
             }
-            /*
-            try
-            {
-                //build the dataframe in the global environment
-                //this dataframe will remain in the global environment
-                this.myREngine.Evaluate("AHatDF<-data.frame(Index,x,y, event)");
-                this.myREngine.Evaluate("rm(y)");
-            }
-            catch(Exception)
-            {
-                //System.Diagnostics.Debug.WriteLine(myError);
-            }
-            */
             finally
             {
                 this.myREngine.Evaluate("rm(Index)");
@@ -121,6 +119,7 @@ namespace CSharpBackendWithR
             //execute class with appropriate parameters
             InitializeRClassForSignalResponse(newTranformAnalysis.Pod_threshold, newTranformAnalysis.ModelType);
             this.myREngine.Evaluate("newSRAnalysis$executeAhatvsA()");
+            RecalculateGhostCurve(ref newTranformAnalysis);
             //remove misc variables from the global environment
             this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("rm(fullAnalysis)");
@@ -147,6 +146,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("ahatvACensored<-newSRAnalysis$genAhatVersusACensored()");
             this.myREngine.Evaluate("newSRAnalysis$genAvaluesAndMatrix(ahatvACensored)");
             this.myREngine.Evaluate("newSRAnalysis$genPODCurve()");
+            RecalculateGhostCurve(ref newTranformAnalysis);
             //remove misc variables from the global environment
             this.myREngine.Evaluate("rm(lambdaInput)");
             this.myREngine.Evaluate("rm(ahatvACensored)");
@@ -158,6 +158,18 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDFTest, y_dec=" + pod_threshold + ", " +
                 "modelType=" + modelType + ", lambda=lambdaInput)");
             this.myREngine.Evaluate("newSRAnalysis$generateDefaultValues()");
+        }
+        /// <summary>
+        /// this function call is used when the user changes the threshold when the ghost curve is present(points omitted)
+        /// the AHATDFTest variable is overwritten with no omitted points and calculated below.
+        /// </summary>
+        /// <param name="newTranformAnalysis"></param>
+        private void RecalculateGhostCurve(ref AHatAnalysisObject newTranformAnalysis)
+        {
+            this.createDataFrameinGlobalEnvr(newTranformAnalysis, true);
+            this.myREngine.Evaluate("recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=AHatDFTest,y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+
+                newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
+            this.myREngine.Evaluate("recalcPODClass$recalcPOD()");
         }
         public DataTable GetLinearFitTableForUI()
         {
@@ -188,6 +200,17 @@ namespace CSharpBackendWithR
         {
             //ShowResults();
             RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newSRAnalysis$getResults()").AsDataFrame();
+            DataTable AHatPODTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            return AHatPODTable;
+        }
+        public DataTable GetRecalcPODCurveAll()
+        {
+            //ShowResults();
+            RDotNet.DataFrame returnDataFrame;
+            if (Convert.ToBoolean(myREngine.Evaluate("exists(\"recalcPODClass\")").AsLogical()[0]))
+                returnDataFrame = myREngine.Evaluate("recalcPODClass$getPODCurveAll()").AsDataFrame();
+            else
+                returnDataFrame = myREngine.Evaluate("newSRAnalysis$getResults()").AsDataFrame();
             DataTable AHatPODTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return AHatPODTable;
         }

@@ -118,42 +118,42 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
 
 #### Used for testing
 #used for Debugging ONLY
-plotSimdata=function(df){
-  myPlot=ggplot(data=df, mapping=aes(x=flaw, y=pod))+geom_point()+
-    ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
-  print(myPlot)
-}
-#used for Debugging ONLY
-plotCI=function(df){
-  myPlot=ggplot(data=df, mapping=aes(x=flaw, y=confidence))+geom_point()+
-    ggtitle(paste("Confidence interval Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
-  print(myPlot)
-}
-
-loopAmount=20
-avgTime=c()
-for (i in 1:loopAmount){
-  start.time <- Sys.time()
-  data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots.csv",sep=""), header=TRUE)
-
-  data_obs=data.frame(
-    Index=data_obs$Index,
-    x=data_obs$Length,
-    y=data_obs$A11,
-    event=rep(1, nrow(data_obs))
-  )
-  data_obs$x=log(data_obs$x)
-  data_obs$event=c( 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-  lambda=0
-  newSRAnalysis<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=1, lambda=lambda)
-  newSRAnalysis$recalcPOD()
-  PODCurveAll<<-newSRAnalysis$getPODCurveAll()
-  end.time <- Sys.time()
-  time.taken <- end.time - start.time
-
-  avgTime=c(avgTime, time.taken)
-}
-avg=sum(avgTime)/loopAmount
-avg
-PODCurveAll$flaw=exp(PODCurveAll$flaw)
-plotSimdata(PODCurveAll)
+# plotSimdata=function(df){
+#   myPlot=ggplot(data=df, mapping=aes(x=flaw, y=pod))+geom_point()+
+#     ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
+#   print(myPlot)
+# }
+# #used for Debugging ONLY
+# plotCI=function(df){
+#   myPlot=ggplot(data=df, mapping=aes(x=flaw, y=confidence))+geom_point()+
+#     ggtitle(paste("Confidence interval Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
+#   print(myPlot)
+# }
+# 
+# loopAmount=20
+# avgTime=c()
+# for (i in 1:loopAmount){
+#   start.time <- Sys.time()
+#   data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots.csv",sep=""), header=TRUE)
+# 
+#   data_obs=data.frame(
+#     Index=data_obs$Index,
+#     x=data_obs$Length,
+#     y=data_obs$A11,
+#     event=rep(1, nrow(data_obs))
+#   )
+#   data_obs$x=log(data_obs$x)
+#   data_obs$event=c( 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+#   lambda=0
+#   newSRAnalysis<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=1, lambda=lambda)
+#   newSRAnalysis$recalcPOD()
+#   PODCurveAll<<-newSRAnalysis$getPODCurveAll()
+#   end.time <- Sys.time()
+#   time.taken <- end.time - start.time
+# 
+#   avgTime=c(avgTime, time.taken)
+# }
+# avg=sum(avgTime)/loopAmount
+# avg
+# PODCurveAll$flaw=exp(PODCurveAll$flaw)
+# plotSimdata(PODCurveAll)

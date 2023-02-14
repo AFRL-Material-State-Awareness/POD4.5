@@ -48,7 +48,7 @@ namespace CSharpBackendWithR
         private Dictionary<string, List<double>> responsesCensoredLeft;
         private Dictionary<string, List<double>> responsesCensoredRight;
         //box cox
-        private double lambda;
+        private double lambda;        
         public AHatAnalysisObject(string nameInput = "") : base()
         {
             //name of the analysis
@@ -292,10 +292,7 @@ namespace CSharpBackendWithR
         {
             set
             {
-                if(this.Flaws.Count == this.Flaws_All.Count)
-                {
-                    this.aHatResultsPODAll = value;
-                }
+                this.aHatResultsPODAll = value;
             }
             get
             {
@@ -303,6 +300,10 @@ namespace CSharpBackendWithR
             }
             
         }
+        /// <summary>
+        /// flag used to allow the aHatResultsPODAll table to be overwritten
+        /// </summary>
+        public bool RecalcPODAll { set; get; }
         public double GetMaxResponse()
         {
             double overallMax = -1;

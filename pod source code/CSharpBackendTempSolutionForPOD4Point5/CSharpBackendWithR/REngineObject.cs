@@ -215,6 +215,7 @@ namespace CSharpBackendWithR
             this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/SignalResponseCode/SignalResponseMainAnalysisRObject.R')");
             this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/SignalResponseCode/GenPODSignalResponeRObject.R')");
             this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/SignalResponseCode/PrepareDataWithMultipleResponsesRObject.R')");
+            this.rEngine.Evaluate("source('" + path + "/RCode/RBackend/SignalResponseCode/RecalculatePODGhostCurve.R')");
             scriptsLoaded = true;
         }
         private void InitializeRLibraries()
