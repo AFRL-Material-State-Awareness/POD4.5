@@ -2,11 +2,12 @@
 
 RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFFull="data.frame",
                                                                    y_dec="numeric",
-                                                                   mu="numeric",
                                                                    modelType="numeric",
                                                                    lambda="numeric",
-                                                                   sigma="numeric",
+                                                                   tau="numeric",
                                                                    varCovarMatrix="matrix",
+                                                                   mu="numeric",
+                                                                   sigma="numeric",
                                                                    aVPOD="matrix",
                                                                    PODCurveAll="data.frame",
                                                                    thresholdTabAll="data.frame",
@@ -130,9 +131,10 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                     colnames(threshDataFrame)=columns
                                     a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                     a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
-                                    a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
-                                    a.covariance.matrix <- a.hat.vs.a.censored$var
-                                    varCovarMatrix<<-a.covariance.matrix
+                                    #a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
+                                    a.tau <- tau
+                                    #a.covariance.matrix <- a.hat.vs.a.censored$var
+                                    #varCovarMatrix<<-a.covariance.matrix
                                     for(i in thresholds){
                                       a.hat.decision = i # = 200
                                       aMu <- (a.hat.decision - a.b0)/a.b1
@@ -162,8 +164,8 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                                                    
                     )
 
-# #### Used for testing
-# #used for Debugging ONLY
+# ### Used for testing
+# ###used for Debugging ONLY
 # plotSimdata=function(df){
 #   myPlot=ggplot(data=df, mapping=aes(x=flaw, y=pod))+geom_point()+
 #     ggtitle(paste("POD Curve"))#+scale_x_continuous(limits = c(0,1.0))+scale_y_continuous(limits = c(0,1))
@@ -176,11 +178,11 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
 #   print(myPlot)
 # }
 # 
-# loopAmount=20
+# loopAmount=1
 # avgTime=c()
 # for (i in 1:loopAmount){
 #   start.time <- Sys.time()
-#   data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots.csv",sep=""), header=TRUE)
+#   data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots_exp.csv",sep=""), header=TRUE)
 # 
 #   data_obs=data.frame(
 #     Index=data_obs$Index,
@@ -188,12 +190,14 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
 #     y=data_obs$A11,
 #     event=rep(1, nrow(data_obs))
 #   )
-#   data_obs$x=log(data_obs$x)
-#   data_obs$event=c( 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+#   #data_obs$x=log(data_obs$x)
+#   data_obs$event=c( 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+#                    #2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  1  1  1  2  1  1  1  1  1  1  1  1  1  1  1  1  1
 #   lambda=0
 #   newSRAnalysis<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=1, lambda=lambda)
-#   newSRAnalysis$recalcPOD()
+#   newSRAnalysis$recalcPOD(TRUE)
 #   PODCurveAll<<-newSRAnalysis$getPODCurveAll()
+#   threshDFAll<<-newSRAnalysis$getGhostThresholdDF() %>% filter(threshold > 0)
 #   end.time <- Sys.time()
 #   time.taken <- end.time - start.time
 # 

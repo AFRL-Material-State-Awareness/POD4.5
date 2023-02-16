@@ -34,6 +34,7 @@
 # varCovarMatrix= the values of the variance-covariance matrix for the linear fit model
 # keyAValues = a list of the critical a values (a25, a50, a90, sigma, a9095) for the linear fit model
 # linearModel = The dataframe that holds the linear model fit for the signal response data (i.e. the predict reponses using the linear fit)
+# tau = the value found for tau. It is reused in RecalculateGhostCurveR to ensure the POD tables are EXACTLY the same
 # rSquared = the value of R-squared for the linear fit model
 # regressionStdErrs = the standard error of the linear regression
 # linearTestResults = a list of the p-values found of taking linear tests on the linear fit model
@@ -54,6 +55,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         varCovarMatrix="matrix",
                                                                         keyAValues="list",
                                                                         linearModel="data.frame",
+                                                                        tau="numeric",
                                                                         rSqaured="numeric",
                                                                         regressionStdErrs="list",
                                                                         linearTestResults="list",
@@ -137,6 +139,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       names(linearModel)[names(linearModel) == 'x'] <<- 'flaw'
                                       return(linearModel)
                                     },
+                                    setTau=function(setTau){
+                                      tau <<- setTau
+                                    },
+                                    getTau=function(){
+                                      return(tau)
+                                    },
                                     setResidualTable=function(psResidTable){
                                       residualTable<<-psResidTable
                                     },
@@ -208,6 +216,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     },
                                     getCovarianceMatrix=function(){
                                       return(as.data.frame(aVPOD))
+                                    },
+                                    getCovarianceMatrixAsMatrix=function(){
+                                      return(aVPOD)
                                     },
                                     setKeyAValues=function(psKeyAValues){
                                       keyAValues<<-psKeyAValues
@@ -438,6 +449,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
+                                      setTau(a.tau)
                                       a.covariance.matrix <- a.hat.vs.a.censored$var
                                       varCovarMatrix<<-a.covariance.matrix
                                       for(i in thresholds){

@@ -1905,7 +1905,7 @@ namespace POD.Data
             try
             {
                 // used to plot the  original ghost curve in the event that the user omits points
-                _podCurveTable_All = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD_All);
+                 _podCurveTable_All = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD_All);
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();

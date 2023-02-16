@@ -168,7 +168,7 @@ namespace CSharpBackendWithR
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis, true);
             this.myREngine.Evaluate("recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=AHatDFTest,y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+
-                newTranformAnalysis.ModelType+ ", lambda=lambdaInput)");
+                newTranformAnalysis.ModelType+ ", lambda=lambdaInput, tau = newSRAnalysis$getTau(), varCovarMatrix= newSRAnalysis$getCovarianceMatrixAsMatrix())");
             //recalculates the POD curve with or without the threshold table
             //when the user changes the threshold, the threshold table is not regenerated
             if (recreateThreshTable)
