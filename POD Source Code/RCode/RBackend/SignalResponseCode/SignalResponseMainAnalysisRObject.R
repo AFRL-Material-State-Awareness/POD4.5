@@ -155,12 +155,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
-                                      ResultsPOD<<-data.frame(
+                                      resultsPOD<<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
                                         pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
-                                      return(ResultsPOD)
+                                      return(resultsPOD)
                                     },
                                     setThresholdDF=function(psThreshDF){
                                       thesholdTable<<-psThreshDF

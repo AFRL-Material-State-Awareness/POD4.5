@@ -30,7 +30,9 @@ namespace CSharpBackendWithR
         private DataTable aHatResidualResultsUncensored;
         private DataTable aHatResidualResults;
         private DataTable aHatThresholdsTable;
+        private DataTable aHatThresholdsTableAll;
         private DataTable aHatResultsPOD;
+        private DataTable aHatResultsPODAll;
         //linear model unique metrics
         private double intercept;
         private double slope;
@@ -121,8 +123,10 @@ namespace CSharpBackendWithR
             this.aHatResidualResults = new DataTable();
             //used to store and plot the POD at various thresholds in ahat vs a
             this.aHatThresholdsTable = new DataTable();
+            this.aHatThresholdsTableAll= new DataTable();
             //used to store the results dataframe
             this.aHatResultsPOD = new DataTable();
+            this.aHatResultsPODAll = new DataTable();
         }
         public double Signalmin { set; get; }
         public double Signalmax { set; get; }
