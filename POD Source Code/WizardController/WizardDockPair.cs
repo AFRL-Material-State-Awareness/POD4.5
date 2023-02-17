@@ -391,6 +391,9 @@ namespace POD
             Wizard.NextStep();
 
             nextStep = Wizard.CurrentStep;
+            //Needs to stay in the invent the user imports data and wants to change the project name
+            if (Wizard.Stuck && Wizard.CurrentStep is POD.Wizards.Steps.FullAnalysisProjectSteps.ProjectPropertiesStep)
+                nextStep = prevStep;
 
             if (Dock.SkipAnimations == false)
             {

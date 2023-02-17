@@ -909,37 +909,37 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         protected override void DisableInputControls()
         {
-            //foreach (Annotation anno in MainChart.Annotations)
-            //    anno.AllowMoving = false;
+            foreach (Annotation anno in MainChart.Annotations)
+                anno.AllowMoving = false;
 
-            ////_activeControl = ActiveControl;
+            //_activeControl = ActiveControl;
 
-            //foreach (Control control in inputTablePanel.Controls)
-            //{
-            //    var label = control as Label;
+            foreach (Control control in inputTablePanel.Controls)
+            {
+                var label = control as Label;
 
-            //    if (label == null)
-            //        control.Enabled = false;
-            //}
+                if (label == null)
+                    control.Enabled = false;
+            }
         }
 
         protected override void EnableInputControls()
         {
-            //foreach (Annotation anno in MainChart.Annotations)
-            //    anno.AllowMoving = true;
+            foreach (Annotation anno in MainChart.Annotations)
+                anno.AllowMoving = true;
 
-            //MainChart.DrawBoundaryLines();
+            MainChart.DrawBoundaryLines();
 
-            //foreach (Control control in inputTablePanel.Controls)
-            //{
-            //    var label = control as Label;
+            foreach (Control control in inputTablePanel.Controls)
+            {
+                var label = control as Label;
 
-            //    if (label == null)
-            //        control.Enabled = true;
-            //}
+                if (label == null)
+                    control.Enabled = true;
+            }
 
-            //if (_activeControl != null)
-            //    _activeControl.Focus();
+            if (_activeControl != null)
+                _activeControl.Focus();
         }
 
         protected override void MainChart_LinesChanged(object sender, EventArgs e)
