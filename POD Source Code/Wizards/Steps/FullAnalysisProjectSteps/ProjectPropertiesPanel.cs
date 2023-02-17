@@ -535,7 +535,12 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
         public void CopySettingsToProject()
         {
             if (HasInvalidProjectName)
+            {
+                //needed in the event the user changes the project name to something invalid!
+                Project.Properties.Name = "";
                 return;
+            }
+                
 
             Project.Properties.Analyst.Name = analystComboBox.Text;
             Project.Properties.Analyst.Company = analystCoComboBox.Text;
@@ -560,9 +565,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             Globals.UpdateMRUList(Project.Properties.Parent, Globals.PODv4ParentFile);
             Globals.UpdateMRUListMultiLine(Project.Properties.Notes + "|", Globals.PODv4NotesFile);
         }
-
-        
-
         public override bool CheckStuck()
         {
             if (HasInvalidProjectName)
