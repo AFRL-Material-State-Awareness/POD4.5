@@ -16,16 +16,29 @@ namespace CSharpBackendWithR
         private List<double> cracksCensored;
         private List<double> signalResponse;
         private List<int> indices;
-        public GenerateRTransformDF_AHAT(REngineObject myREngineObjectInput, AHatAnalysisObject newAHatAnalysisInput)
+
+        private bool usingAllPoints;
+        public GenerateRTransformDF_AHAT(REngineObject myREngineObjectInput, AHatAnalysisObject newAHatAnalysisInput, bool usingAllPoints)
         {
             this.myREngineObject = myREngineObjectInput;
             this.myREngine = this.myREngineObject.RDotNetEngine;
             this.newAHatAnalysis = newAHatAnalysisInput;
             this.lambda = newAHatAnalysisInput.Lambda;
-            this.cracks = newAHatAnalysis.Flaws;
+            if (usingAllPoints)
+            {
+                this.cracks = newAHatAnalysis.Flaws_All;
+                this.signalResponse = newAHatAnalysis.Responses_all[newAHatAnalysis.SignalResponseName];
+            }
+            else
+            {
+                this.cracks = newAHatAnalysis.Flaws;
+                this.signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
+            }
             this.cracksCensored = newAHatAnalysis.FlawsCensored;
-            this.signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
+            //this.signalResponse = newAHatAnalysis.Responses[newAHatAnalysis.SignalResponseName];
             this.indices = new List<int>();
+
+            this.usingAllPoints = usingAllPoints;
         }
         public void GenerateTransformDataframe()
         {
@@ -79,6 +92,7 @@ namespace CSharpBackendWithR
         }
         private void GenerateIndices()
         {
+            
             //create index column for dataframe
             for (int i = 1; i <= this.cracks.Count; i++)
             {
@@ -96,7 +110,10 @@ namespace CSharpBackendWithR
         }
         private void LinearSignalGeneration()
         {
-            Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            //Dictionary<string, List<double>> responses= this.newAHatAnalysis.Responses;
+            //if (this.usingAllPoints)
+            //    responses = this.newAHatAnalysis.Responses_all;
+            Dictionary<string, List<double>> responses=GetResponseType();
             List<string> genYHatNames = new List<string>();
             for (int i = 0; i < responses.Count; i++)
             {
@@ -121,7 +138,8 @@ namespace CSharpBackendWithR
         }
         private void LogSignalGeneration()
         {
-            Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            //Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            Dictionary<string, List<double>> responses = GetResponseType();
             List<string> genYHatNames = new List<string>();
             for (int i = 0; i < responses.Count; i++)
             {
@@ -146,7 +164,8 @@ namespace CSharpBackendWithR
         }
         private void InverseSignalGeneration()
         {
-            Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            //Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            Dictionary<string, List<double>> responses = GetResponseType();
             List<string> genYHatNames = new List<string>();
             for (int i = 0; i < responses.Count; i++)
             {
@@ -171,7 +190,8 @@ namespace CSharpBackendWithR
         }
         private void BoxCoxSignalGeneration()
         {
-            Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            //Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            Dictionary<string, List<double>> responses = GetResponseType();
             List<string> genYHatNames = new List<string>();
             for (int i = 0; i < responses.Count; i++)
             {
@@ -283,6 +303,17 @@ namespace CSharpBackendWithR
         {
             InverseSignalGeneration();
             InverseFlawGeneration();
+        }
+        /// <summary>
+        /// Function used to either return the activated respones or all of the  responses (all of the responses are used to generate the ghost curve
+        /// </summary>
+        /// <returns>responses as a dictionary</returns>
+        private Dictionary<string, List<double>> GetResponseType()
+        {
+            Dictionary<string, List<double>> responses = this.newAHatAnalysis.Responses;
+            if (this.usingAllPoints)
+                responses = this.newAHatAnalysis.Responses_all;
+            return responses;
         }
         private void SetLambdaValueAndTransformInR()
         {

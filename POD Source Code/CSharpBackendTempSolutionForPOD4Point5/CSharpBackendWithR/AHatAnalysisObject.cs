@@ -46,7 +46,7 @@ namespace CSharpBackendWithR
         private Dictionary<string, List<double>> responsesCensoredLeft;
         private Dictionary<string, List<double>> responsesCensoredRight;
         //box cox
-        private double lambda;
+        private double lambda;        
         public AHatAnalysisObject(string nameInput = "") : base()
         {
             //name of the analysis
@@ -252,6 +252,21 @@ namespace CSharpBackendWithR
             set { this.aHatThresholdsTable = value; }
             get { return this.aHatThresholdsTable; }
         }
+        public DataTable AHatThresholdsTable_All
+        {
+            set
+            {
+                //if (this.Flaws.Count == this.Flaws_All.Count)
+                //{
+                    this.aHatThresholdsTableAll = value;
+                //}
+            }
+            get
+            {
+                return this.aHatThresholdsTableAll;
+            }
+
+        }
         public DataTable AHatResultsResidUncensored
         {
             set { this.aHatResidualResultsUncensored = value; }
@@ -266,6 +281,18 @@ namespace CSharpBackendWithR
         {
             set { this.aHatResultsPOD=value; }
             get { return this.aHatResultsPOD; }
+        }
+        public DataTable AHatResultsPOD_All
+        {
+            set
+            {
+                this.aHatResultsPODAll = value;
+            }
+            get
+            {
+                return this.aHatResultsPODAll;
+            }
+            
         }
         public double GetMaxResponse()
         {

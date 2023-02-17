@@ -1904,8 +1904,8 @@ namespace POD.Data
             //printDT(PodCurveTable);
             try
             {
-                //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
-                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
+                // used to plot the  original ghost curve in the event that the user omits points
+                 _podCurveTable_All = BackwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD_All);
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
@@ -1946,7 +1946,8 @@ namespace POD.Data
             try
             {
                 //_thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
-                _thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable;
+                _thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable_All);
+                //_thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable_All;
                 _thresholdPlotTable_All.DefaultView.Sort = "threshold" + " " + "ASC";
                 //remove negative values
                 _thresholdPlotTable_All = _thresholdPlotTable_All.Select("threshold > 0.0").CopyToDataTable();
