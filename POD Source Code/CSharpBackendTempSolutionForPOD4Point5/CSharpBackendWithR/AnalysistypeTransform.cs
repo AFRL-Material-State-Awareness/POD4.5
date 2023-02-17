@@ -283,6 +283,5 @@ namespace CSharpBackendWithR
             set { this.resultsAHatAnalysis = value; }
             get { return this.resultsAHatAnalysis; }
         }
-        
     }
 }

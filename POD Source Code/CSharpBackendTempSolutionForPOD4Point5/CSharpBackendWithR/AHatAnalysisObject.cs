@@ -30,9 +30,7 @@ namespace CSharpBackendWithR
         private DataTable aHatResidualResultsUncensored;
         private DataTable aHatResidualResults;
         private DataTable aHatThresholdsTable;
-        private DataTable aHatThresholdsTableAll;
         private DataTable aHatResultsPOD;
-        private DataTable aHatResultsPODAll;
         //linear model unique metrics
         private double intercept;
         private double slope;
@@ -123,12 +121,8 @@ namespace CSharpBackendWithR
             this.aHatResidualResults = new DataTable();
             //used to store and plot the POD at various thresholds in ahat vs a
             this.aHatThresholdsTable = new DataTable();
-            //keeps track of the original threshold lines
-            this.aHatThresholdsTableAll = new DataTable();
             //used to store the results dataframe
             this.aHatResultsPOD = new DataTable();
-            //keeps track of the original POD curve in order to plot the ghost curve
-            this.aHatResultsPODAll = new DataTable();
         }
         public double Signalmin { set; get; }
         public double Signalmax { set; get; }
@@ -334,7 +328,6 @@ namespace CSharpBackendWithR
             this.aHatLinearResults = null;
             this.aHatResidualResults = null;
             this.aHatResultsPOD = null;
-            
         }
     }
 }

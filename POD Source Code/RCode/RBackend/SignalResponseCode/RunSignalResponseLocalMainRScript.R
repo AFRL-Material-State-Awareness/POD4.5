@@ -29,19 +29,18 @@ begin<-proc.time()
 ###################################################### Uncomment this for boxcox transform (leave lambda in to prevent a varaible not found error)
 bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
 lambda<-0
-#data_obs$x=log(data_obs$x)
+data_obs$x=log(data_obs$x)
 lambda<-bc$x[which.max(bc$y)]
 lambda<- -2.0
-data_obs$y<-(data_obs$y^lambda-1)/lambda
+#data_obs$y<-(data_obs$y^lambda-1)/lambda
 ##############################################################
 #data_obs$event= c(2, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0)
-#data_obs$event= c(2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 #data_obs$event= c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 data_obs$event=rep(1,  nrow(data_obs))
 
 fullAnalysis=TRUE
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=57, modelType=5, lambda=lambda)
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=5, modelType=3, lambda=lambda)
 newSRAnalysis$generateDefaultValues()
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
@@ -67,8 +66,8 @@ newSRAnalysis$plotSimdata(results)
 newSRAnalysis$plotCI(results)
 
 
-data_obs$y=nthroot(data_obs$y * lambda + 1)
-threshDF$threshold=nthroot(threshDF$threshold * lambda + 1)
+
+
 
 
 # full<-lm(y~x, data=data_obs)

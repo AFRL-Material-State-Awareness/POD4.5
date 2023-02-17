@@ -40,7 +40,6 @@
 # linearTestResults = a list of the p-values found of taking linear tests on the linear fit model
 # aVPOD = the values of the variance-covariance matrix for the POD
 # ResultsPOD = a dataframe of the POD and confidence interval values
-# ResultsPOD = Original POD dataframe used to keep track of the ghost curve
 # critPts = the key aValues for POD transformation
 # residuallTable = a dataframe containing the residuals for the linear fit
 # modelIntercept = the y-intercept of the straight line
@@ -156,12 +155,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
-                                      resultsPOD<-data.frame(
+                                      ResultsPOD<<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
                                         pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
                                       )
-                                      return(resultsPOD)
+                                      return(ResultsPOD)
                                     },
                                     setThresholdDF=function(psThreshDF){
                                       thesholdTable<<-psThreshDF
@@ -475,9 +474,9 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                          a90, 
                                                                          a9095, 
                                                                          a50, 
-                                                                         v11=varCovarMatrix[[1]],  
-                                                                         v12=varCovarMatrix[1,2],
-                                                                         v22=varCovarMatrix[2,2]))
+                                                                         v11=a.V_POD[[1]],  
+                                                                         v12=a.V_POD[1,2],
+                                                                         v22=a.V_POD[2,2]))
                                       }
                                       setThresholdDF(threshDataFrame)
                                     },

@@ -1735,7 +1735,7 @@ namespace POD.Data
             try
             {
                 //note: DO NOT set this equal to _podcurveTable, it will cause program to throw an exception when duplicating
-                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD_All;
+                _podCurveTable_All = _aHatAnalysisObject.AHatResultsPOD;
                 _podCurveTable_All.DefaultView.Sort = "flaw, pod" + " " + "ASC";
                 _podCurveTable_All = _podCurveTable_All.Select("flaw > 0.0").CopyToDataTable();
                 _podCurveTable_All = _podCurveTable_All.DefaultView.ToTable();
