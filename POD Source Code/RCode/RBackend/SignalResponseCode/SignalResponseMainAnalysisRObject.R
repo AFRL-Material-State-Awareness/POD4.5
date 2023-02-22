@@ -63,6 +63,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         critPts="data.frame",
                                                                         #copyoutputfrompython
                                                                         residualTable="data.frame",
+                                                                        frequencyTable="data.frame",
                                                                         modelIntercept="numeric",
                                                                         modelSlope="numeric",
                                                                         thesholdTable="data.frame",
@@ -103,6 +104,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         v11=c(0,0,0,0,0),
                                         v12=c(0,0,0,0,0),
                                         v22=c(0,0,0,0,0)
+                                      )
+                                      frequencyTable<<-data.frame(
+                                        Range=c(0,0,0,0,0),
+                                        Freq=c(0,0,0,0,0)
                                       )
                                       critPts<<-data.frame(
                                         index=-1,
@@ -155,7 +160,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       ResultsPOD<<-psResults
                                     },
                                     getResults=function(){
-                                      resultsPOD<<-data.frame(
+                                      resultsPOD<-data.frame(
                                         flaw= ResultsPOD$defect_sizes,
                                         pod = ResultsPOD$probabilities,
                                         confidence= ResultsPOD$defect_sizes_upCI
@@ -167,6 +172,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     },
                                     getThresholdDF=function(){
                                       return(thesholdTable)
+                                    },
+                                    setFreqTable=function(psFreqTable){
+                                      frequencyTable<<-psFreqTable
+                                    },
+                                    getFreqTable=function(){
+                                      return(frequencyTable)
                                     },
                                     setModelIntercept=function(psModelInt){
                                       modelIntercept<<-psModelInt
@@ -325,6 +336,11 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         genThresholdsTable(ahatvACensored)
                                         #function that generates the POD curve and stores the results
                                         genPODCurve()
+                                        #generate the normality chart
+                                        responsesCheck=data.frame(y=signalRespDF$y)
+                                        normalityCheck<-GenerateNormalityTable$new(responses=responsesCheck, responsesMin = min(responsesCheck$y), responsesMax = max(responsesCheck$y))
+                                        normalityCheck$GenFrequencyTable()
+                                        setFreqTable(normalityCheck$getFreqTable())
                                       }
                                       
                                     },
@@ -448,7 +464,6 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
-                                      setTau(a.tau)
                                       a.covariance.matrix <- a.hat.vs.a.censored$var
                                       varCovarMatrix<<-a.covariance.matrix
                                       for(i in thresholds){
@@ -527,5 +542,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     plotSimdata=function(df){
                                       myPlot=ggplot(data=df, mapping=aes(x=flaw, y=y))+geom_point()
                                       print(myPlot)
+                                    },
+                                    plotNormality=function(df){
+                                      # Barplot
+                                      ggplot(df, aes(x=Range, y=Freq)) + 
+                                        geom_bar(stat = "identity", width=1.0)
                                     }
                                   ))
