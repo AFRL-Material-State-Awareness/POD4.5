@@ -37,7 +37,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private void InitializeComponent()
         {   
             this.linearityChart = new POD.Controls.CensoredLinearityChart();
-            this.normalityChart = new POD.Controls.DataPointChart();
+            this.normalityChart = new POD.Controls.NormalityChart();
             this.equalVarianceChart = new POD.Controls.DataPointChart();
             this.podChart = new POD.Controls.PODChart();
             this.thresholdChart = new POD.Controls.PODThresholdChart();
@@ -1326,7 +1326,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         private Controls.AHatVsARegressionChart mainChart;
         private Controls.CensoredLinearityChart linearityChart;
-        private Controls.DataPointChart normalityChart;
+        private Controls.NormalityChart normalityChart;
         private Controls.DataPointChart equalVarianceChart;
         private Controls.PODChart podChart;
         private Controls.PODThresholdChart thresholdChart;

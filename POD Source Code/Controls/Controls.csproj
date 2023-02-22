@@ -315,6 +315,12 @@
     <Compile Include="TutorialPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="NormalityChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NormalityChart.Designer.cs">
+      <DependentUpon>NormalityChart.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

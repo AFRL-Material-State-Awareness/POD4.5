@@ -220,6 +220,7 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
             this.newAHatAnalysisObject.AHatThresholdsTable = this.newAHatControl.GetThresholdsTableForUI();
             this.newAHatAnalysisObject.AHatThresholdsTable_All = this.newAHatControl.GetThresholdsTable_ALL_ForUI();
+            this.newAHatAnalysisObject.AHatNormalityTable = this.newAHatControl.GetNormalityTableForUI();
             //get slope and intercept (need to add the errors for each as well)
             List<double> linearMetrics = this.newAHatControl.GetLinearModelMetrics();
             this.newAHatAnalysisObject.Intercept = linearMetrics[0];

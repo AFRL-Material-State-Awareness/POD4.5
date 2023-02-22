@@ -783,6 +783,8 @@ namespace POD
             }
         }
 
+        public static string NormalityChart { get; set; }
+
         public static void CleanUpRandomImageFiles()
         {
             if(!Directory.Exists(Globals.PODv4ImageFolder))
@@ -1079,7 +1081,10 @@ namespace POD
         public const string a9095Line = "a9095Line";
     }
 
-
+    public static class NormalityChart
+    {
+        public const string NormalityHistogram = "NormalityHistogram";
+    }
     public static class ChartColors
     {
         public static Color a50Color = Color.DarkSlateGray;
