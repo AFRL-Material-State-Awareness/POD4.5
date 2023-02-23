@@ -1571,7 +1571,8 @@ namespace POD.Analyze
                 List<double> censoredResponsesR = new List<double>();
                 foreach (double flaw in _aHatAnalysisObject.Flaws_All)
                 {
-                    int responseIndex = _aHatAnalysisObject.Flaws_All.IndexOf(flaw);
+                    //int responseIndex = _aHatAnalysisObject.Flaws_All.IndexOf(flaw);
+                    int responseIndex = index;
                     if (flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
                     {
                         aHatIncludedFlaws.Add(flaw);
