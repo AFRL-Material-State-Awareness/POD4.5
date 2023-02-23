@@ -85,6 +85,7 @@
             this.ActionIcons.Images.SetKeyName(45, "Show Data Table.png");
             this.ActionIcons.Images.SetKeyName(46, "Show Properties.png");
             this.ActionIcons.Images.SetKeyName(47, "Switch Help View.png");
+            this.ActionIcons.Images.SetKeyName(48, "Show Normality.png");
             // 
             // ActionIconsList
             // 
