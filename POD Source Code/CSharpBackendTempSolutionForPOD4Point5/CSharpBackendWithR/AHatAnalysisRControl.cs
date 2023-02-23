@@ -20,7 +20,7 @@ namespace CSharpBackendWithR
         //convert to a dataframe by adding strings
         private void createDataFrameinGlobalEnvr(AHatAnalysisObject newAHatAnalysis, bool usingAll=false)
         {
-            
+
             //create private variable names to shorten length
             List<double> cracks = newAHatAnalysis.Flaws;
             List<double> cracksCensored = newAHatAnalysis.FlawsCensored;
@@ -168,7 +168,8 @@ namespace CSharpBackendWithR
         {
             this.createDataFrameinGlobalEnvr(newTranformAnalysis, true);
             this.myREngine.Evaluate("recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=AHatDFTest,y_dec=" + newTranformAnalysis.Pod_threshold+", modelType="+
-                newTranformAnalysis.ModelType+ ", lambda=lambdaInput, tau = newSRAnalysis$getTau(), varCovarMatrix= newSRAnalysis$getCovarianceMatrixAsMatrix())");
+                newTranformAnalysis.ModelType+ ", lambda=lambdaInput, tau = newSRAnalysis$getTau())");
+            
             //recalculates the POD curve with or without the threshold table
             //when the user changes the threshold, the threshold table is not regenerated
             if (recreateThreshTable)
