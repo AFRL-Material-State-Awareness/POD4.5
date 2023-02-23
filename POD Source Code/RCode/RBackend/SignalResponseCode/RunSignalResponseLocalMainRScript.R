@@ -64,7 +64,7 @@ print("total time:")
 print(end-begin)
 
 
-recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=1, lambda=lambda, tau = newSRAnalysis$getTau(), varCovarMatrix= newSRAnalysis$getCovarianceMatrixAsMatrix())
+recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=1, lambda=lambda, tau = newSRAnalysis$getTau())
 recalcPODClass$recalcPOD(TRUE)
 
 #newSRAnalysis$plotSimdata(results)

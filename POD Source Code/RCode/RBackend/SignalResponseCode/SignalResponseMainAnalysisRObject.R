@@ -427,6 +427,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
+                                      setTau(a.tau)
                                       a.covariance.matrix <- a.hat.vs.a.censored$var
                                       varCovarMatrix<<-a.covariance.matrix
                                       # Transform backward into the original units
