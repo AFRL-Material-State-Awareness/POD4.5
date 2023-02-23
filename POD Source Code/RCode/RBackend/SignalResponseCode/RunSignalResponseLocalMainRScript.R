@@ -16,21 +16,29 @@ source(paste(folderLocation, "/GenPODSignalResponeRObject.R", sep=""))
 source(paste(folderLocation, "/SignalResponseMainAnalysisRObject.R", sep=""))
 source(paste(folderLocation, "/PrepareDataWithMultipleResponsesRObject.R", sep=""))
 source(paste(folderLocation, "/GenFrequencyTableR.R", sep = ""))
+source(paste(folderLocation, "/RecalculatePODGhostCurve.R", sep = ""))
+
 #data_obs = read.csv(paste(folderLocation,'/Plot_Data_50.csv',sep=""), header=TRUE, col.names=c("y","x"))
 data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots.csv",sep=""), header=TRUE)
-data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/ahat_vs_a_1823_Example1_LogY.csv"), header=TRUE)
+
+#data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/ahat_vs_a_1823_Example1_LogY.csv"), header=TRUE)
 data_obs=na.omit(data_obs)
 colnames(data_obs)[1] <- "Index"
 colnames(data_obs)[2] <- "x"
+data_obs$A11=log(data_obs$A14)
 colnames(data_obs)[3] <- "y"
+data_obs$A21=NULL
+data_obs$A12=NULL
+data_obs$A13=NULL
+data_obs$A14=NULL
 #data_obs$y2=NULL
 #log both
 #data_obs$y=log(data_obs$y)
 #data_obs$y2=log(data_obs$y2)
 begin<-proc.time()
 ###################################################### Uncomment this for boxcox transform (leave lambda in to prevent a varaible not found error)
-bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
- lambda<-0
+#bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
+lambda<-0
 #data_obs$x=log(data_obs$x)
 #lambda<-bc$x[which.max(bc$y)]
 #lambda<- -2.0
@@ -42,7 +50,7 @@ bc<-boxcox(data_obs$y~data_obs$x, plotit =FALSE)
 data_obs$event=rep(1,  nrow(data_obs))
 
 fullAnalysis=TRUE
-newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=5, modelType=5, lambda=lambda)
+newSRAnalysis<-AHatAnalysis$new(signalRespDF=data_obs,y_dec=5, modelType=3, lambda=lambda)
 newSRAnalysis$generateDefaultValues()
 newSRAnalysis$executeAhatvsA()
 linResults<-newSRAnalysis$getLinearModel()
@@ -64,7 +72,7 @@ print("total time:")
 print(end-begin)
 
 
-recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=1, lambda=lambda, tau = newSRAnalysis$getTau())
+recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=3, lambda=lambda, tau = newSRAnalysis$getTau())
 recalcPODClass$recalcPOD(TRUE)
 
 #newSRAnalysis$plotSimdata(results)
