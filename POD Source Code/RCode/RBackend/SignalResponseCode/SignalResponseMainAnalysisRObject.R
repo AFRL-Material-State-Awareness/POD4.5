@@ -42,6 +42,7 @@
 # ResultsPOD = a dataframe of the POD and confidence interval values
 # critPts = the key aValues for POD transformation
 # residuallTable = a dataframe containing the residuals for the linear fit
+# frequencyTable = aka the normality table. This table holds the ferquency of responses at various ranges
 # modelIntercept = the y-intercept of the straight line
 # modelSlope = the slope of the straight line
 # threshold table = a table containing the values of a90 and a9095 at various thresholds (should never display negative flaw sizes)

@@ -1,3 +1,24 @@
+#     Probability of Detection Version 4.5 (PODv4.5)
+#     Copyright (C) 2022  University of Dayton Research Institute (UDRI)
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# parameters:
+# Responses= the transformed responses for the given dataset
+# responseMin = the minimum transformed response
+# responseMax = the maximum transformed response
+# frequency table = table containing the frequencies of responses at various ranges (this gets returned to the UI)
 
 GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(responses="data.frame",
                                                                     responsesMin="numeric",
@@ -36,9 +57,13 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                             stop("sequence was unable to generate values in noramlity plot")
                                           }
                                           setFreqTable(finalOutput)
-                                        }
+                                        },
                                         DetermineIncrement=function(maxTenVal){
-                                          incrementSeq<- seq(from=0, to = maxTenVal, length.out = SturgesRule())
+                                          if(maxTenVal > 0){
+                                            incrementSeq<- seq(from=0, to = maxTenVal, length.out = SturgesRule())
+                                          }else{
+                                            incrementSeq<- seq(from= RoundUpNice(-responsesMin)*(-1), to = maxTenVal, length.out = SturgesRule())
+                                          }
                                           return(incrementSeq)
                                         },
                                         #this function applies sturges rule to determine the number of bins 
@@ -48,14 +73,6 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                           #sturges rule using log base 2
                                           N=length(responses$y)
                                           return(ceiling(1+3.322*log(N, base = 2)))
-                                        },
-                                        GetBestIncrement=function(tensMax){
-                                          if(tensMax >=1){
-                                            return((nchar(as.character(tensMax))-1)*10)
-                                          }
-                                          else{
-                                            return(((nchar(as.character(tensMax))-1)*nchar(as.character(tensMax))))
-                                          }
                                         },
                                         # source : https://stackoverflow.com/questions/6461209/how-to-round-up-to-the-nearest-10-or-100-or-x
                                         # author : Tommy
