@@ -31,38 +31,48 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                         getFreqTable=function(){
                                           return(frequencyTable)
                                         },
-                                        GenFrequencyTable=function(){
+                                        GenFrequencyTable=function(override=1){
                                           if(responsesMax > 0){
                                             maxTenVal<-RoundUpNice(responsesMax)
-                                          }
-                                          else{
+                                          }else{
                                             maxTenVal<-RoundUpNiceNeg(responsesMax)
                                           }
                                           incrementSeq<-c()
-                                          incrementSeq<-DetermineIncrement(maxTenVal)
+                                          incrementSeq<-DetermineIncrement(maxTenVal, override)
                                           outputTable<-as.data.frame(table(cut(responses$y, breaks=incrementSeq)))
 
                                           tempArray<-TrimEndZeros(outputTable$Freq)
-                                          
+                                          #find the first index in temp array that isn't zero
+                                          firstIndex=(which(outputTable$Freq != 0)[1])
                                           outputTable<-data.frame(
-                                            Ranges=outputTable$Var1[1:length(tempArray)],
+                                            Ranges=outputTable$Var1[firstIndex:(firstIndex+length(tempArray)-1)],
                                             Freq=tempArray
                                           )
                                           if(length(incrementSeq)>0){
                                             finalOutput=data.frame(
-                                              Range=incrementSeq[2:(length(tempArray)+1)],
+                                              Range=incrementSeq[(firstIndex+1):(firstIndex+(length(tempArray)))],
                                               Freq=outputTable$Freq
                                             )
+                                            cat(nrow(finalOutput))
+                                            # The 2^15 is the max number of iterations for the normal curve
+                                            # if there aren't 10 bars after 15 iterations, give up
+                                            if(nrow(finalOutput) < 10 && override < 2^15){
+                                              override=override*2
+                                              GenFrequencyTable(override)
+                                            }
+                                            else{
+                                              setFreqTable(finalOutput)
+                                            }
                                           }else{
                                             stop("sequence was unable to generate values in noramlity plot")
                                           }
-                                          setFreqTable(finalOutput)
+                                          
                                         },
-                                        DetermineIncrement=function(maxTenVal){
+                                        DetermineIncrement=function(maxTenVal, override){
                                           if(maxTenVal > 0){
-                                            incrementSeq<- seq(from=0, to = maxTenVal, length.out = SturgesRule())
+                                            incrementSeq<- seq(from=RoundDownNice(responsesMin), to = maxTenVal, length.out = SturgesRule()*override)
                                           }else{
-                                            incrementSeq<- seq(from= RoundUpNice(-responsesMin)*(-1), to = maxTenVal, length.out = SturgesRule())
+                                            incrementSeq<- seq(from= RoundUpNice(-responsesMin)*(-1), to = maxTenVal, length.out = SturgesRule()*override)
                                           }
                                           return(incrementSeq)
                                         },
@@ -85,6 +95,10 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                         RoundUpNiceNeg = function(x, nice=c(10,8,6,5,4,2,1)) {
                                           if(length(x) != 1){ stop("'x' must be of length 1")}
                                           (10^floor(log10(-x)) * nice[[which(-x > 10^floor(log10(-x)) * nice)[[1]]]])*(-1)
+                                        },
+                                        RoundDownNice = function(x, nice=c(10,8,6,5,4,2,1)) {
+                                          if(length(x) != 1){ stop("'x' must be of length 1")}
+                                          (10^floor(log10(x)) * nice[[which(x > 10^floor(log10(x)) * nice)[[1]]]])
                                         },
                                         TrimEndZeros=function(array){
                                           return(array[min(which(array != 0 )): max( which(array != 0 ))])
