@@ -45,13 +45,26 @@ namespace POD.Controls
             //{
             //    bars.Points.AddXY(range[i], freq[i]);
             //}
-
         }
         public Series NormalityHistogram
         {
             get { return Series[POD.NormalityChart.NormalityHistogram]; }
         }
+        public override string TooltipText
+        {
+            get
+            {
+                var text = "";
+
+                text += "Normality of the transformed responses."+ Environment.NewLine;
+                text += "The responses should roughly be in the shape of a normal distribution." + Environment.NewLine;
+                text += "If sample size is small, this may not be possible.";
+
+                return text;
+            }
+        }
     }
+
 }
 
 

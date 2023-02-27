@@ -760,10 +760,14 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                                                       a9095Original,
                                                       Analysis.InResponseDecision);
 
-            normalityChart.FillChart(Analysis.Data.NormalityTable);
+           
 
             StepToolTip.SetToolTip(thresholdChart, thresholdChart.TooltipText);
             thresholdChart.ChartToolTip = StepToolTip;
+
+            normalityChart.FillChart(Analysis.Data.NormalityTable);
+            StepToolTip.SetToolTip(normalityChart, normalityChart.TooltipText);
+
             REngineObject.REngineRunning = false;
             //RefreshValues();
         }        

@@ -338,8 +338,8 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         #function that generates the POD curve and stores the results
                                         genPODCurve()
                                         #generate the normality chart
-                                        responsesCheck=data.frame(y=signalRespDF$y)
-                                        normalityCheck<-GenerateNormalityTable$new(responses=responsesCheck, responsesMin = min(responsesCheck$y), responsesMax = max(responsesCheck$y))
+                                        responsesCheck=data.frame(y=signalRespDF$y, event = signalRespDF$event)
+                                        normalityCheck<-GenerateNormalityTable$new(responses=subset(responsesCheck, event==1), responsesMin = min(responsesCheck$y), responsesMax = max(responsesCheck$y))
                                         normalityCheck$GenFrequencyTable()
                                         setFreqTable(normalityCheck$getFreqTable())
                                       }
@@ -548,6 +548,6 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     plotNormality=function(df){
                                       # Barplot
                                       ggplot(df, aes(x=Range, y=Freq)) + 
-                                        geom_bar(stat = "identity", width=1.0)
+                                        geom_bar(stat = "identity", width=.00001)
                                     }
                                   ))
