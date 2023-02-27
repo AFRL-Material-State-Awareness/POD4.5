@@ -150,6 +150,10 @@ namespace POD
             {
                 return _wizard;
             }
+            set
+            {
+                this._wizard = value;
+            }
         }
         #endregion
 
@@ -294,7 +298,15 @@ namespace POD
             OnSourceModified(this, e);
 
             SetWizardToFirstStep();
+
+            this.DeleteSteps();
+
             Dock.Hide();
+        }
+        private void DeleteSteps()
+        {
+            Wizard.DeleteSteps();
+            Dock.DeleteSteps();
         }
 
         /// <summary>

@@ -167,11 +167,11 @@ namespace POD.Wizards
 
             foreach (WizardStep step in _list)
             {
-                start.Nodes.Add(new TreeNode(step.Header));                
+                start.Nodes.Add(new TreeNode(step.Header));
             }
 
             Source.ProgressStepListNode = start;
-            
+
             foreach (WizardStep step in _list)
             {
                 step.InitializeStep(this.GetType().Name, ref _howToDisplay);
@@ -283,6 +283,27 @@ namespace POD.Wizards
         {
             _list = new WizardStepList();
         }
+        public void DeleteSteps()
+        {
+
+            foreach (var step in _list)
+            {
+                if((step is Steps.HitMissNormalSteps.ChooseTransformStep) ||
+                    (step is POD.Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
+                    (step is Steps.HitMissNormalSteps.DocumentRemovedStep) ||
+                    (step is Steps.AHatVsANormalSteps.ChooseTransformStep) ||
+                    (step is Steps.AHatVsANormalSteps.FullRegressionStep) ||
+                    (step is Steps.AHatVsANormalSteps.DocumentRemovedStep)
+                    )
+                {
+                step.Dispose();
+                }
+            }
+            //the list needs to retain the disposed objects
+            //the steps will be overwritten if the given analysis is reopened
+            //_list.Clear();
+        }
+
         #endregion
 
         #region Event Handling

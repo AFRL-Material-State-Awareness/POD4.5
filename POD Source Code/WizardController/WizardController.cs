@@ -132,7 +132,7 @@ namespace POD
 
                 _wizards.Remove(dock);
 
-                dock.Dock.Close();
+                dock.Dock.Close();         
             }
         }
 
@@ -462,9 +462,27 @@ namespace POD
             if (mySource != null)
             {
                 WizardDockPair pair = _wizards[mySource];
-
+                
                 if (pair != null)
                 {
+                    if(pair.Wizard.CurrentStep != null)
+                    {
+                        if (pair.Wizard.CurrentStep.Panel.IsDisposed)
+                        {
+                            ControlOrganize control = ControlOrganize.NaviBottom;
+                            Analysis tempAnalysis = pair.Analysis;
+                            if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                            {
+                                
+                                pair.Wizard = new HitMissNormalWizard((HitMissAnalysis)tempAnalysis, ref control);
+                            }
+                            else if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                            {
+                                pair.Wizard = new AHatvsANormalWizard((AHatAnalysis)tempAnalysis, ref control);
+                            }
+                             
+                        }
+                    }                   
                     pair.SyncDock();
                     return pair; 
                 }
