@@ -132,7 +132,22 @@ namespace POD
 
                 _wizards.Remove(dock);
 
-                dock.Dock.Close();         
+                dock.Dock.Close();
+                /*
+               if (!dock.Dock.Step.IsDisposed)
+               {
+                   dock.Dock.Close();
+               }
+               
+                try
+                {
+                    dock.Dock.Close();
+                }
+                catch (ObjectDisposedException)
+                {
+                    //
+                }
+                */
             }
         }
 
@@ -467,7 +482,7 @@ namespace POD
                 {
                     if(pair.Wizard.CurrentStep != null)
                     {
-                        if (pair.Wizard.CurrentStep.Panel.IsDisposed)
+                        if (pair.Wizard.CurrentStep.IsDisposed)
                         {
                             ControlOrganize control = ControlOrganize.NaviBottom;
                             Analysis tempAnalysis = pair.Analysis;
