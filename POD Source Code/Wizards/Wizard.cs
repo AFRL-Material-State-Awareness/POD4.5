@@ -284,8 +284,12 @@ namespace POD.Wizards
             _list = new WizardStepList();
         }
         public void DeleteSteps()
-        {
-
+         {
+            foreach(var step in _list)
+            {
+                step.Dispose();
+            }
+            /*
             foreach (var step in _list)
             {
                 if((step is Steps.HitMissNormalSteps.ChooseTransformStep) ||
@@ -299,6 +303,26 @@ namespace POD.Wizards
                 step.Dispose();
                 }
             }
+            */
+            /*
+           foreach (var step in _list)
+           {
+                if ((step is Steps.HitMissNormalSteps.FullRegressionStep))
+                {
+                    (FullRegressionStep)(step).Panel.GetMainChart.dispose();
+                }
+           }
+
+            
+            foreach( var step in _list)
+            {
+                if((step is POD.Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
+                    step is Steps.AHatVsANormalSteps.FullRegressionStep)
+                {
+
+                }
+            }
+            */
             //the list needs to retain the disposed objects
             //the steps will be overwritten if the given analysis is reopened
             //_list.Clear();

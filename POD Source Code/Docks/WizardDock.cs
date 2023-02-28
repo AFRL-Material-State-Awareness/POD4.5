@@ -200,8 +200,8 @@ namespace POD.Docks
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-
-            _step.CloseOpenedContextMenu();
+            if(_step != null)
+                _step.CloseOpenedContextMenu();
         }
 
         public void OnTransitionSteps(object sender, SwapStepsEventArgs args)
@@ -376,6 +376,10 @@ namespace POD.Docks
             {
                 NeedSteps.Invoke(this, null);
             }
+        }
+        public void DeleteSteps()
+        {
+            _step = null;
         }
     }
 }

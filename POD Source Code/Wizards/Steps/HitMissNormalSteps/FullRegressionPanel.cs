@@ -85,7 +85,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 label.TextAlign = ContentAlignment.MiddleRight;
             }
         }
-
+        public DataPointChart GetMainChart
+        {
+            get { return MainChart; }
+        }
+        
         public override void FixPanelControlSizes()
         {
             if (!ControlSizesFixed)
