@@ -389,7 +389,8 @@ namespace POD.Controls
 
         private void InvalidateMenu()
         {
-            Invalidate(new Rectangle(0, 0, FullSizeImageList.Images[0].Width, FullSizeImageList.Images[0].Height));
+            if(FullSizeImageList.Images.Count > 0)
+                Invalidate(new Rectangle(0, 0, FullSizeImageList.Images[0].Width, FullSizeImageList.Images[0].Height));
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
