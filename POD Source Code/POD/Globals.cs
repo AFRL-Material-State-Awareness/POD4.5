@@ -19,7 +19,7 @@ namespace POD
     public delegate void FinishEventHandler(object sender, FinishArgs e);
     public delegate void AnalysisErrorHandler(object sender, ErrorArgs e);
     public delegate void GetProjectInfoHandler(object sender, GetProjectInfoArgs e);
-    
+
     
 
     public class ClipboardMetafileHelper
@@ -72,6 +72,7 @@ namespace POD
 
     public static class Globals
     {
+        public static int CountAnnoyingBug = 0;
         public delegate double InvertAxisFunction(double x);
 
         public const int DefaultLabelCount = 10;
