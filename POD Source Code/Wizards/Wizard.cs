@@ -287,47 +287,73 @@ namespace POD.Wizards
          {
             foreach(var step in _list)
             {
-                step.Dispose();
-            }
-            /*
-            foreach (var step in _list)
-            {
-                if((step is Steps.HitMissNormalSteps.ChooseTransformStep) ||
-                    (step is POD.Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
-                    (step is Steps.HitMissNormalSteps.DocumentRemovedStep) ||
-                    (step is Steps.AHatVsANormalSteps.ChooseTransformStep) ||
-                    (step is Steps.AHatVsANormalSteps.FullRegressionStep) ||
-                    (step is Steps.AHatVsANormalSteps.DocumentRemovedStep)
-                    )
+                //step.Panel.Dispose();
+                //step.Dispose();
+                if (step is Steps.HitMissNormalSteps.ChooseTransformStep ||
+                    step is Steps.HitMissNormalSteps.DocumentRemovedStep ||
+                    step is Steps.AHatVsANormalSteps.ChooseTransformStep ||
+                    step is Steps.AHatVsANormalSteps.DocumentRemovedStep)
                 {
-                step.Dispose();
-                }
-            }
-            */
-            /*
-           foreach (var step in _list)
-           {
-                if ((step is Steps.HitMissNormalSteps.FullRegressionStep))
-                {
-                    (FullRegressionStep)(step).Panel.GetMainChart.dispose();
-                }
-           }
-
-            
-            foreach( var step in _list)
-            {
-                if((step is POD.Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
-                    step is Steps.AHatVsANormalSteps.FullRegressionStep)
-                {
+                    step.Dispose();
 
                 }
+                else if (step is Steps.HitMissNormalSteps.FullRegressionStep)
+                {
+                    ((POD.Wizards.Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).MainChart.Dispose();
+                    ((POD.Wizards.Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).MainChart = null;
+                    List<DataPointChart> tempDataList = ((POD.Wizards.Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).SideCharts;
+                    for(int i=0; i< tempDataList.Count; i++)
+                    {
+                        tempDataList[i].Dispose();
+                        tempDataList[i] = null;
+                    }
+                    step.Panel.Dispose();
+                    step.Dispose();
+                }
+                else if(step is Steps.AHatVsANormalSteps.FullRegressionStep)
+                {
+                    ((POD.Wizards.Steps.AHatVsANormalSteps.FullRegressionPanel)step.Panel).MainChart.Dispose();
+                    ((POD.Wizards.Steps.AHatVsANormalSteps.FullRegressionPanel)step.Panel).MainChart = null;
+                    List<DataPointChart> tempDataList = ((POD.Wizards.Steps.AHatVsANormalSteps.FullRegressionPanel)step.Panel).SideCharts;
+                    for (int i = 0; i < tempDataList.Count; i++)
+                    {
+                        tempDataList[i].Dispose();
+                        tempDataList[i] = null;
+                    }
+                    step.Panel.Dispose();
+                    step.Dispose();
+                }
             }
-            */
             //the list needs to retain the disposed objects
             //the steps will be overwritten if the given analysis is reopened
             //_list.Clear();
         }
-
+        public void ClearCharts(WizardStep step)
+        {
+            dynamic stepCast=null;
+            if(step is Steps.HitMissNormalSteps.FullRegressionStep)
+            {
+                stepCast = step.Panel as Steps.HitMissNormalSteps.FullRegressionPanel;
+            }
+            else if (step is Steps.AHatVsANormalSteps.FullRegressionStep)
+            {
+                stepCast = step.Panel as Steps.HitMissNormalSteps.FullRegressionPanel;
+            }
+            else
+            {
+                return;
+            }
+            (stepCast).MainChart.Dispose();
+            (stepCast).MainChart = null;
+            List<DataPointChart> tempDataList = (stepCast).SideCharts;
+            for (int i = 0; i < tempDataList.Count; i++)
+            {
+                tempDataList[i].Dispose();
+                tempDataList[i] = null;
+            }
+            step.Panel.Dispose();
+            step.Dispose();
+        }
         #endregion
 
         #region Event Handling
