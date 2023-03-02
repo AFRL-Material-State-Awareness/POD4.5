@@ -743,13 +743,14 @@ namespace POD
 
                 var alreadyThere = _dockMgr.Add(dock);
 
-                if (!alreadyThere)
+                if (!alreadyThere || pair.Reloading)
                 {
                     _dockMgr.Show(dock, activate);
                     dock.RefreshValues();
 
                     if (!activate)
                         _dockMgr.Activate(activeDoc);
+                    pair.Reloading = false;
                 }
                 else
                 {

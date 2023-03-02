@@ -488,11 +488,12 @@ namespace POD
                             Analysis tempAnalysis = pair.Analysis;
                             if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                             {
-                                
+                                pair.Reloading = true;
                                 pair.Wizard = new HitMissNormalWizard((HitMissAnalysis)tempAnalysis, ref control);
                             }
                             else if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.AHat)
                             {
+                                pair.Reloading = true;
                                 pair.Wizard = new AHatvsANormalWizard((AHatAnalysis)tempAnalysis, ref control);
                             }
                              
