@@ -119,11 +119,9 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                     varCovarMatrix<<-a.covariance.matrix
                                     aMu <- (a.hat.decision - a.b0)/a.b1
                                     aSigma <- a.tau/a.b1
-                                    POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
-                                    a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
                                     a50 <- aMu
                                     z90 <- qnorm(0.9)
-                                    a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                    a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
                                     a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                     SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
                                     #set parameters
@@ -154,13 +152,10 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                       a.hat.decision = i # = 200
                                       aMu <- (a.hat.decision - a.b0)/a.b1
                                       aSigma <- a.tau/a.b1
-                                      POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
-                                      a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
                                       a50 <- aMu
                                       a90 <- aMu + qnorm(0.9) * aSigma
                                       z90 <- qnorm(0.9)
-                                      #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
-                                      a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                      a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
                                       a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                       SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
                                       a9095 <- aMu + z90 * aSigma + qnorm(0.95) * SD.a.90
