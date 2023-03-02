@@ -22,6 +22,7 @@ namespace POD
     public class WizardDockPair// : ISerializable
     {
         #region Fields
+        private bool reloading;
         /// <summary>
         /// The dock that holds the wizard. The dock contains the current step of the wizard.
         /// </summary>
@@ -51,7 +52,7 @@ namespace POD
         {
             _wizard = myWizard;
             _dock = Dock;
-
+            reloading = false;
             AddEvents();
         }
 
@@ -155,6 +156,13 @@ namespace POD
                 this._wizard = value;
             }
         }
+
+        public bool Reloading
+        {
+            get { return this.reloading; }
+            set { this.reloading = value; }
+        }
+
         #endregion
 
         #region Methods
