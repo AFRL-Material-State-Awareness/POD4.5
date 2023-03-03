@@ -201,10 +201,10 @@
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.linkLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.linkLabel2.Location = new System.Drawing.Point(229, 232);
+            this.linkLabel2.Location = new System.Drawing.Point(229, 212);
             this.linkLabel2.Margin = new System.Windows.Forms.Padding(3, 3, 3, 40);
             this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(362, 18);
+            this.linkLabel2.Size = new System.Drawing.Size(362, 38);
             this.linkLabel2.TabIndex = 4;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "christine.henry@afrl.af.mil";
@@ -223,7 +223,7 @@
             this.Name = "About";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "About UDRI POD v4.5.0";
+            this.Text = "About UDRI POD v4.5.1";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
