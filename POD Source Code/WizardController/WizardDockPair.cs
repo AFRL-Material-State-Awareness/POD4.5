@@ -362,7 +362,6 @@ namespace POD
         /// <param name="e">FinishArgs which has a pair of newly created/modified analyses</param>
         private void Project_Finished(object sender, FinishArgs e)
         {
-
             ProjectFinishArgs args = (ProjectFinishArgs)e;
 
             if (MoveToEnd())
@@ -389,13 +388,17 @@ namespace POD
 
                 Wizard.CurrentStep.Project.NullFinishArguments();
             }
-
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
             OnSourceModified(this, e);
 
             SetWizardToFirstStep();
             this.Wizard.CurrentStep.RefreshValues();
             //Dock.Hide();
             //Dock.Show();
+            
+            Application.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>
