@@ -339,8 +339,6 @@ namespace POD
             //Console.WriteLine((long)(intVal * deno) +
             //                      num + "/" + deno);
         }
-        //convert c# dictionary to python dictionary
-        //my dictionary is the c# dictionary
         public void Close()
         {
             _hitMissAnalyses.Clear();
