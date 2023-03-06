@@ -607,8 +607,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         public override void ProcessAnalysisOutput(Object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"Check if annotations is null 3:{MainChart.Annotations}");
-            System.Diagnostics.Debug.WriteLine('\n');
+            //System.Diagnostics.Debug.WriteLine($"Check if annotations is null 3:{MainChart.Annotations}");
+            //System.Diagnostics.Debug.WriteLine('\n');
             //bool analysisFailed = false;
             if (MainChart != null)
                 MainChart.ClearProgressBar();

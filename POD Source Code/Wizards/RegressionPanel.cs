@@ -332,15 +332,13 @@ namespace POD.Wizards
 
             if (MainChart != null)
             {
-                Debug.WriteLine(Globals.CountAnnoyingBug);
-                Debug.WriteLine($"Check if annotations is null 1: {MainChart.Annotations}");
+                //Debug.WriteLine($"Check if annotations is null 1: {MainChart.Annotations}");
                 DisableInputControls();
                 MainChart.PrepareForRunAnalysis();
                 MainChart.ResetErrors();
                 MainChart.ClearProgressBar();
 
-                Debug.WriteLine($"Check if annotations is null 2: {MainChart.Annotations}");
-                Globals.CountAnnoyingBug += 1;
+                //Debug.WriteLine($"Check if annotations is null 2: {MainChart.Annotations}");
             }
             else
             {

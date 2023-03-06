@@ -72,7 +72,6 @@ namespace POD
 
     public static class Globals
     {
-        public static int CountAnnoyingBug = 0;
         public delegate double InvertAxisFunction(double x);
 
         public const int DefaultLabelCount = 10;
