@@ -58,6 +58,11 @@ namespace POD.Controls
         protected Bitmap[,] MenuBitmaps = new Bitmap[3,4];
         protected ToolTip _chartToolTip = null;
         private int _lastWidth = -1;
+        /// <summary>
+        /// This is needed to keep track the lambda value in the event
+        /// the user tries to load a POD analysis with a boxcox transformation
+        /// </summary>
+        private AnalysisData _analysisData;
 
         public ToolTip ChartToolTip
         {
@@ -77,7 +82,14 @@ namespace POD.Controls
                 UpdateChartTitle();
             }
         }
-
+        /// <summary>
+        /// Load analysis data into the parent class in addition to the regression panel
+        /// </summary>
+        /// <param name="data"></param>
+        public virtual void LoadChartData(AnalysisData data)
+        {
+            _analysisData = data;
+        }
         public DataPointChart()
         {
             
@@ -124,11 +136,6 @@ namespace POD.Controls
 
             SingleSeriesCount = 1;
 
-            //_bitmap = new Bitmap(20, 20);
-            //exportButton.Size = new System.Drawing.Size(20, 20);
-            //exportButton.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            //exportButton.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            //exportButton.DrawToBitmap(_bitmap, new Rectangle(0, 0, 20, 20));
             _bitmap = new Bitmap(ButtonImageList.Images[0]);
             _wideBitmap = new Bitmap(WideImageList.Images[0]);
             _aspectBitmap = new Bitmap(WideImageList.Images[5]);
@@ -424,12 +431,6 @@ namespace POD.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            /*if (e.X < ImageSize && e.Y < ImageSize)
-            {
-                var image = ContextMenuImageList.Images[0];
-                _bitmap = new Bitmap(image);
-                InvalidateMenu();
-            }*/
 
             if (MenuIsOpen)
             {
@@ -447,14 +448,6 @@ namespace POD.Controls
 
             base.OnMouseUp(e);
         }
-
-        //public static Stream ToStream(this Image image, ImageFormat formaw)
-        //{
-        //    var stream = new System.IO.MemoryStream();
-        //    image.Save(stream, formaw);
-        //    stream.Position = 0;
-        //    return stream;
-        //}
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
@@ -1185,13 +1178,21 @@ namespace POD.Controls
                     //_yRelabel.LabelCount = Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind);//Convert.ToInt32(Math.Abs(_yRelabel.Axis.Max - _yRelabel.Axis.Min) / _yRelabel.Axis.Interval + 1);
                 }
 
-                RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
+                if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+                    RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
+                                  _xRelabel.InvertFunc, _yRelabel.InvertFunc,
+                                  _xRelabel.LabelCount, _yRelabel.LabelCount,
+                                  _xRelabel.CenterAtZero, _yRelabel.CenterAtZero,
+                                  _xRelabel.TransformType, _yRelabel.TransformType,
+                                  _xRelabel.TransformFunc, _yRelabel.TransformFunc, false, false, _analysisData.LambdaValue);
+                else
+                    RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
                                   _xRelabel.InvertFunc, _yRelabel.InvertFunc,
                                   _xRelabel.LabelCount, _yRelabel.LabelCount,
                                   _xRelabel.CenterAtZero, _yRelabel.CenterAtZero,
                                   _xRelabel.TransformType, _yRelabel.TransformType,
                                   _xRelabel.TransformFunc, _yRelabel.TransformFunc);
-                
+
                 /*
                 if (.DataType == AnalysisDataTypeEnum.HitMiss) 
                 {
@@ -1233,10 +1234,6 @@ namespace POD.Controls
             
             Random rand = new Random();
 
-            //if (yAxis != null && yAxisTransform != TransformTypeEnum.Log)
-            //{
-            //    LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform, lambda);
-            //}
             if (yAxis != null && yAxisTransform == TransformTypeEnum.Linear)
             {
                 LabelLinearAxis(ChartAreas[0].AxisY, yAxis, invertY, yLabelCount, yOffset, false, yAxisTransform);
