@@ -133,7 +133,7 @@ namespace POD.Docks
 
                 _step = value;
 
-                if (HasStep)
+                if (HasStep && !_step.IsDisposed)
                 {
                     movePanelBox.BringToFront();
                     _step.Visible = false;
