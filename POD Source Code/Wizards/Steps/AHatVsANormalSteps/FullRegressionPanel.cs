@@ -765,8 +765,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             StepToolTip.SetToolTip(thresholdChart, thresholdChart.TooltipText);
             thresholdChart.ChartToolTip = StepToolTip;
 
-            normalityChart.FillChart(Analysis.Data.NormalityTable);
+            normalityChart.FillChart(Analysis.Data.NormalityTable, Analysis.Data.NormalityCurveTable);
             StepToolTip.SetToolTip(normalityChart, normalityChart.TooltipText);
+
+
 
             REngineObject.REngineRunning = false;
             //RefreshValues();

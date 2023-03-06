@@ -34,6 +34,7 @@ namespace CSharpBackendWithR
         private DataTable aHatResultsPOD;
         private DataTable aHatResultsPODAll;
         private DataTable aHatNormalityTable;
+        private DataTable aHatNormalCurveTable;
         //linear model unique metrics
         private double intercept;
         private double slope;
@@ -130,6 +131,8 @@ namespace CSharpBackendWithR
             this.aHatResultsPODAll = new DataTable();
             //use this to generate the histogram normality chart
             this.aHatNormalityTable = new DataTable();
+
+            this.aHatNormalCurveTable = new DataTable();
         }
         public double Signalmin { set; get; }
         public double Signalmax { set; get; }
@@ -305,6 +308,11 @@ namespace CSharpBackendWithR
         {
             set { this.aHatNormalityTable = value; }
             get { return this.aHatNormalityTable; }
+        }
+        public DataTable AHatNormalCurveTable
+        {
+            set { this.aHatNormalCurveTable = value; }
+            get { return this.aHatNormalCurveTable; }
         }
         public double GetMaxResponse()
         {

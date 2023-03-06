@@ -176,6 +176,10 @@ namespace POD.Data
         ///     Table holds the flaw range and number of flaws in that rnage
         /// </summary>
         private DataTable _normalityTable;
+        /// <summary>
+        /// Table holds points to plot a normal curve over the histogram
+        /// </summary>
+        private DataTable _normalityCurveTable;
 
         /// <summary>
         /// used to store and plot the original data (mainly used when modified wald, lr, or mlr is used
@@ -625,6 +629,14 @@ namespace POD.Data
         public DataTable NormalityTable
         {
             get { return _normalityTable; }
+        }
+
+        /// <summary>
+        /// get the table to plot a normal curve overlay
+        /// </summary>
+        public DataTable NormalityCurveTable
+        {
+            get { return _normalityCurveTable; }
         }
 
         public DataTable OriginalData
@@ -1978,6 +1990,9 @@ namespace POD.Data
             try
             {
                 _normalityTable = _aHatAnalysisObject.AHatNormalityTable;
+                _normalityTable.DefaultView.Sort = "Range, Freq" + " " + "ASC";
+
+                _normalityCurveTable = _aHatAnalysisObject.AHatNormalCurveTable;
                 _normalityTable.DefaultView.Sort = "Range, Freq" + " " + "ASC";
             }
             catch (Exception exp)

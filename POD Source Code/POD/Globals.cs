@@ -1084,6 +1084,7 @@ namespace POD
     public static class NormalityChart
     {
         public const string NormalityHistogram = "NormalityHistogram";
+        public const string NormalCurve = "NormalCurveOverlay";
     }
     public static class ChartColors
     {
@@ -1113,7 +1114,8 @@ namespace POD
         public static int ControlBackColorAlpha = 40;
         public static int ModelCompareAlpha = 128;
 
-
+        public static Color ResponseBarsColor = Color.RoyalBlue;
+        public static Color NormalityCurveColor = Color.FromArgb(255, 130 , 2, 41);
         
     }
 

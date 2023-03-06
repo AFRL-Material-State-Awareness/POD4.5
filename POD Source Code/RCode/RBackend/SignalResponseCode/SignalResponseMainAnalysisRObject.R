@@ -65,6 +65,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         #copyoutputfrompython
                                                                         residualTable="data.frame",
                                                                         frequencyTable="data.frame",
+                                                                        normalCurveTable="data.frame",
                                                                         modelIntercept="numeric",
                                                                         modelSlope="numeric",
                                                                         thesholdTable="data.frame",
@@ -179,6 +180,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     },
                                     getFreqTable=function(){
                                       return(frequencyTable)
+                                    },
+                                    setNormalCurveTable=function(psNormalCurveTb){
+                                      normalCurveTable<<-psNormalCurveTb
+                                    },
+                                    getNormalCurveTable=function(){
+                                      return(normalCurveTable)
                                     },
                                     setModelIntercept=function(psModelInt){
                                       modelIntercept<<-psModelInt
@@ -342,6 +349,13 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         normalityCheck<-GenerateNormalityTable$new(responses=subset(responsesCheck, event==1), responsesMin = min(responsesCheck$y), responsesMax = max(responsesCheck$y))
                                         normalityCheck$GenFrequencyTable()
                                         setFreqTable(normalityCheck$getFreqTable())
+                                        #generate a dataframe that creates a normal curve based on the responses
+                                        xfit <- seq(min(signalRespDF$y), max(signalRespDF$y), length = nrow(signalRespDF)) 
+                                        yfit <- dnorm(xfit, mean = mean(signalRespDF$y), sd = sd(signalRespDF$y)) 
+                                        #yfit <- yfit * diff(h$mids[1:2]) * length(g) 
+                                        yfit <- yfit * diff(normalityCheck$getFreqTable()$Range[1:2]) * length(signalRespDF$y) 
+                                        setNormalCurveTable(data.frame(Response=xfit, Range=yfit))
+                                        #setNormalCurveTable(data.frame(Response=signalRespDF$y, Range=dnorm(signalRespDF$y, mean = mean(signalRespDF$y),  sd =sd(signalRespDF$y))))
                                       }
                                       
                                     },
