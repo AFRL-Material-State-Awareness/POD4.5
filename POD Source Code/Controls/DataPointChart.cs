@@ -1177,14 +1177,18 @@ namespace POD.Controls
                     AnalysisData.GetBufferedRange(this, _yRelabel.Axis, _yRelabel.Axis.Min, _yRelabel.Axis.Max, AxisKind.Y);
                     //_yRelabel.LabelCount = Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind);//Convert.ToInt32(Math.Abs(_yRelabel.Axis.Max - _yRelabel.Axis.Min) / _yRelabel.Axis.Interval + 1);
                 }
-
-                if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
-                    RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
-                                  _xRelabel.InvertFunc, _yRelabel.InvertFunc,
-                                  _xRelabel.LabelCount, _yRelabel.LabelCount,
-                                  _xRelabel.CenterAtZero, _yRelabel.CenterAtZero,
-                                  _xRelabel.TransformType, _yRelabel.TransformType,
-                                  _xRelabel.TransformFunc, _yRelabel.TransformFunc, false, false, _analysisData.LambdaValue);
+                //the data point chart may not have analysisData because it doesn't need it.
+                //check to make sure analysis data is not null and that the transform is boxcox before running relabel
+                if(_analysisData != null && _yRelabel.TransformType == TransformTypeEnum.BoxCox)
+                {
+                    if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+                        RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
+                                      _xRelabel.InvertFunc, _yRelabel.InvertFunc,
+                                      _xRelabel.LabelCount, _yRelabel.LabelCount,
+                                      _xRelabel.CenterAtZero, _yRelabel.CenterAtZero,
+                                      _xRelabel.TransformType, _yRelabel.TransformType,
+                                      _xRelabel.TransformFunc, _yRelabel.TransformFunc, false, false, _analysisData.LambdaValue);
+                }
                 else
                     RelabelAxesBetter(_xRelabel.Axis, _yRelabel.Axis,
                                   _xRelabel.InvertFunc, _yRelabel.InvertFunc,
