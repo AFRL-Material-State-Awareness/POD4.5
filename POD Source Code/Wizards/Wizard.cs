@@ -301,14 +301,16 @@ namespace POD.Wizards
                     step is Steps.AHatVsANormalSteps.FullRegressionStep)
                 {
                     ((POD.Wizards.RegressionPanel)step.Panel).MainChart.Dispose();
-                    ((POD.Wizards.RegressionPanel)step.Panel).MainChart = null;
+                    //((POD.Wizards.RegressionPanel)step.Panel).MainChart = null;
                     List<DataPointChart> tempDataList = ((POD.Wizards.RegressionPanel)step.Panel).SideCharts;
                     for(int i=0; i< tempDataList.Count; i++)
                     {
                         tempDataList[i].Dispose();
                         tempDataList[i] = null;
                     }
-                    step.Panel.Dispose();
+                    ((POD.Wizards.RegressionPanel)step.Panel).Dispose();
+                    //step.Panel = null;
+                    //step.Panel.Dispose();
                     step.Dispose();
                 }
             }
