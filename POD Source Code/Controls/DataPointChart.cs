@@ -2000,7 +2000,8 @@ namespace POD.Controls
                         e.ChartGraphics.Graphics.DrawImage(_wideBitmap, 0, 4 * ImageSize);
                         e.ChartGraphics.Graphics.DrawImage(_aspectBitmap, 0, 100);
                         e.ChartGraphics.Graphics.DrawImage(_sizeBitmap, 0, 120);
-                        e.ChartGraphics.Graphics.DrawImage(WideImageList.Images[1], 0, 0);
+                        if (WideImageList.Images.Count > 0)
+                            e.ChartGraphics.Graphics.DrawImage(WideImageList.Images[1], 0, 0);
                         
                     }
 
