@@ -354,6 +354,10 @@ namespace POD.Controls
 
         private void TurnOffAllMenuButtons()
         {
+            if(MenuOffImageList.Images.Count < 1)
+            {
+                return;
+            }
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 3; j++)
@@ -1982,7 +1986,8 @@ namespace POD.Controls
 
                     if(MenuIsOpen)
                     {
-                        e.ChartGraphics.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
+                        if(FullSizeImageList.Images.Count > 0)
+                            e.ChartGraphics.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
 
                         for (int i = 0; i < 4; i++)
                         {
