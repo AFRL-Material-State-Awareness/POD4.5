@@ -2167,13 +2167,17 @@ namespace POD.Controls
 
             try
             {
-                this.Invoke((MethodInvoker)delegate()
+                if (IsHandleCreated)
                 {
-                    if (_error != null)
+                    this.Invoke((MethodInvoker)delegate ()
                     {
-                        _error.Text = finalErrorString;
-                    }
-                });
+                        if (_error != null)
+                        {
+                            _error.Text = finalErrorString;
+                        }
+                    });
+                }
+                
             }
             catch(Exception exp)
             {
@@ -2222,12 +2226,15 @@ namespace POD.Controls
                 _errorBox.LineWidth = 2;
 
                 //Annotations.Insert(0, _equation);
-
-                this.Invoke((MethodInvoker)delegate()
+                if (IsHandleCreated)
                 {
-                    Annotations.Add(_errorBox);
-                    Annotations.Add(_error);
-                });
+                    this.Invoke((MethodInvoker)delegate ()
+                    {
+                        Annotations.Add(_errorBox);
+                        Annotations.Add(_error);
+                    });
+                }
+                
             }
             //else
             //{
