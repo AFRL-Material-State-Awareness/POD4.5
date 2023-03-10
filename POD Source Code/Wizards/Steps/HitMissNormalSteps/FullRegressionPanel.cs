@@ -61,6 +61,52 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             mainChart.FreezeThresholdLine(.5);
         }
+        public void DisposeAllExceptMainChart()
+        {
+            Analysis.AnalysisDone -= ProcessAnalysisOutput;
+            _xTransformBox.Dispose();
+            _xTransformLabel.Dispose();
+
+            _confIntBox.Dispose();
+            _confIntLabel.Dispose();
+
+            _sampleTypeBox.Dispose();
+            _sampleTypeLabel.Dispose();
+            _helpfulRTF.Dispose();
+            //StepToolTip.Dispose();
+            ///worked correctly when last tried here///
+            ///private POD.Controls.PODChartNumericUpDown aMaxControl;
+            AMaxInputLabel.Dispose();
+            AMinInputLabel.Dispose();
+            aMinControl.Dispose();
+            a50label.Dispose();
+            a50Out.Dispose();
+            a90Label.Dispose();
+            a90Out.Dispose();
+            a90_95Label.Dispose();
+            a90_95Out.Dispose();
+            SigmaOut.Dispose();
+            podSigmaLabel.Dispose();
+            podMuLabel.Dispose();
+            MuOut.Dispose();
+            covV22Out.Dispose();
+            CovV22OutLabel.Dispose();
+            covV11Out.Dispose();
+            CovV12OutLabel.Dispose();
+            covV12Out.Dispose();
+            CovV11OutLabel.Dispose();
+            ModelBox.Dispose();
+            ModelLabel.Dispose();
+            TestColorMap.Dispose();
+            likelihoodRatioTestOut.Dispose();
+            lackOfFitTestLabel.Dispose();
+            FlawRangeHeader.Dispose();
+            TestOfAssumptionsHeader.Dispose();
+            CovarianceHeader.Dispose();
+            AxisTransformsHeader.Dispose();
+            PodModelParametersHeader.Dispose();
+            PODModelTypeHeader.Dispose();
+    }
         protected override void SetupLabels()
         {
             var labels = new List<Control>
@@ -356,6 +402,10 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         }
         private void ModelBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
         {
+            if (_helpfulRTF.IsDisposed)
+            {
+                return;
+            }
             _helpfulRTF.Text = " ";
             colorBackTextInHelpfulRTF();
             switch (e.ItemIndex)
@@ -607,7 +657,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         public override void ProcessAnalysisOutput(Object sender, EventArgs e)
         {
-            //System.Diagnostics.Debug.WriteLine($"Check if annotations is null 3:{MainChart.Annotations}");
+            System.Diagnostics.Debug.WriteLine(Globals.AnnoyingBug);
+            System.Diagnostics.Debug.WriteLine($"Check if annotations is null 3:{MainChart.Annotations}");
+            Globals.AnnoyingBug += 1;
             //System.Diagnostics.Debug.WriteLine('\n');
             //bool analysisFailed = false;
             if (MainChart != null)

@@ -284,13 +284,13 @@ namespace POD
         /// <param name="e">Finish arguments</param>
         private void Analysis_Finished(object sender, FinishArgs e)
         {
-            AnalysisFinishArgs args = (AnalysisFinishArgs)e;
-
+            AnalysisFinishArgs args = (AnalysisFinishArgs)e;          
+            
             if (MoveToEnd())
                 return;
-
+            
             if (e == null)
-            {
+            {                             
                 Wizard.CurrentStep.PressFinishButton();
                 return;
             }
@@ -304,16 +304,17 @@ namespace POD
             }
 
             OnSourceModified(this, e);
-
+            WizardStep tempCurrentStep = new WizardStep();
+            tempCurrentStep = Wizard.CurrentStep;
             SetWizardToFirstStep();
 
-            this.DeleteSteps();
+            this.DeleteSteps(tempCurrentStep);
 
             Dock.Hide();
         }
-        private void DeleteSteps()
+        private void DeleteSteps(WizardStep tempStep)
         {
-            Wizard.DeleteSteps();
+            Wizard.DeleteSteps(tempStep);
             Dock.DeleteSteps();
         }
 

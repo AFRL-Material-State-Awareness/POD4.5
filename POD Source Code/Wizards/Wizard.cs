@@ -283,7 +283,7 @@ namespace POD.Wizards
         {
             _list = new WizardStepList();
         }
-        public void DeleteSteps()
+        public void DeleteSteps(WizardStep tempStep)
          {
             foreach(var step in _list)
             {
@@ -295,20 +295,32 @@ namespace POD.Wizards
                     step is Steps.AHatVsANormalSteps.DocumentRemovedStep)
                 {
                     step.Dispose();
-
                 }
                 else if (step is Steps.HitMissNormalSteps.FullRegressionStep ||
                     step is Steps.AHatVsANormalSteps.FullRegressionStep)
                 {
+                    if (tempStep is Steps.HitMissNormalSteps.DocumentRemovedStep)
+                    {
+                        ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
+                        step.ActionBar.Dispose();
+                        step.Title.Dispose();
+                        return;
+                    }
+                    else if (tempStep is Steps.AHatVsANormalSteps.DocumentRemovedStep)
+                    {
+                        throw new NotImplementedException();
+                    }
+
                     ((POD.Wizards.RegressionPanel)step.Panel).MainChart.Dispose();
                     //((POD.Wizards.RegressionPanel)step.Panel).MainChart = null;
                     List<DataPointChart> tempDataList = ((POD.Wizards.RegressionPanel)step.Panel).SideCharts;
-                    for(int i=0; i< tempDataList.Count; i++)
+                    for (int i = 0; i < tempDataList.Count; i++)
                     {
                         tempDataList[i].Dispose();
                         tempDataList[i] = null;
                     }
                     ((POD.Wizards.RegressionPanel)step.Panel).Dispose();
+                    //step.Panel.Controls.Clear();
                     //step.Panel = null;
                     //step.Panel.Dispose();
                     step.Dispose();
