@@ -299,12 +299,30 @@ namespace POD.Wizards
                 else if (step is Steps.HitMissNormalSteps.FullRegressionStep ||
                     step is Steps.AHatVsANormalSteps.FullRegressionStep)
                 {
+                    // you cannot outright dispose of the entire fullregression step
+                    // if you try to and reopen the analysis, the mainchart with still be disposed
+                    // when raiseanalysisdone is invoked
+                    ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
+                    step.ActionBar.Dispose();
+                    step.Title.Dispose();
+                    foreach (Control control in step.Controls)
+                    {
+                        control.Dispose();
+                    }
+                    //((POD.Wizards.RegressionPanel)step.Panel).MainChart.Series.Dispose();
+                    //step.Site.Container.Dispose();
+                    //step.Region.Dispose();
+                    /*
                     if (tempStep is Steps.HitMissNormalSteps.DocumentRemovedStep)
                     {
                         ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
                         step.ActionBar.Dispose();
                         step.Title.Dispose();
-                        return;
+                        foreach(Control control in step.Controls)
+                        {
+                            control.Dispose();
+                        }
+                        continue;
                     }
                     else if (tempStep is Steps.AHatVsANormalSteps.DocumentRemovedStep)
                     {
@@ -324,6 +342,7 @@ namespace POD.Wizards
                     //step.Panel = null;
                     //step.Panel.Dispose();
                     step.Dispose();
+                    */
                 }
             }
             //the list needs to retain the disposed objects

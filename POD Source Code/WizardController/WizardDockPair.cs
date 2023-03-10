@@ -284,8 +284,8 @@ namespace POD
         /// <param name="e">Finish arguments</param>
         private void Analysis_Finished(object sender, FinishArgs e)
         {
-            AnalysisFinishArgs args = (AnalysisFinishArgs)e;          
-            
+            AnalysisFinishArgs args = (AnalysisFinishArgs)e;
+
             if (MoveToEnd())
                 return;
             
@@ -304,8 +304,6 @@ namespace POD
             }
 
             OnSourceModified(this, e);
-            WizardStep tempCurrentStep = new WizardStep();
-            tempCurrentStep = Wizard.CurrentStep;
             SetWizardToFirstStep();
 
             this.DeleteSteps(tempCurrentStep);
