@@ -283,7 +283,7 @@ namespace POD.Wizards
         {
             _list = new WizardStepList();
         }
-        public void DeleteSteps(WizardStep tempStep)
+        public void DeleteSteps()
          {
             foreach(var step in _list)
             {

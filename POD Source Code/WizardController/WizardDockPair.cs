@@ -110,6 +110,13 @@ namespace POD
 
                 return _dock;
             }
+            set
+            {
+                if (Dock.IsDisposed)
+                {
+                    _dock = value;
+                }
+            }
         }
 
         /// <summary>
@@ -306,14 +313,16 @@ namespace POD
             OnSourceModified(this, e);
             SetWizardToFirstStep();
 
-            this.DeleteSteps(tempCurrentStep);
+            this.DeleteSteps();
 
             Dock.Hide();
         }
-        private void DeleteSteps(WizardStep tempStep)
+        private void DeleteSteps()
         {
-            Wizard.DeleteSteps(tempStep);
+            Wizard.DeleteSteps();
             Dock.DeleteSteps();
+            Dock.Dispose();
+            Dock = null;
         }
 
         /// <summary>

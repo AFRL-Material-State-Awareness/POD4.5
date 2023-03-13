@@ -211,10 +211,14 @@ namespace POD.Controls
 
             setAMin.Click += (sender, e) => SetAMinBoundaryMenu(sender, e, new DataPoint(x, y));
 
-            if (ContextMenuImageList != null)
+            if (ContextMenuImageList != null )
             {
-                setAMax.Image = ContextMenuImageList.Images[5];
-                setAMin.Image = ContextMenuImageList.Images[4];
+                if(ContextMenuImageList.Images.Count >= 4)
+                {
+                    setAMax.Image = ContextMenuImageList.Images[5];
+                    setAMin.Image = ContextMenuImageList.Images[4];
+                }
+                
             }
 
             var menuItems = new List<ToolStripItem>
