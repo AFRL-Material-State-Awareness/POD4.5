@@ -19,18 +19,19 @@ source(paste(folderLocation, "/GenFrequencyTableR.R", sep = ""))
 source(paste(folderLocation, "/RecalculatePODGhostCurve.R", sep = ""))
 
 #data_obs = read.csv(paste(folderLocation,'/Plot_Data_50.csv',sep=""), header=TRUE, col.names=c("y","x"))
-data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots.csv",sep=""), header=TRUE)
+
+data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/dataFromPlots_exp.csv",sep=""), header=TRUE)
 
 #data_obs = read.csv(paste("C:/Users/gohmancm/Desktop/PODv4.5ExampleDataRepo/PODv4.5ExampleDatasets/aHat/ahat_vs_a_1823_Example1_LogY.csv"), header=TRUE)
 data_obs=na.omit(data_obs)
 colnames(data_obs)[1] <- "Index"
 colnames(data_obs)[2] <- "x"
-data_obs$A11=log(data_obs$A14)
+data_obs$A11=data_obs$A12
 colnames(data_obs)[3] <- "y"
-data_obs$A21=NULL
+#data_obs$A21=NULL
 data_obs$A12=NULL
-data_obs$A13=NULL
-data_obs$A14=NULL
+#data_obs$A13=NULL
+#data_obs$A14=NULL
 #data_obs$y2=NULL
 #log both
 #data_obs$y=log(data_obs$y)
@@ -65,6 +66,8 @@ stdErrors<-newSRAnalysis$getRegressionStdErrs()
 covarMatrix<-newSRAnalysis$getCovarianceMatrix()
 resDF<-newSRAnalysis$getResidualTable()
 threshDF<-newSRAnalysis$getThresholdDF()
+normalityDF<-newSRAnalysis$getFreqTable()
+
 end<-proc.time()
 print("total time:")
 print(end-begin)
@@ -73,6 +76,10 @@ print(end-begin)
 recalcPODClass<-RecalcOriginalPOD$new(signalRespDFFull=data_obs,y_dec=5, modelType=3, lambda=lambda, tau = newSRAnalysis$getTau())
 recalcPODClass$recalcPOD(TRUE)
 
+
+#newSRAnalysis$plotSimdata(results)
+#newSRAnalysis$plotCI(results)
+newSRAnalysis$plotNormality(normalityDF)
 
 
 

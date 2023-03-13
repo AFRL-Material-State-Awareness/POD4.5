@@ -173,6 +173,15 @@ namespace POD.Data
         private DataTable _podCurveTable;
         private DataTable _podCurveTable_All;
         /// <summary>
+        ///     Table holds the flaw range and number of flaws in that rnage
+        /// </summary>
+        private DataTable _normalityTable;
+        /// <summary>
+        /// Table holds points to plot a normal curve over the histogram
+        /// </summary>
+        private DataTable _normalityCurveTable;
+
+        /// <summary>
         /// used to store and plot the original data (mainly used when modified wald, lr, or mlr is used
         /// </summary>
         private DataTable _originalData;
@@ -612,6 +621,22 @@ namespace POD.Data
         public DataTable PodCurveTable_All
         {
             get { return _podCurveTable_All; }
+        }
+
+        /// <summary>
+        /// Table holds the frequency of ranges in order to plot the normality chart
+        /// </summary>
+        public DataTable NormalityTable
+        {
+            get { return _normalityTable; }
+        }
+
+        /// <summary>
+        /// get the table to plot a normal curve overlay
+        /// </summary>
+        public DataTable NormalityCurveTable
+        {
+            get { return _normalityCurveTable; }
         }
 
         public DataTable OriginalData
@@ -1959,7 +1984,20 @@ namespace POD.Data
             }
             catch (Exception exp)
             {
-                MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
+                MessageBox.Show(exp.Message, "POD v4 Reading Threshold Error All");
+            }
+
+            try
+            {
+                _normalityTable = _aHatAnalysisObject.AHatNormalityTable;
+                _normalityTable.DefaultView.Sort = "Range, Freq" + " " + "ASC";
+
+                _normalityCurveTable = _aHatAnalysisObject.AHatNormalCurveTable;
+                _normalityTable.DefaultView.Sort = "Range, Freq" + " " + "ASC";
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "NormalityTable reading error");
             }
 
             //watch.Stop();

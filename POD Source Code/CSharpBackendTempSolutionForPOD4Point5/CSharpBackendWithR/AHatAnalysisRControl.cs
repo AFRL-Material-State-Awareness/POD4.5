@@ -239,6 +239,19 @@ namespace CSharpBackendWithR
             DataTable AHatPODTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
             return AHatPODTable;
         }
+
+        public DataTable GetNormalityTableForUI()
+        {
+            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newSRAnalysis$getFreqTable()").AsDataFrame();
+            DataTable AHatNormalityTable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            return AHatNormalityTable;
+        }
+        public DataTable GetNormalCurveTableForUI()
+        {
+            RDotNet.DataFrame returnDataFrame = myREngine.Evaluate("newSRAnalysis$getNormalCurveTable()").AsDataFrame();
+            DataTable AHatnormalCurvetable = myREngineObject.rDataFrameToDataTable(returnDataFrame);
+            return AHatnormalCurvetable;
+        }
         public double GetRSquaredValue()
         {
             double rSqaured= this.myREngine.Evaluate("newSRAnalysis$getRSquared()").AsNumeric()[0];

@@ -81,7 +81,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 DisplayChart(LinearityIndex);
                 DisplayChart(PodIndex);
                 DisplayChart(ThresholdIndex);
-                SetSideChartSize(3);                
+                DisplayChart(NormalityIndex);
+                SetSideChartSize(4);                
 
                 //ResizeControlsToAllFit(inputTablePanel);
                 //ResizeControlsToAllFit(outputTablePanel);
@@ -288,6 +289,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             normalityTestOut.TooltipForNumeric = Globals.SplitIntoLines("Normality hypothesis test for the model fit. High p values indicate data compatible with assumption.");
             equalVarianceTestOut.TooltipForNumeric = Globals.SplitIntoLines("Equal variance hypothesis test for the model fit. High p values indicate data compatible with assumption.");
             lackOfFitTestOut.TooltipForNumeric = Globals.SplitIntoLines("Lack of fit hypothesis test for the model fit. High p values indicate data compatible with assumption.");
+            lackOfFitTestOut.TooltipForNumeric = Globals.SplitIntoLines("Lack of fit hypothesis test for the model fit. LOW p values indicate data compatible with assumption.");
             //autoCorrelationTestOut.TooltipForNumeric = Globals.SplitIntoLines("Durbin Watson test for auto-correlation. High p values indicate there is auto-correlation in the data.");
         }
 
@@ -551,7 +553,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         public override void AddSideCharts()
         {
             SideCharts.Add(linearityChart);
-            //SideCharts.Add(normalityChart);
+            SideCharts.Add(normalityChart);
             //SideCharts.Add(equalVarianceChart);
             SideCharts.Add(podChart);
             SideCharts.Add(thresholdChart);
@@ -740,8 +742,16 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                                                       a9095Original,
                                                       Analysis.InResponseDecision);
 
+           
+
             StepToolTip.SetToolTip(thresholdChart, thresholdChart.TooltipText);
             thresholdChart.ChartToolTip = StepToolTip;
+
+            normalityChart.FillChart(Analysis.Data.NormalityTable, Analysis.Data.NormalityCurveTable);
+            StepToolTip.SetToolTip(normalityChart, normalityChart.TooltipText);
+
+
+
             REngineObject.REngineRunning = false;
             //RefreshValues();
         }        

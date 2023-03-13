@@ -783,6 +783,8 @@ namespace POD
             }
         }
 
+        public static string NormalityChart { get; set; }
+
         public static void CleanUpRandomImageFiles()
         {
             if(!Directory.Exists(Globals.PODv4ImageFolder))
@@ -1079,7 +1081,11 @@ namespace POD
         public const string a9095Line = "a9095Line";
     }
 
-
+    public static class NormalityChart
+    {
+        public const string NormalityHistogram = "NormalityHistogram";
+        public const string NormalCurve = "NormalCurveOverlay";
+    }
     public static class ChartColors
     {
         public static Color a50Color = Color.DarkSlateGray;
@@ -1108,7 +1114,8 @@ namespace POD
         public static int ControlBackColorAlpha = 40;
         public static int ModelCompareAlpha = 128;
 
-
+        public static Color ResponseBarsColor = Color.RoyalBlue;
+        public static Color NormalityCurveColor = Color.FromArgb(255, 130 , 2, 41);
         
     }
 
