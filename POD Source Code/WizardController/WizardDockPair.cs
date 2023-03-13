@@ -370,8 +370,17 @@ namespace POD
         /// <param name="e">FinishArgs which has a pair of newly created/modified analyses</param>
         private void Project_Finished(object sender, FinishArgs e)
         {
-            ProjectFinishArgs args = (ProjectFinishArgs)e;
-
+            ProjectFinishArgs args = null;
+            if (e is ProjectFinishArgs)
+            {
+                args = (ProjectFinishArgs)e;
+            }
+            else
+            {
+                //SetWizardToFirstStep();
+                this.Wizard.CurrentStep.RefreshValues();
+                return;
+            }
             if (MoveToEnd())
                 return;
             //if e = null, then finish was pressed before the end

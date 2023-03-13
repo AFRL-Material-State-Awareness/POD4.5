@@ -581,6 +581,33 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             return false;
         }
 
+        public bool RunAllAnalyses(object sender, EventArgs e)
+        {
+            if(_currentAnalyses.Count == 0)
+            {
+                return false;
+            }
+            foreach (Analysis currAnalysis in _currentAnalyses)
+            {
+                //do not run on analyses that were already run!
+                if(currAnalysis._finalAnalysis != null)
+                {
+                    continue;
+                }
+                currAnalysis.InFlawTransform = TransformTypeEnum.Linear;
+                currAnalysis.InSamplingType = SamplingTypeEnum.SimpleRandomSampling;
+                currAnalysis.InConfIntervalType = ConfidenceIntervalTypeEnum.ModifiedWald;
+                currAnalysis.InHitMissModel = HitMissRegressionType.LogisticRegression;
+                currAnalysis.InitializeAnalysisAll();
+                currAnalysis.Background_StartAnalysis(sender, null);
+                RunWorkerCompletedEventArgs eventComplete = new RunWorkerCompletedEventArgs(sender, null, false);
+                currAnalysis.Background_FinishedAnalysis(sender, eventComplete);
+                POD.FinishArgs finishArgs = new POD.FinishArgs();
+                Source.OnWizardFinish(sender, finishArgs);
+            }
+            return true;
+        }
+
         public bool HasInvalidProjectName
         {
             get

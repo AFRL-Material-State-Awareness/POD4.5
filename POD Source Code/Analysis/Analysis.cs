@@ -942,7 +942,7 @@ namespace POD.Analyze
             return TestRatingLabels.ValueFromLabel(myLabel);
         }
 
-        private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
+        public void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             //_data.UpdateHitMissModel(_hmAnalysisObject.ModelType);
@@ -1059,7 +1059,7 @@ namespace POD.Analyze
             _python.ProgressText = (e.ProgressPercentage.ToString() + "%");
         }
 
-        private void Background_FinishedAnalysis(object sender, RunWorkerCompletedEventArgs e)
+        public void Background_FinishedAnalysis(object sender, RunWorkerCompletedEventArgs e)
         {
             while (analysisLauncher.IsBusy == true);
 
@@ -1603,6 +1603,12 @@ namespace POD.Analyze
             }
 
 
+        }
+        public void InitializeAnalysisAll()
+        {
+            CopyInputToR();
+            UpdateCensoredData();
+            _python.FailedRunCount = 0;
         }
         /// <summary>
         ///     Run analysis with current settings and data. Output data will be overwritten.
@@ -3095,6 +3101,10 @@ namespace POD.Analyze
                 CreatedAnalysis.Invoke(this, args);
 
             }
+        }
+        public BackgroundWorker AnalysisLauncher
+        {
+            get { return this.analysisLauncher; }
         }
     }
         
