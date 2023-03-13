@@ -83,7 +83,7 @@ namespace POD
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LicensingInfo";
-            this.Text = "LicensingInfo";
+            this.Text = "LicensingInfo POD v4.5.1";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

@@ -194,8 +194,6 @@ namespace POD.Controls
             if(e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
             {
                 //e.Text = "5";
-
-                
             }
         }
 
@@ -226,8 +224,6 @@ namespace POD.Controls
 
             return menuItems;
         }
-
-        //public new bool CanUnselect { get; set; }
 
         protected List<ContextMenuStrip> CreatePointMenu(double x, double y, bool isDataPoint = false, string mySeriesName = "", string myName = "", int myPointIndex = -1, Color myColor = default(Color), FlowLayoutPanel panel = null, int rowIndex = -1, int colIndex = -1)
         {
@@ -400,18 +396,6 @@ namespace POD.Controls
                 Annotations.Add(_equation);
             }
         }
-
-        /*protected void UpdateEquationLocation(ChartPaintEventArgs e)
-        {
-            if (_equation != null)
-            {
-                System.Drawing.Font drawFont = new System.Drawing.Font(_equation.Font, FontStyle.Regular);
-                System.Drawing.SolidBrush drawBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-
-                e.ChartGraphics.Graphics.DrawString(_equation.Text, drawFont, drawBrush, new PointF(100.0F, 100.0F));
-            }
-        }*/
-
         protected void UpdateEquationLocation(ChartPaintEventArgs e)
         {
             if (_equation != null)
@@ -463,13 +447,6 @@ namespace POD.Controls
                     _equBox.Height = _equation.Height;
                 }
 
-                //var height = (60d / Height) * 100;
-                //var width = (400d / Width) * 100;
-
-                //if(_equation.Width != width)
-                //   _equation.Width = width;
-                //if(_equation.Height != height)
-                //    _equation.Height = height;
             }
         }
 
@@ -702,31 +679,6 @@ namespace POD.Controls
             _thresholdFreeze = true;
         }
 
-        /*public new bool IsSelected
-        {
-            get { return isSelected; }
-
-            set
-            {
-                if (Selectable)
-                {
-                    if (mouseInside == false)
-                    {
-                        isSelected = value;
-
-                        if (isSelected == false)
-                            BorderlineColor = Color.Transparent;
-                    }
-                }
-                else
-                {
-                    BorderlineColor = Color.FromKnownColor(KnownColor.ControlDark);
-                }
-            }
-        }*/
-
-        /*public new bool IsSquare { get; set; }*/
-
         private void KeepAMinMaxInOrder()
         {
             if(_aMinLine == null)
@@ -748,8 +700,9 @@ namespace POD.Controls
             KeepAMinMaxInOrder();
         }
 
-        public void LoadChartData(AnalysisData data)
+        public override void LoadChartData(AnalysisData data)
         {
+            base.LoadChartData(data);
             _flaws = data.ActivatedFlaws;
             _responses = data.ActivatedResponses;
             _names = data.ActivatedSpecimenIDs;
@@ -1039,10 +992,14 @@ namespace POD.Controls
             }
 
             AnalysisData.GetBufferedRange(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
-
-            RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
-
+            if(_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
+                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
+            else
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, 
+                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
             //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
             //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
 
@@ -1232,21 +1189,6 @@ namespace POD.Controls
         private void RegressionAnalysisChart_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             RegressionAnalysisChart_MouseClick(sender, e);
-            //clicking on the same pixel when opened menu will close it
-            //if (_lastX == e.X && _lastY == e.Y)
-            //{
-            //    _lastX = -1;
-            //    _lastY = -1;
-
-            //    if(_lastMenu != null)
-            //        _lastMenu.Close();
-            //    return;
-            //}
-            //else
-            //{
-            //    _lastX = e.X;
-            //    _lastY = e.Y;
-            //}
         }
 
         private void RegressionAnalysisChart_MouseClick(object sender, MouseEventArgs e)
@@ -1269,13 +1211,6 @@ namespace POD.Controls
                 return;
             }
 
-            //clicking on the same pixel when opened menu will close it
-            //if (_lastX == e.X && _lastY == e.Y)
-            //{
-            //    _lastX = -1;
-            //    _lastY = -1;
-            //    return;
-            //}
 
             var line = result.Object as LineAnnotation;
 
@@ -1451,13 +1386,6 @@ namespace POD.Controls
                 _equation.ResizeToContent();
             }
         }
-
-        //public override void SelectChart()
-        //{
-        //    base.SelectChart();
-
-        //    RegressionAnalysisChart_MouseClick(this, null);
-        //}
         
         public void SetAMaxBoundary(double myX, bool triggerEvent)
         {
@@ -1576,7 +1504,7 @@ namespace POD.Controls
             
             this.Invoke((MethodInvoker)delegate()
             {
-                if (_analysisData.DataType.ToString() == "HitMiss")
+                if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     //if(_analysisData.FlawTransform.ToString() == "Inverse")
                     //{
@@ -1589,7 +1517,7 @@ namespace POD.Controls
                 }
                 else
                 {
-                    if(_analysisData.FlawTransform.ToString()== "Inverse")
+                    if(_analysisData.FlawTransform== TransformTypeEnum.Inverse)
                     {
                         fitLine.Points.DataBindXY(view, "flaw", view, "fit");
                     }
@@ -1721,16 +1649,6 @@ namespace POD.Controls
 
         public void ForceIncludedPointsUpdate()
         {
-            /*for (int i = _prevAbove; i < sortByX.Count; i++)
-            {
-                FixColor(sortByX[i].SeriesName, sortByX[i].SeriesPtIndex, Flag.OutBounds);
-            }
-
-            for (int i = 0; i < _prevBelow; i++)
-            {
-                FixColor(sortByX[i].SeriesName, sortByX[i].SeriesPtIndex, Flag.OutBounds);
-            }*/
-
             foreach(var point in _analysisData.TurnedOffPoints)
             {
                 //convert from table column index to series index
