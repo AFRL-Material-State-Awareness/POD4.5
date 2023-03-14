@@ -321,8 +321,8 @@ namespace POD
         {
             Wizard.DeleteSteps();
             Dock.DeleteSteps();
-            Dock.Dispose();
-            Dock = null;
+            //Dock.Dispose();
+            //Dock = null;
         }
 
         /// <summary>
