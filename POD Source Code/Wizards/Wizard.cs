@@ -302,7 +302,10 @@ namespace POD.Wizards
                     // you cannot outright dispose of the entire fullregression step
                     // if you try to and reopen the analysis, the mainchart with still be disposed
                     // when raiseanalysisdone is invoked
-                    ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
+                    if(step is Steps.HitMissNormalSteps.FullRegressionStep)
+                        ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
+                    else if(step is Steps.AHatVsANormalSteps.FullRegressionStep)
+                        ((Steps.AHatVsANormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
                     step.ActionBar.Dispose();
                     step.Title.Dispose();
                     foreach (Control control in step.Controls)
