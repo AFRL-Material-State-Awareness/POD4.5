@@ -61,6 +61,70 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             mainChart.FreezeThresholdLine(.5);
         }
+        public void DisposeAllExceptMainChart()
+        {
+            Analysis.AnalysisDone -= ProcessAnalysisOutput;
+            _xTransformBox.Dispose();
+
+            _confIntBox.Dispose();
+
+            _sampleTypeBox.Dispose();
+            _helpfulRTF.Dispose();
+            //StepToolTip.Dispose();
+            ///worked correctly when last tried here///
+            ///private POD.Controls.PODChartNumericUpDown aMaxControl;
+            aMinControl.Dispose();
+            //a50label.Dispose();
+            a50Out.Dispose();
+            //a90Label.Dispose();
+            a90Out.Dispose();
+            //a90_95Label.Dispose();
+            a90_95Out.Dispose();
+            SigmaOut.Dispose();
+            MuOut.Dispose();
+            covV22Out.Dispose();
+            covV11Out.Dispose();
+            CovV12OutLabel.Dispose();
+            covV12Out.Dispose();
+            ModelBox.Dispose();
+            TestColorMap.Dispose();
+            likelihoodRatioTestOut.Dispose();
+            FlawRangeHeader.Dispose();
+            TestOfAssumptionsHeader.Dispose();
+            CovarianceHeader.Dispose();
+            AxisTransformsHeader.Dispose();
+            PodModelParametersHeader.Dispose();
+            PODModelTypeHeader.Dispose();
+
+            DisposeLabels();
+
+        }
+        private void DisposeLabels()
+        {
+            var labels = new List<Control>
+            {
+                a50label,
+                a90Label,
+                a90_95Label,
+                podMuLabel,
+                podSigmaLabel,
+                CovV11OutLabel,
+                CovV12OutLabel,
+                CovV22OutLabel,
+                lackOfFitTestLabel,
+                ModelLabel,
+                AMinInputLabel,
+                AMaxInputLabel,
+                _xTransformLabel,
+                _confIntLabel,
+                _sampleTypeLabel
+            };
+
+            foreach (Label label in labels)
+            {
+                label.Dispose();
+            }
+        }
         protected override void SetupLabels()
         {
             var labels = new List<Control>
@@ -85,7 +149,6 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 label.TextAlign = ContentAlignment.MiddleRight;
             }
         }
-
         public override void FixPanelControlSizes()
         {
             if (!ControlSizesFixed)
@@ -357,6 +420,10 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         }
         private void ModelBox_Mousehover(object sender, ComboBoxListEx.ListItemSelectionChangedEventArgs e)
         {
+            if (_helpfulRTF.IsDisposed)
+            {
+                return;
+            }
             _helpfulRTF.Text = " ";
             colorBackTextInHelpfulRTF();
             switch (e.ItemIndex)
@@ -608,6 +675,10 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
         public override void ProcessAnalysisOutput(Object sender, EventArgs e)
         {
+            //System.Diagnostics.Debug.WriteLine(Globals.AnnoyingBug);
+            //System.Diagnostics.Debug.WriteLine($"Check if annotations is null 3:{MainChart.Annotations}");
+            //Globals.AnnoyingBug += 1;
+            //System.Diagnostics.Debug.WriteLine('\n');
             //bool analysisFailed = false;
             if (MainChart != null)
                 MainChart.ClearProgressBar();

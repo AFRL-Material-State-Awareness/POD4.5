@@ -22,6 +22,7 @@ namespace POD
     public class WizardDockPair// : ISerializable
     {
         #region Fields
+        private bool reloading;
         /// <summary>
         /// The dock that holds the wizard. The dock contains the current step of the wizard.
         /// </summary>
@@ -51,7 +52,7 @@ namespace POD
         {
             _wizard = myWizard;
             _dock = Dock;
-
+            reloading = false;
             AddEvents();
         }
 
@@ -109,6 +110,13 @@ namespace POD
 
                 return _dock;
             }
+            set
+            {
+                if (Dock.IsDisposed)
+                {
+                    _dock = value;
+                }
+            }
         }
 
         /// <summary>
@@ -150,7 +158,18 @@ namespace POD
             {
                 return _wizard;
             }
+            set
+            {
+                this._wizard = value;
+            }
         }
+
+        public bool Reloading
+        {
+            get { return this.reloading; }
+            set { this.reloading = value; }
+        }
+
         #endregion
 
         #region Methods
@@ -276,9 +295,9 @@ namespace POD
 
             if (MoveToEnd())
                 return;
-
+            
             if (e == null)
-            {
+            {                             
                 Wizard.CurrentStep.PressFinishButton();
                 return;
             }
@@ -292,9 +311,18 @@ namespace POD
             }
 
             OnSourceModified(this, e);
-
             SetWizardToFirstStep();
+
+            this.DeleteSteps();
+
             Dock.Hide();
+        }
+        private void DeleteSteps()
+        {
+            Wizard.DeleteSteps();
+            Dock.DeleteSteps();
+            //Dock.Dispose();
+            //Dock = null;
         }
 
         /// <summary>
@@ -342,7 +370,6 @@ namespace POD
         /// <param name="e">FinishArgs which has a pair of newly created/modified analyses</param>
         private void Project_Finished(object sender, FinishArgs e)
         {
-
             ProjectFinishArgs args = (ProjectFinishArgs)e;
 
             if (MoveToEnd())
@@ -369,13 +396,17 @@ namespace POD
 
                 Wizard.CurrentStep.Project.NullFinishArguments();
             }
-
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
             OnSourceModified(this, e);
 
             SetWizardToFirstStep();
             this.Wizard.CurrentStep.RefreshValues();
             //Dock.Hide();
             //Dock.Show();
+            
+            Application.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
         }
 
         /// <summary>

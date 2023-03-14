@@ -486,7 +486,7 @@ namespace POD.Controls
             a9095Line.Points.Clear();
 
             //if 90/95 curve was calculated by the analysis
-            if (POD9095.Points.Count > 0)
+            if (POD9095.Points.Count > 0 && POD.Points.Count == POD.Points.Count)
             {
                 line = a9095Area;
 

@@ -19,7 +19,7 @@ namespace POD
     public delegate void FinishEventHandler(object sender, FinishArgs e);
     public delegate void AnalysisErrorHandler(object sender, ErrorArgs e);
     public delegate void GetProjectInfoHandler(object sender, GetProjectInfoArgs e);
-    
+
     
 
     public class ClipboardMetafileHelper
@@ -75,7 +75,7 @@ namespace POD
         public delegate double InvertAxisFunction(double x);
 
         public const int DefaultLabelCount = 10;
-
+        //public static int AnnoyingBug = 0;
         public static int GetLabelIntervalBasedOnChartSize(Control chart, AxisKind kind)
         {
             if (chart != null)

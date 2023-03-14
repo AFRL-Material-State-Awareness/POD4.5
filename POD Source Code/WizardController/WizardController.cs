@@ -133,6 +133,21 @@ namespace POD
                 _wizards.Remove(dock);
 
                 dock.Dock.Close();
+                /*
+               if (!dock.Dock.Step.IsDisposed)
+               {
+                   dock.Dock.Close();
+               }
+               
+                try
+                {
+                    dock.Dock.Close();
+                }
+                catch (ObjectDisposedException)
+                {
+                    //
+                }
+                */
             }
         }
 
@@ -462,9 +477,28 @@ namespace POD
             if (mySource != null)
             {
                 WizardDockPair pair = _wizards[mySource];
-
+                
                 if (pair != null)
                 {
+                    if(pair.Wizard.CurrentStep != null)
+                    {
+                        if (pair.Wizard.CurrentStep.IsDisposed)
+                        {
+                            ControlOrganize control = ControlOrganize.NaviBottom;
+                            Analysis tempAnalysis = pair.Analysis;
+                            if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                            {
+                                pair.Reloading = true;
+                                pair.Wizard = new HitMissNormalWizard((HitMissAnalysis)tempAnalysis, ref control);
+                            }
+                            else if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                            {
+                                pair.Reloading = true;
+                                pair.Wizard = new AHatvsANormalWizard((AHatAnalysis)tempAnalysis, ref control);
+                            }
+                             
+                        }
+                    }                   
                     pair.SyncDock();
                     return pair; 
                 }

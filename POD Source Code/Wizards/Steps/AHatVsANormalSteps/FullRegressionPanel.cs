@@ -96,7 +96,65 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 //ResumeDrawing();
             }
         }
+        public void DisposeAllExceptMainChart()
+        {
+            //throw new NotImplementedException();
+            Analysis.AnalysisDone -= ProcessAnalysisOutput;
+            _xTransformBox.Dispose();
+            _yTransformBox.Dispose();
+            aMinControl.Dispose();
+            a50Out.Dispose();
+            a90Out.Dispose();
+            a90_95Out.Dispose();
+            SigmaOut.Dispose();
+            MuOut.Dispose();
+            TestColorMap.Dispose();
+            FlawRangeHeader.Dispose();
+            TestOfAssumptionsHeader.Dispose();
+            AxisTransformsHeader.Dispose();
+            PodModelParametersHeader.Dispose();
 
+            normalityTestOut.Dispose();
+            equalVarianceTestOut.Dispose();
+
+            lackOfFitTestOut.Dispose();
+
+            DisposeLabels();
+        }
+        private void DisposeLabels()
+        {
+            var labels = new List<Control>
+            {
+                a50label,
+                a90Label,
+                a90_95Label,
+                MuLabel,
+                SigmaLabel,
+                modelMLabel,
+                modelBLabel,
+                modelErrorLabel,
+                rSqauredLabel,
+                modelMStdErrLabel,
+                modelBStdErrLabel,
+                modelErrorStdErrLabel,
+                normalityTestLabel,
+                equalVarianceTestLabel,
+                lackOfFitTestLabel,
+                LeftCensorInputLabel,
+                RightCensorInputLabel,
+                AMinInputLabel,
+                AMaxInputLabel,
+                thresholdLabel,
+                _xTransformLabel,
+                _yTransformLabel,
+                _labelForLamdaInput
+            };
+
+            foreach (Label label in labels)
+            {
+                label.Dispose();
+            }
+        }
         void FullRegressionPanel_VisibleChanged(object sender, EventArgs e)
         {
             

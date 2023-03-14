@@ -361,6 +361,10 @@ namespace POD.Controls
 
         private void TurnOffAllMenuButtons()
         {
+            if(MenuOffImageList.Images.Count < 1)
+            {
+                return;
+            }
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 3; j++)
@@ -1979,7 +1983,8 @@ namespace POD.Controls
 
                     if(MenuIsOpen)
                     {
-                        e.ChartGraphics.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
+                        if(FullSizeImageList.Images.Count > 0)
+                            e.ChartGraphics.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
 
                         for (int i = 0; i < 4; i++)
                         {
@@ -1992,7 +1997,8 @@ namespace POD.Controls
                         e.ChartGraphics.Graphics.DrawImage(_wideBitmap, 0, 4 * ImageSize);
                         e.ChartGraphics.Graphics.DrawImage(_aspectBitmap, 0, 100);
                         e.ChartGraphics.Graphics.DrawImage(_sizeBitmap, 0, 120);
-                        e.ChartGraphics.Graphics.DrawImage(WideImageList.Images[1], 0, 0);
+                        if (WideImageList.Images.Count > 0)
+                            e.ChartGraphics.Graphics.DrawImage(WideImageList.Images[1], 0, 0);
                         
                     }
 
@@ -2158,13 +2164,17 @@ namespace POD.Controls
 
             try
             {
-                this.Invoke((MethodInvoker)delegate()
+                if (IsHandleCreated)
                 {
-                    if (_error != null)
+                    this.Invoke((MethodInvoker)delegate ()
                     {
-                        _error.Text = finalErrorString;
-                    }
-                });
+                        if (_error != null)
+                        {
+                            _error.Text = finalErrorString;
+                        }
+                    });
+                }
+                
             }
             catch(Exception exp)
             {
@@ -2213,12 +2223,15 @@ namespace POD.Controls
                 _errorBox.LineWidth = 2;
 
                 //Annotations.Insert(0, _equation);
-
-                this.Invoke((MethodInvoker)delegate()
+                if (IsHandleCreated)
                 {
-                    Annotations.Add(_errorBox);
-                    Annotations.Add(_error);
-                });
+                    this.Invoke((MethodInvoker)delegate ()
+                    {
+                        Annotations.Add(_errorBox);
+                        Annotations.Add(_error);
+                    });
+                }
+                
             }
             //else
             //{

@@ -12,6 +12,7 @@ using CSharpBackendWithR;
 namespace POD.Wizards
 {
     using System.Data;
+    using System.Diagnostics;
     using System.Windows.Forms.DataVisualization.Charting;
 
     using POD.Analyze;
@@ -331,16 +332,23 @@ namespace POD.Wizards
 
             if (MainChart != null)
             {
+                //Debug.WriteLine($"Check if annotations is null 1: {MainChart.Annotations}");
                 DisableInputControls();
                 MainChart.PrepareForRunAnalysis();
                 MainChart.ResetErrors();
                 MainChart.ClearProgressBar();
+
+                //Debug.WriteLine($"Check if annotations is null 2: {MainChart.Annotations}");
+            }
+            else
+            {
+                Debug.WriteLine("MainChart is null.");
             }
 
             SetupAnalysisInput();
 
             this.Cursor = Cursors.WaitCursor;
-
+            
             Analysis.RunAnalysis();
 
             this.Cursor = Cursors.Default;
