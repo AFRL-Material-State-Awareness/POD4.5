@@ -75,7 +75,7 @@ namespace POD
         public delegate double InvertAxisFunction(double x);
 
         public const int DefaultLabelCount = 10;
-        public static int AnnoyingBug = 0;
+        //public static int AnnoyingBug = 0;
         public static int GetLabelIntervalBasedOnChartSize(Control chart, AxisKind kind)
         {
             if (chart != null)
