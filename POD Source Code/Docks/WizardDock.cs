@@ -320,6 +320,14 @@ namespace POD.Docks
             ResumeLayout();
 
             transition.run();
+            /*
+            panelAni.DisposeAnimComponents();
+            titleAni.DisposeAnimComponents();
+            barAni.DisposeAnimComponents();
+            */
+            //wizTo.Dispose();
+            //wizFrom.Dispose();
+            emptyPanel.Dispose();
         }
 
         void t_TransitionCompletedEvent(object sender, Transition.Args e)
@@ -343,6 +351,14 @@ namespace POD.Docks
             if (!(NavBarEnabled.TransitionTo is Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
                 !(NavBarEnabled.TransitionTo is Wizards.Steps.AHatVsANormalSteps.FullRegressionStep))
                 NavBarEnabled.TransitionTo.ActionBar.Enabled = true;
+            /*
+            movePanelBox.Dispose();
+            moveBarBox.Dispose();
+            moveTitleBox.Dispose();
+            nextTitleBox.Dispose();
+            nextBarBox.Dispose();
+            nextPanelBox.Dispose();
+            */
         }
 
         #endregion
