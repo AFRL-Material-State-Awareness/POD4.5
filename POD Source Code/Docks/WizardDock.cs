@@ -49,6 +49,20 @@ namespace POD.Docks
 
                 if (_skipAnimations == true)
                 {
+                    using(Bitmap image = new Bitmap(Step.Width, Step.Height))
+                    {
+                        Step.DrawPanelToBitmap(image, new Rectangle(0, 0, Step.Width, Step.Height));
+                        movePanelBox.Height = Step.Height;
+                        movePanelBox.Width = Step.Width;
+                        movePanelBox.Left = 0;
+                        movePanelBox.Top = 0;
+                        movePanelBox.Image = image;
+                        movePanelBox.BringToFront();
+                        movePanelBox.Show();
+
+                        Cursor.Current = Cursors.WaitCursor;
+                    }
+                    /*
                     Bitmap image = new Bitmap(Step.Width, Step.Height);
 
                     Step.DrawPanelToBitmap(image, new Rectangle(0, 0, Step.Width, Step.Height));
@@ -61,6 +75,7 @@ namespace POD.Docks
                     movePanelBox.Show();
 
                     Cursor.Current = Cursors.WaitCursor;
+                    */
                 }
                 else
                 {
@@ -305,6 +320,14 @@ namespace POD.Docks
             ResumeLayout();
 
             transition.run();
+            /*
+            panelAni.DisposeAnimComponents();
+            titleAni.DisposeAnimComponents();
+            barAni.DisposeAnimComponents();
+            */
+            //wizTo.Dispose();
+            //wizFrom.Dispose();
+            emptyPanel.Dispose();
         }
 
         void t_TransitionCompletedEvent(object sender, Transition.Args e)
@@ -328,6 +351,14 @@ namespace POD.Docks
             if (!(NavBarEnabled.TransitionTo is Wizards.Steps.HitMissNormalSteps.FullRegressionStep) ||
                 !(NavBarEnabled.TransitionTo is Wizards.Steps.AHatVsANormalSteps.FullRegressionStep))
                 NavBarEnabled.TransitionTo.ActionBar.Enabled = true;
+            /*
+            movePanelBox.Dispose();
+            moveBarBox.Dispose();
+            moveTitleBox.Dispose();
+            nextTitleBox.Dispose();
+            nextBarBox.Dispose();
+            nextPanelBox.Dispose();
+            */
         }
 
         #endregion
@@ -379,6 +410,7 @@ namespace POD.Docks
         }
         public void DeleteSteps()
         {
+            //_step.Dispose();
             _step = null;
         }
     }
