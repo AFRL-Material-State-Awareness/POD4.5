@@ -759,7 +759,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             
             if (analysesTree.GetNodeCount(false) >= 50)
             {
-                MessageBox.Show("The maximum amount of analyses that can fit into one project in PODv4.5.0 is 50.");
+                MessageBox.Show("The maximum amount of analyses that can fit into one project in PODv4.5.1 is 50.");
                 return;
             }
             

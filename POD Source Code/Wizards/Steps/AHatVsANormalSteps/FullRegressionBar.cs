@@ -13,6 +13,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         PODBooleanButton _linearityButton;
         PODBooleanButton _podButton;
         PODBooleanButton _thresholdButton;
+        PODBooleanButton _normalityButton;
         PODBooleanButton _hideAllButton;
         PODButton _cycleButton;
 
@@ -77,8 +78,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _linearityButton = new PODBooleanButton("Show Residual", "Hide Residual", true, "Show or hide Residual side chart. (Ctrl + 1)", StepToolTip);
             AddLeftButton(_linearityButton, Linear_Click);
 
-            //_normalityButton = new PODBooleanButton("Show N&ormality", "Hide N&ormality", false);
-            //AddLeftButton(_normalityButton, Normality_Click);
+            _normalityButton = new PODBooleanButton("Show N&ormality", "Hide N&ormality", false);
+            AddLeftButton(_normalityButton, Normality_Click);
             
             //_equalVarianceButton = new PODBooleanButton("Show &Equal Variance", "Hide &Equal Variance", false);
             //AddLeftButton(_equalVarianceButton, EqualVariance_Click);
@@ -182,10 +183,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         //    UpdateChartAndButton(MyPanel.EqualVarianceIndex, _equalVarianceButton);
         //}
 
-        //private void Normality_Click(object sender, EventArgs e)
-        //{
-        //    UpdateChartAndButton(MyPanel.NormalityIndex, _normalityButton);
-        //}
+        private void Normality_Click(object sender, EventArgs e)
+        {
+            UpdateChartAndButton(MyPanel.NormalityIndex, _normalityButton);
+        }
 
         private void Linear_Click(object sender, EventArgs e)
         {

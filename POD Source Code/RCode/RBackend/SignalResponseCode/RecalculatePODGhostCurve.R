@@ -114,16 +114,15 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                     }
                                     a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                     a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
-                                    a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
+                                    #a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
+                                    a.tau <- tau
                                     a.covariance.matrix <- a.hat.vs.a.censored$var
                                     varCovarMatrix<<-a.covariance.matrix
                                     aMu <- (a.hat.decision - a.b0)/a.b1
                                     aSigma <- a.tau/a.b1
-                                    POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
-                                    a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
                                     a50 <- aMu
                                     z90 <- qnorm(0.9)
-                                    a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                    a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
                                     a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                     SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
                                     #set parameters
@@ -154,13 +153,10 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                       a.hat.decision = i # = 200
                                       aMu <- (a.hat.decision - a.b0)/a.b1
                                       aSigma <- a.tau/a.b1
-                                      POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
-                                      a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
                                       a50 <- aMu
                                       a90 <- aMu + qnorm(0.9) * aSigma
                                       z90 <- qnorm(0.9)
-                                      #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
-                                      a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                      a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
                                       a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                       SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
                                       a9095 <- aMu + z90 * aSigma + qnorm(0.95) * SD.a.90
@@ -169,9 +165,9 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                                                        a90, 
                                                                        a9095, 
                                                                        a50, 
-                                                                       v11=varCovarMatrix[[1]],  
-                                                                       v12=varCovarMatrix[1,2],
-                                                                       v22=varCovarMatrix[2,2]))
+                                                                       v11=a.V_POD[[1]],  
+                                                                       v12=a.V_POD[1,2],
+                                                                       v22=a.V_POD[2,2]))
                                     }
                                     setGhostThresholdDF(threshDataFrame)
                                   }

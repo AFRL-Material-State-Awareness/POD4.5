@@ -8,7 +8,7 @@ namespace CSharpBackendWithR
 {
     public class AnalysistypeTransform
     {
-        private HMAnalysisObject newPFAnalysisObject;
+        private HMAnalysisObject newHMAnalysisObject;
         private AHatAnalysisObject newAHatAnalysisObject;
         private REngineObject analysisEngine;
         private int srsOrRSS;//0=simple random sampling, 1=ranked set sampling
@@ -20,7 +20,7 @@ namespace CSharpBackendWithR
         public AnalysistypeTransform(REngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
         {
             this.analysisEngine = analysisEngine;
-            this.newPFAnalysisObject = newHitMissAnalysisObjectInput;
+            this.newHMAnalysisObject = newHitMissAnalysisObjectInput;
             if (newHitMissAnalysisObjectInput != null)
             {
                 this.srsOrRSS = newHitMissAnalysisObjectInput.SrsOrRSS;
@@ -72,51 +72,51 @@ namespace CSharpBackendWithR
             //overwrite the max and min class each iteration
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
             //write the max and min crack size to the pfanalysisObject
-            newMaxMin.calcCrackRange(this.newPFAnalysisObject.Flaws);
-            this.newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
-            this.newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
-            newHitMissControl.ExecuteAnalysis(this.newPFAnalysisObject);
+            newMaxMin.calcCrackRange(this.newHMAnalysisObject.Flaws);
+            this.newHMAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            this.newHMAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            newHitMissControl.ExecuteAnalysis(this.newHMAnalysisObject);
             ReturnHitMissObjects();
             //clear all contents in R and restart the global environment
             //this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
-            //Console.WriteLine(newPFAnalysisObject);
+            //Console.WriteLine(newHMAnalysisObject);
             //finish analysis
             //return object to UI
-            //this.newPFAnalysisObject.Confidence_level
+            //this.newHMAnalysisObject.Confidence_level
             //analysisEngine.clearGlobalIInREngineObject();
-            return this.newPFAnalysisObject;
+            return this.newHMAnalysisObject;
         }
         private HMAnalysisObject ExecutePFAnalysisTrans()
         {
             //overwrite the max and min class each iteration
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
             //write the max and min crack size to the pfanalysisObject
-            newMaxMin.calcCrackRange(this.newPFAnalysisObject.Flaws);
-            this.newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
-            this.newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
-            newHitMissControl.ExecuteTransformOnlyAnalysis(this.newPFAnalysisObject);
+            newMaxMin.calcCrackRange(this.newHMAnalysisObject.Flaws);
+            this.newHMAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            this.newHMAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            newHitMissControl.ExecuteTransformOnlyAnalysis(this.newHMAnalysisObject);
             ReturnTransformHitMissObjects();
             //return object to UI
-            return this.newPFAnalysisObject;
+            return this.newHMAnalysisObject;
         }
         private HMAnalysisObject ExecuteRankedSetSampling()
         {
             //analysisEngine.RDotNetEngine.Evaluate("str(as.list(.GlobalEnv))");
             //Get crack max and min class
             MaxAndMinClass newMaxMin = new MaxAndMinClass();
-            newMaxMin.calcCrackRange(newPFAnalysisObject.Flaws);
-            this.newPFAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
-            newPFAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
+            newMaxMin.calcCrackRange(newHMAnalysisObject.Flaws);
+            this.newHMAnalysisObject.Crckmax = newMaxMin.maxAndMinListControl["Max"];
+            newHMAnalysisObject.Crckmin = newMaxMin.maxAndMinListControl["Min"];
             //create the class for hitMissControl
             //HitMissAnalysisRControl this.newHitMissControl = new HitMissAnalysisRControl(analysisEngine);
-            this.newHitMissControl.ExecuteRSS(this.newPFAnalysisObject);
+            this.newHitMissControl.ExecuteRSS(this.newHMAnalysisObject);
             ReturnHitMissObjects();
             //clear all contents in R and restart the global environment
             //this.analysisEngine.clearGlobalIInREngineObject();
             //this.analysisEngine.RDotNetEngine.Evaluate("rm(hitMissDF)");
-            //Console.WriteLine(newPFAnalysisObject);
-            return this.newPFAnalysisObject;
+            //Console.WriteLine(newHMAnalysisObject);
+            return this.newHMAnalysisObject;
         }
 
         private AHatAnalysisObject ExecuteaHatAnalysis()
@@ -172,44 +172,44 @@ namespace CSharpBackendWithR
         }
         public void ReturnHitMissObjects()
         {
-            this.newPFAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
-            this.newPFAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
-            this.newPFAnalysisObject.IterationTable = this.newHitMissControl.GetIterationTableForUI();
+            this.newHMAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
+            this.newHMAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
+            this.newHMAnalysisObject.IterationTable = this.newHitMissControl.GetIterationTableForUI();
             //normal tranformation finished! Start log tranformation table
             Dictionary<string, double> finalAValuesDict = this.newHitMissControl.GetKeyA_Values();
-            this.newPFAnalysisObject.A25 = finalAValuesDict["a25"];
-            this.newPFAnalysisObject.A50 = finalAValuesDict["a50"];
-            this.newPFAnalysisObject.A90 = finalAValuesDict["a90"];
-            this.newPFAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
-            this.newPFAnalysisObject.A9095 = finalAValuesDict["a9095"];
-            this.newPFAnalysisObject.Muhat = finalAValuesDict["a50"];
+            this.newHMAnalysisObject.A25 = finalAValuesDict["a25"];
+            this.newHMAnalysisObject.A50 = finalAValuesDict["a50"];
+            this.newHMAnalysisObject.A90 = finalAValuesDict["a90"];
+            this.newHMAnalysisObject.Sighat = finalAValuesDict["sigmahat"];
+            this.newHMAnalysisObject.A9095 = finalAValuesDict["a9095"];
+            this.newHMAnalysisObject.Muhat = finalAValuesDict["a50"];
             //store the original dataframe in the HM analysis object
-            this.newPFAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
+            this.newHMAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
             //store the covariance matrix values to return to UI
-            this.newPFAnalysisObject.CovarianceMatrix = this.newHitMissControl.GetCovarianceMatrixValues();
+            this.newHMAnalysisObject.CovarianceMatrix = this.newHitMissControl.GetCovarianceMatrixValues();
             //get the goodness of fit
-            this.newPFAnalysisObject.GoodnessOfFit = this.newHitMissControl.GetGoodnessOfFit();
+            this.newHMAnalysisObject.GoodnessOfFit = this.newHitMissControl.GetGoodnessOfFit();
             //set the separated flag to warn user if necessary
-            if (this.newPFAnalysisObject.RegressionType == "Logistic Regression")
+            if (this.newHMAnalysisObject.RegressionType == "Logistic Regression")
             {
-                this.newPFAnalysisObject.Is_Separated = this.newHitMissControl.GetSeparationFlag();
+                this.newHMAnalysisObject.Is_Separated = this.newHitMissControl.GetSeparationFlag();
             }
             //used for error if the alogrithm doesn't converge
-            this.newPFAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
+            this.newHMAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
         }
         public void ReturnTransformHitMissObjects()
         {
-            this.newPFAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
-            this.newPFAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
+            this.newHMAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
+            this.newHMAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
             //store the original dataframe in the HM analysis object
-            this.newPFAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
+            this.newHMAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
             //set the separated flag to warn user if necessary
-            if (this.newPFAnalysisObject.RegressionType == "Logistic Regression")
+            if (this.newHMAnalysisObject.RegressionType == "Logistic Regression")
             {
-                this.newPFAnalysisObject.Is_Separated = this.newHitMissControl.GetSeparationFlag();
+                this.newHMAnalysisObject.Is_Separated = this.newHitMissControl.GetSeparationFlag();
             }
             //used for error if the alogrithm doesn't converge
-            this.newPFAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
+            this.newHMAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
         }
         public void ReturnSignalResponseObjects()
         {
@@ -220,6 +220,8 @@ namespace CSharpBackendWithR
             this.newAHatAnalysisObject.AHatResultsResid = this.newAHatControl.GetResidualTableForUI();
             this.newAHatAnalysisObject.AHatThresholdsTable = this.newAHatControl.GetThresholdsTableForUI();
             this.newAHatAnalysisObject.AHatThresholdsTable_All = this.newAHatControl.GetThresholdsTable_ALL_ForUI();
+            this.newAHatAnalysisObject.AHatNormalityTable = this.newAHatControl.GetNormalityTableForUI();
+            this.newAHatAnalysisObject.AHatNormalCurveTable = this.newAHatControl.GetNormalCurveTableForUI();
             //get slope and intercept (need to add the errors for each as well)
             List<double> linearMetrics = this.newAHatControl.GetLinearModelMetrics();
             this.newAHatAnalysisObject.Intercept = linearMetrics[0];
