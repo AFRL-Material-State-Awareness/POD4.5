@@ -197,10 +197,6 @@
       <Project>{bee41d1e-eba8-4d3e-b297-4c1ca6fff8db}</Project>
       <Name>Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\dockpanelsuite-development_3.0\WinFormsUI\WinFormsUI.csproj">
-      <Project>{d23040b2-b914-4879-8041-a62f1f545a94}</Project>
-      <Name>WinFormsUI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Docks\Docks.csproj">
       <Project>{03a62e1e-31ef-423f-8246-716be7864932}</Project>
       <Name>Docks</Name>
