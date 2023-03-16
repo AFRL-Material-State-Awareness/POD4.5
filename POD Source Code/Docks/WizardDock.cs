@@ -28,6 +28,11 @@ namespace POD.Docks
         /// The Step that displays on the Dock.
         /// </summary>
         private WizardStep _step;
+        /// <summary>
+        /// keep track of the wizard instance in case it needs
+        /// to be disposed
+        /// </summary>
+        private Wizard _wizardInstance;
         private bool _skipAnimations;
         [NonSerialized]
         public EventHandler NeedSteps = null;
@@ -49,7 +54,7 @@ namespace POD.Docks
 
                 if (_skipAnimations == true)
                 {
-                    using(Bitmap image = new Bitmap(Step.Width, Step.Height))
+                    using (Bitmap image = new Bitmap(Step.Width, Step.Height))
                     {
                         Step.DrawPanelToBitmap(image, new Rectangle(0, 0, Step.Width, Step.Height));
                         movePanelBox.Height = Step.Height;
@@ -137,10 +142,10 @@ namespace POD.Docks
         {
             get
             {
-                if(_step == null)
+                if (_step == null)
                     AddSteps();
 
-                return _step; 
+                return _step;
             }
             set
             {
@@ -166,7 +171,7 @@ namespace POD.Docks
                     _step.PrepareGUI();
                 }
 
-                
+
             }
         }
         /// <summary>
@@ -180,6 +185,13 @@ namespace POD.Docks
             }
 
         }
+
+        public Wizard WizardInstance
+        {
+            set { _wizardInstance = value; }
+            get { return _wizardInstance; }
+        }
+
 
         public SwapStepsEventHandler SwapSteps;
         #endregion
