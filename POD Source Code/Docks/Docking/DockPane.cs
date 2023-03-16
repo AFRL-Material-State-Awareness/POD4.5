@@ -534,18 +534,21 @@ namespace WeifenLuo.WinFormsUI.Docking
         {
             CloseContent(ActiveContent);  
         }
+        /// <summary>
+        /// used to dispose of the wizard steps when the user closes an analysis
+        /// </summary>
+        /// <param name="content"></param>
         private void DeleteSteps(IDockContent content)
         {
             //cast the active content
             WizardDock currWizardDock = content as WizardDock;
             if(currWizardDock != null)
             {
-                //return wizard to first step to make sure it is recreated
+                //return wizard and wizard dock to first step to make sure it is recreated
                 currWizardDock.WizardInstance.CurrentStep = currWizardDock.WizardInstance.FirstStep;
                 currWizardDock.Step = currWizardDock.WizardInstance.CurrentStep;
                 currWizardDock.DeleteSteps();
-                currWizardDock.WizardInstance.DeleteSteps();
-                
+                currWizardDock.WizardInstance.DeleteSteps();           
             }
         }
         internal void CloseContent(IDockContent content)
