@@ -161,6 +161,7 @@ namespace POD
             set
             {
                 this._wizard = value;
+                //Dock.WizardInstance = value;
             }
         }
 
@@ -277,7 +278,12 @@ namespace POD
         /// </summary>
         internal void SyncDock()
         {
-            Dock.Step = Wizard.CurrentStep;            
+            UpdateWizardInstance();
+            Dock.Step = Wizard.CurrentStep;    
+        }
+        internal void UpdateWizardInstance()
+        {
+            Dock.WizardInstance = Wizard;
         }
 
         #endregion
