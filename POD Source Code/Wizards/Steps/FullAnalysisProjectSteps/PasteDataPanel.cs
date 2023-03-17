@@ -174,12 +174,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                 var endX = 27;
                 var startY = 24;
                 var endY = 31;
-                //var startPrevX = 16;
-                //var endPrevX = 20;
-                //var startSmallY = 24;
-                //var endSmallY = 31;
-                //var startNextX = 27;
-                //var endNextX = 31;
+
                 Color outlineColor = Color.Black;
                 Color nextColor = GetNextColorFromDefinitionMode(grid);
                 Color prevColor = GetPreviousColorFromDefinitionMode(grid);
@@ -363,14 +358,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             //TODO: make function that previews the paste of whatever is in the clipboard
             //as greyed out grid then when the user pastes something make it the traditional white
             //this way they don't have to paste to see what they have
-            /*DataSourceTabs.SelectedTab.Controls[0].ContextMenuStrip.Items[0].PerformClick();
-
-            _views[DataSourceTabs.SelectedIndex].DefaultCellStyle.BackColor = _views[DataSourceTabs.SelectedIndex].BackgroundColor;
-            _views[DataSourceTabs.SelectedIndex].DefaultCellStyle.ForeColor = SystemColors.ControlDarkDark;
-            _views[DataSourceTabs.SelectedIndex].EnableHeadersVisualStyles = false;
-            _views[DataSourceTabs.SelectedIndex].ColumnHeadersDefaultCellStyle.ForeColor = SystemColors.ControlDarkDark;
-            _views[DataSourceTabs.SelectedIndex].ColumnHeadersDefaultCellStyle
-            _views[DataSourceTabs.SelectedIndex].ColumnHeadersDefaultCellStyle.BackColor = _views[DataSourceTabs.SelectedIndex].BackgroundColor;*/
+            /*DataSourceTabs.SelectedTab.Controls[0].ContextMenuStrip.Items[0].PerformClick();*/
         }
 
         private void PaintGridBackgroundBasedOnUse()
@@ -422,18 +410,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
         internal void PasteFromClipboard()
         {
-            try
-            {
-                //_views[DataSourceTabs.SelectedIndex].DataSource = null;
-                //_views[DataSourceTabs.SelectedIndex].Columns.Clear();
-                //_views[DataSourceTabs.SelectedIndex].Rows.Clear();
-            }
-            catch
-            {
-
-            }
-
-            // DataSourceTabs.SelectedTab.Controls[0].ContextMenuStrip.Items[0].PerformClick();
 
             var tab = DataSourceTabs.SelectedTab;
             var grid = _views[SelectedTabName];
@@ -443,11 +419,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                 if (CanSourceBeEdited(tab))
                 {
                     var clipboardContents = Clipboard.GetText(TextDataFormat.Rtf);
-
-                    //var fileNameCollection = Clipboard.GetFileDropList();
-                    //string copiedFilePath = (fileNameCollection != null && fileNameCollection.Count > 0) ? fileNameCollection[0] : "";
-
-                    //MessageBox.Show(copiedFilePath);
 
                     this.UpdateDataTable(clipboardContents);
                 }
@@ -515,10 +486,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                 int i = 0;
 
-                //_views[DataSourceTabs.SelectedIndex].DataSource = null;
-
-                //currentTable.BeginLoadData();
-
                 foreach(DataRow row in tempTable.Rows)
                 {       
                     foreach (DataColumn dc in tempTable.Columns)
@@ -532,14 +499,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                     i++;
                 }
-
-                //tempTable.AcceptChanges();
-
-                //currentTable.Merge(tempTable, false, MissingSchemaAction.Add);
-
-                //currentTable.EndLoadData();
-
-                //currentTable.AcceptChanges();
 
                 _views[SelectedTabName].Table = currentTable;
             }
@@ -820,17 +779,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
         public void BackupTables()
         {
-            //for (int i = 0; i < DataSourceTabs.TabPages.Count; i++)
-            //{
-            //    var sourceName = DataSourceTabs.TabPages[i].Text;
-            //    var data = _views[sourceName];
-            //    var table = (DataTable)data.Table;
-
-            //    if (table != null && table.Columns.Count > 0 && table.Rows.Count > 0)
-            //    {
-            //        _tableBackups[sourceName] = table;
-            //    }
-            //}
 
             CopyDataToSource();
         }
@@ -910,18 +858,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             {
                 if (((Project)Source).Sources.Count == 0)
                 {
-                    try
-                    {
-
-                    
                     MessageBox.Show("Unfortunately, you need at least one source before you can continue." + Environment.NewLine + Environment.NewLine
                                     + "Please copy and paste data from Excel into the table." + Environment.NewLine
                                     + "Ctrl+V is supported or select Paste from the available actions.");
-                    }
-                    catch (Exception e)
-                    {
-                        System.Diagnostics.Debug.WriteLine(e.StackTrace);
-                    }
                 }
                 else if(!AllSourcesHaveRanges())
                 {
