@@ -904,7 +904,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             mainChart.SetThresholdBoundary(y, true);
             //set to calculate threshold change only
             Analysis.AnalysisCalculationType = RCalculationType.ThresholdChange;
-            RunAnalysis();
+            RunAnalysis(false);
         }
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)
         {

@@ -1070,7 +1070,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             get { return SideCharts.IndexOf(thresholdChart); }
         }
 
-        public override void RunAnalysis()
+        public override void RunAnalysis(bool disableControls = true)
         {
             //ResumeDrawing();
 
@@ -1086,7 +1086,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 if (MainChart != null)
                 {
                     PrepBeforeQuickRunAnalysis();
-                    DisableInputControls();
+                    if(disableControls)
+                        DisableInputControls();
                     MainChart.PrepareForRunAnalysis();
                     MainChart.ResetErrors();
                     MainChart.ClearProgressBar();
@@ -1169,7 +1170,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             mainChart.SetThresholdBoundary(y, true);
             //set to calculate threshold change only
             Analysis.AnalysisCalculationType = RCalculationType.ThresholdChange;
-            RunAnalysis();
+            RunAnalysis(false);
             _previousThreshold = thresholdControl.Value;
         }
         private void NumericUpDown_ValueChanged(object sender, EventArgs e)

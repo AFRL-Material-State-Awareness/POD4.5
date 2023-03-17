@@ -49,8 +49,9 @@ namespace POD.Docks
 
                 if (_skipAnimations == true)
                 {
-                    using(Bitmap image = new Bitmap(Step.Width, Step.Height))
-                    {
+                    //using()
+                    //{
+                    Bitmap image = new Bitmap(Step.Width, Step.Height);
                         Step.DrawPanelToBitmap(image, new Rectangle(0, 0, Step.Width, Step.Height));
                         movePanelBox.Height = Step.Height;
                         movePanelBox.Width = Step.Width;
@@ -61,7 +62,7 @@ namespace POD.Docks
                         movePanelBox.Show();
 
                         Cursor.Current = Cursors.WaitCursor;
-                    }
+                    //}
                     /*
                     Bitmap image = new Bitmap(Step.Width, Step.Height);
 
