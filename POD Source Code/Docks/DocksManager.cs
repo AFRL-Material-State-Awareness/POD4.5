@@ -467,6 +467,8 @@ namespace POD.Docks
                     myWizard.AddSteps();
 
                 myWizard.Show(_panel, DockState.Document);
+
+                _panel.ActiveDocumentPane.ContentClosing += ActiveDocumentPane_ContentClosing;
                 
                 if(activate)
                     Activate(myWizard);
@@ -474,6 +476,14 @@ namespace POD.Docks
                 if(myWizard.Width > 300)
                     myWizard.Step.FixPanelControlSizes();
             }    
+        }
+
+        private void ActiveDocumentPane_ContentClosing(object sender, IDockContent e)
+        {
+            if (e is WizardDock dock)
+            {
+                dock.DeleteSteps();
+            }
         }
 
         public bool Add(WizardDock myWizard)
