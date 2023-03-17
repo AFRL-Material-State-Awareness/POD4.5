@@ -319,7 +319,7 @@ namespace POD.Wizards
             
         }
 
-        public virtual void RunAnalysis()
+        public virtual void RunAnalysis(bool disableControls=true)
         {
             //ResumeDrawing();
             REngineObject.REngineRunning = true;
@@ -333,7 +333,8 @@ namespace POD.Wizards
             if (MainChart != null)
             {
                 //Debug.WriteLine($"Check if annotations is null 1: {MainChart.Annotations}");
-                DisableInputControls();
+                if(disableControls)
+                    DisableInputControls();
                 MainChart.PrepareForRunAnalysis();
                 MainChart.ResetErrors();
                 MainChart.ClearProgressBar();

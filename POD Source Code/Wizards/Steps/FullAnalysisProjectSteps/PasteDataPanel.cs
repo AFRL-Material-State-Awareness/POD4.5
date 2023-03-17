@@ -910,9 +910,18 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             {
                 if (((Project)Source).Sources.Count == 0)
                 {
+                    try
+                    {
+
+                    
                     MessageBox.Show("Unfortunately, you need at least one source before you can continue." + Environment.NewLine + Environment.NewLine
                                     + "Please copy and paste data from Excel into the table." + Environment.NewLine
                                     + "Ctrl+V is supported or select Paste from the available actions.");
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine(e.StackTrace);
+                    }
                 }
                 else if(!AllSourcesHaveRanges())
                 {
