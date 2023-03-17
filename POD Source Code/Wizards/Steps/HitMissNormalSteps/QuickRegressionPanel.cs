@@ -344,7 +344,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             MainChart.RefreshStripLines();
         }
 
-        public override void RunAnalysis()
+        public override void RunAnalysis(bool disableControls=true)
         {
             //ResumeDrawing();
 
@@ -360,7 +360,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 if (MainChart != null)
                 {
                     PrepBeforeQuickRunAnalysis();
-                    DisableInputControls();
+                    if(disableControls)
+                        DisableInputControls();
                     MainChart.PrepareForRunAnalysis();
                     MainChart.ResetErrors();
                     MainChart.ClearProgressBar();
