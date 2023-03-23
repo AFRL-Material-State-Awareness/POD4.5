@@ -467,6 +467,8 @@ namespace POD.Docks
                     myWizard.AddSteps();
 
                 myWizard.Show(_panel, DockState.Document);
+
+                _panel.ActiveDocumentPane.ContentClosing += ActiveDocumentPane_ContentClosing;
                 
                 if(activate)
                     Activate(myWizard);
@@ -474,6 +476,19 @@ namespace POD.Docks
                 if(myWizard.Width > 300)
                     myWizard.Step.FixPanelControlSizes();
             }    
+        }
+
+        private void ActiveDocumentPane_ContentClosing(object sender, IDockContent e)
+        {
+            if (e is WizardDock dock)
+            {
+                //return wizard and wizard dock to first step to make sure it is recreated
+                dock.WizardInstance.CurrentStep = dock.WizardInstance.FirstStep;
+                dock.Step = dock.WizardInstance.CurrentStep;
+                //remove the steps to free up user objects
+                dock.DeleteSteps();
+                dock.WizardInstance.DeleteSteps();
+            }
         }
 
         public bool Add(WizardDock myWizard)

@@ -562,7 +562,7 @@ namespace POD.Controls
                     }
                     catch
                     {
-                        MessageBox.Show("Chart Image file being used by another appicaltion.", "POD v4 Error");
+                        MessageBox.Show("Chart Image file being used by another application.", "POD v4 Error");
                     }
                                         
                     return;

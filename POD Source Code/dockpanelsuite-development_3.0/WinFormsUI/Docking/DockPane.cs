@@ -21,6 +21,16 @@ namespace WeifenLuo.WinFormsUI.Docking
 
         private int suspendCounter = 0;
 
+        public event EventHandler<IDockContent> ContentClosing = null;
+
+        private void RaiseContentClosing(IDockContent dock)
+        {
+            if (this.ContentClosing != null)
+            {
+                this.ContentClosing.Invoke(this, dock);
+            }
+        }
+
         public void SuspendDrawing()
         {
             if (suspendCounter == 0)
@@ -548,6 +558,8 @@ namespace WeifenLuo.WinFormsUI.Docking
 
             dockPanel.SuspendLayout(true);
             dockPanel.SuspendDrawing();
+
+            this.RaiseContentClosing(content);
 
             try
             {
