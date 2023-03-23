@@ -8,7 +8,7 @@ namespace CSharpBackendWithR
     /// This class contains analysis metrics that are shared by both hit/miss and signal response analyses.
     /// </summary>
     [Serializable]
-    public class ParentAnalysisObject
+    abstract public class ParentAnalysisObject
     {
         //may have to adjust this later
         protected double Pod_all;
@@ -39,7 +39,7 @@ namespace CSharpBackendWithR
         /// <summary>
         /// sets default values for fields that are shared by both AHat and HitMiss data
         /// </summary>
-        public ParentAnalysisObject()
+        protected ParentAnalysisObject()
         {
             Count = 0; //the original number of data points in a given analysis
             //max and min crack sizes

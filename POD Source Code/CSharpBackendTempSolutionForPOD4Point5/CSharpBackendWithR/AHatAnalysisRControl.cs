@@ -343,7 +343,9 @@ namespace CSharpBackendWithR
             
             return AllLinearTestResults;
         }
-        
+        /// <summary>
+        /// method is used for debugging only
+        /// </summary>
         public void ShowResults()
         {
             myREngine.Evaluate("newSRAnalysis$plotSimdata(newSRAnalysis$getLinearModel())");
