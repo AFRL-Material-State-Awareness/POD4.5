@@ -482,7 +482,12 @@ namespace POD.Docks
         {
             if (e is WizardDock dock)
             {
+                //return wizard and wizard dock to first step to make sure it is recreated
+                dock.WizardInstance.CurrentStep = dock.WizardInstance.FirstStep;
+                dock.Step = dock.WizardInstance.CurrentStep;
+                //remove the steps to free up user objects
                 dock.DeleteSteps();
+                dock.WizardInstance.DeleteSteps();
             }
         }
 
