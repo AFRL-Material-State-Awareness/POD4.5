@@ -283,6 +283,35 @@ namespace POD.Wizards
         {
             _list = new WizardStepList();
         }
+        public void DeleteTreeNodes()
+        {
+            foreach(TreeNode node in Source.ProgressStepListNode.Nodes)
+            {
+                if(node != null)
+                {
+                    node.Remove();
+                }
+            }
+        }
+        public void DeleteProjWizardSteps()
+        {
+            foreach (var step in _list)
+            {
+                
+                foreach (Control control in step.Controls)
+                {
+                    control.Dispose();
+                }
+                step.ActionBar.Dispose();
+                step.Title.Dispose();
+                step.Dispose();
+            }
+            DeleteTreeNodes();
+        }
+        /// <summary>
+        /// disposes of the steps when a wizard is closed to free up user objects in the application
+        /// The main chart CANNOT be disposed without issues (throws disposed exception when the wizard is reloaded)
+        /// </summary>
         public void DeleteSteps()
          {
             foreach(var step in _list)
