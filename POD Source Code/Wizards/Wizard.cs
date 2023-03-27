@@ -292,6 +292,7 @@ namespace POD.Wizards
         {
             _list = new WizardStepList();
         }
+        /*
         public void DeleteTreeNodes()
         {
             if (Source.ProgressStepListNode == null)
@@ -304,6 +305,7 @@ namespace POD.Wizards
                 }
             }
         }
+        */
         public void DeleteProjWizardSteps()
         {
             foreach (var step in _list)
@@ -317,7 +319,7 @@ namespace POD.Wizards
                 step.Title.Dispose();
                 step.Dispose();
             }
-            DeleteTreeNodes();
+            //DeleteTreeNodes();
         }
         #endregion
 

@@ -125,7 +125,7 @@ namespace POD
         {
             pair.Dock.Dispose();
             pair.Wizard.DeleteSteps();
-            pair.Wizard.DeleteTreeNodes();
+            //pair.Wizard.DeleteTreeNodes();
         }
 
         // <summary>
