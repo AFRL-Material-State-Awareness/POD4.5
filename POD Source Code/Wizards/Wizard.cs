@@ -285,6 +285,8 @@ namespace POD.Wizards
         }
         public void DeleteTreeNodes()
         {
+            if (Source.ProgressStepListNode == null)
+                return;
             foreach(TreeNode node in Source.ProgressStepListNode.Nodes)
             {
                 if(node != null)
