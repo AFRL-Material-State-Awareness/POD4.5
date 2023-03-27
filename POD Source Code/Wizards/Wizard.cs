@@ -148,6 +148,15 @@ namespace POD.Wizards
         }
 
         /// <summary>
+        /// disposes of the steps when a wizard is closed to free up user objects in the application
+        /// The main chart CANNOT be disposed without issues (throws disposed exception when the wizard is reloaded)
+        /// </summary>
+        public virtual void DeleteSteps()
+        {
+
+        }
+
+        /// <summary>
         /// Add a new Step to the end of the Step List.
         /// </summary>
         /// <param name="myStep">the Step to add</param>
@@ -309,79 +318,6 @@ namespace POD.Wizards
                 step.Dispose();
             }
             DeleteTreeNodes();
-        }
-        /// <summary>
-        /// disposes of the steps when a wizard is closed to free up user objects in the application
-        /// The main chart CANNOT be disposed without issues (throws disposed exception when the wizard is reloaded)
-        /// </summary>
-        public void DeleteSteps()
-         {
-            foreach(var step in _list)
-            {
-                //step.Panel.Dispose();
-                //step.Dispose();
-                if (step is Steps.HitMissNormalSteps.ChooseTransformStep ||
-                    step is Steps.HitMissNormalSteps.DocumentRemovedStep ||
-                    step is Steps.AHatVsANormalSteps.ChooseTransformStep ||
-                    step is Steps.AHatVsANormalSteps.DocumentRemovedStep)
-                {
-                    step.Dispose();
-                }
-                else if (step is Steps.HitMissNormalSteps.FullRegressionStep ||
-                    step is Steps.AHatVsANormalSteps.FullRegressionStep)
-                {
-                    // you cannot outright dispose of the entire fullregression step
-                    // if you try to and reopen the analysis, the mainchart with still be disposed
-                    // when raiseanalysisdone is invoked
-                    if(step is Steps.HitMissNormalSteps.FullRegressionStep)
-                        ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
-                    else if(step is Steps.AHatVsANormalSteps.FullRegressionStep)
-                        ((Steps.AHatVsANormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
-                    step.ActionBar.Dispose();
-                    step.Title.Dispose();
-                    foreach (Control control in step.Controls)
-                    {
-                        control.Dispose();
-                    }
-                    //((POD.Wizards.RegressionPanel)step.Panel).MainChart.Series.Dispose();
-                    //step.Site.Container.Dispose();
-                    //step.Region.Dispose();
-                    /*
-                    if (tempStep is Steps.HitMissNormalSteps.DocumentRemovedStep)
-                    {
-                        ((Steps.HitMissNormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
-                        step.ActionBar.Dispose();
-                        step.Title.Dispose();
-                        foreach(Control control in step.Controls)
-                        {
-                            control.Dispose();
-                        }
-                        continue;
-                    }
-                    else if (tempStep is Steps.AHatVsANormalSteps.DocumentRemovedStep)
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    ((POD.Wizards.RegressionPanel)step.Panel).MainChart.Dispose();
-                    //((POD.Wizards.RegressionPanel)step.Panel).MainChart = null;
-                    List<DataPointChart> tempDataList = ((POD.Wizards.RegressionPanel)step.Panel).SideCharts;
-                    for (int i = 0; i < tempDataList.Count; i++)
-                    {
-                        tempDataList[i].Dispose();
-                        tempDataList[i] = null;
-                    }
-                    ((POD.Wizards.RegressionPanel)step.Panel).Dispose();
-                    //step.Panel.Controls.Clear();
-                    //step.Panel = null;
-                    //step.Panel.Dispose();
-                    step.Dispose();
-                    */
-                }
-            }
-            //the list needs to retain the disposed objects
-            //the steps will be overwritten if the given analysis is reopened
-            //_list.Clear();
         }
         #endregion
 
