@@ -53,7 +53,7 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                               Range=incrementSeq[(firstIndex+1):(firstIndex+(length(tempArray)))],
                                               Freq=outputTable$Freq
                                             )
-                                            cat(nrow(finalOutput))
+                                            #cat(nrow(finalOutput))
                                             # The 2^15 is the max number of iterations for the normal curve
                                             # if there aren't 10 bars after 15 iterations, give up
                                             if(nrow(finalOutput) < 10 && override < 2^15){
@@ -69,8 +69,10 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                           
                                         },
                                         DetermineIncrement=function(maxTenVal, override){
-                                          if(maxTenVal > 0){
+                                          if(maxTenVal > 0 && responsesMin >=0){
                                             incrementSeq<- seq(from=RoundDownNice(responsesMin), to = maxTenVal, length.out = SturgesRule()*override)
+                                          }else if(maxTenVal > 0 && responsesMin < 0){
+                                            incrementSeq<- seq(from=RoundDownNiceNeg(responsesMin), to = maxTenVal, length.out = SturgesRule()*override)
                                           }else{
                                             incrementSeq<- seq(from= RoundUpNice(-responsesMin)*(-1), to = maxTenVal, length.out = SturgesRule()*override)
                                           }
@@ -91,7 +93,7 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                           if(length(x) != 1) stop("'x' must be of length 1")
                                           10^floor(log10(x)) * nice[[which(x <= 10^floor(log10(x)) * nice)[[1]]]]
                                         },
-                                        #use this one to round negative numbers nicely
+                                        #use this one to round up negative numbers nicely
                                         RoundUpNiceNeg = function(x, nice=c(10,8,6,5,4,2,1)) {
                                           if(length(x) != 1){ stop("'x' must be of length 1")}
                                           (10^floor(log10(-x)) * nice[[which(-x > 10^floor(log10(-x)) * nice)[[1]]]])*(-1)
@@ -99,6 +101,11 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                         RoundDownNice = function(x, nice=c(10,8,6,5,4,2,1)) {
                                           if(length(x) != 1){ stop("'x' must be of length 1")}
                                           (10^floor(log10(x)) * nice[[which(x > 10^floor(log10(x)) * nice)[[1]]]])
+                                        },
+                                        #use this one to round down negative numbers nicely
+                                        RoundDownNiceNeg = function(x, nice=c(1,2,4,5,6,8,10)) {
+                                          if(length(x) != 1){ stop("'x' must be of length 1")}
+                                          (10^floor(log10(-x)) * nice[[which(-x <= 10^floor(log10(-x)) * nice)[[1]]]])*(-1)
                                         },
                                         TrimEndZeros=function(array){
                                           return(array[min(which(array != 0 )): max( which(array != 0 ))])
