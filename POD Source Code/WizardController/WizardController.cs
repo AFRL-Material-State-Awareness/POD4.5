@@ -117,6 +117,17 @@ namespace POD
             AddAnalysis(myAnalysis, null);
         }
 
+        /// <summary>
+        /// Disposes of all the user objects in both the dock and wizard
+        /// </summary>
+        /// <param name="pair"></param>
+        private void DisposeWizardDockPair(WizardDockPair pair)
+        {
+            pair.Dock.Dispose();
+            pair.Wizard.DeleteSteps();
+            //pair.Wizard.DeleteTreeNodes();
+        }
+
         // <summary>
         /// Removes the analysis from the project.
         /// </summary>
@@ -133,21 +144,6 @@ namespace POD
                 _wizards.Remove(dock);
 
                 dock.Dock.Close();
-                /*
-               if (!dock.Dock.Step.IsDisposed)
-               {
-                   dock.Dock.Close();
-               }
-               
-                try
-                {
-                    dock.Dock.Close();
-                }
-                catch (ObjectDisposedException)
-                {
-                    //
-                }
-                */
             }
         }
 
@@ -160,6 +156,8 @@ namespace POD
             if (_wizards.Project != null)
             {
                 _wizards.Project.Dock.Close();
+                _wizards.Project.Dock.Dispose();
+                _wizards.Project.Wizard.DeleteProjWizardSteps();
                 _wizards.Project = null;
             }
         }
@@ -1108,12 +1106,14 @@ namespace POD
         public void ClearEverything()
         {
             DeleteProject();
-
+            
             var analyses = new List<Analysis>();
 
             foreach (WizardDockPair pair in _wizards)
             {
                 analyses.Add(pair.Analysis);
+                //release all the user objects for the wizard dock pair
+                DisposeWizardDockPair(pair);
             }
 
             foreach(Analysis analysis in analyses)

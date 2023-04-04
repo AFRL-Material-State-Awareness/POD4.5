@@ -219,6 +219,9 @@ namespace POD
             _loader.Close();
 
             _loader.Dispose();
+
+            load_R.Dispose();
+
         }
 
         void _dockMgr_AllWizardsClosed(object sender, EventArgs e)

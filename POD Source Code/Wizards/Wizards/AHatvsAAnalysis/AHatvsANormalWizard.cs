@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using POD.Analyze;
 using POD.Wizards.Steps.FullAnalysisProjectSteps;
 
@@ -27,6 +28,31 @@ namespace POD.Wizards
             CreateWizardProgressStepListNode();
 
             CurrentStep = FirstStep;
+        }
+
+        public override void DeleteSteps()
+        {
+            foreach (var step in _list)
+            {
+                if (step is Steps.AHatVsANormalSteps.ChooseTransformStep ||
+                    step is Steps.AHatVsANormalSteps.DocumentRemovedStep)
+                {
+                    step.Dispose();
+                }
+                else if (step is Steps.AHatVsANormalSteps.FullRegressionStep)
+                {
+                    // you cannot outright dispose of the entire fullregression step
+                    // if you try to and reopen the analysis, the mainchart with still be disposed
+                    // when raiseanalysisdone is invoked
+                    ((Steps.AHatVsANormalSteps.FullRegressionPanel)step.Panel).DisposeAllExceptMainChart();
+                    step.ActionBar.Dispose();
+                    step.Title.Dispose();
+                    foreach (Control control in step.Controls)
+                    {
+                        control.Dispose();
+                    }
+                }
+            }
         }
     }
 }
