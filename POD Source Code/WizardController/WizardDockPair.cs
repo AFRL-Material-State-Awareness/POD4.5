@@ -402,17 +402,17 @@ namespace POD
 
                 Wizard.CurrentStep.Project.NullFinishArguments();
             }
-            Application.UseWaitCursor = true;
+            //Application.UseWaitCursor = true;
             Cursor.Current = Cursors.WaitCursor;
             OnSourceModified(this, e);
-
+            
             SetWizardToFirstStep();
             this.Wizard.CurrentStep.RefreshValues();
             //Dock.Hide();
             //Dock.Show();
-            
-            Application.UseWaitCursor = false;
+            //Application.UseWaitCursor = false;
             Cursor.Current = Cursors.Default;
+
         }
 
         /// <summary>
