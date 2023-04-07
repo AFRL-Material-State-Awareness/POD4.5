@@ -94,24 +94,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalysistypeTransform.cs" />
-    <Compile Include="AHatAnalysisObject.cs" />
     <Compile Include="AHatAnalysisRControl.cs" />
     <Compile Include="GenerateRTransformDF_HitMiss.cs" />
     <Compile Include="TransformBackCSharpTablesAHAT.cs" />
     <Compile Include="GenerateRTransformDF_AHAT.cs" />
     <Compile Include="TemporaryLambdaCalc.cs" />
     <Compile Include="HitMissAnalysisRControl.cs" />
-    <Compile Include="HMAnalysisObject.cs" />
     <Compile Include="MaxAndMinClass.cs" />
-    <Compile Include="ParentAnalysisObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="REngineObject.cs" />
     <Compile Include="TransformBackCSharpTablesHITMISS.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\POD\Global.csproj">
+      <Project>{f7db9280-e09a-470d-8fdb-3c97c538a6c1}</Project>
+      <Name>Global</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
