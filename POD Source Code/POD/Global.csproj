@@ -53,6 +53,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DynamicInterop, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicInterop.0.9.1\lib\netstandard2.0\DynamicInterop.dll</HintPath>
+    </Reference>
     <Reference Include="IronPython">
       <HintPath>..\PythonEnvironment\IronPython.dll</HintPath>
     </Reference>
@@ -62,9 +65,21 @@
     <Reference Include="Microsoft.Scripting">
       <HintPath>..\PythonEnvironment\Microsoft.Scripting.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="RDotNet, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\R.NET.1.9.0\lib\netstandard2.0\RDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -73,16 +88,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AHatAnalysisObject.cs" />
     <Compile Include="ErrorArgs.cs" />
     <Compile Include="EventRaisingStreamWriter.cs" />
     <Compile Include="GetProjectInfoArgs.cs" />
+    <Compile Include="HMAnalysisObject.cs" />
     <Compile Include="IPy4C.cs" />
+    <Compile Include="ParentAnalysisObject.cs" />
     <Compile Include="PODStatusBar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PODStatusBar.Designer.cs">
       <DependentUpon>PODStatusBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="REngineObject.cs" />
     <Compile Include="StepArgs.cs" />
     <Compile Include="FinishArgs.cs" />
     <Compile Include="Globals.cs" />
@@ -98,12 +117,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">
-      <Project>{910fe8f4-2cae-4a5b-8d9e-f5f3c099f80f}</Project>
-      <Name>CSharpBackendWithR</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
