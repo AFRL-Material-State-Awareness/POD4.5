@@ -2848,7 +2848,8 @@ namespace POD.Data
             
             if (_dataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.ModelType = _python.TransformEnumToInt(_flawTransform);
+                _hmAnalysisObject.FlawTransform =_python.TransformEnumToInt(_flawTransform);
+                HitMissModelUpdate();
             }
             else if (_dataType == AnalysisDataTypeEnum.AHat)
             {
@@ -2948,67 +2949,82 @@ namespace POD.Data
 
             return axis;
         }
+        private void HitMissModelUpdate()
+        {
+            switch (_hmAnalysisObject.FlawTransform)
+            {
+                case 1:
+                    _hmAnalysisObject.ModelType = TransformPairEnum.LinearLinear;
+                    break;
+                case 2:
+                    _hmAnalysisObject.ModelType = TransformPairEnum.LogLinear;
+                    break;
+                case 3:
+                    _hmAnalysisObject.ModelType = TransformPairEnum.InverseLinear;
+                    break;
+            }
+        }
         private void AHatModelUpdate()
         {
             //linear- linear
             if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 1;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearLinear;
             }
             //log - linear
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 2;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogLinear;
             }
             //linear- log
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 3;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearLog;
             }
             // log - log
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 4;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogLog;
             }
             // linear - box-cox
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 5;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearBoxcox;
             }
             // log - boxcox
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 6;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogBoxcox;
             }
             // inverse - boxcox
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 7;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseBoxcox;
             }
             // linear - inverse
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 8;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearInverse;
             }
             // log - inverse
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 9;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogInverse;
             }
             // inverse - linear
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 10;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseLinear;
             }
             // inverse - log
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 11;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseLog;
             }
             // inverse x - inverse y
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 12;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseInverse;
             }
         }
         public AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed)
@@ -3130,7 +3146,7 @@ namespace POD.Data
             return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
 
         }
-        public void UpdateHitMissModel(int modelType)
+        public void UpdateHitMissModel(TransformPairEnum modelType)
         {
             _hmAnalysisObject.ModelType = modelType;
         }

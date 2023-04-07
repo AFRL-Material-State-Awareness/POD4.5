@@ -268,7 +268,7 @@ namespace POD.Controls
             var view = data.OriginalData.AsDataView();
             
             //Original.Points.DataBindXY(view, "t_flaw", view, "hitrate");
-            if(data.HMAnalysisObject.ModelType == 99)
+            if(data.HMAnalysisObject.ModelType == null)
             {
                 Original.Points.DataBindXY(view, "flaw", view, "hitrate");
             }
@@ -291,8 +291,11 @@ namespace POD.Controls
         {
             var view = data.ResidualRawTable.AsDataView();
 
-            int modelType = data.AHATAnalysisObject.ModelType;
-            if (modelType == 7 || modelType==8 || modelType == 9 || modelType == 12)
+            TransformPairEnum modelType = data.AHATAnalysisObject.ModelType;
+            if (modelType == TransformPairEnum.InverseBoxcox || 
+                    modelType== TransformPairEnum.LinearInverse ||
+                modelType == TransformPairEnum.LogInverse || 
+                modelType == TransformPairEnum.InverseInverse)
             {
                 Original.Points.DataBindXY(view, "flaw", view, "transformResponse");
             }
@@ -568,7 +571,7 @@ namespace POD.Controls
             DataView view = data.ResidualUncensoredTable.DefaultView;
 
             //fitLine.Points.DataBindXY(view, "t_flaw", view, "t_fit");
-            if (data.HMAnalysisObject.ModelType == 99)
+            if (data.HMAnalysisObject.ModelType == null)
             {
                 fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using POD;
 using RDotNet;
 namespace CSharpBackendWithR
 {
@@ -52,40 +53,40 @@ namespace CSharpBackendWithR
             //create the appropriate dataframe based on the transform type
             switch (newAHatAnalysis.ModelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     NoTransformDF();
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     XAxisOnlyLogTransform();
                     break;
-                case 3:
+                case TransformPairEnum.LinearLog:
                     YAxisOnlyLogTransform();
                     break;
-                case 4:
+                case TransformPairEnum.LogLog:
                     YAndXLogTransform();
                     break;
-                case 5:
+                case TransformPairEnum.LinearBoxcox:
                     LinearXBoxcox();
                     break;
-                case 6:
+                case TransformPairEnum.LogBoxcox:
                     LogXBoxcox();
                     break;
-                case 7:
+                case TransformPairEnum.InverseBoxcox:
                     InverseXBoxcox();
                     break;
-                case 8:
+                case TransformPairEnum.LinearInverse:
                     LinearXInverseY();
                     break;
-                case 9:
+                case TransformPairEnum.LogInverse:
                     LogXInverseY();
                     break;
-                case 10:
+                case TransformPairEnum.InverseLinear:
                     InverseXLinearY();
                     break;
-                case 11:
+                case TransformPairEnum.InverseLog:
                     InverseXLogY();
                     break;
-                case 12:
+                case TransformPairEnum.InverseInverse:
                     InverseXInverseY();
                     break;
             }

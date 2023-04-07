@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using POD;
+
 namespace CSharpBackendWithR
 {
     [Serializable]
@@ -70,7 +72,7 @@ namespace CSharpBackendWithR
             //10= inverse x with linear y
             //11= inverse x with log y
             //12= inverse x with inverse y
-            this.modelType = 1; 
+            this.modelType = TransformPairEnum.LinearLinear; 
             //stores the max and min signal reponses
             Signalmin = -1.0;
             Signalmax = -1.0;

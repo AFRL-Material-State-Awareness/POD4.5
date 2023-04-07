@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using POD;
+
 namespace CSharpBackendWithR
 {
     public class TransformBackCSharpTablesAHAT
     {
         private double lambda;
-        private int modelType;
+        private TransformPairEnum modelType;
         private AHatAnalysisObject aHatAnalysisObject;
         public TransformBackCSharpTablesAHAT(AHatAnalysisObject aHatAnalysisObjectInput)
         {
@@ -22,35 +24,35 @@ namespace CSharpBackendWithR
             //used to transform the POD curve back to linear space
             switch (this.modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
                         _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.LinearLog:
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
                         _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
                     }
                     break;
-                case 4:
+                case TransformPairEnum.LogLog:
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
                         _fitResidualsTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][0]));
                         _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
                     }
                     break;
-                case 5:
+                case TransformPairEnum.LinearBoxcox:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
                         _fitResidualsTable.Rows[i][2] = NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * this.lambda + 1, this.lambda);
                     }
                     break;
-                case 6:
+                case TransformPairEnum.LogBoxcox:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
@@ -58,7 +60,7 @@ namespace CSharpBackendWithR
                         _fitResidualsTable.Rows[i][2] = NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * this.lambda + 1, this.lambda);
                     }
                     break;
-                case 7:
+                case TransformPairEnum.InverseBoxcox:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
@@ -66,14 +68,14 @@ namespace CSharpBackendWithR
                         _fitResidualsTable.Rows[i][2] = NthRoot(Convert.ToDouble(_fitResidualsTable.Rows[i][2]) * this.lambda + 1, this.lambda);
                     }
                     break;
-                case 8:
+                case TransformPairEnum.LinearInverse:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
                         _fitResidualsTable.Rows[i][2] = 1.0 / Convert.ToDouble(_fitResidualsTable.Rows[i][2]);
                     }
                     break;
-                case 9:
+                case TransformPairEnum.LogInverse:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
@@ -81,14 +83,14 @@ namespace CSharpBackendWithR
                         _fitResidualsTable.Rows[i][2] = 1.0 / Convert.ToDouble(_fitResidualsTable.Rows[i][2]);
                     }
                     break;
-                case 10:
+                case TransformPairEnum.InverseLinear:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
                         _fitResidualsTable.Rows[i][0] = 1.0 / Convert.ToDouble(_fitResidualsTable.Rows[i][0]);
                     }
                     break;
-                case 11:
+                case TransformPairEnum.InverseLog:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
@@ -96,7 +98,7 @@ namespace CSharpBackendWithR
                         _fitResidualsTable.Rows[i][2] = Math.Exp(Convert.ToDouble(_fitResidualsTable.Rows[i][2]));
                     }
                     break;
-                case 12:
+                case TransformPairEnum.InverseInverse:
                     //transform back box cox here;
                     for (int i = 0; i < _fitResidualsTable.Rows.Count; i++)
                     {
@@ -117,22 +119,22 @@ namespace CSharpBackendWithR
             }
             switch (modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.LinearLog:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
                         myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
                     }
                     break;
-                case 4:
+                case TransformPairEnum.LogLog:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
@@ -140,34 +142,34 @@ namespace CSharpBackendWithR
                         myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
                     }
                     break;
-                case 5:
+                case TransformPairEnum.LinearBoxcox:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         myResidTable.Rows[i][1] = NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * this.lambda + 1, this.lambda);
                     }
                     break;
-                case 6:
+                case TransformPairEnum.LogBoxcox:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         myResidTable.Rows[i][0] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][0]));
                         myResidTable.Rows[i][1] = NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * this.lambda + 1, this.lambda);
                     }
                     break;
-                case 7:
+                case TransformPairEnum.InverseBoxcox:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         myResidTable.Rows[i][0] = 1.0/(Convert.ToDouble(myResidTable.Rows[i][0]));
                         myResidTable.Rows[i][1] = NthRoot(Convert.ToDouble(myResidTable.Rows[i][1]) * this.lambda + 1, this.lambda);
                     }
                     break;
-                case 8:
+                case TransformPairEnum.LinearInverse:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
                         myResidTable.Rows[i][1] = 1.0 / Convert.ToDouble(myResidTable.Rows[i][1]);
                     }
                     break;
-                case 9:
+                case TransformPairEnum.LogInverse:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
@@ -175,14 +177,14 @@ namespace CSharpBackendWithR
                         myResidTable.Rows[i][1] = 1.0 / Convert.ToDouble(myResidTable.Rows[i][1]);
                     }
                     break;
-                case 10:
+                case TransformPairEnum.InverseLinear:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
                         myResidTable.Rows[i][0] = 1.0 / Convert.ToDouble(myResidTable.Rows[i][0]);
                     }
                     break;
-                case 11:
+                case TransformPairEnum.InverseLog:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
@@ -190,7 +192,7 @@ namespace CSharpBackendWithR
                         myResidTable.Rows[i][1] = Math.Exp(Convert.ToDouble(myResidTable.Rows[i][1]));
                     }
                     break;
-                case 12:
+                case TransformPairEnum.InverseInverse:
                     for (int i = 0; i < myResidTable.Rows.Count; i++)
                     {
                         //tranform back orginal flaws and/or reponses
@@ -245,63 +247,63 @@ namespace CSharpBackendWithR
             */
             switch (this.modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.LinearLog:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                     break;
-                case 4:
+                case TransformPairEnum.LogLog:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                     break;
-                case 5:
+                case TransformPairEnum.LinearBoxcox:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                     break;
-                case 6:
+                case TransformPairEnum.LogBoxcox:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                     break;
-                case 7:
+                case TransformPairEnum.InverseBoxcox:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = 1.0 / Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                     break;
-                case 8:
+                case TransformPairEnum.LinearInverse:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Convert.ToDouble(_podCurveTable.Rows[i][0]);
                     }
                     break;
-                case 9:
+                case TransformPairEnum.LogInverse:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_podCurveTable.Rows[i][0]));
                     }
                     break;
-                case 10:
-                case 11:
-                case 12:
+                case TransformPairEnum.InverseLinear:
+                case TransformPairEnum.InverseLog:
+                case TransformPairEnum.InverseInverse:
                     for (int i = 0; i < _podCurveTable.Rows.Count; i++)
                     {
                         _podCurveTable.Rows[i][0] = 1.0 / Convert.ToDouble(_podCurveTable.Rows[i][0]);
@@ -315,9 +317,9 @@ namespace CSharpBackendWithR
             double currThreshold;
             switch (modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         _thresholdPlotTable.Rows[i][1] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][1]));
@@ -325,13 +327,13 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.LinearLog:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
                     }
                     break;
-                case 4:
+                case TransformPairEnum.LogLog:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         _thresholdPlotTable.Rows[i][0] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][0]));
@@ -341,7 +343,7 @@ namespace CSharpBackendWithR
 
                     }
                     break;
-                case 5:
+                case TransformPairEnum.LinearBoxcox:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         currThreshold = Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
@@ -349,7 +351,7 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][0] = TransformBackBoxCox(currThreshold, this.lambda);
                     }
                     break;
-                case 6:
+                case TransformPairEnum.LogBoxcox:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back y thresholds
@@ -362,7 +364,7 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
                     }
                     break;
-                case 7:
+                case TransformPairEnum.InverseBoxcox:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back y thresholds
@@ -375,14 +377,14 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][3] = 1.0 / Convert.ToDouble(_thresholdPlotTable.Rows[i][3]);
                     }
                     break;
-                case 8:
+                case TransformPairEnum.LinearInverse:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back y thresholds
                         _thresholdPlotTable.Rows[i][0] = 1.0 / Convert.ToDouble(_thresholdPlotTable.Rows[i][0]);
                     }
                     break;
-                case 9:
+                case TransformPairEnum.LogInverse:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back y thresholds
@@ -393,7 +395,7 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][3] = Math.Exp(Convert.ToDouble(_thresholdPlotTable.Rows[i][3]));
                     }
                     break;
-                case 10:
+                case TransformPairEnum.InverseLinear:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back 'a' flaw sizes
@@ -402,7 +404,7 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][3] = 1.0 / Convert.ToDouble(_thresholdPlotTable.Rows[i][3]);
                     }
                     break;
-                case 11:
+                case TransformPairEnum.InverseLog:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back y thresholds
@@ -413,7 +415,7 @@ namespace CSharpBackendWithR
                         _thresholdPlotTable.Rows[i][3] = 1.0 / Convert.ToDouble(_thresholdPlotTable.Rows[i][3]);
                     }
                     break;
-                case 12:
+                case TransformPairEnum.InverseInverse:
                     for (int i = 0; i < _thresholdPlotTable.Rows.Count; i++)
                     {
                         //transform back y thresholds

@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Data;
 using System.Linq;
+using POD;
 
 namespace CSharpBackendWithR
 {
@@ -230,7 +231,9 @@ namespace CSharpBackendWithR
             //get r-squared value
             this.newAHatAnalysisObject.RSqaured = this.newAHatControl.GetRSquaredValue();
             //get lambda from box-cox if applicable
-            if (this.newAHatAnalysisObject.ModelType >= 5 && this.newAHatAnalysisObject.ModelType <= 7)
+            if (this.newAHatAnalysisObject.ModelType == TransformPairEnum.LinearBoxcox ||
+                this.newAHatAnalysisObject.ModelType == TransformPairEnum.LogBoxcox ||
+                this.newAHatAnalysisObject.ModelType == TransformPairEnum.InverseBoxcox)
             {
                 this.newAHatAnalysisObject.Lambda = this.newAHatControl.GetBoxCoxLamda();
             }

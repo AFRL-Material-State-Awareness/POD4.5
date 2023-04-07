@@ -1,4 +1,5 @@
-﻿using System;
+﻿using POD;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -33,7 +34,7 @@ namespace CSharpBackendWithR
         protected string Alevel; //set to a9095
         protected string Clevel; //set to a 95% confidence interval
         //used to set the default model type
-        protected int modelType;
+        protected TransformPairEnum modelType;
 
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace CSharpBackendWithR
         
         //represents the overall transform being done on an analysis
         //for reference see HMAnalysisObject.cs and AHatAnalysisObject.cs under this.modeltype=0
-        public int ModelType
+        public TransformPairEnum ModelType
         {
 
             set { this.modelType = value; }

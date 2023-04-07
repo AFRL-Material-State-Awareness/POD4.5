@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using POD;
 using RDotNet;
 namespace CSharpBackendWithR
 {
@@ -34,13 +35,13 @@ namespace CSharpBackendWithR
             //create the appropriate dataframe based on the transform type
             switch (newHMAnalysis.ModelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     NoTransformDF();
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     LogXTransform();
                     break;
-                case 3:
+                case TransformPairEnum.LinearInverse:
                     InverseXTransform();
                     break;
                 default:

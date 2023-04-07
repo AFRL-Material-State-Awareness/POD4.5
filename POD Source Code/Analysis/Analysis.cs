@@ -63,11 +63,11 @@ namespace POD.Analyze
         /// <summary>
         /// used to check if previous analyis is being loaded (used to handle when a saved file as exluded points
         /// </summary>
-        private bool _fileLoadHitMiss=false;
+        private bool _fileLoadHitMiss = false;
         /// <summary>
         /// used to update quick analysis (when the user adds or removes rows the chart updates
         /// </summary>
-        private bool _quickAnalysis=false;
+        private bool _quickAnalysis = false;
         /// <summary>
         /// Used to indicate that the run analysis a threshold change in the main regression panel
         /// </summary>
@@ -79,7 +79,7 @@ namespace POD.Analyze
                 if (stillRunningAnalysis)
                     return true;
 
-                if(analysisLauncher == null)
+                if (analysisLauncher == null)
                     return false;
 
                 return analysisLauncher.IsBusy && stillRunningAnalysis;
@@ -92,7 +92,7 @@ namespace POD.Analyze
             set
             {
                 Data.IsFrozen = value;
-                _isFrozen = value; 
+                _isFrozen = value;
             }
         }
         #region Fields
@@ -107,7 +107,7 @@ namespace POD.Analyze
         /// </summary>
         private DateTime _analysisDate;
 
-        
+
 
         #endregion
 
@@ -129,7 +129,7 @@ namespace POD.Analyze
             SetupAnalysisLauncher();
         }
 
-        
+
 
         public Analysis(DataSource mySource, List<string> myFlaws, List<string> myMetaDatas, List<string> myResponses,
             List<string> mySpecIDs)
@@ -260,7 +260,7 @@ namespace POD.Analyze
                 return Data.AvailableFlawNames[0];
             }
         }
-        
+
         /// <summary>
         ///     Units flaw size is measured in.
         /// </summary>
@@ -292,7 +292,7 @@ namespace POD.Analyze
             get { return _samplingHMType; }
             set { if (!IsFrozen) _samplingHMType = value; }
         }
-        
+
         private double NoBigNumbers(double myValue)
         {
             if (myValue > 1E9)
@@ -456,7 +456,7 @@ namespace POD.Analyze
         }
 
         double _outResponseDecisionPODA50Value;
-        
+
 
         /// <summary>
         ///     A50 flaw size for the response data decision threshold
@@ -503,7 +503,7 @@ namespace POD.Analyze
 
         //}
 
-        
+
 
         public void RestoreBackup(double mya50, double mya90, double mya9095)
         {
@@ -728,7 +728,7 @@ namespace POD.Analyze
             get { return _outTestNormalityRating; }
             set { if (!IsFrozen) _outTestNormalityRating = value; }
         }
-        
+
         /// <summary>
         ///     POD confidence level that is being calculated (95 in a90/95)
         /// </summary>
@@ -934,7 +934,7 @@ namespace POD.Analyze
             //REngineObject.REngineRunning = true;
             analysisLauncher.DoWork += new DoWorkEventHandler(Background_StartAnalysis);
             analysisLauncher.ProgressChanged += new ProgressChangedEventHandler(Background_AnalysisProgressChanged);
-            analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);           
+            analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
         }
 
         public TestRating GetTestRatingFromLabel(string myLabel)
@@ -974,20 +974,20 @@ namespace POD.Analyze
                     if (_analysisCalculationType == RCalculationType.Full)
                     {
                         newAnalysisControl.ExecuteAnalysisAHat();
-                    }                   
+                    }
                     else if (_analysisCalculationType == RCalculationType.ThresholdChange)
                     {
                         newAnalysisControl.ExecuteThresholdChange();
                     }
                     _finalAnalysisAHat = newAnalysisControl.AHatAnalysisResults;
                 }
-                    
+
             }
             //TODO: add exception handling here to ensure the value in the c# datatables are not null
             catch (Exception exp)
             {
                 var moreInfo = string.Empty;
-                
+
                 try
                 {
                     //MessageBox.Show("Analysis Error:" + Environment.NewLine + Environment.NewLine + exp.Message);
@@ -1032,7 +1032,7 @@ namespace POD.Analyze
 
                     moreInfo = Environment.NewLine + Environment.NewLine + moreInfo;
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     moreInfo = string.Empty;
                 }
@@ -1048,10 +1048,10 @@ namespace POD.Analyze
             }
             finally
             {
-                
+
             }
 
-                        
+
         }
 
         private void Background_AnalysisProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -1061,7 +1061,7 @@ namespace POD.Analyze
 
         private void Background_FinishedAnalysis(object sender, RunWorkerCompletedEventArgs e)
         {
-            while (analysisLauncher.IsBusy == true);
+            while (analysisLauncher.IsBusy == true) ;
 
             CopyOutputFromR();
 
@@ -1095,10 +1095,10 @@ namespace POD.Analyze
         }
 
         private void CopyOutputFromR()
-        {  
+        {
             _python.OutputWriter.StringWritten -= OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten -= ErrorWriter_StringWritten;
-            
+
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
                 OutModelIntercept = _aHatAnalysisObject.Intercept;
@@ -1120,7 +1120,7 @@ namespace POD.Analyze
                 OutTestLackOfFitCalculated = true;
                 OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
                 OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
-                OutTestEqualVarianceRating= _python.GetPValueDecision(OutTestEqualVariance_p);
+                OutTestEqualVarianceRating = _python.GetPValueDecision(OutTestEqualVariance_p);
                 OutTestAutoCorrelation_p = _aHatAnalysisObject.DurbinWatsonPValue;
                 OutTestAutoCorrelationRating = _python.GetPValueDecision(OutTestAutoCorrelation_p);
                 //A Values and sigma
@@ -1162,11 +1162,11 @@ namespace POD.Analyze
             {
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
                 List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
-                if(_hmAnalysisObject.CovarianceMatrix != null)
+                if (_hmAnalysisObject.CovarianceMatrix != null)
                 {
                     OutPFCovarianceV11 = covMatrix[0];
                     OutPFCovarianceV12 = covMatrix[1];
-                    OutPFCovarianceV22 = covMatrix[3];   
+                    OutPFCovarianceV22 = covMatrix[3];
                 }
                 else
                 {
@@ -1186,14 +1186,14 @@ namespace POD.Analyze
                 }
                 else if (InFlawTransform == TransformTypeEnum.Log)
                 {
-                    OutResponseDecisionPODSigma =Math.Exp(_hmAnalysisObject.Sighat);
+                    OutResponseDecisionPODSigma = Math.Exp(_hmAnalysisObject.Sighat);
                     OutResponseDecisionPODA50Value = Math.Exp(_hmAnalysisObject.A50);
                     OutResponseDecisionPODLevelValue = Math.Exp(_hmAnalysisObject.A90);
                     OutResponseDecisionPODConfidenceValue = Math.Exp(_hmAnalysisObject.A9095);
                 }
                 else if (InFlawTransform == TransformTypeEnum.Inverse)
                 {
-                    OutResponseDecisionPODSigma = 1/(_hmAnalysisObject.Sighat);
+                    OutResponseDecisionPODSigma = 1 / (_hmAnalysisObject.Sighat);
                     OutResponseDecisionPODA50Value = 1 / (_hmAnalysisObject.A50);
                     OutResponseDecisionPODLevelValue = 1 / (_hmAnalysisObject.A90);
                     OutResponseDecisionPODConfidenceValue = 1 / (_hmAnalysisObject.A9095);
@@ -1215,7 +1215,7 @@ namespace POD.Analyze
             }
 
             Data.UpdateOutput(_analysisCalculationType);
-            
+
             Data.ResponseLeft = InResponseMin;
             Data.ResponseRight = InResponseMax;
 
@@ -1236,7 +1236,7 @@ namespace POD.Analyze
             List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
             TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, _rDotNet);
             lambdaTemp = TempLambda.CalcTempLambda();
-            InLambdaValue= lambdaTemp;
+            InLambdaValue = lambdaTemp;
         }
         public void UpdateProgress(Object sender, int myProgressOutOf100)
         {
@@ -1313,10 +1313,11 @@ namespace POD.Analyze
                 InFlawTransform = TransformTypeEnum.Log;
                 Data.FlawTransform = InFlawTransform;
 
-                if(_python != null) {
+                if (_python != null) {
                     //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
-                    _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
-                }  
+                    _hmAnalysisObject.FlawTransform = _python.TransformEnumToInt(Data.FlawTransform);
+                    HitMissModelUpdate();
+                }
             }
         }
 
@@ -1354,7 +1355,7 @@ namespace POD.Analyze
             {
                 AnalysisDataType = _data.RecheckAnalysisType(forcedType);
             }
-            else 
+            else
                 AnalysisDataType = _data.DataType;
         }
 
@@ -1371,7 +1372,8 @@ namespace POD.Analyze
                     //InFlawTransform = _python.TransformEnumToInt(Data.FlawTransform);
                     Data.FlawTransform = InFlawTransform;
                     //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
-                    _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
+                    _hmAnalysisObject.FlawTransform = _python.TransformEnumToInt(Data.FlawTransform);
+                    HitMissModelUpdate();
                 }
 
                 ForceUpdateInputsFromData();
@@ -1468,7 +1470,7 @@ namespace POD.Analyze
             Compute.SanityCheck(ref myMin, ref myMax);
         }
 
-        
+
 
 
 
@@ -1509,10 +1511,10 @@ namespace POD.Analyze
         public bool CheckForTurnedOffPoints(int index)
         {
             //assume the data point is turned on 
-            bool turnedOn= true;
-            foreach(DataPointIndex dataPointIndex in Data.TurnedOffPoints)
+            bool turnedOn = true;
+            foreach (DataPointIndex dataPointIndex in Data.TurnedOffPoints)
             {
-                if(dataPointIndex.RowIndex == index)
+                if (dataPointIndex.RowIndex == index)
                 {
                     turnedOn = false;
                     break;
@@ -1529,13 +1531,13 @@ namespace POD.Analyze
                 int index = 0;
                 List<double> hmInludedFlaws = new List<double>();
                 List<double> hmIncludedResponses = new List<double>();
-                if (_hmAnalysisObject.ModelType==3)
+                if (_hmAnalysisObject.ModelType == TransformPairEnum.InverseLinear)
                 {
                     InFlawMax = _hmAnalysisObject.Flaws_All.Max();
                 }
                 foreach (double flaw in _hmAnalysisObject.Flaws_All)
                 {
-                    if(flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
+                    if (flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
                     {
                         hmInludedFlaws.Add(flaw);
                         int responseIndex = _hmAnalysisObject.Flaws_All.IndexOf(flaw);
@@ -1550,14 +1552,14 @@ namespace POD.Analyze
                 }
                 //overwrite the temporary flaw variables in HitMiss object
                 _hmAnalysisObject.Flaws = hmInludedFlaws;
-                
+
                 //_hmAnalysisObject.Responses["y"] = hmIncludedResponses;
                 _hmAnalysisObject.Responses[_hmAnalysisObject.HitMiss_name] = hmIncludedResponses;
             }
             //ahat analysis
             else
             {
-                if(_aHatAnalysisObject.Signalmax==-1)
+                if (_aHatAnalysisObject.Signalmax == -1)
                 {
                     _aHatAnalysisObject.Signalmax = _aHatAnalysisObject.GetMaxResponse();
                 }
@@ -1607,7 +1609,7 @@ namespace POD.Analyze
         /// <summary>
         ///     Run analysis with current settings and data. Output data will be overwritten.
         /// </summary>
-        public void RunAnalysis(bool quickAnalysis=false)
+        public void RunAnalysis(bool quickAnalysis = false)
         {
             _quickAnalysis = quickAnalysis;
             if (IsFrozen)
@@ -1629,7 +1631,7 @@ namespace POD.Analyze
                 CopyInputToR();
                 UpdateCensoredData();
                 _python.FailedRunCount = 0;
-                
+
                 //The analysis is run with parallelization. Use the 'threads' window to see what each worker is computing
                 analysisLauncher.RunWorkerAsync();
 
@@ -1642,9 +1644,9 @@ namespace POD.Analyze
 
                 _python.FailedRunCount++;
 
-                if(_python.FailedRunCount >= 4)
+                if (_python.FailedRunCount >= 4)
                 {
-                    Show_R_CodeStuckMessage();                    
+                    Show_R_CodeStuckMessage();
                 }
             }
         }
@@ -1677,12 +1679,12 @@ namespace POD.Analyze
             }
             else
             {
-                _aHatAnalysisObject.ProgressText= "Starting Analysis";
+                _aHatAnalysisObject.ProgressText = "Starting Analysis";
             }
-            
+
             // store the analysis name in the python engine object 
             _python.CurrentAnalysisName = Name;
-            
+
             _python.OutputWriter.StringWritten += OutputWriter_StringWritten;
             _python.ErrorWriter.StringWritten += ErrorWriter_StringWritten;
 
@@ -1716,7 +1718,7 @@ namespace POD.Analyze
             //    _fileLoadHitMiss = true;
             //}
             CheckForLoadFileWithCensoredData();
-            
+
             if (!_fileLoadHitMiss)
             {
                 Data.UpdateData(_quickAnalysis);
@@ -1782,7 +1784,7 @@ namespace POD.Analyze
                 thresholds.Add(value);
             }
             */
-            
+
         }
         //this function checks to see if the user is loading a saved file in which data was censored. If so, the flag is turned on
         public void CheckForLoadFileWithCensoredData()
@@ -1810,8 +1812,8 @@ namespace POD.Analyze
             //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
-
+                _hmAnalysisObject.FlawTransform = _python.TransformEnumToInt(Data.FlawTransform);
+                HitMissModelUpdate();
             }
             else
             {
@@ -1821,8 +1823,23 @@ namespace POD.Analyze
             //_podDoc.ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
-                _aHatAnalysisObject.Ahat_transform= _python.TransformEnumToInt(Data.ResponseTransform);
+                _aHatAnalysisObject.Ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
                 AHatModelUpdate();
+            }
+        }
+        private void HitMissModelUpdate()
+        {
+            switch (_hmAnalysisObject.FlawTransform)
+            {
+                case 1:
+                    _hmAnalysisObject.ModelType = TransformPairEnum.LinearLinear;
+                    break;
+                case 2:
+                    _hmAnalysisObject.ModelType = TransformPairEnum.LogLinear;
+                    break;
+                case 3:
+                    _hmAnalysisObject.ModelType = TransformPairEnum.InverseLinear;
+                    break;
             }
         }
         private void AHatModelUpdate()
@@ -1830,62 +1847,62 @@ namespace POD.Analyze
             //linear- linear
             if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 1;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearLinear;
             }
             //log - linear
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 2;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogLinear;
             }
             //linear- log
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 3;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearLog;
             }
             // log - log
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 4;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogLog;
             }
             // linear - box-cox
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 5;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearBoxcox;
             }
             // log - boxcox
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 6;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogBoxcox;
             }
             // inverse - boxcox
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 7;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseBoxcox;
             }
             // linear - inverse
             else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 8;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LinearInverse;
             }
             // log - inverse
             else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 9;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.LogInverse;
             }
             // inverse - linear
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 10;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseLinear;
             }
             // inverse - log
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 11;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseLog;
             }
             // inverse x - inverse y
             else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 12;
+                _aHatAnalysisObject.ModelType = TransformPairEnum.InverseInverse;
             }
         }
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
@@ -2861,7 +2878,7 @@ namespace POD.Analyze
                     //reset the model type to 1 in order to prevent a blank chart showing up(linear)
                     if (Data.FlawTransform == TransformTypeEnum.Linear)
                     {
-                        _hmAnalysisObject.ModelType = 1;
+                        _hmAnalysisObject.ModelType = TransformPairEnum.LinearLinear;
                     }
                 }
             }

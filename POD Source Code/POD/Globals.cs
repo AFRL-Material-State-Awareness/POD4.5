@@ -1185,6 +1185,22 @@ namespace POD
         Custom,
         None
     }
+    public enum TransformPairEnum
+    {
+        LinearLinear,
+        LogLinear,
+        LinearLog,
+        LogLog,
+        LinearBoxcox,
+        LogBoxcox,
+        InverseBoxcox,
+        LinearInverse,
+        LogInverse,
+        InverseLinear,
+        InverseLog,
+        InverseInverse,
+
+    }
     public enum ConfidenceIntervalTypeEnum
     {
         StandardWald,

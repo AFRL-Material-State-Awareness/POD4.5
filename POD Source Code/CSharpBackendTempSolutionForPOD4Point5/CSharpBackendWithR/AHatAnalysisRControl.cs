@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using POD;
 using RDotNet;
 namespace CSharpBackendWithR
 {
@@ -152,7 +153,7 @@ namespace CSharpBackendWithR
             this.myREngine.Evaluate("rm(ahatvACensored)");
             this.myREngine.Evaluate("rm(fullAnalysis)");
         }
-        private void InitializeRClassForSignalResponse(double pod_threshold, int modelType)
+        private void InitializeRClassForSignalResponse(double pod_threshold, TransformPairEnum modelType)
         {
             
             this.myREngine.Evaluate("newSRAnalysis<-AHatAnalysis$new(signalRespDF=AHatDFTest, y_dec=" + pod_threshold + ", " +

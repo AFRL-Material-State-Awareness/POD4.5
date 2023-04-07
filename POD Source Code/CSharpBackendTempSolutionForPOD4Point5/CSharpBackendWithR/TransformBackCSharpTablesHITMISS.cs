@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using POD;
+
 namespace CSharpBackendWithR
 {
     public class TransformBackCSharpTablesHITMISS
     {
         private HMAnalysisObject hmAnalysisObject;
-        private double modelType;
+        private TransformPairEnum modelType;
         public TransformBackCSharpTablesHITMISS(HMAnalysisObject hmAnalysisObjectInput, double modelTypeInput=0.0)
         {
             this.hmAnalysisObject = hmAnalysisObjectInput;
@@ -19,20 +21,20 @@ namespace CSharpBackendWithR
         {
             switch (this.modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     for (int i = 0; i < originalData.Rows.Count; i++)
                     {
                         originalData.Rows[i][1] = Convert.ToDouble(originalData.Rows[i][0]);
                     }
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < originalData.Rows.Count; i++)
                     {
                         originalData.Rows[i][1] = Convert.ToDouble(originalData.Rows[i][0]);
                         originalData.Rows[i][0] = Math.Exp(Convert.ToDouble(originalData.Rows[i][0]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.InverseLinear:
                     for (int i = 0; i < originalData.Rows.Count; i++)
                     {
                         originalData.Rows[i][1] = Convert.ToDouble(originalData.Rows[i][0]);
@@ -46,15 +48,15 @@ namespace CSharpBackendWithR
         {
             switch(this.modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < podCurveTable.Rows.Count; i++)
                     {
                         podCurveTable.Rows[i][0] = Math.Exp(Convert.ToDouble(podCurveTable.Rows[i][0]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.InverseLinear:
                     for (int i = 0; i < podCurveTable.Rows.Count; i++)
                     {
                         podCurveTable.Rows[i][0] = 1.0 / Convert.ToDouble(podCurveTable.Rows[i][0]);
@@ -71,20 +73,20 @@ namespace CSharpBackendWithR
             }
             switch (this.modelType)
             {
-                case 1:
+                case TransformPairEnum.LinearLinear:
                     for (int i = 0; i < residualUncensoredTable.Rows.Count; i++)
                     {
                         residualUncensoredTable.Rows[i][1] = Convert.ToDouble(residualUncensoredTable.Rows[i][0]);
                     }
                     break;
-                case 2:
+                case TransformPairEnum.LogLinear:
                     for (int i = 0; i < residualUncensoredTable.Rows.Count; i++)
                     {
                         residualUncensoredTable.Rows[i][1] = Convert.ToDouble(residualUncensoredTable.Rows[i][0]);
                         residualUncensoredTable.Rows[i][0] = Math.Exp(Convert.ToDouble(residualUncensoredTable.Rows[i][0]));
                     }
                     break;
-                case 3:
+                case TransformPairEnum.InverseLinear:
                     for (int i = 0; i < residualUncensoredTable.Rows.Count; i++)
                     {
                         residualUncensoredTable.Rows[i][1] = Convert.ToDouble(residualUncensoredTable.Rows[i][0]);

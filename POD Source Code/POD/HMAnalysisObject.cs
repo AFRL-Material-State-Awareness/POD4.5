@@ -1,4 +1,5 @@
-﻿using System;
+﻿using POD;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -30,6 +31,8 @@ namespace CSharpBackendWithR
         //flag used for separated Data and whether or not the alogrithm converged
         private bool isSeparated;
         private bool failureToConverge;
+
+        private int flawTransform;
         public HMAnalysisObject(string nameInput="") : base()
         {
             //original HMDataframe
@@ -42,13 +45,15 @@ namespace CSharpBackendWithR
             Podfile = null;
             //name of the analysis
             Name = nameInput;
+
+            flawTransform = 0;
             //Info_row = 0;
             /// <summary>
             /// becomes 1 if linear
             /// 2 if log
             /// 3 if inverse
             /// </summary>
-            this.modelType = 1; 
+            this.modelType = TransformPairEnum.LinearLinear; 
             this.regressionType = "Logistic Regression";//becomes logit, firth, or lasso (logit by default)
             Flaw_name = ""; //holds the name of the flaw in the datatable
             HitMiss_name = "";
@@ -94,6 +99,12 @@ namespace CSharpBackendWithR
             this.maxResamples = 30; //1 by default
             //goodness of fit test with likelihood ratio
             this.goodnessOfFit = -1.0;
+        }
+
+        public int FlawTransform
+        {
+            set { this.flawTransform = value; }
+            get { return this.flawTransform; }
         }
         public DataTable HitMissDataOrig
         {

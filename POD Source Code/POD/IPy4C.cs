@@ -185,6 +185,23 @@ namespace POD
 
             return transform;
         }
+        public TransformPairEnum ConvertHitMissEnum(int modelType)
+        {
+            TransformPairEnum transform = TransformPairEnum.LinearLinear;
+
+            switch (modelType)
+            {
+                case 1:
+                    break;
+                case 2:
+                    transform = TransformPairEnum.LogLinear;
+                    break;
+                case 3:
+                    transform = TransformPairEnum.InverseLinear;
+                    break;                
+            }
+            return transform;
+        }
         /// <summary>
         /// 
         /// </summary>
