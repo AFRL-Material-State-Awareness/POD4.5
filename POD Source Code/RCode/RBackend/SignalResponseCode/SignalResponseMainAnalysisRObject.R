@@ -413,13 +413,21 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
                                       a.covariance.matrix <- a.hat.vs.a.censored$var
                                       varCovarMatrix<<-a.covariance.matrix
-                                      # get Mu, sigma and key A values
+                                      # Transform backward into the original units
+                                      # if(lambda!=0){
+                                      #   a.hat.decision = (a.hat.decision*lambda+1)^(1/lambda)
+                                      # }else{
+                                      #   a.hat.decision = exp(a.hat.decision)
+                                      # }
                                       aMu <- (a.hat.decision - a.b0)/a.b1
                                       aSigma <- a.tau/a.b1
+                                      POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                      a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
                                       a50 <- aMu
                                       a90 <- aMu + qnorm(0.9) * aSigma
                                       z90 <- qnorm(0.9)
-                                      a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
+                                      #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
+                                      a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
                                       a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                       SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
                                       a9095 <- aMu + z90 * aSigma + qnorm(0.95) * SD.a.90
@@ -445,13 +453,15 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       varCovarMatrix<<-a.covariance.matrix
                                       for(i in thresholds){
                                         a.hat.decision = i # = 200
-                                        # get Mu, sigma and key A values for the given threshold
                                         aMu <- (a.hat.decision - a.b0)/a.b1
                                         aSigma <- a.tau/a.b1
+                                        POD.transition.matrix <- matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
+                                        a.VCV <- (-1/a.b1)^2 * t(POD.transition.matrix)
                                         a50 <- aMu
                                         a90 <- aMu + qnorm(0.9) * aSigma
                                         z90 <- qnorm(0.9)
-                                        a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
+                                        #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
+                                        a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
                                         a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                         SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
                                         a9095 <- aMu + z90 * aSigma + qnorm(0.95) * SD.a.90
