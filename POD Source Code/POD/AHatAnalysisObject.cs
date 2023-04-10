@@ -314,6 +314,16 @@ namespace CSharpBackendWithR
             set { this.aHatNormalCurveTable = value; }
             get { return this.aHatNormalCurveTable; }
         }
+        public int MaxPrecision
+        {
+            get
+            {
+                if (this.maxPrecisionFlaws > this.maxPrecisionResponses)
+                    return this.maxPrecisionFlaws;
+                else
+                    return this.maxPrecisionResponses;
+            }
+        }
         public double GetMaxResponse()
         {
             double overallMax = -1;

@@ -157,6 +157,11 @@ namespace CSharpBackendWithR
             set { this.goodnessOfFit = value; }
             get { return this.goodnessOfFit; }
         } 
+
+        public int MaxPrecision
+        {
+            get { return this.maxPrecisionFlaws; }
+        }
         
         public void ClearMetrics()
         {
