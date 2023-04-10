@@ -205,48 +205,6 @@ namespace POD
             }
             return type;
         }
-        /*
-        //returns the value for the respective data analyis type
-        public int AnalysisDataTypeEnumToInt(AnalysisDataTypeEnum myAnalysisDataType)
-        {
-            int analysisDataType = 0;
-
-            switch (myAnalysisDataType)
-            {
-                case AnalysisDataTypeEnum.AHat:
-                    analysisDataType = 1;
-                    break;
-                case AnalysisDataTypeEnum.HitMiss:
-                    analysisDataType = 2;
-                    break;
-                default:
-                    analysisDataType = 0;
-                    break;
-            }
-
-            return analysisDataType;
-        }
-        //used to determine if the normal or odds model is to be generated (it is normal by default)
-        public int PFModelEnumToInt(HitMissRegressionType myModel)
-        {
-            int modelType = 0;
-
-            switch (myModel)
-            {
-                case HitMissRegressionType.LogisticRegression:
-                    modelType = 0;
-                    break;
-                case HitMissRegressionType.FirthLogisticRegression:
-                    modelType = 2;
-                    break;
-                default:
-                    modelType = 0;
-                    break;
-            }
-
-            return modelType;
-        }
-        */
         //used to output the decision value
         //self.choices = ["P > 0.1", "0.05 < P <= 0.1", ".025 < P <= 0.05",
         //                "0.01 < P <= .025", ".005 < P <= 0.01", "P <= .005", "Undefined"]
@@ -339,6 +297,31 @@ namespace POD
             //Console.WriteLine((long)(intVal * deno) +
             //                      num + "/" + deno);
         }
+        /// <summary>
+        /// This method gets the max precision of either the flaws, responses, or both
+        /// for labeling the graphs.
+        /// </summary>
+        /// <param name="podItems"></param>
+        public static int GetMaxPrecision(List<double> podItems)
+        {
+            int maxPrecision = 0;
+
+            foreach(double item in podItems)
+            {
+                string numAsString = item.ToString();
+                string[] splitDouble = numAsString.Split('.');
+                int currPrecision;
+                if (splitDouble.Length < 2)
+                    currPrecision = 0;
+                else
+                    currPrecision = splitDouble[1].Length;
+                if (currPrecision > maxPrecision)
+                    maxPrecision = currPrecision;
+            }
+
+            return maxPrecision;
+        }
+
         public void Close()
         {
             _hitMissAnalyses.Clear();
