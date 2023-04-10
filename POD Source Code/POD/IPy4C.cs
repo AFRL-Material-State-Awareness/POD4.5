@@ -322,6 +322,20 @@ namespace POD
             return maxPrecision;
         }
 
+        public static int GetMaxPrecisionDict(Dictionary<string, List<double>> podDictionary)
+        {
+            int maxPrecision = 0;
+
+            foreach (List<double> item in podDictionary.Values)
+            {
+                int currPrecision= GetMaxPrecision(item);
+                if (currPrecision > maxPrecision)
+                    maxPrecision = currPrecision;
+            }
+
+            return maxPrecision;
+        }
+
         public void Close()
         {
             _hitMissAnalyses.Clear();

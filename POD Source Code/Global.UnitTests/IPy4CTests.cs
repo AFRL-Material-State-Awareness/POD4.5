@@ -75,5 +75,37 @@ namespace Global.UnitTests
             //Assert
             Assert.That(result, Is.EqualTo(3));
         }
+        /// <summary>
+        /// Unit tests for GetMaxPrecisionDict. The responses are a dictionary type
+        /// in signal response, so this meethod is used to deal with multiple responses
+        /// </summary>
+        [Test]
+        public void GetMaxPrecisionDict_OneDictionaryItem_Returns3()
+        {
+            //Arrange
+            Dictionary<string, List<double>> podDict = new Dictionary<string, List<double>>();
+            podDict.Add("test1,", new List<double> { .123, .12, .1 });
+
+            //Act
+            int result = IPy4C.GetMaxPrecisionDict(podDict);
+
+            //Arrange
+            Assert.That(result, Is.EqualTo(3));
+
+        }
+        [Test]
+        public void GetMaxPrecisionDict_TwoDictionaryItems_Returns3()
+        {
+            //Arrange
+            Dictionary<string, List<double>> podDict = new Dictionary<string, List<double>>();
+            podDict.Add("test1,", new List<double> { .123, .12, .1 });
+            podDict.Add("test2,", new List<double> { .1, .2, .3 });
+            //Act
+            int result = IPy4C.GetMaxPrecisionDict(podDict);
+
+            //Arrange
+            Assert.That(result, Is.EqualTo(3));
+
+        }
     }
 }
