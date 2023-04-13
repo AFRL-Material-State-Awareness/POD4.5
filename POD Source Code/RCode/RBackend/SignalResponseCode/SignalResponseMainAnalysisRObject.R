@@ -111,6 +111,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         Range=c(0,0,0,0,0),
                                         Freq=c(0,0,0,0,0)
                                       )
+                                      normalCurveTable<<-data.frame(
+                                        Response=c(0,0,0,0,0),
+                                        Range=c(0,0,0,0,0)
+                                      )
                                       critPts<<-data.frame(
                                         index=-1,
                                         a_25_25=-1,
