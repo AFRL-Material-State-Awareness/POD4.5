@@ -96,7 +96,7 @@ namespace POD
             get { return _errorWriter; }
         }
 
-        public IPy4C()//, PODStatusBar myBar)
+        public IPy4C()
         {
             _outputStream = new MemoryStream();
             _errorStream = new MemoryStream();
@@ -104,7 +104,6 @@ namespace POD
             _outputWriter = new EventRaisingStreamWriter(_outputStream);
             _errorWriter = new EventRaisingStreamWriter(_errorStream);
 
-            //_cpDocs = new Dictionary<string, dynamic>();
             //used to store the hitmiss analyses
             _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
             //used to store ahat analyses
@@ -250,13 +249,8 @@ namespace POD
                             fVal * pVal), pVal);
 
             // Calculate num and deno
-            //long num = (long)Math.Round(fVal * pVal) / gcdVal;
-            //long deno = pVal / gcdVal;
             numerator= (long)Math.Round(fVal * pVal) / gcdVal;
             denominator= pVal / gcdVal;
-            // Print the fraction
-            //Console.WriteLine((long)(intVal * deno) +
-            //                      num + "/" + deno);
         }
         /// <summary>
         /// This method gets the max precision of either the flaws, responses, or both
@@ -300,6 +294,7 @@ namespace POD
         public void Close()
         {
             _hitMissAnalyses.Clear();
+            _ahatAnalyses.Clear();
             try
             {
                 _outputStream.Flush();
@@ -334,16 +329,6 @@ namespace POD
             try
             {
                 _outputWriter.Close();
-            }
-            catch
-            {
-
-            }
-
-            try
-            {
-                //_pyEngine.Runtime.Shutdown();
-                
             }
             catch
             {
