@@ -1331,14 +1331,31 @@ namespace POD.Controls
                 return "";
             }
         }
+        private int GetPrecisionFromData()
+        {
+            int maxPrecision=10;
+            if (_analysisData.RecheckAnalysisType(AnalysisDataTypeEnum.None) == AnalysisDataTypeEnum.AHat)
+                maxPrecision = _analysisData.AHATAnalysisObject.MaxPrecision;
+            else if (_analysisData.RecheckAnalysisType(AnalysisDataTypeEnum.None) == AnalysisDataTypeEnum.HitMiss)
+                maxPrecision = _analysisData.HMAnalysisObject.MaxPrecision;
+
+            return maxPrecision;
+        }
         //private void LabelBoxCoxAxis(Axis chartaxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offest, bool redoing= false, Transform)
         private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
         {
             var lastString = "";
             var precision = 1;
+            var maxPrecision = 10;
+            if(_analysisData != null)
+            {
+                maxPrecision = GetPrecisionFromData();
+            }
+
+
             // when lambda value is negative. The top label will be negative due to the nature of the backwards transform function
             // thus, the top label is simply omitted. DO NOT DELETE.
-            if(lambdaValue < 0)
+            if (lambdaValue < 0)
             {
                 labelCount -=1;
             }
@@ -1352,7 +1369,7 @@ namespace POD.Controls
 
                 if (invert != null && intv != 0.0)
                     //intvString = invert(intv).ToString(format);                   
-                    intvString = TransformBackValue(intv, myTransform, lambdaValue).ToString();
+                    intvString = Math.Round(TransformBackValue(intv, myTransform, lambdaValue), maxPrecision).ToString();
                 else
                     intvString = intv.ToString(format);
 
@@ -1360,7 +1377,7 @@ namespace POD.Controls
 
                 double diff = Math.Abs(intv - convertedIntv);
 
-                if ((intvString == lastString || diff > Math.Abs(intv * .1)) && precision < 10)
+                if ((intvString == lastString || diff > Math.Abs(intv * .1)) && precision < maxPrecision)
                 {
                     i = -1;
                     precision++;

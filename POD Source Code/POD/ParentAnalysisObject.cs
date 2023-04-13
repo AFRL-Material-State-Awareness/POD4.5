@@ -1,4 +1,5 @@
-﻿using System;
+﻿using POD;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -28,6 +29,11 @@ namespace CSharpBackendWithR
         protected float Pf_censor_test_result;
         protected bool Pf_censor_test_pass;
 
+        protected List<double> flaw_all;
+        Dictionary<string, List<double>> responses_all;
+
+        protected int maxPrecisionFlaws;
+        protected int maxPrecisionResponses;
 
         protected string Asize; //set to a90
         protected string Alevel; //set to a9095
@@ -41,6 +47,9 @@ namespace CSharpBackendWithR
         /// </summary>
         protected ParentAnalysisObject()
         {
+            flaw_all = new List<double>();
+            responses_all = new Dictionary<string, List<double>>();
+
             Count = 0; //the original number of data points in a given analysis
             //max and min crack sizes
             Crckmin = 0.0;
@@ -87,13 +96,33 @@ namespace CSharpBackendWithR
 
         public string Flaw_name { set; get; }
         public List<double> Flaws { set; get; }
-        public List<double> Flaws_All { set; get; }
+        public List<double> Flaws_All
+        {
+            set { 
+                this.flaw_all = value;
+                this.maxPrecisionFlaws = IPy4C.GetMaxPrecision(value);
+            }
+            get
+            {
+                return this.flaw_all;
+            }
+        }
         public List<double> LogFlaws_All { set; get; }
         //TODO: ause this with signal response too?
         public List<double> InverseFlaws_All;
         public List<double> ExcludedFlaws { set; get; }
         public Dictionary<string, List<double>> Responses { set; get; }//used for POD with excluded points
-        public Dictionary<string, List<double>> Responses_all { set; get; }//used for POD when no points are missing(keeps original data intact)
+        public Dictionary<string, List<double>> Responses_all
+        {
+            set { 
+                this.responses_all = value;
+                this.maxPrecisionFlaws = IPy4C.GetMaxPrecisionDict(value);
+            }
+            get
+            {
+                return this.responses_all;
+            }
+        }//used for POD when no points are missing(keeps original data intact)
         public int Count { set; get; } //number of data points
 
         //flaw ranges
