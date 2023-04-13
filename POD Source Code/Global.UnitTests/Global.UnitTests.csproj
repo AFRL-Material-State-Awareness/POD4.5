@@ -54,6 +54,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AHatAnlysisObjectTests.cs" />
     <Compile Include="IPy4CTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
