@@ -180,36 +180,20 @@ namespace POD
         //                "0.01 < P <= .025", ".005 < P <= 0.01", "P <= .005", "Undefined"]
         public string GetPValueDecision(double myValue)
         {
-            string decisionString = "";
-            if(myValue > 0.1)
-            {
-                decisionString = "P > 0.1";
-            }
-            else if(myValue <= 0.1 && myValue > .05)
-            {
-                decisionString = "0.05 < P <= 0.1";
-            }
-            else if(myValue <= .05 && myValue > .025)
-            {
-                decisionString = ".025 < P <= 0.05";
-            }
-            else if(myValue <= .025 && myValue > .01)
-            {
-                decisionString = "0.01 < P <= .025";
-            }
-            else if (myValue <= .01 && myValue > .005)
-            {
-                decisionString = ".005 < P <= 0.01";
-            }
-            else if (myValue <= .005 && myValue >= 0.0)
-            {
-                decisionString = "P <= .005";
-            }
+            if (myValue > .1)
+                return "P > 0.1";
+            else if (myValue > .05)
+                return "0.05 < P <= 0.1";
+            else if (myValue > .025)
+                return ".025 < P <= 0.05";
+            else if (myValue > .01)
+                return "0.01 < P <= .025";
+            else if (myValue > .005)
+                return ".005 < P <= 0.01";
+            else if (myValue >= 0.0)
+                return "P <= .005";
             else
-            {
-                decisionString = "Undefined";
-            }
-            return decisionString;
+                return "Undefined";
         }
         //used to calculate the nth root given a double 'A'
         //source : https://stackoverflow.com/questions/55987201/calculating-the-cubic-root-for-negative-number
