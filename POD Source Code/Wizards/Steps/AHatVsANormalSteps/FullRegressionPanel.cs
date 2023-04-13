@@ -119,6 +119,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             lackOfFitTestOut.Dispose();
 
+            //Analysis.Data.AHATAnalysisObject.Flaws.Clear();
+
             DisposeLabels();
         }
         private void DisposeLabels()
@@ -806,6 +808,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             thresholdChart.ChartToolTip = StepToolTip;
 
             normalityChart.FillChart(Analysis.Data.NormalityTable, Analysis.Data.NormalityCurveTable);
+            normalityChart.SetXAxisRange(Analysis.Data.GetYBufferedRange(normalityChart, false), Analysis.Data, true);
             StepToolTip.SetToolTip(normalityChart, normalityChart.TooltipText);
 
 
