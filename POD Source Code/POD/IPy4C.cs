@@ -216,7 +216,7 @@ namespace POD
         //author : Tim ---- https://stackoverflow.com/users/6785695/tim
         public static double NthRoot(double A, double root, double checkLambdaDenominator=2.0)
         {
-            if(checkLambdaDenominator % 2 != 0 && A<0)
+            if(checkLambdaDenominator % 2 != 0 && A < 0)
             {
                 return -Math.Pow(-A, 1.0 / root);
             }
@@ -240,7 +240,14 @@ namespace POD
         // Function to convert decimal to fraction
         public static void DecimalToFraction(double number, out long numerator, out long denominator)
         {
-
+            if (number >= 1)
+            {
+                throw new Exception("Error: input to decimal fraction conversion cannot be a mixed number");
+            }
+            else if(number < 0)
+            {
+                throw new Exception("Error: input to decimal fraction conversion cannot be a negative number");
+            }
             // Fetch integral value of the decimal
             double intVal = Math.Floor(number);
 

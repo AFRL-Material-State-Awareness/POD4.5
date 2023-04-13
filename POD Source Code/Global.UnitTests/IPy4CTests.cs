@@ -244,82 +244,110 @@ namespace Global.UnitTests
             Assert.That(result, Is.EqualTo("Undefined").IgnoreCase);
         }
         [Test]
-        public void GetPValueDecision_PIsZeroOr005_ReturnsStringPIsLessThan005()
-        {
-            //Arrange
-            var value = 0.0;
-            var value2 = .005;
-            //Act
-            var result = sampleIPy4C.GetPValueDecision(value);
-            var result2 = sampleIPy4C.GetPValueDecision(value2);
-            //Assert
-            Assert.That(result, Is.EqualTo("P <= .005").IgnoreCase);
-            Assert.That(result2, Is.EqualTo("P <= .005").IgnoreCase);
-        }
-        [Test]
-        public void GetPValueDecision_PIsAbove005Or01_ReturnsDecisionStringBetween005and01()
-        {
-            //Arrange
-            var value = .006;
-            var value2 = .01;
-            //Act
-            var result = sampleIPy4C.GetPValueDecision(value);
-            var result2 = sampleIPy4C.GetPValueDecision(value2);
-            //Assert
-            Assert.That(result, Is.EqualTo(".005 < P <= 0.01").IgnoreCase);
-            Assert.That(result2, Is.EqualTo(".005 < P <= 0.01").IgnoreCase);
-        }
-        [Test]
-        public void GetPValueDecision_PIsAbove01OrIs025_ReturnsDecisionStringPIsBetween01And025()
-        {
-            //Arrange
-            var value = .02;
-            var value2 = .025;
-            //Act
-            var result = sampleIPy4C.GetPValueDecision(value);
-            var result2 = sampleIPy4C.GetPValueDecision(value2);
-            //Assert
-            Assert.That(result, Is.EqualTo("0.01 < P <= .025").IgnoreCase);
-            Assert.That(result2, Is.EqualTo("0.01 < P <= .025").IgnoreCase);
-        }
-        [Test]
-        public void GetPValueDecision_PIsAbove025OrIs05_ReturnsDecisionStringPIsBetween025And05()
-        {
-            //Arrange
-            var value = .026;
-            var value2 = .05;
-            //Act
-            var result = sampleIPy4C.GetPValueDecision(value);
-            var result2 = sampleIPy4C.GetPValueDecision(value2);
-            //Assert
-            Assert.That(result, Is.EqualTo(".025 < P <= 0.05").IgnoreCase);
-            Assert.That(result2, Is.EqualTo(".025 < P <= 0.05").IgnoreCase);
-        }
-        [Test]
-        public void GetPValueDecision_PIsAbove05or1_ReturnsDecisionStringPIsBetween05And1()
-        {
-            //Arrange
-            var value = .06;
-            var value2 = .1;
-            //Act
-            var result = sampleIPy4C.GetPValueDecision(value);
-            var result2 = sampleIPy4C.GetPValueDecision(value2);
-            //Assert
-            Assert.That(result, Is.EqualTo("0.05 < P <= 0.1").IgnoreCase);
-            Assert.That(result2, Is.EqualTo("0.05 < P <= 0.1").IgnoreCase);
-        }
-        [Test]
-        public void GetPValueDecision_ValueIsAbove1_ReturnsPIsGreaterThan1()
-        {
-            //Arrange
-            var value = .2;
-            //Act
-            var result = sampleIPy4C.GetPValueDecision(value);
-            //Assert
-            Assert.That(result, Is.EqualTo("P > 0.1").IgnoreCase);
-        }
+        [TestCase(0.0, "P <= .005")]
+        [TestCase(.005, "P <= .005")]
+        [TestCase(.006, ".005 < P <= 0.01")]
+        [TestCase(.01, ".005 < P <= 0.01")]
+        [TestCase(.02, "0.01 < P <= .025")]
+        [TestCase(.025, "0.01 < P <= .025")]
+        [TestCase(.026, ".025 < P <= 0.05")]
+        [TestCase(.05, ".025 < P <= 0.05")]
+        [TestCase(.06, "0.05 < P <= 0.1")]
+        [TestCase(.1, "0.05 < P <= 0.1")]
+        [TestCase (.2, "P > 0.1")]
 
+        public void GetPValueDecision_PIsACertainRange_ReturnsCorrectPValueRangeAsString(double value, string expectedString)
+        {
+            //Act
+            var result = sampleIPy4C.GetPValueDecision(value);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedString).IgnoreCase);
+        }
+        /// <summary>
+        /// Tests for NthRoot(double A, double root, double checkLambdaDenominator=2.0) function
+        /// </summary> 
+        [Test]
+        public void NthRoot_AIsPositiveAndRootIsPositive_ReturnsAPositiveRealNumber()
+        {
+            //Arrange
+            var a = 16.0;
+            var root = 2.0;
+            //Act
+            var result = IPy4C.NthRoot(a, root);
+            //Assert
+            Assert.That(result, Is.TypeOf<double>());
+            Assert.That(result, Is.Not.EqualTo(Double.NaN));
+            Assert.That(result, Is.EqualTo(4));
+        }
+        [Test]
+        public void NthRoot_AIsNegativeButCheckLambdaDenominatorNotAddedAndRootIsEven_ReturnsDoubleNaN()
+        {
+            //Arrange
+            var a = -16.0;
+            var root = 2.0;
+            //Act
+            var result = IPy4C.NthRoot(a, root);
+            //Assert
+            Assert.That(result, Is.EqualTo(Double.NaN));
+        }
+        [Test]
+        public void NthRoot_AIsNegativeButODDCheckLambdaDenominatorAddedAndRootIsEven_ReturnsANegativeRealNumber()
+        {
+            //Arrange
+            var a = -16.0;
+            var root = 2.0;
+            //Act
+            var result = IPy4C.NthRoot(a, root, 3.0);
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(Double.NaN));
+            Assert.That(result, Is.EqualTo(-4.0));
+        }
+        /// <summary>
+        /// Tests for DecimalToFraction(double number, out long numerator, out long denominator) function
+        /// Note: a mixed number is never passed into this function
+        /// </summary> 
+        [Test]
+        public void DecimalToFraction_DecimalIsBetween0And1_ReturnsAProperFraction()
+        {
+            //Arrange
+            long numerator;
+            long denominator;
+            double exampleNum = .5;
 
+            IPy4C.DecimalToFraction(exampleNum, out numerator, out denominator);
+
+            Assert.That(numerator, Is.EqualTo(1));
+            Assert.That(denominator, Is.EqualTo(2));
+
+        }
+        [Test]
+        public void DecimalToFraction_DecimalIsZero_Returns0Over1()
+        {
+            //Arrange
+            long numerator;
+            long denominator;
+            double exampleNum = 0.0;
+
+            IPy4C.DecimalToFraction(exampleNum, out numerator, out denominator);
+
+            Assert.That(numerator, Is.EqualTo(0));
+            Assert.That(denominator, Is.EqualTo(1));
+
+        }
+        [Test]
+        [TestCase(-1.5)]
+        [TestCase(-.5)]
+        [TestCase(1.5)]
+        public void DecimalToFraction_DecimalIsANegativeNumber_ReturnsAnImproperFraction(double testNum)
+        {
+            //Arrange
+            long numerator;
+            long denominator;
+            double exampleNum = testNum;
+
+            Assert.That(() => IPy4C.DecimalToFraction(exampleNum, out numerator, out denominator), Throws.TypeOf<Exception>());
+
+        }
         /// <summary>
         /// Tests for GetMaxPrecision() function
         /// </summary> 
