@@ -14,12 +14,6 @@ using System.Diagnostics;
 using CSharpBackendWithR;
 namespace POD
 {
-    public enum PyTypeEnum
-    {
-        PyFiles,
-        DLLFiles
-    }
-
     public class IPy4C
     {
         Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
@@ -151,10 +145,6 @@ namespace POD
             }
         }
 
-        public IPy4C CreateDuplicate()
-        {
-            return this;
-        }
         //This function converts the transform type into an integer and returns it
         //The transformtypeEnum is located in Globals.cs
         public int TransformEnumToInt(TransformTypeEnum myTransformType)
@@ -185,26 +175,6 @@ namespace POD
 
             return transform;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int RCalcTypeEnumToInt(RCalculationType myType)
-        {
-            int type = 0;
-            switch (myType)
-            {
-                case RCalculationType.Full:
-                    type = 1;
-                    break;
-                case RCalculationType.ThresholdChange:
-                    type = 2;
-                    break;
-                case RCalculationType.Transform:
-                    type = 3;
-                    break;
-            }
-            return type;
-        }
         //used to output the decision value
         //self.choices = ["P > 0.1", "0.05 < P <= 0.1", ".025 < P <= 0.05",
         //                "0.01 < P <= .025", ".005 < P <= 0.01", "P <= .005", "Undefined"]
@@ -231,7 +201,7 @@ namespace POD
             {
                 decisionString = ".005 < P <= 0.01";
             }
-            else if (myValue <= .005)
+            else if (myValue <= .005 && myValue >= 0.0)
             {
                 decisionString = "P <= .005";
             }
@@ -391,6 +361,19 @@ namespace POD
         }
         public int FailedRunCount { get; set; }
 
-        
+        public int DictionarySizeHitMiss
+        {
+            get
+            {
+                return _hitMissAnalyses.Count;
+            }
+        }
+        public int DictionarySizeSignalResponse
+        {
+            get
+            {
+                return _ahatAnalyses.Count;
+            }
+        }
     }
 }
