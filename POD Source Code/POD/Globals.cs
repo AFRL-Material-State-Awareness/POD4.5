@@ -88,7 +88,6 @@ namespace POD
                 switch (kind)
                 {
                     case AxisKind.X:
-                        return Convert.ToInt32(width / 100) + 1;
                     case AxisKind.Y:
                         return Convert.ToInt32(width / 100) + 1;
                     default:
@@ -170,12 +169,10 @@ namespace POD
 
         public static string CleanColumnName(string myName)
         {
-            var illegal = new char[] {'~', '(', ')', '#', '\\', '/', '=', '>', '<', '+', '-', '*', '%', '&', '|', '^', '\'', '"', '[', ']' };
-
             // Replace invalid characters with empty strings. 
             try
             {
-                return Regex.Replace(myName, @"([~()#\\/=><+/*%&|^'""[\]])+\s*", "",
+                return Regex.Replace(myName, @"([!@$~()#\\/=><+/*%&|^'""[\]])+\s*", "",
                                      RegexOptions.None, TimeSpan.FromSeconds(1.5));
             }
             // If we timeout when replacing invalid characters,  
