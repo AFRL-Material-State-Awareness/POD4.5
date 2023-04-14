@@ -18,10 +18,20 @@ namespace Global.UnitTests
     {
         //private Mock<IContainerControl> _mockControl;
         private Control _control;
+        private string latinString;
+        private string latinStringWLineBreak;
         [SetUp]
         public void Setup()
         {
             _control = new Control();
+
+            latinString= "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod"+
+                         "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,"+
+                          "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo"+
+                          "consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse"+
+                          "cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non"+
+                          "proident, sunt in culpa qui";
+            latinStringWLineBreak = latinString + '\n';
         }
         /// <summary>
         /// Tests for GetLabelIntervalBasedOnChartSize(Control chart, AxisKind kind) function
@@ -148,6 +158,7 @@ namespace Global.UnitTests
             Assert.That(resultCursor, Is.Not.EqualTo(Cursors.Default));
         }
         [Test]
+        [Ignore("Figure out how to inject message box for this test")]
         public void CreateCursorNoResize_NullBitmapPassed_ReturnsDefaultCursor()
         {
             //Arrange
@@ -158,7 +169,83 @@ namespace Global.UnitTests
             //Assert
             Assert.That(resultCursor, Is.EqualTo(Cursors.Default));
         }
+        ///<summary>
+        /// DeleteMRUList(string value, string fileName) is too difficult to unit test
+        ///</summary>
 
+        ///<summary>
+        /// UpdateMRUListMultiLine(string value, string fileName, int maxLines = 8) is too difficult to unit test
+        ///</summary>
+
+        ///<summary>
+        ///  UpdateMRUList(string value, string fileName, bool useSplitted = false, string splitCharacter = "|", int maxLines = 8) is too difficult to unit test
+        ///</summary>
+
+        ///<summary>
+        /// GetMRUListMultiLine(string fileName) is too difficult to unit test
+        ///</summary>
+
+        ///<summary>
+        /// GetMRUList(string fileName) is too difficult to unit test
+        ///</summary>
+
+        ///<summary>
+        /// GetMRUListWithoutEmpties(string fileName, bool useSplitted = false, string splitCharacter = "|") is too difficult to unit test
+        ///</summary>
+
+        ///<summary>
+        /// CleanUpRandomImageFiles() is too difficult to unit test
+        ///</summary>
+
+        ///<summary>
+        /// Tests for SplitIntoLines(string p) function
+        ///</summary>
+        [Test]
+        public void SplitIntoLines_StringWithNoSpaces_ReturnsTheSameString()
+        {
+            var myString = "ThisIsAStringWithNoSpaces";
+
+            string result = Globals.SplitIntoLines(myString);
+
+            Assert.That(result, Is.EqualTo(myString));
+        }
+        [Test]
+        public void SplitIntoLines_EmptyString_ReturnsEmptyString()
+        {
+            var myString = "";
+
+            string result = Globals.SplitIntoLines(myString);
+
+            Assert.That(result, Is.EqualTo(String.Empty));
+        }
+        [Test]
+        public void SplitIntoLines_StringHasWordsButNotLongerThan40_ReturnsTheStringWithLineBreaksWithoutEndingWithALineBreak()
+        {
+            //arrange
+            var myString = latinString;
+            //Act
+            string result = Globals.SplitIntoLines(myString);
+
+
+            Assert.That(result, Is.Not.EqualTo(myString));
+            Assert.That(result.Contains('\n'));
+            Assert.That(result.EndsWith("\n")== false);
+            Assert.That(result.EndsWith(" ") == false);
+        }
+        [Test]
+        public void SplitIntoLines_StringHasWordsButNotLongerThan40AndEndsInLineBreak_ReturnsTheStringWithLineBreaksWithoutEndingWithALineBreak()
+        {
+            //arrange
+            var myString = latinStringWLineBreak;
+            //Act
+            string result = Globals.SplitIntoLines(myString);
+
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(myString));
+            Assert.That(result.Contains('\n'));
+            Assert.That(result.EndsWith("\n") == false);
+            Assert.That(result.EndsWith(" ") == false);
+        }
 
 
 

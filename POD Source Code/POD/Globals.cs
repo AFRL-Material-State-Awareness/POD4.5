@@ -813,7 +813,7 @@ namespace POD
             foreach(string word in list)
             {
                 tempString += (word + " ");
-
+                
                 if(tempString.Trim().Length > 40)
                 {
                     prevTempString = prevTempString.Trim();
@@ -821,14 +821,16 @@ namespace POD
                     finalString += prevTempString;
                     tempString = word + " ";
                 }
+                
 
                 prevTempString = tempString;
             }
 
+            //finalString += tempString.Replace(" ", "");
             finalString += tempString.Trim();
 
-            if (finalString.EndsWith("\n"))
-                finalString.Remove(finalString.Length - 1);
+            //if (finalString.EndsWith("\n"))
+            //    finalString.Remove(finalString.Length - 1);
 
             return finalString;
         }
