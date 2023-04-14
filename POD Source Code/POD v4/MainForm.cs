@@ -1235,6 +1235,8 @@ namespace POD
 
                 _controller.ClearEverything();
 
+                py.ClearAnalyses();
+
                 ShowNewNormalProject(proj);
 
                 _lastFile = "";

@@ -14,12 +14,6 @@ using System.Diagnostics;
 using CSharpBackendWithR;
 namespace POD
 {
-    public enum PyTypeEnum
-    {
-        PyFiles,
-        DLLFiles
-    }
-
     public class IPy4C
     {
         Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
@@ -102,7 +96,7 @@ namespace POD
             get { return _errorWriter; }
         }
 
-        public IPy4C()//, PODStatusBar myBar)
+        public IPy4C()
         {
             _outputStream = new MemoryStream();
             _errorStream = new MemoryStream();
@@ -110,7 +104,6 @@ namespace POD
             _outputWriter = new EventRaisingStreamWriter(_outputStream);
             _errorWriter = new EventRaisingStreamWriter(_errorStream);
 
-            //_cpDocs = new Dictionary<string, dynamic>();
             //used to store the hitmiss analyses
             _hitMissAnalyses = new Dictionary<string, HMAnalysisObject>();
             //used to store ahat analyses
@@ -151,10 +144,6 @@ namespace POD
             }
         }
 
-        public IPy4C CreateDuplicate()
-        {
-            return this;
-        }
         //This function converts the transform type into an integer and returns it
         //The transformtypeEnum is located in Globals.cs
         public int TransformEnumToInt(TransformTypeEnum myTransformType)
@@ -185,68 +174,32 @@ namespace POD
 
             return transform;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int RCalcTypeEnumToInt(RCalculationType myType)
-        {
-            int type = 0;
-            switch (myType)
-            {
-                case RCalculationType.Full:
-                    type = 1;
-                    break;
-                case RCalculationType.ThresholdChange:
-                    type = 2;
-                    break;
-                case RCalculationType.Transform:
-                    type = 3;
-                    break;
-            }
-            return type;
-        }
         //used to output the decision value
         //self.choices = ["P > 0.1", "0.05 < P <= 0.1", ".025 < P <= 0.05",
         //                "0.01 < P <= .025", ".005 < P <= 0.01", "P <= .005", "Undefined"]
         public string GetPValueDecision(double myValue)
         {
-            string decisionString = "";
-            if(myValue > 0.1)
-            {
-                decisionString = "P > 0.1";
-            }
-            else if(myValue <= 0.1 && myValue > .05)
-            {
-                decisionString = "0.05 < P <= 0.1";
-            }
-            else if(myValue <= .05 && myValue > .025)
-            {
-                decisionString = ".025 < P <= 0.05";
-            }
-            else if(myValue <= .025 && myValue > .01)
-            {
-                decisionString = "0.01 < P <= .025";
-            }
-            else if (myValue <= .01 && myValue > .005)
-            {
-                decisionString = ".005 < P <= 0.01";
-            }
-            else if (myValue <= .005)
-            {
-                decisionString = "P <= .005";
-            }
+            if (myValue > .1)
+                return "P > 0.1";
+            else if (myValue > .05)
+                return "0.05 < P <= 0.1";
+            else if (myValue > .025)
+                return ".025 < P <= 0.05";
+            else if (myValue > .01)
+                return "0.01 < P <= .025";
+            else if (myValue > .005)
+                return ".005 < P <= 0.01";
+            else if (myValue >= 0.0)
+                return "P <= .005";
             else
-            {
-                decisionString = "Undefined";
-            }
-            return decisionString;
+                return "Undefined";
         }
         //used to calculate the nth root given a double 'A'
         //source : https://stackoverflow.com/questions/55987201/calculating-the-cubic-root-for-negative-number
         //author : Tim ---- https://stackoverflow.com/users/6785695/tim
         public static double NthRoot(double A, double root, double checkLambdaDenominator=2.0)
         {
-            if(checkLambdaDenominator % 2 != 0 && A<0)
+            if(checkLambdaDenominator % 2 != 0 && A < 0)
             {
                 return -Math.Pow(-A, 1.0 / root);
             }
@@ -270,7 +223,14 @@ namespace POD
         // Function to convert decimal to fraction
         public static void DecimalToFraction(double number, out long numerator, out long denominator)
         {
-
+            if (number >= 1)
+            {
+                throw new Exception("Error: input to decimal fraction conversion cannot be a mixed number");
+            }
+            else if(number < 0)
+            {
+                throw new Exception("Error: input to decimal fraction conversion cannot be a negative number");
+            }
             // Fetch integral value of the decimal
             double intVal = Math.Floor(number);
 
@@ -289,13 +249,8 @@ namespace POD
                             fVal * pVal), pVal);
 
             // Calculate num and deno
-            //long num = (long)Math.Round(fVal * pVal) / gcdVal;
-            //long deno = pVal / gcdVal;
             numerator= (long)Math.Round(fVal * pVal) / gcdVal;
             denominator= pVal / gcdVal;
-            // Print the fraction
-            //Console.WriteLine((long)(intVal * deno) +
-            //                      num + "/" + deno);
         }
         /// <summary>
         /// This method gets the max precision of either the flaws, responses, or both
@@ -335,10 +290,14 @@ namespace POD
 
             return maxPrecision;
         }
-
-        public void Close()
+        public void ClearAnalyses()
         {
             _hitMissAnalyses.Clear();
+            _ahatAnalyses.Clear();
+        }
+        public void Close()
+        {
+            
             try
             {
                 _outputStream.Flush();
@@ -378,19 +337,22 @@ namespace POD
             {
 
             }
-
-            try
-            {
-                //_pyEngine.Runtime.Shutdown();
-                
-            }
-            catch
-            {
-
-            }
         }
         public int FailedRunCount { get; set; }
 
-        
+        public int DictionarySizeHitMiss
+        {
+            get
+            {
+                return _hitMissAnalyses.Count;
+            }
+        }
+        public int DictionarySizeSignalResponse
+        {
+            get
+            {
+                return _ahatAnalyses.Count;
+            }
+        }
     }
 }
