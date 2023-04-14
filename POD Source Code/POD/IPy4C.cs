@@ -290,11 +290,14 @@ namespace POD
 
             return maxPrecision;
         }
-
-        public void Close()
+        public void ClearAnalyses()
         {
             _hitMissAnalyses.Clear();
             _ahatAnalyses.Clear();
+        }
+        public void Close()
+        {
+            
             try
             {
                 _outputStream.Flush();
