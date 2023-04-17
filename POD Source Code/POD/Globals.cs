@@ -88,7 +88,6 @@ namespace POD
                 switch (kind)
                 {
                     case AxisKind.X:
-                        return Convert.ToInt32(width / 100) + 1;
                     case AxisKind.Y:
                         return Convert.ToInt32(width / 100) + 1;
                     default:
@@ -170,12 +169,10 @@ namespace POD
 
         public static string CleanColumnName(string myName)
         {
-            var illegal = new char[] {'~', '(', ')', '#', '\\', '/', '=', '>', '<', '+', '-', '*', '%', '&', '|', '^', '\'', '"', '[', ']' };
-
             // Replace invalid characters with empty strings. 
             try
             {
-                return Regex.Replace(myName, @"([~()#\\/=><+/*%&|^'""[\]])+\s*", "",
+                return Regex.Replace(myName, @"([!@$~()#\\/=><+/*%&|^'""[\]])+\s*", "",
                                      RegexOptions.None, TimeSpan.FromSeconds(1.5));
             }
             // If we timeout when replacing invalid characters,  
@@ -807,33 +804,20 @@ namespace POD
 
         public static string SplitIntoLines(string p)
         {
-            var list = p.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-
-            var finalString = "";
-            var prevTempString = "";
-            var tempString = "";
-
-            foreach(string word in list)
+            var myCharArray = p.Trim().ToCharArray();
+            int newLineCounter = 0;
+            for (int i = 0; i < myCharArray.Length; i++)
             {
-                tempString += (word + " ");
-
-                if(tempString.Trim().Length > 40)
+                if (myCharArray[i] == ' ' && newLineCounter > 40)
                 {
-                    prevTempString = prevTempString.Trim();
-                    prevTempString += "\n";
-                    finalString += prevTempString;
-                    tempString = word + " ";
+                    myCharArray[i] = '\n';
+                    newLineCounter = 0;
+                    continue;
                 }
 
-                prevTempString = tempString;
+                newLineCounter += 1;
             }
-
-            finalString += tempString.Trim();
-
-            if (finalString.EndsWith("\n"))
-                finalString.Remove(finalString.Length - 1);
-
-            return finalString;
+            return new string(myCharArray);
         }
     }
 
@@ -940,27 +924,12 @@ namespace POD
             }
         }
 
-        public static string LabelFromValue(TestRating myRating)
-        {
-            var label = Undefined;
-            var index = -1;
-            var values = Values;
-            
-            index = values.IndexOf(myRating);
-
-            if (index >= 0)
-                label = Labels[index];
-
-            return label;
-        }
-
         public static TestRating ValueFromLabel(string myRating)
         {
             var label = TestRating.Undefined;
-            var index = -1;
             var values = Labels;
 
-            index = values.IndexOf(myRating);
+            var index = values.IndexOf(myRating);
 
             if (index >= 0)
                 label = Values[index];
@@ -997,9 +966,10 @@ namespace POD
             {
                 var yParse = double.TryParse(row[column].ToString(), out value);
                 var xParse = double.TryParse(row[xCol].ToString(), out xValue);
-
+                
                 if (xParse && yParse)
                 {
+                    // only overwrite the max or min when within range of x values specified
                     if (xValue >= xMin && xValue <= xMax)
                     {
                         if (value < myMin)
@@ -1219,6 +1189,7 @@ namespace POD
     public static class PrintingToConsole
     {
         //This method is for debugging purpose
+        //No unit tests are necessary for this method
         public static void printDT(DataTable data)
         {
             //Console.WriteLine();
@@ -1263,15 +1234,15 @@ namespace POD
 
     public class ExtColProperty
     {
-        public static string Unit = "Unit";
-        public static string Max = "Maximum";
-        public static string Min = "Minimum";
-        public static string Thresh = "Threshold";
-        public static string MaxPrev = "Previous Maximum";
-        public static string MinPrev = "Previous Minimum";
-        public static string ThreshPrev = "Previous Threshold";
-        public static string Original = "Original";
-        public static string NewName = "NewName";
+        public const string Unit = "Unit";
+        public const string Max = "Maximum";
+        public const string Min = "Minimum";
+        public const string Thresh = "Threshold";
+        public const string MaxPrev = "Previous Maximum";
+        public const string MinPrev = "Previous Minimum";
+        public const string ThreshPrev = "Previous Threshold";
+        public const string Original = "Original";
+        public const string NewName = "NewName";
 
         public static string UnitDefault = "";
         public static double MaxDefault = 0.0;
@@ -1284,6 +1255,7 @@ namespace POD
 
         public static string GetDefaultValue(string colType)
         {
+            /*
             if (colType == ExtColProperty.Unit)
                 return ExtColProperty.UnitDefault;
             else if (colType == ExtColProperty.Max)
@@ -1294,6 +1266,20 @@ namespace POD
                 return ExtColProperty.ThreshDefault.ToString();
             else
                 return "";
+            */
+            switch (colType)
+            {
+                case ExtColProperty.Unit:
+                    return ExtColProperty.UnitDefault.ToString();
+                case ExtColProperty.Max:
+                    return ExtColProperty.MaxDefault.ToString();
+                case ExtColProperty.Min:
+                    return ExtColProperty.MinDefault.ToString();
+                case ExtColProperty.Thresh:
+                    return ExtColProperty.ThreshDefault.ToString();
+                default:
+                    return "";
+            }
         }
         
     }
