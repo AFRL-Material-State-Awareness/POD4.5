@@ -804,32 +804,20 @@ namespace POD
 
         public static string SplitIntoLines(string p)
         {
-            var list = p.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-
-            var finalString = "";
-            var prevTempString = "";
-            var tempString = "";
-
-            foreach(string word in list)
+            var myCharArray = p.Trim().ToCharArray();
+            int newLineCounter = 0;
+            for (int i = 0; i < myCharArray.Length; i++)
             {
-                tempString += (word + " ");
-                
-                if(tempString.Trim().Length > 40)
+                if (myCharArray[i] == ' ' && newLineCounter > 40)
                 {
-                    prevTempString = prevTempString.Trim();
-                    prevTempString += "\n";
-                    finalString += prevTempString;
-                    tempString = word + " ";
+                    myCharArray[i] = '\n';
+                    newLineCounter = 0;
+                    continue;
                 }
-                
 
-                prevTempString = tempString;
+                newLineCounter += 1;
             }
-
-            finalString += tempString.Trim();
-            //finalString = tempString;
-
-            return finalString;
+            return new string(myCharArray);
         }
     }
 
