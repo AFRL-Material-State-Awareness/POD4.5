@@ -826,11 +826,8 @@ namespace POD
                 prevTempString = tempString;
             }
 
-            //finalString += tempString.Replace(" ", "");
             finalString += tempString.Trim();
-
-            //if (finalString.EndsWith("\n"))
-            //    finalString.Remove(finalString.Length - 1);
+            //finalString = tempString;
 
             return finalString;
         }

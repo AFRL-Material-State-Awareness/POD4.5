@@ -25,11 +25,11 @@ namespace Global.UnitTests
         {
             _control = new Control();
 
-            latinString= "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod"+
-                         "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,"+
-                          "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo"+
-                          "consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse"+
-                          "cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non"+
+            latinString = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod" +
+                         "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam," +
+                          "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo" +
+                          "consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse" +
+                          "cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non" +
                           "proident, sunt in culpa qui";
             latinStringWLineBreak = latinString + '\n';
         }
@@ -38,11 +38,11 @@ namespace Global.UnitTests
         /// </summary>
         /// <param name="axisKind"></param>
         [Test]
-        [TestCase (AxisKind.X)]
+        [TestCase(AxisKind.X)]
         [TestCase(AxisKind.Y)]
         public void GetLabelIntervalBasedOnChartSize_ChartIsNull_ReturnsDefaultLabelCount(AxisKind axisKind)
         {
-            var result=Globals.GetLabelIntervalBasedOnChartSize(null, axisKind);
+            var result = Globals.GetLabelIntervalBasedOnChartSize(null, axisKind);
 
             Assert.That(result, Is.EqualTo(Globals.DefaultLabelCount));
         }
@@ -54,7 +54,7 @@ namespace Global.UnitTests
             _control.Width = 500;
             _control.Height = 500;
             var result = Globals.GetLabelIntervalBasedOnChartSize(_control, axisKind);
-            
+
             Assert.That(result, Is.GreaterThanOrEqualTo(1));
             Assert.That(result, Is.Not.EqualTo(10));
         }
@@ -79,7 +79,7 @@ namespace Global.UnitTests
             //Act
             var result = Globals.StdWidth(_control);
             //Assert
-            Assert.That(result, Is.EqualTo(70* scale));
+            Assert.That(result, Is.EqualTo(70 * scale));
         }
         /// <summary>
         /// tests for StdHeight(Control control) function
@@ -151,7 +151,7 @@ namespace Global.UnitTests
             //Arrange
             Cursor resultCursor = null;
             //Act
-            using(Bitmap bmp=new Bitmap(10,10))
+            using (Bitmap bmp = new Bitmap(10, 10))
             {
                 resultCursor = Globals.CreateCursorNoResize(bmp, 1, 1);
             }
@@ -163,9 +163,9 @@ namespace Global.UnitTests
         {
             //Arrange
             Cursor resultCursor = null;
-            
+
             //Act
-            resultCursor = Globals.CreateCursorNoResize(null, 1, 1);;
+            resultCursor = Globals.CreateCursorNoResize(null, 1, 1); ;
             //Assert
             Assert.That(resultCursor, Is.EqualTo(Cursors.Default));
         }
@@ -206,47 +206,62 @@ namespace Global.UnitTests
             var myString = "ThisIsAStringWithNoSpaces";
 
             string result = Globals.SplitIntoLines(myString);
+            //Assert
+            Assert.That(result, Is.EqualTo(myString));
+        }
+        [Test]
+        public void SplitIntoLines_StringWithSpaces_ReturnsTheSameString()
+        {
+            var myString = "This Is A String With Spaces";
 
+            string result = Globals.SplitIntoLines(myString);
+            //Assert
             Assert.That(result, Is.EqualTo(myString));
         }
         [Test]
         public void SplitIntoLines_EmptyString_ReturnsEmptyString()
         {
+            //arrange
             var myString = "";
-
+            //Act
             string result = Globals.SplitIntoLines(myString);
-
+            //Assert
             Assert.That(result, Is.EqualTo(String.Empty));
         }
         [Test]
-        public void SplitIntoLines_StringHasWordsButNotLongerThan40_ReturnsTheStringWithLineBreaksWithoutEndingWithALineBreak()
+        public void SplitIntoLines_StringHasWordsAndLongerThan40Chars_ReturnsTheStringWithLineBreaksWithoutEndingWithALineBreak()
         {
             //arrange
             var myString = latinString;
             //Act
             string result = Globals.SplitIntoLines(myString);
-
-
-            Assert.That(result, Is.Not.EqualTo(myString));
-            Assert.That(result.Contains('\n'));
-            Assert.That(result.EndsWith("\n")== false);
-            Assert.That(result.EndsWith(" ") == false);
+            //Assert
+            AssertMultiLineString(result, myString);
         }
         [Test]
-        public void SplitIntoLines_StringHasWordsButNotLongerThan40AndEndsInLineBreak_ReturnsTheStringWithLineBreaksWithoutEndingWithALineBreak()
+        public void SplitIntoLines_StringHasWordsAndLongerThan40CharsAndEndsInLineBreak_ReturnsTheStringWithLineBreaksWithoutEndingWithALineBreak()
         {
             //arrange
             var myString = latinStringWLineBreak;
             //Act
             string result = Globals.SplitIntoLines(myString);
-
             //Assert
-            Assert.That(result, Is.Not.EqualTo(myString));
+            AssertMultiLineString(result, myString);
+        }
+        private void AssertMultiLineString(string result, string origString)
+        {
+            var words = origString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //make sure the last word is in the string (to ensure the for loop did not terminate early)
+            Assert.That(result.Contains(words[words.Length-1].Trim()));
+            //because new lines are being made, the old and new string should never be equal
+            Assert.That(result, Is.Not.EqualTo(origString));
             Assert.That(result.Contains('\n'));
+            Assert.That(result.Contains(" \n") == false);
+            Assert.That(result.Contains("\n ") == false);
+            Assert.That(result.StartsWith("\n") == false);
             Assert.That(result.EndsWith("\n") == false);
             Assert.That(result.EndsWith(" ") == false);
         }
-
 
 
     }
