@@ -54,9 +54,9 @@ namespace Global.UnitTests
             Assert.That(NearlyEqual((double)firstRow[1], 1.0, .0000000000000001));
             Assert.That(NearlyEqual((double)firstRow[2], 1.1, .0000000000000001));
 
-            Assert.That(NearlyEqual((double)firstRow[0], -2.0, .0000000000000001));
-            Assert.That(NearlyEqual((double)firstRow[1], 2.0, .0000000000000001));
-            Assert.That(NearlyEqual((double)firstRow[2], 2.1, .0000000000000001));
+            Assert.That(NearlyEqual((double)secondRow[0], -2.0, .0000000000000001));
+            Assert.That(NearlyEqual((double)secondRow[1], 2.0, .0000000000000001));
+            Assert.That(NearlyEqual((double)secondRow[2], 2.1, .0000000000000001));
 
         }
         [Test]
