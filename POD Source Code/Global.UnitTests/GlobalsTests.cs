@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Moq;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Data;
 
 namespace Global.UnitTests
 {
@@ -20,6 +21,8 @@ namespace Global.UnitTests
         private Control _control;
         private string latinString;
         private string latinStringWLineBreak;
+        // used for the Compute Class
+        private DataTable _sampleTable;
         [SetUp]
         public void Setup()
         {
@@ -32,6 +35,30 @@ namespace Global.UnitTests
                           "cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non" +
                           "proident, sunt in culpa qui";
             latinStringWLineBreak = latinString + '\n';
+
+            SetUpDataTable();
+            SetUpExtColProperty();
+        }
+        private void SetUpDataTable()
+        {
+            _sampleTable = new DataTable();
+            _sampleTable.Columns.Add("Column_1", typeof(double));
+            _sampleTable.Columns.Add("Column_2", typeof(double));
+            _sampleTable.Columns.Add("BadColumn", typeof(string));
+            var column1 = new List<double> { 1.0, 3.0, 5.0, 4.0, 2.0 };
+            var column2 = new List<double> { 3.0, 6.0, 9.0, 12.0, 10.0 };
+            var badColumn = new List<string> { "a", "b", "c", "d", "e" };
+            for (int i = 0; i < column1.Count; i++)
+                _sampleTable.Rows.Add(column1[i], column2[i], badColumn[i]);
+
+        }
+        private void SetUpExtColProperty()
+        {
+            /// these are used to test the methods in the ExtColPropertyClass
+            ExtColProperty.UnitDefault = "myDefaultUnit";
+            ExtColProperty.MaxDefault = 10.0;
+            ExtColProperty.MinDefault = 1.0;
+            ExtColProperty.ThreshDefault = 5.0;
         }
         /// <summary>
         /// Tests for GetLabelIntervalBasedOnChartSize(Control chart, AxisKind kind) function
@@ -297,6 +324,175 @@ namespace Global.UnitTests
             Assert.That(result, Is.TypeOf<TestRating>());
             Assert.That(result, Is.Not.EqualTo(TestRating.Undefined));
         }
+
+        ///<summary>
+        /// Tests for the compute class
+        ///</summary>
+
+        ///<summary>
+        /// test for MinMax(DataTable myTable, DataColumn column, ref double myMin, ref double myMax) function
+        /// </summary>
+        [Test]
+        public void MinMaxOneColumn_PassInNonEmptyDatableWithValidColumn_ReturnsTheMaxForAGivenColumn()
+        {
+            //arrange
+            var testColumn1 = _sampleTable.Columns["Column_1"];
+            var refMin = double.MaxValue;
+            var refMax = double.MinValue;
+            //Act
+            Compute.MinMax(_sampleTable, testColumn1, ref refMin, ref refMax);
+            //Assert
+            Assert.That(refMin, Is.Not.EqualTo(double.MaxValue));
+            Assert.That(refMax, Is.Not.EqualTo(double.MinValue));
+
+        }
+        [Test]
+        public void MinMaxOneColumn_PassInNonEmptyDatableWithInvalidColumn_MaxAndMinDontChange()
+        {
+            //arrange
+            var testColumn1 = _sampleTable.Columns["BadColumn"];
+            var refMin = double.MaxValue;
+            var refMax = double.MinValue;
+            //Act
+            Compute.MinMax(_sampleTable, testColumn1, ref refMin, ref refMax);
+            //Assert
+            Assert.That(refMin, Is.EqualTo(double.MaxValue));
+            Assert.That(refMax, Is.EqualTo(double.MinValue));
+
+        }
+        [Test]
+        public void MinMaxOneColumn_PassInEmptyDatable_MaxAndMinDontChange()
+        {
+            //arrange
+            var testColumn1 = _sampleTable.Columns["Column_1"];
+            var refMin = double.MaxValue;
+            var refMax = double.MinValue;
+            //Act
+            Compute.MinMax(new DataTable(), testColumn1, ref refMin, ref refMax);
+            //Assert
+            Assert.That(refMin, Is.EqualTo(double.MaxValue));
+            Assert.That(refMax, Is.EqualTo(double.MinValue));
+
+        }
+        [Test]
+        public void MinMaxMultiColumn_PassInNonEmptyDatableWithTwoXValuesInBound_ReturnsTheMaxAndMinBetweenSpecifiedXRange()
+        {
+            //arrange
+            var testColumn1 = _sampleTable.Columns["Column_1"];
+            var testColumn2 = _sampleTable.Columns["Column_2"];
+            var refMin = double.MaxValue;
+            var refMax = double.MinValue;
+            //Act
+            Compute.MinMax(_sampleTable, testColumn1, ref refMin, ref refMax, 1.0, 6.0, testColumn2);
+            //Assert
+            Assert.That(refMin, Is.Not.EqualTo(double.MaxValue));
+            Assert.That(refMax, Is.Not.EqualTo(double.MinValue));
+        }
+        [Test]
+        public void MinMaxMultiColumn_PassInEmptyDatable_MaxAndMinDontChange()
+        {
+            //arrange
+            var testColumn1 = _sampleTable.Columns["Column_1"];
+            var testColumn2 = _sampleTable.Columns["Column_2"];
+            var refMin = double.MaxValue;
+            var refMax = double.MinValue;
+            //Act
+            Compute.MinMax(new DataTable(), testColumn1, ref refMin, ref refMax, 1.0, 6.0, testColumn2);
+            //Assert
+            Assert.That(refMin, Is.EqualTo(double.MaxValue));
+            Assert.That(refMax, Is.EqualTo(double.MinValue));
+        }
+
+        ///<summary>
+        /// test forSanityCheck(ref double myMin, ref double myMax) function
+        /// </summary>
+        [Test]
+        public void SanityCheck_BothMaxAndMinAreOverwritten_ReturnsMinAndMax()
+        {
+            //Arrange
+            var refMin = 10.0;
+            var refMax= 100.0;
+            //Act
+            Compute.SanityCheck(ref refMin, ref refMax);
+            //Assert
+            Assert.That(refMin, Is.EqualTo(10.0));
+            Assert.That(refMax, Is.EqualTo(100.0));
+        }
+        [Test]
+        public void SanityCheck_MaxNotOverwritten_ReturnsMinValueAnd1()
+        {
+            //Arrange
+            var refMin = 10.0;
+            var refMax = double.MinValue;
+            //Act
+            Compute.SanityCheck(ref refMin, ref refMax);
+            //Assert
+            Assert.That(refMin, Is.EqualTo(10.0));
+            Assert.That(refMax, Is.Not.EqualTo(double.MinValue));
+        }
+        [Test]
+        public void SanityCheck_MinAndMaxNotOverwritten_ReturnsMinValueAnd1()
+        {
+            //Arrange
+            var refMin = double.MaxValue;
+            var refMax = double.MinValue;
+            //Act
+            Compute.SanityCheck(ref refMin, ref refMax);
+            //Assert
+            Assert.That(refMin, Is.Not.EqualTo(double.MaxValue));
+            Assert.That(refMax, Is.Not.EqualTo(double.MinValue));
+        }
+
+        ///<summary>
+        /// test OriginalDefault(DataColumn column) function
+        /// </summary>
+        [Test]
+        public void OriginalDefault_DataColumnWithName_ReturnsDataColumnNameAsString()
+        {
+            //Arrange
+            DataColumn testColumn = _sampleTable.Columns[0];
+            //Act
+            string result = ExtColProperty.OriginalDefault(testColumn);
+            //Assert
+            Assert.That(result, Is.EqualTo( "Column_1"));
+        }
+        [Test]
+        public void OriginalDefault_DataColumnWitNoname_ReturnsAnEmptyString()
+        {
+            //Act
+            string result = ExtColProperty.OriginalDefault(new DataColumn());
+            //Assert
+            Assert.That(result, Is.EqualTo(String.Empty));
+        }
+
+        ///<summary>
+        /// test GetDefaultValue(string colType) function
+        /// </summary>
+        [Test]
+        public void GetDefaultValue_ColumnTypeIsInvalid_ReturnsEmptyString()
+        {
+            //Arrange
+           
+            var colType = "Other Column";
+            //Act
+            var result = ExtColProperty.GetDefaultValue(colType);
+            //Assert
+            Assert.That(result, Is.EqualTo(String.Empty));
+        }
+        [Test]
+        [TestCase("Unit", "myDefaultUnit")]
+        [TestCase("Maximum", "10")]
+        [TestCase("Minimum", "1")]
+        [TestCase("Threshold", "5")]
+        public void GetDefaultValue_ColumnTypeIsValid_ReturnsDefaultAsString(string colTypeInput, string expectedDefault)
+        {
+            //Arrange
+            var colType = colTypeInput;
+            //Act
+            var result = ExtColProperty.GetDefaultValue(colType);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedDefault));
+        }
     }
-    
+
 }

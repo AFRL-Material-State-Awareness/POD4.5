@@ -966,9 +966,10 @@ namespace POD
             {
                 var yParse = double.TryParse(row[column].ToString(), out value);
                 var xParse = double.TryParse(row[xCol].ToString(), out xValue);
-
+                
                 if (xParse && yParse)
                 {
+                    // only overwrite the max or min when within range of x values specified
                     if (xValue >= xMin && xValue <= xMax)
                     {
                         if (value < myMin)
@@ -1188,6 +1189,7 @@ namespace POD
     public static class PrintingToConsole
     {
         //This method is for debugging purpose
+        //No unit tests are necessary for this method
         public static void printDT(DataTable data)
         {
             //Console.WriteLine();
@@ -1232,15 +1234,15 @@ namespace POD
 
     public class ExtColProperty
     {
-        public static string Unit = "Unit";
-        public static string Max = "Maximum";
-        public static string Min = "Minimum";
-        public static string Thresh = "Threshold";
-        public static string MaxPrev = "Previous Maximum";
-        public static string MinPrev = "Previous Minimum";
-        public static string ThreshPrev = "Previous Threshold";
-        public static string Original = "Original";
-        public static string NewName = "NewName";
+        public const string Unit = "Unit";
+        public const string Max = "Maximum";
+        public const string Min = "Minimum";
+        public const string Thresh = "Threshold";
+        public const string MaxPrev = "Previous Maximum";
+        public const string MinPrev = "Previous Minimum";
+        public const string ThreshPrev = "Previous Threshold";
+        public const string Original = "Original";
+        public const string NewName = "NewName";
 
         public static string UnitDefault = "";
         public static double MaxDefault = 0.0;
@@ -1253,6 +1255,7 @@ namespace POD
 
         public static string GetDefaultValue(string colType)
         {
+            /*
             if (colType == ExtColProperty.Unit)
                 return ExtColProperty.UnitDefault;
             else if (colType == ExtColProperty.Max)
@@ -1263,6 +1266,20 @@ namespace POD
                 return ExtColProperty.ThreshDefault.ToString();
             else
                 return "";
+            */
+            switch (colType)
+            {
+                case ExtColProperty.Unit:
+                    return ExtColProperty.UnitDefault.ToString();
+                case ExtColProperty.Max:
+                    return ExtColProperty.MaxDefault.ToString();
+                case ExtColProperty.Min:
+                    return ExtColProperty.MinDefault.ToString();
+                case ExtColProperty.Thresh:
+                    return ExtColProperty.ThreshDefault.ToString();
+                default:
+                    return "";
+            }
         }
         
     }
