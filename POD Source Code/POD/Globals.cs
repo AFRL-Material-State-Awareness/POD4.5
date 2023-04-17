@@ -924,27 +924,12 @@ namespace POD
             }
         }
 
-        public static string LabelFromValue(TestRating myRating)
-        {
-            var label = Undefined;
-            var index = -1;
-            var values = Values;
-            
-            index = values.IndexOf(myRating);
-
-            if (index >= 0)
-                label = Labels[index];
-
-            return label;
-        }
-
         public static TestRating ValueFromLabel(string myRating)
         {
             var label = TestRating.Undefined;
-            var index = -1;
             var values = Labels;
 
-            index = values.IndexOf(myRating);
+            var index = values.IndexOf(myRating);
 
             if (index >= 0)
                 label = Values[index];

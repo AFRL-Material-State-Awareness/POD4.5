@@ -263,6 +263,40 @@ namespace Global.UnitTests
             Assert.That(result.EndsWith(" ") == false);
         }
 
+        ///<summary>
+        /// MeasureDisplayStringWidth(Graphics graphics, string text, Font font) contains many dependences.
+        /// would need to inject multple dependencies in order to test this method
+        ///</summary>
 
+        ///<summary>
+        /// Tests for TestRating ValueFromLabel(string myRating) function
+        ///</summary>
+        [Test]
+        public void ValueFromLabel_RatingNotValid_ReturnsUndefined()
+        {
+            //Arrange
+            string myRating = "NotAValidRating";
+            //Act
+            var result = TestRatingLabels.ValueFromLabel(myRating);
+            //Assert
+            Assert.That(result, Is.EqualTo(TestRating.Undefined));
+        }
+
+        [Test]
+        [TestCase("P <= .005")]
+        [TestCase(".005 < P <= 0.01")]
+        [TestCase("0.01 < P <= .025")]
+        [TestCase(".025 < P <= 0.05")]
+        [TestCase("0.05 < P <= 0.1")]
+        [TestCase("P > 0.1")]
+        public void ValueFromLabel_ValidRating_ReturnsAValidRatingEnum(string myRatingString)
+        {
+            ///Act
+            var result = TestRatingLabels.ValueFromLabel(myRatingString);
+            //Assert
+            Assert.That(result, Is.TypeOf<TestRating>());
+            Assert.That(result, Is.Not.EqualTo(TestRating.Undefined));
+        }
     }
+    
 }
