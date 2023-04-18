@@ -41,5 +41,24 @@ namespace Analyze.UnitTests
             //Assert
             Assert.That(_analysis.InLambdaValue, Is.EqualTo(1.0));
         }
+
+        /// <summary>
+        /// Tests UpdateProgress(Object sender, int myProgressOutOF100) check if needed first
+        /// </summary>
+
+        /// <summary>
+        /// Tests UpdateStatus(Object sender, string myCurrentStatus) check if needed first
+        /// </summary>
+
+        /// <summary>
+        /// Tests AddError(Object sender, string myNewError) check if needed first
+        /// </summary>
+
+        /// <summary>
+        /// Tests ClearErrors(Object sender) check if needed first
+        /// </summary>
+        
+
+
     }
 }

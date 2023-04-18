@@ -1250,33 +1250,8 @@ namespace POD.Analyze
                 AnalysisDone.Invoke(this, null);
         }
 
-        /// <summary>
-        ///     Archive output so it can be used when generating charts after analysis is finished.
-        /// </summary>
-        /// <param name="myArchiveName">the name used to store the analysis under</param>
-        /// <returns>does the name already exist?</returns>
-        public bool ArchiveOutput(string myArchiveName)
-        {
-            bool nameIsNew = false;
 
-            foreach (Analysis analysis in _archivedOutputs)
-            {
-                if (myArchiveName == analysis.Name)
-                {
-                    nameIsNew = true;
-                }
-            }
-
-            if (nameIsNew == false && _archivedOutputs != null)
-            {
-                _archivedOutputs.Add(CreateDuplicate());
-                _archivedOutputs[_archivedOutputs.Count - 1].Name = myArchiveName;
-            }
-
-            return nameIsNew;
-        }
-
-        public void CalculateInitialValuesWithNewInfo(SourceInfo myInfo)
+        private void CalculateInitialValuesWithNewInfo(SourceInfo myInfo)
         {
             if (HasBeenInitialized == false && Data.RowCount > 0)
             {
@@ -1300,7 +1275,6 @@ namespace POD.Analyze
                 Data.FlawTransform = InFlawTransform;
 
                 if(_python != null) {
-                    //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
                     _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
                 }  
             }
