@@ -86,6 +86,7 @@
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSources.cs" />
     <Compile Include="DataTableWithRanges.cs" />
+    <Compile Include="IAnalysisData.cs" />
     <Compile Include="ImportTemplate.cs" />
     <Compile Include="ImportTemplates.cs" />
     <Compile Include="PODListBoxItem.cs" />
