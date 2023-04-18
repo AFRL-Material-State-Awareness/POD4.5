@@ -13,6 +13,67 @@ namespace POD.Data
 {
     public interface IAnalysisData
     {
+
+        /// Propreties region
+        string ActivatedFlawName { get; }
+
+        string ActivatedOriginalFlawName { get; }
+
+        List<string> ActivatedOriginalResponseNames { get; }
+
+        string GetRemovedPointComment(int myColIndex, int myRowIndex);
+
+        void SetRemovedPointComment(int myColIndex, int myRowIndex, string myComment);
+
+        DataTable ActivatedFlaws { get; }
+        List<string> ActivatedMetaDataNames { get; }
+        DataTable ActivatedMetaDatas { get; }
+        List<string> ActivatedResponseNames { get; }
+        DataTable ActivatedResponses { get; }
+        List<string> ActivatedSpecimenIDNames { get; }
+        DataTable ActivatedSpecimenIDs { get; }
+        DataTable ActivatedTransformedFlaws { get; }
+        DataTable ActivatedTransformedResponses { get; }
+        List<string> AvailableFlawNames { get; }
+        List<string> AvailableMetaDataNames { get; }
+        List<string> AvailableResponseNames { get; }
+        AnalysisDataTypeEnum DataType { get; set; }
+        DataTable FitResidualsTable { get; }
+        TransformTypeEnum FlawTransform { get; set; }
+        /// <summary>
+        ///     Table holds the flaw size, POD and confidence bound
+        /// </summary>
+        DataTable PodCurveTable { get; }
+        /// <summary>
+        /// Holds the values to plot the ghost curve (will be the same as PODCurveTable if no flaws are excluded)
+        /// </summary>
+        DataTable PodCurveTable_All { get; }
+        /// <summary>
+        /// Table holds the frequency of ranges in order to plot the normality chart
+        /// </summary>
+        DataTable NormalityTable { get; }
+        /// <summary>
+        /// get the table to plot a normal curve overlay
+        /// </summary>
+        DataTable NormalityCurveTable { get; }
+        DataTable OriginalData { get; }
+        double LambdaValue { get; }
+        /// <summary>
+        ///     Get/set the response data transform type
+        /// </summary>
+        TransformTypeEnum ResponseTransform { get; set; }
+        /// <summary>
+        ///     Holds the a50, a90, a90/95, V11, V12, V22 (Vs represent the values for the varaince-covariance matrix)
+        /// </summary>
+        DataTable ThresholdPlotTable { get; }
+        /// <summary>
+        ///     Holds the a50, a90, a90/95, V11, V12, V22 (plots the ghost curve if applicable)
+        /// </summary>
+        DataTable ThresholdPlotTable_All { get; }
+        /// <summary>
+        /// Creates a duplicate list of turned off points to read. DataPointIndex has ColumnName and RowIndex.
+        /// </summary>
+        List<DataPointIndex> TurnedOffPoints { get; }
         /// <summary>
         ///     Make active a single flaw column.
         /// </summary>
@@ -20,7 +81,7 @@ namespace POD.Data
         /// <summary>
         ///     Make active multiple flaw columns.
         /// </summary>
-        DataTable ActivateFlaws(List<string> myNames, bool runUpdate = true)
+        DataTable ActivateFlaws(List<string> myNames, bool runUpdate = true);
         DataTable ActivateResponses(List<string> myNames, bool runUpdate = true);
         DataTable ActivateSpecIDs(List<string> myNames);
         /// <summary>

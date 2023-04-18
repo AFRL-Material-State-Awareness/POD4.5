@@ -568,13 +568,6 @@ namespace POD.Data
             get { return new List<string>(_availableResponses); }
         }
 
-        /// <summary>
-        ///     Get a copy of the available specimen ID column names
-        /// </summary>
-        public List<string> AvailableSpecimenIDNames
-        {
-            get { return new List<string>(_availableSpecIDs); }
-        }
 
         /// <summary>
         ///     Get the type of analysis that will be performed on the data
@@ -665,7 +658,7 @@ namespace POD.Data
         }
 
         /// <summary>
-        ///     Holds the a50, a90, a90/95, V11, V12, V22 (not sure what Vs are yet)
+        ///     Holds the a50, a90, a90/95, V11, V12, V22 (Vs represent the values for the varaince-covariance matrix)
         /// </summary>
         public DataTable ThresholdPlotTable
         {
@@ -673,7 +666,7 @@ namespace POD.Data
         }
 
         /// <summary>
-        ///     Holds the a50, a90, a90/95, V11, V12, V22 (not sure what Vs are yet)
+        ///     Holds the a50, a90, a90/95, V11, V12, V22 (plots the ghost curve if applicable)
         /// </summary>
         public DataTable ThresholdPlotTable_All
         {
