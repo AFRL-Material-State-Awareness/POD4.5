@@ -21,9 +21,9 @@ namespace POD.Data
 
         [NonSerialized]
         public List<SortPoint> sortByX = new List<SortPoint>();
-        public int _prevAbove;
-        public int _prevBelow;
-        public bool _prevBelowDoesNotInclude;
+        private int _prevAbove;
+        private int _prevBelow;
+        private bool _prevBelowDoesNotInclude;
         public Dictionary<int, Dictionary<int, string>> _commentDictionary;
 
         public Dictionary<int, Dictionary<int, string>> CommentDictionary
@@ -272,11 +272,11 @@ namespace POD.Data
             get { return _residualFullCensoredTable; }
         }
 
-        public double ResponseLeft;
-        public double ResponseRight;
+        public double ResponseLeft { get; set; }
+        public double ResponseRight { get; set; }
         private double _smallestFlawSize;
         private double _smallestResponse;
-        public bool IsFrozen;
+        public bool IsFrozen { get; set; }
 
         private double _minSignal = 0.0;
 

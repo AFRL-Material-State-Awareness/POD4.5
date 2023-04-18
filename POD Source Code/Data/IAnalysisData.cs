@@ -1,6 +1,7 @@
 ﻿using CSharpBackendWithR;
 using POD;
 using POD.Data;
+using POD.ExcelData;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +14,9 @@ namespace POD.Data
 {
     public interface IAnalysisData
     {
-
+        double ResponseLeft { get; set; }
+        double ResponseRight { get; set; }
+        bool IsFrozen { get; set; }
         /// Propreties region
         string ActivatedFlawName { get; }
 
@@ -190,7 +193,20 @@ namespace POD.Data
 
         HMAnalysisObject HMAnalysisObject { get; }
         AHatAnalysisObject AHATAnalysisObject { get; }
-        
 
+        /// Will end up removing?
+        int ResponsePartialBelowMinCount { get; }
+        int ResponsePartialAboveMaxCount { get; }
+        int ResponseCompleteBelowMinCount { get; }
+        int ResponseCompleteAboveMaxCount { get; }
+        int ResponseBetweenCount { get; }
+
+        double MaxFlaw { get; set; }
+        double MinFlaw { get; set; }
+        double MaxSignal { get; set; }
+        double MinSignal { get; set; }
+
+        //Excel Properties
+        void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true);
     }
 }
