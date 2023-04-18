@@ -99,8 +99,11 @@ namespace POD.Analyze
         #endregion
 
         #region Constructors
-
-        public Analysis()
+        /// <summary>
+        /// this constructor is used for testing only
+        /// </summary>
+        /// <param name="data"></param>
+        public Analysis(IAnalysisData data=null)
         {
             Initialize();
 
