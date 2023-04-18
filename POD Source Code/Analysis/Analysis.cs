@@ -72,19 +72,6 @@ namespace POD.Analyze
         /// Used to indicate that the run analysis a threshold change in the main regression panel
         /// </summary>
         private RCalculationType _analysisCalculationType = RCalculationType.Full;
-        public bool AnalysisRunning
-        {
-            get
-            {
-                if (stillRunningAnalysis)
-                    return true;
-
-                if(analysisLauncher == null)
-                    return false;
-
-                return analysisLauncher.IsBusy && stillRunningAnalysis;
-            }
-        }
 
         public bool IsFrozen
         {
@@ -1228,14 +1215,14 @@ namespace POD.Analyze
                 //_aHatAnalysisObject.ClearMetrics();
             }
         }
-        public void SetUpLambda()
+        public void SetUpLambda(ITemporaryLambdaCalc tempLambdaInput=null)
         {
             double lambdaTemp;
             AHatAnalysisObject currAnalysis = _aHatAnalysisObject;
             List<double> tempFlaws = currAnalysis.Flaws;
             List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
-            TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, _rDotNet);
-            lambdaTemp = TempLambda.CalcTempLambda();
+            ITemporaryLambdaCalc tempLambda = tempLambdaInput ?? new TemporaryLambdaCalc(tempFlaws, tempResponses, _rDotNet);
+            lambdaTemp = tempLambda.CalcTempLambda();
             InLambdaValue= lambdaTemp;
         }
         public void UpdateProgress(Object sender, int myProgressOutOf100)
@@ -1785,7 +1772,7 @@ namespace POD.Analyze
             
         }
         //this function checks to see if the user is loading a saved file in which data was censored. If so, the flag is turned on
-        public void CheckForLoadFileWithCensoredData()
+        private void CheckForLoadFileWithCensoredData()
         {
             if (_hmAnalysisObject != null)
             {

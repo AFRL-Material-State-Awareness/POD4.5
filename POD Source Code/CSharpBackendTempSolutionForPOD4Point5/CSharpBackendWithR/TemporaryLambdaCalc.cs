@@ -11,7 +11,7 @@ namespace CSharpBackendWithR
     /// <summary>
     /// auto-calculates a default lambda if the user selected a box-cox transformation in the choose transform panel or the full regression panel
     /// </summary>
-    public class TemporaryLambdaCalc
+    public class TemporaryLambdaCalc : ITemporaryLambdaCalc
     {
         private List<double> cracks;
         private List<double> signalResponse;
@@ -55,5 +55,10 @@ namespace CSharpBackendWithR
             if (lambda != 0.0) return true;
             else return false;
         }
+    }
+
+    public interface ITemporaryLambdaCalc
+    {
+        double CalcTempLambda();
     }
 }
