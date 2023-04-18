@@ -1331,9 +1331,7 @@ namespace POD.Analyze
                 if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     InFlawTransform = TransformTypeEnum.Log;
-                    //InFlawTransform = _python.TransformEnumToInt(Data.FlawTransform);
                     Data.FlawTransform = InFlawTransform;
-                    //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
                     _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
                 }
 
@@ -1345,10 +1343,6 @@ namespace POD.Analyze
 
                 HasBeenInitialized = true;
             }
-
-            //force data table to be transformed to current transform type
-            //XAxisTransformIn = _data.FlawTransform;// _xAxisTransformIn;
-            //YAxisTransformIn = _data.ResponseTransform;// _yAxisTransformIn;
         }
 
         public bool UsingInitialGuesses
