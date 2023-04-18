@@ -8,13 +8,13 @@ namespace CSharpBackendWithR
 {
     class GenerateRTransformDF_HitMiss
     {
-        private REngineObject myREngineObject;
+        private IREngineObject myREngineObject;
         private REngine myREngine;
         private HMAnalysisObject newHMAnalysis;
         private List<double> cracks;
         private List<double> hitMiss;
         private List<int> indices;
-        public GenerateRTransformDF_HitMiss(REngineObject myREngineObjectInput, HMAnalysisObject newHMnalysisInput)
+        public GenerateRTransformDF_HitMiss(IREngineObject myREngineObjectInput, HMAnalysisObject newHMnalysisInput)
         {
             this.myREngineObject = myREngineObjectInput;
             this.myREngine = this.myREngineObject.RDotNetEngine;

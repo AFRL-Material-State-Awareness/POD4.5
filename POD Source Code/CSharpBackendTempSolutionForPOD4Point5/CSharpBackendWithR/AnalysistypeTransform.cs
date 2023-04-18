@@ -11,14 +11,14 @@ namespace CSharpBackendWithR
     {
         private HMAnalysisObject newHMAnalysisObject;
         private AHatAnalysisObject newAHatAnalysisObject;
-        private REngineObject analysisEngine;
+        private IREngineObject analysisEngine;
         private int srsOrRSS;//0=simple random sampling, 1=ranked set sampling
         private HMAnalysisObject resultsHMAnalysis;
         private AHatAnalysisObject resultsAHatAnalysis;
         //controls
         private HitMissAnalysisRControl newHitMissControl;
         private AHatAnalysisRControl newAHatControl;
-        public AnalysistypeTransform(REngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
+        public AnalysistypeTransform(IREngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
         {
             this.analysisEngine = analysisEngine;
             this.newHMAnalysisObject = newHitMissAnalysisObjectInput;

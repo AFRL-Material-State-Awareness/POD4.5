@@ -189,13 +189,13 @@ namespace POD.Data
         ///     IronPython engine used to call Python code/libraries.
         /// </summary>
         [NonSerialized]
-        private IPy4C _python;
+        private I_IPy4C _python;
 
         /// <summary>
         /// RDotEngineObjectInstance
         /// </summary>
         [NonSerialized]
-        private REngineObject _rDotNet;
+        private IREngineObject _rDotNet;
 
         private HMAnalysisObject _hmAnalysisObject;
         private AHatAnalysisObject _aHatAnalysisObject;
@@ -1616,11 +1616,11 @@ namespace POD.Data
         }
         #endregion
 
-        public void SetPythonEngine(IPy4C myPy, string myAnalysisName)
+        public void SetPythonEngine(I_IPy4C myPy, string myAnalysisName)
         {
             _python = myPy;
         }
-        public void SetREngine(REngineObject myREngine, string myAnalysisName)
+        public void SetREngine(IREngineObject myREngine, string myAnalysisName)
         {
             _rDotNet = myREngine;
             if (_hmAnalysisObject == null && _dataType == AnalysisDataTypeEnum.HitMiss)

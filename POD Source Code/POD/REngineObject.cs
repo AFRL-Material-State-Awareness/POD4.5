@@ -11,7 +11,7 @@ namespace CSharpBackendWithR
     /// <summary>
     /// This class controls everything related to the R backend including initializing the R.NET engine, importing the necessary libaries, and running the appropriate scripts
     /// </summary>
-    public class REngineObject
+    public class REngineObject : IREngineObject
     {
         private REngine rEngine;
         private string applicationPathScripts;
@@ -301,7 +301,7 @@ namespace CSharpBackendWithR
         /// <summary>
         /// used to clear the global environment for the rEngine objects and recalls all scripts
         /// </summary>
-        public void clearGlobalIInREngineObject()
+        public void ClearGlobalIInREngineObject()
         {
             this.rEngine.ClearGlobalEnvironment();
             InitializeRScripts();
@@ -310,6 +310,14 @@ namespace CSharpBackendWithR
         public static bool REngineRunning=false;
         public static bool PythonLoaded { get; set; }
     }
+    // Interface used to Mock the REngineObject class in order to apply unit testing
+    public interface IREngineObject
+    {
+        REngine RDotNetEngine { get; }
+        DataTable rDataFrameToDataTable(RDotNet.DataFrame myDataFrame);
+    }
+
+
     //custom exception handling classes to aid the user in figuring out why the application backend didn't initialize properly
     [Serializable]
     public class FailedLoadingLibrariesException : Exception

@@ -15,9 +15,9 @@ namespace CSharpBackendWithR
     {
         private List<double> cracks;
         private List<double> signalResponse;
-        private REngineObject myREngineObject;
+        private IREngineObject myREngineObject;
         private REngine myREngine;
-        public TemporaryLambdaCalc(List<double> cracksInput, List<double> signalResponseInput, REngineObject myREngineInput)
+        public TemporaryLambdaCalc(List<double> cracksInput, List<double> signalResponseInput, IREngineObject myREngineInput)
         {
             this.cracks = cracksInput;
             this.signalResponse = signalResponseInput;

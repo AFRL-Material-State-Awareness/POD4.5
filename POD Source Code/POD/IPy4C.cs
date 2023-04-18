@@ -14,7 +14,7 @@ using System.Diagnostics;
 using CSharpBackendWithR;
 namespace POD
 {
-    public class IPy4C
+    public class IPy4C : I_IPy4C
     {
         Dictionary<string, HMAnalysisObject> _hitMissAnalyses;
         Dictionary<string, AHatAnalysisObject> _ahatAnalyses;
@@ -22,10 +22,10 @@ namespace POD
         MemoryStream _errorStream;
         EventRaisingStreamWriter _outputWriter;
         //PODStatusBar _statusBar;
-        public AnalysisErrorHandler OnAnalysisError;
-        public AnalysisErrorHandler OnProgressUpdate;
-        public AnalysisErrorHandler OnAnalysisFinish;
-        public string CurrentAnalysisName;
+        public AnalysisErrorHandler OnAnalysisError { get; set; }
+        public AnalysisErrorHandler OnProgressUpdate { get; set; }
+        public AnalysisErrorHandler OnAnalysisFinish { get; set; }
+        public string CurrentAnalysisName { get; set; }
         /// <summary>
         /// A way to at least record status even if the status bar isn't being used.
         /// </summary>
@@ -38,7 +38,7 @@ namespace POD
             get { return _outputWriter; }
         }
         EventRaisingStreamWriter _errorWriter;
-
+        //remove***
         public int ProgressOutOf100
         {
             get
@@ -55,7 +55,7 @@ namespace POD
                 }
             }
         }
-
+        //remove***
         public string ProgressText
         {
             get
@@ -354,5 +354,36 @@ namespace POD
                 return _ahatAnalyses.Count;
             }
         }
+    }
+    public interface I_IPy4C
+    {
+        void AddErrorText(string myError);
+        void ClearErrorText();
+        EventRaisingStreamWriter ErrorWriter {get;}
+
+        HMAnalysisObject HitMissAnalsysis(string myAnalysisName);
+        AHatAnalysisObject AHatAnalysis(string myAnalysisName);
+
+        int TransformEnumToInt(TransformTypeEnum myTransformType);
+
+        string GetPValueDecision(double myValue);
+
+        void Close();
+
+        void NotifyFinishAnalysis();
+
+
+        AnalysisErrorHandler OnAnalysisError { get; set; }
+        AnalysisErrorHandler OnProgressUpdate { get; set; }
+        AnalysisErrorHandler OnAnalysisFinish { get; set; }
+        int FailedRunCount { get; set; }
+
+        EventRaisingStreamWriter OutputWriter { get; }
+
+        string ProgressText { get; set; }
+
+        int ProgressOutOf100 { get; set; }
+
+        string CurrentAnalysisName { get; set; }
     }
 }

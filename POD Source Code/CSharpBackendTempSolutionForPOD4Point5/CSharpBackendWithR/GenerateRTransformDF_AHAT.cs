@@ -8,7 +8,7 @@ namespace CSharpBackendWithR
 {
     class GenerateRTransformDF_AHAT
     {
-        private REngineObject myREngineObject;
+        private IREngineObject myREngineObject;
         private REngine myREngine;
         private AHatAnalysisObject newAHatAnalysis;
         private double lambda;
@@ -18,7 +18,7 @@ namespace CSharpBackendWithR
         private List<int> indices;
 
         private bool usingAllPoints;
-        public GenerateRTransformDF_AHAT(REngineObject myREngineObjectInput, AHatAnalysisObject newAHatAnalysisInput, bool usingAllPoints)
+        public GenerateRTransformDF_AHAT(IREngineObject myREngineObjectInput, AHatAnalysisObject newAHatAnalysisInput, bool usingAllPoints)
         {
             this.myREngineObject = myREngineObjectInput;
             this.myREngine = this.myREngineObject.RDotNetEngine;

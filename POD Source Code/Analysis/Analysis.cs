@@ -1218,10 +1218,9 @@ namespace POD.Analyze
         public void SetUpLambda(ITemporaryLambdaCalc tempLambdaInput=null)
         {
             double lambdaTemp;
-            AHatAnalysisObject currAnalysis = _aHatAnalysisObject;
-            List<double> tempFlaws = currAnalysis.Flaws;
-            List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
-            ITemporaryLambdaCalc tempLambda = tempLambdaInput ?? new TemporaryLambdaCalc(tempFlaws, tempResponses, _rDotNet);
+            ITemporaryLambdaCalc tempLambda = tempLambdaInput ?? new TemporaryLambdaCalc(_aHatAnalysisObject.Flaws, 
+                _aHatAnalysisObject.Responses[_aHatAnalysisObject.SignalResponseName], 
+                _rDotNet);
             lambdaTemp = tempLambda.CalcTempLambda();
             InLambdaValue= lambdaTemp;
         }
@@ -1959,12 +1958,12 @@ namespace POD.Analyze
 
         #endregion
 
-        public override void SetPythonEngine(IPy4C myPy)
+        public override void SetPythonEngine(I_IPy4C myPy)
         {
             _python = myPy;     
             _data.SetPythonEngine(_python, Name);
         }
-        public override void SetREngine(REngineObject myREngine)
+        public override void SetREngine(IREngineObject myREngine)
         {
             _rDotNet = myREngine;
             if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)

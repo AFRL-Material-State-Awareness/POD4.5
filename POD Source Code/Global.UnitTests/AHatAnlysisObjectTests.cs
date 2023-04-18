@@ -17,7 +17,7 @@ namespace Global.UnitTests
         [SetUp]
         public void Setup()
         {
-            _ahatAnalysisObject = new AHatAnalysisObject();
+            _ahatAnalysisObject = new AHatAnalysisObject("SampleAnalysis");
             _reponseDict = new Dictionary<string, List<double>>();
             
         }

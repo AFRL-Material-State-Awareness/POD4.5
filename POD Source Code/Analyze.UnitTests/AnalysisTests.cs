@@ -4,21 +4,25 @@ using NUnit.Framework;
 using Moq;
 using CSharpBackendWithR;
 using POD.Analyze;
-
+using POD;
 namespace Analyze.UnitTests
 {
     [TestFixture]
     public class AnalysisTests
     {
         private Mock<ITemporaryLambdaCalc> _tempLambdaCalc;
+        private Mock<IREngineObject> _rEngine;
+        private Mock<I_IPy4C> _python;
         private Analysis _analysis;
         [SetUp]
         public void SetUp()
         {
             _tempLambdaCalc = new Mock<ITemporaryLambdaCalc>();
+            _rEngine = new Mock<IREngineObject>();
+            _python = new Mock<I_IPy4C>();
             _analysis = new Analysis();
-
-            //_analysis.SetREngine(_rengine)
+            _analysis.Name = "SampleAnalysis";
+            
         }
         /// <summary>
         /// Tests for the SetUpLambda() function
@@ -27,7 +31,11 @@ namespace Analyze.UnitTests
         public void SetUpLambda_ValidLambdaCalculated_AssignedLambdaToInLambdaValueField()
         {
             //Arrange
-            _tempLambdaCalc.Setup(l => l.CalcTempLambda()).Returns(1.0);
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            _python.Setup(ahat => ahat.AHatAnalysis("SampleAnalysis")).Returns(new AHatAnalysisObject("SampleAnalysis"));
+            _analysis.SetPythonEngine(_python.Object);
+            _analysis.SetREngine(_rEngine.Object);         
+            _tempLambdaCalc.Setup(l => l.CalcTempLambda()).Returns(1.0);           
             //Act
             _analysis.SetUpLambda(_tempLambdaCalc.Object);
             //Assert
