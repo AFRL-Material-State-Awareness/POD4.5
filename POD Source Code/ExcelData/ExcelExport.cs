@@ -24,7 +24,7 @@ namespace POD.ExcelData
         Compare4
     }
 
-    public class ExcelExport
+    public class ExcelExport : IExcelExport
     {
         SLDocument _workbook;
 
@@ -36,11 +36,6 @@ namespace POD.ExcelData
         public ExcelExport()
         {
             _workbook = new SLDocument();
-        }
-
-        public void WriteTest()
-        {
-            _workbook.SetCellValueNumeric(4, 2, "3.14159");
         }
 
         public string AskUserToSave(string myDefaultFileName, out bool shouldSave)
@@ -79,8 +74,8 @@ namespace POD.ExcelData
         /// link to author: https://stackoverflow.com/users/79271/chrisw
         /// </summary>
         /// <param name="file"></param>
-        /// <returns></returns>
-        protected virtual bool IsFileLocked(FileInfo file)
+        /// <returns>boolean</returns>
+        private bool IsFileLocked(FileInfo file)
         {
             try
             {
@@ -342,8 +337,6 @@ namespace POD.ExcelData
                                      myPageName, "View Analysis " + myPageName + " Worksheet.");
         }
 
-
-
         public void SetCellTextWrapped(int row, int column, bool p)
         {
             var style = Workbook.GetCellStyle(row, column);
@@ -365,13 +358,24 @@ namespace POD.ExcelData
             Workbook.SetRowHeight(rowIndex, style * multFactor);
         }
 
-        public void RightJustifyCell(int rowIndex, int colIndex)
-        {
-            var style =Workbook.GetCellStyle(rowIndex, colIndex);
-
-            style.Alignment.Horizontal = HorizontalAlignmentValues.Right;
-
-            Workbook.SetCellStyle(rowIndex, colIndex, style);
-        }
+    }
+    public interface IExcelExport
+    {
+        string AskUserToSave(string myDefaultFileName, out bool shouldSave);
+        void SaveToFileWithDefaultName(string myDefaultFileName);
+        void SaveToFile(string myFileName);
+        void RemoveDefaultSheet();
+        void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, PODChartLocations location = PODChartLocations.Default);
+        void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, PODChartLocations location = PODChartLocations.Default);
+        void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol);
+        void SetCellValue(int rowIndex, int colIndex, string myValue);
+        void SetCellValue(int rowIndex, int colIndex, double myValue);
+        void SetCellValue(int rowIndex, int colIndex, DateTime myValue);
+        void WriteTableToExcel(System.Data.DataTable myTable, ref int myRowIndex, ref int myColIndex, bool fitWidthOnLastColumn = true);
+        void InsertReturnToTableOfContents(int myRowIndex, int myColIndex, string myAnalysisIndex);
+        void InsertAnalysisWorksheetLink(int myRowIndex, int myColIndex, string myAnalysisWorksheetName, string myPageName);
+        void SetCellTextWrapped(int row, int column, bool p);
+        void MergeCells(int rowStart, int columnStart, int rowEnd, int columnEnd);
+        void SetRowSize(int rowIndex, double multFactor);
     }
 }
