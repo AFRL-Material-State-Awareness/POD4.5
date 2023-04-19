@@ -232,5 +232,14 @@ namespace Analyze.UnitTests
             Assert.That(_analysis.Python, Is.Not.Null);
         }
 
+        /// <summary>
+        /// Tests for the RunAnalysis(bool quickAnalysis=false) function
+        /// </summary>
+        [Test]
+        public void RunAnalysis_NotQuickAnalysis_ReturnsTrue()
+        {
+            
+
+        }
     }
 }

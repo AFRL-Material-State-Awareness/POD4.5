@@ -1462,7 +1462,7 @@ namespace POD.Analyze
             _activeAnalysis = this;
             _activeAnalysisIndex = -1;
         }
-        public bool CheckForTurnedOffPoints(int index)
+        private bool CheckForTurnedOffPoints(int index)
         {
             //assume the data point is turned on 
             bool turnedOn= true;
@@ -1476,7 +1476,7 @@ namespace POD.Analyze
             }
             return turnedOn;
         }
-        public void UpdateCensoredData()
+        private void UpdateCensoredData()
         {
             //_aHatAnalysisObject.SignalResponseName = _aHatAnalysisObject.Responses_all.ElementAt(i).Key;
             //hitmiss analysis
@@ -2804,7 +2804,7 @@ namespace POD.Analyze
             stillRunningAnalysis = false;
 
         }
-        public void CheckForLoadedFile()
+        private void CheckForLoadedFile()
         {
             //if flaws and responses are empty, we are loading from a saved file, so update the _hmanalyiss object from the analysis data class.
             //added the check of the x and y values in case the user has an analysis open and then opens an already saved file
