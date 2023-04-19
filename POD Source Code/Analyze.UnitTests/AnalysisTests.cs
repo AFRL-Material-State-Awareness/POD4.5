@@ -242,5 +242,94 @@ namespace Analyze.UnitTests
             
 
         }
+        // <summary>
+        /// Tests for the RunAnalysis(bool quickAnalysis=false) function
+        /// </summary>
+        [Test]
+        public void UpdateRTransforms_AnalysisTypeHitMissNoChange_ModelHitMissTheSame()
+        {
+            SetupIPy4CTransformsHitMiss(TransformTypeEnum.Linear, 1);
+            SetPythonAndREngines();
+            var originalModel = _analysis.Data.HMAnalysisObject.ModelType;
+            //don't change the flaw transform to log
+            //Act
+            _analysis.UpdateRTransforms();
+            //Assert
+            Assert.That(_analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(originalModel));
+            Assert.That(_analysis.Data.AHATAnalysisObject, Is.Null);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Log , 2)]
+        [TestCase(TransformTypeEnum.Inverse, 3)]
+        public void UpdateRTransforms_AnalysisTypeHitMissChangesTransform_ReturnsModelUpdateForHitMiss(TransformTypeEnum transformChange, int expectedModelType)
+        {
+            SetupIPy4CTransformsHitMiss(transformChange, expectedModelType);
+            SetPythonAndREngines();
+            //change the flaw transform to log
+            _analysis.InFlawTransform = transformChange;
+            //Act
+            _analysis.UpdateRTransforms();
+            //Assert
+            Assert.That(_analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
+            Assert.That(_analysis.Data.AHATAnalysisObject, Is.Null);
+        }
+        [Test]
+        public void UpdateRTransforms_AnalysisTypeAHatNoChange_TransformsAndModelSame()
+        {
+            SetupIPy4CTransformsHitAhat();
+            SetPythonAndREngines();
+            var originalModel = _analysis.Data.AHATAnalysisObject.ModelType;
+            //dont change transforms
+            //Act
+            _analysis.UpdateRTransforms();
+            //Assert
+            Assert.That(_analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(originalModel));
+            Assert.That(_analysis.Data.HMAnalysisObject, Is.Null);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, TransformTypeEnum.Linear, 1)]
+        [TestCase(TransformTypeEnum.Log, TransformTypeEnum.Linear, 2)]
+        [TestCase(TransformTypeEnum.Linear, TransformTypeEnum.Log, 3)]
+        [TestCase(TransformTypeEnum.Log, TransformTypeEnum.Log, 4)]
+        [TestCase(TransformTypeEnum.Linear, TransformTypeEnum.BoxCox, 5)]
+        [TestCase(TransformTypeEnum.Log, TransformTypeEnum.BoxCox, 6)]
+        [TestCase(TransformTypeEnum.Inverse, TransformTypeEnum.BoxCox, 7)]
+        [TestCase(TransformTypeEnum.Linear, TransformTypeEnum.Inverse, 8)]
+        [TestCase(TransformTypeEnum.Log, TransformTypeEnum.Inverse, 9)]
+        [TestCase(TransformTypeEnum.Inverse, TransformTypeEnum.Linear, 10)]
+        [TestCase(TransformTypeEnum.Inverse, TransformTypeEnum.Log, 11)]
+        [TestCase(TransformTypeEnum.Inverse, TransformTypeEnum.Inverse, 12)]
+
+        public void UpdateRTransforms_AnalysisTypeAHatChanges_TransformsAndModelSame(TransformTypeEnum transformChangeX, TransformTypeEnum transformChangeY, int expectedModelType)
+        {
+            SetupIPy4CTransformsHitAhat();
+            SetPythonAndREngines();
+            //change the flaw transform to log
+            _analysis.InFlawTransform = transformChangeX;
+            _analysis.InResponseTransform = transformChangeY;
+            //Act
+            _analysis.UpdateRTransforms();
+            //Assert
+            Assert.That(_analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
+            Assert.That(_analysis.Data.HMAnalysisObject, Is.Null);
+        }
+        private void SetupIPy4CTransformsHitMiss(TransformTypeEnum testTransformX, int expectedOutput)
+        {
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+            _analysis.Data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _python.Setup(hitmiss => hitmiss.HitMissAnalsysis("SampleAnalysis")).Returns(new HMAnalysisObject("SampleAnalysis"));
+            _python.Setup(modelType => modelType.TransformEnumToInt(testTransformX)).Returns(expectedOutput);
+        }
+        private void SetupIPy4CTransformsHitAhat()
+        {
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            _analysis.Data.DataType = AnalysisDataTypeEnum.AHat;
+            _python.Setup(ahat => ahat.AHatAnalysis("SampleAnalysis")).Returns(new AHatAnalysisObject("SampleAnalysis"));
+            //setup all possible transforms since AHat could be either
+            _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Linear)).Returns(1);
+            _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Inverse)).Returns(3);
+            _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.BoxCox)).Returns(5);
+        }
     }
 }

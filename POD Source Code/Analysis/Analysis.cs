@@ -1744,24 +1744,17 @@ namespace POD.Analyze
         }
         public void UpdateRTransforms()
         {
+            // Pass the transforms into the AnalysisData class to update the HM/AHat AnlysisObject()
             Data.FlawTransform = InFlawTransform;
             Data.ResponseTransform = InResponseTransform;
-            //x-axis transformation check
-            //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
-            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-            {
-                Data.HMAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
 
-            }
+            if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                Data.HMAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
             else
             {
+                // Apply both transforms to AHat and update the model type
                 Data.AHATAnalysisObject.A_transform = _python.TransformEnumToInt(Data.FlawTransform);
-            }
-            //y-axis transformation check
-            //_podDoc.ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
-            if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
-            {
-                Data.AHATAnalysisObject.Ahat_transform= _python.TransformEnumToInt(Data.ResponseTransform);
+                Data.AHATAnalysisObject.Ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
                 AHatModelUpdate();
             }
         }
@@ -1769,64 +1762,40 @@ namespace POD.Analyze
         {
             //linear- linear
             if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 1)
-            {
                 Data.AHATAnalysisObject.ModelType = 1;
-            }
             //log - linear
             else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 1)
-            {
                 Data.AHATAnalysisObject.ModelType = 2;
-            }
             //linear- log
             else if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 2)
-            {
                 Data.AHATAnalysisObject.ModelType = 3;
-            }
             // log - log
             else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 2)
-            {
                 Data.AHATAnalysisObject.ModelType = 4;
-            }
             // linear - box-cox
             else if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 5)
-            {
                 Data.AHATAnalysisObject.ModelType = 5;
-            }
             // log - boxcox
             else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 5)
-            {
                 Data.AHATAnalysisObject.ModelType = 6;
-            }
             // inverse - boxcox
             else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 5)
-            {
                 Data.AHATAnalysisObject.ModelType = 7;
-            }
             // linear - inverse
             else if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 3)
-            {
                 Data.AHATAnalysisObject.ModelType = 8;
-            }
             // log - inverse
             else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 3)
-            {
                 Data.AHATAnalysisObject.ModelType = 9;
-            }
             // inverse - linear
             else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 1)
-            {
                 Data.AHATAnalysisObject.ModelType = 10;
-            }
             // inverse - log
             else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 2)
-            {
                 Data.AHATAnalysisObject.ModelType = 11;
-            }
             // inverse x - inverse y
             else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 3)
-            {
                 Data.AHATAnalysisObject.ModelType = 12;
-            }
         }
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
         {
