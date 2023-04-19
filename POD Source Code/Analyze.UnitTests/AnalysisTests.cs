@@ -5,6 +5,8 @@ using Moq;
 using CSharpBackendWithR;
 using POD.Analyze;
 using POD;
+using System.Data;
+
 namespace Analyze.UnitTests
 {
     [TestFixture]
@@ -14,6 +16,7 @@ namespace Analyze.UnitTests
         private Mock<IREngineObject> _rEngine;
         private Mock<I_IPy4C> _python;
         private Analysis _analysis;
+        private DataTable _testDataTable;
         [SetUp]
         public void SetUp()
         {
@@ -22,12 +25,31 @@ namespace Analyze.UnitTests
             _python = new Mock<I_IPy4C>();
             _analysis = new Analysis();
             _analysis.Name = "SampleAnalysis";
-            
         }
         private void SetPythonAndREngines()
         {
             _analysis.SetPythonEngine(_python.Object);
             _analysis.SetREngine(_rEngine.Object);
+        }
+        private void DataTableSampleSetupLinear()
+        {
+            _testDataTable = new DataTable();
+            _testDataTable.Columns.Add("Test_Column_1");
+            _testDataTable.Columns[0].DataType = typeof(double);
+            for (int i =0; i< 11; i++)
+            {
+                _testDataTable.Rows.Add((double)i);
+            }
+        }
+        private void DataTableSampleSetupLog()
+        {
+            _testDataTable = new DataTable();
+            _testDataTable.Columns.Add("Test_Column_1");
+            _testDataTable.Columns[0].DataType = typeof(double);
+            for (double i = 0.0; i < 1.1; i=i+.1)
+            {
+                _testDataTable.Rows.Add(Math.Log(i));
+            }
         }
         /// <summary>
         /// Tests for the SetUpLambda() function
@@ -145,10 +167,59 @@ namespace Analyze.UnitTests
             Assert.That(_analysis.InResponseDecisionMin, Is.EqualTo(.05));
             Assert.That(_analysis.InResponseDecisionMax, Is.EqualTo(.05));
             Assert.That(_analysis.InResponseDecisionIncCount, Is.EqualTo(30));
-            //
+            //***
             Assert.That(_analysis.AnalysisDataType, Is.EqualTo(AnalysisDataTypeEnum.HitMiss));
             Assert.That(_analysis.InFlawTransform, Is.EqualTo(TransformTypeEnum.Log));
             Assert.That(_analysis.Data.FlawTransform, Is.EqualTo(TransformTypeEnum.Log));
         }
+
+        /// <summary>
+        /// Tests for the GetBufferedMinMax(DataTable myTable, out double myMin, out double myMax) function
+        /// Note: this function does not accept negative flaw values
+        /// </summary>
+        [Test]
+        public void GetBufferedMinMax_EmptyDataTable_ReturnsNegativePt1MinAnd1Pt1Max()
+        {
+            //Arrange
+            DataTable emptyDataTable = new DataTable();
+            double myMin = Double.NaN;
+            double myMax = Double.NaN;
+            //Act
+            Analysis.GetBufferedMinMax(emptyDataTable, out myMin, out myMax);
+            //Assert
+            Assert.That(myMin, Is.EqualTo(-.1));
+            Assert.That(myMax, Is.EqualTo(1.1));
+
+        }
+        [Test]
+        public void GetBufferedMinMax_NonEmptyDataTableLinear_ReturnsBufferedMinAndMaxOfDataTable()
+        {
+            //Arrange
+            DataTableSampleSetupLinear();
+            double myMin = Double.NaN;
+            double myMax = Double.NaN;
+            //Act
+            Analysis.GetBufferedMinMax(_testDataTable, out myMin, out myMax);
+            //Assert
+            Assert.That(myMin, Is.EqualTo(-1));
+            Assert.That(myMax, Is.EqualTo(11));
+
+        }
+        /*
+        [Test]
+        public void GetBufferedMinMax_NonEmptyDataTableLog_ReturnsBufferedMinAndMaxOfDataTable()
+        {
+            DataTableSampleSetupLog();
+            //Arrange
+            double myMin = Double.NaN;
+            double myMax = Double.NaN;
+            //Act
+            Analysis.GetBufferedMinMax(_testDataTable, out myMin, out myMax);
+            //Assert
+            Assert.That(myMin, Is.EqualTo(-1));
+            Assert.That(myMax, Is.EqualTo(11));
+
+        }
+        */
     }
 }
