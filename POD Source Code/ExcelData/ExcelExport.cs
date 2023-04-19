@@ -361,6 +361,7 @@ namespace POD.ExcelData
     }
     public interface IExcelExport
     {
+        SLDocument Workbook { get; }
         string AskUserToSave(string myDefaultFileName, out bool shouldSave);
         void SaveToFileWithDefaultName(string myDefaultFileName);
         void SaveToFile(string myFileName);
