@@ -6,6 +6,7 @@ using CSharpBackendWithR;
 using POD.Analyze;
 using POD;
 using System.Data;
+using POD.Data;
 
 namespace Analyze.UnitTests
 {
@@ -39,16 +40,6 @@ namespace Analyze.UnitTests
             for (int i =0; i< 11; i++)
             {
                 _testDataTable.Rows.Add((double)i);
-            }
-        }
-        private void DataTableSampleSetupLog()
-        {
-            _testDataTable = new DataTable();
-            _testDataTable.Columns.Add("Test_Column_1");
-            _testDataTable.Columns[0].DataType = typeof(double);
-            for (double i = 0.0; i < 1.1; i=i+.1)
-            {
-                _testDataTable.Rows.Add(Math.Log(i));
             }
         }
         /// <summary>
@@ -221,5 +212,25 @@ namespace Analyze.UnitTests
 
         }
         */
+
+        /// <summary>
+        /// Tests for the CreateDuplicate() function
+        /// </summary>
+        [Test]
+        public void CreateDuplicate_AnalysisObjectInitialized_ReturnsClonedAnalysisObject()
+        {
+            //Arrange
+            DataSource source = new DataSource("DataSource", "ID", "Flaw", "Response");
+            _analysis.SetDataSource(source);
+            var placeholder=_analysis.Data.CommentDictionary;
+            SetPythonAndREngines();
+            //Act
+            Analysis clone = _analysis.CreateDuplicate();
+            //Assert
+            Assert.That(_analysis != clone);
+            Assert.That(clone.Python, Is.Null);
+            Assert.That(_analysis.Python, Is.Not.Null);
+        }
+
     }
 }

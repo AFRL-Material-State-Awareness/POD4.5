@@ -1398,7 +1398,6 @@ namespace POD.Analyze
             analysis._hmAnalysisObject = null;
             analysis._aHatAnalysisObject = null;
             analysis._rDotNet = null;
-            //analysis.Report = Report.CreateDuplicate();
 
 
             return analysis;
