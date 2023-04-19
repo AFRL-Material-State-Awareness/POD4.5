@@ -3817,10 +3817,12 @@ namespace POD.Data
         }
         public HMAnalysisObject HMAnalysisObject
         {
+            set { _hmAnalysisObject = value; }
             get { return _hmAnalysisObject; }
         }
         public AHatAnalysisObject AHATAnalysisObject
         {
+            set { _aHatAnalysisObject = value; }
             get { return _aHatAnalysisObject; }
         }
     }

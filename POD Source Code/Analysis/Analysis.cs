@@ -940,11 +940,11 @@ namespace POD.Analyze
             AnalysistypeTransform newAnalysisControl;
             if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
             {
-                newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+                newAnalysisControl = new AnalysistypeTransform(_rDotNet, Data.HMAnalysisObject);
             }
             else
             {
-                newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+                newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, Data.AHATAnalysisObject);
 
             }
             try
@@ -960,7 +960,7 @@ namespace POD.Analyze
                 //entry point for pod calculate in PODv4.5 ahat
                 else
                 {
-                    //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+                    //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, Data.AHATAnalysisObject);
                     if (_analysisCalculationType == RCalculationType.Full)
                     {
                         newAnalysisControl.ExecuteAnalysisAHat();
@@ -1091,68 +1091,68 @@ namespace POD.Analyze
             
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
-                OutModelIntercept = _aHatAnalysisObject.Intercept;
-                OutModelInterceptStdError = _aHatAnalysisObject.InterceptStdErr;
-                OutModelSlope = _aHatAnalysisObject.Slope;
-                OutModelSlopeStdError = _aHatAnalysisObject.SlopeStdErr;
-                OutModelResidualError = _aHatAnalysisObject.ResidualError;
-                OutModelResidualErrorStdError = _aHatAnalysisObject.ResidualStdErr;
-                OutRSquaredValue = _aHatAnalysisObject.RSqaured;
+                OutModelIntercept = Data.AHATAnalysisObject.Intercept;
+                OutModelInterceptStdError = Data.AHATAnalysisObject.InterceptStdErr;
+                OutModelSlope = Data.AHATAnalysisObject.Slope;
+                OutModelSlopeStdError = Data.AHATAnalysisObject.SlopeStdErr;
+                OutModelResidualError = Data.AHATAnalysisObject.ResidualError;
+                OutModelResidualErrorStdError = Data.AHATAnalysisObject.ResidualStdErr;
+                OutRSquaredValue = Data.AHATAnalysisObject.RSqaured;
                 //replaced normality test with shapiro-wilk
-                OutTestNormality_p = _aHatAnalysisObject.ShapiroPValue;
-                OutTestNormality = _aHatAnalysisObject.ShapiroTestStat;
+                OutTestNormality_p = Data.AHATAnalysisObject.ShapiroPValue;
+                OutTestNormality = Data.AHATAnalysisObject.ShapiroTestStat;
                 OutTestNormalityRating = _python.GetPValueDecision(OutTestNormality_p);
-                OutTestLackOfFit_p = _aHatAnalysisObject.LackOfFitPValue;
-                OutTestLackOfFit = _aHatAnalysisObject.LackOfFitFCalc;
+                OutTestLackOfFit_p = Data.AHATAnalysisObject.LackOfFitPValue;
+                OutTestLackOfFit = Data.AHATAnalysisObject.LackOfFitFCalc;
                 OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit_p);
-                OutTestLackOfFitDegreesFreedom = Convert.ToInt32(_aHatAnalysisObject.LackOfFitDegFreedom);
+                OutTestLackOfFitDegreesFreedom = Convert.ToInt32(Data.AHATAnalysisObject.LackOfFitDegFreedom);
                 //this metric was included with the python version (not sure where its used if at all)
                 OutTestLackOfFitCalculated = true;
-                OutTestEqualVariance_p = _aHatAnalysisObject.ChiSqPValue;
-                OutTestEqualVariance = _aHatAnalysisObject.ChiSqValue;
+                OutTestEqualVariance_p = Data.AHATAnalysisObject.ChiSqPValue;
+                OutTestEqualVariance = Data.AHATAnalysisObject.ChiSqValue;
                 OutTestEqualVarianceRating= _python.GetPValueDecision(OutTestEqualVariance_p);
-                OutTestAutoCorrelation_p = _aHatAnalysisObject.DurbinWatsonPValue;
+                OutTestAutoCorrelation_p = Data.AHATAnalysisObject.DurbinWatsonPValue;
                 OutTestAutoCorrelationRating = _python.GetPValueDecision(OutTestAutoCorrelation_p);
                 //A Values and sigma
-                OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
-                OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
-                OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
-                OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
+                OutResponseDecisionPODSigma = Data.AHATAnalysisObject.Sighat;
+                OutResponseDecisionPODA50Value = Data.AHATAnalysisObject.A50;
+                OutResponseDecisionPODLevelValue = Data.AHATAnalysisObject.A90;
+                OutResponseDecisionPODConfidenceValue = Data.AHATAnalysisObject.A9095;
 
                 if (InFlawTransform == TransformTypeEnum.Linear)
                 {
-                    OutResponseDecisionPODSigma = _aHatAnalysisObject.Sighat;
-                    OutResponseDecisionPODA50Value = _aHatAnalysisObject.A50;
-                    OutResponseDecisionPODLevelValue = _aHatAnalysisObject.A90;
-                    OutResponseDecisionPODConfidenceValue = _aHatAnalysisObject.A9095;
+                    OutResponseDecisionPODSigma = Data.AHATAnalysisObject.Sighat;
+                    OutResponseDecisionPODA50Value = Data.AHATAnalysisObject.A50;
+                    OutResponseDecisionPODLevelValue = Data.AHATAnalysisObject.A90;
+                    OutResponseDecisionPODConfidenceValue = Data.AHATAnalysisObject.A9095;
                 }
                 else if (InFlawTransform == TransformTypeEnum.Log)
                 {
-                    OutResponseDecisionPODSigma = Math.Exp(_aHatAnalysisObject.Sighat);
-                    OutResponseDecisionPODA50Value = Math.Exp(_aHatAnalysisObject.A50);
-                    OutResponseDecisionPODLevelValue = Math.Exp(_aHatAnalysisObject.A90);
-                    OutResponseDecisionPODConfidenceValue = Math.Exp(_aHatAnalysisObject.A9095);
+                    OutResponseDecisionPODSigma = Math.Exp(Data.AHATAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = Math.Exp(Data.AHATAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = Math.Exp(Data.AHATAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = Math.Exp(Data.AHATAnalysisObject.A9095);
                 }
                 else if (InFlawTransform == TransformTypeEnum.Inverse)
                 {
-                    OutResponseDecisionPODSigma = 1 / (_aHatAnalysisObject.Sighat);
-                    OutResponseDecisionPODA50Value = 1 / (_aHatAnalysisObject.A50);
-                    OutResponseDecisionPODLevelValue = 1 / (_aHatAnalysisObject.A90);
-                    OutResponseDecisionPODConfidenceValue = 1 / (_aHatAnalysisObject.A9095);
+                    OutResponseDecisionPODSigma = 1 / (Data.AHATAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = 1 / (Data.AHATAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = 1 / (Data.AHATAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = 1 / (Data.AHATAnalysisObject.A9095);
                 }
                 else
                 {
                     throw new Exception("OOPS something went wrong with tranforming the a values back to linear space");
                 }
-                OutPODMu = _aHatAnalysisObject.Muhat;
-                OutPODSigma = _aHatAnalysisObject.Sighat;
+                OutPODMu = Data.AHATAnalysisObject.Muhat;
+                OutPODSigma = Data.AHATAnalysisObject.Sighat;
                 //OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
             }
             else if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 //List<double> covMatrix = _python.PythonToDotNetList(_podDoc.GetPFEstimatedCovarianceMatrix());
-                List<double> covMatrix = _hmAnalysisObject.CovarianceMatrix;
-                if(_hmAnalysisObject.CovarianceMatrix != null)
+                List<double> covMatrix = Data.HMAnalysisObject.CovarianceMatrix;
+                if(Data.HMAnalysisObject.CovarianceMatrix != null)
                 {
                     OutPFCovarianceV11 = covMatrix[0];
                     OutPFCovarianceV12 = covMatrix[1];
@@ -1169,39 +1169,39 @@ namespace POD.Analyze
                 //switch (InFlawTransform) { }
                 if (InFlawTransform == TransformTypeEnum.Linear)
                 {
-                    OutResponseDecisionPODSigma = _hmAnalysisObject.Sighat;
-                    OutResponseDecisionPODA50Value = _hmAnalysisObject.A50;
-                    OutResponseDecisionPODLevelValue = _hmAnalysisObject.A90;
-                    OutResponseDecisionPODConfidenceValue = _hmAnalysisObject.A9095;
+                    OutResponseDecisionPODSigma = Data.HMAnalysisObject.Sighat;
+                    OutResponseDecisionPODA50Value = Data.HMAnalysisObject.A50;
+                    OutResponseDecisionPODLevelValue = Data.HMAnalysisObject.A90;
+                    OutResponseDecisionPODConfidenceValue = Data.HMAnalysisObject.A9095;
                 }
                 else if (InFlawTransform == TransformTypeEnum.Log)
                 {
-                    OutResponseDecisionPODSigma =Math.Exp(_hmAnalysisObject.Sighat);
-                    OutResponseDecisionPODA50Value = Math.Exp(_hmAnalysisObject.A50);
-                    OutResponseDecisionPODLevelValue = Math.Exp(_hmAnalysisObject.A90);
-                    OutResponseDecisionPODConfidenceValue = Math.Exp(_hmAnalysisObject.A9095);
+                    OutResponseDecisionPODSigma =Math.Exp(Data.HMAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = Math.Exp(Data.HMAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = Math.Exp(Data.HMAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = Math.Exp(Data.HMAnalysisObject.A9095);
                 }
                 else if (InFlawTransform == TransformTypeEnum.Inverse)
                 {
-                    OutResponseDecisionPODSigma = 1/(_hmAnalysisObject.Sighat);
-                    OutResponseDecisionPODA50Value = 1 / (_hmAnalysisObject.A50);
-                    OutResponseDecisionPODLevelValue = 1 / (_hmAnalysisObject.A90);
-                    OutResponseDecisionPODConfidenceValue = 1 / (_hmAnalysisObject.A9095);
+                    OutResponseDecisionPODSigma = 1/(Data.HMAnalysisObject.Sighat);
+                    OutResponseDecisionPODA50Value = 1 / (Data.HMAnalysisObject.A50);
+                    OutResponseDecisionPODLevelValue = 1 / (Data.HMAnalysisObject.A90);
+                    OutResponseDecisionPODConfidenceValue = 1 / (Data.HMAnalysisObject.A9095);
                 }
                 else
                 {
                     throw new Exception("OOPS something went wrong with tranforming the a values back to linear space");
                 }
-                OutPODMu = _hmAnalysisObject.Muhat;
-                OutPODSigma = _hmAnalysisObject.Sighat;
-                OutTestLackOfFit = _hmAnalysisObject.GoodnessOfFit;
+                OutPODMu = Data.HMAnalysisObject.Muhat;
+                OutPODSigma = Data.HMAnalysisObject.Sighat;
+                OutTestLackOfFit = Data.HMAnalysisObject.GoodnessOfFit;
                 //OutTestNormalityRating = _python.GetPValueDecision(OutTestLackOfFit);
                 OutTestLackOfFitRating = _python.GetPValueDecision(OutTestLackOfFit);
 
                 //separated flag
-                _isSeparatedFlag = _hmAnalysisObject.Is_Separated;
+                _isSeparatedFlag = Data.HMAnalysisObject.Is_Separated;
                 //failure to converge flag
-                _failedToConverge = _hmAnalysisObject.Failed_To_Converge;
+                _failedToConverge = Data.HMAnalysisObject.Failed_To_Converge;
             }
 
             Data.UpdateOutput(_analysisCalculationType);
@@ -1215,14 +1215,14 @@ namespace POD.Analyze
             }
             else
             {
-                //_aHatAnalysisObject.ClearMetrics();
+                //Data.AHATAnalysisObject.ClearMetrics();
             }
         }
         public void SetUpLambda(ITemporaryLambdaCalc tempLambdaInput=null)
         {
             double lambdaTemp;
-            ITemporaryLambdaCalc tempLambda = tempLambdaInput ?? new TemporaryLambdaCalc(_aHatAnalysisObject.Flaws, 
-                _aHatAnalysisObject.Responses[_aHatAnalysisObject.SignalResponseName], 
+            ITemporaryLambdaCalc tempLambda = tempLambdaInput ?? new TemporaryLambdaCalc(Data.AHATAnalysisObject.Flaws, 
+                Data.AHATAnalysisObject.Responses[Data.AHATAnalysisObject.SignalResponseName], 
                 _rDotNet);
             lambdaTemp = tempLambda.CalcTempLambda();
             InLambdaValue= lambdaTemp;
@@ -1278,7 +1278,7 @@ namespace POD.Analyze
                 Data.FlawTransform = InFlawTransform;
 
                 if(_python != null) {
-                    _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
+                    Data.HMAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
                 }  
             }
         }
@@ -1332,7 +1332,7 @@ namespace POD.Analyze
                 {
                     InFlawTransform = TransformTypeEnum.Log;
                     Data.FlawTransform = InFlawTransform;
-                    _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
+                    Data.HMAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
                 }
 
                 ForceUpdateInputsFromData();
@@ -1395,8 +1395,8 @@ namespace POD.Analyze
             analysis._data = _data.CreateDuplicate();
             analysis._python = null;
             //analysis._podDoc = null;
-            analysis._hmAnalysisObject = null;
-            analysis._aHatAnalysisObject = null;
+            //analysis._hmAnalysisObject = null;
+            //analysis.Data.AHATAnalysisObject = null;
             analysis._rDotNet = null;
 
 
@@ -1478,44 +1478,44 @@ namespace POD.Analyze
         }
         private void UpdateCensoredData()
         {
-            //_aHatAnalysisObject.SignalResponseName = _aHatAnalysisObject.Responses_all.ElementAt(i).Key;
+            //Data.AHATAnalysisObject.SignalResponseName = Data.AHATAnalysisObject.Responses_all.ElementAt(i).Key;
             //hitmiss analysis
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 int index = 0;
                 List<double> hmInludedFlaws = new List<double>();
                 List<double> hmIncludedResponses = new List<double>();
-                if (_hmAnalysisObject.ModelType==3)
+                if (Data.HMAnalysisObject.ModelType==3)
                 {
-                    InFlawMax = _hmAnalysisObject.Flaws_All.Max();
+                    InFlawMax = Data.HMAnalysisObject.Flaws_All.Max();
                 }
-                foreach (double flaw in _hmAnalysisObject.Flaws_All)
+                foreach (double flaw in Data.HMAnalysisObject.Flaws_All)
                 {
                     if(flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
                     {
                         hmInludedFlaws.Add(flaw);
-                        int responseIndex = _hmAnalysisObject.Flaws_All.IndexOf(flaw);
-                        hmIncludedResponses.Add(_hmAnalysisObject.Responses_all[_hmAnalysisObject.HitMiss_name][responseIndex]);
+                        int responseIndex = Data.HMAnalysisObject.Flaws_All.IndexOf(flaw);
+                        hmIncludedResponses.Add(Data.HMAnalysisObject.Responses_all[Data.HMAnalysisObject.HitMiss_name][responseIndex]);
                     }
                     else
                     {
                         //store the list of exluded flaws
-                        _hmAnalysisObject.ExcludedFlaws.Add(flaw);
+                        Data.HMAnalysisObject.ExcludedFlaws.Add(flaw);
                     }
                     index += 1;
                 }
                 //overwrite the temporary flaw variables in HitMiss object
-                _hmAnalysisObject.Flaws = hmInludedFlaws;
-                
+                Data.HMAnalysisObject.Flaws = hmInludedFlaws;
+
                 //_hmAnalysisObject.Responses["y"] = hmIncludedResponses;
-                _hmAnalysisObject.Responses[_hmAnalysisObject.HitMiss_name] = hmIncludedResponses;
+                Data.HMAnalysisObject.Responses[Data.HMAnalysisObject.HitMiss_name] = hmIncludedResponses;
             }
             //ahat analysis
             else
             {
-                if(_aHatAnalysisObject.Signalmax==-1)
+                if(Data.AHATAnalysisObject.Signalmax==-1)
                 {
-                    _aHatAnalysisObject.Signalmax = _aHatAnalysisObject.GetMaxResponse();
+                    Data.AHATAnalysisObject.Signalmax = Data.AHATAnalysisObject.GetMaxResponse();
                 }
                 int index = 0;
                 //used for storing the excluded flaws
@@ -1525,37 +1525,37 @@ namespace POD.Analyze
                 List<double> censoredFlaws = new List<double>();
                 List<double> censoredResponsesL = new List<double>();
                 List<double> censoredResponsesR = new List<double>();
-                foreach (double flaw in _aHatAnalysisObject.Flaws_All)
+                foreach (double flaw in Data.AHATAnalysisObject.Flaws_All)
                 {
-                    //int responseIndex = _aHatAnalysisObject.Flaws_All.IndexOf(flaw);
+                    //int responseIndex = Data.AHATAnalysisObject.Flaws_All.IndexOf(flaw);
                     int responseIndex = index;
                     if (flaw >= InFlawMin && flaw <= InFlawMax && CheckForTurnedOffPoints(index))
                     {
                         aHatIncludedFlaws.Add(flaw);
-                        aHatIncludedResponses.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
-                        if (_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] < InResponseMin)
+                        aHatIncludedResponses.Add(Data.AHATAnalysisObject.Responses_all[Data.AHATAnalysisObject.SignalResponseName][responseIndex]);
+                        if (Data.AHATAnalysisObject.Responses_all[Data.AHATAnalysisObject.SignalResponseName][responseIndex] < InResponseMin)
                         {
                             censoredFlaws.Add(flaw);
-                            censoredResponsesL.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
+                            censoredResponsesL.Add(Data.AHATAnalysisObject.Responses_all[Data.AHATAnalysisObject.SignalResponseName][responseIndex]);
                         }
-                        if (_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex] > InResponseMax)
+                        if (Data.AHATAnalysisObject.Responses_all[Data.AHATAnalysisObject.SignalResponseName][responseIndex] > InResponseMax)
                         {
                             censoredFlaws.Add(flaw);
-                            censoredResponsesR.Add(_aHatAnalysisObject.Responses_all[_aHatAnalysisObject.SignalResponseName][responseIndex]);
+                            censoredResponsesR.Add(Data.AHATAnalysisObject.Responses_all[Data.AHATAnalysisObject.SignalResponseName][responseIndex]);
                         }
                     }
                     else
                     {
-                        _aHatAnalysisObject.ExcludedFlaws.Add(flaw);
+                        Data.AHATAnalysisObject.ExcludedFlaws.Add(flaw);
                     }
                     index += 1;
                 }
                 //overwrite the temporary flaw variables in HitMiss object
-                _aHatAnalysisObject.Flaws = aHatIncludedFlaws;
-                _aHatAnalysisObject.Responses[_aHatAnalysisObject.SignalResponseName] = aHatIncludedResponses;
-                _aHatAnalysisObject.FlawsCensored = censoredFlaws;
-                _aHatAnalysisObject.ResponsesCensoredLeft[_aHatAnalysisObject.SignalResponseName] = censoredResponsesL;
-                _aHatAnalysisObject.ResponsesCensoredRight[_aHatAnalysisObject.SignalResponseName] = censoredResponsesR;
+                Data.AHATAnalysisObject.Flaws = aHatIncludedFlaws;
+                Data.AHATAnalysisObject.Responses[Data.AHATAnalysisObject.SignalResponseName] = aHatIncludedResponses;
+                Data.AHATAnalysisObject.FlawsCensored = censoredFlaws;
+                Data.AHATAnalysisObject.ResponsesCensoredLeft[Data.AHATAnalysisObject.SignalResponseName] = censoredResponsesL;
+                Data.AHATAnalysisObject.ResponsesCensoredRight[Data.AHATAnalysisObject.SignalResponseName] = censoredResponsesR;
             }
 
 
@@ -1629,11 +1629,11 @@ namespace POD.Analyze
         {
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.ProgressText = "Starting Analysis";
+                Data.HMAnalysisObject.ProgressText = "Starting Analysis";
             }
             else
             {
-                _aHatAnalysisObject.ProgressText= "Starting Analysis";
+                Data.AHATAnalysisObject.ProgressText= "Starting Analysis";
             }
             
             // store the analysis name in the python engine object 
@@ -1651,7 +1651,7 @@ namespace POD.Analyze
                 InResponseMax = temp;
             }
             //tranform the response decision back to linear space if necessary
-            //if (AnalysisDataType == AnalysisDataTypeEnum.AHat && _aHatAnalysisObject.ModelType == 2)
+            //if (AnalysisDataType == AnalysisDataTypeEnum.AHat && Data.AHATAnalysisObject.ModelType == 2)
             //{
             //    InResponseDecision = Math.Log(InResponseDecision);
             //}
@@ -1660,17 +1660,13 @@ namespace POD.Analyze
             //change the model type of logistic regression to firth logistical regression if using log odds
             if (InHitMissModel.ToString() == "LogisticRegression" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.RegressionType = "Logistic Regression";
+                Data.HMAnalysisObject.RegressionType = "Logistic Regression";
             }
             else if (InHitMissModel.ToString() == "FirthLogisticRegression" && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.RegressionType = "Firth Logistic Regression";
+                Data.HMAnalysisObject.RegressionType = "Firth Logistic Regression";
             }
 
-            //if(_hmAnalysisObject.Responses==null && _data.HMAnalysisObject.Responses != null && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-            //{
-            //    _fileLoadHitMiss = true;
-            //}
             CheckForLoadFileWithCensoredData();
             
             if (!_fileLoadHitMiss)
@@ -1678,54 +1674,42 @@ namespace POD.Analyze
                 Data.UpdateData(_quickAnalysis);
             }
             _fileLoadHitMiss = false;
-            //_fileLoadHitMiss = false;
-            //_podDoc.SetCalcMin(InFlawCalcMin);
-            //_hmAnalysisObject.Crckmin = InFlawCalcMin;
-            //_podDoc.SetCalcMax(InFlawCalcMax);
-            //_hmAnalysisObject.Crckmax = InFlawCalcMax;
-            //_podDoc.SetResponseMin(InResponseMin);
-            //_hmAnalysisObject.HitMissMin= InResponseMin
-            //_podDoc.SetResponseMax(InResponseMax);
-            //_hmAnalysisObject.HitMissMax= HitMissMax
-            //_podDoc.SetPODThreshold(InResponseDecision);
-            //_podDoc.SetPODLevel(.90);
-            //_podDoc.SetPODConfidence(.95);
+
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
-                _aHatAnalysisObject.Pod_threshold = InResponseDecision;
-                //_aHatAnalysisObject.Lambda = InLambdaValue;
+                Data.AHATAnalysisObject.Pod_threshold = InResponseDecision;
             }
 
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.Pod_threshold = InResponseDecision;
-                _hmAnalysisObject.Pod_level = .90;
-                _hmAnalysisObject.Confidence_level = .95;
+                Data.HMAnalysisObject.Pod_threshold = InResponseDecision;
+                Data.HMAnalysisObject.Pod_level = .90;
+                Data.HMAnalysisObject.Confidence_level = .95;
                 //used for modified wald, LR, etc.
-                _hmAnalysisObject.A_x_n = 500;
-                _hmAnalysisObject.CIType = InConfIntervalType.ToString(); // used to change the confidence interval if the user chooses to
+                Data.HMAnalysisObject.A_x_n = 500;
+                Data.HMAnalysisObject.CIType = InConfIntervalType.ToString(); // used to change the confidence interval if the user chooses to
                 switch (InSamplingType.ToString())
                 {
                     case "SimpleRandomSampling":
-                        _hmAnalysisObject.SrsOrRSS = 0;
+                        Data.HMAnalysisObject.SrsOrRSS = 0;
                         break;
                     case "RankedSetSampling":
-                        _hmAnalysisObject.SrsOrRSS = 1;
+                        Data.HMAnalysisObject.SrsOrRSS = 1;
                         break;
                     default:
-                        _hmAnalysisObject.SrsOrRSS = 0; //use simple random sampling by default
+                        Data.HMAnalysisObject.SrsOrRSS = 0; //use simple random sampling by default
                         break;
                 }
                 //used for RSS
-                if (_hmAnalysisObject.CIType == "StandardWald")
+                if (Data.HMAnalysisObject.CIType == "StandardWald")
                 {
-                    _hmAnalysisObject.Set_r = _hmAnalysisObject.Count / _hmAnalysisObject.Set_m;
+                    Data.HMAnalysisObject.Set_r = Data.HMAnalysisObject.Count / Data.HMAnalysisObject.Set_m;
                 }
                 else
                 {
-                    _hmAnalysisObject.Set_r = _hmAnalysisObject.A_x_n / _hmAnalysisObject.Set_m;
+                    Data.HMAnalysisObject.Set_r = Data.HMAnalysisObject.A_x_n / Data.HMAnalysisObject.Set_m;
                 }
-                _hmAnalysisObject.MaxResamples = 30;
+                Data.HMAnalysisObject.MaxResamples = 30;
             }
             List<double> thresholds = new List<double>();
 
@@ -1743,14 +1727,14 @@ namespace POD.Analyze
         //this function checks to see if the user is loading a saved file in which data was censored. If so, the flag is turned on
         private void CheckForLoadFileWithCensoredData()
         {
-            if (_hmAnalysisObject != null)
+            if (Data.HMAnalysisObject != null)
             {
                 if (_data.HMAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     _fileLoadHitMiss = true;
                 }
             }
-            if (_aHatAnalysisObject != null)
+            if (Data.AHATAnalysisObject != null)
             {
                 if (_data.AHATAnalysisObject.ExcludedFlaws.Count != 0 && AnalysisDataType == AnalysisDataTypeEnum.AHat)
                 {
@@ -1766,82 +1750,82 @@ namespace POD.Analyze
             //_podDoc.a_transform = _python.TransformEnumToInt(Data.FlawTransform);
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
-                _hmAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
+                Data.HMAnalysisObject.ModelType = _python.TransformEnumToInt(Data.FlawTransform);
 
             }
             else
             {
-                _aHatAnalysisObject.A_transform = _python.TransformEnumToInt(Data.FlawTransform);
+                Data.AHATAnalysisObject.A_transform = _python.TransformEnumToInt(Data.FlawTransform);
             }
             //y-axis transformation check
             //_podDoc.ahat_transform = _python.TransformEnumToInt(Data.ResponseTransform);
             if (AnalysisDataType == AnalysisDataTypeEnum.AHat)
             {
-                _aHatAnalysisObject.Ahat_transform= _python.TransformEnumToInt(Data.ResponseTransform);
+                Data.AHATAnalysisObject.Ahat_transform= _python.TransformEnumToInt(Data.ResponseTransform);
                 AHatModelUpdate();
             }
         }
         private void AHatModelUpdate()
         {
             //linear- linear
-            if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 1)
+            if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 1;
+                Data.AHATAnalysisObject.ModelType = 1;
             }
             //log - linear
-            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 1)
+            else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 2;
+                Data.AHATAnalysisObject.ModelType = 2;
             }
             //linear- log
-            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 2)
+            else if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 3;
+                Data.AHATAnalysisObject.ModelType = 3;
             }
             // log - log
-            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 2)
+            else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 4;
+                Data.AHATAnalysisObject.ModelType = 4;
             }
             // linear - box-cox
-            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 5)
+            else if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 5;
+                Data.AHATAnalysisObject.ModelType = 5;
             }
             // log - boxcox
-            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 5)
+            else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 6;
+                Data.AHATAnalysisObject.ModelType = 6;
             }
             // inverse - boxcox
-            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 5)
+            else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 5)
             {
-                _aHatAnalysisObject.ModelType = 7;
+                Data.AHATAnalysisObject.ModelType = 7;
             }
             // linear - inverse
-            else if (_aHatAnalysisObject.A_transform == 1 && _aHatAnalysisObject.Ahat_transform == 3)
+            else if (Data.AHATAnalysisObject.A_transform == 1 && Data.AHATAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 8;
+                Data.AHATAnalysisObject.ModelType = 8;
             }
             // log - inverse
-            else if (_aHatAnalysisObject.A_transform == 2 && _aHatAnalysisObject.Ahat_transform == 3)
+            else if (Data.AHATAnalysisObject.A_transform == 2 && Data.AHATAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 9;
+                Data.AHATAnalysisObject.ModelType = 9;
             }
             // inverse - linear
-            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 1)
+            else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 1)
             {
-                _aHatAnalysisObject.ModelType = 10;
+                Data.AHATAnalysisObject.ModelType = 10;
             }
             // inverse - log
-            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 2)
+            else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 2)
             {
-                _aHatAnalysisObject.ModelType = 11;
+                Data.AHATAnalysisObject.ModelType = 11;
             }
             // inverse x - inverse y
-            else if (_aHatAnalysisObject.A_transform == 3 && _aHatAnalysisObject.Ahat_transform == 3)
+            else if (Data.AHATAnalysisObject.A_transform == 3 && Data.AHATAnalysisObject.Ahat_transform == 3)
             {
-                _aHatAnalysisObject.ModelType = 12;
+                Data.AHATAnalysisObject.ModelType = 12;
             }
         }
         private void OutputWriter_StringWritten(object sender, MyEvtArgs<string> e)
@@ -1936,14 +1920,16 @@ namespace POD.Analyze
         public override void SetREngine(IREngineObject myREngine)
         {
             _rDotNet = myREngine;
+            /*
             if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject = _python.HitMissAnalsysis(Name);
             }
             else
             {
-                _aHatAnalysisObject = _python.AHatAnalysis(Name);
+                Data.AHATAnalysisObject = _python.AHatAnalysis(Name);
             }
+            */
             _data.SetREngine(_rDotNet, Name);
         }
 
@@ -2482,8 +2468,8 @@ namespace POD.Analyze
         }
         public double InLambdaValue
         {
-            set { _aHatAnalysisObject.Lambda = value; }
-            get { return _aHatAnalysisObject.Lambda; }
+            set { Data.AHATAnalysisObject.Lambda = value; }
+            get { return Data.AHATAnalysisObject.Lambda; }
         }
         public RCalculationType AnalysisCalculationType
         {
@@ -2598,7 +2584,7 @@ namespace POD.Analyze
                 try
                 {
                     // this will set the signal response to -1 by default if the bottom slider becomes negative
-                    return Convert.ToDecimal(TransformAValue(Convert.ToDouble(0), _python.TransformEnumToInt(InResponseTransform)) * _aHatAnalysisObject.Lambda);
+                    return Convert.ToDecimal(TransformAValue(Convert.ToDouble(0), _python.TransformEnumToInt(InResponseTransform)) * Data.AHATAnalysisObject.Lambda);
                 }
                 catch (OverflowException)
                 {
@@ -2775,7 +2761,7 @@ namespace POD.Analyze
                 //for the case of hit/miss data and ahat, this is where the program first enters the python program
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+                    AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, Data.HMAnalysisObject);
                     if (InFlawTransform != TransformTypeEnum.Inverse)
                     {
                         newAnalysisControlHM.ExecuteAnalysisTransforms_HM();
@@ -2784,14 +2770,14 @@ namespace POD.Analyze
                     {
                         newAnalysisControlHM.ExecuteReqSampleAnalysisTypeHitMiss();
                     }
-                    _hmAnalysisObject = newAnalysisControlHM.HMAnalsysResults;
+                    Data.HMAnalysisObject = newAnalysisControlHM.HMAnalsysResults;
                 }
                 else
                 {
 
-                    AnalysistypeTransform newAnalysisControlAHat = new AnalysistypeTransform(_rDotNet, null, _aHatAnalysisObject);
+                    AnalysistypeTransform newAnalysisControlAHat = new AnalysistypeTransform(_rDotNet, null, Data.AHATAnalysisObject);
                     newAnalysisControlAHat.ExecuteAnalysisTransforms();
-                    _aHatAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
+                    Data.AHATAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
                 }
             }
             catch(Exception executeProblemAnalysis)
@@ -2823,12 +2809,12 @@ namespace POD.Analyze
             }
             //ditto for ahat versus a, signal response
             //added the check of the x and y values in case the user has an analysis open and then opens an already saved file
-            if (_aHatAnalysisObject != null)
+            if (Data.AHATAnalysisObject != null)
             {
-                if ((_aHatAnalysisObject.Flaws_All.Count() == 0 && _aHatAnalysisObject.Responses == null) || 
-                    (_aHatAnalysisObject.Responses_all != _data.AHATAnalysisObject.Responses_all && _aHatAnalysisObject.Flaws_All != _data.AHATAnalysisObject.Flaws_All))
+                if ((Data.AHATAnalysisObject.Flaws_All.Count() == 0 && Data.AHATAnalysisObject.Responses == null) || 
+                    (Data.AHATAnalysisObject.Responses_all != _data.AHATAnalysisObject.Responses_all && Data.AHATAnalysisObject.Flaws_All != _data.AHATAnalysisObject.Flaws_All))
                 {
-                    _aHatAnalysisObject = _data.AHATAnalysisObject;
+                    Data.AHATAnalysisObject = _data.AHATAnalysisObject;
                 }
 
             }
@@ -2876,7 +2862,7 @@ namespace POD.Analyze
         //get the min flaw size for inverse
         public double MinFlawSize
         {
-            get { return _hmAnalysisObject.Flaws_All.Min(); }
+            get { return Data.HMAnalysisObject.Flaws_All.Min(); }
         }
         //quick analysis units
         public string Operator { get; set; }

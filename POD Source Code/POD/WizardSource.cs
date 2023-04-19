@@ -237,9 +237,6 @@ namespace POD
         public virtual void SetPythonEngine(I_IPy4C myPy)
         {
             _python = myPy;
-            //initializes a new instance of the cPODDoc class in the .py file
-            //if(_podDoc == null)
-            //    _podDoc = _python.CPodDoc(Name);
         }
         public virtual void SetREngine(IREngineObject myREngine)
         {
