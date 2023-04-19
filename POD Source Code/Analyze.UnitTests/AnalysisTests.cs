@@ -7,6 +7,8 @@ using POD.Analyze;
 using POD;
 using System.Data;
 using POD.Data;
+using POD.ExcelData;
+using SpreadsheetLight;
 
 namespace Analyze.UnitTests
 {
@@ -16,6 +18,7 @@ namespace Analyze.UnitTests
         private Mock<ITemporaryLambdaCalc> _tempLambdaCalc;
         private Mock<IREngineObject> _rEngine;
         private Mock<I_IPy4C> _python;
+        private Mock<IExcelExport> _excelOutput;
         private Analysis _analysis;
         private DataTable _testDataTable;
         [SetUp]
@@ -24,8 +27,10 @@ namespace Analyze.UnitTests
             _tempLambdaCalc = new Mock<ITemporaryLambdaCalc>();
             _rEngine = new Mock<IREngineObject>();
             _python = new Mock<I_IPy4C>();
+            _excelOutput = new Mock<IExcelExport>();
             _analysis = new Analysis();
             _analysis.Name = "SampleAnalysis";
+            _analysis.WorksheetName = "myWorkSheet";
         }
         private void SetPythonAndREngines()
         {
@@ -239,8 +244,6 @@ namespace Analyze.UnitTests
         [Ignore("Need to figure out how to mock a background worker")]
         public void RunAnalysis_NotQuickAnalysis_ReturnsTrue()
         {
-            
-
         }
         // <summary>
         /// Tests for the RunAnalysis(bool quickAnalysis=false) function
@@ -347,5 +350,61 @@ namespace Analyze.UnitTests
         /// </summary>
 
         //// Need to Mock Data (AnlysisData) to effectively test this method
+
+        /// <summary>
+        /// Tests for the public void WriteToExcel(ExcelExport myWriter, bool myPartOfProject = true, DataTable table = null) function
+        /// </summary>
+
+        /// TODO: write tests for this method
+
+        /// <summary>
+        ///  WriteQuickAnalysis(ExcelExport myWriter, DataTable myInputTable, string myOperator, string mySpecimentSet, string mySpecUnits, double mySpecMin, double mySpecMax,
+        ///  string myInstrument = "", string myInstUnits = "", double myInstMin = 0.0, double myInstMax = 1.0)
+        /// </summary>
+        [Test]
+        public void WriteQuickAnalysis_WriteHitMissQuickAnalysis_WrittenToExcelWithNoInstrumentOrInstMinMax()
+        {
+            //Arrange
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+            _analysis.Data.DataType = AnalysisDataTypeEnum.HitMiss;
+            SetPythonAndREngines();
+            var spreadSheet = new SLDocument();
+            _excelOutput.SetupGet(w => w.Workbook).Returns(spreadSheet);
+            //Act
+            _analysis.WriteQuickAnalysis(_excelOutput.Object, new DataTable(), "operator", "specimentSet", "specUnits", 0.0, 10.0, "instrument", "units");
+            //Assert
+            VerifySetCells(Times.Never);
+            /// This test will still pass in the event any cells are added or changed
+            VerifySetCellsCount(13, 2);
+        }
+        [Test]
+        public void WriteQuickAnalysis_WriteAHatQuickAnalysis_WrittenToExcelWithNoInstrumentOrInstMinMax()
+        {
+            //Arrange          
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            _analysis.Data.DataType = AnalysisDataTypeEnum.AHat;
+            SetPythonAndREngines();
+            var spreadSheet = new SLDocument();
+            _excelOutput.SetupGet(w => w.Workbook).Returns(spreadSheet);
+            //Act
+            _analysis.WriteQuickAnalysis(_excelOutput.Object, new DataTable(), "operator", "specimentSet", "specUnits", 0.0, 10.0, "instrument", "units");
+            //Assert
+            VerifySetCells(Times.Once);
+            /// This test will still pass in the event any cells are added or changed
+            VerifySetCellsCount(18, 4);
+        }
+        private void VerifySetCells(Func<Times> shouldExecute)
+        {
+            _excelOutput.Verify(e => e.SetCellValue(1, 1, "Quick Analysis"), Times.Once);
+            _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), 1, "Instrument"), shouldExecute);
+            _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), 1, "RESPONSE:"), shouldExecute);
+            _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), 2, "instrument"), shouldExecute);
+            _excelOutput.Verify(e => e.RemoveDefaultSheet(), Times.Once);
+        }
+        private void VerifySetCellsCount(int countString, int countWithDouble)
+        {
+            _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.AtLeast(countString));
+            _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.AtLeast(countWithDouble));
+        }
     }
 }

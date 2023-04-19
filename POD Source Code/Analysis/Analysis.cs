@@ -1891,7 +1891,7 @@ namespace POD.Analyze
             WorksheetName = temp;
         }
 
-        public void WriteQuickAnalysis(ExcelExport myWriter, DataTable myInputTable, string myOperator, string mySpecimentSet, string mySpecUnits, double mySpecMin, double mySpecMax,
+        public void WriteQuickAnalysis(IExcelExport myWriter, DataTable myInputTable, string myOperator, string mySpecimentSet, string mySpecUnits, double mySpecMin, double mySpecMax,
                                        string myInstrument = "", string myInstUnits = "", double myInstMin = 0.0, double myInstMax = 1.0)
         {
             myWriter.Workbook.AddWorksheet((WorksheetName + " Input").Trim());
