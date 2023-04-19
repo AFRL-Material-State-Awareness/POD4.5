@@ -1838,47 +1838,6 @@ namespace POD.Analyze
             CalculateInitialValuesWithNewData();
         }
 
-        /// <summary>
-        ///     Switches the active analysis to an archived analysis.
-        /// </summary>
-        /// <param name="myName">name of the archived analysis</param>
-        /// <returns>Did it switch to the archived analysis specified?</returns>
-        public bool SwitchToArchivedOutput(string myName)
-        {
-            //assume it will not be found
-            int index = -1;
-
-            //find output with the same name
-            for (int i = 0; i < _archivedOutputs.Count; i++)
-            {
-                if (_archivedOutputs[i].Name == myName)
-                {
-                    index = i;
-                }
-            }
-
-            return SwitchToArchivedOutput(index);
-        }
-
-        /// <summary>
-        ///     Switches the active analysis to an archived analysis.
-        /// </summary>
-        /// <param name="myIndex">index of archived analysis to switch to</param>
-        /// <returns>Did it switch to the archived analysis specified?</returns>
-        public bool SwitchToArchivedOutput(int myIndex)
-        {
-            //assume it will not be allowed
-            bool valid = false;
-
-            if (myIndex >= 0 && myIndex < _archivedOutputs.Count)
-            {
-                valid = true;
-                _activeAnalysisIndex = myIndex;
-            }
-
-            return valid;
-        }
-
         #endregion
 
         public override void SetPythonEngine(I_IPy4C myPy)
@@ -1889,16 +1848,6 @@ namespace POD.Analyze
         public override void SetREngine(IREngineObject myREngine)
         {
             _rDotNet = myREngine;
-            /*
-            if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-            {
-                _hmAnalysisObject = _python.HitMissAnalsysis(Name);
-            }
-            else
-            {
-                Data.AHATAnalysisObject = _python.AHatAnalysis(Name);
-            }
-            */
             _data.SetREngine(_rDotNet, Name);
         }
 

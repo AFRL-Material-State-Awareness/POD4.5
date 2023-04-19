@@ -258,6 +258,10 @@ namespace Analyze.UnitTests
             Assert.That(_analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(originalModel));
             Assert.That(_analysis.Data.AHATAnalysisObject, Is.Null);
         }
+
+        // <summary>
+        /// Tests for the UpdateRTransforms() function
+        /// </summary>
         [Test]
         [TestCase(TransformTypeEnum.Log , 2)]
         [TestCase(TransformTypeEnum.Inverse, 3)]
@@ -331,5 +335,17 @@ namespace Analyze.UnitTests
             _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Inverse)).Returns(3);
             _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.BoxCox)).Returns(5);
         }
+        /// <summary>
+        /// Tests for the SetDataSource(DataSource mySource) function
+        /// </summary>
+
+        //// Need to Mock Data (AnlysisData) to effectively test this method
+
+        /// <summary>
+        /// Tests for the SetDataSource(DataSource mySource, List<string> myFlaws, List<string> myMetaDatas,
+        /// List<string> myResponses, List<string> mySpecIDs) function
+        /// </summary>
+
+        //// Need to Mock Data (AnlysisData) to effectively test this method
     }
 }
