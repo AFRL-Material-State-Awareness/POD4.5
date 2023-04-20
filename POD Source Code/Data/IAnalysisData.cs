@@ -208,6 +208,7 @@ namespace POD.Data
         DataTable ResidualUncensoredTable { get; }
         Dictionary<int, Dictionary<int, string>> CommentDictionary { get; }
         DataTable ResidualPartialCensoredTable { get; }
+        DataTable ResidualRawTable { get; }
 
         //Excel Properties
         void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true);

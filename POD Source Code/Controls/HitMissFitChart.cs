@@ -40,14 +40,14 @@ namespace POD.Controls
         }
 
 
-        public void FillChart(AnalysisData myData, double mu, double sigma)
+        public void FillChart(IAnalysisData myData, double mu, double sigma)
         {
             //FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
             FillChart(myData, myData.ResidualUncensoredTable, "transformFlaw", "t_fit", "transformFlaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
             //FillChart(myData, myData.ResidualUncensoredTable, "flaw", "t_fit", "flaw", "hitrate", 0, 1.0, mu, sigma, myData.OriginalData);
         }
 
-        public void FillChart(AnalysisData myData, string my90X, string my90Y, string my95X, string my95Y, double mu, double sigma)
+        public void FillChart(IAnalysisData myData, string my90X, string my90Y, string my95X, string my95Y, double mu, double sigma)
         {
             FillChart(myData, myData.ResidualUncensoredTable, my90X, my90Y, my95X, my95Y, 0.0, 1.0, mu, sigma);
         }
@@ -64,7 +64,7 @@ namespace POD.Controls
             ChartTitle = "Model Fit";
         }
 
-        public void FillChart(AnalysisData myData, DataTable myTable,  string myFitX, string myFitY, 
+        public void FillChart(IAnalysisData myData, DataTable myTable,  string myFitX, string myFitY, 
             string myHitRateX, string myHitRateY, double myYMin, double myYMax, double mu, double sigma, DataTable origData = null)
         {
             DataView origView = origData.DefaultView;
