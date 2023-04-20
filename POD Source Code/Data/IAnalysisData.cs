@@ -191,8 +191,8 @@ namespace POD.Data
         List<string> AvailableFlawUnits { get; }
         List<string> AvailableResponseUnits { get; }
 
-        HMAnalysisObject HMAnalysisObject { get; }
-        AHatAnalysisObject AHATAnalysisObject { get; }
+        HMAnalysisObject HMAnalysisObject { get; set; }
+        AHatAnalysisObject AHATAnalysisObject { get; set; }
 
         /// Will end up removing?
         int ResponsePartialBelowMinCount { get; }
@@ -205,8 +205,13 @@ namespace POD.Data
         double MinFlaw { get; set; }
         double MaxSignal { get; set; }
         double MinSignal { get; set; }
+        DataTable ResidualUncensoredTable { get; }
+        Dictionary<int, Dictionary<int, string>> CommentDictionary { get; }
+        DataTable ResidualPartialCensoredTable { get; }
 
         //Excel Properties
         void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true);
+
+        /// tables
     }
 }
