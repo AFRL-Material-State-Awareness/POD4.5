@@ -105,9 +105,12 @@ namespace POD.Analyze
         /// <param name="data"></param>
         public Analysis(IAnalysisData data=null)
         {
+           
             Initialize();
 
             SetupAnalysisLauncher();
+
+            _data = data ?? new AnalysisData();
         }
 
         public Analysis(DataSource mySource)

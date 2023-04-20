@@ -15,6 +15,7 @@ namespace Analyze.UnitTests
     [TestFixture]
     public class AnalysisTests
     {
+        private Mock<IAnalysisData> _data;
         private Mock<ITemporaryLambdaCalc> _tempLambdaCalc;
         private Mock<IREngineObject> _rEngine;
         private Mock<I_IPy4C> _python;
@@ -24,13 +25,21 @@ namespace Analyze.UnitTests
         [SetUp]
         public void SetUp()
         {
+            _data = new Mock<IAnalysisData>();
             _tempLambdaCalc = new Mock<ITemporaryLambdaCalc>();
             _rEngine = new Mock<IREngineObject>();
             _python = new Mock<I_IPy4C>();
             _excelOutput = new Mock<IExcelExport>();
-            _analysis = new Analysis();
+            _analysis = new Analysis(_data.Object);
             _analysis.Name = "SampleAnalysis";
             _analysis.WorksheetName = "myWorkSheet";
+        }
+        private Analysis AnalysisWithNoDataMock()
+        {
+            var analysis = new Analysis();
+            analysis.Name = "SampleAnalysis";
+            analysis.WorksheetName = "myWorkSheet";
+            return analysis;
         }
         private void SetPythonAndREngines()
         {
@@ -55,6 +64,8 @@ namespace Analyze.UnitTests
         {
             //Arrange
             _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            //_data.SetupSet(x => x.AHATAnalysisObject).Callback(value => dummyObject = value);
+            _data.SetupGet(ahat => ahat.AHATAnalysisObject).Returns(new AHatAnalysisObject("SampleAnalysis"));
             _python.Setup(ahat => ahat.AHatAnalysis("SampleAnalysis")).Returns(new AHatAnalysisObject("SampleAnalysis"));
             SetPythonAndREngines();
             _tempLambdaCalc.Setup(l => l.CalcTempLambda()).Returns(1.0);           
@@ -62,6 +73,7 @@ namespace Analyze.UnitTests
             _analysis.SetUpLambda(_tempLambdaCalc.Object);
             //Assert
             Assert.That(_analysis.InLambdaValue, Is.EqualTo(1.0));
+            Assert.That(_analysis.Data.AHATAnalysisObject.Lambda, Is.EqualTo(1.0));
         }
 
         /// <summary>
@@ -91,28 +103,29 @@ namespace Analyze.UnitTests
         public void CalculateInitialValuesWithNewData_PythonIsNullAndHasBeenInitizlizedFalse_HasBeenInitializedStillFalse()
         {
             //Arrange
-            Analysis analysis = new Analysis();
+            Analysis analysis = new Analysis(_data.Object);
             analysis.HasBeenInitialized = false;
             analysis.SetPythonEngine(null);
             //Act
             analysis.CalculateInitialValuesWithNewData();
             //Assert
+            _data.Verify(sp=>sp.SetPythonEngine((I_IPy4C)null, (String)null), Times.Once);
+            Assert.That(analysis.Python, Is.Null);
             Assert.That(analysis.HasBeenInitialized, Is.False);
-            Assert.That(analysis.Data.HMAnalysisObject == null);
         }
         [Test]
         public void CalculateInitialValuesWithNewData_PythonIsNullAndHasBeenInitizlizedTrue_HasBeenInitializedIsStillTrueAndPythonNull()
         {
             //Arrange
-            Analysis analysis = new Analysis();
+            Analysis analysis = new Analysis(_data.Object);
             analysis.HasBeenInitialized = true;
             analysis.SetPythonEngine(null);
             //Act
             analysis.CalculateInitialValuesWithNewData();
             //Assert
+            _data.Verify(sp => sp.SetPythonEngine((I_IPy4C)null, (String)null), Times.Once);
             Assert.That(analysis.HasBeenInitialized, Is.True);
             Assert.That(analysis.Python, Is.Null);
-            Assert.That(analysis.Data.HMAnalysisObject == null);
         }
         [Test]
         public void CalculateInitialValuesWithNewData_PythonIsNotNullAndHasBeenInitizlizedTrue_HasBeenInitializedIsStillTrueAndPythonNotNull()
@@ -123,6 +136,7 @@ namespace Analyze.UnitTests
             //Act
             _analysis.CalculateInitialValuesWithNewData();
             //Assert
+            _data.Verify(sp => sp.SetPythonEngine(_python.Object, "SampleAnalysis"), Times.Once);
             Assert.That(_analysis.HasBeenInitialized, Is.True);
             Assert.That(_analysis.Python, Is.Not.Null);
             Assert.That(_analysis.Data.HMAnalysisObject == null);
@@ -132,26 +146,29 @@ namespace Analyze.UnitTests
         {
             //Arrange           
             _analysis.HasBeenInitialized = false;
+            AssignActivatedFlawsAndResponses();
             SetPythonAndREngines();
             //Act
             _analysis.CalculateInitialValuesWithNewData();
             //Assert
             Assert.That(_analysis.HasBeenInitialized, Is.True);
+            _python.Verify(te => te.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Never);
             // These values are set when ForceUpdateFunctionIsFired
-            Assert.That(_analysis.InResponseDecisionMin, Is.EqualTo(.05));
-            Assert.That(_analysis.InResponseDecisionMax, Is.EqualTo(.05));
-            Assert.That(_analysis.InResponseDecisionIncCount, Is.EqualTo(30));
-            //
+            AssertForceUpdateFunctionIsFired();
+
             Assert.That(_analysis.AnalysisDataType, Is.EqualTo(AnalysisDataTypeEnum.AHat));
             Assert.That(_analysis.InFlawTransform, Is.EqualTo(TransformTypeEnum.Linear));
         }
         [Test]
-        public void CalculateInitialValuesWithNewData_PythonNotNullAndHasBeenInitizlizedFalseNotHtMiss_ForceUpdateFunctionFiredAndHMModelSetToLog()
+        public void CalculateInitialValuesWithNewData_PythonNotNullAndHasBeenInitizlizedFalseIsHtMiss_ForceUpdateFunctionFiredAndHMModelSetToLog()
         {
-            //Arrange           
+            //Arrange
+            //Analysis analysis=AnalysisWithNoDataMock();
             _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
-            _analysis.Data.DataType = AnalysisDataTypeEnum.HitMiss;
             _analysis.HasBeenInitialized = false;
+            AssignActivatedFlawsAndResponses();
+            _data.SetupGet(hitmiss => hitmiss.HMAnalysisObject).Returns(new HMAnalysisObject("SampleAnalysis"));
+            _data.SetupGet(dt => dt.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
             _python.Setup(p => p.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
             _python.Setup(hitmiss => hitmiss.HitMissAnalsysis("SampleAnalysis")).Returns(new HMAnalysisObject("SampleAnalysis"));
             SetPythonAndREngines();
@@ -159,16 +176,25 @@ namespace Analyze.UnitTests
             _analysis.CalculateInitialValuesWithNewData();
             //Assert
             Assert.That(_analysis.HasBeenInitialized, Is.True);
-            // These values are set when ForceUpdateFunctionIsFired
-            Assert.That(_analysis.InResponseDecisionMin, Is.EqualTo(.05));
-            Assert.That(_analysis.InResponseDecisionMax, Is.EqualTo(.05));
-            Assert.That(_analysis.InResponseDecisionIncCount, Is.EqualTo(30));
-            //***
+            _python.Verify(te => te.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
+            AssertForceUpdateFunctionIsFired();
             Assert.That(_analysis.AnalysisDataType, Is.EqualTo(AnalysisDataTypeEnum.HitMiss));
             Assert.That(_analysis.InFlawTransform, Is.EqualTo(TransformTypeEnum.Log));
             Assert.That(_analysis.Data.FlawTransform, Is.EqualTo(TransformTypeEnum.Log));
         }
+        // These values are set when ForceUpdateFunctionIsFired
 
+        private void AssertForceUpdateFunctionIsFired()
+        {
+            Assert.That(_analysis.InResponseDecisionMin, Is.EqualTo(.05));
+            Assert.That(_analysis.InResponseDecisionMax, Is.EqualTo(.05));
+            Assert.That(_analysis.InResponseDecisionIncCount, Is.EqualTo(30));
+        }
+        private void AssignActivatedFlawsAndResponses()
+        {
+            _data.SetupGet(ar => ar.ActivatedResponses).Returns(new DataTable());
+            _data.SetupGet(ar => ar.ActivatedFlaws).Returns(new DataTable());
+        }
         /// <summary>
         /// Tests for the GetBufferedMinMax(DataTable myTable, out double myMin, out double myMax) function
         /// Note: this function does not accept negative flaw values
@@ -226,6 +252,7 @@ namespace Analyze.UnitTests
         {
             //Arrange
             DataSource source = new DataSource("DataSource", "ID", "Flaw", "Response");
+            //_data.Setup(cd => cd.CreateDuplicate()).Returns(_data.Object);
             _analysis.SetDataSource(source);
             var placeholder=_analysis.Data.CommentDictionary;
             SetPythonAndREngines();
@@ -251,15 +278,15 @@ namespace Analyze.UnitTests
         [Test]
         public void UpdateRTransforms_AnalysisTypeHitMissNoChange_ModelHitMissTheSame()
         {
-            SetupIPy4CTransformsHitMiss(TransformTypeEnum.Linear, 1);
-            SetPythonAndREngines();
-            var originalModel = _analysis.Data.HMAnalysisObject.ModelType;
+            var analysis =SetupIPy4CTransformsHitMiss(TransformTypeEnum.Linear, 1);
+            
+            var originalModel = analysis.Data.HMAnalysisObject.ModelType;
             //don't change the flaw transform to log
             //Act
-            _analysis.UpdateRTransforms();
+            analysis.UpdateRTransforms();
             //Assert
-            Assert.That(_analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(originalModel));
-            Assert.That(_analysis.Data.AHATAnalysisObject, Is.Null);
+            Assert.That(analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(originalModel));
+            Assert.That(analysis.Data.AHATAnalysisObject, Is.Null);
         }
 
         // <summary>
@@ -270,28 +297,27 @@ namespace Analyze.UnitTests
         [TestCase(TransformTypeEnum.Inverse, 3)]
         public void UpdateRTransforms_AnalysisTypeHitMissChangesTransform_ReturnsModelUpdateForHitMiss(TransformTypeEnum transformChange, int expectedModelType)
         {
-            SetupIPy4CTransformsHitMiss(transformChange, expectedModelType);
-            SetPythonAndREngines();
+            var analysis = SetupIPy4CTransformsHitMiss(transformChange, expectedModelType);
             //change the flaw transform to log
-            _analysis.InFlawTransform = transformChange;
+            analysis.InFlawTransform = transformChange;
             //Act
-            _analysis.UpdateRTransforms();
+            analysis.UpdateRTransforms();
             //Assert
-            Assert.That(_analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
-            Assert.That(_analysis.Data.AHATAnalysisObject, Is.Null);
+            Assert.That(analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
+            Assert.That(analysis.Data.AHATAnalysisObject, Is.Null);
         }
         [Test]
         public void UpdateRTransforms_AnalysisTypeAHatNoChange_TransformsAndModelSame()
         {
-            SetupIPy4CTransformsHitAhat();
+            var analysis = SetupIPy4CTransformsAhat();
             SetPythonAndREngines();
-            var originalModel = _analysis.Data.AHATAnalysisObject.ModelType;
+            var originalModel = analysis.Data.AHATAnalysisObject.ModelType;
             //dont change transforms
             //Act
-            _analysis.UpdateRTransforms();
+            analysis.UpdateRTransforms();
             //Assert
-            Assert.That(_analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(originalModel));
-            Assert.That(_analysis.Data.HMAnalysisObject, Is.Null);
+            Assert.That(analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(originalModel));
+            Assert.That(analysis.Data.HMAnalysisObject, Is.Null);
         }
         [Test]
         [TestCase(TransformTypeEnum.Linear, TransformTypeEnum.Linear, 1)]
@@ -309,34 +335,42 @@ namespace Analyze.UnitTests
 
         public void UpdateRTransforms_AnalysisTypeAHatChanges_TransformsAndModelSame(TransformTypeEnum transformChangeX, TransformTypeEnum transformChangeY, int expectedModelType)
         {
-            SetupIPy4CTransformsHitAhat();
+            var analysis = SetupIPy4CTransformsAhat();
             SetPythonAndREngines();
             //change the flaw transform to log
-            _analysis.InFlawTransform = transformChangeX;
-            _analysis.InResponseTransform = transformChangeY;
+            analysis.InFlawTransform = transformChangeX;
+            analysis.InResponseTransform = transformChangeY;
             //Act
-            _analysis.UpdateRTransforms();
+            analysis.UpdateRTransforms();
             //Assert
-            Assert.That(_analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
-            Assert.That(_analysis.Data.HMAnalysisObject, Is.Null);
+            Assert.That(analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
+            Assert.That(analysis.Data.HMAnalysisObject, Is.Null);
         }
-        private void SetupIPy4CTransformsHitMiss(TransformTypeEnum testTransformX, int expectedOutput)
+        private Analysis SetupIPy4CTransformsHitMiss(TransformTypeEnum testTransformX, int expectedOutput)
         {
-            _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
-            _analysis.Data.DataType = AnalysisDataTypeEnum.HitMiss;
+            var analysis = AnalysisWithNoDataMock();
+            analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+            analysis.Data.DataType = AnalysisDataTypeEnum.HitMiss;
             _python.Setup(hitmiss => hitmiss.HitMissAnalsysis("SampleAnalysis")).Returns(new HMAnalysisObject("SampleAnalysis"));
             _python.Setup(modelType => modelType.TransformEnumToInt(testTransformX)).Returns(expectedOutput);
+            analysis.SetPythonEngine(_python.Object);
+            analysis.SetREngine(_rEngine.Object);
+            return analysis;
         }
-        private void SetupIPy4CTransformsHitAhat()
+        private Analysis SetupIPy4CTransformsAhat()
         {
-            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
-            _analysis.Data.DataType = AnalysisDataTypeEnum.AHat;
+            var analysis = AnalysisWithNoDataMock();
+            analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            analysis.Data.DataType = AnalysisDataTypeEnum.AHat;
             _python.Setup(ahat => ahat.AHatAnalysis("SampleAnalysis")).Returns(new AHatAnalysisObject("SampleAnalysis"));
             //setup all possible transforms since AHat could be either
             _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Linear)).Returns(1);
             _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
             _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.Inverse)).Returns(3);
             _python.Setup(modelType => modelType.TransformEnumToInt(TransformTypeEnum.BoxCox)).Returns(5);
+            analysis.SetPythonEngine(_python.Object);
+            analysis.SetREngine(_rEngine.Object);
+            return analysis;
         }
         /// <summary>
         /// Tests for the SetDataSource(DataSource mySource) function
