@@ -482,5 +482,6 @@ namespace Analyze.UnitTests
         /// Test for the public double TransformValueForXAxis(double myValue) function
         /// ensure a double is always returned
         /// </summary>
+        //TODO: test this method with the new Mock Analysis Data
     }
 }

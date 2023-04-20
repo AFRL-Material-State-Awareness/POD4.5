@@ -1627,7 +1627,7 @@ namespace POD.Analyze
 
             _python.FailedRunCount = 0;
         }
-
+        //TODO : turn the string for model names and ranked set sampling into enumerations
         private void CopyInputToR()
         {
             if (AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
@@ -1653,11 +1653,7 @@ namespace POD.Analyze
                 InResponseMin = InResponseMax;
                 InResponseMax = temp;
             }
-            //tranform the response decision back to linear space if necessary
-            //if (AnalysisDataType == AnalysisDataTypeEnum.AHat && Data.AHATAnalysisObject.ModelType == 2)
-            //{
-            //    InResponseDecision = Math.Log(InResponseDecision);
-            //}
+            
             //used to store the current transformation the program is performing in the 'choose transform' window
             UpdateRTransforms();
             //change the model type of logistic regression to firth logistical regression if using log odds
@@ -1717,14 +1713,6 @@ namespace POD.Analyze
             List<double> thresholds = new List<double>();
 
             double inc = (InResponseDecisionMax - InResponseDecisionMin) / (InResponseDecisionIncCount);
-            /*
-            for (int i = 0; i <= InResponseDecisionIncCount; i++)
-            {
-                value = InResponseDecisionMin + (inc * i);
-
-                thresholds.Add(value);
-            }
-            */
             
         }
         //this function checks to see if the user is loading a saved file in which data was censored. If so, the flag is turned on
