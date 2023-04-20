@@ -356,6 +356,20 @@ namespace Analyze.UnitTests
         /// </summary>
 
         /// TODO: write tests for this method
+        /*
+        [Test]
+        public void WriteToExcel_PartOfProjectAndTableIsNull_WorSheetNameNotOverwrittenAndRemoveDefaultSheetNotCalled()
+        {
+            //Arrange
+            SetUpExcelWriting();
+            //Act
+            _analysis.WriteToExcel(_excelOutput.Object, true);
+
+            Assert.That(_analysis.WorksheetName, Is.EqualTo("myWorkSheet"));
+            _excelOutput.Verify(e => e.RemoveDefaultSheet(), Times.Never);
+        }
+        */
+
 
         /// <summary>
         ///  WriteQuickAnalysis(ExcelExport myWriter, DataTable myInputTable, string myOperator, string mySpecimentSet, string mySpecUnits, double mySpecMin, double mySpecMax,
@@ -367,9 +381,7 @@ namespace Analyze.UnitTests
             //Arrange
             _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
             _analysis.Data.DataType = AnalysisDataTypeEnum.HitMiss;
-            SetPythonAndREngines();
-            var spreadSheet = new SLDocument();
-            _excelOutput.SetupGet(w => w.Workbook).Returns(spreadSheet);
+            SetUpExcelWriting();
             //Act
             _analysis.WriteQuickAnalysis(_excelOutput.Object, new DataTable(), "operator", "specimentSet", "specUnits", 0.0, 10.0, "instrument", "units");
             //Assert
@@ -393,6 +405,12 @@ namespace Analyze.UnitTests
             /// This test will still pass in the event any cells are added or changed
             VerifySetCellsCount(18, 4);
         }
+        private void SetUpExcelWriting()
+        {
+            SetPythonAndREngines();
+            var spreadSheet = new SLDocument();
+            _excelOutput.SetupGet(w => w.Workbook).Returns(spreadSheet);
+        }
         private void VerifySetCells(Func<Times> shouldExecute)
         {
             _excelOutput.Verify(e => e.SetCellValue(1, 1, "Quick Analysis"), Times.Once);
@@ -406,5 +424,29 @@ namespace Analyze.UnitTests
             _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.AtLeast(countString));
             _excelOutput.Verify(e => e.SetCellValue(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.AtLeast(countWithDouble));
         }
+
+        /// <summary>
+        /// Test for the public double TransformValueForXAxis(double myValue) function
+        /// ensure a double is always returned
+        /// </summary>
+        [Test]
+        public void TransformValueForXAxis_AnyDoublePassed_ReturnsAValidDouble()
+        {
+            //Arrange
+            //_python.Setup(p => p.TransformEnumToInt(transformType)).Returns();
+            SetPythonAndREngines();
+            var myValue = It.IsAny<double>();
+
+            //Act
+            var result = _analysis.TransformValueForXAxis(myValue);
+
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(double.NaN));
+        }
+
+        /// <summary>
+        /// Test for the public double TransformValueForXAxis(double myValue) function
+        /// ensure a double is always returned
+        /// </summary>
     }
 }
