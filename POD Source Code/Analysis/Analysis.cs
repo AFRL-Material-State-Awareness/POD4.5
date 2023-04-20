@@ -87,7 +87,7 @@ namespace POD.Analyze
         /// <summary>
         ///     Holds the tabular data associated with the analysis and anything associated data transforms.
         /// </summary>
-        private AnalysisData _data;
+        private IAnalysisData _data;
 
         /// <summary>
         ///     the time and date the analysis was performed
@@ -184,7 +184,7 @@ namespace POD.Analyze
         /// <summary>
         ///     Holds the tabular data associated with the analysis and anything associated data transforms.
         /// </summary>
-        public AnalysisData Data
+        public IAnalysisData Data
         {
             get { return _data; }
         }

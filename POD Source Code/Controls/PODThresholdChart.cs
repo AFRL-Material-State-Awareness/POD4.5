@@ -320,7 +320,7 @@ namespace POD.Controls
             }
         }
 
-        public void FillChart(AnalysisData myData)
+        public void FillChart(IAnalysisData myData)
         {
             //_lastUsedData = myData;
 
