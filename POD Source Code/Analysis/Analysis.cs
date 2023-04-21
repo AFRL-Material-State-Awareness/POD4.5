@@ -2439,25 +2439,19 @@ namespace POD.Analyze
                 {
                     value = 0.0M;
                 }
-                catch (DivideByZeroException)
+            }
+            else
+            {
+                try
                 {
-                    value = 0;
+                    value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
                 }
-            }           
-
-            try
-            {
-                //value = Convert.ToDecimal(_podDoc.GetTransformedValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
-                value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                catch (OverflowException)
+                {
+                    value = myValue;
+                }
             }
-            catch(OverflowException)
-            {
-                value = myValue;
-            }
-            catch (DivideByZeroException)
-            {
-                value = 0;
-            }
+            
 
             return value;
         }
@@ -2740,6 +2734,7 @@ namespace POD.Analyze
                     transformValue = Math.Log(myValue);
                     break;
                 case 3:
+                    /*
                     if (myValue == 0)
                     {
                         transformValue =0.0;
@@ -2748,6 +2743,8 @@ namespace POD.Analyze
                     {
                         transformValue = 1.0 / myValue;
                     }
+                    */
+                    transformValue = 1.0 / myValue;
                     //transformValue = myValue;
                     break;
                 case 5:

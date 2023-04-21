@@ -482,6 +482,83 @@ namespace Analyze.UnitTests
         /// Test for the public double TransformValueForXAxis(double myValue) function
         /// ensure a double is always returned
         /// </summary>
-        //TODO: test this method with the new Mock Analysis Data
+        //The possible transforms that can go into this function is Linear, Log, and inverse
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 1, 2.0, 2.0)]
+        [TestCase(TransformTypeEnum.Linear, 1, 0.0, 0.0)]
+        [TestCase(TransformTypeEnum.Linear, 1, -2.0, -2.0)]
+        [TestCase(TransformTypeEnum.Inverse, 3, 2.0, .5)]
+        [TestCase(TransformTypeEnum.Inverse, 3, -2.0, -.5)]
+        public void InvertTransformValueForXAxis_NonLogtransformPassed_ReturnsValidtransform(TransformTypeEnum transform, int enumTransform, decimal myValue,  decimal expectedResult)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = transform;
+            _python.Setup(e => e.TransformEnumToInt(transform)).Returns(enumTransform);
+            //Act
+            var result = _analysis.TransformValueForXAxis(myValue);
+            Assert.That(result, Is.EqualTo(expectedResult));
+            //Assert.Throws<OverflowException>(()=>_analysis.TransformValueForXAxis(-1.0M));
+        }
+        [Test]
+        public void TransformValueForXAxis_0PassedInForInverseTransform_ThrowsDividByZeroExcpetionAndReturnsTheSameValue()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Inverse;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Inverse)).Returns(3);
+            //Act
+            var result = _analysis.TransformValueForXAxis(0.0M);
+            //Assert
+            Assert.That(result, Is.EqualTo(0.0M));
+            //Assert.That(() => _analysis.TransformValueForXAxis(0.0M), Throws.Exception.TypeOf<OverflowException>());
+        }
+        [Test]
+        [TestCase(Math.E, 1.0)]
+        [TestCase(.1, -2.303)]
+        public void TransformValueForXAxis_LogTransformPassedAndValueIsPositive_ReturnsValidLogTransform(decimal inputValue, decimal expectedValue)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            //Act
+            var result = _analysis.TransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(Math.Round(result, 3), Is.EqualTo(expectedValue));
+
+        }
+        [Test]
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void TransformValueForXAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIsNot0_ReturnsValidLogTransform(decimal inputValue)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _data.SetupGet(sf => sf.SmallestFlaw).Returns(.1);
+            //Act
+            var result = _analysis.TransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(Convert.ToDecimal(Math.Log(.1/2.0))));
+
+        }
+        [Test]
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void TransformValueForXAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIs0_Returns0(decimal inputValue)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _data.SetupGet(sf => sf.SmallestFlaw).Returns(0.0);
+            //Act
+            var result = _analysis.TransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(0.0M));
+            //Assert.That(() => _analysis.TransformValueForXAxis(inputValue), Throws.Exception.TypeOf<OverflowException>());
+        }
     }
 }
