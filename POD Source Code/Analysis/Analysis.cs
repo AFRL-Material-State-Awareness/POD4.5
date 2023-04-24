@@ -941,14 +941,14 @@ namespace POD.Analyze
             BackgroundWorker worker = sender as BackgroundWorker;
             //_data.UpdateHitMissModel(_hmAnalysisObject.ModelType);
             IsBusy = true;
-            AnalysistypeTransform newAnalysisControl;
+            AnalysisBackendControl newAnalysisControl;
             if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
             {
-                newAnalysisControl = new AnalysistypeTransform(_rDotNet, Data.HMAnalysisObject);
+                newAnalysisControl = new AnalysisBackendControl(_rDotNet, Data.HMAnalysisObject);
             }
             else
             {
-                newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, Data.AHATAnalysisObject);
+                newAnalysisControl = new AnalysisBackendControl(_rDotNet, null, Data.AHATAnalysisObject);
 
             }
             try
@@ -956,7 +956,7 @@ namespace POD.Analyze
                 //entry point for pod caluclation in PODv4.5 hit miss
                 if (Data.DataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, _hmAnalysisObject);
+                    //AnalysisBackendControl newAnalysisControl = new AnalysisBackendControl(_rDotNet, _hmAnalysisObject);
                     newAnalysisControl.ExecuteReqSampleAnalysisTypeHitMiss();
                     _finalAnalysis = newAnalysisControl.HMAnalsysResults;
 
@@ -964,7 +964,7 @@ namespace POD.Analyze
                 //entry point for pod calculate in PODv4.5 ahat
                 else
                 {
-                    //AnalysistypeTransform newAnalysisControl = new AnalysistypeTransform(_rDotNet, null, Data.AHATAnalysisObject);
+                    //AnalysisBackendControl newAnalysisControl = new AnalysisBackendControl(_rDotNet, null, Data.AHATAnalysisObject);
                     if (_analysisCalculationType == RCalculationType.Full)
                     {
                         newAnalysisControl.ExecuteAnalysisAHat();
@@ -2623,7 +2623,7 @@ namespace POD.Analyze
                 //for the case of hit/miss data and ahat, this is where the program first enters the python program
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    AnalysistypeTransform newAnalysisControlHM = new AnalysistypeTransform(_rDotNet, Data.HMAnalysisObject);
+                    AnalysisBackendControl newAnalysisControlHM = new AnalysisBackendControl(_rDotNet, Data.HMAnalysisObject);
                     if (InFlawTransform != TransformTypeEnum.Inverse)
                     {
                         newAnalysisControlHM.ExecuteAnalysisTransforms_HM();
@@ -2637,7 +2637,7 @@ namespace POD.Analyze
                 else
                 {
 
-                    AnalysistypeTransform newAnalysisControlAHat = new AnalysistypeTransform(_rDotNet, null, Data.AHATAnalysisObject);
+                    AnalysisBackendControl newAnalysisControlAHat = new AnalysisBackendControl(_rDotNet, null, Data.AHATAnalysisObject);
                     newAnalysisControlAHat.ExecuteAnalysisTransforms();
                     Data.AHATAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
                 }

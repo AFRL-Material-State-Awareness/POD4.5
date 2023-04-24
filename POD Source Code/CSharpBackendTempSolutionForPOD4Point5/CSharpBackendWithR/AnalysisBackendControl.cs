@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CSharpBackendWithR
 {
-    public class AnalysistypeTransform
+    public class AnalysisBackendControl
     {
         private HMAnalysisObject newHMAnalysisObject;
         private AHatAnalysisObject newAHatAnalysisObject;
@@ -18,7 +18,7 @@ namespace CSharpBackendWithR
         //controls
         private HitMissAnalysisRControl newHitMissControl;
         private AHatAnalysisRControl newAHatControl;
-        public AnalysistypeTransform(IREngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
+        public AnalysisBackendControl(IREngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
         {
             this.analysisEngine = analysisEngine;
             this.newHMAnalysisObject = newHitMissAnalysisObjectInput;
