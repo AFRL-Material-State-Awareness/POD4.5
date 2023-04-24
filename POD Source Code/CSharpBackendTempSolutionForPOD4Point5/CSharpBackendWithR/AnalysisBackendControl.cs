@@ -7,11 +7,10 @@ using System.Linq;
 
 namespace CSharpBackendWithR
 {
-    public class AnalysisBackendControl
+    public class AnalysisBackendControl : IAnalysisBackendControl
     {
         private HMAnalysisObject newHMAnalysisObject;
         private AHatAnalysisObject newAHatAnalysisObject;
-        private IREngineObject analysisEngine;
         private int srsOrRSS;//0=simple random sampling, 1=ranked set sampling
         private HMAnalysisObject resultsHMAnalysis;
         private AHatAnalysisObject resultsAHatAnalysis;
@@ -20,7 +19,6 @@ namespace CSharpBackendWithR
         private AHatAnalysisRControl newAHatControl;
         public AnalysisBackendControl(IREngineObject analysisEngine, HMAnalysisObject newHitMissAnalysisObjectInput=null, AHatAnalysisObject newAhatAnalysisObjectInput=null)
         {
-            this.analysisEngine = analysisEngine;
             this.newHMAnalysisObject = newHitMissAnalysisObjectInput;
             if (newHitMissAnalysisObjectInput != null)
             {
@@ -198,7 +196,7 @@ namespace CSharpBackendWithR
             //used for error if the alogrithm doesn't converge
             this.newHMAnalysisObject.Failed_To_Converge = this.newHitMissControl.GetConvergenceFlag();
         }
-        public void ReturnTransformHitMissObjects()
+        private void ReturnTransformHitMissObjects()
         {
             this.newHMAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
             this.newHMAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
