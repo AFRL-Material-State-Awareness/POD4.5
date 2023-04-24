@@ -278,12 +278,10 @@ namespace CSharpBackendWithR
         }
         public HMAnalysisObject HMAnalsysResults
         {
-            set { this.resultsHMAnalysis = value; }
             get { return this.resultsHMAnalysis; }
         }
         public AHatAnalysisObject AHatAnalysisResults
         {
-            set { this.resultsAHatAnalysis = value; }
             get { return this.resultsAHatAnalysis; }
         }
     }
