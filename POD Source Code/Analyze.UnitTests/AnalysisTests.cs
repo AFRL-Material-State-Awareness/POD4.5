@@ -9,6 +9,8 @@ using System.Data;
 using POD.Data;
 using POD.ExcelData;
 using SpreadsheetLight;
+using System.IO;
+using System.Text;
 
 namespace Analyze.UnitTests
 {
@@ -20,6 +22,7 @@ namespace Analyze.UnitTests
         private Mock<IREngineObject> _rEngine;
         private Mock<I_IPy4C> _python;
         private Mock<IExcelExport> _excelOutput;
+        private Mock<IAnalysisBackendControl> _analysisBackendControl;
         private Analysis _analysis;
         private DataTable _testDataTable;
         [SetUp]
@@ -30,6 +33,7 @@ namespace Analyze.UnitTests
             _rEngine = new Mock<IREngineObject>();
             _python = new Mock<I_IPy4C>();
             _excelOutput = new Mock<IExcelExport>();
+            _analysisBackendControl = new Mock<IAnalysisBackendControl>();
             _analysis = new Analysis(_data.Object);
             _analysis.Name = "SampleAnalysis";
             _analysis.WorksheetName = "myWorkSheet";
@@ -846,5 +850,117 @@ namespace Analyze.UnitTests
             _data.Verify(gnv => gnv.GetNewValue(ColType.Response, ExtColProperty.Thresh, out tempValue), Times.Once);
         }
 
+
+        /// <summary>
+        /// Test for the public void  public void RunOnlyFitAnalysis() function
+        /// </summary>
+        [Test]
+        public void RunOnlyFitAnalysis_AnalysisTypeHitMissNotInverse_ReturnsAnHMAnalysisObjectResultsToData()
+        {
+            using (EventRaisingStreamWriter outputWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("outputWriter"))))
+            using (EventRaisingStreamWriter errorWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("errorWriter"))))
+            {
+                //Arrange
+                SetPythonAndREngines();
+                StandardHitMissSetup(TransformTypeEnum.Linear, outputWriter, errorWriter);
+                //Act
+                _analysis.RunOnlyFitAnalysis(_analysisBackendControl.Object);
+                //Assert
+                _analysisBackendControl.Verify(etHM => etHM.ExecuteAnalysisTransforms_HM(), Times.Once);
+                _data.VerifySet(data => data.HMAnalysisObject = It.IsAny<HMAnalysisObject>(), Times.Once);
+            }
+            
+        }
+        [Test]
+        public void RunOnlyFitAnalysis_AnalysisTypeHitMissIsInverse_ReturnsAnHMAnalysisObjectResultsToDataAndSkipsCheckingForRankedSetSampling()
+        {
+            using (EventRaisingStreamWriter outputWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("outputWriter"))))
+            using (EventRaisingStreamWriter errorWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("errorWriter"))))
+            {
+                //Arrange
+                SetPythonAndREngines();
+                StandardHitMissSetup(TransformTypeEnum.Inverse, outputWriter, errorWriter);
+                //Act
+                _analysis.RunOnlyFitAnalysis(_analysisBackendControl.Object);
+                //Assert
+                _analysisBackendControl.Verify(etHM => etHM.ExecuteReqSampleAnalysisTypeHitMiss(), Times.Once);
+                _data.VerifySet(data => data.HMAnalysisObject = It.IsAny<HMAnalysisObject>(), Times.Once);
+            }
+
+        }
+       
+        [Test]
+        [TestCase(TransformTypeEnum.Linear)]
+        [TestCase(TransformTypeEnum.Inverse)]
+        public void RunOnlyFitAnalysis_AnalysisTypeHitMissThrowsException_DoesNotOverwriteTheHMAnalysisObject(TransformTypeEnum transformType)
+        {
+            using (EventRaisingStreamWriter outputWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("outputWriter"))))
+            using (EventRaisingStreamWriter errorWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("errorWriter"))))
+            {
+                //Arrange
+                SetPythonAndREngines();
+                StandardHitMissSetup(transformType, outputWriter, errorWriter);
+                _analysisBackendControl.Setup(abc => abc.ExecuteAnalysisTransforms_HM()).Throws<Exception>();
+                _analysisBackendControl.Setup(abc => abc.ExecuteReqSampleAnalysisTypeHitMiss()).Throws<Exception>();
+                //Act
+                _analysis.RunOnlyFitAnalysis(_analysisBackendControl.Object);
+                //Assert
+                _data.VerifySet(data => data.HMAnalysisObject = It.IsAny<HMAnalysisObject>(), Times.Never);
+            }
+
+        }
+        private void StandardHitMissSetup(TransformTypeEnum transform, EventRaisingStreamWriter outputWriter, EventRaisingStreamWriter errorWriter)
+        {
+            _data.SetupGet(data => data.HMAnalysisObject).Returns(new HMAnalysisObject("Sample Analysis"));
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+            _analysis.InFlawTransform = transform;
+            _python.Setup(p => p.OutputWriter).Returns(outputWriter);
+            _python.Setup(p => p.ErrorWriter).Returns(errorWriter);
+            _analysisBackendControl.Setup(abc => abc.HMAnalsysResults).Returns(new HMAnalysisObject("Output Analysis"));
+        }
+        // RunOnlyFitAnalysis for AHAT analyses
+        [Test]
+        public void RunOnlyFitAnalysis_AnalysisTypeAHat_ReturnsAnAHatAnalysisObjectResultsToData()
+        {
+            using (EventRaisingStreamWriter outputWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("outputWriter"))))
+            using (EventRaisingStreamWriter errorWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("errorWriter"))))
+            {
+                //Arrange
+                SetPythonAndREngines();
+                StandardAHatSetup(TransformTypeEnum.Linear, outputWriter, errorWriter);
+                //Act
+                _analysis.RunOnlyFitAnalysis(_analysisBackendControl.Object);
+                //Assert
+                _analysisBackendControl.Verify(etHM => etHM.ExecuteAnalysisTransforms(), Times.Once);
+                _data.VerifySet(data => data.AHATAnalysisObject = It.IsAny<AHatAnalysisObject>(), Times.Once);
+            }
+
+        }
+        [Test]
+        public void RunOnlyFitAnalysis_AnalysisTypeAHatThrowsException_DoesNotOverwriteTheAHatAnalysisObject()
+        {
+            using (EventRaisingStreamWriter outputWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("outputWriter"))))
+            using (EventRaisingStreamWriter errorWriter = new EventRaisingStreamWriter(new MemoryStream(Encoding.UTF8.GetBytes("errorWriter"))))
+            {
+                //Arrange
+                SetPythonAndREngines();
+                StandardAHatSetup(TransformTypeEnum.Linear, outputWriter, errorWriter);
+                _analysisBackendControl.Setup(abc => abc.ExecuteAnalysisTransforms()).Throws<Exception>();
+                //Act
+                _analysis.RunOnlyFitAnalysis(_analysisBackendControl.Object);
+                //Assert
+                _data.VerifySet(data => data.AHATAnalysisObject = It.IsAny<AHatAnalysisObject>(), Times.Never);
+            }
+
+        }
+        private void StandardAHatSetup(TransformTypeEnum transform, EventRaisingStreamWriter outputWriter, EventRaisingStreamWriter errorWriter)
+        {
+            _data.SetupGet(data => data.AHATAnalysisObject).Returns(new AHatAnalysisObject("Sample Analysis"));
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            _analysis.InFlawTransform = transform;
+            _python.Setup(p => p.OutputWriter).Returns(outputWriter);
+            _python.Setup(p => p.ErrorWriter).Returns(errorWriter);
+            _analysisBackendControl.Setup(abc => abc.AHatAnalysisResults).Returns(new AHatAnalysisObject("Output Analysis"));
+        }
     }
 }

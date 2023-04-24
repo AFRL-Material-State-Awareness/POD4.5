@@ -2612,18 +2612,16 @@ namespace POD.Analyze
             }
         }
 
-        public void RunOnlyFitAnalysis()
+        public void RunOnlyFitAnalysis(IAnalysisBackendControl backendAnalysisControl=null)
         {
 
             CopyInputToR();
 
             try
             {
-                //_analysisCalculationType = RCalculationType.Full;
-                //for the case of hit/miss data and ahat, this is where the program first enters the python program
                 if(AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    AnalysisBackendControl newAnalysisControlHM = new AnalysisBackendControl(_rDotNet, Data.HMAnalysisObject);
+                    IAnalysisBackendControl newAnalysisControlHM = backendAnalysisControl ?? new AnalysisBackendControl(_rDotNet, Data.HMAnalysisObject);
                     if (InFlawTransform != TransformTypeEnum.Inverse)
                     {
                         newAnalysisControlHM.ExecuteAnalysisTransforms_HM();
@@ -2636,8 +2634,7 @@ namespace POD.Analyze
                 }
                 else
                 {
-
-                    AnalysisBackendControl newAnalysisControlAHat = new AnalysisBackendControl(_rDotNet, null, Data.AHATAnalysisObject);
+                    IAnalysisBackendControl newAnalysisControlAHat = backendAnalysisControl ?? new AnalysisBackendControl(_rDotNet, null, Data.AHATAnalysisObject);
                     newAnalysisControlAHat.ExecuteAnalysisTransforms();
                     Data.AHATAnalysisObject = newAnalysisControlAHat.AHatAnalysisResults;
                 }
@@ -2652,7 +2649,7 @@ namespace POD.Analyze
             stillRunningAnalysis = false;
 
         }
-        public double TransformAValue(double myValue, int transform)
+        private double TransformAValue(double myValue, int transform)
         {
             double transformValue = 0.0;
             switch (transform)
