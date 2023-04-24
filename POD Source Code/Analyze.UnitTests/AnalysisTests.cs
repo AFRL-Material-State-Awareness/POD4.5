@@ -813,7 +813,38 @@ namespace Analyze.UnitTests
         }
 
         /// <summary>
-        /// Test for the public decimal TransformValueForYAxis(decimal myValue) function
+        /// Test for the public void UpdateRangesFromData() function
         /// </summary>
+        [Test]
+        public void UpdateRangesFromData_HasBeenInitializedTrue_GetUpdatedValueFunctionFired()
+        {
+            //Arrange
+            _analysis.HasBeenInitialized = true;
+            //Act
+            _analysis.UpdateRangesFromData();
+            //Assert
+            var tempValue = 0.0;
+            _data.Verify(guv => guv.GetUpdatedValue(ColType.Flaw, ExtColProperty.Max, It.IsAny<double>(), out tempValue), Times.Once);
+            _data.Verify(guv => guv.GetUpdatedValue(ColType.Flaw, ExtColProperty.Min, It.IsAny<double>(), out tempValue), Times.Once);
+            _data.Verify(guv => guv.GetUpdatedValue(ColType.Response, ExtColProperty.Max, It.IsAny<double>(), out tempValue), Times.Once);
+            _data.Verify(guv => guv.GetUpdatedValue(ColType.Response, ExtColProperty.Min, It.IsAny<double>(), out tempValue), Times.Once);
+            _data.Verify(guv => guv.GetUpdatedValue(ColType.Response, ExtColProperty.Thresh, It.IsAny<double>(), out tempValue), Times.Once);
+        }
+        [Test]
+        public void UpdateRangesFromData_HasBeenInitializedFalse_GetNewValueFunctionFired()
+        {
+            //Arrange
+            _analysis.HasBeenInitialized = false;
+            //Act
+            _analysis.UpdateRangesFromData();
+            //Assert
+            var tempValue = 0.0;
+            _data.Verify(gnv => gnv.GetNewValue(ColType.Flaw, ExtColProperty.Max, out tempValue), Times.Once);
+            _data.Verify(gnv => gnv.GetNewValue(ColType.Flaw, ExtColProperty.Min, out tempValue), Times.Once);
+            _data.Verify(gnv => gnv.GetNewValue(ColType.Response, ExtColProperty.Max, out tempValue), Times.Once);
+            _data.Verify(gnv => gnv.GetNewValue(ColType.Response, ExtColProperty.Min, out tempValue), Times.Once);
+            _data.Verify(gnv => gnv.GetNewValue(ColType.Response, ExtColProperty.Thresh, out tempValue), Times.Once);
+        }
+
     }
 }
