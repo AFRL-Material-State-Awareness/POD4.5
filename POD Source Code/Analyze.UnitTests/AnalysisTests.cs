@@ -854,6 +854,7 @@ namespace Analyze.UnitTests
         /// <summary>
         /// Test for the public void  public void RunOnlyFitAnalysis() function
         /// </summary>
+        /// RunOnlyFitAnalysis for HitMiss analyses
         [Test]
         public void RunOnlyFitAnalysis_AnalysisTypeHitMissNotInverse_ReturnsAnHMAnalysisObjectResultsToData()
         {
@@ -961,6 +962,87 @@ namespace Analyze.UnitTests
             _python.Setup(p => p.OutputWriter).Returns(outputWriter);
             _python.Setup(p => p.ErrorWriter).Returns(errorWriter);
             _analysisBackendControl.Setup(abc => abc.AHatAnalysisResults).Returns(new AHatAnalysisObject("Output Analysis"));
+        }
+
+        /// <summary>
+        /// tests for GenerateFileName()
+        /// Will treat the function calls as fields since they are only one line of code each
+        /// </summary>
+        [Test]
+        public void GenerateFileName_AnalysisTypeHitMiss_ReturnsHitMissFileNameString()
+        {
+            //Arrange
+            _analysis.Operator = "operator";
+            _analysis.SpecimenSet = "specimen set";
+            _data.SetupGet(dt => dt.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            //Act
+            string result = _analysis.GenerateFileName();
+            //Assert
+            Assert.That(result.Contains(_analysis.Operator));
+            Assert.That(result.Contains(_analysis.SpecimenSet));
+            Assert.That(result.Contains(_data.Object.DataType.ToString()));
+        }
+        [Test]
+        public void GenerateFileName_AnalysisTypeAHat_ReturnsHitMissFileNameString()
+        {
+            //Arrange
+            _analysis.Operator = "operator";
+            _analysis.SpecimenSet = "specimen set";
+            _analysis.Instrument = "instrument";
+            _data.SetupGet(dt => dt.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            //Act
+            string result = _analysis.GenerateFileName();
+            //Assert
+            Assert.That(result.Contains(_analysis.Operator));
+            Assert.That(result.Contains(_analysis.SpecimenSet));
+            Assert.That(result.Contains(_analysis.Instrument));
+            Assert.That(result.Contains(_data.Object.DataType.ToString()));
+        }
+
+        /// <summary>
+        /// tests for ClearAllEvents()
+        /// </summary>
+        [Test]
+        public void ClearAllEvents_PythonIsNull_AnalysisDoneNotNull()
+        {
+            //Arrange
+            _analysis.AnalysisDone += (sender, args) => { };
+            //Act
+            _analysis.ClearAllEvents();
+            //Assert
+            Assert.That(_analysis.AnalysisDone, Is.Not.Null);
+        }
+        [Test]
+        public void ClearAllEvents_PythonIsNotNullAndEventsNeedsToBeClearedIsNull_AnalysisDoneIsNullAndEventsToBeClearedNotInvoked()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            var events = SetupAnalysisDoneAndEventsNeedtoBeCleared();
+            _analysis.EventsNeedToBeCleared = null;
+            //Act
+            _analysis.ClearAllEvents();
+            //Assert
+            Assert.That(_analysis.AnalysisDone, Is.Null);
+            Assert.That(events, Is.Not.Null);
+        }
+        [Test]
+        public void ClearAllEvents_PythonIsNotNullAndEventsNeedsToBeClearedIsNotNull_AnalysisDoneIsNullAndEventsToBeClearedInvoked()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            var events = SetupAnalysisDoneAndEventsNeedtoBeCleared();
+            //Act
+            _analysis.ClearAllEvents();
+            //Assert
+            Assert.That(_analysis.AnalysisDone, Is.Null);
+            Assert.That(events, Is.Not.Null);
+        }
+        private EventArgs SetupAnalysisDoneAndEventsNeedtoBeCleared()
+        {
+            _analysis.AnalysisDone += (sender, args) => { };
+            var events = EventArgs.Empty;
+            _analysis.EventsNeedToBeCleared += (sender, args) => { events = args; };
+            return events;
         }
     }
 }
