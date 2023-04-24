@@ -1097,7 +1097,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                 this.Cursor = Cursors.WaitCursor;
 
-                Analysis.RunAnalysis(true);
+                Analysis.RunAnalysis();
 
                 this.Cursor = Cursors.Default;
             }
