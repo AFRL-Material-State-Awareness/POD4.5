@@ -2732,17 +2732,9 @@ namespace POD.Analyze
         {
             if(_python != null)
             {
-                RaiseClearEvents();
-            }
-        }
-
-        private void RaiseClearEvents()
-        {
-            AnalysisDone = null;
-
-            if(EventsNeedToBeCleared != null)
-            {
-                EventsNeedToBeCleared.Invoke(this, null);
+                //RaiseClearEvents();
+                AnalysisDone = null;
+                EventsNeedToBeCleared?.Invoke(this, null);
             }
         }
 
@@ -2767,8 +2759,6 @@ namespace POD.Analyze
             {
                 ProjectInfoNeeded.Invoke(this, args);
             }
-
-
         }
 
         public void ExportProjectToExcel()
