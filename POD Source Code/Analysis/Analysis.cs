@@ -13,6 +13,7 @@ using POD.Controls;
 using POD;
 //for r engine
 using CSharpBackendWithR;
+
 namespace POD.Analyze
 {
     /// <summary>
@@ -2427,8 +2428,6 @@ namespace POD.Analyze
 
         public decimal TransformValueForXAxis(decimal myValue)
         {
-            decimal value = 0.0M;
-
             if (myValue <= 0.0M && InFlawTransform == TransformTypeEnum.Log)
             {
                 try
@@ -2437,48 +2436,39 @@ namespace POD.Analyze
                 }
                 catch (OverflowException)
                 {
-                    value = 0.0M;
+                    return 0.0M;
                 }
             }
             else
             {
                 try
                 {
-                    value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
+                    return Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
                 }
                 catch (OverflowException)
                 {
-                    value = myValue;
+                    return myValue;
                 }
             }
-            
-
-            return value;
         }
 
         public double TransformValueForYAxis(double myValue)
         {
             return Convert.ToDouble(TransformValueForYAxis(Convert.ToDecimal(myValue)));
         }
-
+        // the lambdaValueInput arguement is added in order to unit test this method
         public decimal TransformValueForYAxis(decimal myValue)
         {
-            decimal value = 0.0M;
 
             if (myValue <= 0.0M && InResponseTransform == TransformTypeEnum.Log)
             {
                 try
                 {
                     return Convert.ToDecimal(TransformAValue(_data.SmallestResponse / 2.0, _python.TransformEnumToInt(InResponseTransform)));
-                    //return Convert.ToDecimal(TransformAValue(myValue / 2.0, _python.TransformEnumToInt(InResponseTransform)));
                 }
                 catch (OverflowException)
                 {
-                    value = 0.0M;
-                }
-                catch (DivideByZeroException)
-                {
-                    value = 0;
+                    return 0.0M;
                 }
             }
             //only used when slider becomes negative and the transform type in a_hat is boxcox
@@ -2491,60 +2481,40 @@ namespace POD.Analyze
                 }
                 catch (OverflowException)
                 {
-                    value = 0.0M;
+                    return 0.0M;
                 }
-                catch (DivideByZeroException)
+            }
+            else
+            {
+                try
                 {
-                    value = 0;
+                    return Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
+                }
+                catch (OverflowException)
+                {
+                    return myValue;
                 }
             }
-            try
-            {
-                value = Convert.ToDecimal(TransformAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
-            }
-            catch(OverflowException)
-            {
-                value = myValue;
-            }
-            catch (DivideByZeroException)
-            {
-                value = 0;
-            }
-
-            return value;
         }
 
         public double InvertTransformValueForXAxis(double myValue)
         {
             return Convert.ToDouble(InvertTransformValueForXAxis(Convert.ToDecimal(myValue)));
         }
-
         public decimal InvertTransformValueForXAxis(decimal myValue)
         {
             decimal value = 0.0M;
 
             try
             {
-                if (_python != null)
-                {
-                    value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
-                }
-                else
-                {
-                    value = myValue;
-                }       
+                value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
             }
-            catch
+            catch (Exception)
             {
                 value = myValue;
             }
 
             return value;
-        }
-
-        public double InvertTransformValueForYAxis(double myValue)
-        {
-            return Convert.ToDouble(InvertTransformValueForYAxis(Convert.ToDecimal(myValue)));
         }
 
         public decimal InvertTransformValueForYAxis(decimal myValue)
@@ -2553,14 +2523,9 @@ namespace POD.Analyze
 
             try
             {
-                if (_python != null)
-                {
-                    value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
-                }    
-                else
-                    value = myValue;
+                value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));
             }
-            catch
+            catch (Exception)
             {
                 value = myValue;
             }
@@ -2734,18 +2699,7 @@ namespace POD.Analyze
                     transformValue = Math.Log(myValue);
                     break;
                 case 3:
-                    /*
-                    if (myValue == 0)
-                    {
-                        transformValue =0.0;
-                    }
-                    else
-                    {
-                        transformValue = 1.0 / myValue;
-                    }
-                    */
                     transformValue = 1.0 / myValue;
-                    //transformValue = myValue;
                     break;
                 case 5:
                     transformValue = (Math.Pow(myValue, InLambdaValue) - 1) / InLambdaValue;

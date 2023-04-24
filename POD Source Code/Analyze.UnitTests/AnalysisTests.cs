@@ -479,8 +479,7 @@ namespace Analyze.UnitTests
         }
 
         /// <summary>
-        /// Test for the public double TransformValueForXAxis(double myValue) function
-        /// ensure a double is always returned
+        /// Test for the public decimal TransformValueForXAxis(decimal myValue) function
         /// </summary>
         //The possible transforms that can go into this function is Linear, Log, and inverse
         [Test]
@@ -489,7 +488,7 @@ namespace Analyze.UnitTests
         [TestCase(TransformTypeEnum.Linear, 1, -2.0, -2.0)]
         [TestCase(TransformTypeEnum.Inverse, 3, 2.0, .5)]
         [TestCase(TransformTypeEnum.Inverse, 3, -2.0, -.5)]
-        public void InvertTransformValueForXAxis_NonLogtransformPassed_ReturnsValidtransform(TransformTypeEnum transform, int enumTransform, decimal myValue,  decimal expectedResult)
+        public void TransformValueForXAxis_NonLogtransformPassed_ReturnsValidtransform(TransformTypeEnum transform, int enumTransform, decimal myValue,  decimal expectedResult)
         {
             //Arrange
             SetPythonAndREngines();
@@ -501,7 +500,7 @@ namespace Analyze.UnitTests
             //Assert.Throws<OverflowException>(()=>_analysis.TransformValueForXAxis(-1.0M));
         }
         [Test]
-        public void TransformValueForXAxis_0PassedInForInverseTransform_ThrowsDividByZeroExcpetionAndReturnsTheSameValue()
+        public void TransformValueForXAxis_0PassedInForInverseTransform_ThrowsOverflowExcpetionAndReturnsTheSameValue()
         {
             //Arrange
             SetPythonAndREngines();
@@ -560,5 +559,261 @@ namespace Analyze.UnitTests
             Assert.That(result, Is.EqualTo(0.0M));
             //Assert.That(() => _analysis.TransformValueForXAxis(inputValue), Throws.Exception.TypeOf<OverflowException>());
         }
+
+        /// <summary>
+        /// Test for the public double TransformValueForYAxis(double myValue) function
+        /// ensure a double is always returned
+        /// </summary>
+        [Test]
+        public void TransformValueForYAxis_AnyDoublePassed_ReturnsAValidDouble()
+        {
+            //Arrange
+            //_python.Setup(p => p.TransformEnumToInt(transformType)).Returns();
+            SetPythonAndREngines();
+            var myValue = It.IsAny<double>();
+
+            //Act
+            var result = _analysis.TransformValueForYAxis(myValue);
+
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(double.NaN));
+        }
+
+        /// <summary>
+        /// Test for the public decimal TransformValueForYAxis(decimal myValue) function
+        /// </summary>
+        //The possible transforms that can go into this function is Linear, Log, BoxCox, and inverse
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 1, 2.0, 2.0)]
+        [TestCase(TransformTypeEnum.Linear, 1, 0.0, 0.0)]
+        [TestCase(TransformTypeEnum.Linear, 1, -2.0, -2.0)]
+        [TestCase(TransformTypeEnum.Inverse, 3, 2.0, .5)]
+        [TestCase(TransformTypeEnum.Inverse, 3, -2.0, -.5)]
+        public void TransformValueForYAxis_NonLogOrBoxCoxtransformPassed_ReturnsValidtransform(TransformTypeEnum transform, int enumTransform, decimal myValue, decimal expectedResult)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = transform;
+            _python.Setup(e => e.TransformEnumToInt(transform)).Returns(enumTransform);
+            //Act
+            var result = _analysis.TransformValueForYAxis(myValue);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public void TransformValueForYAxis_0PassedInForInverseTransform_ThrowsOverflowExcpetionAndReturnsTheSameValue()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.Inverse;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Inverse)).Returns(3);
+            //Act
+            var result = _analysis.TransformValueForYAxis(0.0M);
+            //Assert
+            Assert.That(result, Is.EqualTo(0.0M));
+            //Assert.That(() => _analysis.TransformValueForXAxis(0.0M), Throws.Exception.TypeOf<OverflowException>());
+        }
+        [Test]
+        [TestCase(Math.E, 1.0)]
+        [TestCase(.1, -2.303)]
+        public void TransformValueForYAxis_LogTransformPassedAndValueIsPositive_ReturnsValidLogTransform(decimal inputValue, decimal expectedValue)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            //Act
+            var result = _analysis.TransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(Math.Round(result, 3), Is.EqualTo(expectedValue));
+
+        }
+        [Test]
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void TransformValueForYAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIsNot0_ReturnsValidLogTransform(decimal inputValue)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _data.SetupGet(sf => sf.SmallestResponse).Returns(.1);
+            //Act
+            var result = _analysis.TransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(Convert.ToDecimal(Math.Log(.1 / 2.0))));
+
+        }
+        [Test]
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void TransformValueForYAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIs0_Returns0(decimal inputValue)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _data.SetupGet(sf => sf.SmallestResponse).Returns(0.0);
+            //Act
+            var result = _analysis.TransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(0.0M));
+            //Assert.That(() => _analysis.TransformValueForXAxis(inputValue), Throws.Exception.TypeOf<OverflowException>());
+        }
+        //Testing for a postive and negative value for lambda
+        [Test]
+        [TestCase(.5, 16.0, 6.0)]
+        [TestCase(-.5, 16.0, 1.5)]
+        public void TransformValueForYAxis_BoxCoxTransformPassedAndValueIsPositive_ReturnsValidBoxCoxTransform(double lambdaValue, decimal myValue, decimal ExpectedOutput)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.BoxCox;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.BoxCox)).Returns(5);
+            _data.SetupGet(sf => sf.AHATAnalysisObject).Returns(new AHatAnalysisObject("SampleAnalysis"));
+            _analysis.InLambdaValue = lambdaValue;
+            //Act
+            var result = _analysis.TransformValueForYAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(ExpectedOutput));
+        }
+        [Test]
+        [TestCase(.5, -16.0, -1.0)]
+        [TestCase(-.5, -16.0, 0.0)]
+        public void TransformValueForYAxis_BoxCoxTransformPassedAndValueIsPositive_ReturnsNegative1ForPositiveLambdaAndZeroForNegativeLambdas(double lambdaValue, decimal myValue, decimal ExpectedOutput)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.BoxCox;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.BoxCox)).Returns(5);
+            _data.SetupGet(sf => sf.AHATAnalysisObject).Returns(new AHatAnalysisObject("SampleAnalysis"));
+            _analysis.InLambdaValue = lambdaValue;
+            //Act
+            var result = _analysis.TransformValueForYAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(ExpectedOutput));
+        }
+
+
+        /// <summary>
+        /// Test for the public double InvertTransformValueForXAxis(double myValue) function
+        /// ensure a double is always returned
+        /// </summary>
+        [Test]
+        public void InvertTransformValueForXAxis_AnyDoublePassed_ReturnsAValidDouble()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            var myValue = It.IsAny<double>();
+
+            //Act
+            var result = _analysis.InvertTransformValueForXAxis(myValue);
+
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(double.NaN));
+        }
+
+        /// <summary>
+        /// Test for the public double TransformValueForYAxis(decimal myValue) function
+        /// </summary>
+        [Test]
+        [TestCase(2, 0.0, 1.0)]
+        public void InvertTransformValueForXAxis_ValidValuePassedAndPythonNotNull_ReturnsValidtransform(int enumTransform, decimal myValue, decimal expectedResult)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(enumTransform);
+            _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), enumTransform)).Returns(Convert.ToDouble(expectedResult));
+            //Act
+            var result = _analysis.InvertTransformValueForXAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+        [Test]
+        [TestCase(-1.0)]
+        [TestCase(0.0)]
+        [TestCase(1.0)]
+        public void InvertTransformValueForXAxis_ValidValuePassedPythonIsNull_ReturnsTheSameValue(decimal myValue)
+        {
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), 2)).Returns(Convert.ToDouble(2.0));
+            //Act
+            var result = _analysis.InvertTransformValueForXAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(myValue));
+        }
+        [Test]
+        [TestCase(1.0)]
+        public void InvertTransformValueForXAxis_ThrowsException_ReturnsTheSameValue(decimal myValue)
+        {
+            SetupTransformBackFlaws();
+            _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), 2)).Throws<Exception>();
+            //Act
+            var result = _analysis.InvertTransformValueForXAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(myValue));
+        }
+        private void SetupTransformBackFlaws()
+        {
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+        }
+
+        /// <summary>
+        /// Test for the public decimal TransformValueForYAxis(decimal myValue) function
+        /// </summary>
+        [Test]
+        [TestCase(2, 0.0, 1.0)]
+        public void InvertTransformValueForYAxis_ValidValuePassedAndPythonNotNull_ReturnsValidtransform(int enumTransform, decimal myValue, decimal expectedResult)
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(enumTransform);
+            _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), enumTransform)).Returns(Convert.ToDouble(expectedResult));
+            //_python.Setup(e => e).Returns(new IPy4C());
+            //Act
+            var result = _analysis.InvertTransformValueForYAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+        [Test]
+        [TestCase(-1.0)]
+        [TestCase(0.0)]
+        [TestCase(1.0)]
+        public void InvertTransformValueForYAxis_ValidValuePassedPythonIsNull_ReturnsTheSameValue(decimal myValue)
+        {
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+            _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), 2)).Returns(Convert.ToDouble(2.0));
+            //Act
+            var result = _analysis.InvertTransformValueForYAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(myValue));
+        }
+        [Test]
+        [TestCase(1.0)]
+        public void InvertTransformValueForYAxis_ThrowsException_ReturnsTheSameValue(decimal myValue)
+        {
+            SetupTransformBackResponse();
+            _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), 2)).Throws<Exception>();
+            //Act
+            var result = _analysis.InvertTransformValueForYAxis(myValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(myValue));
+        }
+        private void SetupTransformBackResponse()
+        {
+            SetPythonAndREngines();
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
+        }
+
+        /// <summary>
+        /// Test for the public decimal TransformValueForYAxis(decimal myValue) function
+        /// </summary>
     }
 }
