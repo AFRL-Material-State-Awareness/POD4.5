@@ -2732,7 +2732,6 @@ namespace POD.Analyze
         {
             if(_python != null)
             {
-                //RaiseClearEvents();
                 AnalysisDone = null;
                 EventsNeedToBeCleared?.Invoke(this, null);
             }
@@ -2763,10 +2762,7 @@ namespace POD.Analyze
 
         public void ExportProjectToExcel()
         {
-            if(ExportProject != null)
-            {
-                ExportProject.Invoke(this, null);
-            }
+            ExportProject?.Invoke(this, null);
         }
 
         public string ToolTipText
@@ -2777,10 +2773,7 @@ namespace POD.Analyze
                 var name = Name;
 
                 if (name.Length > 40)
-                {
-                    name = name.Substring(0, 40);
-                    name += "...";
-                }
+                    name = name.Substring(0, 40) + "...";
 
                 text += name + Environment.NewLine;
                 text += "Flaw Transform: " + InFlawTransform.ToString() + Environment.NewLine;
@@ -2789,9 +2782,7 @@ namespace POD.Analyze
                 {
                     text += "Response Transform: " + InResponseTransform.ToString() + Environment.NewLine;
                     if(InResponseTransform == TransformTypeEnum.BoxCox)
-                    {
                         text += "Lambda Value:\t" + InLambdaValue.ToString() + Environment.NewLine + Environment.NewLine;
-                    }
                     text += "POD Decision:\t" + InResponseDecision.ToString("F3") + " " + ResponseUnits[0] + Environment.NewLine;
                     text += "a50:\t\t" + OutResponseDecisionPODA50Value.ToString("F3") + " " + FlawUnit + Environment.NewLine;
                     text += "a90:\t\t" + OutResponseDecisionPODLevelValue.ToString("F3") + " " + FlawUnit + Environment.NewLine;
@@ -2806,9 +2797,6 @@ namespace POD.Analyze
                     text += "a90:\t" + OutResponseDecisionPODLevelValue.ToString("F3") + " " + FlawUnit + Environment.NewLine;
                     text += "a90/95:\t" + OutResponseDecisionPODConfidenceValue.ToString("F3") + " " + FlawUnit + Environment.NewLine;
                 }
-                
-                
-
                 return text;
             }
         }

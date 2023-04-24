@@ -11,6 +11,7 @@ using POD.ExcelData;
 using SpreadsheetLight;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Analyze.UnitTests
 {
@@ -1043,6 +1044,139 @@ namespace Analyze.UnitTests
             var events = EventArgs.Empty;
             _analysis.EventsNeedToBeCleared += (sender, args) => { events = args; };
             return events;
+        }
+
+
+        /// <summary>
+        /// skipping public void GetProjectInfo(out string fileName, out DataTable data) for now (need to figure out how to deal with the GetProjectInfoArgs dependency)
+        /// </summary>
+
+        /// <summary>
+        /// tests for ExportProjectToExcel() function
+        /// </summary>
+        [Test]
+        public void ExportProjectToExcel_ExportProjectIsNotNull_ExportProjectInvoked()
+        {
+            //Arrange
+            var events = EventArgs.Empty;
+            _analysis.ExportProject += (sender, args) => { events = args; };
+            //_analysis.ExportProject = null;
+            //Act
+            _analysis.ExportProjectToExcel();
+            //Assert
+            Assert.That(events, Is.Null);
+        }
+        [Test]
+        public void ExportProjectToExcel_ExportProjectIsNull_ExportProjectInvoked()
+        {
+            //Arrange
+            var events = EventArgs.Empty;
+            _analysis.ExportProject += (sender, args) => { events = args; };
+            _analysis.ExportProject = null;
+            //Act
+            _analysis.ExportProjectToExcel();
+            //Assert
+            Assert.That(events, Is.Not.Null);
+        }
+
+        /// <summary>
+        /// test for ToolTipText property
+        /// </summary>
+        [Test]
+        public void ToolTipText_AnalysisTypeHitMissAndLengthIsLessThan40_ReturnsAStringWithFullNameAndHitMissParameters()
+        {
+            //Arrange
+            SetUpHitMissParameters();
+            //Act
+            var result = _analysis.ToolTipText;
+            //Assert
+            Assert.That(result.Contains(_analysis.Name));
+            AssertHitMissMetrics(result);
+        }
+        /// <summary>
+        /// test for ToolTipText property
+        /// </summary>
+        [Test]
+        public void ToolTipText_AnalysisTypeHitMissAndLengthIsGREATERThan40_ReturnsAStringWithTruncatedNameAndHitMissParameters()
+        {
+            //Arrange
+            SetUpHitMissParameters();
+            _analysis.Name = "ThisAnalysisNameIsLongerThan40Characters!";
+            //Act
+            var result = _analysis.ToolTipText;
+            //Assert
+            Assert.That(result.Contains(_analysis.Name), Is.False);
+            Assert.That(result.Contains(_analysis.Name.Substring(0, 40)), Is.True);
+            AssertHitMissMetrics(result);
+        }
+        private void SetUpHitMissParameters()
+        {
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.HitMiss;
+            _data.SetupGet(data => data.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            _analysis.InHitMissModel = HitMissRegressionType.LogisticRegression;
+            _analysis.InConfIntervalType = ConfidenceIntervalTypeEnum.StandardWald;
+            _analysis.InSamplingType = SamplingTypeEnum.SimpleRandomSampling;
+            _data.SetupGet(afu => afu.AvailableFlawUnits).Returns( new List<string>() { "centimeters" });
+        }
+        private void AssertHitMissMetrics(string result)
+        {
+            Assert.That(result.Contains(_analysis.InHitMissModel.ToString()));
+            Assert.That(result.Contains(_analysis.InConfIntervalType.ToString()));
+            Assert.That(result.Contains(_analysis.InSamplingType.ToString()));
+        }
+        [Test]
+        public void ToolTipText_AnalysisTypeAHatAndLengthIsLessThan40AndNotBoxCox_ReturnsAStringWithFullNameAndAHatParameters()
+        {
+            //Arrange
+            SetUpAHatParameters(TransformTypeEnum.Log);
+            //Act
+            var result = _analysis.ToolTipText;
+            //Assert
+            AssertAHatMetrics(result);
+            Assert.That(result.Contains(_analysis.InLambdaValue.ToString()), Is.False);
+        }
+        [Test]
+        public void ToolTipText_AnalysisTypeAHatAndLengthIsLessThan40IsBoxCox_ReturnsAStringWithFullNameAndAHatParameters()
+        {
+            //Arrange
+            SetUpAHatParameters(TransformTypeEnum.BoxCox);
+            //Act
+            var result = _analysis.ToolTipText;
+            //Assert
+            AssertAHatMetrics(result);
+            Assert.That(result.Contains(_analysis.InLambdaValue.ToString()), Is.True);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Log)]
+        [TestCase(TransformTypeEnum.BoxCox)]
+        public void ToolTipText_AnalysisTypeAHatAndLengthIsLongerThan40_ReturnsAStringWithFullNameAndAHatParameters(TransformTypeEnum transform)
+        {
+            //Arrange
+            SetUpAHatParameters(transform);
+            _analysis.Name = "ThisAnalysisNameIsLongerThan40Characters!";
+            //Act
+            var result = _analysis.ToolTipText;
+            //Assert
+            AssertAHatMetrics(result);
+            Assert.That(result.Contains(_analysis.Name), Is.False);
+            Assert.That(result.Contains(_analysis.Name.Substring(0, 40)), Is.True);
+            AssertAHatMetrics(result);
+        }
+        private void SetUpAHatParameters(TransformTypeEnum transform)
+        {
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            _data.SetupGet(data => data.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            _analysis.InResponseTransform = transform;
+            _data.Setup(data => data.AHATAnalysisObject).Returns(new AHatAnalysisObject("Sample Analysis"));
+            _analysis.InLambdaValue = 0.5;
+            _analysis.InResponseDecision =5.0;
+            _data.SetupGet(afu => afu.AvailableFlawUnits).Returns(new List<string>() { "centimeters" });
+            _data.SetupGet(afu => afu.AvailableResponseUnits).Returns(new List<string>() { "amps" });
+        }
+        private void AssertAHatMetrics(string result)
+        {
+            Assert.That(result.Contains(_analysis.InResponseTransform.ToString()));
+            Assert.That(result.Contains(_analysis.InResponseDecision.ToString()));
         }
     }
 }
