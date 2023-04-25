@@ -1167,12 +1167,14 @@ namespace POD
     public enum SamplingTypeEnum
     {
         SimpleRandomSampling,
-        RankedSetSampling
+        RankedSetSampling,
+        None
     }
     public enum HitMissRegressionType
     {
         LogisticRegression,
-        FirthLogisticRegression
+        FirthLogisticRegression,
+        None
     }
     public enum RCalculationType
     {

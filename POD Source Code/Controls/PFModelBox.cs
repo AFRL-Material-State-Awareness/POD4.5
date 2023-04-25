@@ -29,15 +29,10 @@ namespace POD.Controls
             {
                 foreach (Object obj in Items)
                 {
-                    var type = obj as PFModelObj;
+                   var type = obj as PFModelObj;
 
-                    if (type != null)
-                    {
-                        if (type.ModelType == value)
-                        {
-                            SelectedItem = obj;
-                        }
-                    }
+                   if (type?.ModelType == value)
+                        SelectedItem = obj;
                 }
             }
         }
