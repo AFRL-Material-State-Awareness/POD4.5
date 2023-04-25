@@ -1178,5 +1178,92 @@ namespace Analyze.UnitTests
             Assert.That(result.Contains(_analysis.InResponseTransform.ToString()));
             Assert.That(result.Contains(_analysis.InResponseDecision.ToString()));
         }
+        /// <summary>
+        /// test for ShortName property
+        /// </summary>
+        [Test]
+        public void ShortName_ShortNameDoesNotStartWithSourceNameOrFlawName_ReturnsShortNameAsASubStringOfSourceName()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.Name = "test.flaw.response.MyProject";
+            _data.SetupGet(afu => afu.AvailableFlawNames).Returns(new List<string>() { "flawName.centimeters" });
+            DataSource source = new DataSource("MyDataSource", "ID", "flawName.centimeters", "Response");
+            _analysis.HasBeenInitialized = true;
+            _analysis.SetDataSource(source);
+            //Act
+            var result = _analysis.ShortName;
+            //Assert
+            Assert.That(result.StartsWith(_analysis.SourceName), Is.False);
+            Assert.That(result.StartsWith(_analysis.FlawName), Is.False);
+            Assert.That(result, Is.EqualTo(_analysis.Name));
+        }
+        [Test]
+        public void ShortName_ShortNameStartsWithSourceNameButNotFlawName_ReturnsShortNameAsASubStringOfSourceName()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.Name = "test.flaw.response.MyProject";
+            _data.SetupGet(afu => afu.AvailableFlawNames).Returns(new List<string>() { "flawName.centimeters" });
+            DataSource source = new DataSource("test.flaw.response", "ID", "flawName.centimeters", "Response");
+            _analysis.HasBeenInitialized = true;
+            _analysis.SetDataSource(source);
+            //Act
+            var result = _analysis.ShortName;
+            //Assert
+            Assert.That(result.StartsWith(_analysis.SourceName), Is.False);
+            Assert.That(result.StartsWith(_analysis.FlawName), Is.False);
+            Assert.That(result, Is.Not.EqualTo(_analysis.Name));
+        }
+        [Test]
+        public void ShortName_ShortNameStartsWithFlawNameButNotWithSourceName_ReturnsShortNameAsASubStringOfSourceName()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.Name = "flawName.centimeters.MyProject";
+            _data.SetupGet(afu => afu.AvailableFlawNames).Returns(new List<string>() { "flawName.centimeters" });
+            DataSource source = new DataSource("test.flaw.response", "ID", "flawName.centimeters", "Response");
+            _analysis.HasBeenInitialized = true;
+            _analysis.SetDataSource(source);
+            //Act
+            var result = _analysis.ShortName;
+            //Assert
+            Assert.That(result.StartsWith(_analysis.SourceName), Is.False);
+            Assert.That(result.StartsWith(_analysis.FlawName), Is.False);
+            Assert.That(result, Is.Not.EqualTo(_analysis.Name));
+        }
+
+        /// <summary>
+        /// test for RaiseCreatedAnalyis(Analysis clone) property
+        /// </summary>
+        [Test]
+        public void RaiseCreatedAnalysis_CreatedAnalysisIsNull_NotInvoked()
+        {
+            //Arrange
+            var events = AnalysisListArg.Empty;
+            _analysis.CreatedAnalysis += (sender, args) => { events = args; };
+            _analysis.CreatedAnalysis = null;
+            //Act
+            _analysis.RaiseCreatedAnalysis(_analysis);
+            //Assert 
+            Assert.That(events, Is.EqualTo(AnalysisListArg.Empty));
+            Assert.That(events as AnalysisListArg, Is.Null);
+        }
+        /// <summary>
+        /// test for RaiseCreatedAnalyis(Analysis clone) property
+        /// </summary>
+        [Test]
+        public void RaiseCreatedAnalysis_CreatedAnalysisIsNotNull_EventInvokedAndArgsContainAnalysisList()
+        {
+            //Arrange
+            EventArgs events = AnalysisListArg.Empty;
+            _analysis.CreatedAnalysis += (sender, args) => { events = args; };
+            //Act
+            _analysis.RaiseCreatedAnalysis(_analysis);
+            //Assert 
+            Assert.That(events, Is.Not.EqualTo(AnalysisListArg.Empty));
+            Assert.That(events as AnalysisListArg, Is.Not.Null);
+            Assert.That(((AnalysisListArg)events).Analyses.Count, Is.GreaterThanOrEqualTo(1));
+        }
     }
 }
