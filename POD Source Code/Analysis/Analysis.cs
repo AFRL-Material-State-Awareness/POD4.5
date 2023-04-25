@@ -1318,9 +1318,7 @@ namespace POD.Analyze
 
             //analysis data will figure out what kind of analysis it is
             if (recheckAnalysisType)
-            {
                 AnalysisDataType = _data.RecheckAnalysisType(forcedType);
-            }
             else 
                 AnalysisDataType = _data.DataType;
         }
