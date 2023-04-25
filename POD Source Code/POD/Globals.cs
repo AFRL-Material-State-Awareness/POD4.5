@@ -1160,7 +1160,8 @@ namespace POD
         StandardWald,
         ModifiedWald,
         LR,
-        MLR
+        MLR,
+        None
     }
 
     public enum SamplingTypeEnum

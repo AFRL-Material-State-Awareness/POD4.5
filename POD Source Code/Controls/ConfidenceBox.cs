@@ -38,13 +38,8 @@ namespace POD.Controls
                 {
                     var type = obj as ConfIntObj;
 
-                    if (type != null)
-                    {
-                        if (type.ConfIntervalType == value)
-                        {
-                            SelectedItem = obj;
-                        }
-                    }
+                    if (type?.ConfIntervalType == value)
+                        SelectedItem = obj;
                 }
             }
         }
