@@ -15,15 +15,15 @@ namespace POD.Data
     ///     It is also in charge of talking to the Python code/libraries for performing the transforms.
     /// </summary>
     [Serializable]
-    public class AnalysisData
+    public class AnalysisData : IAnalysisData
     {
         #region Fields
 
         [NonSerialized]
         public List<SortPoint> sortByX = new List<SortPoint>();
-        public int _prevAbove;
-        public int _prevBelow;
-        public bool _prevBelowDoesNotInclude;
+        private int _prevAbove;
+        private int _prevBelow;
+        private bool _prevBelowDoesNotInclude;
         public Dictionary<int, Dictionary<int, string>> _commentDictionary;
 
         public Dictionary<int, Dictionary<int, string>> CommentDictionary
@@ -189,13 +189,13 @@ namespace POD.Data
         ///     IronPython engine used to call Python code/libraries.
         /// </summary>
         [NonSerialized]
-        private IPy4C _python;
+        private I_IPy4C _python;
 
         /// <summary>
         /// RDotEngineObjectInstance
         /// </summary>
         [NonSerialized]
-        private REngineObject _rDotNet;
+        private IREngineObject _rDotNet;
 
         private HMAnalysisObject _hmAnalysisObject;
         private AHatAnalysisObject _aHatAnalysisObject;
@@ -272,11 +272,11 @@ namespace POD.Data
             get { return _residualFullCensoredTable; }
         }
 
-        public double ResponseLeft;
-        public double ResponseRight;
+        public double ResponseLeft { get; set; }
+        public double ResponseRight { get; set; }
         private double _smallestFlawSize;
         private double _smallestResponse;
-        public bool IsFrozen;
+        public bool IsFrozen { get; set; }
 
         private double _minSignal = 0.0;
 
@@ -568,13 +568,6 @@ namespace POD.Data
             get { return new List<string>(_availableResponses); }
         }
 
-        /// <summary>
-        ///     Get a copy of the available specimen ID column names
-        /// </summary>
-        public List<string> AvailableSpecimenIDNames
-        {
-            get { return new List<string>(_availableSpecIDs); }
-        }
 
         /// <summary>
         ///     Get the type of analysis that will be performed on the data
@@ -665,7 +658,7 @@ namespace POD.Data
         }
 
         /// <summary>
-        ///     Holds the a50, a90, a90/95, V11, V12, V22 (not sure what Vs are yet)
+        ///     Holds the a50, a90, a90/95, V11, V12, V22 (Vs represent the values for the varaince-covariance matrix)
         /// </summary>
         public DataTable ThresholdPlotTable
         {
@@ -673,7 +666,7 @@ namespace POD.Data
         }
 
         /// <summary>
-        ///     Holds the a50, a90, a90/95, V11, V12, V22 (not sure what Vs are yet)
+        ///     Holds the a50, a90, a90/95, V11, V12, V22 (plots the ghost curve if applicable)
         /// </summary>
         public DataTable ThresholdPlotTable_All
         {
@@ -731,46 +724,18 @@ namespace POD.Data
             return _activatedFlawTable;
         }
 
-        /// <summary>
-        ///     Make active a single metadata column.
-        /// </summary>
-        /// <param name="myName">the name of the metadata column</param>
-        /// <returns>a data table containing the metadata data</returns>
-        public DataTable ActivateMetaData(String myName)
-        {
-            return ActivateValue(ref _activatedMetaDatas, myName, ref _activatedMetaDataTable, _availableMetaDatasTable);
-        }
 
         /// <summary>
         ///     Make active multiple metadata columns.
         /// </summary>
         /// <param name="myNames">name of the columns</param>
         /// <returns>a data table containing the metadata data</returns>
-        public DataTable ActivateMetaDatas(List<string> myNames)
+        private DataTable ActivateMetaDatas(List<string> myNames)
         {
             return ActivateValues(ref _activatedMetaDatas, myNames, ref _activatedMetaDataTable,
                 _availableMetaDatasTable);
         }
 
-        /// <summary>
-        ///     Make active a single response data column.
-        /// </summary>
-        /// <param name="myName">the name of the response data column</param>
-        /// <returns>a data table containing the response data</returns>
-        public DataTable ActivateResponse(String myName, bool runUpdate = true)
-        {
-            ActivateValue(ref _activatedResponses, myName, ref _activatedResponseTable, ref _calculatedResponseTable, _availableResponsesTable);
-            TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
-                _customResponseTransformEquation);
-
-            if (runUpdate)
-            {
-                RefreshTurnedOffPoints();
-                UpdateData();
-            }
-
-            return _activatedResponseTable;
-        }
 
         /// <summary>
         ///     Make active multiple response data columns.
@@ -791,17 +756,6 @@ namespace POD.Data
 
             return _activatedResponseTable;
         }
-
-        /// <summary>
-        ///     Make active a single specimen ID column.
-        /// </summary>
-        /// <param name="myName">the name of the specimen ID column</param>
-        /// <returns>a data table containing the specimen ID data</returns>
-        public DataTable ActivateSpecID(String myName)
-        {
-            return ActivateValue(ref _activatedSpecIDs, myName, ref _activatedSpecIDTable, _availableSpecIDsTable);
-        }
-
         /// <summary>
         ///     Make active multiple specimen ID data columns.
         /// </summary>
@@ -1273,7 +1227,6 @@ namespace POD.Data
                 myTransformTable = mySourceTable.DefaultView.ToTable();
 
                 var minValue = 0.0;
-                //var maxValue = Double.PositiveInfinity;
                 var safeValue = 1.0;
                 var minValueTransformed = 0.0;
 
@@ -1301,20 +1254,13 @@ namespace POD.Data
                                 minChanged.Add(i);
                                 values[i] = safeValue;
                             }
-                            //else if(values[i] >= maxValue)
-                            //{
-                            //    maxChanged.Add(i);
-                            //    values[i] = safeValue;
-                            //}
                         }
                     }
-                    //Debug.WriteLine(values);
-                    //_podDoc.TransformData(values, _python.TransformEnumToInt(myTransformType));
+
                     for(int i=0; i < values.Count(); i++)
                     {
                         values[i]=TransformAValue(values[i], _python.TransformEnumToInt(myTransformType));
                     }
-                    //Debug.WriteLine(values);
                     //copy transformed data back to the other table
                     int index = 0;
                     foreach (double value in values)
@@ -1547,31 +1493,9 @@ namespace POD.Data
                     {
                         _hmAnalysisObject.Responses_all = allResponses;
                     }
-                    /*
-                    //check for any excluded flaws (mainly used if user is loading a project) *****
-                    if (_hmAnalysisObject.ExcludedFlaws.Count > 0)
-                    {
-                        for (int i = 0; i < flaws.Count; i++)
-                        {
-                            foreach (double excludedFlaw in _hmAnalysisObject.ExcludedFlaws)
-                            {
-                                if (flaws[i] == excludedFlaw)
-                                {
-                                    flaws.Remove(flaws[i]);
-                                    responses.Remove(responses);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    */
-                    //if(!fileLoad)
-                    //{
-                    //used for the hit miss analysis object for RDotNet
+
                     _hmAnalysisObject.Flaws = flaws;
-                        //string[] names = _hmAnalysisObject.Name.Split('.');
                     _hmAnalysisObject.Responses = responses;
-                    //}
                       
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
@@ -1616,11 +1540,11 @@ namespace POD.Data
         }
         #endregion
 
-        public void SetPythonEngine(IPy4C myPy, string myAnalysisName)
+        public void SetPythonEngine(I_IPy4C myPy, string myAnalysisName)
         {
             _python = myPy;
         }
-        public void SetREngine(REngineObject myREngine, string myAnalysisName)
+        public void SetREngine(IREngineObject myREngine, string myAnalysisName)
         {
             _rDotNet = myREngine;
             if (_hmAnalysisObject == null && _dataType == AnalysisDataTypeEnum.HitMiss)
@@ -2682,62 +2606,7 @@ namespace POD.Data
                 return -1;
             }
         }
-        //*********************************
-        /*
-        public HMAnalysisObject DataHitMissObject
-        {
-            get { return _hmAnalysisObject; }
-        }
-        public AHatAnalysisObject DataAHatObject
-        {
-            get { return _aHatAnalysisObject; }
-        }
-        */
-        /*
-        public void UpdateActivatedResponses()
-        {
-            if (_podDoc != null)
-            {
-                List<double> vals = new List<double>();
-                
-                double min;
-                double max;
 
-                vals.Add(ResponseLeft);
-
-                _podDoc.TransformData(vals, _python.TransformEnumToInt(_responseTransform));
-
-                min = vals[0];
-
-                vals.Clear();
-
-                vals.Add(ResponseRight);
-
-                _podDoc.TransformData(vals, _python.TransformEnumToInt(_responseTransform));
-
-                max = vals[0];
-
-                TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
-                              _customResponseTransformEquation);
-
-                if (min != max)
-                {
-                    foreach (DataRow row in _activatedTransformedResponseTable.Rows)
-                    {
-                        for (int i = 0; i < _activatedTransformedResponseTable.Columns.Count; i++)
-                        {
-                            double value = Convert.ToDouble(row[i]);
-
-                            if (value < min)
-                                row[i] = min;
-                            else if (value > max)
-                                row[i] = max;
-                        }
-                    }
-                }
-            }
-        }
-        */
         public void GetXYBufferedRanges(Control chart, AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed)
         {
             GetXBufferedRange(chart, myXAxis, myGetTransformed);
@@ -3948,14 +3817,16 @@ namespace POD.Data
         }
         public HMAnalysisObject HMAnalysisObject
         {
+            set { _hmAnalysisObject = value; }
             get { return _hmAnalysisObject; }
         }
         public AHatAnalysisObject AHATAnalysisObject
         {
+            set { _aHatAnalysisObject = value; }
             get { return _aHatAnalysisObject; }
         }
     }
-
+    
     public class AxisObject
     {
         public double Max = 1.0;
@@ -3979,3 +3850,4 @@ namespace POD.Data
         }
     }
 }
+

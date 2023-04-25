@@ -371,7 +371,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                 this.Cursor = Cursors.WaitCursor;
 
-                Analysis.RunAnalysis(true);
+                Analysis.RunAnalysis();
 
                 this.Cursor = Cursors.Default;
             }

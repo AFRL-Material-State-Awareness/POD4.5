@@ -64,10 +64,10 @@ namespace POD
         ///     Used to call Python code/libraries
         /// </summary>
         [NonSerialized]
-        protected IPy4C _python;
+        protected I_IPy4C _python;
 
         //return the python engine class
-        public IPy4C Python
+        public I_IPy4C Python
         {
             get { return _python; }
         }
@@ -76,8 +76,8 @@ namespace POD
         /// </summary>
         /// 
         [NonSerialized]
-        protected REngineObject _rDotNet;
-        public REngineObject RDotNet
+        protected IREngineObject _rDotNet;
+        public IREngineObject RDotNet
         {
             get { return _rDotNet;  }
         }
@@ -234,14 +234,11 @@ namespace POD
             }
         }
 
-        public virtual void SetPythonEngine(IPy4C myPy)
+        public virtual void SetPythonEngine(I_IPy4C myPy)
         {
             _python = myPy;
-            //initializes a new instance of the cPODDoc class in the .py file
-            //if(_podDoc == null)
-            //    _podDoc = _python.CPodDoc(Name);
         }
-        public virtual void SetREngine(REngineObject myREngine)
+        public virtual void SetREngine(IREngineObject myREngine)
         {
             _rDotNet = myREngine;
             if (_hmAnalysisObject == null)

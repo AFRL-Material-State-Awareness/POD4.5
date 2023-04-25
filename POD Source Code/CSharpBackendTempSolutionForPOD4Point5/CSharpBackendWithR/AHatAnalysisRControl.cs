@@ -9,10 +9,10 @@ namespace CSharpBackendWithR
 {
     class AHatAnalysisRControl
     {
-        private REngineObject myREngineObject;
+        private IREngineObject myREngineObject;
         private REngine myREngine;
         private GenerateRTransformDF_AHAT GenerateDataFrameInR;
-        public AHatAnalysisRControl(REngineObject myREngineObject)
+        public AHatAnalysisRControl(IREngineObject myREngineObject)
         {
             this.myREngineObject = myREngineObject;
             this.myREngine = myREngineObject.RDotNetEngine;

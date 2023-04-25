@@ -32,7 +32,7 @@ namespace POD.Controls
         protected StripLine _aMaxStrip;
         protected VerticalLineAnnotation _aMinLine = null;
         protected StripLine _aMinStrip;
-        protected AnalysisData _analysisData;
+        protected IAnalysisData _analysisData;
         protected DataTable _flaws;
         protected DataTable _names;
         protected StripLine _leftCensorStrip;
@@ -704,7 +704,7 @@ namespace POD.Controls
             KeepAMinMaxInOrder();
         }
 
-        public override void LoadChartData(AnalysisData data)
+        public override void LoadChartData(IAnalysisData data)
         {
             base.LoadChartData(data);
             _flaws = data.ActivatedFlaws;

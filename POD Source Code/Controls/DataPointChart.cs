@@ -62,7 +62,7 @@ namespace POD.Controls
         /// This is needed to keep track the lambda value in the event
         /// the user tries to load a POD analysis with a boxcox transformation
         /// </summary>
-        private AnalysisData _analysisData;
+        private IAnalysisData _analysisData;
 
         public ToolTip ChartToolTip
         {
@@ -86,7 +86,7 @@ namespace POD.Controls
         /// Load analysis data into the parent class in addition to the regression panel
         /// </summary>
         /// <param name="data"></param>
-        public virtual void LoadChartData(AnalysisData data)
+        public virtual void LoadChartData(IAnalysisData data)
         {
             _analysisData = data;
         }
@@ -1880,7 +1880,7 @@ namespace POD.Controls
             return finalName;
         }
 
-        public void SetXAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
+        public void SetXAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
             bool transformResidView=false)
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window
@@ -1911,7 +1911,7 @@ namespace POD.Controls
             }
         }
 
-        public void SetYAxisRange(AxisObject myAxis, AnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
+        public void SetYAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
             bool transformResidView = false)
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window

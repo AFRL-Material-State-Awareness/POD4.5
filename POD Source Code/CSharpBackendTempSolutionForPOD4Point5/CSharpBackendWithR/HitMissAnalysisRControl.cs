@@ -8,10 +8,10 @@ namespace CSharpBackendWithR
 {
     class HitMissAnalysisRControl
     {
-        private REngineObject myREngineObject;
+        private IREngineObject myREngineObject;
         private REngine myREngine;
         private GenerateRTransformDF_HitMiss GenerateDataFrameInR;
-        public HitMissAnalysisRControl(REngineObject myREngineObject)
+        public HitMissAnalysisRControl(IREngineObject myREngineObject)
         {
             this.myREngineObject = myREngineObject;
             this.myREngine = myREngineObject.RDotNetEngine;

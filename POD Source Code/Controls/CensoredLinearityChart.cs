@@ -163,7 +163,7 @@ namespace POD.Controls
             }
         }
 
-        public void FillChart(AnalysisData myData, double mySlope, double myIntercept, double fitError, double repeatError)
+        public void FillChart(IAnalysisData myData, double mySlope, double myIntercept, double fitError, double repeatError)
         {
             //_lastUsedData = myData;
 

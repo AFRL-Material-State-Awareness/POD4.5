@@ -51,7 +51,7 @@ namespace CSharpBackendWithR
         private Dictionary<string, List<double>> responsesCensoredRight;
         //box cox
         private double lambda;        
-        public AHatAnalysisObject(string nameInput = "") : base()
+        public AHatAnalysisObject(string nameInput) : base()
         {
             //name of the analysis
             Name = nameInput;

@@ -227,7 +227,7 @@ namespace POD.Controls
             }
         }
 
-        public void FillFromAnalysis(AnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
+        public void FillFromAnalysis(IAnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
         {
             xTransform = data.FlawTransform;
             yTransform = data.ResponseTransform;
@@ -244,7 +244,7 @@ namespace POD.Controls
             
         }
 
-        public void FillFromAnalysis(AnalysisData data, HitMissRegressionType model, List<Color> colors, int colorIndex, int styleIndex)
+        public void FillFromAnalysis(IAnalysisData data, HitMissRegressionType model, List<Color> colors, int colorIndex, int styleIndex)
         {
             xTransform = data.FlawTransform;
             yTransform = TransformTypeEnum.Linear;
@@ -263,7 +263,7 @@ namespace POD.Controls
             ModelCompare.Enabled = _compareModels;
         }
 
-        private void addOriginalHitMissSeries(AnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
+        private void addOriginalHitMissSeries(IAnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
         {
             var view = data.OriginalData.AsDataView();
             
@@ -287,7 +287,7 @@ namespace POD.Controls
             ModelCompare.Enabled = _compareModels;
         }
 
-        private void addOriginalSeries(AnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
+        private void addOriginalSeries(IAnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
         {
             var view = data.ResidualRawTable.AsDataView();
 
@@ -317,7 +317,7 @@ namespace POD.Controls
             GetAxisRangeForOriginals(data);
         }
 
-        private void GetAxisRangeForHitMissOriginals(AnalysisData myData)
+        private void GetAxisRangeForHitMissOriginals(IAnalysisData myData)
         {
             double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
             double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
@@ -344,7 +344,7 @@ namespace POD.Controls
             AnalysisData.GetBufferedRange(this, _normalXAxis, xMin, xMax, AxisKind.X);
         }
 
-        private void GetAxisRangeForOriginals(AnalysisData myData)
+        private void GetAxisRangeForOriginals(IAnalysisData myData)
         {
             double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
             double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
@@ -397,7 +397,7 @@ namespace POD.Controls
 
         }
 
-        private void AddResidualSeries(AnalysisData myData, List<Color> colors, int colorIndex, int styleIndex)
+        private void AddResidualSeries(IAnalysisData myData, List<Color> colors, int colorIndex, int styleIndex)
         {
 
             Series series = null;
@@ -449,7 +449,7 @@ namespace POD.Controls
 
         }
 
-        private void GetAxisRangeForResiduals(AnalysisData myData)
+        private void GetAxisRangeForResiduals(IAnalysisData myData)
         {
             double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
             double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
@@ -517,7 +517,7 @@ namespace POD.Controls
 
         }
 
-        public void RelabelAxes(AnalysisData data)
+        public void RelabelAxes(IAnalysisData data)
         {
             if(_showResiduals)
                 SwitchToResidualAxes(data);
@@ -525,7 +525,7 @@ namespace POD.Controls
                 SwitchToNormalAxes(data);
         }
 
-        public void SwitchToResidualAxes(AnalysisData data)
+        public void SwitchToResidualAxes(IAnalysisData data)
         {
             SetXAxisRange(_residualXAxis, data, false, false, true);
             SetYAxisRange(_residualYAxis, data, false, false, true);
@@ -535,7 +535,7 @@ namespace POD.Controls
                               XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
         }
 
-        public void SwitchToNormalAxes(AnalysisData data)
+        public void SwitchToNormalAxes(IAnalysisData data)
         {
             SetXAxisRange(_normalXAxis, data, false, false, true);
             SetYAxisRange(_normalYAxis, data, false, false, true);
@@ -557,7 +557,7 @@ namespace POD.Controls
             }
         }
 
-        private void AddHitMissFitSeries(AnalysisData data)
+        private void AddHitMissFitSeries(IAnalysisData data)
         {
             _normalSeries.Add(FlawEstimate);
 
@@ -578,7 +578,7 @@ namespace POD.Controls
             }
         }
 
-        private void AddFitSeries(AnalysisData data)
+        private void AddFitSeries(IAnalysisData data)
         {
             _normalSeries.Add(FlawEstimate);
 

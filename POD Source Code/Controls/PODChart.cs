@@ -332,7 +332,7 @@ namespace POD.Controls
             }
         }
 
-        public void FillChart(AnalysisData myData, bool usingLoadedFromFileData = false, bool analysisFailed=false)
+        public void FillChart(IAnalysisData myData, bool usingLoadedFromFileData = false, bool analysisFailed=false)
         {
 
             if (!usingLoadedFromFileData)
