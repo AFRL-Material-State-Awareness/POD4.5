@@ -51,12 +51,14 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfidenceBoxTests.cs" />
     <Compile Include="PFModelBoxTests.cs" />
+    <Compile Include="PODTreeNodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +68,10 @@
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{7A2D07DB-3686-4FEC-BA8C-5B905ECA1AF0}</Project>
       <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{BEE41D1E-EBA8-4D3E-B297-4C1CA6FFF8DB}</Project>
+      <Name>Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\POD\Global.csproj">
       <Project>{F7DB9280-E09A-470D-8FDB-3C97C538A6C1}</Project>
