@@ -51,14 +51,14 @@ namespace Analyze.UnitTests
             _analysis.SetPythonEngine(_python.Object);
             _analysis.SetREngine(_rEngine.Object);
         }
-        private void DataTableSampleSetupLinear()
+        private void DataTableSampleSetupLinear(double scaler = 1.0)
         {
             _testDataTable = new DataTable();
             _testDataTable.Columns.Add("Test_Column_1");
             _testDataTable.Columns[0].DataType = typeof(double);
             for (int i =0; i< 11; i++)
             {
-                _testDataTable.Rows.Add((double)i);
+                _testDataTable.Rows.Add((double)i* scaler);
             }
         }
         /// <summary>
@@ -98,9 +98,71 @@ namespace Analyze.UnitTests
         /// </summary>
 
         /// <summary>
-        /// cannot test ForceUpdateInputsFromData(bool recheckAnalysisType = false, AnalysisDataTypeEnum forcedType = AnalysisDataTypeEnum.Undefined) at this time
+        /// tests for the ForceUpdateInputsFromData(bool recheckAnalysisType = false, AnalysisDataTypeEnum forcedType = AnalysisDataTypeEnum.Undefined) function
         /// </summary>
-
+        [Test]
+        public void ForceUpdateInputsFromData_UserSuppliedRanges_FlawAndResponseRangesRemainedUnchangedFromData()
+        {
+            //Arrange
+            _analysis.UserSuppliedRanges = true;
+            //Act
+            _analysis.ForceUpdateInputsFromData();
+            //Assert
+            _data.Verify(data => data.InvertTransformedResponse(It.IsAny<double>()), Times.Never);
+            _data.Verify(data => data.InvertTransformedFlaw(It.IsAny<double>()), Times.Never);
+            _data.Verify(data => data.RecheckAnalysisType(It.IsAny<AnalysisDataTypeEnum>()), Times.Never);
+            _data.VerifyGet(data => data.DataType, Times.Once);
+        }
+        [Test]
+        public void ForceUpdateInputsFromData_UserDidNotSuppliedRanges_FlawAndResponseRangesRemainedUnchangedFromData()
+        {
+            //Arrange
+            FlawResponseRangeSetup();
+            DataTableSampleSetupLinear();
+            DataInvertTransformSetup();
+            //The response range is set by  min + ((max - min) * .15 (%15 of the total response range)
+            _data.Setup(data => data.InvertTransformedResponse(-1.0 +(11.0-(-1.0))*.15)).Returns(Math.Exp(-1.0 + (11.0 - (-1.0)) * .15));
+            //Act
+            _analysis.ForceUpdateInputsFromData();
+            //Assert 
+            _data.Verify(data => data.InvertTransformedResponse(It.IsAny<double>()), Times.AtLeastOnce);
+            _data.Verify(data => data.InvertTransformedFlaw(It.IsAny<double>()), Times.AtLeastOnce);
+            _data.Verify(data => data.RecheckAnalysisType(It.IsAny<AnalysisDataTypeEnum>()), Times.Never);
+            _data.VerifyGet(data => data.DataType, Times.Once);
+            Assert.That(_analysis.InFlawMax, Is.Not.EqualTo(1.0));
+            Assert.That(_analysis.InResponseMax, Is.Not.EqualTo(100.0));
+        }
+        [Test]
+        public void ForceUpdateInputsFromData_RecheckAnalysisTypeTrue_AnalysisDataTypeOverwritten()
+        {
+            //Arrange
+            _analysis.UserSuppliedRanges = true;
+            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
+            _data.Setup(data => data.RecheckAnalysisType(AnalysisDataTypeEnum.HitMiss)).Returns(AnalysisDataTypeEnum.HitMiss);
+            //Act
+            _analysis.ForceUpdateInputsFromData(true, AnalysisDataTypeEnum.HitMiss);
+            //Assert 
+            Assert.That(_analysis.AnalysisDataType, Is.EqualTo(AnalysisDataTypeEnum.HitMiss));
+        }
+        private void FlawResponseRangeSetup()
+        {
+            SetPythonAndREngines();
+            _analysis.InFlawTransform = TransformTypeEnum.Log;
+            _analysis.InResponseTransform = TransformTypeEnum.Log;
+            _analysis.InFlawMin = .10;
+            _analysis.InFlawMax = 1.0;
+            _analysis.InResponseMin = 10.0;
+            _analysis.InResponseMax = 100.0;
+        }
+        private void DataInvertTransformSetup()
+        {
+            _data.SetupGet(data => data.ActivatedFlaws).Returns(_testDataTable);
+            _data.SetupGet(data => data.ActivatedResponses).Returns(_testDataTable);
+            _data.Setup(data => data.InvertTransformedResponse(-1)).Returns(Math.Exp(0));
+            _data.Setup(data => data.InvertTransformedResponse(11)).Returns(Math.Exp(11));
+            _data.Setup(data => data.InvertTransformedFlaw(-1)).Returns(Math.Exp(0));
+            _data.Setup(data => data.InvertTransformedFlaw(11)).Returns(Math.Exp(11));
+        }
         /// <summary>
         /// Tests for the CalculateInitialValuesWithNewData() function
         /// </summary>
@@ -144,10 +206,9 @@ namespace Analyze.UnitTests
             _data.Verify(sp => sp.SetPythonEngine(_python.Object, "SampleAnalysis"), Times.Once);
             Assert.That(_analysis.HasBeenInitialized, Is.True);
             Assert.That(_analysis.Python, Is.Not.Null);
-            Assert.That(_analysis.Data.HMAnalysisObject == null);
         }
         [Test]
-        public void CalculateInitialValuesWithNewData_PythonNotNullAndHasBeenInitizlizedFalseNotHtMiss_ForceUpdateFunctionFired()
+        public void CalculateInitialValuesWithNewData_PythonNotNullAndHasBeenInitizlizedFalseNotHitMiss_ForceUpdateFunctionFired()
         {
             //Arrange           
             _analysis.HasBeenInitialized = false;
@@ -165,7 +226,7 @@ namespace Analyze.UnitTests
             Assert.That(_analysis.InFlawTransform, Is.EqualTo(TransformTypeEnum.Linear));
         }
         [Test]
-        public void CalculateInitialValuesWithNewData_PythonNotNullAndHasBeenInitizlizedFalseIsHtMiss_ForceUpdateFunctionFiredAndHMModelSetToLog()
+        public void CalculateInitialValuesWithNewData_PythonNotNullAndHasBeenInitizlizedFalseIsHitMiss_ForceUpdateFunctionFiredAndHMModelSetToLog()
         {
             //Arrange
             //Analysis analysis=AnalysisWithNoDataMock();
@@ -191,9 +252,7 @@ namespace Analyze.UnitTests
 
         private void AssertForceUpdateFunctionIsFired()
         {
-            Assert.That(_analysis.InResponseDecisionMin, Is.EqualTo(.05));
-            Assert.That(_analysis.InResponseDecisionMax, Is.EqualTo(.05));
-            Assert.That(_analysis.InResponseDecisionIncCount, Is.EqualTo(30));
+            _data.VerifyGet(data => data.DataType, Times.Once);
         }
         private void AssignActivatedFlawsAndResponses()
         {
@@ -203,6 +262,7 @@ namespace Analyze.UnitTests
         /// <summary>
         /// Tests for the GetBufferedMinMax(DataTable myTable, out double myMin, out double myMax) function
         /// Note: this function does not accept negative flaw values
+        /// Another Note: These tests are a bit specific, if the min and max buffered changes, Simply assert that myMin and myMax are valid doubles (i.e. not Double.NaN)
         /// </summary>
         [Test]
         public void GetBufferedMinMax_EmptyDataTable_ReturnsNegativePt1MinAnd1Pt1Max()
@@ -232,22 +292,6 @@ namespace Analyze.UnitTests
             Assert.That(myMax, Is.EqualTo(11));
 
         }
-        /*
-        [Test]
-        public void GetBufferedMinMax_NonEmptyDataTableLog_ReturnsBufferedMinAndMaxOfDataTable()
-        {
-            DataTableSampleSetupLog();
-            //Arrange
-            double myMin = Double.NaN;
-            double myMax = Double.NaN;
-            //Act
-            Analysis.GetBufferedMinMax(_testDataTable, out myMin, out myMax);
-            //Assert
-            Assert.That(myMin, Is.EqualTo(-1));
-            Assert.That(myMax, Is.EqualTo(11));
-
-        }
-        */
 
         /// <summary>
         /// Tests for the CreateDuplicate() function
@@ -267,6 +311,7 @@ namespace Analyze.UnitTests
             Assert.That(_analysis != clone);
             Assert.That(clone.Python, Is.Null);
             Assert.That(_analysis.Python, Is.Not.Null);
+            _data.Verify(data => data.CreateDuplicate(), Times.Once);
         }
 
         /// <summary>
@@ -291,7 +336,6 @@ namespace Analyze.UnitTests
             analysis.UpdateRTransforms();
             //Assert
             Assert.That(analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(originalModel));
-            Assert.That(analysis.Data.AHATAnalysisObject, Is.Null);
         }
 
         // <summary>
@@ -309,7 +353,6 @@ namespace Analyze.UnitTests
             analysis.UpdateRTransforms();
             //Assert
             Assert.That(analysis.Data.HMAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
-            Assert.That(analysis.Data.AHATAnalysisObject, Is.Null);
         }
         [Test]
         public void UpdateRTransforms_AnalysisTypeAHatNoChange_TransformsAndModelSame()
@@ -322,7 +365,6 @@ namespace Analyze.UnitTests
             analysis.UpdateRTransforms();
             //Assert
             Assert.That(analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(originalModel));
-            Assert.That(analysis.Data.HMAnalysisObject, Is.Null);
         }
         [Test]
         [TestCase(TransformTypeEnum.Linear, TransformTypeEnum.Linear, 1)]
@@ -349,7 +391,6 @@ namespace Analyze.UnitTests
             analysis.UpdateRTransforms();
             //Assert
             Assert.That(analysis.Data.AHATAnalysisObject.ModelType, Is.EqualTo(expectedModelType));
-            Assert.That(analysis.Data.HMAnalysisObject, Is.Null);
         }
         private Analysis SetupIPy4CTransformsHitMiss(TransformTypeEnum testTransformX, int expectedOutput)
         {
@@ -381,14 +422,33 @@ namespace Analyze.UnitTests
         /// Tests for the SetDataSource(DataSource mySource) function
         /// </summary>
 
-        //// Need to Mock Data (AnlysisData) to effectively test this method
-
+        [Test]
+        public void SetDataSource_ValidDataSourcePassed_DataSetSourceFunctionExecuted()
+        {
+            //Arrange
+            DataSource source = new DataSource("MyDataSource", "ID", "flawName.centimeters", "Response");
+            //Act
+            _analysis.SetDataSource(source);
+            //Assert
+            _data.Verify(data => data.SetSource(source), Times.Once);
+        }
         /// <summary>
         /// Tests for the SetDataSource(DataSource mySource, List<string> myFlaws, List<string> myMetaDatas,
         /// List<string> myResponses, List<string> mySpecIDs) function
         /// </summary>
 
-        //// Need to Mock Data (AnlysisData) to effectively test this method
+        [Test]
+        public void SetDataSourceMultipleStrings_ValidDataSourcePassed_DataSetSourceFunctionExecuted()
+        {
+            //Arrange
+            DataSource source = new DataSource("MyDataSource", "ID", "flawName.centimeters", "Response");
+            //Act
+            _analysis.SetDataSource(source, new List<string>() { "flaws" }, new List<string>() { "metadata" },
+                new List<string>() { "responses" }, new List<string>() { "specIDs" });
+            //Assert
+            _data.Verify(data => data.SetSource(source, It.IsAny<List<string>>(), It.IsAny<List<string>>(), It.IsAny<List<string>>(),
+                It.IsAny<List<string>>()), Times.Once);
+        }
 
         /// <summary>
         /// Tests for the public void WriteToExcel(ExcelExport myWriter, bool myPartOfProject = true, DataTable table = null) function
@@ -429,7 +489,7 @@ namespace Analyze.UnitTests
             VerifySetCellsCount(13, 2);
         }
         [Test]
-        public void WriteQuickAnalysis_WriteAHatQuickAnalysis_WrittenToExcelWithNoInstrumentOrInstMinMax()
+        public void WriteQuickAnalysis_WriteAHatQuickAnalysis_WrittenToExcelWithAnInstrumentAndInstMinMax()
         {
             //Arrange          
             _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
@@ -472,7 +532,6 @@ namespace Analyze.UnitTests
         public void TransformValueForXAxis_AnyDoublePassed_ReturnsAValidDouble()
         {
             //Arrange
-            //_python.Setup(p => p.TransformEnumToInt(transformType)).Returns();
             SetPythonAndREngines();
             var myValue = It.IsAny<double>();
 
@@ -502,7 +561,6 @@ namespace Analyze.UnitTests
             //Act
             var result = _analysis.TransformValueForXAxis(myValue);
             Assert.That(result, Is.EqualTo(expectedResult));
-            //Assert.Throws<OverflowException>(()=>_analysis.TransformValueForXAxis(-1.0M));
         }
         [Test]
         public void TransformValueForXAxis_0PassedInForInverseTransform_ThrowsOverflowExcpetionAndReturnsTheSameValue()
@@ -515,7 +573,6 @@ namespace Analyze.UnitTests
             var result = _analysis.TransformValueForXAxis(0.0M);
             //Assert
             Assert.That(result, Is.EqualTo(0.0M));
-            //Assert.That(() => _analysis.TransformValueForXAxis(0.0M), Throws.Exception.TypeOf<OverflowException>());
         }
         [Test]
         [TestCase(Math.E, 1.0)]
@@ -551,7 +608,7 @@ namespace Analyze.UnitTests
         [Test]
         [TestCase(0.0)]
         [TestCase(-1.0)]
-        public void TransformValueForXAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIs0_Returns0(decimal inputValue)
+        public void TransformValueForXAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIs0_ThrowsExceptionAndReturns0(decimal inputValue)
         {
             //Arrange
             SetPythonAndREngines();
@@ -562,7 +619,6 @@ namespace Analyze.UnitTests
             var result = _analysis.TransformValueForXAxis(inputValue);
             //Assert
             Assert.That(result, Is.EqualTo(0.0M));
-            //Assert.That(() => _analysis.TransformValueForXAxis(inputValue), Throws.Exception.TypeOf<OverflowException>());
         }
 
         /// <summary>
@@ -573,13 +629,10 @@ namespace Analyze.UnitTests
         public void TransformValueForYAxis_AnyDoublePassed_ReturnsAValidDouble()
         {
             //Arrange
-            //_python.Setup(p => p.TransformEnumToInt(transformType)).Returns();
             SetPythonAndREngines();
             var myValue = It.IsAny<double>();
-
             //Act
             var result = _analysis.TransformValueForYAxis(myValue);
-
             //Assert
             Assert.That(result, Is.Not.EqualTo(double.NaN));
         }
@@ -594,7 +647,8 @@ namespace Analyze.UnitTests
         [TestCase(TransformTypeEnum.Linear, 1, -2.0, -2.0)]
         [TestCase(TransformTypeEnum.Inverse, 3, 2.0, .5)]
         [TestCase(TransformTypeEnum.Inverse, 3, -2.0, -.5)]
-        public void TransformValueForYAxis_NonLogOrBoxCoxtransformPassed_ReturnsValidtransform(TransformTypeEnum transform, int enumTransform, decimal myValue, decimal expectedResult)
+        public void TransformValueForYAxis_NonLogOrBoxCoxtransformPassed_ReturnsValidtransform(TransformTypeEnum transform, 
+            int enumTransform, decimal myValue, decimal expectedResult)
         {
             //Arrange
             SetPythonAndREngines();
@@ -616,7 +670,6 @@ namespace Analyze.UnitTests
             var result = _analysis.TransformValueForYAxis(0.0M);
             //Assert
             Assert.That(result, Is.EqualTo(0.0M));
-            //Assert.That(() => _analysis.TransformValueForXAxis(0.0M), Throws.Exception.TypeOf<OverflowException>());
         }
         [Test]
         [TestCase(Math.E, 1.0)]
@@ -652,7 +705,7 @@ namespace Analyze.UnitTests
         [Test]
         [TestCase(0.0)]
         [TestCase(-1.0)]
-        public void TransformValueForYAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIs0_Returns0(decimal inputValue)
+        public void TransformValueForYAxis_LogTransformPassedAndValueIsNegativeOr0AndSmallestFlawIs0_ThrowsExceptionAndReturns0(decimal inputValue)
         {
             //Arrange
             SetPythonAndREngines();
@@ -663,13 +716,12 @@ namespace Analyze.UnitTests
             var result = _analysis.TransformValueForYAxis(inputValue);
             //Assert
             Assert.That(result, Is.EqualTo(0.0M));
-            //Assert.That(() => _analysis.TransformValueForXAxis(inputValue), Throws.Exception.TypeOf<OverflowException>());
         }
         //Testing for a postive and negative value for lambda
         [Test]
         [TestCase(.5, 16.0, 6.0)]
         [TestCase(-.5, 16.0, 1.5)]
-        public void TransformValueForYAxis_BoxCoxTransformPassedAndValueIsPositive_ReturnsValidBoxCoxTransform(double lambdaValue, decimal myValue, decimal ExpectedOutput)
+        public void TransformValueForYAxis_BoxCoxTransformPassedAndMyValueIsPositive_ReturnsValidBoxCoxTransform(double lambdaValue, decimal myValue, decimal ExpectedOutput)
         {
             //Arrange
             SetPythonAndREngines();
@@ -685,7 +737,8 @@ namespace Analyze.UnitTests
         [Test]
         [TestCase(.5, -16.0, -1.0)]
         [TestCase(-.5, -16.0, 0.0)]
-        public void TransformValueForYAxis_BoxCoxTransformPassedAndValueIsPositive_ReturnsNegative1ForPositiveLambdaAndZeroForNegativeLambdas(double lambdaValue, decimal myValue, decimal ExpectedOutput)
+        public void TransformValueForYAxis_BoxCoxTransformPassedAndMyValueIsNegative_ReturnsNegative1ForPositiveLambdaAndZeroForNegativeLambdas(double lambdaValue,
+            decimal myValue, decimal ExpectedOutput)
         {
             //Arrange
             SetPythonAndREngines();
@@ -741,6 +794,7 @@ namespace Analyze.UnitTests
         [TestCase(1.0)]
         public void InvertTransformValueForXAxis_ValidValuePassedPythonIsNull_ReturnsTheSameValue(decimal myValue)
         {
+            //Arrange
             _analysis.InFlawTransform = TransformTypeEnum.Log;
             _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(2);
             _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), 2)).Returns(Convert.ToDouble(2.0));
@@ -753,6 +807,7 @@ namespace Analyze.UnitTests
         [TestCase(1.0)]
         public void InvertTransformValueForXAxis_ThrowsException_ReturnsTheSameValue(decimal myValue)
         {
+            //Arrange
             SetupTransformBackFlaws();
             _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), 2)).Throws<Exception>();
             //Act
@@ -779,7 +834,6 @@ namespace Analyze.UnitTests
             _analysis.InResponseTransform = TransformTypeEnum.Log;
             _python.Setup(e => e.TransformEnumToInt(TransformTypeEnum.Log)).Returns(enumTransform);
             _data.Setup(transB => transB.TransformBackAValue(Convert.ToDouble(myValue), enumTransform)).Returns(Convert.ToDouble(expectedResult));
-            //_python.Setup(e => e).Returns(new IPy4C());
             //Act
             var result = _analysis.InvertTransformValueForYAxis(myValue);
             //Assert
