@@ -2808,19 +2808,12 @@ namespace POD.Analyze
                 var shortName = Name;
 
                 if(shortName.StartsWith(SourceName))
-                {
                     shortName = shortName.Substring(SourceName.Length+1);
-                }
-
                 if (shortName.StartsWith(FlawName))
-                {
                     shortName = shortName.Substring(FlawName.Length + 1);
-                }
 
                 return shortName;
             }
-
-
         }
 
 
@@ -2828,14 +2821,9 @@ namespace POD.Analyze
         {
             if(CreatedAnalysis != null)
             {
-                AnalysisList analyses = new AnalysisList();
-
-                analyses.Add(clone);
-
+                AnalysisList analyses = new AnalysisList() { clone };
                 var args = new AnalysisListArg(ref analyses);
-
                 CreatedAnalysis.Invoke(this, args);
-
             }
         }
     }

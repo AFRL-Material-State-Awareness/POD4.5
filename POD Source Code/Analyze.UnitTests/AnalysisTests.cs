@@ -1180,6 +1180,7 @@ namespace Analyze.UnitTests
         }
         /// <summary>
         /// test for ShortName property
+        /// The names passed in for short name will always contain '.'. Thus there is always an assertion the original input has at least one period.
         /// </summary>
         [Test]
         public void ShortName_ShortNameDoesNotStartWithSourceNameOrFlawName_ReturnsShortNameAsASubStringOfSourceName()
@@ -1194,6 +1195,7 @@ namespace Analyze.UnitTests
             //Act
             var result = _analysis.ShortName;
             //Assert
+            Assert.That(_analysis.Name.Contains("."));
             Assert.That(result.StartsWith(_analysis.SourceName), Is.False);
             Assert.That(result.StartsWith(_analysis.FlawName), Is.False);
             Assert.That(result, Is.EqualTo(_analysis.Name));
@@ -1211,9 +1213,8 @@ namespace Analyze.UnitTests
             //Act
             var result = _analysis.ShortName;
             //Assert
-            Assert.That(result.StartsWith(_analysis.SourceName), Is.False);
-            Assert.That(result.StartsWith(_analysis.FlawName), Is.False);
-            Assert.That(result, Is.Not.EqualTo(_analysis.Name));
+            Assert.That(_analysis.Name.Contains("."));
+            OverwrittenShortNameAssertions(result);
         }
         [Test]
         public void ShortName_ShortNameStartsWithFlawNameButNotWithSourceName_ReturnsShortNameAsASubStringOfSourceName()
@@ -1228,6 +1229,27 @@ namespace Analyze.UnitTests
             //Act
             var result = _analysis.ShortName;
             //Assert
+            Assert.That(_analysis.Name.Contains("."));
+            OverwrittenShortNameAssertions(result);
+        }
+        [Test]
+        public void ShortName_ShortNameStartsBothSourceNameAndThenFlawName_ReturnsShortNameAsASubStringOfSourceName()
+        {
+            //Arrange
+            SetPythonAndREngines();
+            _analysis.Name = "test.flaw.response.flawName.centimeters.MyProject";
+            _data.SetupGet(afu => afu.AvailableFlawNames).Returns(new List<string>() { "flawName.centimeters" });
+            DataSource source = new DataSource("test.flaw.response", "ID", "flawName.centimeters", "Response");
+            _analysis.HasBeenInitialized = true;
+            _analysis.SetDataSource(source);
+            //Act
+            var result = _analysis.ShortName;
+            //Assert
+            Assert.That(_analysis.Name.Contains("."));
+            OverwrittenShortNameAssertions(result);
+        }
+        private void OverwrittenShortNameAssertions(string result)
+        {
             Assert.That(result.StartsWith(_analysis.SourceName), Is.False);
             Assert.That(result.StartsWith(_analysis.FlawName), Is.False);
             Assert.That(result, Is.Not.EqualTo(_analysis.Name));
@@ -1249,9 +1271,7 @@ namespace Analyze.UnitTests
             Assert.That(events, Is.EqualTo(AnalysisListArg.Empty));
             Assert.That(events as AnalysisListArg, Is.Null);
         }
-        /// <summary>
-        /// test for RaiseCreatedAnalyis(Analysis clone) property
-        /// </summary>
+
         [Test]
         public void RaiseCreatedAnalysis_CreatedAnalysisIsNotNull_EventInvokedAndArgsContainAnalysisList()
         {
