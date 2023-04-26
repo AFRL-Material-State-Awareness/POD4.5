@@ -18,20 +18,9 @@ namespace POD.Controls
 
             Items.Add(new TransformObj(TransformTypeEnum.Linear));
             Items.Add(new TransformObj(TransformTypeEnum.Log));
-            //Items.Add(new TransformObj(TransformTypeEnum.Exponetial));
             Items.Add(new TransformObj(TransformTypeEnum.Inverse));
-            //Items.Add(new TransformObj(TransformTypeEnum.BoxCox));
-            DropDownStyle = ComboBoxStyle.DropDownList;
-
-            
-
-            //SelectedIndexChanged += TransformBox_SelectedIndexChanged;
+            DropDownStyle = ComboBoxStyle.DropDownList;  
         }
-
-        //void TransformBox_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    MessageBox.Show("Changed Transform");
-        //}
 
         public TransformTypeEnum SelectedTransform
         {

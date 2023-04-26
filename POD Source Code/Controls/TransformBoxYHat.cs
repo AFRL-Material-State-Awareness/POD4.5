@@ -18,7 +18,6 @@ namespace POD.Controls
 
             Items.Add(new TransformObjYHat(TransformTypeEnum.Linear));
             Items.Add(new TransformObjYHat(TransformTypeEnum.Log));
-            //Items.Add(new TransformObj(TransformTypeEnum.Exponetial));
             Items.Add(new TransformObjYHat(TransformTypeEnum.Inverse));
             Items.Add(new TransformObjYHat(TransformTypeEnum.BoxCox));
             DropDownStyle = ComboBoxStyle.DropDownList;

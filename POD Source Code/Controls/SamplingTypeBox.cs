@@ -36,13 +36,8 @@ namespace POD.Controls
                 {
                     var type = obj as SampleTypeObj;
 
-                    if (type != null)
-                    {
-                        if (type.SamplingType == value)
-                        {
-                            SelectedItem = obj;
-                        }
-                    }
+                    if (type?.SamplingType == value)
+                        SelectedItem = obj;
                 }
             }
         }
