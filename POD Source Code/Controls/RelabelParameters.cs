@@ -20,10 +20,7 @@ namespace POD.Controls
                                  int labelCount, bool centerAtZero, 
                                  TransformTypeEnum transformType, Globals.InvertAxisFunction transform)
         {
-            if (axis != null)
-                Axis = axis.Clone();
-            else 
-                axis = null;
+            Axis = axis?.Clone();
 
             InvertFunc = invert;
             LabelCount = labelCount;
