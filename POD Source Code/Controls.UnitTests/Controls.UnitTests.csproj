@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfidenceBoxTests.cs" />
+    <Compile Include="ContextMenuStripConnectedTests.cs" />
     <Compile Include="PFModelBoxTests.cs" />
     <Compile Include="PODTreeNodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

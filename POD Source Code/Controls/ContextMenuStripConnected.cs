@@ -78,17 +78,9 @@ namespace POD.Controls
 
         public static void CloseEverythingElse(object sender, EventArgs e)
         {
-            var button = sender as Button;
-
-            if (button != null)
-            {
-                var menu = button.Parent.Parent as ContextMenuStripConnected;
-
-                if (menu != null)
-                {
+            if (sender is Button button)
+                if (button.Parent.Parent is ContextMenuStripConnected menu)
                     menu.ShowOnlyButtons = true;
-                }
-            }
         }
 
         public ContextMenuStripConnected(System.ComponentModel.IContainer container) : base(container)
