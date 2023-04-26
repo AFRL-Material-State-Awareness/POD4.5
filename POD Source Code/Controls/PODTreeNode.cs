@@ -54,30 +54,15 @@ namespace POD.Controls
 
         public string GetOriginalLabel(ColType myType)
         {
-            if (myType == ColType.Response)
-                return ResponseOriginal;
-            else if (myType == ColType.Flaw)
-                return FlawOriginal;
-            else
-                return "";
-        }
-
-        public void SetOriginalLabel(ColType myType, string myName)
-        {
-            if (myType == ColType.Response)
-                ResponseOriginal = myName;
-            else if (myType == ColType.Flaw)
-                FlawOriginal = myName;
-        }
-
-        public string Label(ColType myType)
-        {
-            if (myType == ColType.Response)
-                return ResponseLabel;
-            else if (myType == ColType.Flaw)
-                return FlawLabel;
-            else
-                return "";
+            switch (myType)
+            {
+                case ColType.Response:
+                    return ResponseOriginal;
+                case ColType.Flaw:
+                    return FlawOriginal;
+                default:
+                    return "";
+            }
         }
 
         public void Label(ColType myType, string myName)
@@ -170,16 +155,6 @@ namespace POD.Controls
 
             this._originalAnalysisName = name;
             this.RowColor = listItem.RowColor;
-        }
-
-        public string CreateListBoxText()
-        {
-            if (HasCustomName)
-                return _customName;
-
-            PODListBoxItem item = new PODListBoxItem(RowColor, ResponseLabel, FlawLabel, DataSource);
-
-            return item.ToString();
         }
 
         public PODListBoxItem CreateListBox()
