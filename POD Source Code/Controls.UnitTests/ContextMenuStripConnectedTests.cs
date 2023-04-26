@@ -9,6 +9,9 @@ using POD.Controls;
 using POD;
 using System.Data;
 using System.Windows.Forms;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
 
 namespace Controls.UnitTests
 {
@@ -124,5 +127,45 @@ namespace Controls.UnitTests
             //Assert
             Assert.That(_contextMenuStripCnt.ShowOnlyButtons, Is.True);
         }
+        /// <summary>
+        /// Tests for AddButtonToMenu(FlowLayoutPanel availablePanel, ButtonHolder item, PODToolTip tooltip) Function
+        /// </summary>
+        [Test]
+        public void AddButtonToMenu_ImageIsNull_NoBackGroundImageAdded()
+        {
+            //Arrange
+            FlowLayoutPanel panel = new FlowLayoutPanel();
+            panel.Controls.Clear();
+            //Act
+            ContextMenuStripConnected.AddButtonToMenu(panel, new ButtonHolder("MyButtonHolder", null, MySampleEventHandler), new PODToolTip());
+            //Assert
+            Assert.That(panel.Controls[0] is Button);
+            var button = (Button)panel.Controls[0];
+            Assert.That(button.BackgroundImage, Is.Null);
+        }
+        /// <summary>
+        /// Tests for AddButtonToMenu(FlowLayoutPanel availablePanel, ButtonHolder item, PODToolTip tooltip) Function
+        /// </summary>
+        [Test]
+        public void AddButtonToMenu_ImageIsNot_ContainsBackgroundImageWithDimensionsPlus10()
+        {
+            //Arrange
+            FlowLayoutPanel panel = new FlowLayoutPanel();
+            panel.Controls.Clear();
+            Image image = CreateSampleIamge();
+            //Act
+            ContextMenuStripConnected.AddButtonToMenu(panel, new ButtonHolder("MyButtonHolder", image, MySampleEventHandler), new PODToolTip());
+            //Assert
+            Assert.That(panel.Controls[0] is Button);
+            var button = (Button)panel.Controls[0];
+            Assert.That(button.BackgroundImage, Is.Not.Null);
+            image.Dispose();
+        }
+        private Image CreateSampleIamge()
+        {
+            using(var stream =  Assembly.GetExecutingAssembly().GetManifestResourceStream("Controls.UnitTests.Resources.ShowNormalitySample.png"))
+                return new Bitmap(stream);
+        }
+        private event EventHandler MySampleEventHandler;
     }
 }
