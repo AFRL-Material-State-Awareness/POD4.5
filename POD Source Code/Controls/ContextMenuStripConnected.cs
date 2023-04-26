@@ -58,8 +58,9 @@ namespace POD.Controls
 
         public static void ForcePanelToDraw(FlowLayoutPanel panel)
         {
-            var bitmap = new Bitmap(panel.Bounds.Width, panel.Bounds.Height);
-            panel.DrawToBitmap(bitmap, panel.Bounds);
+            //var bitmap = new Bitmap(panel.Bounds.Width, panel.Bounds.Height);
+            using(var bitmap = new Bitmap(panel.Bounds.Width, panel.Bounds.Height))
+                panel.DrawToBitmap(bitmap, panel.Bounds);
         }
 
         public static FlowLayoutPanel MakeNewMenuFlowLayoutPanel(string name)
