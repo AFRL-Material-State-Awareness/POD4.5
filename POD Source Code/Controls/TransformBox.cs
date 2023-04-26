@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class TransformBoxX : ComboBoxListEx
+    public partial class TransformBoxX : TransformBoxControl
     {
         public TransformBoxX()
         {
@@ -20,29 +20,6 @@ namespace POD.Controls
             Items.Add(new TransformObj(TransformTypeEnum.Log));
             Items.Add(new TransformObj(TransformTypeEnum.Inverse));
             DropDownStyle = ComboBoxStyle.DropDownList;  
-        }
-
-        public TransformTypeEnum SelectedTransform
-        {
-            get
-            {
-                return ((TransformObj) SelectedItem).TransformType; 
-            }
-            set
-            {
-                foreach(Object obj in Items)
-                {
-                    var type = obj as TransformObj;
-
-                    if(type != null)
-                    {
-                        if(type.TransformType == value)
-                        {
-                            SelectedItem = obj;
-                        }
-                    }
-                }
-            }
         }
     }
 

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class TransformBoxYHat : ComboBox
+    public partial class TransformBoxYHat : TransformBoxControl
     {
         public TransformBoxYHat()
         {
@@ -20,26 +20,7 @@ namespace POD.Controls
             Items.Add(new TransformObj(TransformTypeEnum.Log));
             Items.Add(new TransformObj(TransformTypeEnum.Inverse));
             Items.Add(new TransformObj(TransformTypeEnum.BoxCox));
-            DropDownStyle = ComboBoxStyle.DropDownList;
-        
-        }
-
-        public TransformTypeEnum SelectedTransform
-        {
-            get
-            {
-                return ((TransformObj) SelectedItem).TransformType; 
-            }
-            set
-            {
-                foreach(Object obj in Items)
-                {
-                    var type = obj as TransformObj;
-
-                    if (type?.TransformType == value)
-                        SelectedItem = obj;
-                }
-            }
+            DropDownStyle = ComboBoxStyle.DropDownList;        
         }
     }
 }
