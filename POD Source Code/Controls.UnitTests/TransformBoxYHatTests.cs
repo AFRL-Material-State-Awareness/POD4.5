@@ -52,7 +52,7 @@ namespace Controls.UnitTests
         public void SelectedTransform_SetAssignmentIsNull_SelectedTransformRemainsNull()
         {
             //Arrange
-            TransformBox transformBoxYHat = new TransformBox();
+            TransformBoxX transformBoxYHat = new TransformBoxX();
             //Act
             transformBoxYHat.SelectedTransform = TransformTypeEnum.None;
             //Assert
@@ -62,7 +62,7 @@ namespace Controls.UnitTests
         public void SelectedTransform_InvalidObjectAddedToitems_DoesNotThrowException()
         {
             //Arrange
-            TransformBox transformBoxYHat = new TransformBox();
+            TransformBoxX transformBoxYHat = new TransformBoxX();
             transformBoxYHat.Items.Insert(0, new DataTable()); //Add a bad item to the beginning of the list
             //Act
             transformBoxYHat.SelectedTransform = TransformTypeEnum.Inverse;

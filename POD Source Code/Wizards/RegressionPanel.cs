@@ -151,11 +151,11 @@ namespace POD.Wizards
             myNumeric.Value = .99m;
         }
 
-        public static void PrepareLabelBoxPair(ref Label myLabel, string myName, ref TransformBox myBox)
+        public static void PrepareLabelBoxPair(ref Label myLabel, string myName, ref TransformBoxX myBox)
         {
             myLabel = new Label();
 
-            myBox = new TransformBox();
+            myBox = new TransformBoxX();
 
             myLabel.Text = myName;
             myLabel.AutoSize = true;

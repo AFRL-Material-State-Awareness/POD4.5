@@ -23,7 +23,7 @@ namespace Controls.UnitTests
         [Test]
         public void transformBox_x_ValidItemsPassed_CreatesAListOfOnlyConfIntObjItems()
         {
-            TransformBox transformBox_x = new TransformBox();
+            TransformBoxX transformBox_x = new TransformBoxX();
             //Assert
             foreach (Object i in transformBox_x.Items)
                 Assert.That(i as TransformObj, Is.Not.Null);
@@ -40,7 +40,7 @@ namespace Controls.UnitTests
         public void SelectedTransform_SetAssignmentValid_SetsTheSelectedTransformToNewEnumeration(TransformTypeEnum testConfInt)
         {
             //Arrange
-            TransformBox transformBox_x = new TransformBox();
+            TransformBoxX transformBox_x = new TransformBoxX();
             //Act
             transformBox_x.SelectedTransform = testConfInt;
             //Assert
@@ -51,7 +51,7 @@ namespace Controls.UnitTests
         public void SelectedTransform_SetAssignmentIsNull_SelectedTransformRemainsNull()
         {
             //Arrange
-            TransformBox transformBox_x = new TransformBox();
+            TransformBoxX transformBox_x = new TransformBoxX();
             //Act
             transformBox_x.SelectedTransform = TransformTypeEnum.None;
             //Assert
@@ -61,7 +61,7 @@ namespace Controls.UnitTests
         public void SelectedTransform_InvalidObjectAddedToitems_DoesNotThrowException()
         {
             //Arrange
-            TransformBox transformBox_x = new TransformBox();
+            TransformBoxX transformBox_x = new TransformBoxX();
             transformBox_x.Items.Insert(0, new DataTable()); //Add a bad item to the beginning of the list
             //Act
             transformBox_x.SelectedTransform = TransformTypeEnum.Inverse;
