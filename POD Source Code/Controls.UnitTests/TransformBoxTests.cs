@@ -14,7 +14,7 @@ namespace Controls.UnitTests
     [TestFixture]
     public class TransformBoxTests
     {
-        //tets for the transformBox_x() Class
+        //tests for the transformBox_x() Class
 
         /// <summary>
         /// Test for the Constructor transformBox_x()

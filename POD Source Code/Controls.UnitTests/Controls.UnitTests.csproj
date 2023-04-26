@@ -64,6 +64,7 @@
     <Compile Include="RelabelParamertsTests.cs" />
     <Compile Include="SamplingTypeBoxTests.cs" />
     <Compile Include="TransformBoxTests.cs" />
+    <Compile Include="TransformBoxYHatTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
