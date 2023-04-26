@@ -37,14 +37,14 @@ namespace Controls.UnitTests
         [Test]
         [TestCase(HitMissRegressionType.LogisticRegression)]
         [TestCase(HitMissRegressionType.FirthLogisticRegression)]
-        public void SelectedModel_SetAssignmentValid_SetsTheSelectedModelTypeToANewModel(HitMissRegressionType testConfInt)
+        public void SelectedModel_SetAssignmentValid_SetsTheSelectedModelTypeToANewModel(HitMissRegressionType testModel)
         {
             //Arrange
             PFModelBox modelBox = new PFModelBox();
             //Act
-            modelBox.SelectedModel = testConfInt;
+            modelBox.SelectedModel = testModel;
             //Assert
-            Assert.That(modelBox.SelectedModel, Is.EqualTo(testConfInt));
+            Assert.That(modelBox.SelectedModel, Is.EqualTo(testModel));
 
         }
         [Test]
@@ -77,11 +77,11 @@ namespace Controls.UnitTests
         [Test]
         [TestCase(HitMissRegressionType.LogisticRegression, "Logistic Reg")]
         [TestCase(HitMissRegressionType.FirthLogisticRegression, "Firth Logistic Reg")]
-        public void PFModelObj_ValidHitMissModel_AssignsAppropriateLabel(HitMissRegressionType testConfInt, string expectedLabel)
+        public void PFModelObj_ValidHitMissModel_AssignsAppropriateLabel(HitMissRegressionType testModel, string expectedLabel)
         {
             //Arrange
             //Act
-            PFModelObj modelBox = new PFModelObj(testConfInt);
+            PFModelObj modelBox = new PFModelObj(testModel);
             //Assert
             Assert.That(modelBox.Label, Is.EqualTo(expectedLabel));
         }
