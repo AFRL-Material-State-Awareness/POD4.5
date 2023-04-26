@@ -80,11 +80,6 @@ namespace POD.Controls
         {
             get { return _samplingType; }
         }
-
-        public override string ToString()
-        {
-            return Label;
-        }
     }
 }
 
