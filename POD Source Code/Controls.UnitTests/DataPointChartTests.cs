@@ -18,7 +18,11 @@ namespace Controls.UnitTests
     [TestFixture]
     public class DataPointChartTests
     {
-        
+        /// <summary>
+        /// NOTE: For the tests in this class, DesignMode is always assume to be false since there is no easy way to simulate it.
+        /// It also does occur often (if at all) when running the application
+        /// </summary>
+
         private DataPointChart _chart;
         [SetUp]
         public void SetUp()
@@ -96,11 +100,11 @@ namespace Controls.UnitTests
         public void FixUpLegend_SeriesCountContainsItemsWhoseNameIsNotSelected_CreatesCustomLegendItemsForThatSeries()
         {
             //Arrange
-            Mock<FakeDataPointChart> chart = SetupSeries( new Mock<FakeDataPointChart>());
+            Mock<FakeDataPointChart> chart = SetupSeries(new Mock<FakeDataPointChart>());
             //Act
             chart.Object.FixUpLegend(true);
             //Assert That
-            AssertionsForFixUpLegendIsTrue(chart);               
+            AssertionsForFixUpLegendIsTrue(chart);
         }
         [Test]
         public void FixUpLegend_SeriesCountContainsItemsWhoseNameIsNotSelectedAndContainsPointsWhereGetColorIsNotTransparent_DoesNotOverwriteItemMarkerColor()
@@ -153,7 +157,7 @@ namespace Controls.UnitTests
             Assert.That(chart.Object.Legends.Count, Is.EqualTo(1));
             chart.Verify(c => c.ShowLegend(), Times.Once);
             chart.Verify(c => c.Refresh(), Times.Once);
-            
+
         }
         private void AssertLegendItems(Mock<FakeDataPointChart> chart)
         {
@@ -172,7 +176,119 @@ namespace Controls.UnitTests
             {
                 set { _colorMap = value; }
             }
+            public Legend SetLegendManually
+            {
+                set { _legend = value; }
+            }
+        }
 
+
+        /// <summary>
+        /// tests for the ChartTitle Property
+        /// Only testing the git properly
+        /// </summary>
+        [Test]
+        public void ChartTitle_NotInDeisgnMoreAndTitlesEmpty_ReturnEmptyString()
+        {
+            //Act
+            var result = _chart.ChartTitle;
+            //Assert
+            Assert.That(result, Is.EqualTo(""));
+        }
+        [Test]
+        public void ChartTitle_TitleNotEmpty_ReturnsANonEmptyString()
+        {
+            //Arrange
+            _chart.Titles.Add("MyChartTitle");
+            _chart.XAxisTitle = "Flaws";
+            //Act
+            var result = _chart.ChartTitle;
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(""));
+        }
+        /// <summary>
+        /// tests for ShowLegend() function
+        /// </summary>
+        [Test]
+        public void ShowLegend_legendIsNull_LegendsRemainstheSame()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            chart.SetLegendManually = null;
+            //Act
+            chart.ShowLegend();
+            //Assert
+            Assert.That(() => chart.ShowLegend(), Throws.Nothing);
+        }
+        [Test]
+        public void ShowLegend_legendIsInLegends_LegendEnabledTrueAndLegendsCountDoesNotChange()
+        {
+            //Arrange
+           FakeDataPointChart chart = new FakeDataPointChart();
+            var legend = new Legend() { Name = "MyLegend", Enabled = false };
+            chart.SetLegendManually = legend;
+            chart.Legends.Add(legend);
+            //Act
+            chart.ShowLegend();
+            //Assert
+            Assert.That(legend.Enabled, Is.True);
+            Assert.That(chart.Legends.Count, Is.EqualTo(1));
+        }
+        [Test]
+        public void ShowLegend_legendIsNotInLegends_LegendEnabledTrueAndNewLegendGetsAddedToLegends()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            var legend = new Legend() { Name = "MyLegend", Enabled = false };
+            chart.SetLegendManually = legend;
+            chart.Legends.Add(new Legend());
+            //Act
+            chart.ShowLegend();
+            //Assert
+            Assert.That(legend.Enabled, Is.True);
+            Assert.That(chart.Legends.Count, Is.EqualTo(2));
+        }
+        /// <summary>
+        /// tests for HideLegend() function
+        /// </summary>
+        [Test]
+        public void HideLegend_legendIsNull_LegendsRemainstheSameWithNoExceptionThrown()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            chart.SetLegendManually = null;
+            //Act
+            chart.HideLegend();
+            //Assert
+            Assert.That(() => chart.ShowLegend(), Throws.Nothing);
+        }
+        [Test]
+        public void HideLegend_legendIsInLegends_LegendEnabledFalseAndRemovedFromLegendsAndEnabledIsFalse()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            var legend = new Legend() { Name = "MyLegend", Enabled = true };
+            chart.SetLegendManually = legend;
+            chart.Legends.Add(legend);
+            //Act
+            chart.HideLegend();
+            //Assert
+            Assert.That(legend.Enabled, Is.False);
+            Assert.That(chart.Legends.Count, Is.EqualTo(0));
+        }
+        [Test]
+        public void HideLegend_legendIsNotInLegends_LegendsCountRemainsTheSameAndEnabledIsFalse()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            var legend = new Legend() { Name = "MyLegend", Enabled = true };
+            chart.SetLegendManually = legend;
+            chart.Legends.Add(new Legend());
+            //Act
+            chart.HideLegend();
+            //Assert
+            Assert.That(legend.Enabled, Is.False);
+            Assert.That(chart.Legends.Count, Is.EqualTo(1));
         }
     }
 }
