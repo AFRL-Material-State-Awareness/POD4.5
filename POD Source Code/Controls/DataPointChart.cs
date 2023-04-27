@@ -1004,24 +1004,6 @@ namespace POD.Controls
             axis.MinorGrid.IntervalOffset = Double.NaN;
         }
 
-        //public void PickBestAxisRange(AnalysisData data, int labelCount)
-        //{
-        //    AxisObject yAxis = new AxisObject();
-        //    AxisObject xAxis = new AxisObject();
-
-        //    data.GetXYBufferedRanges(xAxis, yAxis, true);
-
-        //    RelabelAxesBetter(xAxis, yAxis, data.InvertTransformValueForXAxis,
-        //                data.InvertTransformValueForYAxis, labelCount, labelCount, false, false, data.FlawTransform, data.ResponseTransform,
-        //                data.TransformValueForXAxis, data.TransformValueForYAxis);
-
-        //    //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-        //    //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
-        //}
-
-
         #region OLD RELABEL CODE
         //protected virtual void RelabelAxes(AxisObject xAxis, AxisObject yAxis, InvertAxisFunction invertX, InvertAxisFunction invertY, 
         //                                   int xLabelCount, int yLabelCount, bool myCenterXAtZero = false, bool myCenterYAtZero = false, 
@@ -1430,7 +1412,7 @@ namespace POD.Controls
                 LabelLog10Axis(chartAxis, axis, transform, true);
             }
         }
-        public double TransformBackValue(double myValue, TransformTypeEnum transform, double lambdaValue= Double.NaN)
+        private double TransformBackValue(double myValue, TransformTypeEnum transform, double lambdaValue= Double.NaN)
         {
             double transformValue = 0.0;
             switch (transform)
@@ -1475,7 +1457,7 @@ namespace POD.Controls
             }
             return transformValue;
         }
-        public double TransformValue(double myValue, TransformTypeEnum transform= TransformTypeEnum.Log)
+        private  double TransformValue(double myValue, TransformTypeEnum transform= TransformTypeEnum.Log)
         {
             double transformValue = 0.0;
             switch (transform)

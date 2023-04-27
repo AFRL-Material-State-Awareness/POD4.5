@@ -69,7 +69,6 @@ namespace Analyze.UnitTests
         {
             //Arrange
             _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
-            //_data.SetupSet(x => x.AHATAnalysisObject).Callback(value => dummyObject = value);
             _data.SetupGet(ahat => ahat.AHATAnalysisObject).Returns(new AHatAnalysisObject("SampleAnalysis"));
             _python.Setup(ahat => ahat.AHatAnalysis("SampleAnalysis")).Returns(new AHatAnalysisObject("SampleAnalysis"));
             SetPythonAndREngines();
