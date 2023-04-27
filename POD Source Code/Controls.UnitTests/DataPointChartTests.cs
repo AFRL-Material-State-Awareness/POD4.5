@@ -169,20 +169,6 @@ namespace Controls.UnitTests
                 Assert.That(item.Cells.Count, Is.GreaterThanOrEqualTo(2));
             }
         }
-        // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
-        public class FakeDataPointChart : DataPointChart
-        {
-            public Dictionary<string, Color> MyInputColorMap
-            {
-                set { _colorMap = value; }
-            }
-            public Legend SetLegendManually
-            {
-                set { _legend = value; }
-            }
-        }
-
-
         /// <summary>
         /// tests for the ChartTitle Property
         /// Only testing the git properly
@@ -289,6 +275,69 @@ namespace Controls.UnitTests
             //Assert
             Assert.That(legend.Enabled, Is.False);
             Assert.That(chart.Legends.Count, Is.EqualTo(1));
+        }
+        /// <summary>
+        /// tests for IsSelected function
+        /// only testing the setter
+        /// </summary>
+        [Test]
+        public void IsSelected_NotSelectable_InvalidateFiredAndIsSelectedUnchanged()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            chart.Selectable = false;
+            //Act
+            chart.IsSelected = true;
+            //Assert
+            Assert.That(chart.IsSelected, Is.False);
+        }
+        [Test]
+        public void IsSelected_IsSelectableAndSetToTrue_IsSelectedBecomesTrue()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            chart.Selectable = true;
+            //Act
+            chart.IsSelected = true;
+            //Assert
+            Assert.That(chart.IsSelected, Is.True);
+        }
+        [Test]
+        public void IsSelected_IsSelectableAndSetToTrueWhileMouseInsideIsAlsoTrue_IsSelectedUnchanged()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            chart.Selectable = true;
+            chart.HighlightChart();
+            //Act
+            chart.IsSelected = true;
+            //Assert
+            Assert.That(chart.IsSelected, Is.False);
+        }
+        [Test]
+        public void IsSelected_IsNotSelectableAndSetToTrueWhileMouseInsideIsAlsoTrue_IsSelectedUnchanged()
+        {
+            //Arrange
+            Mock<FakeDataPointChart> chart = new Mock<FakeDataPointChart>();
+            //Temproarily set to true for the eventhandler
+            chart.Object.Selectable = true;
+            //Act
+            chart.Object.IsSelected = false;
+            //Assert
+            Assert.That(chart.Object.IsSelected, Is.False);
+            chart.Verify(c => c.Invalidate());
+        }
+    }
+    // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
+    public class FakeDataPointChart : DataPointChart
+    {
+        public Dictionary<string, Color> MyInputColorMap
+        {
+            set { _colorMap = value; }
+        }
+        public Legend SetLegendManually
+        {
+            set { _legend = value; }
         }
     }
 }
