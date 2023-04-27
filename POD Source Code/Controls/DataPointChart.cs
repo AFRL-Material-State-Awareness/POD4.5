@@ -40,7 +40,7 @@ namespace POD.Controls
         protected PolygonAnnotation _errorBox = null;
         protected Legend _legend = new Legend();
         protected List<string> _errorsList = new List<string>();
-        protected readonly Dictionary<string, Color> _colorMap = new Dictionary<string, Color>();
+        protected Dictionary<string, Color> _colorMap = new Dictionary<string, Color>();
         protected string _chartTitle = "";
         protected string _xAxisTitle = "";
         protected string _xAxisUnit = "";
@@ -95,9 +95,8 @@ namespace POD.Controls
             
             InitializeComponent();
             if (ContextMenuImageList == null || ContextMenuImageList.Images.Count==0)
-            {
                 SetUpImageLists();
-            }
+
             _errorsList = new List<string>();
 
             MouseEnter += AHatVsAChart_MouseEnter;
@@ -130,7 +129,7 @@ namespace POD.Controls
                 _legend.Font = new System.Drawing.Font(_legend.Font.FontFamily, 10.0F);
 
                 ChartAreas.Add(new ChartArea("podArea"));
-            }            
+            }
 
             PostPaint += DataPointChart_PostPaint;
 
@@ -157,7 +156,7 @@ namespace POD.Controls
         int MenuMinY = 20;
         int MenuMinX = 0;
         public bool MenuIsOpen = false;
-        public void SetUpImageLists()
+        private void SetUpImageLists()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataPointChart));
             ContextMenuImageList = new System.Windows.Forms.ImageList(this.components);
@@ -665,7 +664,7 @@ namespace POD.Controls
         {
             if (showLegend)
             {
-                var legend = new Legend();
+                Legend legend;
 
                 if (Legends.Count > 0)
                     legend = Legends[0];
