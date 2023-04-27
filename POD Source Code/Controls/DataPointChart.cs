@@ -853,25 +853,6 @@ namespace POD.Controls
                 }
             }
         }
-
-        /// <summary>
-        /// Get the axis title without the unit.
-        /// </summary>
-        public string XAxisTitleWithoutUnit
-        {
-            get
-            {
-                if (!DesignMode)
-                {
-                    return _xAxisTitle;
-                }
-
-                return "";
-            }
-        }
-
-        
-
         public string XAxisUnit
         {
             get
@@ -978,43 +959,24 @@ namespace POD.Controls
 
         }
 
-
-
-        /// <summary>
-        /// Get the axis title without the unit.
-        /// </summary>
-        public string YAxisTitleWithoutUnit
-        {
-            get
-            {
-                if (!DesignMode)
-                {
-                    return _yAxisTitle;
-                }
-
-                return "";
-            }
-        }
-
         public virtual void ShowLegend()
         {
             if(_legend != null)
-                _legend.Enabled = true;
-
-            if (!DesignMode && !Legends.Contains(_legend))
             {
-                
-                Legends.Add(_legend);
-            }
+                _legend.Enabled = true;
+                if (!DesignMode && !Legends.Contains(_legend))
+                    Legends.Add(_legend);
+            }              
         }
 
         public virtual void HideLegend()
         {
             if (_legend != null)
+            {
                 _legend.Enabled = false;
-
-            if (!DesignMode && Legends.Contains(_legend))
-                Legends.Remove(_legend);
+                if (!DesignMode && Legends.Contains(_legend))
+                    Legends.Remove(_legend);
+            }
         }
 
 
