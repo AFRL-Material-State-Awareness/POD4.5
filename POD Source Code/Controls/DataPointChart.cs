@@ -673,9 +673,8 @@ namespace POD.Controls
                     Legends.Add(_legend);
                     legend = _legend;
                 }
-
-                if (legend.CustomItems.Count != 0)
-                    legend.CustomItems.Clear();
+                
+                legend.CustomItems.Clear();
 
                 foreach (Series series in Series)
                 {
