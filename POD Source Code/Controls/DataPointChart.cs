@@ -1524,16 +1524,11 @@ namespace POD.Controls
 
             set
             {
-                if (Selectable)
+                if (Selectable && mouseInside == false)
                 {
-                    if (mouseInside == false)
-                    {
-                        _isSelected = value;
-
-                        if (_isSelected == false)
-                            Invalidate();
-
-                    }
+                    _isSelected = value;
+                    if (_isSelected == false)
+                        Invalidate();
                 }
                 else
                 {
@@ -1559,35 +1554,6 @@ namespace POD.Controls
             {
                 return ChartAreas[0].AxisY;
             }
-        }
-
-        private void CopyAxisRange(Axis myAxisTo, Axis myAxisFrom)
-        {
-            myAxisTo.Maximum = myAxisFrom.Maximum;
-            myAxisTo.Minimum = myAxisFrom.Minimum;
-            myAxisTo.Interval = myAxisFrom.Interval;
-            myAxisTo.IntervalOffset = myAxisFrom.IntervalOffset;
-
-        }
-
-        public void CopyXAxisRange(Axis myAxis)
-        {
-            CopyAxisRange(ChartAreas[0].AxisX, myAxis);
-        }
-
-        public void CopyYAxisRange(Axis myAxis)
-        {
-            CopyAxisRange(ChartAreas[0].AxisY, myAxis);
-        }
-
-        public void CopyXAxisRange(Chart myChart)
-        {
-            CopyXAxisRange(myChart.ChartAreas[0].AxisX);
-        }
-
-        public void CopyYAxisRange(Chart myChart)
-        {
-            CopyYAxisRange(myChart.ChartAreas[0].AxisY);
         }
 
         void DataPointChart_Resize(object sender, EventArgs e)
@@ -1635,13 +1601,9 @@ namespace POD.Controls
             if (Selectable)
             {
                 if (CanUnselect)
-                {
                     _isSelected = !_isSelected;
-                }
                 else
-                {
                     _isSelected = true;
-                }
 
                 Select();
                 Invalidate();
@@ -1675,11 +1637,6 @@ namespace POD.Controls
             Invalidate(new Rectangle(0, 0, 20, 20));
             
         }
-
-        /*public void CreateLargeColorList()
-        {
-            GetLargeColorList(false);
-        }*/
 
         public static List<Color> GetLargeColorList(bool designMode)
         {
