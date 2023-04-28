@@ -414,6 +414,62 @@ namespace Controls.UnitTests
             //Assert
             Assert.That(_chart.IsHighlighted, Is.False);
         }
+        /// <summary>
+        /// tests for the GetLargeColorList(bool designMode) function
+        /// </summary>
+        [Test]
+        public void GetLargeColorList_DesignMode_ReturnsAnEmptyColorList()
+        {
+            //Act
+            var result = DataPointChart.GetLargeColorList(true);
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.Zero);
+        }
+        [Test]
+        public void GetLargeColorList_NotDesignMode_ReturnsAListOfColorsThatAreAllUnique()
+        {
+            //Act
+            var result = DataPointChart.GetLargeColorList(false);
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.GreaterThanOrEqualTo(50));
+            // TODO: try to implement a color generation technique that has 50 or more unique colors
+            Assert.That(result.Distinct().Count, Is.EqualTo(15));
+        }
+        /// <summary>
+        /// tests for the GetLargeColorList(bool designMode) function
+        /// </summary>
+        [Test]
+        [TestCase(0.0)]
+        [TestCase(double.NaN)]
+        public void CleanUpDataSeries_NoPointsToRemoveThatAreNaN_TheSeriesDoesNotChange(double inputY)
+        {
+            //Arrange
+            _chart.Series.Add(new Series());
+            double x = 0.0;
+            double y = inputY;
+            DataPoint targetPoint = new DataPoint(x, y);
+            _chart.Series[0].Points.AddXY(x, y);
+            //Act
+            _chart.CleanUpDataSeries();
+            //Assert
+            Assert.That(_chart.Series[0].Points.Count, Is.EqualTo(1));
+            bool containsPoint = _chart.Series[0].Points.Any(p => p.XValue == targetPoint.XValue && p.YValues[0] == targetPoint.YValues[0]);
+        }
+        [Test]
+        public void CleanUpDataSeries_XValueForPointIsNaN_SeriesHasThosePointsRemoved()
+        {
+            //Arrange
+            _chart.Series.Add(new Series());
+            double x = double.NaN;
+            double y = 0.0;
+            _chart.Series[0].Points.AddXY(x, y);
+            //Act
+            _chart.CleanUpDataSeries();
+            //Assert
+            Assert.That(_chart.Series[0].Points.Count, Is.EqualTo(0));
+        }
     }
     // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
     public class FakeDataPointChart : DataPointChart
