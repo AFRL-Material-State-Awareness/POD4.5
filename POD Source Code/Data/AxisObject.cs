@@ -6,15 +6,24 @@ using System.Threading.Tasks;
 
 namespace POD.Data
 {
-    public class AxisObject
+    public class AxisObject : IAxisObject
     {
-        public double Max = 1.0;
-        public double Min = -1.0;
-        public double IntervalOffset = 0.0;
-        public double Interval = .25;
-        public double BufferPercentage = 5.0;
+
+        public double Max { get; set; }
+        public double Min { get; set; }
+        public double IntervalOffset { get; set; }
+        public double Interval { get; set; }
+        public double BufferPercentage { get; set; }
 
 
+        public AxisObject()
+        {
+            Max = 1.0;
+            Min = -1.0;
+            IntervalOffset = 0.0;
+            Interval = .25;
+            BufferPercentage = 5.0;
+        }
         public AxisObject Clone()
         {
             var axis = new AxisObject();
@@ -27,5 +36,16 @@ namespace POD.Data
 
             return axis;
         }
+    }
+
+    public interface IAxisObject
+    {
+        double Max { get; set; }
+        double Min { get; set; }
+        double IntervalOffset { get; set; }
+        double Interval { get; set; }
+        double BufferPercentage { get; set; }
+
+        AxisObject Clone();
     }
 }

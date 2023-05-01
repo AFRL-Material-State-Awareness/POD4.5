@@ -2631,7 +2631,7 @@ namespace POD.Data
 
         }
 
-        public static void GetBufferedRange(Control chart, AxisObject myAxis, DataTable myTable, AxisKind kind)
+        public static void GetBufferedRange(Control chart, IAxisObject myAxis, DataTable myTable, AxisKind kind)
         {
             double myMin = Double.MaxValue;
             double myMax = Double.MinValue;
@@ -2641,7 +2641,7 @@ namespace POD.Data
             GetBufferedRange(chart, myAxis, myMin, myMax, kind);
         }
 
-        public static void GetBufferedRange(Control chart, AxisObject myAxis, double myMin, double myMax, AxisKind kind)
+        public static void GetBufferedRange(Control chart, IAxisObject myAxis, double myMin, double myMax, AxisKind kind)
         {
             if (myMin != myMax)
             {

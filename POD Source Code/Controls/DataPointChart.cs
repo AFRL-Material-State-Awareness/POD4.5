@@ -1157,7 +1157,7 @@ namespace POD.Controls
             }
         }
 
-        protected virtual void RelabelAxesBetter(AxisObject xAxis, AxisObject yAxis, 
+        protected virtual void RelabelAxesBetter(IAxisObject xAxis, IAxisObject yAxis, 
                                                  Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY,
                                                  int xLabelCount, int yLabelCount, 
                                                  bool myCenterXAtZero = false, bool myCenterYAtZero = false,
@@ -1230,7 +1230,7 @@ namespace POD.Controls
             }
         }
 
-        private void StoreLabelingParameters(AxisObject xAxis, AxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 
+        private void StoreLabelingParameters(IAxisObject xAxis, IAxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 
                                              int xLabelCount, int yLabelCount, bool xCenterAtZero, bool yCenterAtZero, 
                                              TransformTypeEnum xAxisTransform, TransformTypeEnum yAxisTransform,
                                              Globals.InvertAxisFunction xTransform, Globals.InvertAxisFunction yTransform)
@@ -1242,7 +1242,7 @@ namespace POD.Controls
                 _yRelabel = new RelabelParameters(yAxis, invertY, yLabelCount, yCenterAtZero, yAxisTransform, yTransform);
         }
 
-        private double UpdateChartAxis(Axis axis, AxisObject axisObj, bool myCenterZero)
+        private double UpdateChartAxis(Axis axis, IAxisObject axisObj, bool myCenterZero)
         {
             var offset = 0.0;
 
@@ -1284,7 +1284,7 @@ namespace POD.Controls
             return maxPrecision;
         }
         //private void LabelBoxCoxAxis(Axis chartaxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offest, bool redoing= false, Transform)
-        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
+        private void LabelLinearAxis(Axis chartAxis, IAxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
         {
             var lastString = "";
             var precision = 1;
@@ -1364,7 +1364,7 @@ namespace POD.Controls
             return format;
         }
 
-        private void LabelLog10Axis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction transform, bool forceAll = false)
+        private void LabelLog10Axis(Axis chartAxis, IAxisObject axis, Globals.InvertAxisFunction transform, bool forceAll = false)
         {
             var labeledTick = 0;
 
@@ -1692,7 +1692,7 @@ namespace POD.Controls
 
         public void ReloadChartData(DataRowCollection xRows, DataTable yData, DataTable names)
         {
-            var nameColumnNames = new List<String>();
+            var nameColumnNames = new List<string>();
 
             foreach (DataColumn col in names.Columns)
                 nameColumnNames.Add(col.ColumnName);
@@ -1779,7 +1779,7 @@ namespace POD.Controls
             return finalName;
         }
 
-        public void SetXAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
+        public void SetXAxisRange(IAxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
             bool transformResidView=false)
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window
@@ -1848,7 +1848,7 @@ namespace POD.Controls
             }
         }
         
-        private void CopyAxisObjectToAxis(Axis myAxis, AxisObject myAxisObj)
+        private void CopyAxisObjectToAxis(Axis myAxis, IAxisObject myAxisObj)
         {
             myAxis.Maximum = myAxisObj.Max;
             myAxis.Minimum = myAxisObj.Min;
