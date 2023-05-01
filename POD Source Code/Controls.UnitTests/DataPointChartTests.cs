@@ -13,6 +13,8 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using POD.Data;
+
 namespace Controls.UnitTests
 {
     [TestFixture]
@@ -470,6 +472,62 @@ namespace Controls.UnitTests
             //Assert
             Assert.That(_chart.Series[0].Points.Count, Is.EqualTo(0));
         }
+        /// Skipping tests for reload chart data for now
+        /// 
+
+        /// Tests for SetXAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, bool transformResidView = false)
+        [Test]
+        [TestCase(2.0)]
+        [TestCase(10.0)]
+        public void SetXAxisRange_TransformResidViewIsTrueMaxIsGreaterThanOrEqualMinForceLinearOff_DoesNotCallGetBufferedRangeMaxMinNotOverwrittenNoForceLinearRelabelAxesCalled(double axisMax)
+        {
+            //Arrange
+            Mock<IAxisObject> axisObject;
+            Mock<IAnalysisData> data;
+            FakeDataPointChart chart = SetUpMockObjects(out axisObject, out data, axisMax);
+            //Act
+            chart.SetXAxisRange(axisObject.Object, data.Object, false, false, true);
+            //Assert
+            axisObject.VerifyGet(axis => axis.Max, Times.Exactly(2));
+            axisObject.VerifyGet(axis => axis.Min, Times.Exactly(2));
+            //these are called in the RelabelAxesBetter
+            data.Verify(d => d.FlawTransform, Times.Once);
+            data.Verify(d => d.ResponseTransform, Times.Once);
+        }
+        [Test]
+        public void SetXAxisRange_TransformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOff_CallsGetBufferedRangeMaxMinNotOverwrittenLargeNoForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            Mock<IAxisObject> axisObject;
+            Mock<IAnalysisData> data;
+            FakeDataPointChart chart = SetUpMockObjects(out axisObject, out data, 10.0);
+            //Act
+            chart.SetXAxisRange(axisObject.Object, data.Object);
+            //Assert
+            axisObject.VerifyGet(axis => axis.Max, Times.Exactly(3));
+            axisObject.VerifyGet(axis => axis.Min, Times.Exactly(3));
+            axisObject.VerifySet(axis => axis.Max = It.IsAny<double>(), Times.AtLeastOnce);
+            axisObject.VerifySet(axis => axis.Min = It.IsAny<double>(), Times.AtLeastOnce);
+            //these are called in the RelabelAxesBetter
+            data.Verify(d => d.FlawTransform, Times.Once);
+            data.Verify(d => d.ResponseTransform, Times.Once);
+        }
+        [Test]
+        public void SetXAxisRange_transformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOff_CallsGetBufferedRangeMaxMinNotOverwrittenLargeNoForceLinearRelabelAxesCalled()
+        {
+
+        }
+        private FakeDataPointChart SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, double axisMax)
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            axisObject = new Mock<IAxisObject>();
+            data = new Mock<IAnalysisData>();
+            axisObject.SetupGet(axis => axis.Max).Returns(axisMax);
+            axisObject.SetupGet(axis => axis.Min).Returns(2.0);
+            axisObject.SetupGet(axis => axis.Interval).Returns(4.0);
+            return chart;
+        }
     }
     // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
     public class FakeDataPointChart : DataPointChart
@@ -481,6 +539,17 @@ namespace Controls.UnitTests
         public Legend SetLegendManually
         {
             set { _legend = value; }
+        }
+        protected override void RelabelAxesBetter(IAxisObject xAxis, IAxisObject yAxis,
+                                                 Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY,
+                                                 int xLabelCount, int yLabelCount,
+                                                 bool myCenterXAtZero = false, bool myCenterYAtZero = false,
+                                                 TransformTypeEnum xAxisTransform = TransformTypeEnum.Linear,
+                                                 TransformTypeEnum yAxisTransform = TransformTypeEnum.Linear,
+                                                 Globals.InvertAxisFunction transformX = null, Globals.InvertAxisFunction transformY = null,
+                                                 bool forceKeepCountX = false, bool forceKeepCountY = false, double lambda = Double.NaN)
+        {
+            return;
         }
     }
 }
