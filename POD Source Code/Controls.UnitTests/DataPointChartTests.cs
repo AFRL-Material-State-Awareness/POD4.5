@@ -655,7 +655,6 @@ namespace Controls.UnitTests
             return chart;
         }
 
-        /*
         /// Tests for the BuildColorMap() function
         [Test]
         public void BuildColorMap_SeriesContainsNoPoints_ColorMapAddsSeriesWithTheColorBeingTheColorOfTheSeries()
@@ -670,9 +669,80 @@ namespace Controls.UnitTests
             Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
             Assert.That(chart.MyInputColorMap.ContainsKey("MySampleSeries"));
             Assert.That(chart.MyInputColorMap.ContainsValue(Color.Blue));
-
         }
-        */
+        /// Tests for the BuildColorMap() function
+        [Test]
+        public void BuildColorMap_SeriesContainsPointsNotGreyAndNotTransparent_ColorAssignedIsTheColorOfThePoints()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetupSeriesForColorMap(new FakeDataPointChart());
+            chart.Series[0].Points[0].Color = Color.Red;
+            //Act
+            chart.BuildColorMap();
+            //Assert
+            Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
+            Assert.That(chart.MyInputColorMap.ContainsKey("MySampleSeries"));
+            Assert.That(chart.MyInputColorMap.ContainsValue(Color.Red));
+        }
+        [Test]
+        public void BuildColorMap_SeriesContainsPointsAreGreyAndNotTransparent_ColorAssignedIsTheOriginalSeriesColor()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetupSeriesForColorMap(new FakeDataPointChart());
+            chart.Series[0].Points[0].Color = Color.Gray;
+            //Act
+            chart.BuildColorMap();
+            //Assert
+            Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
+            Assert.That(chart.MyInputColorMap.ContainsKey("MySampleSeries"));
+            Assert.That(chart.MyInputColorMap.ContainsValue(Color.Blue));
+        }
+        [Test]
+        public void BuildColorMap_SeriesContainsPointsAreNotGreyButAreTransparent_ColorAssignedIsTheOriginalSeriesColor()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetupSeriesForColorMap(new FakeDataPointChart());
+            chart.Series[0].Points[0].Color = Color.FromArgb(0, Color.Red);
+            //Act
+            chart.BuildColorMap();
+            //Assert
+            Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
+            Assert.That(chart.MyInputColorMap.ContainsKey("MySampleSeries"));
+            Assert.That(chart.MyInputColorMap.ContainsValue(Color.Blue));
+        }
+        [Test]
+        public void BuildColorMap_SeriesContainsPointsAreGreyAndTransparent_ColorAssignedIsTheOriginalSeriesColor()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetupSeriesForColorMap(new FakeDataPointChart());
+            chart.Series[0].Points[0].Color = Color.FromArgb(0, Color.Gray);
+            //Act
+            chart.BuildColorMap();
+            //Assert
+            Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
+            Assert.That(chart.MyInputColorMap.ContainsKey("MySampleSeries"));
+            Assert.That(chart.MyInputColorMap.ContainsValue(Color.Blue));
+        }
+        [Test]
+        public void BuildColorMap_SeriesNameAndColorAlreadyInColorMap_ColorMapDoesNotChange()
+        {
+            FakeDataPointChart chart = new FakeDataPointChart();
+            Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
+            chart.Series.Add(sampleSeries);
+            chart.MyInputColorMap.Add("MySampleSeries", Color.Blue);
+            //Act
+            chart.BuildColorMap();
+            //Assert
+            Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
+        }
+        private FakeDataPointChart SetupSeriesForColorMap(FakeDataPointChart chart)
+        {
+            Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
+            chart.Series.Add(sampleSeries);
+            chart.Series[0].Points.AddXY(1.0, 1.0);
+            return chart;
+        }
+
     }
     // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
     public class FakeDataPointChart : DataPointChart

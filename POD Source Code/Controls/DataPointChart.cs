@@ -1918,28 +1918,19 @@ namespace POD.Controls
             foreach (Series series in Series)
             {
                 if (_colorMap.ContainsKey(series.Name))
-                {
                     continue;
-                }
 
-                Color color = Color.Transparent;
+                Color color;
 
                 if (Series[series.Name].Points.Count > 0)
                 {
                     color = Series[series.Name].Points.First().Color;
 
-                    if(color == Color.Gray)
-                    {
-                        color = Series[series.Name].Color;
-                    }
-
-                    if(color.A == 0)
+                    if(color == Color.Gray || color.A == 0)
                         color = Series[series.Name].Color;
                 }
                 else
-                {
                     color = Series[series.Name].Color;
-                }
 
                 _colorMap.Add(series.Name, color);
             }
