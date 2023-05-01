@@ -212,7 +212,7 @@ namespace Controls.UnitTests
         public void ShowLegend_legendIsInLegends_LegendEnabledTrueAndLegendsCountDoesNotChange()
         {
             //Arrange
-           FakeDataPointChart chart = new FakeDataPointChart();
+            FakeDataPointChart chart = new FakeDataPointChart();
             var legend = new Legend() { Name = "MyLegend", Enabled = false };
             chart.SetLegendManually = legend;
             chart.Legends.Add(legend);
@@ -357,7 +357,7 @@ namespace Controls.UnitTests
         [TestCase(true, true, false)]
         [TestCase(false, false, true)]
         [TestCase(false, true, true)]
-        public void Select_IsSelectable_FiresMouseClickEventAndChecksForCanUnselect(bool setCanUnselect,  bool setIsSelected, bool expectedAssignmentOfIsSelected)
+        public void Select_IsSelectable_FiresMouseClickEventAndChecksForCanUnselect(bool setCanUnselect, bool setIsSelected, bool expectedAssignmentOfIsSelected)
         {
             //Arrange
             _chart.Selectable = true;
@@ -482,9 +482,7 @@ namespace Controls.UnitTests
         public void SetXAxisRange_TransformResidViewIsTrueMaxIsGreaterThanOrEqualMinForceLinearOff_DoesNotCallGetBufferedRangeMaxMinNotOverwrittenNoForceLinearRelabelAxesCalled(double axisMax)
         {
             //Arrange
-            Mock<IAxisObject> axisObject;
-            Mock<IAnalysisData> data;
-            FakeDataPointChart chart = SetUpMockObjects(out axisObject, out data, axisMax);
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, axisMax);
             //Act
             chart.SetXAxisRange(axisObject.Object, data.Object, false, false, true);
             //Assert
@@ -493,14 +491,14 @@ namespace Controls.UnitTests
             //these are called in the RelabelAxesBetter
             data.Verify(d => d.FlawTransform, Times.Once);
             data.Verify(d => d.ResponseTransform, Times.Once);
+            axisObject.VerifySet(axis => axis.Max = It.IsAny<double>(), Times.Never);
+            axisObject.VerifySet(axis => axis.Min = It.IsAny<double>(), Times.Never);
         }
         [Test]
         public void SetXAxisRange_TransformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOff_CallsGetBufferedRangeMaxMinNotOverwrittenLargeNoForceLinearRelabelAxesCalled()
         {
             //Arrange
-            Mock<IAxisObject> axisObject;
-            Mock<IAnalysisData> data;
-            FakeDataPointChart chart = SetUpMockObjects(out axisObject, out data, 10.0);
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 10.0);
             //Act
             chart.SetXAxisRange(axisObject.Object, data.Object);
             //Assert
@@ -513,10 +511,138 @@ namespace Controls.UnitTests
             data.Verify(d => d.ResponseTransform, Times.Once);
         }
         [Test]
-        public void SetXAxisRange_transformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOff_CallsGetBufferedRangeMaxMinNotOverwrittenLargeNoForceLinearRelabelAxesCalled()
+        public void SetXAxisRange_TransformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOn_CallsGetBufferedRangeMaxMinNotOverwrittenLargeForceLinearRelabelAxesCalled()
         {
-
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 10.0);
+            //Act
+            chart.SetXAxisRange(axisObject.Object, data.Object, true);
+            //these are called in the RelabelAxesBetter
+            data.Verify(d => d.FlawTransform, Times.Never);
+            data.Verify(d => d.ResponseTransform, Times.Never);
         }
+        [Test]
+        public void SetXAxisRange_TransformResidViewIsFalseMaxIsLessThanOrEqualMinForceLinearOff_CallsGetBufferedRangeMaxMinNotOverwrittenLargeForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 1.0);
+            //Act
+            chart.SetXAxisRange(axisObject.Object, data.Object);
+            //these are called in the RelabelAxesBetter
+            axisObject.VerifySet(axis => axis.Max = 1.0, Times.AtLeastOnce);
+            axisObject.VerifySet(axis => axis.Min = 0.0, Times.AtLeastOnce);
+            data.Verify(d => d.FlawTransform, Times.Once);
+            data.Verify(d => d.ResponseTransform, Times.Once);
+        }
+        [Test]
+        public void SetXAxisRange_TransformResidViewIsTrueMaxIsLessThanMinForceLinearOn_CallsGetBufferedRangeMaxMinNotOverwrittenLargeForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 1.0);
+            //Act
+            chart.SetXAxisRange(axisObject.Object, data.Object, true);
+            //these are called in the RelabelAxesBetter
+            axisObject.VerifySet(axis => axis.Max = 1.0, Times.AtLeastOnce);
+            axisObject.VerifySet(axis => axis.Min = 0.0, Times.AtLeastOnce);
+            data.Verify(d => d.FlawTransform, Times.Never);
+            data.Verify(d => d.ResponseTransform, Times.Never);
+        }
+
+
+        /// Tests for SetXAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, bool transformResidView = false)
+
+        /// Tests for SetXAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, bool transformResidView = false)
+        [Test]
+        [TestCase(2.0)]
+        [TestCase(10.0)]
+        public void SetYAxisRange_TransformResidViewIsTrueMaxIsGreaterThanOrEqualMinForceLinearOff_DoesNotCallGetBufferedRangeMaxMinNotOverwrittenNoForceLinearRelabelAxesCalled(double axisMax)
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, axisMax);
+            //Act
+            chart.SetYAxisRange(axisObject.Object, data.Object, false, false, true);
+            //Assert
+            axisObject.VerifyGet(axis => axis.Max, Times.Exactly(2));
+            axisObject.VerifyGet(axis => axis.Min, Times.Exactly(2));
+            //these are called in the RelabelAxesBetter
+            data.Verify(d => d.FlawTransform, Times.Once);
+            data.Verify(d => d.ResponseTransform, Times.Once);
+            axisObject.VerifySet(axis => axis.Max = It.IsAny<double>(), Times.Never);
+            axisObject.VerifySet(axis => axis.Min = It.IsAny<double>(), Times.Never);
+        }
+        [Test]
+        public void SetYAxisRange_TransformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOffHitMissData_CallsGetBufferedRangeMaxMinNotOverwrittenLargeNoForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 10.0);
+            data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            //Act
+            chart.SetYAxisRange(axisObject.Object, data.Object);
+            //Assert
+            ForceLinearOffVerification(axisObject, data);
+            data.Verify(d => d.LambdaValue, Times.Never);
+        }
+        [Test]
+        public void SetYAxisRange_TransformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOffSignalResponseData_CallsGetBufferedRangeMaxMinNotOverwrittenLargeNoForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 10.0);
+            data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            //Act
+            chart.SetYAxisRange(axisObject.Object, data.Object);
+            //Assert
+            ForceLinearOffVerification(axisObject, data);
+            data.Verify(d => d.LambdaValue, Times.Once);
+        }
+        private void ForceLinearOffVerification(Mock<IAxisObject> axisObject, Mock<IAnalysisData> data)
+        {
+            axisObject.VerifyGet(axis => axis.Max, Times.Exactly(3));
+            axisObject.VerifyGet(axis => axis.Min, Times.Exactly(3));
+            axisObject.VerifySet(axis => axis.Max = It.IsAny<double>(), Times.AtLeastOnce);
+            axisObject.VerifySet(axis => axis.Min = It.IsAny<double>(), Times.AtLeastOnce);
+            //these are called in the RelabelAxesBetter
+            data.Verify(d => d.FlawTransform, Times.Once);
+            data.Verify(d => d.ResponseTransform, Times.Once);
+        }
+        [Test]
+        public void SetYAxisRange_TransformResidViewIsFalseMaxIsGreaterThanOrEqualMinForceLinearOn_CallsGetBufferedRangeMaxMinNotOverwrittenLargeForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 10.0);
+            //Act
+            chart.SetYAxisRange(axisObject.Object, data.Object, true);
+            //these are called in the RelabelAxesBetter
+            data.Verify(d => d.FlawTransform, Times.Never);
+            data.Verify(d => d.ResponseTransform, Times.Never);
+        }
+        [Test]
+        public void SetYAxisRange_TransformResidViewIsFalseMaxIsLessThanOrEqualMinForceLinearOff_CallsGetBufferedRangeMaxMinNotOverwrittenLargeForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 1.0);
+            //Act
+            chart.SetYAxisRange(axisObject.Object, data.Object);
+            //these are called in the RelabelAxesBetter
+            axisObject.VerifySet(axis => axis.Max = 1.0, Times.AtLeastOnce);
+            axisObject.VerifySet(axis => axis.Min = 0.0, Times.AtLeastOnce);
+            data.Verify(d => d.FlawTransform, Times.Once);
+            data.Verify(d => d.ResponseTransform, Times.Once);
+        }
+        [Test]
+        public void SetYAxisRange_TransformResidViewIsTrueMaxIsLessThanMinForceLinearOn_CallsGetBufferedRangeMaxMinNotOverwrittenLargeForceLinearRelabelAxesCalled()
+        {
+            //Arrange
+            FakeDataPointChart chart = SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, 1.0);
+            //Act
+            chart.SetYAxisRange(axisObject.Object, data.Object, true);
+            //these are called in the RelabelAxesBetter
+            axisObject.VerifySet(axis => axis.Max = 1.0, Times.AtLeastOnce);
+            axisObject.VerifySet(axis => axis.Min = 0.0, Times.AtLeastOnce);
+            data.Verify(d => d.FlawTransform, Times.Never);
+            data.Verify(d => d.ResponseTransform, Times.Never);
+        }
+
+
         private FakeDataPointChart SetUpMockObjects(out Mock<IAxisObject> axisObject, out Mock<IAnalysisData> data, double axisMax)
         {
             //Arrange
@@ -528,12 +654,32 @@ namespace Controls.UnitTests
             axisObject.SetupGet(axis => axis.Interval).Returns(4.0);
             return chart;
         }
+
+        /*
+        /// Tests for the BuildColorMap() function
+        [Test]
+        public void BuildColorMap_SeriesContainsNoPoints_ColorMapAddsSeriesWithTheColorBeingTheColorOfTheSeries()
+        {
+            //Arrange
+            FakeDataPointChart chart = new FakeDataPointChart();
+            Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
+            chart.Series.Add(sampleSeries);
+            //Act
+            chart.BuildColorMap();
+            //Assert
+            Assert.That(chart.MyInputColorMap.Count, Is.EqualTo(1));
+            Assert.That(chart.MyInputColorMap.ContainsKey("MySampleSeries"));
+            Assert.That(chart.MyInputColorMap.ContainsValue(Color.Blue));
+
+        }
+        */
     }
     // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
     public class FakeDataPointChart : DataPointChart
     {
         public Dictionary<string, Color> MyInputColorMap
         {
+            get { return _colorMap; }
             set { _colorMap = value; }
         }
         public Legend SetLegendManually

@@ -1784,9 +1784,7 @@ namespace POD.Controls
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window
             if (!transformResidView)
-            {
                 AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.X);
-            }
 
             if (myAxis.Max < myAxis.Min)
             {
@@ -1798,26 +1796,19 @@ namespace POD.Controls
             CopyAxisObjectToAxis(ChartAreas[0].AxisX, myAxis);
 
             if (!forceLinear)
-            {
                 RelabelAxesBetter(myAxis, null, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 
                     Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, keepLabelCount, false);
-            }
             else
-            {
                 RelabelAxesBetter(myAxis, null, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
                     false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, keepLabelCount, false);
-
-            }
         }
 
-        public void SetYAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
+        public void SetYAxisRange(IAxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
             bool transformResidView = false)
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window
             if (!transformResidView)
-            {
                 AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.Y);
-            }
 
             if (myAxis.Max < myAxis.Min)
             {
@@ -1838,14 +1829,8 @@ namespace POD.Controls
                                       false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
             }
             else
-            {
-                //if (data.ResponseTransform == TransformTypeEnum.BoxCox)
-                //    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                //                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
-                //else
-                    RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                      false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
-            }
+                RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                    false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
         }
         
         private void CopyAxisObjectToAxis(Axis myAxis, IAxisObject myAxisObj)
