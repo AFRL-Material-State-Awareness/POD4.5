@@ -743,6 +743,29 @@ namespace Controls.UnitTests
             return chart;
         }
 
+        /// Tests for the  public Color GetColor(Series series) function
+        [Test]
+        public void GetColor_ColorMapContainsKey_ReturnsValueColorWithKey()
+        {
+            FakeDataPointChart chart = new FakeDataPointChart();
+            Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
+            chart.MyInputColorMap.Add("MySampleSeries", Color.Blue);
+            //Act
+            var result=chart.GetColor(sampleSeries);
+            //Assert
+            Assert.That(result, Is.EqualTo(Color.Blue));
+        }
+        [Test]
+        public void GetColor_ColorMapDoesNotContainKey_ReturnsTransparent()
+        {
+            FakeDataPointChart chart = new FakeDataPointChart();
+            Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
+            //Act
+            var result = chart.GetColor(sampleSeries);
+            //Assert
+            Assert.That(result, Is.EqualTo(Color.Transparent));
+        }
+
     }
     // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
     public class FakeDataPointChart : DataPointChart
