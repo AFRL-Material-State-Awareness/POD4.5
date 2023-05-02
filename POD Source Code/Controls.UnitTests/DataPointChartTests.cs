@@ -726,6 +726,7 @@ namespace Controls.UnitTests
         [Test]
         public void BuildColorMap_SeriesNameAndColorAlreadyInColorMap_ColorMapDoesNotChange()
         {
+            //Arrange
             FakeDataPointChart chart = new FakeDataPointChart();
             Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
             chart.Series.Add(sampleSeries);
@@ -747,6 +748,7 @@ namespace Controls.UnitTests
         [Test]
         public void GetColor_ColorMapContainsKey_ReturnsValueColorWithKey()
         {
+            //Arrange
             FakeDataPointChart chart = new FakeDataPointChart();
             Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
             chart.MyInputColorMap.Add("MySampleSeries", Color.Blue);
@@ -758,6 +760,7 @@ namespace Controls.UnitTests
         [Test]
         public void GetColor_ColorMapDoesNotContainKey_ReturnsTransparent()
         {
+            //Arrange
             FakeDataPointChart chart = new FakeDataPointChart();
             Series sampleSeries = new Series { Name = "MySampleSeries", Color = Color.Blue };
             //Act
@@ -765,7 +768,49 @@ namespace Controls.UnitTests
             //Assert
             Assert.That(result, Is.EqualTo(Color.Transparent));
         }
+        /// <summary>
+        /// tests for AddEmtpySeriesToForceDraw() function
+        /// </summary>
+        [Test]
+        public void AddEmptySeriesToForceDraw_FindSeriesByNameEmptyIsNull_AddsAnEmptySeries()
+        {
+            //Arrange
+            //Act
+            _chart.AddEmptySeriesToForceDraw();
+            //Assert
+            Assert.That(_chart.Series.Count, Is.EqualTo(1));
+            Assert.That(_chart.Series[0].Name, Is.EqualTo("Empty"));
+        }
+        [Test]
+        public void AddEmptySeriesToForceDraw_FindSeriesByNameEmptyIsNotNull_SeriesStaysTheSame()
+        {
+            //Arrange
+            Series emptySeries = new Series { Name = "Empty", Color = Color.Blue };
+            _chart.Series.Add(emptySeries);
+            //Act
+            _chart.AddEmptySeriesToForceDraw();
+            //Assert
+            Assert.That(_chart.Series.Count, Is.EqualTo(1));
+            Assert.That(_chart.Series[0].Name, Is.EqualTo("Empty"));
+        }
 
+        /// tests for void FillFromSource(DataSource source, int flawIndex, int responseIndex, List<Color> colors) function
+        /// Need to look into this function more before testing. Area variable is getting assigned but it's never used.
+        /*
+        /// Tests for FinalizeErrors(ErrorArgs e, IMessageBoxWrap messageBoxInput = null) function
+        /// NEED to figure out how to unit test a UI thread invocation
+        [Test]
+        public void FinalizeErrors_ErrorLIstIsEmptyAndHandleNotCreated_NoInvocationThrown()
+        {
+            //Arrange
+            Mock<IMessageBoxWrap> messageBox = new Mock<IMessageBoxWrap>();
+            Mock<FakeDataPointChart> chart = new Mock<FakeDataPointChart>();
+            //Act
+            chart.Object.FinalizeErrors(null, messageBox.Object);
+            //Assert
+            
+        }
+        */
     }
     // Used for the tests inside the series for for loop in order to control the GetColor() dependency within the FixUpLegend function
     public class FakeDataPointChart : DataPointChart
