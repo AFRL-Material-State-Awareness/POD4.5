@@ -1291,26 +1291,6 @@ namespace POD
                 default:
                     return "";
             }
-        }
-        
-    }
-    /// <summary>
-    /// This interface and class are used for dependency injection for unit testing methods containing MessageBox.Show(...)
-    /// </summary>
-    public interface IMessageBoxWrap
-    {
-        DialogResult Show(string text, string caption);
-        DialogResult Show(string text);
-    }
-    public class MessageBoxWrap: IMessageBoxWrap
-    {
-        public DialogResult Show(string text, string caption)
-        {
-            return MessageBox.Show(text, caption);
-        }
-        public DialogResult Show(string text)
-        {
-            return MessageBox.Show(text);
-        }
+        }      
     }
 }
