@@ -78,10 +78,12 @@ namespace POD.Controls
 
             if(_file.Exists(myPath))
             {
-                var reader = _streamReader.CreateStreamReader(myPath, Encoding.Unicode);
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                    AddLink(line);
+                using (var reader = _streamReader.CreateStreamReader(myPath, Encoding.Unicode))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                        AddLink(line);
+                }
             }
 
             AdjustPadding();
