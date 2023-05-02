@@ -185,15 +185,16 @@ namespace Global.UnitTests
             Assert.That(resultCursor, Is.Not.EqualTo(Cursors.Default));
         }
         [Test]
-        [Ignore("Figure out how to inject message box for this test")]
         public void CreateCursorNoResize_NullBitmapPassed_ReturnsDefaultCursor()
         {
             //Arrange
             Cursor resultCursor = null;
-
+            Mock<IMessageBoxWrap> messageBox = new Mock<IMessageBoxWrap>();
+            Globals.MessageBoxWrapper = messageBox.Object;
             //Act
-            resultCursor = Globals.CreateCursorNoResize(null, 1, 1); ;
+            resultCursor = Globals.CreateCursorNoResize(null, 1, 1);
             //Assert
+            messageBox.Verify(mb => mb.Show(It.IsAny<string>()));
             Assert.That(resultCursor, Is.EqualTo(Cursors.Default));
         }
         ///<summary>
