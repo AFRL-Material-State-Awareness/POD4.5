@@ -32,6 +32,17 @@ namespace POD.Controls
             set { _tooltip = value; }
         }
 
+        public PODButton()
+        {
+
+            //UseMnemonic = true;
+            Height = StdHeight;
+            Width = StdWidth;
+
+            Padding = new Padding(0);
+            Margin = new Padding(0);
+        }
+
         public PODButton(string myLabel)
         {
             //UseMnemonic = true;
