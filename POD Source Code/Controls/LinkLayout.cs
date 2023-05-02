@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 using System.Drawing;
 
 namespace POD.Controls
@@ -12,7 +9,8 @@ namespace POD.Controls
     public class LinkLayout : PODFlowLayoutPanel
     {
         List<BookmarkLink> _labels;
-
+        private IFileExistsWrapper _file;
+        private IStreamReaderWrapper _streamReader;
         public List<BookmarkLink> Links
         {
             get { return _labels; }
@@ -32,15 +30,15 @@ namespace POD.Controls
             }
         }
 
-        public LinkLayout()
+        public LinkLayout(IFileExistsWrapper file = null, IStreamReaderWrapper stream = null)
         {
+            _file = file ?? new FileExistsWrapper();
+            _streamReader = stream ?? new StreamReaderWrapper();
             FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            //AutoScroll = true;
-            //WrapContents = true;
             BackColor = Color.White;
         }
 
-        public BookmarkLink AddLink(string linkPath)
+        private BookmarkLink AddLink(string linkPath)
         {
             var bookmark = new BookmarkLink(linkPath);
 
@@ -51,24 +49,26 @@ namespace POD.Controls
 
             Controls.Add(bookmark);
 
-            //bookmark.MouseEnter += bookmark_MouseEnter;
-
             return bookmark;
         }
-
-        void bookmark_MouseEnter(object sender, EventArgs e)
+        private void AdjustPadding()
         {
-            if (Focused == false)
-                Focus();
-        }
+            int minWidth = int.MaxValue;
+            foreach (BookmarkLink link in _labels)
+            {
+                if (link.LeftPadding < minWidth)
+                    minWidth = link.LeftPadding;
+            }
 
-        
+            foreach (BookmarkLink link in _labels)
+                link.LeftPadding -= minWidth;
+        }
 
         public void LoadFile(string myPath)
         {
             if (_labels == null)
                 _labels = new List<BookmarkLink>();
-
+            
             SuspendLayout();
 
             Controls.Clear();
@@ -76,34 +76,15 @@ namespace POD.Controls
 
             
 
-            if(File.Exists(myPath))
+            if(_file.Exists(myPath))
             {
-                var reader = new StreamReader(myPath, Encoding.Unicode);
-                var line = "";
-
-                while (line != null)
-                {
-                    line = reader.ReadLine();
-
-                    if (line != null)
-                    {
-                        AddLink(line);
-                    }
-                }
+                var reader = _streamReader.CreateStreamReader(myPath, Encoding.Unicode);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                    AddLink(line);
             }
 
-            int minWidth = 50000;
-
-            foreach(BookmarkLink link in _labels)
-            {
-                if (link.LeftPadding < minWidth)
-                    minWidth = link.LeftPadding;
-            }
-
-            foreach (BookmarkLink link in _labels)
-            {
-                link.LeftPadding -= minWidth;
-            }
+            AdjustPadding();
 
             ResumeLayout(false);
             PerformLayout();
@@ -112,4 +93,5 @@ namespace POD.Controls
         
 
     }
+    
 }
