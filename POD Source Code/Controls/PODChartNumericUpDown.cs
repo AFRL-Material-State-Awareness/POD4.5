@@ -44,9 +44,6 @@ namespace POD.Controls
             if (index >= 0)
                 image = RatingImages.Images[index];
 
-            //if (Parent != null)
-            //    ImageBox.BackColor = Parent.BackColor;
-
             ImageBox.Image = image;
 
             FixBackgrounColor();

@@ -26,9 +26,6 @@ namespace POD.Controls
             Series.Clear();
 
             DoPostPaint = true;
-
-            //PrePaint += LineChartPrePaint;
-            //PostPaint += LineChartPostPaint;
         }
 
         public override void SetupChart(string flawName, string flawUnit, List<string> responseNames, List<string> responseUnits)

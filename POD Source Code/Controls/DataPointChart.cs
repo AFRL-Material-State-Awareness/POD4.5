@@ -2022,7 +2022,7 @@ namespace POD.Controls
                 HideLegend();
         }
 
-        public static void RemoveNullRowsFromView(DataView view)
+        private void RemoveNullRowsFromView(DataView view)
         {
             var deletes = new List<DataRow>();
 
@@ -2040,8 +2040,10 @@ namespace POD.Controls
             }
         }
 
-        public void FinalizeErrors(ErrorArgs e)
+        public void FinalizeErrors(ErrorArgs e, IMessageBoxWrap messageBoxInput = null)
         {
+            var messageBox = messageBoxInput ?? new MessageBoxWrap();
+
             var finalErrorString = "";
 
             foreach (string error in _errorsList)
@@ -2070,7 +2072,7 @@ namespace POD.Controls
             }
             catch(Exception exp)
             {
-                MessageBox.Show("FinalizeErrors: " + exp.Message, "POD v4 Error");
+                messageBox.Show("FinalizeErrors: " + exp.Message, "POD v4 Error");
             }
         }
 
@@ -2089,10 +2091,7 @@ namespace POD.Controls
             if (_error == null && _errorBox == null)
             {
                 _error = new TextAnnotation();
-                //_error.AxisX = XAxis;
-                //_error.AxisY = YAxis;
-                //_error.Alignment = ContentAlignment.MiddleCenter;
-                //_error.AnchorAlignment = ContentAlignment.MiddleCenter;
+
                 _error.X = 50;// (XAxis.Maximum - XAxis.Minimum) / 2.0 + XAxis.Minimum;
                 _error.Y = 50;// (YAxis.Maximum - YAxis.Minimum) / 2.0 + YAxis.Minimum;
                 _error.ForeColor = Color.Black;
@@ -2125,23 +2124,6 @@ namespace POD.Controls
                 }
                 
             }
-            //else
-            //{
-            //    this.Invoke((MethodInvoker)delegate()
-            //    {
-            //        if (_resetErrors)
-            //        {
-            //            //_error.Text = e.Error;                      
-            //        }
-            //        else
-            //        {
-            //            //_error.Text += Environment.NewLine + e.Error;
-            //        }
-            //    });
-            //}
-
-            
-            
         }
 
         public void ShowProgressBar(ErrorArgs e)
