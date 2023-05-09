@@ -162,7 +162,7 @@ namespace Controls.UnitTests
         [Test]
         [TestCase(true)]
         [TestCase(false)]
-        public void SingleSelectedIndex_MultiSelectIsFalse_OnlyOneIndexIsSelected(bool multiSelectFlag)
+        public void SingleSelectedIndex_MultiSelectIsTrueOrFalse_OnlyOneIndexIsSelected(bool multiSelectFlag)
         {
             //Arrange
             PODListBox podListBox = new PODListBox();
@@ -177,6 +177,91 @@ namespace Controls.UnitTests
             Assert.That(podListBox.Rows[0].Selected, Is.False);
             Assert.That(podListBox.Rows[1].Selected, Is.False);
             Assert.That(podListBox.Rows[2].Selected, Is.True);        
+        }
+
+        /// Skipping SuspendDrawing() tests for now
+        /// Skipping ResumeDrawing() tests for now
+        
+        /// tests for string CreateAutoName(List<PODListBoxItem> listBoxItems) function
+        [Test]
+        public void CreateAutoName_ListPODListBoxItemIsEmpty_ReturnsEmptyString()
+        {
+            //Arrange
+            List<PODListBoxItem> listOfPODBoxItems = new List<PODListBoxItem>();
+            //Act
+            var result=PODListBox.CreateAutoName(listOfPODBoxItems);
+            //Arrange
+            Assert.That(result, Is.EqualTo(string.Empty));
+        }
+        //input strings in various formats
+        [Test]
+        [TestCase("myName.x.y")]
+        [TestCase("my Name.x.y")]
+        [TestCase("myName.x.responseName")]
+        [TestCase("my Name.x.responseName")]
+        [TestCase("myName.x.response Name")]
+        [TestCase("my Name.x.response Name")]
+        public void CreateAutoName_ListPODListBoxItemContains1Name_ReturnsTheName(string myName)
+        {
+            //Arrange
+            PODListBoxItem podListBoxItem = new PODListBoxItem();
+            podListBoxItem.DataSourceName = myName.Split('.')[0];
+            podListBoxItem.FlawColumnName = myName.Split('.')[1];
+            podListBoxItem.ResponseColumnName = myName.Split('.')[myName.Split('.').Length-1];
+            List<PODListBoxItem> listOfPODBoxItems = new List<PODListBoxItem>() { podListBoxItem };
+            //Act
+            var result = PODListBox.CreateAutoName(listOfPODBoxItems);
+            //Assert
+            Assert.That(result, Is.EqualTo(myName));
+        }
+        [Test]
+        public void CreateAutoName_ListPODListBoxItemContainsNumerousWithNoOverlappingStrings_ReturnsConcatinatedResponsesStringWithParentheses()
+        {
+            //Arrange
+            PODListBoxItem podListBoxItem1 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.responseNames");
+            PODListBoxItem podListBoxItem2 = PopulatePODListBoxItem(new PODListBoxItem(), "HitMiss.x.y");
+            PODListBoxItem podListBoxItem3 = PopulatePODListBoxItem(new PODListBoxItem(), "SignalResponse.no.substrings");
+
+            List<PODListBoxItem> listOfPODBoxItems = new List<PODListBoxItem>() { podListBoxItem1, podListBoxItem2, podListBoxItem3 };
+            //Act
+            var result = PODListBox.CreateAutoName(listOfPODBoxItems);
+            //Assert
+            Assert.That(result, Is.EqualTo("myName" + "." + "flawNames" + "." + "(" + "responseNames" + ", " + "y" + ", " + "substrings" + ")"));
+        }
+        [Test]
+        public void reateAutoName_ListPODListBoxItemContainsNumerousThatHaveNonStartingOverlappingStrings_ReturnsConcatinatedResponsesStringWithParentheses()
+        {
+            //Arrange
+            PODListBoxItem podListBoxItem1 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.xyzhelloworldabc");
+            PODListBoxItem podListBoxItem2 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.whyhelloworldmad");
+            PODListBoxItem podListBoxItem3 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.lmnhelloworldopq");
+
+            List<PODListBoxItem> listOfPODBoxItems = new List<PODListBoxItem>() { podListBoxItem1, podListBoxItem2, podListBoxItem3 };
+            //Act
+            var result = PODListBox.CreateAutoName(listOfPODBoxItems);
+            //Assert
+            Assert.That(result, Is.EqualTo("myName" + "." + "flawNames" + "." + "(" + "xyzhelloworldabc" + ", " + "whyhelloworldmad" + ", " + "lmnhelloworldopq" + ")"));
+        }
+        [Test]
+        public void CreateAutoName_ListPODListBoxItemContainsNumerousWithStartingOverlappingStrings_ReturnsResponsesInParanthesisWithTheOverlapString()
+        {
+            //Arrange
+            PODListBoxItem podListBoxItem1 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.helloworldabc");
+            PODListBoxItem podListBoxItem2 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.helloworlddef");
+            PODListBoxItem podListBoxItem3 = PopulatePODListBoxItem(new PODListBoxItem(), "myName.flawNames.helloworldghi");
+            List<PODListBoxItem> listOfPODBoxItems = new List<PODListBoxItem>() { podListBoxItem1, podListBoxItem2, podListBoxItem3 };
+            //Act
+            var result = PODListBox.CreateAutoName(listOfPODBoxItems);
+            //Assert
+            string commonSubstring = "helloworld";
+            Assert.That(result, Is.EqualTo("myName" + "." + "flawNames" + "." + commonSubstring+ "(" + "abc" + ", " + "def" + ", " + "ghi" + ")"));
+        }
+        private PODListBoxItem PopulatePODListBoxItem(PODListBoxItem podListBoxItem,string myName)
+        {
+            podListBoxItem.DataSourceName = myName.Split('.')[0];
+            podListBoxItem.FlawColumnName = myName.Split('.')[1];
+            podListBoxItem.ResponseColumnName = myName.Split('.')[myName.Split('.').Length - 1];
+            return podListBoxItem;
         }
 
     }
