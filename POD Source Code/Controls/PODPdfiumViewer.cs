@@ -19,10 +19,12 @@ namespace POD.Controls
             set { _pdfFile = value; }
         }
         // Inject dependencies in contructor for testing purposes (do not use args in code)
-        public PODPdfiumViewer(IPDFLoader pdfLoader = null, bool loaded=false)
+        public PODPdfiumViewer(IPDFLoader pdfLoader = null, bool loaded = false,
+            IPdfDocument pdfDoc = null)
         {
             _pdfLoader = pdfLoader ?? new PDFLoader();
             _loaded = loaded;
+            _mypdfDocument = pdfDoc;
         }
 
         void PODPdfViewer_PdfLoaded(object sender, EventArgs args)
@@ -33,32 +35,24 @@ namespace POD.Controls
         {
             if (keyData == System.Windows.Forms.Keys.PageUp)
             {
-                //GoToPreviousPage();
-                //Renderer.Page -= 1;
                 Page -= 1;
                 return true;
             }
 
             if (keyData == System.Windows.Forms.Keys.PageDown)
             {
-                //GoToNextPage();
-                //Renderer.Page += 1;
                 Page += 1;
                 return true;
             }
 
             if (keyData == Keys.Home)
             {
-                //GoToFirstPage();
-                //Renderer.Page = 1;
                 Page = 1;
                 return true;
             }
 
             if (keyData == Keys.End)
             {
-                //GoToLastPage();
-                //Renderer.Page = _mypdfDocument.PageCount;
                 Page = _mypdfDocument.PageCount;
                 return true;
             }
@@ -106,33 +100,9 @@ namespace POD.Controls
             }
             return false;
         }
-        public int PageCount
-        {
-            get {                
-                if(_mypdfDocument != null)
-                {
-                    return _mypdfDocument.PageCount;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-        public PdfBookmarkCollection Bookmarks
-        {
-            get
-            {
-                if(_mypdfDocument != null)
-                {
-                    return _mypdfDocument.Bookmarks;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
+        public int PageCount => _mypdfDocument?.PageCount ?? 0;
+
+        public PdfBookmarkCollection Bookmarks => _mypdfDocument?.Bookmarks;
     }
 
 }
