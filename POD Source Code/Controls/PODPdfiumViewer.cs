@@ -9,33 +9,25 @@ namespace POD.Controls
 {
     public class PODPdfiumViewer : PdfRenderer
     {
-        //Form _form;
+        IPDFLoader _pdfLoader;
         string _pdfFile;
-        bool _loaded = false;
-        PdfDocument _mypdfDoucment;
+        bool _loaded;
+        IPdfDocument _mypdfDoucment;
         //PdfRenderer _myPdfRender;
         public string PdfFileName
         {
             get { return _pdfFile; }
             set { _pdfFile = value; }
         }
-
-        public PODPdfiumViewer()
+        // Inject dependencies in contructor for testing purposes (do not use args in code)
+        public PODPdfiumViewer(IPDFLoader pdfLoader = null, bool loaded=false)
         {
-            //PdfLoaded += PODPdfViewer_PdfLoaded;
-            //_myPdfRender = new PdfRenderer();
-            
-            
+            _pdfLoader = pdfLoader ?? new PDFLoader();
+            _loaded = loaded;
         }
 
         void PODPdfViewer_PdfLoaded(object sender, EventArgs args)
         {
-            //_form = FindForm();
-
-            //_form.VerticalScroll.Minimum = 0;
-            //_form.VerticalScroll.Maximum = PageCount * 3;      
-
-
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -102,29 +94,13 @@ namespace POD.Controls
 
             base.OnMouseClick(e);
         }
-        /*
+
         public bool OpenPDF()
         {
             if (!_loaded)
             {
-                LoadFromFile(_pdfFile);
-                
-                _loaded = true;
+                _mypdfDoucment=_pdfLoader.LoadPDF(this, _pdfFile);
 
-                return true;
-            }
-
-            return false;
-        }
-        */
-        public bool OpenPDF()
-        {
-            if (!_loaded)
-            {
-                //LoadFromFile(_pdfFile);
-                _mypdfDoucment = PdfDocument.Load(this, _pdfFile);
-                // Load PDF Document into WinForms Control
-                Load(_mypdfDoucment);
                 _loaded = true;
 
                 return true;

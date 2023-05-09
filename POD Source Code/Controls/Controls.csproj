@@ -89,6 +89,9 @@
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="PDFLoader.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PODPdfiumViewer.cs">
       <SubType>Component</SubType>
     </Compile>
