@@ -3,20 +3,20 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public class PDFLoader : PdfRenderer, IPDFLoader
+    public class PDFLoader :  IPDFLoader
     {
         public PDFLoader() { }
 
-        public IPdfDocument LoadPDF(IWin32Window owner, string pdfFile)
+        public IPdfDocument LoadPDF(PODPdfiumViewer pdfiumClass, IWin32Window owner, string pdfFile)
         {
-            PdfDocument mypdfDocument = PdfDocument.Load(owner, pdfFile);
+            PdfDocument mypdfDocument = PdfDocument.Load( owner, pdfFile);
             // Load PDF Document into WinForms Control
-            Load(mypdfDocument);
+            pdfiumClass.Load(mypdfDocument);
             return mypdfDocument;
         }
     }
     public interface IPDFLoader
     {
-        IPdfDocument LoadPDF(IWin32Window owner, string pdfFile);
+        IPdfDocument LoadPDF(PODPdfiumViewer pdfiumClass, IWin32Window owner, string pdfFile);
     }
 }

@@ -30,7 +30,7 @@ namespace Controls.UnitTests
             _pdfDocument = new Mock<IPdfDocument>();
             _pdfDocument.SetupGet(pdfDoc => pdfDoc.PageCount).Returns(1);
             _pdfDocument.SetupGet(bmk => bmk.Bookmarks).Returns(new PdfBookmarkCollection() { new PdfBookmark() });
-            _pdfLoader.Setup(pdf => pdf.LoadPDF(It.IsAny<IWin32Window>(), It.IsAny<string>())).Returns(_pdfDocument.Object);
+            _pdfLoader.Setup(pdf => pdf.LoadPDF(It.IsAny<PODPdfiumViewer>(), It.IsAny<IWin32Window>(), It.IsAny<string>())).Returns(_pdfDocument.Object);
         }
         /// <summary>
         /// Tests for the OpenPDF() function
@@ -43,7 +43,7 @@ namespace Controls.UnitTests
             //Act
             var result= pdfiumViewer.OpenPDF();
             //Assert
-            _pdfLoader.Verify(pdf => pdf.LoadPDF(It.IsAny<IWin32Window>(), It.IsAny<string>()), Times.Never);
+            _pdfLoader.Verify(pdf => pdf.LoadPDF(It.IsAny<PODPdfiumViewer>(), It.IsAny<IWin32Window>(), It.IsAny<string>()), Times.Never);
             Assert.That(result, Is.False);
         }
         [Test]
@@ -54,7 +54,7 @@ namespace Controls.UnitTests
             //Act
             var result = pdfiumViewer.OpenPDF();
             //Assert
-            _pdfLoader.Verify(pdf => pdf.LoadPDF(It.IsAny<IWin32Window>(), It.IsAny<string>()));
+            _pdfLoader.Verify(pdf => pdf.LoadPDF(It.IsAny<PODPdfiumViewer>(), It.IsAny<IWin32Window>(), It.IsAny<string>()));
             Assert.That(result, Is.True);
         }
         // tests for PageCount getter

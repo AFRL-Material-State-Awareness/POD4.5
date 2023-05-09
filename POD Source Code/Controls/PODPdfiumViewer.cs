@@ -92,7 +92,7 @@ namespace POD.Controls
         {
             if (!_loaded)
             {
-                _mypdfDocument=_pdfLoader.LoadPDF(this, _pdfFile);
+                _mypdfDocument=_pdfLoader.LoadPDF(this, this, _pdfFile);
 
                 _loaded = true;
 
