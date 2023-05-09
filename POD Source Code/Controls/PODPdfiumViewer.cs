@@ -12,8 +12,7 @@ namespace POD.Controls
         IPDFLoader _pdfLoader;
         string _pdfFile;
         bool _loaded;
-        IPdfDocument _mypdfDoucment;
-        //PdfRenderer _myPdfRender;
+        IPdfDocument _mypdfDocument;
         public string PdfFileName
         {
             get { return _pdfFile; }
@@ -59,8 +58,8 @@ namespace POD.Controls
             if (keyData == Keys.End)
             {
                 //GoToLastPage();
-                //Renderer.Page = _mypdfDoucment.PageCount;
-                Page = _mypdfDoucment.PageCount;
+                //Renderer.Page = _mypdfDocument.PageCount;
+                Page = _mypdfDocument.PageCount;
                 return true;
             }
 
@@ -99,7 +98,7 @@ namespace POD.Controls
         {
             if (!_loaded)
             {
-                _mypdfDoucment=_pdfLoader.LoadPDF(this, _pdfFile);
+                _mypdfDocument=_pdfLoader.LoadPDF(this, _pdfFile);
 
                 _loaded = true;
 
@@ -110,9 +109,9 @@ namespace POD.Controls
         public int PageCount
         {
             get {                
-                if(_mypdfDoucment != null)
+                if(_mypdfDocument != null)
                 {
-                    return _mypdfDoucment.PageCount;
+                    return _mypdfDocument.PageCount;
                 }
                 else
                 {
@@ -124,9 +123,9 @@ namespace POD.Controls
         {
             get
             {
-                if(_mypdfDoucment != null)
+                if(_mypdfDocument != null)
                 {
-                    return _mypdfDoucment.Bookmarks;
+                    return _mypdfDocument.Bookmarks;
                 }
                 else
                 {

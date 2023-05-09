@@ -9,10 +9,10 @@ namespace POD.Controls
 
         public IPdfDocument LoadPDF(IWin32Window owner, string pdfFile)
         {
-            PdfDocument mypdfDoucment = PdfDocument.Load(owner, pdfFile);
+            PdfDocument mypdfDocument = PdfDocument.Load(owner, pdfFile);
             // Load PDF Document into WinForms Control
-            Load(mypdfDoucment);
-            return mypdfDoucment;
+            Load(mypdfDocument);
+            return mypdfDocument;
         }
     }
     public interface IPDFLoader
