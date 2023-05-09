@@ -263,6 +263,54 @@ namespace Controls.UnitTests
             podListBoxItem.ResponseColumnName = myName.Split('.')[myName.Split('.').Length - 1];
             return podListBoxItem;
         }
+        /// <summary>
+        /// Tests for FitAllRows(int myMaxCount) function
+        
+        /// </summary>
+        [Test]
+        public void FitAllRows_NoRowsInListBox_HeightDefaultReturned()
+        {
+            //Arrange
+            PODListBox podListBox = new PODListBox();
+            //Act
+            podListBox.FitAllRows(It.IsAny<int>());
+            //Assert
+            /// Default Height is 150
+            Assert.That(podListBox.Height, Is.EqualTo(150));
+        }
+        [Test]
+        [TestCase(0, 3)]
+        [TestCase(1, 25)]
+        [TestCase(2, 47)]
+        [TestCase(3, 69)]
+        public void FitAllRows_RowsAreInListBoxAndMaxCountIsLessthanOrEqualToRowCount_NewHeightReturned(int maxCount, int exectedHeight)
+        {
+            //Arrange
+            PODListBox podListBox = AddPODListBoxItems(new PODListBox());
+            //Act
+            podListBox.FitAllRows(maxCount);
+            //Assert
+            Assert.That(podListBox.Height, Is.EqualTo(exectedHeight));
+        }
+        [Test]
+        [TestCase(4, 69)]
+        [TestCase(5, 69)]
+        public void FitAllRows_RowsAreInListBoxAndMaxCountIsGreaterThanRowCount_NewHeightReturnsTheSameValue(int maxCount, int exectedHeight)
+        {
+            //Arrange
+            PODListBox podListBox = AddPODListBoxItems(new PODListBox());
+            //Act
+            podListBox.FitAllRows(maxCount);
+            //Assert
+            Assert.That(podListBox.Height, Is.EqualTo(exectedHeight));
+        }
+        private PODListBox AddPODListBoxItems(PODListBox podListBox)
+        {
+            podListBox.Rows.Add(new DataGridViewRow());
+            podListBox.Rows.Add(new DataGridViewRow());
+            podListBox.Rows.Add(new DataGridViewRow());
+            return podListBox;
+        }
 
     }
 }

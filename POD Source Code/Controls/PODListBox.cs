@@ -314,7 +314,7 @@ namespace POD.Controls
                 var rowCount = Rows.Count;
                 var rowHeight = (double)rowsHeight / (double)rowCount;
 
-                if (rowCount > myMaxCount)
+                if (myMaxCount <= rowCount)
                     rowCount = myMaxCount;
 
                 Height = Convert.ToInt32(rowCount * rowHeight) + 3;
