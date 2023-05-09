@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Moq;
-using System.Windows.Forms.DataVisualization.Charting;
 using POD.Controls;
 using POD;
-using System.Data;
 using POD.Data;
-using System.Drawing;
 
 namespace Controls.UnitTests
 {

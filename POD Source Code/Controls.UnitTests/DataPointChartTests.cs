@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Moq;
 using System.Windows.Forms.DataVisualization.Charting;
 using POD.Controls;
 using POD;
-using System.Data;
 using System.Windows.Forms;
 using System.Drawing;
-using System.IO;
 using System.Reflection;
 using POD.Data;
 
