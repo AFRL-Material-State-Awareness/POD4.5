@@ -70,25 +70,15 @@ namespace POD.Controls
 
         private int suspendCounter = 0;
 
-        //gets either the first selected row or it selectes the first row
+        //g7ets either the first selected row or it selectes the first row
         public PODListBoxItem SingleSelectedItem
         {
             get
             {
-                if (Rows.Count > 0)
-                {
-                    if (SelectedRows.Count > 0)
-                        return SelectedRows[0].Cells[0].Value as PODListBoxItem;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
-                }
-
-                return null;
+                if(Rows.Count > 0 && SelectedRows?.Count > 0)
+                    return SelectedRows[0].Cells[0].Value as PODListBoxItem;
+                else
+                    return null;
             }
         }
 
@@ -97,20 +87,10 @@ namespace POD.Controls
         {
             get
             {
-                if (Rows.Count > 0)
-                {
-                    if (SelectedRows.Count > 0)
-                        return SelectedRows[0].Cells[0].Value as PODListBoxItemWithProps;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
-                }
-
-                return null;
+                if(Rows.Count > 0 && SelectedRows?.Count > 0)
+                    return SelectedRows[0].Cells[0].Value as PODListBoxItemWithProps;
+                else
+                    return null;
             }
         }
 
@@ -119,25 +99,15 @@ namespace POD.Controls
         {
             get
             {
-                if (Rows.Count > 0)
-                {
-                    if (SelectedRows.Count > 0)
-                        return SelectedRows[0].Index;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
-                }
-
-                return -1;
+                if(Rows.Count > 0 && SelectedRows?.Count > 0)
+                    return SelectedRows[0].Index;
+                else
+                    return -1;
             }
 
             set
             {
-                if (Rows.Count > 0 && value >= 0 && value < Rows.Count)
+                if (value >= 0 && value < Rows.Count)
                 {
                     if(MultiSelect == true)
                     {
@@ -148,13 +118,6 @@ namespace POD.Controls
                     }
 
                     Rows[value].Selected = true;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
                 }
             }
         }
@@ -304,24 +267,6 @@ namespace POD.Controls
 
                 return CreateAutoName(names);
             }
-        }
-
-
-        public List<string> GetSelectedRowsAsTextList()
-        {
-            List<string> names = new List<string>();
-
-            foreach (DataGridViewRow row in SelectedRows)
-            {
-                PODListBoxItem obj = (PODListBoxItem)row.Cells[0].Value;
-
-                names.Add(obj.ToString());
-            }
-
-            //reverse because SelectedRows row order is in the opposite order of what we want
-            names.Reverse();
-
-            return names;
         }
 
         public bool GetSelected(int myIndex)
