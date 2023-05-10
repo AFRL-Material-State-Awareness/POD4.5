@@ -1030,14 +1030,9 @@ namespace POD.Controls
                 {
                     var status = row.Cells[2].Tag as CellTag;
                     var rowStatus = row.Tag as RowTag;
-
-                    if(status != null && rowStatus != null)
-                    {
-                        if (status.Status == CellStatus.Valid && rowStatus.Status == RowStatus.Valid)
-                            rowCount++;
-                    }
+                    if (status?.Status == CellStatus.Valid && rowStatus?.Status == RowStatus.Valid)
+                        rowCount++;
                 }
-
                 return rowCount;
             }
         }
