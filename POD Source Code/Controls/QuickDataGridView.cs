@@ -281,17 +281,12 @@ namespace POD.Controls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            base.OnKeyDown(e);
-
-            
-
-            
+            base.OnKeyDown(e);         
         }
 
         private void RaiseRunAnalysis()
         {
-            if (RunAnalysis != null)
-                RunAnalysis.Invoke(this, null);
+            RunAnalysis?.Invoke(this, null);
         }
 
         public void PrepareDataColumns(DataColumnCollection collection)
@@ -763,45 +758,14 @@ namespace POD.Controls
         {
             return grid.DefaultCellStyle.BackColor;
         }
-
-        public static Color IDColor
-        {
-            get
-            {
-                //nice blue
-                return Color.FromArgb(204, 235, 255);
-            }
-        }
-
-        public static Color MetaColor
-        {
-            get
-            {
-                //nice dark blue
-                return Color.FromArgb(190, 198, 247);
-                //return Color.FromArgb(255, 245, 201);
-            }
-        }
-
-        public static Color FlawColor
-        {
-            get
-            {
-                //nice dark green
-                return Color.FromArgb(84, 184, 96);
-            }
-        }
-
-        public static Color ResponseColor
-        {
-            get
-            {
-                //nice green
-                return Color.FromArgb(166, 237, 175);
-                ////nice purple
-                //return Color.FromArgb(214, 171, 255);
-            }
-        }
+        //nice blue
+        public static Color IDColor => Color.FromArgb(204, 235, 255);
+        //nice dark blue
+        public static Color MetaColor => Color.FromArgb(190, 198, 247);
+        //nice dark green
+        public static Color FlawColor => Color.FromArgb(84, 184, 96);
+        //nice green
+        public static Color ResponseColor => Color.FromArgb(166, 237, 175);
 
         private RowStatus CheckRowStatus(DataGridViewRow row)
         {
@@ -1015,23 +979,6 @@ namespace POD.Controls
 
             return cell;
         }
-
-        /*protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == (Keys.Control | Keys.V))
-            {
-                if(EditingControl == null)
-                {
-                    if (ControlV != null)
-                    {
-                        ControlV.Invoke(this, null);
-                    }
-                }
-
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }*/
 
         /// <summary>
         /// Forces double buffer.
