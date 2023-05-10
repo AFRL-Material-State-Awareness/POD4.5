@@ -7,6 +7,7 @@ using POD.Controls;
 using NUnit.Framework;
 using Moq;
 using System.Windows.Forms;
+using POD;
 
 namespace Controls.UnitTests
 {
@@ -15,6 +16,7 @@ namespace Controls.UnitTests
     {
         private QuickDataGridView _quickDGView;
         private Mock<DataPointChart> _chart;
+        private bool _runAnalysisFired;
         [SetUp]
         public void Setup()
         {
@@ -33,6 +35,7 @@ namespace Controls.UnitTests
                 _quickDGView.Columns.Add(datagidcolumn);
             } 
             _chart = new Mock<DataPointChart>();
+            _runAnalysisFired = false;
 
         }
         /// <summary>
@@ -89,6 +92,24 @@ namespace Controls.UnitTests
             _chart.Verify(c => c.ForceResizeAnnotations(), Times.Never);
         }
 
-        /// Tests for the void PasteFromClipboard(IPasteFromClipBoardWrapper clipboardPaster=null) function
+        /// Test for the void PasteFromClipboard(IPasteFromClipBoardWrapper clipboardPaster=null) function
+        [Test]
+        public void PasteFromClipboard_ValidDataPastedFromClipBoard_CallsPasteToClipBoardDependencyAndRaisesRunAnalysis()
+        {
+            //Arrange
+            Mock<IPasteFromClipBoardWrapper> pasteFromClipboard = new Mock<IPasteFromClipBoardWrapper>();
+            pasteFromClipboard.Setup(cb => cb.GetClipBoardContents(It.IsAny<TextDataFormat>())).Returns("ClipBoardContents");
+            _quickDGView.RunAnalysis = null;
+            _quickDGView.RunAnalysis += RunAnalysis;
+            //Act
+            _quickDGView.PasteFromClipboard(pasteFromClipboard.Object);
+            //Assert
+            pasteFromClipboard.Verify(cb => cb.GetClipBoardContents(It.IsAny<TextDataFormat>()));
+            Assert.That(_runAnalysisFired, Is.True);
+        }
+        private void RunAnalysis(object sender, EventArgs args)
+        {
+            _runAnalysisFired = true;
+        }
     }
 }
