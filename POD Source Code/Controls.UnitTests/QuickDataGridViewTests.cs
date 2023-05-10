@@ -21,8 +21,10 @@ namespace Controls.UnitTests
         public void Setup()
         {
             _quickDGView = new QuickDataGridView();
+           
             _quickDGView.AutoGenerateColumns = false;
             // There needs to be three cells per row, so this for loop will generate three columns
+            // Note that adding these columns will set the datagridview row count to 1 by default
             for(int i =0; i < 3; i++)
             {
                 DataGridViewColumn datagidcolumn = new DataGridViewColumn()
@@ -33,7 +35,7 @@ namespace Controls.UnitTests
                     CellTemplate = new DataGridViewTextBoxCell()
                 };
                 _quickDGView.Columns.Add(datagidcolumn);
-            } 
+            }
             _chart = new Mock<DataPointChart>();
             _runAnalysisFired = false;
 
@@ -110,6 +112,83 @@ namespace Controls.UnitTests
         private void RunAnalysis(object sender, EventArgs args)
         {
             _runAnalysisFired = true;
+        }
+
+        /// skipping tests for GridCheckForProblems()  for now
+        /// need to ask Tom about this
+        /// 
+
+        /// Tests for ValidResponsRowCount getter
+        [Test]
+        public void ValidResponsRowCount_RowCountIsLessThanOrEqualTo1_Returns0()
+        {
+            //Act
+            var result=_quickDGView.ValidResponsRowCount;
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        [TestCase(RowStatus.Valid, CellStatus.Valid, 2)]
+        [TestCase(RowStatus.Invalid, CellStatus.Valid, 1)]
+        [TestCase(RowStatus.Valid, CellStatus.Invalid, 1)]
+        [TestCase(RowStatus.Invalid, CellStatus.Invalid, 1)]
+        public void ValidResponseRowCount_RowCountIsGreaterThan1AndStatusIsCellTagAndRowStatusIsRowTag_ReturnsARowCountOf1(RowStatus rowStatus,
+                                                                                                                           CellStatus cellStatus,
+                                                                                                                           int expectedRowCount)
+        {
+            //Arrange
+            //Row will always be added to count     
+            _quickDGView.Rows[0].Tag = new RowTag(RowStatus.Valid);
+            _quickDGView.Rows[0].Cells[2].Tag = new CellTag(CellStatus.Valid);
+            //Row may or may not be added to count
+            DataGridViewRow myRow = new DataGridViewRow();
+            _quickDGView.Rows.Add(myRow);
+            _quickDGView.Rows[1].Tag= new RowTag(rowStatus);
+            _quickDGView.Rows[1].Cells[2].Tag = new CellTag(cellStatus);
+            //Act
+            var result = _quickDGView.ValidResponsRowCount;
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedRowCount));
+        }
+        [Test]
+        public void ValidResponseRowCount_RowCountIsGreaterThan1AndStatusIsNotCellTagAndRowStatusIsNotRowTag_ReturnsARowCountOf0()
+        {
+            //Arrange
+            //Flipped the assignments in order for them both to be invalid tags
+            _quickDGView.Rows[0].Tag = new CellTag(CellStatus.Valid);
+            _quickDGView.Rows[0].Cells[2].Tag = new RowTag(RowStatus.Valid);
+            //Act
+            var result = _quickDGView.ValidResponsRowCount;
+            //Assert
+            Assert.That(result, Is.EqualTo(0));
+        }
+        /// Tests for DeleteSelectedRow() function
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void DeleteSelectedRow_NoUserAddedRows_RowIsNeverRemovedEvenIfSelected(bool rowSelected)
+        {
+            //Arrange
+            _quickDGView.Rows[0].Selected = rowSelected;
+            //Act
+            _quickDGView.DeleteSelectedRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.EqualTo(1));
+        }
+        [Test]
+        [TestCase(1, false, 2)]
+        [TestCase(1, true, 2)]
+        [TestCase(0, false, 2)]
+        [TestCase(0, true, 1)]
+        public void DeleteSelectedRow_UserAddedRows_RowIsRemovedIfItIsSelectedAndNotTheLastRow(int rowSelectedIndex, bool rowSelected, int expectedRows)
+        {
+            //Arrange
+            _quickDGView.Rows.Add(new DataGridViewRow());
+            _quickDGView.Rows[rowSelectedIndex].Selected = rowSelected;
+            //Act
+            _quickDGView.DeleteSelectedRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.EqualTo(expectedRows));
         }
     }
 }
