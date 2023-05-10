@@ -418,9 +418,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Show Normality.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Show Normality.png.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
