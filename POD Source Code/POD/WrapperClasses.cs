@@ -50,14 +50,14 @@ namespace POD
         }
     }
 
-    public class PasteToClipBoardWrapper : IPasteToClipBoardWrapper
+    public class PasteFromClipBoardWrapper : IPasteFromClipBoardWrapper
     {
         public string GetClipBoardContents(TextDataFormat format)
         {
             return Clipboard.GetText(format);
         }
     }
-    public interface IPasteToClipBoardWrapper
+    public interface IPasteFromClipBoardWrapper
     {
         string GetClipBoardContents(TextDataFormat format);
     }

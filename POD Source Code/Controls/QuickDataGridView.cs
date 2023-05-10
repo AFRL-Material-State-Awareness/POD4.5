@@ -331,11 +331,11 @@ namespace POD.Controls
             return result;
         }
 
-        public void PasteFromClipboard(IPasteToClipBoardWrapper clipboardPaster=null)
+        public void PasteFromClipboard(IPasteFromClipBoardWrapper clipboardPaster=null)
         {
-            var pasteToClipboard = clipboardPaster ?? new PasteToClipBoardWrapper();
+            var pasteFromClipboard = clipboardPaster ?? new PasteFromClipBoardWrapper();
 
-            var clipboardContents = pasteToClipboard.GetClipBoardContents(TextDataFormat.Rtf);
+            var clipboardContents = pasteFromClipboard.GetClipBoardContents(TextDataFormat.Rtf);
             this.UpdateDataTable(clipboardContents);
 
             RaiseRunAnalysis();

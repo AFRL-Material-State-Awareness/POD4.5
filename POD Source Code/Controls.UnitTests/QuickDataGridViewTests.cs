@@ -89,6 +89,6 @@ namespace Controls.UnitTests
             _chart.Verify(c => c.ForceResizeAnnotations(), Times.Never);
         }
 
-        /// Tests for the void PasteFromClipboard(IPasteToClipBoardWrapper clipboardPaster=null) function
+        /// Tests for the void PasteFromClipboard(IPasteFromClipBoardWrapper clipboardPaster=null) function
     }
 }
