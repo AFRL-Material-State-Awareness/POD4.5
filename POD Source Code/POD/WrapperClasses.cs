@@ -49,4 +49,16 @@ namespace POD
             return new StreamReader(path, encoding);
         }
     }
+
+    public class PasteToClipBoardWrapper : IPasteToClipBoardWrapper
+    {
+        public string GetClipBoardContents(TextDataFormat format)
+        {
+            return Clipboard.GetText(format);
+        }
+    }
+    public interface IPasteToClipBoardWrapper
+    {
+        string GetClipBoardContents(TextDataFormat format);
+    }
 }
