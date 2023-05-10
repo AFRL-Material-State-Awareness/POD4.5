@@ -72,12 +72,10 @@ namespace POD.Controls
                 series.BorderWidth = 2;
                 series.BorderDashStyle = ChartDashStyle.Solid;
                 series.Color = System.Drawing.Color.FromArgb(ChartColors.AreaAlpha, ChartColors.a9095Color);
-                //series.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No;
                 series.SmartLabelStyle.MovingDirection = LabelAlignmentStyles.TopRight;
                 series.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box;
                 series.SmartLabelStyle.CalloutBackColor = Color.White;
                 series.SmartLabelStyle.CalloutLineAnchorCapStyle = LineAnchorCapStyle.None;
-                //series.SmartLabelStyle.CalloutLineWidth = 0;
             }
 
             if (Series.FindByName(PODThresholdChartLabels.a9095Line) == null)
@@ -91,12 +89,10 @@ namespace POD.Controls
                 series.BorderWidth = 2;
                 series.BorderDashStyle = ChartDashStyle.Dot;
                 series.Color = System.Drawing.Color.FromArgb(ChartColors.LineAlpha, ChartColors.a9095Color);
-                //series.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No;
                 series.SmartLabelStyle.MovingDirection = LabelAlignmentStyles.TopRight;
                 series.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box;
                 series.SmartLabelStyle.CalloutBackColor = Color.White;
                 series.SmartLabelStyle.CalloutLineAnchorCapStyle = LineAnchorCapStyle.None;
-                //series.SmartLabelStyle.CalloutLineWidth = 0;
             }
 
             if (Series.FindByName(PODThresholdChartLabels.a90Area) == null)
@@ -110,12 +106,10 @@ namespace POD.Controls
                 series.BorderWidth = 2;
                 series.BorderDashStyle = ChartDashStyle.Solid;
                 series.Color = System.Drawing.Color.FromArgb(ChartColors.AreaAlpha, ChartColors.a90Color);
-                //series.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No;
                 series.SmartLabelStyle.MovingDirection = LabelAlignmentStyles.TopRight;
                 series.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box;
                 series.SmartLabelStyle.CalloutBackColor = Color.White;
                 series.SmartLabelStyle.CalloutLineAnchorCapStyle = LineAnchorCapStyle.None;
-                //series.SmartLabelStyle.CalloutLineWidth = 0;
             }
 
             if (Series.FindByName(PODThresholdChartLabels.a90Line) == null)
@@ -129,12 +123,10 @@ namespace POD.Controls
                 series.BorderWidth = 2;
                 series.BorderDashStyle = ChartDashStyle.Dot;
                 series.Color = System.Drawing.Color.FromArgb(ChartColors.LineAlpha, ChartColors.a90Color);
-                //series.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No;
                 series.SmartLabelStyle.MovingDirection = LabelAlignmentStyles.TopRight;
                 series.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box;
                 series.SmartLabelStyle.CalloutBackColor = Color.White;
                 series.SmartLabelStyle.CalloutLineAnchorCapStyle = LineAnchorCapStyle.None;
-                //series.SmartLabelStyle.CalloutLineWidth = 0;
             }
 
             if (Series.FindByName(PODThresholdChartLabels.a50Area) == null)
@@ -148,12 +140,10 @@ namespace POD.Controls
                 series.BorderWidth = 2;
                 series.BorderDashStyle = ChartDashStyle.Solid;
                 series.Color = System.Drawing.Color.FromArgb(ChartColors.AreaAlpha, ChartColors.a50Color);
-                //series.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No;
                 series.SmartLabelStyle.MovingDirection = LabelAlignmentStyles.TopRight;
                 series.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box;
                 series.SmartLabelStyle.CalloutBackColor = Color.White;
                 series.SmartLabelStyle.CalloutLineAnchorCapStyle = LineAnchorCapStyle.None;
-                //series.SmartLabelStyle.CalloutLineWidth = 0;
             }
 
             if (Series.FindByName(PODThresholdChartLabels.a50Line) == null)
@@ -167,12 +157,10 @@ namespace POD.Controls
                 series.BorderWidth = 2;
                 series.BorderDashStyle = ChartDashStyle.Dot;
                 series.Color = System.Drawing.Color.FromArgb(ChartColors.LineAlpha, ChartColors.a50Color);
-                //series.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No;
                 series.SmartLabelStyle.MovingDirection = LabelAlignmentStyles.TopRight;
                 series.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box;
                 series.SmartLabelStyle.CalloutBackColor = Color.White;
                 series.SmartLabelStyle.CalloutLineAnchorCapStyle = LineAnchorCapStyle.None;
-                //series.SmartLabelStyle.CalloutLineWidth = 0;
             }
 
             if (Series.FindByName(PODThresholdChartLabels.POD9095) == null)
@@ -219,10 +207,6 @@ namespace POD.Controls
 
             ChartAreas[0].AxisY.MajorGrid.Enabled = false;
             ChartAreas[0].AxisX.MajorGrid.Enabled = false;
-
-            //Titles[0].Text = "Threshold Plot";
-            //ChartAreas[0].AxisX.Title = "Decision Threshold";
-            //ChartAreas[0].AxisY.Title = "Crack Size (mils)";
 
             XAxisNameIsUnitlessConstant = true;
             YAxisNameIsUnitlessConstant = true;
@@ -322,20 +306,13 @@ namespace POD.Controls
 
         public void FillChart(IAnalysisData myData)
         {
-            //_lastUsedData = myData;
-
             DataView view = myData.ThresholdPlotTable.DefaultView;
             
-            //POD90.Points.DataBindXY(view, "threshold", view, "level");
             POD90.Points.DataBindXY(view, "threshold", view, "a90");
-            //POD90.Points.DataBindXY(view, "transformThreshold", view, "a90");
             POD9095.Points.DataBindXY(view, "threshold", view, "a9095");
-            //POD9095.Points.DataBindXY(view, "transformThreshold", view, "a9095");
 
             DataView all_view = myData.ThresholdPlotTable_All.DefaultView;
-            //POD90_All.Points.DataBindXY(all_view, "threshold", all_view, "level");
             POD90_All.Points.DataBindXY(all_view, "threshold", all_view, "a90");
-            //POD9095_All.Points.DataBindXY(all_view, "threshold", all_view, "confidence");
             POD9095_All.Points.DataBindXY(all_view, "threshold", all_view, "a9095");
             //no point in plotting a 90/95 that couldn't be calculated (zeroed out by analysis code)
             if (POD9095.Points.Count > 0 && POD9095.Points.First().YValues[0] + POD9095.Points.Last().YValues[0] == 0.0)
