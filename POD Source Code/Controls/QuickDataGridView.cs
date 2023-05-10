@@ -231,14 +231,6 @@ namespace POD.Controls
             return (myRow.Index + 1).ToString();
         }
 
-        public DataGridViewRow RowBefore(DataGridViewRow myRow)
-        {
-            if (myRow.Index == 0)
-                return null;
-            else
-                return Rows[myRow.Index - 1];
-        }
-
         public DataGridViewRow LastDataRow
         {
             get
@@ -324,27 +316,26 @@ namespace POD.Controls
         {
             var result = ValidResponsRowCount >= 8;
 
-            if (!result)
+            if (!result && chart != null && analysisName != null)
             {
-                if (chart != null && analysisName != null)
-                {
-                    chart.ResetErrors();
-                    chart.AddError(new ErrorArgs(analysisName, "Need at least 8 valid data points"));
-                    chart.AddError(new ErrorArgs(analysisName, "before an analysis can be run."));
-                    chart.AddError(new ErrorArgs(analysisName, string.Format("The table currently has {0}.", ValidResponsRowCount)));
-                    chart.AddError(new ErrorArgs(analysisName, "Please add more points to the table."));
-                    chart.FinalizeErrors(new ErrorArgs(analysisName, ""));
-                    chart.ForceResizeAnnotations();
-                }
+                chart.ResetErrors();
+                chart.AddError(new ErrorArgs(analysisName, "Need at least 8 valid data points"));
+                chart.AddError(new ErrorArgs(analysisName, "before an analysis can be run."));
+                chart.AddError(new ErrorArgs(analysisName, string.Format("The table currently has {0}.", ValidResponsRowCount)));
+                chart.AddError(new ErrorArgs(analysisName, "Please add more points to the table."));
+                chart.FinalizeErrors(new ErrorArgs(analysisName, ""));
+                //Leave this function here for testing purposes
+                chart.ForceResizeAnnotations();
             }
 
             return result;
         }
 
-        public void PasteFromClipboard()
+        public void PasteFromClipboard(IPasteToClipBoardWrapper clipboardPaster=null)
         {
-            var clipboardContents = Clipboard.GetText(TextDataFormat.Rtf);
+            var pasteToClipboard = clipboardPaster ?? new PasteToClipBoardWrapper();
 
+            var clipboardContents = pasteToClipboard.GetClipBoardContents(TextDataFormat.Rtf);
             this.UpdateDataTable(clipboardContents);
 
             RaiseRunAnalysis();
@@ -352,7 +343,6 @@ namespace POD.Controls
 
         private void UpdateDataTable(string clipboardContents)
         {
-            //var addedColumn = false;
             var tempTable = DataHelpers.GetTableFromRtfString(clipboardContents);
 
             if (tempTable.Rows.Count == 0)
