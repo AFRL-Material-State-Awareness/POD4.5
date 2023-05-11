@@ -346,9 +346,7 @@ namespace POD.Controls
 
         public void DeterminePointsInThreshold()
         {
-            MoveLine(_aMaxLine, _aMinLine);
-
-            
+            MoveLine(_aMaxLine, _aMinLine);      
         }
 
         public void DrawEquation()
@@ -919,21 +917,15 @@ namespace POD.Controls
                 LinesChanged(this, e);
             }
         }
-
-        public void PickBestAxisRange(double myTransformedResponseMin, double myTransformedResponseMax, double myTransformedFlawMin, double myTransformedFlawMax)
+        // IAxisObjects are injected dependencies for unit testing purposes
+        public void PickBestAxisRange(double myTransformedResponseMin, 
+            double myTransformedResponseMax, double myTransformedFlawMin, double myTransformedFlawMax,
+            IAxisObject xaxisT = null, IAxisObject yAxisT = null)
         {
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            IAxisObject xAxis = xaxisT ?? new AxisObject();
+            IAxisObject yAxis = yAxisT ?? new AxisObject();
 
-            //myResponseMin = _analysisData.TransformValueForYAxis(myResponseMin);
-            //myResponseMax = _analysisData.TransformValueForYAxis(myResponseMax);
-
-            //myFlawMin = _analysisData.TransformValueForXAxis(myFlawMin);
-            //myFlawMax = _analysisData.TransformValueForXAxis(myFlawMax);
-
-            _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
-
-            
+            _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);           
 
             if(yAxis.Max < myTransformedResponseMax)
                 yAxis.Max = myTransformedResponseMax;
@@ -955,11 +947,13 @@ namespace POD.Controls
             }
             else
             {
-                AnalysisData.GetBufferedRange(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
+                //AnalysisData.GetBufferedRange(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
+                GetBufferedRangeWrapper(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
             }
 
-            AnalysisData.GetBufferedRange(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
-            if(_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+            //AnalysisData.GetBufferedRange(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
+            GetBufferedRangeWrapper(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
+            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
                 RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
                               _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
                               _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
@@ -967,12 +961,7 @@ namespace POD.Controls
                 RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
                               _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, 
                               _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
-            //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-            //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
         }
-
         public void PickBestAxisRange()
         {
             AxisObject yAxis = new AxisObject();
@@ -980,8 +969,6 @@ namespace POD.Controls
 
             _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
 
-            //RelabelAxes(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis, 
-            //            _analysisData.InvertTransformValueForYAxis, 10, 10);
             if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
                 RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
                               _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
@@ -996,11 +983,6 @@ namespace POD.Controls
                     ChartAreas[0].AxisX.Minimum = 0;
                 }
             }
-            
-            //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-            //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
         }
 
         
