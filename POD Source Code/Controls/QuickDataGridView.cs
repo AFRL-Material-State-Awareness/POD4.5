@@ -1055,7 +1055,6 @@ namespace POD.Controls
             if (SelectedCells.Count > 0)
             {
                 var cell = SelectedCells[0];
-                var row = Rows[cell.RowIndex];
                 var colIndex = cell.ColumnIndex;
                 
                 if (IsAddByUserRow(cell.RowIndex))
@@ -1080,11 +1079,8 @@ namespace POD.Controls
                 else
                 {
                     Rows.Insert(LastDataRow.Index, 1);
-                    CurrentCell = Rows[LastDataRow.Index].Cells[0];
-                    
+                    CurrentCell = Rows[LastDataRow.Index].Cells[0];                
                 }
-
-                
             }
 
             CurrentCell.Selected = true;

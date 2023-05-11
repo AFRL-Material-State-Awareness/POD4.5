@@ -36,6 +36,8 @@ namespace Controls.UnitTests
                 };
                 _quickDGView.Columns.Add(datagidcolumn);
             }
+            //Set a ToolTip to prevent any null reference exception
+            _quickDGView.ToolTip = new ToolTip();
             _chart = new Mock<DataPointChart>();
             _runAnalysisFired = false;
 
@@ -189,6 +191,76 @@ namespace Controls.UnitTests
             _quickDGView.DeleteSelectedRow();
             //Assert
             Assert.That(_quickDGView.Rows.Count, Is.EqualTo(expectedRows));
+        }
+        /// Tests for AddRow() function
+        [Test]
+        public void AddRow_NoSelectedCellsAndLastDataRowIsNull_InsertsRowAtIndexZeroAndSetsCurrentCellToFirstCellInTheFirstRow()
+        {
+            //Arrange
+            //Act
+            _quickDGView.AddRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.GreaterThan(1));
+            Assert.That(_quickDGView.CurrentCell.RowIndex, Is.Zero);
+            Assert.That(_quickDGView.CurrentCell.ColumnIndex, Is.Zero);
+            Assert.That(_quickDGView.CurrentCell.Selected, Is.True);
+        }
+        /// Tests for AddRow() function
+        [Test]
+        public void AddRow_NoSelectedCellsAndLastDataRowIsNOTNull_InsertsRowAtLastColumnIndexAndSetsCurrentCellToTheRowAndColumnIndexOfLastDataRow()
+        {
+            //Arrange
+            _quickDGView.Rows.Add(new DataGridViewRow());
+            //Act
+            _quickDGView.AddRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.GreaterThan(2));
+            Assert.That(_quickDGView.CurrentCell.RowIndex, Is.EqualTo(1));
+            Assert.That(_quickDGView.CurrentCell.ColumnIndex, Is.Zero);
+            Assert.That(_quickDGView.CurrentCell.Selected, Is.True);
+        }
+        [Test]
+        public void AddRow_SelectedCellsAndIsAddByUserRowTrueWithLastDataRowNull_InsertsRowInFrontOfTheIndexOfTheFirstSelectedCell()
+        {
+            //Arrange
+            _quickDGView.Rows[0].Cells[0].Selected = true;
+            //Act
+            _quickDGView.AddRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.GreaterThan(1));
+            Assert.That(_quickDGView.CurrentCell.RowIndex, Is.Zero);
+            Assert.That(_quickDGView.CurrentCell.ColumnIndex, Is.Zero);
+            Assert.That(_quickDGView.CurrentCell.Selected, Is.True);
+        }
+        [Test]
+        public void AddRow_SelectedCellsAndIsAddByUserRowTrueWithLastDataRowNOTNull_InsertsRowInFrontOfTheIndexOfTheFirstSelectedCell()
+        {
+            //Arrange
+            _quickDGView.Rows.Add(new DataGridViewRow());
+            //IsAddByUserRow(cell.RowIndex) will be true
+            _quickDGView.Rows[1].Cells[1].Selected = true;
+            //Act
+            _quickDGView.AddRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.GreaterThan(2));
+            Assert.That(_quickDGView.CurrentCell.RowIndex, Is.EqualTo(1));
+            Assert.That(_quickDGView.CurrentCell.ColumnIndex, Is.EqualTo(1));
+            Assert.That(_quickDGView.CurrentCell.Selected, Is.True);
+        }
+        [Test]
+        public void AddRow_SelectedCellsAndIsAddByUserRowIsFalse_InsertsRowBelowTheIndexOfTheFirstSelectedCell()
+        {
+            //Arrange
+            _quickDGView.Rows.Add(new DataGridViewRow());
+            //IsAddByUserRow(cell.RowIndex) will be false because The selected cell is in the first cell of two rows and LastDataRow is not null
+            _quickDGView.Rows[0].Cells[0].Selected = true;
+            //Act
+            _quickDGView.AddRow();
+            //Assert
+            Assert.That(_quickDGView.Rows.Count, Is.GreaterThan(2));
+            Assert.That(_quickDGView.CurrentCell.RowIndex, Is.EqualTo(0));
+            Assert.That(_quickDGView.CurrentCell.ColumnIndex, Is.EqualTo(0));
+            Assert.That(_quickDGView.CurrentCell.Selected, Is.True);
         }
     }
 }
