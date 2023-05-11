@@ -947,11 +947,9 @@ namespace POD.Controls
             }
             else
             {
-                //AnalysisData.GetBufferedRange(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
                 GetBufferedRangeWrapper(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
             }
 
-            //AnalysisData.GetBufferedRange(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
             GetBufferedRangeWrapper(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
             if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
                 RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
