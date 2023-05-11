@@ -1106,6 +1106,11 @@ namespace POD.Controls
         //}
         #endregion
 
+        protected virtual void GetBufferedRangeWrapper(Control chart, IAxisObject myAxis, double myMin, double myMax, AxisKind kind)
+        {
+            AnalysisData.GetBufferedRange(chart, myAxis, myMin, myMax, kind);
+        }
+
         private void RefreshAxisLabelingBasedOnCurrentSize()
         {
             if(_xRelabel != null && _yRelabel != null)
