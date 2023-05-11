@@ -83,10 +83,5 @@ namespace POD.Controls
         {
             get { return _transformType; }
         }
-
-        public override string ToString()
-        {
-            return Label;
-        }
     }
 }
