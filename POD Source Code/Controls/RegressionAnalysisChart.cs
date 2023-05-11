@@ -193,7 +193,6 @@ namespace POD.Controls
         {
             if(e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
             {
-                //e.Text = "5";
             }
         }
 
@@ -201,30 +200,20 @@ namespace POD.Controls
         {
             var setAMax = new ToolStripMenuItem("Set Flaw Max. here");
 
-            
-
             setAMax.Click += (sender, e) => SetAMaxBoundaryMenu(sender, e, new DataPoint(x, y));
 
             var setAMin = new ToolStripMenuItem("Set Flaw Min. here");
 
             setAMin.Click += (sender, e) => SetAMinBoundaryMenu(sender, e, new DataPoint(x, y));
 
-            if (ContextMenuImageList != null )
+            // was >= 4, changed to >=6 because images[5] index out of range would occur
+            if (ContextMenuImageList?.Images.Count >= 6)
             {
-                if(ContextMenuImageList.Images.Count >= 4)
-                {
-                    setAMax.Image = ContextMenuImageList.Images[5];
-                    setAMin.Image = ContextMenuImageList.Images[4];
-                }
-                
+                setAMax.Image = ContextMenuImageList.Images[5];
+                setAMin.Image = ContextMenuImageList.Images[4];
             }
 
-            var menuItems = new List<ToolStripItem>
-            {
-                //new ToolStripSeparator(),
-                setAMax,
-                setAMin
-            };
+            var menuItems = new List<ToolStripItem> { setAMax, setAMin };
 
             return menuItems;
         }
@@ -277,9 +266,6 @@ namespace POD.Controls
                         dataPointLabel.Image = bitmap;
                         dataPointLabel.ImageScaling = ToolStripItemImageScaling.SizeToFit;
                     }
-
-                    //dataPointLabel.Enabled = false;
-                    //dataPointLabel.Paint += dataPointLabel_Paint;
 
                     if (panel != null)
                     {

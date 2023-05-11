@@ -68,6 +68,7 @@
     <Compile Include="PODTreeNodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickDataGridViewTests.cs" />
+    <Compile Include="RegressionAnalysisChartTests.cs" />
     <Compile Include="RelabelParamertsTests.cs" />
     <Compile Include="SamplingTypeBoxTests.cs" />
     <Compile Include="TransformBoxTests.cs" />
