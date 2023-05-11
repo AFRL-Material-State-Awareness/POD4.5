@@ -211,6 +211,55 @@ namespace Controls.UnitTests
             Assert.That(_regressionAnalysisChart.ThresholdLine.Y, Is.EqualTo(double.NaN));
         }
 
+        /// Tests for the bool FindValue(ControlLine line, ref double myValue) function
+        [Test]
+        [TestCase(ControlLine.AMax, 10.0)]
+        [TestCase(ControlLine.AMin, 20.0)]
+        [TestCase(ControlLine.Threshold, 30.0)]
+        public void FindValue_ControlLineIsValidAndValueIsNotNaN_ReturnsTrueAndAssignsTheXYValue(ControlLine controlLine, double expectedValue)
+        {
+            //Arrange
+            SetUpLineValues(10.0, 20.0, 30.0);
+            double myValue = -1.0;
+            //Act
+            var result=_regressionAnalysisChart.FindValue(controlLine, ref myValue);
+            //Assert
+            Assert.That(result, Is.True);
+            Assert.That(myValue, Is.EqualTo(expectedValue));
+        }
+        [Test]
+        [TestCase(ControlLine.AMax, 1.0)]
+        [TestCase(ControlLine.AMin, 2.0)]
+        [TestCase(ControlLine.Threshold, 3.0)]
+        public void FindValue_ControlLineIsValidAndValueIsNaN_ReturnsTrueAndTheXYAnchorValues(ControlLine controlLine, double expectedValue)
+        {
+            //Arrange
+            SetUpLineValues(double.NaN, double.NaN, double.NaN);
+            double myValue = -1.0;
+            //Act
+
+            var result=_regressionAnalysisChart.FindValue(controlLine, ref myValue);
+            //Assert
+            Assert.That(result, Is.True);
+            Assert.That(myValue, Is.EqualTo(expectedValue));
+        }
+        [Test]
+        public void FindValue_ControlLineIsInValid_ReturnsFalseAndAssignsNaN()
+        {
+            //Arrange
+            double myValue = -1.0;
+            //Act
+            var result=_regressionAnalysisChart.FindValue(ControlLine.LeftCensor, ref myValue);
+            //Assert
+            Assert.That(result, Is.False);
+            Assert.That(myValue, Is.EqualTo(double.NaN));
+        }
+        private void SetUpLineValues(double value1, double value2, double value3)
+        {
+            _regressionAnalysisChart.AMaxLine = new VerticalLineAnnotation() { X = value1, AnchorX = 1.0 };
+            _regressionAnalysisChart.AMinLine = new VerticalLineAnnotation() { X = value2, AnchorX = 2.0 };
+            _regressionAnalysisChart.ThresholdLine = new HorizontalLineAnnotation() { Y = value3, AnchorY = 3.0 };
+        }
     }
     public class FakeRegressionAnalysisChart : RegressionAnalysisChart
     {
