@@ -144,9 +144,9 @@ namespace POD.Data
         double InvertTransformedResponse(double myValue);
         int FlawCount { get; }
         int FlawCountUnique { get; }
-        void GetXYBufferedRanges(Control chart, AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed);
-        void GetYBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed);
-        void GetXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed);
+        void GetXYBufferedRanges(Control chart, IAxisObject myXAxis, IAxisObject myYAxis, bool myGetTransformed);
+        void GetYBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed);
+        void GetXBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed);
         void GetUncensoredXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed);
         AxisObject GetXBufferedRange(Control chart, bool myGetTransformed);
         AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed);

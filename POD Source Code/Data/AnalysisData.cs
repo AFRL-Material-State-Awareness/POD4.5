@@ -2607,7 +2607,7 @@ namespace POD.Data
             }
         }
 
-        public void GetXYBufferedRanges(Control chart, AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed)
+        public void GetXYBufferedRanges(Control chart, IAxisObject myXAxis, IAxisObject myYAxis, bool myGetTransformed)
         {
             GetXBufferedRange(chart, myXAxis, myGetTransformed);
             GetYBufferedRange(chart, myYAxis, myGetTransformed);
@@ -2686,7 +2686,7 @@ namespace POD.Data
             }
         }
 
-        public void GetYBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
+        public void GetYBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
 
@@ -2698,7 +2698,7 @@ namespace POD.Data
             GetBufferedRange(chart, myAxis, table, AxisKind.Y);
         }
 
-        public void GetXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
+        public void GetXBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
 
