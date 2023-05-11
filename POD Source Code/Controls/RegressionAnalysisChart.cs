@@ -578,34 +578,21 @@ namespace POD.Controls
 
         public virtual bool FindValue(ControlLine line, ref double myValue)
         {
-            double value;
-            double anchorValue;
-            bool foundLine = true;
-
             switch (line)
             {
                 case ControlLine.AMin:
-                    value = _aMinLine.X;
-                    anchorValue = _aMinLine.AnchorX;
-                    break;
+                    myValue = Double.IsNaN(_aMinLine.X) ? _aMinLine.AnchorX : _aMinLine.X;
+                    return true;
                 case ControlLine.AMax:
-                    value = _aMaxLine.X;
-                    anchorValue = _aMaxLine.AnchorX;
-                    break;
+                    myValue = Double.IsNaN(_aMaxLine.X) ? _aMaxLine.AnchorX : _aMaxLine.X;
+                    return true;
                 case ControlLine.Threshold:
-                    value = _thresholdLine.Y;
-                    anchorValue = _thresholdLine.AnchorY;
-                    break;
+                    myValue = Double.IsNaN(_thresholdLine.Y) ? _thresholdLine.AnchorY : _thresholdLine.Y;
+                    return true;
                 default:
-                    value = Double.NaN;
-                    anchorValue = Double.NaN;
-                    foundLine = false;
-                    break;
+                    myValue = double.NaN;
+                    return false;
             }
-
-            myValue = Double.IsNaN(value) ? anchorValue : value;
-
-            return foundLine;
         }
 
         private void FixColor(int seriesIndex, int seriesPtIndex, Flag bounds)
