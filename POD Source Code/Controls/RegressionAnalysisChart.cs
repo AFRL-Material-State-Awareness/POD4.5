@@ -355,10 +355,6 @@ namespace POD.Controls
         {
             if(_equation == null)
             {
-                //FindForm().SizeChanged += RegressionAnalysisChart_Resize;
-
-                //_equGroup = new AnnotationGroup();
-
                 _equBox = new PolygonAnnotation();
 
                 _equBox.Name = "EquationBox";
@@ -375,13 +371,9 @@ namespace POD.Controls
                 _equation.AxisX = XAxis;
                 _equation.AxisY = YAxis;
                 _equation.Alignment = ContentAlignment.TopLeft;
-                //_equation.X = double.NaN;
-                //_equation.Y = double.NaN;
                 _equation.ForeColor = Color.Black;
                 _equation.Font = new Font("Arial", 14);
-                //_equation.Visible = false;
 
-                //Annotations.Insert(0, _equation);
                 Annotations.Add(_equBox);
                 Annotations.Add(_equation);
             }
@@ -455,7 +447,6 @@ namespace POD.Controls
                 _aMaxLine.AxisY = yAxis;
                 _aMaxLine.IsSizeAlwaysRelative = false;
                 _aMaxLine.AllowMoving = true;
-                //_aMaxLine.AnchorX = x;
                 _aMaxLine.X = x;
                 _aMaxLine.IsInfinitive = true;
                 _aMaxLine.ClipToChartArea = ChartAreas[0].Name;
@@ -482,7 +473,6 @@ namespace POD.Controls
                 _aMinLine.AxisY = yAxis;
                 _aMinLine.IsSizeAlwaysRelative = false;
                 _aMinLine.AllowMoving = true;
-                //_aMinLine.AnchorX = x;
                 _aMinLine.X = x;
                 _aMinLine.IsInfinitive = true;
                 _aMinLine.ClipToChartArea = ChartAreas[0].Name;
