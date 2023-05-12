@@ -655,6 +655,23 @@ namespace Controls.UnitTests
         */
 
         ///
+        /// Tests for the UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95, double myFitM, double myFitB) function
+        [Test]
+        [TestCase(0.0, 0)]
+        [TestCase(.9, 2)]
+        public void UpdateLevelConfidenceLines_A9095ValueCondition_9095LineConditionallyDraw(double a9095, int expectedPoints)
+        {
+            //Arrange
+            _regressionAnalysisChart.Series.Add(new Series(PODRegressionLabels.a50Line));
+            _regressionAnalysisChart.Series.Add(new Series(PODRegressionLabels.a90Line));
+            _regressionAnalysisChart.Series.Add(new Series(PODRegressionLabels.a9095Line));
+            _regressionAnalysisChart.ChartAreas[0].AxisX.Minimum = 1.0;
+            _regressionAnalysisChart.ChartAreas[0].AxisY.Minimum = .1;
+            //Act
+            _regressionAnalysisChart.UpdateLevelConfidenceLines(.5, .75, a9095, 1.0, 1.0);
+            //Assert
+            Assert.That(_regressionAnalysisChart.Series[PODRegressionLabels.a9095Line].Points.Count, Is.EqualTo(expectedPoints));
+        }
     }
     public class FakeRegressionAnalysisChart : RegressionAnalysisChart
     {
