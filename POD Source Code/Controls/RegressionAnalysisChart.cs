@@ -1035,16 +1035,8 @@ namespace POD.Controls
             hittestresults[0] = HitTest(pos.X, pos.Y);
             hittestresults[1] = HitTest(pos.X+1, pos.Y);
             hittestresults[2] = HitTest(pos.X-1, pos.Y);
-            //hittestresults[3] = HitTest(pos.X+2, pos.Y);
-            //hittestresults[4] = HitTest(pos.X-2, pos.Y);
-            //hittestresults[5] = HitTest(pos.X, pos.Y-2);
-            //hittestresults[6] = HitTest(pos.X, pos.Y+2);
             hittestresults[3] = HitTest(pos.X, pos.Y+1);
             hittestresults[4] = HitTest(pos.X, pos.Y-1);
-            //hittestresults[9] = HitTest(pos.X, pos.Y - 3);
-            //hittestresults[10] = HitTest(pos.X, pos.Y + 3);
-            //hittestresults[11] = HitTest(pos.X, pos.Y + 3);
-            //hittestresults[12] = HitTest(pos.X, pos.Y - 3);
 
             var allEmpty = true;
 
@@ -1099,9 +1091,6 @@ namespace POD.Controls
 
                             _positionString = string.Format("Series: {3}" + "\n" + "ID: {2}" + "\n" + "Value: ({0:0.###}, {1:0.###})", xInvt, yInvt, dataPoint.GetCustomProperty("Name"), result.Series.Name);
 
-                            //var newLabel = oldLabel + _positionString;
-
-                            //dataPoint.ToolTip += "Value: " + _positionString; 
                             dataPoint.ToolTip = _positionString;
                         }
                         catch (Exception exp)
@@ -1141,9 +1130,6 @@ namespace POD.Controls
             HitTestResult result = HitTest(pos.X, pos.Y);
             var panel = new FlowLayoutPanel();
             panel.FlowDirection = FlowDirection.TopDown;
-            //panel.BorderStyle = BorderStyle.FixedSingle;
-            //panel.AutoSize = true;
-            //panel.Dock = DockStyle.Fill;
 
             if (_lastMenu != null && _lastMenu.Visible == false)// && _lastMenu.Visible == true)
             {
@@ -1248,8 +1234,6 @@ namespace POD.Controls
                     {
                         _lastMenu = null;
                     }
-
-                    //pointMenu.Show(this, new Point(pos.X, pos.Y - pointMenu.Height ));
                     actionMenu.Show(this, new Point(pos.X + 10, pos.Y - pointMenu.Height));
                 }
             }
@@ -1290,15 +1274,9 @@ namespace POD.Controls
 
                 _analysisData.RefillSortList();
 
-                //OnLinesChanged(EventArgs.Empty);
                 _painted = true;
 
-                //PickBestAxisRange();
-
                 RaiseRunAnalysis();
-
-                //Refresh();
-                //Refresh();
 
                 
             }
