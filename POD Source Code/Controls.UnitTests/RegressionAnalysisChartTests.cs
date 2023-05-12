@@ -14,6 +14,7 @@ using NUnit.Framework.Constraints;
 using System.Windows.Forms.DataVisualization.Charting;
 using POD.Data;
 using System.Data;
+using CSharpBackendWithR;
 
 namespace Controls.UnitTests
 {
@@ -299,7 +300,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_MaxNeverSmallerThanTransformMaxAndMinNeverLargerThanTransformMin_NoValuesReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -312,7 +313,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMaxSmallerThanTransformedResponseMax_ResponseMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax + 1, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -326,7 +327,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMinLargerThanTransformedResponseMin_ResponseMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -340,7 +341,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMaxSmallerThanTransformedFlawMax_FlawMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -354,7 +355,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_SmallestFlawIsGreaterThanSmallestTransformFlaw_FlawMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin -1, _flawMax , xAxis.Object, yAxis.Object);
             //Assert
@@ -368,7 +369,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMinLargerThanTransformedResponseMinAndOriginalMaxSmallerThanTransformResponseMax_ResponseMaxAndMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax +1, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -383,7 +384,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMaxSmallerThanTransformedFlawMaxAndOriginalMaxSmallerThanTransformResponseMax_ResponseMaxAndFlawMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax + 1, _flawMin, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -397,7 +398,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMinLargerThanTransformedFlawMinAndOriginalMaxSmallerThanTransformResponseMax_ResponseMaxAndFlawMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax + 1, _flawMin - 1, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -411,7 +412,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMaxSmallerThanTransformedFlawMaxAndOriginalMinLargerThanTransformResponseMin_FlawMaxAndResponseMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin -1, _responseMax, _flawMin, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -425,7 +426,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMinLargerThanTransformedFlawMinAndOriginalMinLargerThanTransformResponseMin_FlawMinAndResponseMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax, _flawMin - 1, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -439,7 +440,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OriginalMinLargerThanTransformedFlawMinAndOriginalMaxSmallerThanTransformFlawMax_FlawMinAndMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin - 1, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -453,7 +454,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OrigMaxSmallerThanTransformedFlawMaxAndOrigMinLargerThanTransformResponseMinAndOrigMaxSmallerThanTransformResponseMax_FlawMaxAndResponseMinMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax + 1, _flawMin, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -467,7 +468,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OrigMinLargerThanTransformedFlawMinAndOrigMinLargerThanTransformResponseMinAndOrigMaxSmallerThanTransformResponseMax_FlawMinAndResponseMinMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax + 1, _flawMin - 1, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -481,7 +482,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OrigMinLargerThanTransformedFlawMinAndOrigMaxSmallerThanTransformFlawMaxAndOrigMaxSmallerThanTransformResponseMax_FlawMinMaxAndResponseMaxReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax + 1, _flawMin - 1, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -495,7 +496,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_OrigMinLargerThanTransformedFlawMinAndOrigMaxSmallerThanTransformFlawMaxAndOrigMinLargerThanTransformResponseMin_FlawMinMaxAndResponseMinReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax, _flawMin - 1, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -509,7 +510,7 @@ namespace Controls.UnitTests
         public void PickBestAxisRange_MaxAlwaysSmallerThanTransformMaxAndMinAlwaysLargerThanTransformMin_AllReassigned()
         {
             //Arrange
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, _responseMin, _responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin - 1, _responseMax + 1, _flawMin - 1, _flawMax + 1, xAxis.Object, yAxis.Object);
             //Assert
@@ -529,7 +530,7 @@ namespace Controls.UnitTests
         {
             //Arrange
             _regressionAnalysisChart.GetBufferedCalled = false;
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, responseMin, responseMax);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, responseMin, responseMax);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(responseMin, responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -544,7 +545,7 @@ namespace Controls.UnitTests
         {
             //Arrange
             _regressionAnalysisChart.GetBufferedCalled = false;
-            SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(-.1, 1.1, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -554,7 +555,70 @@ namespace Controls.UnitTests
             // Make sure that the GetBuffered range is NOT called with specifically the YAxis object (XAxis always get called)
             Assert.That(_regressionAnalysisChart.GetBufferedCalled, Is.False);
         }
-        private void SetupXAxesObjectsMinMax(out Mock<IAxisObject> xAxis, double minValueX, double maxValueX, out Mock<IAxisObject> yAxis, double minValueY, double maxValueY)
+        [Test]
+        public void PickBestAxisRange_AnalysisDataTypeAHat_RelabelAxesBetterCalledWithLambdaValue()
+        {
+            //Arrange
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
+            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            //Act
+            _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
+            //Assert
+            _data.VerifyGet(d => d.LambdaValue);
+        }
+        [Test]
+        public void PickBestAxisRange_AnalysisDataTypeHitMiss_RelabelAxesBetterCalledWithoutLambdaValue()
+        {
+            //Arrange
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
+            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            //Act
+            _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
+            //Assert
+            _data.VerifyGet(d => d.LambdaValue, Times.Never);
+        }
+        // Tests for void PickBestAxisRange(IAxisObject xaxisT = null, IAxisObject yAxisT = null) --- no arguements version
+        [Test]
+        public void PickBestAxisRangeNoArgs_AnalysisDataTypeAHat_RelabelAxesBetterCalledWithLambdaValue()
+        {
+            //Arrange
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
+            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            //Act
+            _regressionAnalysisChart.PickBestAxisRange(xAxis.Object, yAxis.Object);
+            //Assert
+            _data.VerifyGet(d => d.LambdaValue);
+        }
+        [Test]
+        public void PickBestAxisRangeNoArgs_AnalysisDataTypeHitMissAndXAxisMaxNotLessThanMin_RelabelAxesBetterCalledWithoutLambdaValueAndAxisMaxMinNotReassigned()
+        {
+            //Arrange
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
+            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            //Act
+            _regressionAnalysisChart.PickBestAxisRange(xAxis.Object, yAxis.Object);
+            //Assert
+            _data.VerifyGet(d => d.LambdaValue, Times.Never);
+            _data.VerifyGet(d => d.HMAnalysisObject, Times.Exactly(0));
+        }
+        [Test]
+        public void PickBestAxisRangeNoArgs_AnalysisDataTypeHitMissAndXAxisMaxLessThanMin_RelabelAxesBetterCalledWithoutLambdaValueAndAxisMaxMinReassigned()
+        {
+            //Arrange
+            SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
+            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            _regressionAnalysisChart.ChartAreas[0].AxisX.Maximum = 10.0;
+            _regressionAnalysisChart.ChartAreas[0].AxisX.Minimum = 11.0;
+            List<double> sampleFlaws = new List<double>() { 1.0, 2.0, 3.0 };
+            _data.SetupGet(d => d.HMAnalysisObject).Returns(new HMAnalysisObject() { Flaws_All = sampleFlaws });
+            //Act
+            _regressionAnalysisChart.PickBestAxisRange(xAxis.Object, yAxis.Object);
+            //Assert
+            _data.VerifyGet(d => d.LambdaValue, Times.Never);
+            _data.VerifyGet(d => d.HMAnalysisObject, Times.AtLeastOnce);
+            Assert.That(_regressionAnalysisChart.ChartAreas[0].AxisX.Maximum, Is.GreaterThan(_regressionAnalysisChart.ChartAreas[0].AxisX.Minimum));
+        }
+        private void SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, double minValueX, double maxValueX, out Mock<IAxisObject> yAxis, double minValueY, double maxValueY)
         {
             xAxis = new Mock<IAxisObject>();
             xAxis.SetupGet(x => x.Min).Returns(minValueX);
