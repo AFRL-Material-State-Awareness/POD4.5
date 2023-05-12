@@ -951,28 +951,15 @@ namespace POD.Controls
             }
 
             GetBufferedRangeWrapper(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
-            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
-                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
-            else
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, 
-                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
+            RelabelAxesBetterForAxisRange(xAxis, yAxis);
         }
-        public void PickBestAxisRange()
+        public void PickBestAxisRange(IAxisObject xaxisT = null, IAxisObject yAxisT = null)
         {
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            IAxisObject xAxis = xaxisT ?? new AxisObject();
+            IAxisObject yAxis = yAxisT ?? new AxisObject();
 
             _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
-
-            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
-            else
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false);
+            RelabelAxesBetterForAxisRange(xAxis, yAxis);
             if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
             {
                 if (ChartAreas[0].AxisX.Maximum < ChartAreas[0].AxisX.Minimum)
@@ -983,7 +970,17 @@ namespace POD.Controls
             }
         }
 
-        
+        private void RelabelAxesBetterForAxisRange(IAxisObject xAxis, IAxisObject yAxis)
+        {
+            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
+                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
+            else
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
+                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false);
+        }
 
         public void PrepareForRunAnalysis()
         {
