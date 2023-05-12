@@ -75,6 +75,12 @@ namespace POD.Controls
         {
             get { return _samplingType; }
         }
+
+        //Needs to stay in here for the Label text to show up in the combo box
+        public override string ToString()
+        {
+            return Label;
+        }
     }
 }
 
