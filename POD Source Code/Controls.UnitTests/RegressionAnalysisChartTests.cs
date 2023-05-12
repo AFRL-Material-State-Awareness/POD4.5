@@ -560,7 +560,7 @@ namespace Controls.UnitTests
         {
             //Arrange
             SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
-            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            _data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -571,7 +571,7 @@ namespace Controls.UnitTests
         {
             //Arrange
             SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
-            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            _data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(_responseMin, _responseMax, _flawMin, _flawMax, xAxis.Object, yAxis.Object);
             //Assert
@@ -583,7 +583,7 @@ namespace Controls.UnitTests
         {
             //Arrange
             SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
-            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
+            _data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.AHat);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(xAxis.Object, yAxis.Object);
             //Assert
@@ -594,7 +594,7 @@ namespace Controls.UnitTests
         {
             //Arrange
             SetupAxesObjectsMinMax(out Mock<IAxisObject> xAxis, _flawMin, _flawMax, out Mock<IAxisObject> yAxis, -.1, 1.1);
-            _data.Setup(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            _data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
             //Act
             _regressionAnalysisChart.PickBestAxisRange(xAxis.Object, yAxis.Object);
             //Assert
@@ -627,6 +627,34 @@ namespace Controls.UnitTests
             yAxis.SetupGet(y => y.Min).Returns(minValueY);
             yAxis.SetupGet(y => y.Max).Returns(maxValueY);
         }
+        /// Tests for the UpdateBestFitLine() function
+        /*
+        [Test]
+        public void UpdateBestFitLine_()
+        {
+            //Arrange
+            Series bestFitLine = new Series() { Name = PODRegressionLabels.BestFitLine };
+            SetupDataTableSample(new DataTable());            
+            _regressionAnalysisChart.Series.Add(bestFitLine);
+            _regressionAnalysisChart.Show();
+            _data.SetupGet(d => d.DataType).Returns(AnalysisDataTypeEnum.HitMiss);
+            //Act
+            _regressionAnalysisChart.UpdateBestFitLine();
+            //Assert
+            Assert.That(_regressionAnalysisChart.Series[PODRegressionLabels.BestFitLine].Points.FirstOrDefault(p=>p.XValue==2 && p.YValues[0] == 4), Is.True);
+        }
+        private void SetupDataTableSample(DataTable sampleDT)
+        {
+            sampleDT.Columns.Add(new DataColumn("flaw"));
+            sampleDT.Columns.Add(new DataColumn("transformFlaw"));
+            sampleDT.Columns.Add(new DataColumn("fit"));
+            sampleDT.Columns.Add(new DataColumn("t_fit"));
+            sampleDT.Rows.Add(new double[] { 1, 2, 3, 4 });
+            _data.SetupGet(d => d.ResidualUncensoredTable).Returns(sampleDT);
+        }
+        */
+
+        ///
     }
     public class FakeRegressionAnalysisChart : RegressionAnalysisChart
     {
