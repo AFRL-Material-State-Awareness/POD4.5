@@ -1296,11 +1296,8 @@ namespace POD.Controls
 
         protected void ForceUpdateEquation()
         {
-            if (_equation != null)
-            {
-                _equation.Text = _equation.Text;
-                _equation.ResizeToContent();
-            }
+            //_equation.Text = _equation?.Text;
+            _equation?.ResizeToContent();
         }
         
         public void SetAMaxBoundary(double myX, bool triggerEvent)
