@@ -26,13 +26,6 @@ namespace POD.Controls
 
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {
-            //base.OnPaint(e);
-            //ControlPaint.DrawGrabHandle(e.Graphics, SplitterRectangle, false, Enabled);
-
-            //base.OnPaint(e);
-
-            //e.Graphics.FillRectangle(SystemBrushes.ControlDark, 0.0F, 0.0F, SnapToSize, SnapToSize);
-
             Point centerPoint = new Point(SplitterRectangle.Left - 3 + SplitterRectangle.Width / 2, SplitterRectangle.Top - 1 + SplitterRectangle.Height / 2);
 
             e.Graphics.FillEllipse(SystemBrushes.ControlText, centerPoint.X, centerPoint.Y, 3, 3);
