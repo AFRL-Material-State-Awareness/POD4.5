@@ -753,6 +753,38 @@ namespace Controls.UnitTests
                     _regressionAnalysisChart.Series[series].Points.Add(new DataPoint(1.0 + i, .1 + i));
             }
         }
+        /// Tests for ForceResizeAnnotations() function
+        [Test]
+        public void ForceResizeAnnotations_EquationIsNull_EquationTextNotAssignedAndResizeNotCalled()
+        {
+            //Arrange
+            Mock<TextAnnotation> equation = new Mock<TextAnnotation>();
+            _regressionAnalysisChart.Equation = null;
+            //Act
+            _regressionAnalysisChart.ForceResizeAnnotations();
+            //Assert
+            equation.Verify(e => e.ResizeToContent(), Times.Never);
+        }
+        [Test]
+        public void ForceResizeAnnotations_EquationIsNOTNull_EquationTextNotAssignedAndResizeNotCalled()
+        {
+            //Arrange
+            Mock<TextAnnotation> equation = new Mock<TextAnnotation>();
+            _regressionAnalysisChart.Equation = equation.Object;
+            //Act
+            _regressionAnalysisChart.ForceResizeAnnotations();
+            //Assert
+            equation.Verify(e => e.ResizeToContent());
+        }
+        ///Tests for ForceRefillSortList() function
+        [Test]
+        public void ForceRefillSortList_CalledFromMainChart_ExecutesForceRefillSortListInAnalysisData()
+        {
+            //Act
+            _regressionAnalysisChart.ForceRefillSortList();
+            //Assert
+            _data.Verify(d => d.ForceRefillSortList());
+        }
     }
     public class FakeRegressionAnalysisChart : RegressionAnalysisChart
     {
