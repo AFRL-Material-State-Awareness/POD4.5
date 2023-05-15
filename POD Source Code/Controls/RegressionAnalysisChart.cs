@@ -604,12 +604,6 @@ namespace POD.Controls
                         if (_colorMap.Count > 0)
                         {
                             var color = _colorMap[Series[seriesIndex].Name];
-
-                            if(color == Color.Gray)
-                            {
-
-                            }
-
                             var point = Series[seriesIndex].Points[seriesPtIndex];
                             if(!point.IsEmpty)
                                 point.Color = color;
