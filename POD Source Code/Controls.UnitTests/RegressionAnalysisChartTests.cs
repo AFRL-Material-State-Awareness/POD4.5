@@ -727,8 +727,33 @@ namespace Controls.UnitTests
             Assert.IsTrue(_regressionAnalysisChart.Series[label].Points.Any(point =>
             point.XValue == expectedX && point.YValues[0] == expectedY));
         }
+
+        /// Tests for ForceIncludedPointsUpdate() function
+        [Test]
+        public void ForceIncludedPointsUpdate_TurnedOffPointsExists_AllTurnedOffPointsBecomeGray()
+        {
+            AddPointsToSeries();
+            _data.SetupGet(d => d.TurnedOffPoints).Returns(new List<DataPointIndex>() { new DataPointIndex(1, 1, "MyReasonForOmission")});
+            //Act
+            _regressionAnalysisChart.ForceIncludedPointsUpdate();
+            //Assert
+            //var point = Series[3].Points[1];
+            Assert.That(_regressionAnalysisChart.Series[3].Points[1].Color, Is.EqualTo(Color.Gray));
+        }
+        private void AddPointsToSeries()
+        {
+            List<string> mySeries = new List<string>() { PODRegressionLabels.a50Line, 
+                                                        PODRegressionLabels.a90Line,
+                                                        PODRegressionLabels.a9095Line,
+                                                        PODRegressionLabels.BestFitLine };
+            foreach(string series in mySeries)
+            {
+                _regressionAnalysisChart.Series.Add(new Series(series));
+                for (int i = 0; i < 5; i++)
+                    _regressionAnalysisChart.Series[series].Points.Add(new DataPoint(1.0 + i, .1 + i));
+            }
+        }
     }
-    
     public class FakeRegressionAnalysisChart : RegressionAnalysisChart
     {
         private bool _getBufferedCalled = false;
