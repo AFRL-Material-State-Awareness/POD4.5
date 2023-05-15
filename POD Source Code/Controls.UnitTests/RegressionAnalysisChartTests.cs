@@ -755,12 +755,9 @@ namespace Controls.UnitTests
         public void ForceResizeAnnotations_EquationIsNull_EquationTextNotAssignedAndResizeNotCalled()
         {
             //Arrange
-            Mock<TextAnnotation> equation = new Mock<TextAnnotation>();
             _regressionAnalysisChart.Equation = null;
-            //Act
-            _regressionAnalysisChart.ForceResizeAnnotations();
-            //Assert
-            equation.Verify(e => e.ResizeToContent(), Times.Never);
+            //Act and Assert
+            Assert.DoesNotThrow(() => _regressionAnalysisChart.ForceResizeAnnotations());
         }
         [Test]
         public void ForceResizeAnnotations_EquationIsNOTNull_EquationTextNotAssignedAndResizeNotCalled()
