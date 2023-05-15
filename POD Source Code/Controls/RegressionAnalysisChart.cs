@@ -1459,18 +1459,15 @@ namespace POD.Controls
             Series a90_95Line = Series[PODRegressionLabels.a9095Line];
 
             double minY = ChartAreas[0].AxisY.Minimum;
-            double minX = ChartAreas[0].AxisX.Minimum;
 
             double a50Y = myFitM*myA50 + myFitB;
             double a90Y = myFitM*myA90 + myFitB;
-            double a90_95Y = myFitM*myA90_95 + myFitB;
 
             Series line = a50Line;
 
             line.Points.Clear();
             line.Points.AddXY(myA50, minY);
             line.Points.AddXY(myA50, a50Y);
-            //line.Points.AddXY(minX, a50Y);
             line.Points[0].Label = "50";
 
             line = a90Line;
@@ -1478,7 +1475,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA90, minY);
             line.Points.AddXY(myA90, a90Y);
-            //line.Points.AddXY(minX, a90Y);
             line.Points[0].Label = "90";
 
             line = a90_95Line;
@@ -1490,7 +1486,6 @@ namespace POD.Controls
             {
                 line.Points.AddXY(myA90_95, minY);
                 line.Points.AddXY(myA90_95, a90Y);
-                //line.Points.AddXY(minX, a90_95Y);
                 line.Points[0].Label = "90/95";
             }
         }
@@ -1502,7 +1497,6 @@ namespace POD.Controls
             Series a90_95Line = Series[PODRegressionLabels.a9095Line];
 
             double minY = ChartAreas[0].AxisY.Minimum;
-            double minX = ChartAreas[0].AxisX.Minimum;
 
             double a50Y = .5;
             double a90Y = .9;
@@ -1512,7 +1506,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA50, minY);
             line.Points.AddXY(myA50, a50Y);
-            //line.Points.AddXY(minX, a50Y);
             line.Points[0].Label = "50";
 
             line = a90Line;
@@ -1520,7 +1513,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA90, minY);
             line.Points.AddXY(myA90, a90Y);
-            //line.Points.AddXY(minX, a90Y);
             line.Points[0].Label = "90";
 
             line = a90_95Line;
@@ -1528,7 +1520,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA90_95, minY);
             line.Points.AddXY(myA90_95, a90Y);
-            //line.Points.AddXY(minX, a90_95Y);
             line.Points[0].Label = "90/95";
         }
 
