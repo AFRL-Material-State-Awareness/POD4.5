@@ -71,6 +71,7 @@
     <Compile Include="RegressionAnalysisChartTests.cs" />
     <Compile Include="RelabelParamertsTests.cs" />
     <Compile Include="SamplingTypeBoxTests.cs" />
+    <Compile Include="SimpleActionBarTests.cs" />
     <Compile Include="TransformBoxTests.cs" />
     <Compile Include="TransformBoxYHatTests.cs" />
   </ItemGroup>
