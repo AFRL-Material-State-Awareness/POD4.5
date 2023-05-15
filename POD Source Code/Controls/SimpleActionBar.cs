@@ -64,28 +64,17 @@ namespace POD.Controls
 
         private void AddIconToButton(PODButton button)
         {
-            if (button != null)
-            {
-                var key = button.Name + ".png";
+            if (button == null)
+                return;
+           var key = button.Name + ".png";
 
-                if (ActionIcons.Images.ContainsKey(key) && button.Image == null)
-                {
-                    button.Image = ActionIcons.Images[key];
-
-                    button.ImageAlign = ContentAlignment.MiddleCenter;
-                    button.TextAlign = ContentAlignment.BottomCenter;
-                    button.TextImageRelation = TextImageRelation.ImageAboveText;
-
-                }
-                else
-                {
-                    button.Image = ActionIcons.Images[0];
-
-                    button.ImageAlign = ContentAlignment.MiddleCenter;
-                    button.TextAlign = ContentAlignment.BottomCenter;
-                    button.TextImageRelation = TextImageRelation.ImageAboveText;
-                }
-            }
+            if (ActionIcons.Images.ContainsKey(key) && button.Image == null)
+                button.Image = ActionIcons.Images[key];
+            else
+                button.Image = ActionIcons.Images[0];
+            button.ImageAlign = ContentAlignment.MiddleCenter;
+            button.TextAlign = ContentAlignment.BottomCenter;
+            button.TextImageRelation = TextImageRelation.ImageAboveText;
         }
 
         public Label AddLabel(string myText)
