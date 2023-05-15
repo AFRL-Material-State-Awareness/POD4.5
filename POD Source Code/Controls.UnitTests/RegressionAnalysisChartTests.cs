@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using POD.Controls;
 using NUnit.Framework;
 using Moq;
@@ -10,7 +8,6 @@ using System.Windows.Forms;
 using POD;
 using System.Reflection;
 using System.Drawing;
-using NUnit.Framework.Constraints;
 using System.Windows.Forms.DataVisualization.Charting;
 using POD.Data;
 using System.Data;
