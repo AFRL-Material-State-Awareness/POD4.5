@@ -656,23 +656,79 @@ namespace Controls.UnitTests
 
         ///
         /// Tests for the UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95, double myFitM, double myFitB) function
+        /// This function is used for AHat
         [Test]
-        [TestCase(0.0, 0)]
-        [TestCase(.9, 2)]
-        public void UpdateLevelConfidenceLines_A9095ValueCondition_9095LineConditionallyDraw(double a9095, int expectedPoints)
+        [TestCase(0)]
+        public void UpdateLevelConfidenceLines_A9095IsZero_9095PointsNotAdded(int expectedPoints)
         {
             //Arrange
+            SetupSeriesUpdateLevelConfidence();
+            double a9095 = 0.0;
+            //Act
+            _regressionAnalysisChart.UpdateLevelConfidenceLines(myA50: .5, myA90: .75, myA90_95: a9095, 1.0, 0.0);
+            //Assert
+            AssertPointsAddedToCount(expectedPoints);
+        }
+        [Test]
+        [TestCase(2)]
+        public void UpdateLevelConfidenceLinesAHat_A9095IsNotZero_9095PointsAdded(int expectedPoints)
+        {
+            //Arrange
+            SetupSeriesUpdateLevelConfidence();
+            double a9095 = .9;
+            //Act
+            _regressionAnalysisChart.UpdateLevelConfidenceLines(.5, .75, myA90_95: a9095, 1.0, 0.0);
+            //Assert
+            AssertPointsAddedToCount(expectedPoints);
+            AssertContainsPoint(PODRegressionLabels.a9095Line, a9095, .1);
+            AssertContainsPoint(PODRegressionLabels.a9095Line, a9095, .75);
+        }
+        /// <summary>
+        /// tests for UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95)
+        /// This function body is called for hitmiss
+        /// </summary>
+        [Test]
+        public void UpdateLevelConfidenceLines_ValidDoubleValuesPassed_AllPointsAdded()
+        {
+            //Arrange
+            SetupSeriesUpdateLevelConfidence();
+            //Act
+            _regressionAnalysisChart.UpdateLevelConfidenceLines(myA50: 5.0, myA90: 9.0, myA90_95: 9.50);
+            //Assert
+            AssertPointsAddedToCount(2);
+            //A50
+            AssertContainsPoint(PODRegressionLabels.a50Line, 5.0, .1);
+            AssertContainsPoint(PODRegressionLabels.a50Line, 5.0, .5);
+            //A90
+            AssertContainsPoint(PODRegressionLabels.a90Line, 9.0, .1);
+            AssertContainsPoint(PODRegressionLabels.a90Line, 9.0, .9);
+            //A9095
+            AssertContainsPoint(PODRegressionLabels.a9095Line, 9.50, .1);
+            AssertContainsPoint(PODRegressionLabels.a9095Line, 9.50, .9);
+        }
+
+        private void SetupSeriesUpdateLevelConfidence()
+        {
             _regressionAnalysisChart.Series.Add(new Series(PODRegressionLabels.a50Line));
             _regressionAnalysisChart.Series.Add(new Series(PODRegressionLabels.a90Line));
             _regressionAnalysisChart.Series.Add(new Series(PODRegressionLabels.a9095Line));
             _regressionAnalysisChart.ChartAreas[0].AxisX.Minimum = 1.0;
             _regressionAnalysisChart.ChartAreas[0].AxisY.Minimum = .1;
-            //Act
-            _regressionAnalysisChart.UpdateLevelConfidenceLines(.5, .75, a9095, 1.0, 1.0);
-            //Assert
+        }
+        private void AssertPointsAddedToCount(int expectedPoints)
+        {
             Assert.That(_regressionAnalysisChart.Series[PODRegressionLabels.a9095Line].Points.Count, Is.EqualTo(expectedPoints));
+            //Ensure that other points are being added as well
+            Assert.That(_regressionAnalysisChart.Series[PODRegressionLabels.a50Line].Points.Count, Is.EqualTo(2));
+            Assert.That(_regressionAnalysisChart.Series[PODRegressionLabels.a90Line].Points.Count, Is.EqualTo(2));
+        }
+        private void AssertContainsPoint(string label, double expectedX, double expectedY)
+        {
+            Assert.IsTrue(_regressionAnalysisChart.Series[label].Points.Any(point =>
+            point.XValue == expectedX && point.YValues[0] == expectedY));
         }
     }
+    
     public class FakeRegressionAnalysisChart : RegressionAnalysisChart
     {
         private bool _getBufferedCalled = false;
