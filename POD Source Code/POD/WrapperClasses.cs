@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -60,5 +61,47 @@ namespace POD
     public interface IPasteFromClipBoardWrapper
     {
         string GetClipBoardContents(TextDataFormat format);
+    }
+
+    public class RichTextBoxWrapper : IRichTextBoxWrapper
+    {
+        private readonly RichTextBox richTextBox;
+        public RichTextBoxWrapper(RichTextBox rtbInput)
+        {
+            this.richTextBox = rtbInput;
+        }
+
+        public int Width
+        {
+            set { this.richTextBox.Width = value; }
+            get { return this.richTextBox.Width; }
+        }
+        public int Height
+        {
+            set { this.richTextBox.Height = value; }
+            get { return this.richTextBox.Height; }
+        }
+        public Size Size
+        {
+            set { this.richTextBox.Size = value; }
+            get { return this.richTextBox.Size; }
+        }
+        public void Dispose() => this.richTextBox.Dispose();
+        public bool IsDisposed => this.richTextBox.IsDisposed;
+        public void Update() => this.richTextBox.Update();
+        public Point PointToScreen(Point p) => this.richTextBox.PointToScreen(p);
+
+        public static explicit operator RichTextBox(RichTextBoxWrapper wrapper) => wrapper.richTextBox;
+
+    }
+    public interface IRichTextBoxWrapper
+    {
+        int Width { get; set; }
+        int Height { get; set; }
+        Size Size { get; set; }
+        void Dispose();
+        bool IsDisposed { get; }
+        void Update();
+        Point PointToScreen(Point p);      
     }
 }
