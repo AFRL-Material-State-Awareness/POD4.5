@@ -57,9 +57,9 @@ namespace POD.Controls
             Initialize();
         }
 
-        public static Bitmap RtbToBitmap(RichTextBox rtb)
+        public static Bitmap RtbToBitmap(IRichTextBoxWrapper rtb)
         {
-            if (rtb.Width == 0 && rtb.Height == 0)
+            if (rtb.Width == 0 || rtb.Height == 0)
                 return new Bitmap(50, 50);
 
             Bitmap bmp = new Bitmap(rtb.Width, rtb.Height);
@@ -67,13 +67,10 @@ namespace POD.Controls
             if (rtb.IsDisposed == false)
             {
                 rtb.Update();  // Ensure RTB fully painted
-                
-                using (Graphics gr = Graphics.FromImage(bmp))
-                {
-                    gr.CopyFromScreen(rtb.PointToScreen(Point.Empty), Point.Empty, rtb.Size);
-                }
-            }
 
+                using (Graphics gr = Graphics.FromImage(bmp))
+                    gr.CopyFromScreen(rtb.PointToScreen(Point.Empty), Point.Empty, rtb.Size);
+            }
             return bmp;
         }
 
@@ -85,7 +82,7 @@ namespace POD.Controls
 
                 if (myControl.GetType().Name == "RichTextBox")
                 {
-                    image = RtbToBitmap((RichTextBox)myControl);
+                    image = RtbToBitmap(new RichTextBoxWrapper((RichTextBox)myControl));
                 }
                 else
                 {
