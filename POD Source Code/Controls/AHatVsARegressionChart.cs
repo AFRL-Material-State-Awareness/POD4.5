@@ -295,64 +295,53 @@ namespace POD.Controls
             return menuItems;
         }
 
-
-
         public void UpdateEquation(TransformTypeEnum myXAxisTransform, TransformTypeEnum myYAxisTransform)
         {
+            if (_equation is null)
+                return;
+
             string text = "Fit: ";
-            string yText = "";
-            string xText = "";
+            string yText = YTransformEquationText(myYAxisTransform);
+            string xText = XTransformEquationText(myXAxisTransform);
+            //combine x and y equations
+            text = yText + " = " + xText;
 
-            if (_equation != null)
-            {
-                switch(myXAxisTransform)
-                {
-                    case TransformTypeEnum.Log:
-                        xText = "m·ln(x) + b";
-                        break;
-                    case TransformTypeEnum.Linear:
-                        xText = "m·x + b";
-                        break;
-                    case TransformTypeEnum.Exponetial:
-                        xText = "m(e^x) + b";
-                        break;
-                    case TransformTypeEnum.Inverse:
-                        xText = "m(1/x) + b";
-                        break;
-                    default:
-                        xText = "Custom";
-                        break;
-                }
-
-                switch (myYAxisTransform)
-                {
-                    case TransformTypeEnum.Log:
-                        yText = "ln(y)";
-                        break;
-                    case TransformTypeEnum.Linear:
-                        yText = "y";
-                        break;
-                    case TransformTypeEnum.Exponetial:
-                        yText = "e^y";
-                        break;
-                    case TransformTypeEnum.Inverse:
-                        yText = "1/y";
-                        break;
-                    case TransformTypeEnum.BoxCox:
-                        yText = "(y^(lambda)-1)/lambda";
-                        break;
-                    default:
-                        yText = "Custom";
-                        break;
-                }
-
-                //combine x and y equations
-                text = yText + " = " + xText;
-
-                _equation.Text = text;
-            }
+            _equation.Text = text;
         }
 
-        
+        private string XTransformEquationText(TransformTypeEnum transform)
+        {
+            switch (transform)
+            {
+                case TransformTypeEnum.Log:
+                    return "m·ln(x) + b";
+                case TransformTypeEnum.Linear:
+                    return "m·x + b";
+                case TransformTypeEnum.Exponetial:
+                    return "m(e^x) + b";
+                case TransformTypeEnum.Inverse:
+                    return "m(1/x) + b";
+                default:
+                    return "Custom";
+            }
+        }
+        private string YTransformEquationText(TransformTypeEnum transform)
+        {
+            switch (transform)
+            {
+                case TransformTypeEnum.Log:
+                    return "ln(y)";
+                case TransformTypeEnum.Linear:
+                    return "y";
+                case TransformTypeEnum.Exponetial:
+                    return "e^y";
+                case TransformTypeEnum.Inverse:
+                    return "1/y";
+                case TransformTypeEnum.BoxCox:
+                    return "(y^(lambda)-1)/lambda";
+                default:
+                    return "Custom";
+            }
+        }      
     }
 }
