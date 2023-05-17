@@ -169,5 +169,26 @@ namespace Controls.UnitTests
             Assert.AreEqual(_blendPicBox.Image.Width, width);
             Assert.AreEqual(_blendPicBox.Image.Height, height);
         }
+        ///Tests for the GetLineLabel(int myIndex) function
+        [Test]
+        public void GetLineLabel_IndexIsPossibleLinesCountMinus1_ReturnsShow1ChartOnLeftSideString()
+        {
+            //Arrange
+            _blendPicBox.PossibleLines = new List<int>() { 1, 2 };
+            //Act
+            var result=_blendPicBox.GetLineLabel(1);
+            //Assert
+            Assert.That(result, Is.EqualTo("Show 1 Chart\non the Left Side"));
+        }
+        [Test]
+        public void GetLineLabel_IndexIsPossibleLinesIsNotCountMinus1_ReturnsShowDifferenceBetweenCountAndIndexChartOnLeftSideString()
+        {
+            //Arrange
+            _blendPicBox.PossibleLines = new List<int>() { 1, 2 };
+            //Act
+            var result = _blendPicBox.GetLineLabel(2);
+            //Assert
+            Assert.IsTrue(result.Contains((_blendPicBox.PossibleLines.Count - 2).ToString()));
+        }
     }
 }
