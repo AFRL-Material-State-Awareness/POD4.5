@@ -149,6 +149,24 @@ namespace POD.Controls
 
             
         }
+        protected void DisposeOfAllItems()
+        {
+            _bitmap.Dispose();
+            _wideBitmap.Dispose();
+            _aspectBitmap.Dispose();
+            _sizeBitmap.Dispose();
+            ContextMenuImageList.Dispose();
+            ButtonImageList.Dispose();
+            MenuOffImageList.Dispose();
+            MenuOnImageList.Dispose();
+            MenuPressedImageList.Dispose();
+            WideImageList.Dispose();
+            FullSizeImageList.Dispose();
+            foreach (Bitmap bmp in MenuBitmaps)
+                bmp.Dispose();
+            base.Dispose();
+        }
+
 
         int ImageSize = 20;
         int MenuMaxY = 80;

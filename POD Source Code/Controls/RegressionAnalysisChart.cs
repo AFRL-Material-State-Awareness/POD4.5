@@ -112,7 +112,19 @@ namespace POD.Controls
             }
         }
 
-        
+        public void DisposeAllRegressionItems()
+        {
+            foreach (Series series in Series)
+                series.Dispose();
+            _aMinLine?.Dispose();
+            _aMaxLine?.Dispose();
+            _aMinLine?.Dispose();
+            _aMaxStrip?.Dispose();
+            _thresholdLine?.Dispose();
+            _equBox?.Dispose();
+            madeWhichOneBigger?.Dispose();
+            base.DisposeOfAllItems();
+        }
 
         private void RemoveEmptySeries()
         {
