@@ -53,6 +53,7 @@ namespace POD.Wizards
                     }
                 }
             }
+            base.DeleteSteps();
         }
     }
 }

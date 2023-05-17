@@ -153,7 +153,9 @@ namespace POD.Wizards
         /// </summary>
         public virtual void DeleteSteps()
         {
-
+            foreach (WizardStep step in _list)
+                step.Dispose();
+            _currentStep.Dispose();
         }
 
         /// <summary>

@@ -149,22 +149,32 @@ namespace POD.Controls
 
             
         }
-        protected void DisposeOfAllItems()
+        public void DisposeOfAllItems()
         {
-            _bitmap.Dispose();
-            _wideBitmap.Dispose();
-            _aspectBitmap.Dispose();
-            _sizeBitmap.Dispose();
-            ContextMenuImageList.Dispose();
-            ButtonImageList.Dispose();
-            MenuOffImageList.Dispose();
-            MenuOnImageList.Dispose();
-            MenuPressedImageList.Dispose();
-            WideImageList.Dispose();
-            FullSizeImageList.Dispose();
-            foreach (Bitmap bmp in MenuBitmaps)
-                bmp.Dispose();
-            base.Dispose(true);
+            try
+            {
+                ChartAreas?.Dispose();
+                foreach (Series series in Series)
+                    series.Dispose();
+            }
+            catch (NullReferenceException) { }
+            finally
+            {
+                _bitmap.Dispose();
+                _wideBitmap.Dispose();
+                _aspectBitmap.Dispose();
+                _sizeBitmap.Dispose();
+                ContextMenuImageList.Dispose();
+                ButtonImageList.Dispose();
+                MenuOffImageList.Dispose();
+                MenuOnImageList.Dispose();
+                MenuPressedImageList.Dispose();
+                WideImageList.Dispose();
+                FullSizeImageList.Dispose();
+                foreach (Bitmap bmp in MenuBitmaps)
+                    bmp.Dispose();
+                base.Dispose(true);
+            }
         }
 
 

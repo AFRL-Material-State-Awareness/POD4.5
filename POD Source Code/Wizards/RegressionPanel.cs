@@ -76,7 +76,7 @@ namespace POD.Wizards
             OutputLabelTable.Dispose();
             ShiftOutputButton.Dispose();
             base.DisposeOfSideChartPanelObjects();
-    }
+        }
 
         void RegressionPanel_Load(object sender, EventArgs e)
         {

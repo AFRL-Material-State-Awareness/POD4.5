@@ -64,6 +64,15 @@ namespace POD.Wizards
 
         protected void DisposeOfSideChartPanelObjects()
         {
+            try
+            {
+                foreach (DataPointChart chart in SideCharts)
+                    chart.DisposeOfAllItems();
+            }
+            catch (NullReferenceException) { }
+            SidePanel.Dispose();
+            SideSplitter.Dispose();
+            SplitterBox.Dispose();
             base.Dispose(true);
             Dispose(true);
         }
