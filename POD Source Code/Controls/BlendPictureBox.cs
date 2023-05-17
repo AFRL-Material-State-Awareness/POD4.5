@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using Microsoft.VisualBasic;
-using System.IO;
 
 
 namespace POD.Controls
@@ -59,10 +52,6 @@ namespace POD.Controls
 
         public static Bitmap RtbToBitmap(IRichTextBoxWrapper rtb)
         {
-            /*
-            if (rtb.Width == 0 || rtb.Height == 0)
-                return new Bitmap(50, 50);
-            */
             Bitmap bmp = new Bitmap(rtb.Width, rtb.Height);
 
             if (rtb.IsDisposed == false)
@@ -183,9 +172,6 @@ namespace POD.Controls
                         e.Graphics.DrawString((j + 1).ToString(), boldFont, new SolidBrush(Color.White), rect, stringFormat);
 
                         value += _vX;
-
-                        //if (_vX == PossibleLines[j])
-                        //    break;
                     }
 
                     if (PossibleLines != null && PossibleLines.Count > 0)
@@ -207,9 +193,7 @@ namespace POD.Controls
                             }
 
                             e.Graphics.FillRectangle(new SolidBrush(Color.Black), value - 5, 0, 12, 10);
-                            //e.Graphics.FillEllipse(new SolidBrush(Color.Black), value - 5, 0, 11, 11);
                             e.Graphics.FillRectangle(new SolidBrush(Color.Black), value - 5, Height - 10, 12, 10);
-                            //e.Graphics.FillEllipse(new SolidBrush(Color.Black), value - 5, Height - 12, 11, 11);
                         }
                     }
 
