@@ -59,9 +59,10 @@ namespace POD.Controls
 
         public static Bitmap RtbToBitmap(IRichTextBoxWrapper rtb)
         {
+            /*
             if (rtb.Width == 0 || rtb.Height == 0)
                 return new Bitmap(50, 50);
-
+            */
             Bitmap bmp = new Bitmap(rtb.Width, rtb.Height);
 
             if (rtb.IsDisposed == false)
@@ -79,27 +80,15 @@ namespace POD.Controls
             if (!myControl.IsDisposed)
             {
                 Bitmap image;
-
-                if (myControl.GetType().Name == "RichTextBox")
-                {
+                if (myControl.Width <= 0 || myControl.Height <= 0)
+                    image = new Bitmap(50, 50);
+                else if (myControl.GetType().Name == "RichTextBox")
                     image = RtbToBitmap(new RichTextBoxWrapper((RichTextBox)myControl));
-                }
                 else
                 {
-                    if (myControl.Width <= 0 && myControl.Height <= 0)
-                    {
-                        image = new Bitmap(50, 50);
-                    }
-                    else
-                    {
-
-
-                        image = new Bitmap(myControl.Width, myControl.Height);
-
-                        myControl.DrawToBitmap(image, new Rectangle(0, 0, myControl.Width, myControl.Height));
-                    }
+                    image = new Bitmap(myControl.Width, myControl.Height);
+                    myControl.DrawToBitmap(image, new Rectangle(0, 0, myControl.Width, myControl.Height));
                 }
-
                 BackgroundImage = image;
                 Transparency = 0.0F;
 
@@ -112,7 +101,7 @@ namespace POD.Controls
         {
             Bitmap image;
 
-            if (myControl.Width <= 0 && myControl.Height <= 0)
+            if (myControl.Width <= 0 || myControl.Height <= 0)
             {
                 image = new Bitmap(50, 50);
             }
