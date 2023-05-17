@@ -70,25 +70,15 @@ namespace POD.Controls
 
         private int suspendCounter = 0;
 
-        //gets either the first selected row or it selectes the first row
+        //g7ets either the first selected row or it selectes the first row
         public PODListBoxItem SingleSelectedItem
         {
             get
             {
-                if (Rows.Count > 0)
-                {
-                    if (SelectedRows.Count > 0)
-                        return SelectedRows[0].Cells[0].Value as PODListBoxItem;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
-                }
-
-                return null;
+                if(Rows.Count > 0 && SelectedRows?.Count > 0)
+                    return SelectedRows[0].Cells[0].Value as PODListBoxItem;
+                else
+                    return null;
             }
         }
 
@@ -97,20 +87,10 @@ namespace POD.Controls
         {
             get
             {
-                if (Rows.Count > 0)
-                {
-                    if (SelectedRows.Count > 0)
-                        return SelectedRows[0].Cells[0].Value as PODListBoxItemWithProps;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
-                }
-
-                return null;
+                if(Rows.Count > 0 && SelectedRows?.Count > 0)
+                    return SelectedRows[0].Cells[0].Value as PODListBoxItemWithProps;
+                else
+                    return null;
             }
         }
 
@@ -119,25 +99,15 @@ namespace POD.Controls
         {
             get
             {
-                if (Rows.Count > 0)
-                {
-                    if (SelectedRows.Count > 0)
-                        return SelectedRows[0].Index;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
-                }
-
-                return -1;
+                if(Rows.Count > 0 && SelectedRows?.Count > 0)
+                    return SelectedRows[0].Index;
+                else
+                    return -1;
             }
 
             set
             {
-                if (Rows.Count > 0 && value >= 0 && value < Rows.Count)
+                if (value >= 0 && value < Rows.Count)
                 {
                     if(MultiSelect == true)
                     {
@@ -148,13 +118,6 @@ namespace POD.Controls
                     }
 
                     Rows[value].Selected = true;
-                    /*else
-                    {
-                        var item = Rows[0].Cells[0].Value as PODListBoxItem;
-                        Rows[0].Selected = true;
-
-                        return item;
-                    }*/
                 }
             }
         }
@@ -186,40 +149,9 @@ namespace POD.Controls
             base.OnHandleCreated(e);
         }
 
-        /*private void Item_Dropped(object sender, DroppedEventArgs e)
-        {
-
-            int matches = 0;
-            int droppedIndex = 0;
-            int index = 0;
-
-            foreach (Object droppedItem in e.DroppedItems)
-            {
-                matches = 0;
-                index = 0;
-
-                foreach (Object item in Items)
-                {
-                    if (droppedItem == item)
-                    {
-                        matches++;
-                        droppedIndex = index;
-                    }
-
-                    index++;
-                }
-
-                if (matches > 1)
-                {
-                    Items.RemoveAt(droppedIndex);
-                }
-            }
-        }*/
-
         static public string CreateAutoName(List<PODListBoxItem> listBoxItems)
         {
             string name = "";
-            string longestSubString = null;
 
             var myNames = listBoxItems.Select(item => (item.ResponseColumnName)).ToList();
 
@@ -231,51 +163,25 @@ namespace POD.Controls
                                                orderby word.Length
                                                select word).ToList();
 
-            if (wordsInLengthOrder.Count > 0)
+            string longestSubString = FindLargestBeginningSubstring(wordsInLengthOrder);
+            name = longestSubString;
+
+            if (myNames.Count > 1)
             {
-                string shortestWord = wordsInLengthOrder[0];
-                int shortWordLength = shortestWord.Length;
+                name += "(";
 
-                // Work through the consecutive character strings, in length order.
-                for (int partLength = shortWordLength; (partLength > 0) && (longestSubString == null); partLength--)
+                for (int i = 0; i < myNames.Count; i++)
                 {
-                    for (int partStartIndex = 0; partStartIndex <= shortWordLength - partLength; partStartIndex++)
-                    {
-                        string part = shortestWord.Substring(partStartIndex, partLength);
+                    myNames[i] = myNames[i].Remove(0, longestSubString.Length);
 
-                        // Test if all the words in the sorted list contain the part.
-                        if (wordsInLengthOrder.All(s => s.StartsWith(part)))
-                        {
-                            longestSubString = part;
-                            break;
-                        }
-                    }
-
+                    name += myNames[i] + ", ";
                 }
 
-                if (longestSubString == null)
-                    longestSubString = "";
+                name = name.Remove(name.Length - 2);
 
-                name = longestSubString;
-
-                if (myNames.Count > 1)
-                {
-                    //if(longestSubString.Length > 0)
-                    name += "(";
-
-                    for (int i = 0; i < myNames.Count; i++)
-                    {
-                        myNames[i] = myNames[i].Remove(0, longestSubString.Length);
-
-                        name += myNames[i] + ", ";
-                    }
-
-                    name = name.Remove(name.Length - 2);
-
-                    //if (longestSubString.Length > 0)
-                    name += ")";
-                }
+                name += ")";
             }
+
 
             PODListBoxItem firstItem = null;
 
@@ -287,12 +193,30 @@ namespace POD.Controls
 
             return name;
         }
+        private static string FindLargestBeginningSubstring(List<string> wordsInLengthOrder)
+        {
+            string largestSubString = "";
 
+            string shortestWord = wordsInLengthOrder.FirstOrDefault();
+            // FirstOrDefault() returns null if wordsInLengthOrder count is 0
+            // '?' checks if null before calling length
+            for (int i =0; i < shortestWord?.Length; i++)
+            {
+                if (HaveTheSameIndex(wordsInLengthOrder, i))
+                    largestSubString += shortestWord[i];
+                else 
+                    break;        
+            }
+            return largestSubString;
+        }
+        private static bool HaveTheSameIndex(List<string> stringList, int index)
+        {
+            return stringList.Select(s => s.ElementAtOrDefault(index)).Distinct().Count() == 1;
+        }
         public string AutoName
         {
             get
             {
-                //string name = "";
                 List<PODListBoxItem> names = new List<PODListBoxItem>();
 
                 foreach (DataGridViewRow row in Rows)
@@ -304,24 +228,6 @@ namespace POD.Controls
 
                 return CreateAutoName(names);
             }
-        }
-
-
-        public List<string> GetSelectedRowsAsTextList()
-        {
-            List<string> names = new List<string>();
-
-            foreach (DataGridViewRow row in SelectedRows)
-            {
-                PODListBoxItem obj = (PODListBoxItem)row.Cells[0].Value;
-
-                names.Add(obj.ToString());
-            }
-
-            //reverse because SelectedRows row order is in the opposite order of what we want
-            names.Reverse();
-
-            return names;
         }
 
         public bool GetSelected(int myIndex)
@@ -408,7 +314,7 @@ namespace POD.Controls
                 var rowCount = Rows.Count;
                 var rowHeight = (double)rowsHeight / (double)rowCount;
 
-                if (rowCount > myMaxCount)
+                if (myMaxCount <= rowCount)
                     rowCount = myMaxCount;
 
                 Height = Convert.ToInt32(rowCount * rowHeight) + 3;

@@ -40,7 +40,7 @@ namespace POD.Controls
         protected PolygonAnnotation _errorBox = null;
         protected Legend _legend = new Legend();
         protected List<string> _errorsList = new List<string>();
-        protected readonly Dictionary<string, Color> _colorMap = new Dictionary<string, Color>();
+        protected Dictionary<string, Color> _colorMap = new Dictionary<string, Color>();
         protected string _chartTitle = "";
         protected string _xAxisTitle = "";
         protected string _xAxisUnit = "";
@@ -95,9 +95,8 @@ namespace POD.Controls
             
             InitializeComponent();
             if (ContextMenuImageList == null || ContextMenuImageList.Images.Count==0)
-            {
                 SetUpImageLists();
-            }
+
             _errorsList = new List<string>();
 
             MouseEnter += AHatVsAChart_MouseEnter;
@@ -130,7 +129,7 @@ namespace POD.Controls
                 _legend.Font = new System.Drawing.Font(_legend.Font.FontFamily, 10.0F);
 
                 ChartAreas.Add(new ChartArea("podArea"));
-            }            
+            }
 
             PostPaint += DataPointChart_PostPaint;
 
@@ -157,7 +156,7 @@ namespace POD.Controls
         int MenuMinY = 20;
         int MenuMinX = 0;
         public bool MenuIsOpen = false;
-        public void SetUpImageLists()
+        private void SetUpImageLists()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataPointChart));
             ContextMenuImageList = new System.Windows.Forms.ImageList(this.components);
@@ -665,7 +664,7 @@ namespace POD.Controls
         {
             if (showLegend)
             {
-                var legend = new Legend();
+                Legend legend;
 
                 if (Legends.Count > 0)
                     legend = Legends[0];
@@ -674,9 +673,8 @@ namespace POD.Controls
                     Legends.Add(_legend);
                     legend = _legend;
                 }
-
-                if (legend.CustomItems.Count != 0)
-                    legend.CustomItems.Clear();
+                
+                legend.CustomItems.Clear();
 
                 foreach (Series series in Series)
                 {
@@ -855,25 +853,6 @@ namespace POD.Controls
                 }
             }
         }
-
-        /// <summary>
-        /// Get the axis title without the unit.
-        /// </summary>
-        public string XAxisTitleWithoutUnit
-        {
-            get
-            {
-                if (!DesignMode)
-                {
-                    return _xAxisTitle;
-                }
-
-                return "";
-            }
-        }
-
-        
-
         public string XAxisUnit
         {
             get
@@ -980,43 +959,24 @@ namespace POD.Controls
 
         }
 
-
-
-        /// <summary>
-        /// Get the axis title without the unit.
-        /// </summary>
-        public string YAxisTitleWithoutUnit
-        {
-            get
-            {
-                if (!DesignMode)
-                {
-                    return _yAxisTitle;
-                }
-
-                return "";
-            }
-        }
-
         public virtual void ShowLegend()
         {
             if(_legend != null)
-                _legend.Enabled = true;
-
-            if (!DesignMode && !Legends.Contains(_legend))
             {
-                
-                Legends.Add(_legend);
-            }
+                _legend.Enabled = true;
+                if (!DesignMode && !Legends.Contains(_legend))
+                    Legends.Add(_legend);
+            }              
         }
 
         public virtual void HideLegend()
         {
             if (_legend != null)
+            {
                 _legend.Enabled = false;
-
-            if (!DesignMode && Legends.Contains(_legend))
-                Legends.Remove(_legend);
+                if (!DesignMode && Legends.Contains(_legend))
+                    Legends.Remove(_legend);
+            }
         }
 
 
@@ -1043,24 +1003,6 @@ namespace POD.Controls
             axis.MinorGrid.Interval = Double.NaN;
             axis.MinorGrid.IntervalOffset = Double.NaN;
         }
-
-        //public void PickBestAxisRange(AnalysisData data, int labelCount)
-        //{
-        //    AxisObject yAxis = new AxisObject();
-        //    AxisObject xAxis = new AxisObject();
-
-        //    data.GetXYBufferedRanges(xAxis, yAxis, true);
-
-        //    RelabelAxesBetter(xAxis, yAxis, data.InvertTransformValueForXAxis,
-        //                data.InvertTransformValueForYAxis, labelCount, labelCount, false, false, data.FlawTransform, data.ResponseTransform,
-        //                data.TransformValueForXAxis, data.TransformValueForYAxis);
-
-        //    //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-        //    //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
-        //}
-
 
         #region OLD RELABEL CODE
         //protected virtual void RelabelAxes(AxisObject xAxis, AxisObject yAxis, InvertAxisFunction invertX, InvertAxisFunction invertY, 
@@ -1164,6 +1106,11 @@ namespace POD.Controls
         //}
         #endregion
 
+        protected virtual void GetBufferedRangeWrapper(Control chart, IAxisObject myAxis, double myMin, double myMax, AxisKind kind)
+        {
+            AnalysisData.GetBufferedRange(chart, myAxis, myMin, myMax, kind);
+        }
+
         private void RefreshAxisLabelingBasedOnCurrentSize()
         {
             if(_xRelabel != null && _yRelabel != null)
@@ -1215,7 +1162,7 @@ namespace POD.Controls
             }
         }
 
-        protected virtual void RelabelAxesBetter(AxisObject xAxis, AxisObject yAxis, 
+        protected virtual void RelabelAxesBetter(IAxisObject xAxis, IAxisObject yAxis, 
                                                  Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY,
                                                  int xLabelCount, int yLabelCount, 
                                                  bool myCenterXAtZero = false, bool myCenterYAtZero = false,
@@ -1288,7 +1235,7 @@ namespace POD.Controls
             }
         }
 
-        private void StoreLabelingParameters(AxisObject xAxis, AxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 
+        private void StoreLabelingParameters(IAxisObject xAxis, IAxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 
                                              int xLabelCount, int yLabelCount, bool xCenterAtZero, bool yCenterAtZero, 
                                              TransformTypeEnum xAxisTransform, TransformTypeEnum yAxisTransform,
                                              Globals.InvertAxisFunction xTransform, Globals.InvertAxisFunction yTransform)
@@ -1300,7 +1247,7 @@ namespace POD.Controls
                 _yRelabel = new RelabelParameters(yAxis, invertY, yLabelCount, yCenterAtZero, yAxisTransform, yTransform);
         }
 
-        private double UpdateChartAxis(Axis axis, AxisObject axisObj, bool myCenterZero)
+        private double UpdateChartAxis(Axis axis, IAxisObject axisObj, bool myCenterZero)
         {
             var offset = 0.0;
 
@@ -1342,7 +1289,7 @@ namespace POD.Controls
             return maxPrecision;
         }
         //private void LabelBoxCoxAxis(Axis chartaxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offest, bool redoing= false, Transform)
-        private void LabelLinearAxis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
+        private void LabelLinearAxis(Axis chartAxis, IAxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
         {
             var lastString = "";
             var precision = 1;
@@ -1422,7 +1369,7 @@ namespace POD.Controls
             return format;
         }
 
-        private void LabelLog10Axis(Axis chartAxis, AxisObject axis, Globals.InvertAxisFunction transform, bool forceAll = false)
+        private void LabelLog10Axis(Axis chartAxis, IAxisObject axis, Globals.InvertAxisFunction transform, bool forceAll = false)
         {
             var labeledTick = 0;
 
@@ -1470,7 +1417,7 @@ namespace POD.Controls
                 LabelLog10Axis(chartAxis, axis, transform, true);
             }
         }
-        public double TransformBackValue(double myValue, TransformTypeEnum transform, double lambdaValue= Double.NaN)
+        private double TransformBackValue(double myValue, TransformTypeEnum transform, double lambdaValue= Double.NaN)
         {
             double transformValue = 0.0;
             switch (transform)
@@ -1515,7 +1462,7 @@ namespace POD.Controls
             }
             return transformValue;
         }
-        public double TransformValue(double myValue, TransformTypeEnum transform= TransformTypeEnum.Log)
+        private  double TransformValue(double myValue, TransformTypeEnum transform= TransformTypeEnum.Log)
         {
             double transformValue = 0.0;
             switch (transform)
@@ -1582,16 +1529,11 @@ namespace POD.Controls
 
             set
             {
-                if (Selectable)
+                if (Selectable && mouseInside == false)
                 {
-                    if (mouseInside == false)
-                    {
-                        _isSelected = value;
-
-                        if (_isSelected == false)
-                            Invalidate();
-
-                    }
+                    _isSelected = value;
+                    if (_isSelected == false)
+                        Invalidate();
                 }
                 else
                 {
@@ -1617,35 +1559,6 @@ namespace POD.Controls
             {
                 return ChartAreas[0].AxisY;
             }
-        }
-
-        private void CopyAxisRange(Axis myAxisTo, Axis myAxisFrom)
-        {
-            myAxisTo.Maximum = myAxisFrom.Maximum;
-            myAxisTo.Minimum = myAxisFrom.Minimum;
-            myAxisTo.Interval = myAxisFrom.Interval;
-            myAxisTo.IntervalOffset = myAxisFrom.IntervalOffset;
-
-        }
-
-        public void CopyXAxisRange(Axis myAxis)
-        {
-            CopyAxisRange(ChartAreas[0].AxisX, myAxis);
-        }
-
-        public void CopyYAxisRange(Axis myAxis)
-        {
-            CopyAxisRange(ChartAreas[0].AxisY, myAxis);
-        }
-
-        public void CopyXAxisRange(Chart myChart)
-        {
-            CopyXAxisRange(myChart.ChartAreas[0].AxisX);
-        }
-
-        public void CopyYAxisRange(Chart myChart)
-        {
-            CopyYAxisRange(myChart.ChartAreas[0].AxisY);
         }
 
         void DataPointChart_Resize(object sender, EventArgs e)
@@ -1693,13 +1606,9 @@ namespace POD.Controls
             if (Selectable)
             {
                 if (CanUnselect)
-                {
                     _isSelected = !_isSelected;
-                }
                 else
-                {
                     _isSelected = true;
-                }
 
                 Select();
                 Invalidate();
@@ -1733,11 +1642,6 @@ namespace POD.Controls
             Invalidate(new Rectangle(0, 0, 20, 20));
             
         }
-
-        /*public void CreateLargeColorList()
-        {
-            GetLargeColorList(false);
-        }*/
 
         public static List<Color> GetLargeColorList(bool designMode)
         {
@@ -1793,7 +1697,7 @@ namespace POD.Controls
 
         public void ReloadChartData(DataRowCollection xRows, DataTable yData, DataTable names)
         {
-            var nameColumnNames = new List<String>();
+            var nameColumnNames = new List<string>();
 
             foreach (DataColumn col in names.Columns)
                 nameColumnNames.Add(col.ColumnName);
@@ -1880,14 +1784,12 @@ namespace POD.Controls
             return finalName;
         }
 
-        public void SetXAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
+        public void SetXAxisRange(IAxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
             bool transformResidView=false)
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window
             if (!transformResidView)
-            {
                 AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.X);
-            }
 
             if (myAxis.Max < myAxis.Min)
             {
@@ -1899,26 +1801,19 @@ namespace POD.Controls
             CopyAxisObjectToAxis(ChartAreas[0].AxisX, myAxis);
 
             if (!forceLinear)
-            {
                 RelabelAxesBetter(myAxis, null, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 
                     Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, keepLabelCount, false);
-            }
             else
-            {
                 RelabelAxesBetter(myAxis, null, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
                     false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, keepLabelCount, false);
-
-            }
         }
 
-        public void SetYAxisRange(AxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
+        public void SetYAxisRange(IAxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount=false,
             bool transformResidView = false)
         {
             //don't create buffering if user is switching between show residuals and show fit in signal response transform window
             if (!transformResidView)
-            {
                 AnalysisData.GetBufferedRange(this, myAxis, myAxis.Min, myAxis.Max, AxisKind.Y);
-            }
 
             if (myAxis.Max < myAxis.Min)
             {
@@ -1939,17 +1834,11 @@ namespace POD.Controls
                                       false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
             }
             else
-            {
-                //if (data.ResponseTransform == TransformTypeEnum.BoxCox)
-                //    RelabelAxesBetter(null, myAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                //                  false, true, data.FlawTransform, data.ResponseTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, keepLabelCount, data.LambdaValue);
-                //else
-                    RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
-                                      false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
-            }
+                RelabelAxesBetter(null, myAxis, data.DoNoTransform, data.DoNoTransform, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y),
+                    false, true, TransformTypeEnum.Linear, TransformTypeEnum.Linear, data.DoNoTransform, data.DoNoTransform, false, keepLabelCount);
         }
         
-        private void CopyAxisObjectToAxis(Axis myAxis, AxisObject myAxisObj)
+        private void CopyAxisObjectToAxis(Axis myAxis, IAxisObject myAxisObj)
         {
             myAxis.Maximum = myAxisObj.Max;
             myAxis.Minimum = myAxisObj.Min;
@@ -2034,28 +1923,19 @@ namespace POD.Controls
             foreach (Series series in Series)
             {
                 if (_colorMap.ContainsKey(series.Name))
-                {
                     continue;
-                }
 
-                Color color = Color.Transparent;
+                Color color;
 
                 if (Series[series.Name].Points.Count > 0)
                 {
                     color = Series[series.Name].Points.First().Color;
 
-                    if(color == Color.Gray)
-                    {
-                        color = Series[series.Name].Color;
-                    }
-
-                    if(color.A == 0)
+                    if(color == Color.Gray || color.A == 0)
                         color = Series[series.Name].Color;
                 }
                 else
-                {
                     color = Series[series.Name].Color;
-                }
 
                 _colorMap.Add(series.Name, color);
             }
@@ -2147,7 +2027,7 @@ namespace POD.Controls
                 HideLegend();
         }
 
-        public static void RemoveNullRowsFromView(DataView view)
+        private void RemoveNullRowsFromView(DataView view)
         {
             var deletes = new List<DataRow>();
 
@@ -2165,8 +2045,10 @@ namespace POD.Controls
             }
         }
 
-        public void FinalizeErrors(ErrorArgs e)
+        public void FinalizeErrors(ErrorArgs e, IMessageBoxWrap messageBoxInput = null)
         {
+            var messageBox = messageBoxInput ?? new MessageBoxWrap();
+
             var finalErrorString = "";
 
             foreach (string error in _errorsList)
@@ -2195,7 +2077,7 @@ namespace POD.Controls
             }
             catch(Exception exp)
             {
-                MessageBox.Show("FinalizeErrors: " + exp.Message, "POD v4 Error");
+                messageBox.Show("FinalizeErrors: " + exp.Message, "POD v4 Error");
             }
         }
 
@@ -2214,10 +2096,7 @@ namespace POD.Controls
             if (_error == null && _errorBox == null)
             {
                 _error = new TextAnnotation();
-                //_error.AxisX = XAxis;
-                //_error.AxisY = YAxis;
-                //_error.Alignment = ContentAlignment.MiddleCenter;
-                //_error.AnchorAlignment = ContentAlignment.MiddleCenter;
+
                 _error.X = 50;// (XAxis.Maximum - XAxis.Minimum) / 2.0 + XAxis.Minimum;
                 _error.Y = 50;// (YAxis.Maximum - YAxis.Minimum) / 2.0 + YAxis.Minimum;
                 _error.ForeColor = Color.Black;
@@ -2250,23 +2129,6 @@ namespace POD.Controls
                 }
                 
             }
-            //else
-            //{
-            //    this.Invoke((MethodInvoker)delegate()
-            //    {
-            //        if (_resetErrors)
-            //        {
-            //            //_error.Text = e.Error;                      
-            //        }
-            //        else
-            //        {
-            //            //_error.Text += Environment.NewLine + e.Error;
-            //        }
-            //    });
-            //}
-
-            
-            
         }
 
         public void ShowProgressBar(ErrorArgs e)

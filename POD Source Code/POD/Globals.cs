@@ -74,6 +74,13 @@ namespace POD
     {
         public delegate double InvertAxisFunction(double x);
 
+        private static IMessageBoxWrap _messageBoxWrapper = null;
+        public static IMessageBoxWrap MessageBoxWrapper
+        {
+            set { _messageBoxWrapper = value; }
+        }
+
+
         public const int DefaultLabelCount = 10;
         //public static int AnnoyingBug = 0;
         public static int GetLabelIntervalBasedOnChartSize(Control chart, AxisKind kind)
@@ -206,6 +213,7 @@ namespace POD
         /// </summary>
         public static Cursor CreateCursorNoResize(Bitmap bmp, int xHotSpot, int yHotSpot)
         {
+            var messageBox = _messageBoxWrapper ?? new MessageBoxWrap();
             try
             {
                 IntPtr ptr = bmp.GetHicon();
@@ -219,7 +227,7 @@ namespace POD
             }
             catch
             {
-                MessageBox.Show("Problem creating cursor.");
+                messageBox.Show("Problem creating cursor.");
 
                 return Cursors.Default;
             }
@@ -1160,18 +1168,21 @@ namespace POD
         StandardWald,
         ModifiedWald,
         LR,
-        MLR
+        MLR,
+        None
     }
 
     public enum SamplingTypeEnum
     {
         SimpleRandomSampling,
-        RankedSetSampling
+        RankedSetSampling,
+        None
     }
     public enum HitMissRegressionType
     {
         LogisticRegression,
-        FirthLogisticRegression
+        FirthLogisticRegression,
+        None
     }
     public enum RCalculationType
     {
@@ -1280,7 +1291,6 @@ namespace POD
                 default:
                     return "";
             }
-        }
-        
+        }      
     }
 }

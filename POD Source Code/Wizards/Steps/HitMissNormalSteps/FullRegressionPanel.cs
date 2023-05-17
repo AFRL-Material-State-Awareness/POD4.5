@@ -19,7 +19,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
     public partial class FullRegressionPanel : RegressionPanel
     {
-        private TransformBox _xTransformBox;
+        private TransformBoxX _xTransformBox;
         private Label _xTransformLabel;
         
         private ConfidenceBox _confIntBox;

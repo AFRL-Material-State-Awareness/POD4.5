@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalysisData.cs" />
+    <Compile Include="AxisObject.cs" />
     <Compile Include="DataHelpers.cs" />
     <Compile Include="DataPointIndex.cs" />
     <Compile Include="DataSource.cs" />

@@ -193,7 +193,6 @@ namespace POD.Controls
         {
             if(e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
             {
-                //e.Text = "5";
             }
         }
 
@@ -201,30 +200,20 @@ namespace POD.Controls
         {
             var setAMax = new ToolStripMenuItem("Set Flaw Max. here");
 
-            
-
             setAMax.Click += (sender, e) => SetAMaxBoundaryMenu(sender, e, new DataPoint(x, y));
 
             var setAMin = new ToolStripMenuItem("Set Flaw Min. here");
 
             setAMin.Click += (sender, e) => SetAMinBoundaryMenu(sender, e, new DataPoint(x, y));
 
-            if (ContextMenuImageList != null )
+            // was >= 4, changed to >=6 because images[5] index out of range would occur
+            if (ContextMenuImageList?.Images.Count >= 6)
             {
-                if(ContextMenuImageList.Images.Count >= 4)
-                {
-                    setAMax.Image = ContextMenuImageList.Images[5];
-                    setAMin.Image = ContextMenuImageList.Images[4];
-                }
-                
+                setAMax.Image = ContextMenuImageList.Images[5];
+                setAMin.Image = ContextMenuImageList.Images[4];
             }
 
-            var menuItems = new List<ToolStripItem>
-            {
-                //new ToolStripSeparator(),
-                setAMax,
-                setAMin
-            };
+            var menuItems = new List<ToolStripItem> { setAMax, setAMin };
 
             return menuItems;
         }
@@ -277,9 +266,6 @@ namespace POD.Controls
                         dataPointLabel.Image = bitmap;
                         dataPointLabel.ImageScaling = ToolStripItemImageScaling.SizeToFit;
                     }
-
-                    //dataPointLabel.Enabled = false;
-                    //dataPointLabel.Paint += dataPointLabel_Paint;
 
                     if (panel != null)
                     {
@@ -360,19 +346,13 @@ namespace POD.Controls
 
         public void DeterminePointsInThreshold()
         {
-            MoveLine(_aMaxLine, _aMinLine);
-
-            
+            MoveLine(_aMaxLine, _aMinLine);      
         }
 
         public void DrawEquation()
         {
             if(_equation == null)
             {
-                //FindForm().SizeChanged += RegressionAnalysisChart_Resize;
-
-                //_equGroup = new AnnotationGroup();
-
                 _equBox = new PolygonAnnotation();
 
                 _equBox.Name = "EquationBox";
@@ -389,13 +369,9 @@ namespace POD.Controls
                 _equation.AxisX = XAxis;
                 _equation.AxisY = YAxis;
                 _equation.Alignment = ContentAlignment.TopLeft;
-                //_equation.X = double.NaN;
-                //_equation.Y = double.NaN;
                 _equation.ForeColor = Color.Black;
                 _equation.Font = new Font("Arial", 14);
-                //_equation.Visible = false;
 
-                //Annotations.Insert(0, _equation);
                 Annotations.Add(_equBox);
                 Annotations.Add(_equation);
             }
@@ -469,7 +445,6 @@ namespace POD.Controls
                 _aMaxLine.AxisY = yAxis;
                 _aMaxLine.IsSizeAlwaysRelative = false;
                 _aMaxLine.AllowMoving = true;
-                //_aMaxLine.AnchorX = x;
                 _aMaxLine.X = x;
                 _aMaxLine.IsInfinitive = true;
                 _aMaxLine.ClipToChartArea = ChartAreas[0].Name;
@@ -496,7 +471,6 @@ namespace POD.Controls
                 _aMinLine.AxisY = yAxis;
                 _aMinLine.IsSizeAlwaysRelative = false;
                 _aMinLine.AllowMoving = true;
-                //_aMinLine.AnchorX = x;
                 _aMinLine.X = x;
                 _aMinLine.IsInfinitive = true;
                 _aMinLine.ClipToChartArea = ChartAreas[0].Name;
@@ -602,34 +576,21 @@ namespace POD.Controls
 
         public virtual bool FindValue(ControlLine line, ref double myValue)
         {
-            double value;
-            double anchorValue;
-            bool foundLine = true;
-
             switch (line)
             {
                 case ControlLine.AMin:
-                    value = _aMinLine.X;
-                    anchorValue = _aMinLine.AnchorX;
-                    break;
+                    myValue = Double.IsNaN(_aMinLine.X) ? _aMinLine.AnchorX : _aMinLine.X;
+                    return true;
                 case ControlLine.AMax:
-                    value = _aMaxLine.X;
-                    anchorValue = _aMaxLine.AnchorX;
-                    break;
+                    myValue = Double.IsNaN(_aMaxLine.X) ? _aMaxLine.AnchorX : _aMaxLine.X;
+                    return true;
                 case ControlLine.Threshold:
-                    value = _thresholdLine.Y;
-                    anchorValue = _thresholdLine.AnchorY;
-                    break;
+                    myValue = Double.IsNaN(_thresholdLine.Y) ? _thresholdLine.AnchorY : _thresholdLine.Y;
+                    return true;
                 default:
-                    value = Double.NaN;
-                    anchorValue = Double.NaN;
-                    foundLine = false;
-                    break;
+                    myValue = double.NaN;
+                    return false;
             }
-
-            myValue = Double.IsNaN(value) ? anchorValue : value;
-
-            return foundLine;
         }
 
         private void FixColor(int seriesIndex, int seriesPtIndex, Flag bounds)
@@ -643,12 +604,6 @@ namespace POD.Controls
                         if (_colorMap.Count > 0)
                         {
                             var color = _colorMap[Series[seriesIndex].Name];
-
-                            if(color == Color.Gray)
-                            {
-
-                            }
-
                             var point = Series[seriesIndex].Points[seriesPtIndex];
                             if(!point.IsEmpty)
                                 point.Color = color;
@@ -956,21 +911,15 @@ namespace POD.Controls
                 LinesChanged(this, e);
             }
         }
-
-        public void PickBestAxisRange(double myTransformedResponseMin, double myTransformedResponseMax, double myTransformedFlawMin, double myTransformedFlawMax)
+        // IAxisObjects are injected dependencies for unit testing purposes
+        public void PickBestAxisRange(double myTransformedResponseMin, 
+            double myTransformedResponseMax, double myTransformedFlawMin, double myTransformedFlawMax,
+            IAxisObject xaxisT = null, IAxisObject yAxisT = null)
         {
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            IAxisObject xAxis = xaxisT ?? new AxisObject();
+            IAxisObject yAxis = yAxisT ?? new AxisObject();
 
-            //myResponseMin = _analysisData.TransformValueForYAxis(myResponseMin);
-            //myResponseMax = _analysisData.TransformValueForYAxis(myResponseMax);
-
-            //myFlawMin = _analysisData.TransformValueForXAxis(myFlawMin);
-            //myFlawMax = _analysisData.TransformValueForXAxis(myFlawMax);
-
-            _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
-
-            
+            _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);           
 
             if(yAxis.Max < myTransformedResponseMax)
                 yAxis.Max = myTransformedResponseMax;
@@ -992,39 +941,19 @@ namespace POD.Controls
             }
             else
             {
-                AnalysisData.GetBufferedRange(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
+                GetBufferedRangeWrapper(this, yAxis, yAxis.Min, yAxis.Max, AxisKind.Y);
             }
 
-            AnalysisData.GetBufferedRange(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
-            if(_analysisData.DataType == AnalysisDataTypeEnum.AHat)
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
-                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
-            else
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, 
-                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis);
-            //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-            //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
+            GetBufferedRangeWrapper(this, xAxis, xAxis.Min, xAxis.Max, AxisKind.X);
+            RelabelAxesBetterForAxisRange(xAxis, yAxis);
         }
-
-        public void PickBestAxisRange()
+        public void PickBestAxisRange(IAxisObject xaxisT = null, IAxisObject yAxisT = null)
         {
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            IAxisObject xAxis = xaxisT ?? new AxisObject();
+            IAxisObject yAxis = yAxisT ?? new AxisObject();
 
             _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
-
-            //RelabelAxes(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis, 
-            //            _analysisData.InvertTransformValueForYAxis, 10, 10);
-            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
-            else
-                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
-                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform, _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false);
+            RelabelAxesBetterForAxisRange(xAxis, yAxis);
             if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
             {
                 if (ChartAreas[0].AxisX.Maximum < ChartAreas[0].AxisX.Minimum)
@@ -1033,14 +962,19 @@ namespace POD.Controls
                     ChartAreas[0].AxisX.Minimum = 0;
                 }
             }
-            
-            //ChartAreas[0].AxisX.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-            //ChartAreas[0].AxisY.LabelAutoFitStyle = LabelAutoFitStyles.DecreaseFont;
-
-
         }
 
-        
+        private void RelabelAxesBetterForAxisRange(IAxisObject xAxis, IAxisObject yAxis)
+        {
+            if (_analysisData.DataType == AnalysisDataTypeEnum.AHat)
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
+                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false, _analysisData.LambdaValue);
+            else
+                RelabelAxesBetter(xAxis, yAxis, _analysisData.InvertTransformValueForXAxis,
+                              _analysisData.InvertTransformValueForYAxis, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, _analysisData.FlawTransform, _analysisData.ResponseTransform,
+                              _analysisData.TransformValueForXAxis, _analysisData.TransformValueForYAxis, false, false);
+        }
 
         public void PrepareForRunAnalysis()
         {
@@ -1095,16 +1029,8 @@ namespace POD.Controls
             hittestresults[0] = HitTest(pos.X, pos.Y);
             hittestresults[1] = HitTest(pos.X+1, pos.Y);
             hittestresults[2] = HitTest(pos.X-1, pos.Y);
-            //hittestresults[3] = HitTest(pos.X+2, pos.Y);
-            //hittestresults[4] = HitTest(pos.X-2, pos.Y);
-            //hittestresults[5] = HitTest(pos.X, pos.Y-2);
-            //hittestresults[6] = HitTest(pos.X, pos.Y+2);
             hittestresults[3] = HitTest(pos.X, pos.Y+1);
             hittestresults[4] = HitTest(pos.X, pos.Y-1);
-            //hittestresults[9] = HitTest(pos.X, pos.Y - 3);
-            //hittestresults[10] = HitTest(pos.X, pos.Y + 3);
-            //hittestresults[11] = HitTest(pos.X, pos.Y + 3);
-            //hittestresults[12] = HitTest(pos.X, pos.Y - 3);
 
             var allEmpty = true;
 
@@ -1159,9 +1085,6 @@ namespace POD.Controls
 
                             _positionString = string.Format("Series: {3}" + "\n" + "ID: {2}" + "\n" + "Value: ({0:0.###}, {1:0.###})", xInvt, yInvt, dataPoint.GetCustomProperty("Name"), result.Series.Name);
 
-                            //var newLabel = oldLabel + _positionString;
-
-                            //dataPoint.ToolTip += "Value: " + _positionString; 
                             dataPoint.ToolTip = _positionString;
                         }
                         catch (Exception exp)
@@ -1201,9 +1124,6 @@ namespace POD.Controls
             HitTestResult result = HitTest(pos.X, pos.Y);
             var panel = new FlowLayoutPanel();
             panel.FlowDirection = FlowDirection.TopDown;
-            //panel.BorderStyle = BorderStyle.FixedSingle;
-            //panel.AutoSize = true;
-            //panel.Dock = DockStyle.Fill;
 
             if (_lastMenu != null && _lastMenu.Visible == false)// && _lastMenu.Visible == true)
             {
@@ -1308,8 +1228,6 @@ namespace POD.Controls
                     {
                         _lastMenu = null;
                     }
-
-                    //pointMenu.Show(this, new Point(pos.X, pos.Y - pointMenu.Height ));
                     actionMenu.Show(this, new Point(pos.X + 10, pos.Y - pointMenu.Height));
                 }
             }
@@ -1350,15 +1268,9 @@ namespace POD.Controls
 
                 _analysisData.RefillSortList();
 
-                //OnLinesChanged(EventArgs.Empty);
                 _painted = true;
 
-                //PickBestAxisRange();
-
                 RaiseRunAnalysis();
-
-                //Refresh();
-                //Refresh();
 
                 
             }
@@ -1384,11 +1296,8 @@ namespace POD.Controls
 
         protected void ForceUpdateEquation()
         {
-            if (_equation != null)
-            {
-                _equation.Text = _equation.Text;
-                _equation.ResizeToContent();
-            }
+            //_equation.Text = _equation?.Text;
+            _equation?.ResizeToContent();
         }
         
         public void SetAMaxBoundary(double myX, bool triggerEvent)
@@ -1541,18 +1450,15 @@ namespace POD.Controls
             Series a90_95Line = Series[PODRegressionLabels.a9095Line];
 
             double minY = ChartAreas[0].AxisY.Minimum;
-            double minX = ChartAreas[0].AxisX.Minimum;
 
             double a50Y = myFitM*myA50 + myFitB;
             double a90Y = myFitM*myA90 + myFitB;
-            double a90_95Y = myFitM*myA90_95 + myFitB;
 
             Series line = a50Line;
 
             line.Points.Clear();
             line.Points.AddXY(myA50, minY);
             line.Points.AddXY(myA50, a50Y);
-            //line.Points.AddXY(minX, a50Y);
             line.Points[0].Label = "50";
 
             line = a90Line;
@@ -1560,7 +1466,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA90, minY);
             line.Points.AddXY(myA90, a90Y);
-            //line.Points.AddXY(minX, a90Y);
             line.Points[0].Label = "90";
 
             line = a90_95Line;
@@ -1572,7 +1477,6 @@ namespace POD.Controls
             {
                 line.Points.AddXY(myA90_95, minY);
                 line.Points.AddXY(myA90_95, a90Y);
-                //line.Points.AddXY(minX, a90_95Y);
                 line.Points[0].Label = "90/95";
             }
         }
@@ -1584,7 +1488,6 @@ namespace POD.Controls
             Series a90_95Line = Series[PODRegressionLabels.a9095Line];
 
             double minY = ChartAreas[0].AxisY.Minimum;
-            double minX = ChartAreas[0].AxisX.Minimum;
 
             double a50Y = .5;
             double a90Y = .9;
@@ -1594,7 +1497,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA50, minY);
             line.Points.AddXY(myA50, a50Y);
-            //line.Points.AddXY(minX, a50Y);
             line.Points[0].Label = "50";
 
             line = a90Line;
@@ -1602,7 +1504,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA90, minY);
             line.Points.AddXY(myA90, a90Y);
-            //line.Points.AddXY(minX, a90Y);
             line.Points[0].Label = "90";
 
             line = a90_95Line;
@@ -1610,7 +1511,6 @@ namespace POD.Controls
             line.Points.Clear();
             line.Points.AddXY(myA90_95, minY);
             line.Points.AddXY(myA90_95, a90Y);
-            //line.Points.AddXY(minX, a90_95Y);
             line.Points[0].Label = "90/95";
         }
 

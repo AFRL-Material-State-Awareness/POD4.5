@@ -9,66 +9,51 @@ namespace POD.Controls
 {
     public class PODPdfiumViewer : PdfRenderer
     {
-        //Form _form;
+        IPDFLoader _pdfLoader;
         string _pdfFile;
-        bool _loaded = false;
-        PdfDocument _mypdfDoucment;
-        //PdfRenderer _myPdfRender;
+        bool _loaded;
+        IPdfDocument _mypdfDocument;
         public string PdfFileName
         {
             get { return _pdfFile; }
             set { _pdfFile = value; }
         }
-
-        public PODPdfiumViewer()
+        // Inject dependencies in contructor for testing purposes (do not use args in code)
+        public PODPdfiumViewer(IPDFLoader pdfLoader = null, bool loaded = false,
+            IPdfDocument pdfDoc = null)
         {
-            //PdfLoaded += PODPdfViewer_PdfLoaded;
-            //_myPdfRender = new PdfRenderer();
-            
-            
+            _pdfLoader = pdfLoader ?? new PDFLoader();
+            _loaded = loaded;
+            _mypdfDocument = pdfDoc;
         }
 
         void PODPdfViewer_PdfLoaded(object sender, EventArgs args)
         {
-            //_form = FindForm();
-
-            //_form.VerticalScroll.Minimum = 0;
-            //_form.VerticalScroll.Maximum = PageCount * 3;      
-
-
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == System.Windows.Forms.Keys.PageUp)
             {
-                //GoToPreviousPage();
-                //Renderer.Page -= 1;
                 Page -= 1;
                 return true;
             }
 
             if (keyData == System.Windows.Forms.Keys.PageDown)
             {
-                //GoToNextPage();
-                //Renderer.Page += 1;
                 Page += 1;
                 return true;
             }
 
             if (keyData == Keys.Home)
             {
-                //GoToFirstPage();
-                //Renderer.Page = 1;
                 Page = 1;
                 return true;
             }
 
             if (keyData == Keys.End)
             {
-                //GoToLastPage();
-                //Renderer.Page = _mypdfDoucment.PageCount;
-                Page = _mypdfDoucment.PageCount;
+                Page = _mypdfDocument.PageCount;
                 return true;
             }
 
@@ -102,62 +87,22 @@ namespace POD.Controls
 
             base.OnMouseClick(e);
         }
-        /*
+
         public bool OpenPDF()
         {
             if (!_loaded)
             {
-                LoadFromFile(_pdfFile);
-                
-                _loaded = true;
+                _mypdfDocument=_pdfLoader.LoadPDF(this, this, _pdfFile);
 
-                return true;
-            }
-
-            return false;
-        }
-        */
-        public bool OpenPDF()
-        {
-            if (!_loaded)
-            {
-                //LoadFromFile(_pdfFile);
-                _mypdfDoucment = PdfDocument.Load(this, _pdfFile);
-                // Load PDF Document into WinForms Control
-                Load(_mypdfDoucment);
                 _loaded = true;
 
                 return true;
             }
             return false;
         }
-        public int PageCount
-        {
-            get {                
-                if(_mypdfDoucment != null)
-                {
-                    return _mypdfDoucment.PageCount;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-        public PdfBookmarkCollection Bookmarks
-        {
-            get
-            {
-                if(_mypdfDoucment != null)
-                {
-                    return _mypdfDoucment.Bookmarks;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
+        public int PageCount => _mypdfDocument?.PageCount ?? 0;
+
+        public PdfBookmarkCollection Bookmarks => _mypdfDocument?.Bookmarks;
     }
 
 }

@@ -43,14 +43,6 @@ namespace POD.Controls
             Margin = new Padding(0);
         }
 
-        /*protected override void OnMouseEnter(EventArgs e)
-        {
-            if (_tip != null)
-                _tip.Show(_tooltip, this);
-
-            base.OnMouseEnter(e);
-        }*/
-
         public PODButton(string myLabel)
         {
             //UseMnemonic = true;

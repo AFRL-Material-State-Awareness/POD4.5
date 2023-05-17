@@ -20,7 +20,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
     public partial class QuickRegressionPanel : RegressionPanel
     {
-        private TransformBox _xTransformBox;
+        private TransformBoxX _xTransformBox;
         private Label _xTransformLabel;
         //use to keep track of the previously selected confidence interval
         private ConfidenceIntervalTypeEnum previousConfInt = ConfidenceIntervalTypeEnum.StandardWald;
@@ -35,7 +35,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         //rich text box used to give the user helpful hints with the Analysis
         private RichTextBox _helpfulRTF;
 
-        //private TransformBox _yTransformBox;
+        //private TransformBoxX _yTransformBox;
         SimpleActionBar _tableBar;
         PODButton _updateButton;
         PODButton _deleteButton;

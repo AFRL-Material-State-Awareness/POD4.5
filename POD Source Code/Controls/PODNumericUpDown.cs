@@ -14,7 +14,6 @@ namespace POD.Controls
 
     public partial class PODNumericUpDown : NumericUpDown
     {
-        //private bool bypassEvent = false;
         EventHandler eventHandler = null;
 
         public new event EventHandler ValueChanged
@@ -46,25 +45,8 @@ namespace POD.Controls
             }
         }
 
-        //protected override void OnKeyDown(KeyEventArgs e)
-        //{
-            //base.OnKeyDown(e);
-        //}
-
-        //protected override void OnTextBoxTextChanged(object source, EventArgs e)
-        //{
-            //MessageBox.Show(source.ToString());
-        //}
-
        protected override void UpdateEditText()
        {
-            //if (Value < .001m)
-            //    this.Text = Value.ToString("E3");
-            //else
-            //    this.Text = Value.ToString("F3");
-            // 
-
-            //this.Text = Value.ToString("0.#########################");
            if (Value < .00001m)
                this.Text = Value.ToString("F6");
            else if (Value < .0001m)
@@ -108,9 +90,6 @@ namespace POD.Controls
 
         private void PaintOverButtons(object sender, PaintEventArgs e)
         {
-            //base.OnPaint(e);
-
-            
         }
 
         public override void DownButton()

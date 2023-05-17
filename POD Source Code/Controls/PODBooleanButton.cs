@@ -16,23 +16,6 @@ namespace POD.Controls
         private string _falseText;
         private bool _state;
 
-        public PODBooleanButton(string myFalse, string myTrue, bool myState)
-        {
-            
-
-            InitializeComponent();
-
-            //UseMnemonic = true;
-
-            _falseText = myFalse;
-            _trueText = myTrue;
-            _state = myState;
-
-            Name = myFalse.Replace("&", "");
-
-            UpdateLabel();
-        }
-
         public PODBooleanButton(string myFalse, string myTrue, bool myState, string tooltip, PODToolTip myTip)
         {
             //UseMnemonic = true;
@@ -50,26 +33,6 @@ namespace POD.Controls
             UpdateLabel();
         }
 
-        public string TrueLabel
-        {
-            set
-            {
-                _trueText = value;
-                UpdateLabel();
-            }
-            get { return _trueText; }
-        }
-
-        public string FalseLabel
-        {
-            set 
-            {
-                _falseText = value;
-                UpdateLabel(); 
-            }
-            get { return _falseText; }
-        }
-
         public bool ButtonState
         {
             set 
@@ -78,13 +41,6 @@ namespace POD.Controls
                 UpdateLabel(); 
             }
             get { return _state; }
-        }
-
-        public void FlipState()
-        {
-            _state = !_state;
-
-            UpdateLabel();
         }
 
         public override void UpdateLabel()

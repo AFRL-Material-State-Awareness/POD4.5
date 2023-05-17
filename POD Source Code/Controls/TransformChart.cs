@@ -137,20 +137,7 @@ namespace POD.Controls
                 series.Color = Color.FromArgb(ChartColors.LineAlpha, ChartColors.UncensoredPoints);
                 series.MarkerStyle = MarkerStyle.Circle;
                 series.MarkerSize = 8;
-            }
-
-            //if (Series.FindByName(LinearityChartLabels.PartialCensored) == null)
-            //{
-            //    //draw residual for partially censored data
-            //    Series.Add(new Series(LinearityChartLabels.PartialCensored));
-            //    series = Series.Last();
-            //    series.ChartType = SeriesChartType.Point;
-            //    series.YValuesPerPoint = 1;
-            //    series.Color = Color.FromArgb(ChartColors.LineAlpha, ChartColors.SemiCensoredPoints);
-            //    series.MarkerStyle = MarkerStyle.Circle;
-            //}
-
-            
+            }           
 
             _residualXAxis = new AxisObject(); ;
             _residualYAxis = new AxisObject(); ;
@@ -207,13 +194,10 @@ namespace POD.Controls
 
         private void SwitchSeriesForView()
         {
-            //foreach (Series series in _normalSeries)
-            //    series.Enabled = !_showResiduals;
 
             Original.Enabled = !_showResiduals;
             FlawEstimate.Enabled = !_showResiduals;
 
-            //PartialCensored.Enabled = _showResiduals;
             Uncensored.Enabled = _showResiduals;
             FlawResidual.Enabled = _showResiduals;
 
@@ -258,8 +242,6 @@ namespace POD.Controls
 
             AddHitMissFitSeries(data);
 
-            //AddHitMissResidualSeries(data, colors, colorIndex, styleIndex);
-
             ModelCompare.Enabled = _compareModels;
         }
 
@@ -302,15 +284,7 @@ namespace POD.Controls
             }
             Original.Enabled = false;
 
-            //var index = 0;
-
             ColorSeries(colors, colorIndex, styleIndex, Original);
-
-            //XAxisTitle = data.ActivatedFlawName;
-            //XAxisUnit = flaws[flawIndex].Unit;
-
-            //YAxisTitle = data.ActivatedResponseNames[index];
-            //YAxisUnit = responses[responseIndex].Unit;
 
             UpdateChartTitle();
 
@@ -401,9 +375,6 @@ namespace POD.Controls
         {
 
             Series series = null;
-            //TEMP
-            DataTable debugTest = myData.ResidualRawTable;
-            //printDT(debugTest);
             DataView view = myData.ResidualRawTable.DefaultView;
             //Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
             Uncensored.Points.DataBindXY(view, "transformFlaw", view, "t_diff");
@@ -480,29 +451,6 @@ namespace POD.Controls
                 uncensoredMax = Uncensored.Points.FindMaxByValue("Y1").YValues[0];
                 uncensoredMin = Uncensored.Points.FindMinByValue("Y1").YValues[0];
             }
-
-            //var censoredMax = Double.NegativeInfinity;
-            //var censoredMin = Double.PositiveInfinity;
-
-            //if (PartialCensored.Points.Count > 0)
-            //{
-            //    censoredMax = PartialCensored.Points.FindMaxByValue("Y1").YValues[0];
-            //    censoredMin = PartialCensored.Points.FindMinByValue("Y1").YValues[0];
-            //}
-
-            //var globalResponseMax = (uncensoredMax > censoredMax) ? uncensoredMax : censoredMax;
-            //var globalResponseMin = (uncensoredMin < censoredMin) ? uncensoredMin : censoredMin;
-
-            //if (globalResponseMax < globalResponseMin)
-            //{
-            //    globalResponseMax = 1.0;
-            //    globalResponseMin = -1.0;
-            //}
-
-            //if (Math.Abs(globalResponseMin) > globalResponseMax)
-            //    globalResponseMax = Math.Abs(globalResponseMin);
-            //else
-            //    globalResponseMin = -globalResponseMax;
 
             var globalResponseMax = uncensoredMax;
             var globalResponseMin = uncensoredMin;
@@ -633,14 +581,6 @@ namespace POD.Controls
                 return Series[LinearityChartLabels.ModelCompare];
             }
         }
-
-        //public Series PartialCensored
-        //{
-        //    get
-        //    {
-        //        return Series[LinearityChartLabels.PartialCensored];
-        //    }
-        //}
 
         public TransformTypeEnum XTransform
         {

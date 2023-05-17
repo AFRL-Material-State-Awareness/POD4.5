@@ -16,14 +16,11 @@ namespace POD.Controls
         public Globals.InvertAxisFunction TransformFunc = null;
 
 
-        public RelabelParameters(AxisObject axis, Globals.InvertAxisFunction invert, 
+        public RelabelParameters(IAxisObject axis, Globals.InvertAxisFunction invert, 
                                  int labelCount, bool centerAtZero, 
                                  TransformTypeEnum transformType, Globals.InvertAxisFunction transform)
         {
-            if (axis != null)
-                Axis = axis.Clone();
-            else 
-                axis = null;
+            Axis = axis?.Clone();
 
             InvertFunc = invert;
             LabelCount = labelCount;

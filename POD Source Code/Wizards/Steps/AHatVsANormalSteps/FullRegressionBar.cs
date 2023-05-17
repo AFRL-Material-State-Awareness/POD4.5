@@ -45,10 +45,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             }
             if (keyData == (Keys.Control | Keys.D2))
             {
-                _podButton.PerformClick();
+                _normalityButton.PerformClick();
                 return true;
             }
             if (keyData == (Keys.Control | Keys.D3))
+            {
+                _podButton.PerformClick();
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.D4))
             {
                 _thresholdButton.PerformClick();
                 return true;
@@ -78,16 +83,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _linearityButton = new PODBooleanButton("Show Residual", "Hide Residual", true, "Show or hide Residual side chart. (Ctrl + 1)", StepToolTip);
             AddLeftButton(_linearityButton, Linear_Click);
 
-            _normalityButton = new PODBooleanButton("Show N&ormality", "Hide N&ormality", false);
+            _normalityButton = new PODBooleanButton("Show N&ormality", "Hide N&ormality", true, "Show Or hide the response Normality chart. (Ctrl + 2)", StepToolTip);
             AddLeftButton(_normalityButton, Normality_Click);
             
-            //_equalVarianceButton = new PODBooleanButton("Show &Equal Variance", "Hide &Equal Variance", false);
-            //AddLeftButton(_equalVarianceButton, EqualVariance_Click);
-
-            _podButton = new PODBooleanButton("Show POD Curve", "Hide POD Curve", true, "Show or hide POD side chart. (Ctrl + 2)", StepToolTip);
+            _podButton = new PODBooleanButton("Show POD Curve", "Hide POD Curve", true, "Show or hide POD side chart. (Ctrl + 3)", StepToolTip);
             AddLeftButton(_podButton, Pod_Click);
 
-            _thresholdButton = new PODBooleanButton("Show Threshold", "Hide Threshold", true, "Show or hide Threshold side chart. (Ctrl + 3)", StepToolTip);
+            _thresholdButton = new PODBooleanButton("Show Threshold", "Hide Threshold", true, "Show or hide Threshold side chart. (Ctrl + 4)", StepToolTip);
             AddLeftButton(_thresholdButton, Threshold_Click);
 
             _hideAllButton = new PODBooleanButton("Show All Charts", "Hide All Charts", true, "Show or hide all side charts. (Ctrl + 0)", StepToolTip);
@@ -95,18 +97,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _cycleButton = new PODButton("Cycle Transforms", "Cycle through log and linear combinations. (Ctrl + T)", StepToolTip);
             AddLeftButton(_cycleButton, CycleButton_Click);
-            
-            //_boxcoxButton = new PODButton("Apply Box Cox");
-            //AddLeftButton(_boxcoxButton, BoxCox_Click);
 
-            //_snapToGridButton = new PODBooleanButton("Freeform", "Snap to Grid", false);
-            //this.AddLeftButton(_snapToGridButton, SnapGrid_Click);
-
-            //_normalityButton.Enabled = false;
-            //_equalVarianceButton.Enabled = false;
-            //_hideAllButton.Enabled = false;
-            //_boxcoxButton.Enabled = false;
-            //_snapToGridButton.Enabled = false;
 
             AddIconsToButtons();
 
@@ -160,6 +151,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         {
             if (_linearityButton.ButtonState == _hideAllButton.ButtonState)
                 UpdateChartAndButton(MyPanel.LinearityIndex, _linearityButton);
+            if (_normalityButton.ButtonState == _hideAllButton.ButtonState)
+                UpdateChartAndButton(MyPanel.NormalityIndex, _normalityButton);
             if (_podButton.ButtonState == _hideAllButton.ButtonState)
                 UpdateChartAndButton(MyPanel.PodIndex, _podButton);
             if (_thresholdButton.ButtonState == _hideAllButton.ButtonState)
@@ -177,11 +170,6 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         {
             UpdateChartAndButton(MyPanel.PodIndex, _podButton);
         }
-
-        //private void EqualVariance_Click(object sender, EventArgs e)
-        //{
-        //    UpdateChartAndButton(MyPanel.EqualVarianceIndex, _equalVarianceButton);
-        //}
 
         private void Normality_Click(object sender, EventArgs e)
         {

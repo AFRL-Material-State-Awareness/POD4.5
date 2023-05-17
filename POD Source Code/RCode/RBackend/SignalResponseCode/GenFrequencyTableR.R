@@ -90,21 +90,29 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                         # author : Tommy
                                         # author URL:  https://stackoverflow.com/users/662787/tommy
                                         RoundUpNice = function(x, nice=c(1,2,4,5,6,8,10)) {
-                                          if(length(x) != 1) stop("'x' must be of length 1")
-                                          10^floor(log10(x)) * nice[[which(x <= 10^floor(log10(x)) * nice)[[1]]]]
+                                          if(length(x) != 1){ stop("'x' must be of length 1")}
+                                          if(x <= 0) {stop(paste("Invalid value for X passed in RoundUpNice (Was 0 or negative): ", as.character(x), sep = ""))}
+                                          else{return(10^floor(log10(x)) * nice[[which(x <= 10^floor(log10(x)) * nice)[[1]]]])}
                                         },
                                         #use this one to round up negative numbers nicely
                                         RoundUpNiceNeg = function(x, nice=c(10,8,6,5,4,2,1)) {
                                           if(length(x) != 1){ stop("'x' must be of length 1")}
-                                          (10^floor(log10(-x)) * nice[[which(-x > 10^floor(log10(-x)) * nice)[[1]]]])*(-1)
+                                          if(x >= 0) {stop(paste("Invalid value for X passed in RoundUpNiceNeg (Was 0 or positive): ", as.character(x), sep = ""))}
+                                          #needs to stay in here, otherwise subscript out of bounds is thrown
+                                          if(x == -1){ return(-1)}
+                                          else{ return((10^floor(log10(-x)) * nice[[which(-x >= 10^floor(log10(-x)) * nice)[[1]]]])*(-1)) }
                                         },
                                         RoundDownNice = function(x, nice=c(10,8,6,5,4,2,1)) {
                                           if(length(x) != 1){ stop("'x' must be of length 1")}
-                                          (10^floor(log10(x)) * nice[[which(x > 10^floor(log10(x)) * nice)[[1]]]])
+                                          #needs to stay in here, otherwise subscript out of bounds is thrown
+                                          if(x == 1){ return(1)}
+                                          if(x <= 0){ stop(paste("Invalid value for X passed in RoundUpNice (was 0 or negative): ", as.character(x), sep = "")) }
+                                          (10^floor(log10(x)) * nice[[which(x >= 10^floor(log10(x)) * nice)[[1]]]])
                                         },
                                         #use this one to round down negative numbers nicely
                                         RoundDownNiceNeg = function(x, nice=c(1,2,4,5,6,8,10)) {
                                           if(length(x) != 1){ stop("'x' must be of length 1")}
+                                          if(x >= 0) {stop(paste("Invalid value for X passed in RoundUpNiceNeg (Was 0 or positive): ", as.character(x), sep = ""))}
                                           (10^floor(log10(-x)) * nice[[which(-x <= 10^floor(log10(-x)) * nice)[[1]]]])*(-1)
                                         },
                                         TrimEndZeros=function(array){

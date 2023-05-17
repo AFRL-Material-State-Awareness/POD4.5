@@ -10,50 +10,16 @@ using System.Windows.Forms;
 
 namespace POD.Controls
 {
-    public partial class TransformBox : ComboBoxListEx
+    public partial class TransformBoxX : TransformBoxControl
     {
-        public TransformBox()
+        public TransformBoxX()
         {
             InitializeComponent();
 
             Items.Add(new TransformObj(TransformTypeEnum.Linear));
             Items.Add(new TransformObj(TransformTypeEnum.Log));
-            //Items.Add(new TransformObj(TransformTypeEnum.Exponetial));
             Items.Add(new TransformObj(TransformTypeEnum.Inverse));
-            //Items.Add(new TransformObj(TransformTypeEnum.BoxCox));
-            DropDownStyle = ComboBoxStyle.DropDownList;
-
-            
-
-            //SelectedIndexChanged += TransformBox_SelectedIndexChanged;
-        }
-
-        //void TransformBox_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    MessageBox.Show("Changed Transform");
-        //}
-
-        public TransformTypeEnum SelectedTransform
-        {
-            get
-            {
-                return ((TransformObj) SelectedItem).TransformType; 
-            }
-            set
-            {
-                foreach(Object obj in Items)
-                {
-                    var type = obj as TransformObj;
-
-                    if(type != null)
-                    {
-                        if(type.TransformType == value)
-                        {
-                            SelectedItem = obj;
-                        }
-                    }
-                }
-            }
+            DropDownStyle = ComboBoxStyle.DropDownList;  
         }
     }
 

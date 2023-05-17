@@ -2607,7 +2607,7 @@ namespace POD.Data
             }
         }
 
-        public void GetXYBufferedRanges(Control chart, AxisObject myXAxis, AxisObject myYAxis, bool myGetTransformed)
+        public void GetXYBufferedRanges(Control chart, IAxisObject myXAxis, IAxisObject myYAxis, bool myGetTransformed)
         {
             GetXBufferedRange(chart, myXAxis, myGetTransformed);
             GetYBufferedRange(chart, myYAxis, myGetTransformed);
@@ -2631,7 +2631,7 @@ namespace POD.Data
 
         }
 
-        public static void GetBufferedRange(Control chart, AxisObject myAxis, DataTable myTable, AxisKind kind)
+        public static void GetBufferedRange(Control chart, IAxisObject myAxis, DataTable myTable, AxisKind kind)
         {
             double myMin = Double.MaxValue;
             double myMax = Double.MinValue;
@@ -2641,7 +2641,7 @@ namespace POD.Data
             GetBufferedRange(chart, myAxis, myMin, myMax, kind);
         }
 
-        public static void GetBufferedRange(Control chart, AxisObject myAxis, double myMin, double myMax, AxisKind kind)
+        public static void GetBufferedRange(Control chart, IAxisObject myAxis, double myMin, double myMax, AxisKind kind)
         {
             if (myMin != myMax)
             {
@@ -2686,7 +2686,7 @@ namespace POD.Data
             }
         }
 
-        public void GetYBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
+        public void GetYBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
 
@@ -2698,7 +2698,7 @@ namespace POD.Data
             GetBufferedRange(chart, myAxis, table, AxisKind.Y);
         }
 
-        public void GetXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed)
+        public void GetXBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed)
         {
             DataTable table;
 
@@ -3827,27 +3827,6 @@ namespace POD.Data
         }
     }
     
-    public class AxisObject
-    {
-        public double Max = 1.0;
-        public double Min = -1.0;
-        public double IntervalOffset = 0.0;
-        public double Interval = .25;
-        public double BufferPercentage = 5.0;
-
-
-        public AxisObject Clone()
-        {
-            var axis = new AxisObject();
-
-            axis.Max = Max;
-            axis.Min = Min;
-            axis.IntervalOffset = IntervalOffset;
-            axis.Interval = Interval;
-            axis.BufferPercentage = BufferPercentage;
-
-            return axis;
-        }
-    }
+    
 }
 

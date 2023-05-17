@@ -231,14 +231,6 @@ namespace POD.Controls
             return (myRow.Index + 1).ToString();
         }
 
-        public DataGridViewRow RowBefore(DataGridViewRow myRow)
-        {
-            if (myRow.Index == 0)
-                return null;
-            else
-                return Rows[myRow.Index - 1];
-        }
-
         public DataGridViewRow LastDataRow
         {
             get
@@ -289,17 +281,12 @@ namespace POD.Controls
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            base.OnKeyDown(e);
-
-            
-
-            
+            base.OnKeyDown(e);         
         }
 
         private void RaiseRunAnalysis()
         {
-            if (RunAnalysis != null)
-                RunAnalysis.Invoke(this, null);
+            RunAnalysis?.Invoke(this, null);
         }
 
         public void PrepareDataColumns(DataColumnCollection collection)
@@ -324,27 +311,26 @@ namespace POD.Controls
         {
             var result = ValidResponsRowCount >= 8;
 
-            if (!result)
+            if (!result && chart != null && analysisName != null)
             {
-                if (chart != null && analysisName != null)
-                {
-                    chart.ResetErrors();
-                    chart.AddError(new ErrorArgs(analysisName, "Need at least 8 valid data points"));
-                    chart.AddError(new ErrorArgs(analysisName, "before an analysis can be run."));
-                    chart.AddError(new ErrorArgs(analysisName, string.Format("The table currently has {0}.", ValidResponsRowCount)));
-                    chart.AddError(new ErrorArgs(analysisName, "Please add more points to the table."));
-                    chart.FinalizeErrors(new ErrorArgs(analysisName, ""));
-                    chart.ForceResizeAnnotations();
-                }
+                chart.ResetErrors();
+                chart.AddError(new ErrorArgs(analysisName, "Need at least 8 valid data points"));
+                chart.AddError(new ErrorArgs(analysisName, "before an analysis can be run."));
+                chart.AddError(new ErrorArgs(analysisName, string.Format("The table currently has {0}.", ValidResponsRowCount)));
+                chart.AddError(new ErrorArgs(analysisName, "Please add more points to the table."));
+                chart.FinalizeErrors(new ErrorArgs(analysisName, ""));
+                //Leave this function here for testing purposes
+                chart.ForceResizeAnnotations();
             }
 
             return result;
         }
 
-        public void PasteFromClipboard()
+        public void PasteFromClipboard(IPasteFromClipBoardWrapper clipboardPaster=null)
         {
-            var clipboardContents = Clipboard.GetText(TextDataFormat.Rtf);
+            var pasteFromClipboard = clipboardPaster ?? new PasteFromClipBoardWrapper();
 
+            var clipboardContents = pasteFromClipboard.GetClipBoardContents(TextDataFormat.Rtf);
             this.UpdateDataTable(clipboardContents);
 
             RaiseRunAnalysis();
@@ -352,7 +338,6 @@ namespace POD.Controls
 
         private void UpdateDataTable(string clipboardContents)
         {
-            //var addedColumn = false;
             var tempTable = DataHelpers.GetTableFromRtfString(clipboardContents);
 
             if (tempTable.Rows.Count == 0)
@@ -773,45 +758,14 @@ namespace POD.Controls
         {
             return grid.DefaultCellStyle.BackColor;
         }
-
-        public static Color IDColor
-        {
-            get
-            {
-                //nice blue
-                return Color.FromArgb(204, 235, 255);
-            }
-        }
-
-        public static Color MetaColor
-        {
-            get
-            {
-                //nice dark blue
-                return Color.FromArgb(190, 198, 247);
-                //return Color.FromArgb(255, 245, 201);
-            }
-        }
-
-        public static Color FlawColor
-        {
-            get
-            {
-                //nice dark green
-                return Color.FromArgb(84, 184, 96);
-            }
-        }
-
-        public static Color ResponseColor
-        {
-            get
-            {
-                //nice green
-                return Color.FromArgb(166, 237, 175);
-                ////nice purple
-                //return Color.FromArgb(214, 171, 255);
-            }
-        }
+        //nice blue
+        public static Color IDColor => Color.FromArgb(204, 235, 255);
+        //nice dark blue
+        public static Color MetaColor => Color.FromArgb(190, 198, 247);
+        //nice dark green
+        public static Color FlawColor => Color.FromArgb(84, 184, 96);
+        //nice green
+        public static Color ResponseColor => Color.FromArgb(166, 237, 175);
 
         private RowStatus CheckRowStatus(DataGridViewRow row)
         {
@@ -1026,23 +980,6 @@ namespace POD.Controls
             return cell;
         }
 
-        /*protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == (Keys.Control | Keys.V))
-            {
-                if(EditingControl == null)
-                {
-                    if (ControlV != null)
-                    {
-                        ControlV.Invoke(this, null);
-                    }
-                }
-
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }*/
-
         /// <summary>
         /// Forces double buffer.
         /// </summary>
@@ -1093,14 +1030,9 @@ namespace POD.Controls
                 {
                     var status = row.Cells[2].Tag as CellTag;
                     var rowStatus = row.Tag as RowTag;
-
-                    if(status != null && rowStatus != null)
-                    {
-                        if (status.Status == CellStatus.Valid && rowStatus.Status == RowStatus.Valid)
-                            rowCount++;
-                    }
+                    if (status?.Status == CellStatus.Valid && rowStatus?.Status == RowStatus.Valid)
+                        rowCount++;
                 }
-
                 return rowCount;
             }
         }
@@ -1123,7 +1055,6 @@ namespace POD.Controls
             if (SelectedCells.Count > 0)
             {
                 var cell = SelectedCells[0];
-                var row = Rows[cell.RowIndex];
                 var colIndex = cell.ColumnIndex;
                 
                 if (IsAddByUserRow(cell.RowIndex))
@@ -1148,11 +1079,8 @@ namespace POD.Controls
                 else
                 {
                     Rows.Insert(LastDataRow.Index, 1);
-                    CurrentCell = Rows[LastDataRow.Index].Cells[0];
-                    
+                    CurrentCell = Rows[LastDataRow.Index].Cells[0];                
                 }
-
-                
             }
 
             CurrentCell.Selected = true;

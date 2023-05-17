@@ -34,36 +34,6 @@ namespace POD.Controls
 
             Series series;
 
-            //Series.Clear();
-
-            /*if (Series.FindByName(LinearityChartLabels.LeftCensor) == null)
-            {
-                //draw left censor line
-                Series.Add(new Series(LinearityChartLabels.LeftCensor));
-                series = Series.Last();
-                series.ChartType = SeriesChartType.Line;
-                series.IsXValueIndexed = false;
-                series.YValuesPerPoint = 1;
-                series.BorderWidth = 2;
-                series.Color = Color.FromArgb(ChartColors.BoundaryAreaAlpha*4, ChartColors.LeftCensorColor);
-                series.BorderDashStyle = ChartDashStyle.Dash;
-                series.IsVisibleInLegend = false;
-            }
-
-            if (Series.FindByName(LinearityChartLabels.RightCensor) == null)
-            {
-                //draw right censor line
-                Series.Add(new Series(LinearityChartLabels.RightCensor));
-                series = Series.Last();
-                series.ChartType = SeriesChartType.Line;
-                series.IsXValueIndexed = false;
-                series.YValuesPerPoint = 1;
-                series.BorderWidth = 2;
-                series.Color = Color.FromArgb(ChartColors.BoundaryAreaAlpha*4, ChartColors.RightCensorColor);
-                series.BorderDashStyle = ChartDashStyle.Dash;
-                series.IsVisibleInLegend = false;
-            }*/
-
             this.YAxis.Title = "Residuals";
 
             if (Series.FindByName(LinearityChartLabels.CompleteCensored) == null)
@@ -165,8 +135,6 @@ namespace POD.Controls
 
         public void FillChart(IAnalysisData myData, double mySlope, double myIntercept, double fitError, double repeatError)
         {
-            //_lastUsedData = myData;
-
             double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
             double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
 
@@ -226,25 +194,7 @@ namespace POD.Controls
 
             RelabelAxesBetter(xAxis, yAxis, null, null, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 
                               Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, true);
-
-            
-
-            //view = myData.ResidualFullCensoredTable.DefaultView;
-            //CompleteCensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
-
-            double flawRangeMin = ChartAreas[0].AxisX.Minimum;
-            double flawRangeMax = ChartAreas[0].AxisX.Maximum;
-
-            double fitMax = flawRangeMax * mySlope + myIntercept;
-            double fitMin = flawRangeMin * mySlope + myIntercept;            
-
-            /*LeftCensor.Points.Clear();
-            LeftCensor.Points.AddXY(flawRangeMin, myResponseMax - fitMin);
-            LeftCensor.Points.AddXY(flawRangeMax, myResponseMax - fitMax);
-
-            RightCensor.Points.Clear();
-            RightCensor.Points.AddXY(flawRangeMin, myResponseMin - fitMin);
-            RightCensor.Points.AddXY(flawRangeMax, myResponseMin - fitMax);*/
+          
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace POD.Controls
 {
-    partial class TransformBox
+    partial class TransformBoxX
     {
         /// <summary> 
         /// Required designer variable.

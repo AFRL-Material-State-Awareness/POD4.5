@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using Microsoft.VisualBasic;
-using System.IO;
 
 
 namespace POD.Controls
@@ -57,23 +50,17 @@ namespace POD.Controls
             Initialize();
         }
 
-        public static Bitmap RtbToBitmap(RichTextBox rtb)
+        public static Bitmap RtbToBitmap(IRichTextBoxWrapper rtb)
         {
-            if (rtb.Width == 0 && rtb.Height == 0)
-                return new Bitmap(50, 50);
-
             Bitmap bmp = new Bitmap(rtb.Width, rtb.Height);
 
             if (rtb.IsDisposed == false)
             {
                 rtb.Update();  // Ensure RTB fully painted
-                
-                using (Graphics gr = Graphics.FromImage(bmp))
-                {
-                    gr.CopyFromScreen(rtb.PointToScreen(Point.Empty), Point.Empty, rtb.Size);
-                }
-            }
 
+                using (Graphics gr = Graphics.FromImage(bmp))
+                    gr.CopyFromScreen(rtb.PointToScreen(Point.Empty), Point.Empty, rtb.Size);
+            }
             return bmp;
         }
 
@@ -82,27 +69,15 @@ namespace POD.Controls
             if (!myControl.IsDisposed)
             {
                 Bitmap image;
-
-                if (myControl.GetType().Name == "RichTextBox")
-                {
-                    image = RtbToBitmap((RichTextBox)myControl);
-                }
+                if (myControl.Width <= 0 || myControl.Height <= 0)
+                    image = new Bitmap(50, 50);
+                else if (myControl.GetType().Name == "RichTextBox")
+                    image = RtbToBitmap(new RichTextBoxWrapper((RichTextBox)myControl));
                 else
                 {
-                    if (myControl.Width <= 0 && myControl.Height <= 0)
-                    {
-                        image = new Bitmap(50, 50);
-                    }
-                    else
-                    {
-
-
-                        image = new Bitmap(myControl.Width, myControl.Height);
-
-                        myControl.DrawToBitmap(image, new Rectangle(0, 0, myControl.Width, myControl.Height));
-                    }
+                    image = new Bitmap(myControl.Width, myControl.Height);
+                    myControl.DrawToBitmap(image, new Rectangle(0, 0, myControl.Width, myControl.Height));
                 }
-
                 BackgroundImage = image;
                 Transparency = 0.0F;
 
@@ -115,7 +90,7 @@ namespace POD.Controls
         {
             Bitmap image;
 
-            if (myControl.Width <= 0 && myControl.Height <= 0)
+            if (myControl.Width <= 0 || myControl.Height <= 0)
             {
                 image = new Bitmap(50, 50);
             }
@@ -197,9 +172,6 @@ namespace POD.Controls
                         e.Graphics.DrawString((j + 1).ToString(), boldFont, new SolidBrush(Color.White), rect, stringFormat);
 
                         value += _vX;
-
-                        //if (_vX == PossibleLines[j])
-                        //    break;
                     }
 
                     if (PossibleLines != null && PossibleLines.Count > 0)
@@ -221,9 +193,7 @@ namespace POD.Controls
                             }
 
                             e.Graphics.FillRectangle(new SolidBrush(Color.Black), value - 5, 0, 12, 10);
-                            //e.Graphics.FillEllipse(new SolidBrush(Color.Black), value - 5, 0, 11, 11);
                             e.Graphics.FillRectangle(new SolidBrush(Color.Black), value - 5, Height - 10, 12, 10);
-                            //e.Graphics.FillEllipse(new SolidBrush(Color.Black), value - 5, Height - 12, 11, 11);
                         }
                     }
 

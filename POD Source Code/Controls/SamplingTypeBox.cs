@@ -36,13 +36,8 @@ namespace POD.Controls
                 {
                     var type = obj as SampleTypeObj;
 
-                    if (type != null)
-                    {
-                        if (type.SamplingType == value)
-                        {
-                            SelectedItem = obj;
-                        }
-                    }
+                    if (type?.SamplingType == value)
+                        SelectedItem = obj;
                 }
             }
         }
@@ -81,6 +76,7 @@ namespace POD.Controls
             get { return _samplingType; }
         }
 
+        //Needs to stay in here for the Label text to show up in the combo box
         public override string ToString()
         {
             return Label;

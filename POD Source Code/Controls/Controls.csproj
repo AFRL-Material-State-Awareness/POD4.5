@@ -89,6 +89,9 @@
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="PDFLoader.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PODPdfiumViewer.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -296,9 +299,8 @@
     <Compile Include="SimpleActionBar.Designer.cs">
       <DependentUpon>SimpleActionBar.cs</DependentUpon>
     </Compile>
-    <Compile Include="TransformBoxYHat.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="TransformBoxControl.cs" />
+    <Compile Include="TransformBoxYHat.cs" />
     <Compile Include="TransformBoxYHat.Designer.cs">
       <DependentUpon>TransformBoxYHat.cs</DependentUpon>
     </Compile>
@@ -415,9 +417,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Show Normality.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Show Normality.png.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
