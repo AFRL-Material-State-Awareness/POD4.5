@@ -114,8 +114,9 @@ namespace POD.Controls
 
         public void DisposeAllRegressionItems()
         {
-            foreach (Series series in Series)
-                series.Dispose();
+            if(Series != null)
+                foreach (Series series in Series)
+                    series.Dispose();
             _aMinLine?.Dispose();
             _aMaxLine?.Dispose();
             _aMinLine?.Dispose();

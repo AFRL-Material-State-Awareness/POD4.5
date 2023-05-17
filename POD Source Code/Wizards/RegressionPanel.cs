@@ -53,6 +53,30 @@ namespace POD.Wizards
 
             Load += RegressionPanel_Load;
         }
+        protected void DisposeOfRegressionObjects()
+        {
+            graphSplitter.Dispose();
+            graphSplitterOverlay.Dispose();
+            graphSplitter.Dispose();
+            graphFlowPanel.Dispose();
+            RightControlsTablePanel.Dispose();
+            inputTablePanel.Dispose();
+            MainChartRightControlsSplitter.Dispose();
+            outputTablePanel.Dispose();
+            graphSplitterOverlay.Dispose();
+            PutControlsHerePanel.Dispose();
+            OutputLabel.Dispose();
+            InputLabel.Dispose();
+            InputHideButton.Dispose();
+            OutputHideButton.Dispose();
+            ExpandContractList.Dispose();
+            InputLabelTable.Dispose();
+            ShiftInputButton.Dispose();
+            ShiftLeftRightList.Dispose();
+            OutputLabelTable.Dispose();
+            ShiftOutputButton.Dispose();
+            base.DisposeOfSideChartPanelObjects();
+    }
 
         void RegressionPanel_Load(object sender, EventArgs e)
         {

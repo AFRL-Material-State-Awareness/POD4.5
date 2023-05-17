@@ -95,9 +95,16 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             AxisTransformsHeader.Dispose();
             PodModelParametersHeader.Dispose();
             PODModelTypeHeader.Dispose();
-
-            DisposeLabels();
             DisposeChartsRecursively();
+            DisposeLabels();
+
+            DisposeOfParentPanels();
+
+
+        }
+        private void DisposeOfParentPanels()
+        {
+            base.DisposeOfRegressionObjects();
         }
         private void DisposeChartsRecursively()
         {

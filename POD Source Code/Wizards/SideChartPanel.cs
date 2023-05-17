@@ -62,6 +62,11 @@ namespace POD.Wizards
             
         }
 
+        protected void DisposeOfSideChartPanelObjects()
+        {
+            base.Dispose(true);
+            Dispose(true);
+        }
         protected void SetSideControls(FlowLayoutPanel graphFlowPanel, SideSplitter graphSplitter, BlendPictureBox myBlendBox)
         {
             SidePanel = graphFlowPanel;

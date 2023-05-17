@@ -164,7 +164,7 @@ namespace POD.Controls
             FullSizeImageList.Dispose();
             foreach (Bitmap bmp in MenuBitmaps)
                 bmp.Dispose();
-            base.Dispose();
+            base.Dispose(true);
         }
 
 
