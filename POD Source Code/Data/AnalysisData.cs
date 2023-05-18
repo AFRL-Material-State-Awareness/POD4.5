@@ -430,14 +430,10 @@ namespace POD.Data
             {
                 //if row entry is there
                 if(CommentDictionary[myColIndex].ContainsKey(myRowIndex))
-                {
                     return CommentDictionary[myColIndex][myRowIndex];
-                }
+                //add row entry
                 else
-                {
-                    //add row entry
                     CommentDictionary[myColIndex].Add(myRowIndex, "");
-                }
             }
             else
             {
@@ -446,7 +442,6 @@ namespace POD.Data
                 CommentDictionary.Add(myColIndex, rowDictionary);
                 rowDictionary.Add(myRowIndex, "");
             }
-
             return "";
         }
 
