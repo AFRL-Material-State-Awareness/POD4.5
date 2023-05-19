@@ -30,7 +30,7 @@ namespace CSharpBackendWithR
         //flag used for separated Data and whether or not the alogrithm converged
         private bool isSeparated;
         private bool failureToConverge;
-        public HMAnalysisObject(string nameInput="") : base()
+        public HMAnalysisObject(string nameInput) : base()
         {
             //original HMDataframe
             this.hitMissDataOrig = null;

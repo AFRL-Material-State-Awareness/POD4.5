@@ -607,7 +607,7 @@ namespace Controls.UnitTests
             _regressionAnalysisChart.ChartAreas[0].AxisX.Maximum = 10.0;
             _regressionAnalysisChart.ChartAreas[0].AxisX.Minimum = 11.0;
             List<double> sampleFlaws = new List<double>() { 1.0, 2.0, 3.0 };
-            _data.SetupGet(d => d.HMAnalysisObject).Returns(new HMAnalysisObject() { Flaws_All = sampleFlaws });
+            _data.SetupGet(d => d.HMAnalysisObject).Returns(new HMAnalysisObject("HitMissName") { Flaws_All = sampleFlaws });
             //Act
             _regressionAnalysisChart.PickBestAxisRange(xAxis.Object, yAxis.Object);
             //Assert
