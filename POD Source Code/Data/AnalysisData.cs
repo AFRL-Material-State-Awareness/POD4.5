@@ -1512,23 +1512,40 @@ namespace POD.Data
         }
 
         public void UpdateOutput(RCalculationType myCalculationType,
+            IUpdateOutputForAHatData updateOutputForAHatDataIn=null,
             IUpdateOutputForHitMissData updateOutputForHitMissDataIn=null)
         {
-            IUpdateOutputForHitMissData updateOutputForHitMissData = updateOutputForHitMissDataIn ?? 
-                new UpdateOutputForHitMissData(_hmAnalysisObject);
+            
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
+                IUpdateOutputForAHatData updateOutputForAHatData = updateOutputForAHatDataIn ??
+                    new UpdateOutputForAHatData(_aHatAnalysisObject);
                 if (myCalculationType == RCalculationType.ThresholdChange)
                 {
-                    updatePODCurve();
+                    //updatePODCurve();
+                    updateOutputForAHatData.UpdatePODCurveTable(ref _podCurveTable);
+                    updateOutputForAHatData.UpdatePODCurveAllTable(ref _podCurveTable_All);
                 }
                 else
                 {
-                    UpdateAHatOutput();
+                    //UpdateAHatOutput();
+                    updateOutputForAHatData.UpdateFitResidualsTable(ref _fitResidualsTable);
+                    updateOutputForAHatData.UpdateResidualUncensoredTable(ref _residualUncensoredTable);
+                    updateOutputForAHatData.UpdateResidualRawTable(ref _residualRawTable);
+                    updateOutputForAHatData.UpdateResidualCensoredTable(ref _residualCensoredTable, _residualRawTable);
+                    updateOutputForAHatData.UpdateResidualFullCensoredTable(ref _residualFullCensoredTable, _residualRawTable);
+                    updateOutputForAHatData.UpdateResidualPartialCensoredTable(ref _residualPartialCensoredTable);
+                    updateOutputForAHatData.UpdatePODCurveTable(ref _podCurveTable);
+                    updateOutputForAHatData.UpdatePODCurveAllTable(ref _podCurveTable_All);
+                    updateOutputForAHatData.UpdateThresholdCurveTable(ref _thresholdPlotTable);
+                    updateOutputForAHatData.UpdateThresholdCurveTableAll(ref _thresholdPlotTable_All);
+                    updateOutputForAHatData.UpdateNormalityTable(ref _normalityTable, ref _normalityCurveTable);
                 }
             }
             else
             {
+                IUpdateOutputForHitMissData updateOutputForHitMissData = updateOutputForHitMissDataIn ??
+                new UpdateOutputForHitMissData(_hmAnalysisObject);
                 //UpdateHitMissOutput();
                 updateOutputForHitMissData.UpdateOriginalData(ref _originalData);
                 updateOutputForHitMissData.UpdateTotalFlawCount(ref _totalFlawCount);

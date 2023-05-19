@@ -134,7 +134,8 @@ namespace POD.Data
         void TurnOnPoints(int myRowIndex);
         void UpdateData(bool quickFlag = false);
         void SetPythonEngine(I_IPy4C myPy, string myAnalysisName);
-        void UpdateOutput(RCalculationType myCalculationType = RCalculationType.Full,
+        void UpdateOutput(RCalculationType myCalculationType,
+            IUpdateOutputForAHatData updateOutputForAHatDataIn = null,
             IUpdateOutputForHitMissData updateOutputForHitMissDataIn = null);
         string AdditionalWorksheet1Name { get; }
         double UncensoredFlawRangeMin { get; }
