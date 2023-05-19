@@ -1520,33 +1520,24 @@ namespace POD.Data
             {
                 IUpdateOutputForAHatData updateOutputForAHatData = updateOutputForAHatDataIn ??
                     new UpdateOutputForAHatData(_aHatAnalysisObject);
+                updateOutputForAHatData.UpdatePODCurveTable(ref _podCurveTable);
+                updateOutputForAHatData.UpdatePODCurveAllTable(ref _podCurveTable_All);
                 if (myCalculationType == RCalculationType.ThresholdChange)
-                {
-                    //updatePODCurve();
-                    updateOutputForAHatData.UpdatePODCurveTable(ref _podCurveTable);
-                    updateOutputForAHatData.UpdatePODCurveAllTable(ref _podCurveTable_All);
-                }
-                else
-                {
-                    //UpdateAHatOutput();
-                    updateOutputForAHatData.UpdateFitResidualsTable(ref _fitResidualsTable);
-                    updateOutputForAHatData.UpdateResidualUncensoredTable(ref _residualUncensoredTable);
-                    updateOutputForAHatData.UpdateResidualRawTable(ref _residualRawTable);
-                    updateOutputForAHatData.UpdateResidualCensoredTable(ref _residualCensoredTable, _residualRawTable);
-                    updateOutputForAHatData.UpdateResidualFullCensoredTable(ref _residualFullCensoredTable, _residualRawTable);
-                    updateOutputForAHatData.UpdateResidualPartialCensoredTable(ref _residualPartialCensoredTable);
-                    updateOutputForAHatData.UpdatePODCurveTable(ref _podCurveTable);
-                    updateOutputForAHatData.UpdatePODCurveAllTable(ref _podCurveTable_All);
-                    updateOutputForAHatData.UpdateThresholdCurveTable(ref _thresholdPlotTable);
-                    updateOutputForAHatData.UpdateThresholdCurveTableAll(ref _thresholdPlotTable_All);
-                    updateOutputForAHatData.UpdateNormalityTable(ref _normalityTable, ref _normalityCurveTable);
-                }
+                    return;
+                updateOutputForAHatData.UpdateFitResidualsTable(ref _fitResidualsTable);
+                updateOutputForAHatData.UpdateResidualUncensoredTable(ref _residualUncensoredTable);
+                updateOutputForAHatData.UpdateResidualRawTable(ref _residualRawTable);
+                updateOutputForAHatData.UpdateResidualCensoredTable(ref _residualCensoredTable, _residualRawTable);
+                updateOutputForAHatData.UpdateResidualFullCensoredTable(ref _residualFullCensoredTable, _residualRawTable);
+                updateOutputForAHatData.UpdateResidualPartialCensoredTable(ref _residualPartialCensoredTable);
+                updateOutputForAHatData.UpdateThresholdCurveTable(ref _thresholdPlotTable);
+                updateOutputForAHatData.UpdateThresholdCurveTableAll(ref _thresholdPlotTable_All);
+                updateOutputForAHatData.UpdateNormalityTable(ref _normalityTable, ref _normalityCurveTable);
             }
             else
             {
                 IUpdateOutputForHitMissData updateOutputForHitMissData = updateOutputForHitMissDataIn ??
                 new UpdateOutputForHitMissData(_hmAnalysisObject);
-                //UpdateHitMissOutput();
                 updateOutputForHitMissData.UpdateOriginalData(ref _originalData);
                 updateOutputForHitMissData.UpdateTotalFlawCount(ref _totalFlawCount);
                 updateOutputForHitMissData.UpdatePODCurveTable(ref _podCurveTable);
