@@ -97,6 +97,7 @@
     <Compile Include="SourceInfo.cs" />
     <Compile Include="TableRange.cs" />
     <Compile Include="TableRangePair.cs" />
+    <Compile Include="UpdateOutputForHitMissData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">
