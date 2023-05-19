@@ -1833,7 +1833,6 @@ namespace POD.Analyze
         public override void SetREngine(IREngineObject myREngine)
         {
             _rDotNet = myREngine;
-            _data.SetREngine(_rDotNet, Name);
         }
 
         #region Event Handling

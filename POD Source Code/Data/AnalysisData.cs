@@ -191,12 +191,6 @@ namespace POD.Data
         [NonSerialized]
         private I_IPy4C _python;
 
-        /// <summary>
-        /// RDotEngineObjectInstance
-        /// </summary>
-        [NonSerialized]
-        private IREngineObject _rDotNet;
-
         private HMAnalysisObject _hmAnalysisObject;
         private AHatAnalysisObject _aHatAnalysisObject;
 
@@ -1506,21 +1500,13 @@ namespace POD.Data
 
         public void SetPythonEngine(I_IPy4C myPy, string myAnalysisName)
         {
+            if (myPy == null)
+                return;
             _python = myPy;
-        }
-        public void SetREngine(IREngineObject myREngine, string myAnalysisName)
-        {
-            _rDotNet = myREngine;
             if (_hmAnalysisObject == null && _dataType == AnalysisDataTypeEnum.HitMiss)
-            {
                 _hmAnalysisObject = _python.HitMissAnalsysis(myAnalysisName);
-            }
-            else if(_aHatAnalysisObject==null && _dataType == AnalysisDataTypeEnum.AHat)
-            {
+            else if (_aHatAnalysisObject == null && _dataType == AnalysisDataTypeEnum.AHat)
                 _aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
-            }
-            //_hmAnalysisObject = _python.HitMissAnalsysis(myAnalysisName);
-            //_aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
         }
 
         public void UpdateOutput(RCalculationType myCalculationType=RCalculationType.Full)
