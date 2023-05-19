@@ -8,6 +8,8 @@ using POD.ExcelData;
 using System.Windows.Forms;
 //Rengine
 using CSharpBackendWithR;
+using Data;
+
 namespace POD.Data
 {
     /// <summary>
@@ -1509,9 +1511,11 @@ namespace POD.Data
                 _aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
         }
 
-        public void UpdateOutput(RCalculationType myCalculationType)
+        public void UpdateOutput(RCalculationType myCalculationType,
+            IUpdateOutputForHitMissData updateOutputForHitMissDataIn=null)
         {
-            
+            IUpdateOutputForHitMissData updateOutputForHitMissData = updateOutputForHitMissDataIn ?? 
+                new UpdateOutputForHitMissData(_hmAnalysisObject);
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
                 if (myCalculationType == RCalculationType.ThresholdChange)
@@ -1525,7 +1529,13 @@ namespace POD.Data
             }
             else
             {
-                UpdateHitMissOutput();
+                //UpdateHitMissOutput();
+                updateOutputForHitMissData.UpdateOriginalData(ref _originalData);
+                updateOutputForHitMissData.UpdateTotalFlawCount(ref _totalFlawCount);
+                updateOutputForHitMissData.UpdatePODCurveTable(ref _podCurveTable);
+                updateOutputForHitMissData.UpdateResidualUncensoredTable(ref _residualUncensoredTable);
+                updateOutputForHitMissData.UpdateResidualPartialUncensoredTable(ref _residualPartialCensoredTable);
+                updateOutputForHitMissData.UpdateIterationsTable(ref _iterationsTable);
             }
         }
         //updates the tables in the GUI by getting the tables from python
