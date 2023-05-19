@@ -640,5 +640,103 @@ namespace Data.UnitTests
         }
 
 
+        /// Tests For the function : UpdateOutput(RCalculationType myCalculationType,
+        /// IUpdateOutputForAHatData updateOutputForAHatDataIn = null,
+        /// IUpdateOutputForHitMissData updateOutputForHitMissDataIn=null)
+        DataTable _fitResidualsTable;
+        DataTable _residualUncensoredTable;
+        DataTable _residualRawTable;
+        DataTable _residualCensoredTable;
+        DataTable _residualFullCensoredTable;
+        DataTable _residualPartialCensoredTable;
+        DataTable _podCurveTable;
+        DataTable _podCurveTableAll;
+        DataTable _thresholdPlotTable;
+        DataTable _thresholdPlotTable_All;
+        DataTable _normalityTable;
+        DataTable _normalityCurveTable;
+        [Test]
+        public void UpdateOutput_DataTypeIsAHatAndRCalculationTypeIsFull_AllTablesUpdated()
+        {
+            //Arrange
+            Mock<IUpdateOutputForAHatData> updateoutputForAHatData = new Mock<IUpdateOutputForAHatData>();
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            SetupTableVariables();
+            //Act
+            _data.UpdateOutput(RCalculationType.Full, updateoutputForAHatData.Object);
+            //Assert
+            updateoutputForAHatData.Verify(upahat => upahat.UpdatePODCurveTable(ref _podCurveTable), Times.Once);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdatePODCurveAllTable(ref _podCurveTableAll), Times.Once);
+            VerifyAllButPODCurveTables(updateoutputForAHatData, Times.Once);
+        }
+        [Test]
+        public void UpdateOutput_DataTypeIsAHatAndRCalculationTypeIsThresholdChange_OnlyPODTablesUpdated()
+        {
+            //Arrange
+            Mock<IUpdateOutputForAHatData> updateoutputForAHatData = new Mock<IUpdateOutputForAHatData>();
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            SetupTableVariables();
+            //Act
+            _data.UpdateOutput(RCalculationType.ThresholdChange, updateoutputForAHatData.Object);
+            //Assert
+            updateoutputForAHatData.Verify(upahat => upahat.UpdatePODCurveTable(ref _podCurveTable), Times.Once);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdatePODCurveAllTable(ref _podCurveTableAll), Times.Once);
+            //Make sure these aren't executed
+            VerifyAllButPODCurveTables(updateoutputForAHatData, Times.Never);
+        }
+        private void SetupTableVariables()
+        {
+            _fitResidualsTable = _data.FitResidualsTable;
+            _residualUncensoredTable = _data.ResidualUncensoredTable;
+            _residualRawTable = _data.ResidualRawTable;
+            _residualCensoredTable = _data.ResidualCensoredTable;
+            _residualFullCensoredTable = _data.ResidualFullCensoredTable;
+            _residualPartialCensoredTable = _data.ResidualPartialCensoredTable;
+            _podCurveTable = _data.PodCurveTable;
+            _podCurveTableAll = _data.PodCurveTable_All;
+            _thresholdPlotTable = _data.ThresholdPlotTable;
+            _thresholdPlotTable_All = _data.ThresholdPlotTable_All;
+            _normalityTable = _data.NormalityTable;
+            _normalityCurveTable = _data.NormalityCurveTable;
+        }
+        private void VerifyAllButPODCurveTables(Mock<IUpdateOutputForAHatData> updateoutputForAHatData, Func<Times> times)
+        {
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateFitResidualsTable(ref _fitResidualsTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateResidualUncensoredTable(ref _residualUncensoredTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateResidualRawTable(ref _residualRawTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateResidualCensoredTable(ref _residualCensoredTable, _residualRawTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateResidualFullCensoredTable(ref _residualFullCensoredTable, _residualRawTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateResidualPartialCensoredTable(ref _residualPartialCensoredTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateThresholdCurveTable(ref _thresholdPlotTable), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateThresholdCurveTableAll(ref _thresholdPlotTable_All), times);
+            updateoutputForAHatData.Verify(upahat => upahat.UpdateNormalityTable(ref _normalityTable, ref _normalityCurveTable), times);
+        }
+        //Calculation type should have no effect
+        [Test]
+        [TestCase(RCalculationType.Full)]
+        [TestCase(RCalculationType.None)]
+        [TestCase(RCalculationType.ThresholdChange)]
+        public void UpdateOaycutput_DataTypeIsHitMiss_HitMissTablesUpdated(RCalculationType calcType)
+        {
+            //Arrange
+            Mock<IUpdateOutputForHitMissData> updateoutputForHitMissData = new Mock<IUpdateOutputForHitMissData>();
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            var originalData = _data.OriginalData;
+            var flawCount = _data.FlawCount;
+            var podCurveTable = _data.PodCurveTable;
+            var residualUncensoredTable = _data.ResidualUncensoredTable;
+            var residualPartialCensoredTable = _data.ResidualPartialCensoredTable;
+            var iterationsTable = _data.IterationsTable;
+            //Act
+            _data.UpdateOutput(calcType, null, updateoutputForHitMissData.Object);
+            //Assert
+            updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateOriginalData(ref originalData));
+            updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateTotalFlawCount(ref flawCount));
+            updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdatePODCurveTable(ref podCurveTable));
+            updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateResidualUncensoredTable(ref residualUncensoredTable));
+            updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateResidualPartialUncensoredTable(ref residualPartialCensoredTable));
+            updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateIterationsTable(ref iterationsTable));
+        }
+
     }
 }
