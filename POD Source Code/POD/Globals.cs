@@ -1187,8 +1187,8 @@ namespace POD
     public enum RCalculationType
     {
         Full,
-        Transform,
-        ThresholdChange
+        ThresholdChange,
+        None
     }
     public static class RangeNames
     {
