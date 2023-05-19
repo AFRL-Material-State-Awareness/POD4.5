@@ -1413,8 +1413,7 @@ namespace POD.Data
         //pass datatables from c# into the 
         public void UpdateData(bool quickFlag = false)
         {
-            //_aHatAnalysisObject = new AHatAnalysisObject("quick analysis");
-            //only update python data when appropriate
+            //only update data when appropriate
             if (_updatePythonData == true && _python != null && (_hmAnalysisObject!=null || _aHatAnalysisObject!=null))
             {
                 //create list to store the flaws
@@ -1423,48 +1422,35 @@ namespace POD.Data
                 Dictionary<string, List<double>> responses = new Dictionary<string, List<double>>();
                 //Create a dictionary to store ALL responses in the event the user censors data
                 Dictionary<string, List<double>> allResponses = new Dictionary<string, List<double>>();
-
+                //store the flaws in the list
                 foreach (DataRow row in _activatedFlawTable.Rows)
-                {
-                    //store the flaws in the list
                     flaws.Add((double)row[0]);
+                //for each loop is used for more than one response column (such as multiple inspectors)
+                foreach (DataColumn col in _calculatedResponseTable.Columns)
+                {
+                    List<double> list = new List<double>();
+
+                    foreach (DataRow row in _calculatedResponseTable.Rows)
+                        list.Add((double)row[col]);
+
+                    responses.Add(col.ColumnName, list);
                 }
-                //if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                //{
-                    //for each loop is used for more than one response column (such as multiple inspectors)
-                    foreach (DataColumn col in _calculatedResponseTable.Columns)
-                    {
-                        List<double> list = new List<double>();
 
-                        foreach (DataRow row in _calculatedResponseTable.Rows)
-                        {
-                            list.Add((double)row[col]);
-                        }
+                foreach (DataColumn col in _activatedResponseTable.Columns)
+                {
+                    List<double> list = new List<double>();
 
-                        responses.Add(col.ColumnName, list);
-                    }
+                    foreach (DataRow row in _activatedResponseTable.Rows)
+                        list.Add((double)row[col]);
 
-                    foreach (DataColumn col in _activatedResponseTable.Columns)
-                    {
-                        List<double> list = new List<double>();
+                    allResponses.Add(col.ColumnName, list);
+                    if (_dataType == AnalysisDataTypeEnum.HitMiss)
+                        _hmAnalysisObject.HitMiss_name = col.ColumnName;
+                    else if (_dataType == AnalysisDataTypeEnum.AHat)
+                        _aHatAnalysisObject.SignalResponseName = col.ColumnName;
 
-                        foreach (DataRow row in _activatedResponseTable.Rows)
-                        {
-                            list.Add((double)row[col]);
-                        }
-
-                        allResponses.Add(col.ColumnName, list);
-                        if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                        {
-                            _hmAnalysisObject.HitMiss_name = col.ColumnName;
-                        }
-                        else if (_dataType == AnalysisDataTypeEnum.AHat)
-                        {
-                            _aHatAnalysisObject.SignalResponseName = col.ColumnName;
-                        }
-
-                    }
-                if(_dataType== AnalysisDataTypeEnum.HitMiss)
+                }
+                if(_dataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     if (_hmAnalysisObject.Flaws_All.Count()==0 || quickFlag)
                     {
@@ -1472,22 +1458,17 @@ namespace POD.Data
                         //set the dataset size
                         _hmAnalysisObject.Count = _hmAnalysisObject.Flaws_All.Count();
                         List<double> logOfFlaws = new List<double>();
-                        for(int i=0; i<flaws.Count(); i++)
+                        List<double> inverseOfFlaws = new List<double>();
+                        for (int i=0; i<flaws.Count(); i++)
                         {
                             logOfFlaws.Add(Math.Log(flaws[i]));
-                        }
-                        _hmAnalysisObject.LogFlaws_All = logOfFlaws;
-                        List<double> inverseOfFlaws = new List<double>();
-                        for(int i=0; i<flaws.Count(); i++)
-                        {
                             inverseOfFlaws.Add(1.0 / flaws[i]);
                         }
+                        _hmAnalysisObject.LogFlaws_All = logOfFlaws;                            
                         _hmAnalysisObject.InverseFlaws_All = inverseOfFlaws;
                     }
                     if (_hmAnalysisObject.Responses_all.Count() == 0 || quickFlag)
-                    {
                         _hmAnalysisObject.Responses_all = allResponses;
-                    }
 
                     _hmAnalysisObject.Flaws = flaws;
                     _hmAnalysisObject.Responses = responses;
@@ -1497,26 +1478,14 @@ namespace POD.Data
                 {
                     if (_aHatAnalysisObject.Flaws_All.Count() == 0 || quickFlag)
                     {
-
                         _aHatAnalysisObject.Flaws_All = flaws;
                         List<double> logOfFlaws = new List<double>();
                         for (int i = 0; i < flaws.Count(); i++)
-                        {
                             logOfFlaws.Add(Math.Log(flaws[i]));
-                        }
                         _aHatAnalysisObject.LogFlaws_All = logOfFlaws;
                     }
                     if (_aHatAnalysisObject.Responses_all.Count() == 0 || quickFlag)
-                    {
                         _aHatAnalysisObject.Responses_all = allResponses;
-                        List<double> logOfResponses = new List<double>();
-                        //for (int i = 0; i < allResponses.Count(); i++)
-                        //{
-                        //    logOfResponses.Add(Math.Log(allResponses[i]));
-                        //}
-                        //_aHatAnalysisObject.L = logOfResponses;
-                        //TODO: finish this for response values
-                    }
                     //used for the ahat analysis obejct for RDotnet
                     _aHatAnalysisObject.Flaws = flaws;
                     _aHatAnalysisObject.Responses = responses;
