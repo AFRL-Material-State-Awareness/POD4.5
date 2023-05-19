@@ -1509,7 +1509,7 @@ namespace POD.Data
                 _aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
         }
 
-        public void UpdateOutput(RCalculationType myCalculationType=RCalculationType.Full)
+        public void UpdateOutput(RCalculationType myCalculationType)
         {
             
             if (_dataType == AnalysisDataTypeEnum.AHat)
