@@ -430,7 +430,7 @@ namespace Data.UnitTests
             SetupActivationDataSignalResponse();
             SetupAHatAnalysisObject(new List<double>() { -1.0 }, new Dictionary<string, List<double>>());
             //Act
-            _data.UpdateData(false);
+            _data.UpdateData();
             //Assert
             Assert.That(_data.AHATAnalysisObject.SignalResponseName, Is.EqualTo("Response"));
             Assert.AreNotEqual(_data.AHATAnalysisObject.Flaws, _data.AHATAnalysisObject.Flaws_All);
@@ -458,7 +458,7 @@ namespace Data.UnitTests
             SetupActivationDataHitMiss();
             SetupHitMissAnalysisObject(new List<double>(), new Dictionary<string, List<double>>() { { "FakeResponse", new List<double>() } });
             //Act
-            _data.UpdateData(false);
+            _data.UpdateData();
             //Assert
             Assert.That(_data.HMAnalysisObject.HitMiss_name, Is.EqualTo("Response"));
             Assert.AreEqual(_data.HMAnalysisObject.Flaws, _data.HMAnalysisObject.Flaws_All);
@@ -471,7 +471,7 @@ namespace Data.UnitTests
             SetupActivationDataHitMiss();
             SetupHitMissAnalysisObject(new List<double>() { -1.0 }, new Dictionary<string, List<double>>());
             //Act
-            _data.UpdateData(false);
+            _data.UpdateData();
             //Assert
             Assert.That(_data.HMAnalysisObject.HitMiss_name, Is.EqualTo("Response"));
             Assert.AreNotEqual(_data.HMAnalysisObject.Flaws, _data.HMAnalysisObject.Flaws_All);
@@ -536,14 +536,109 @@ namespace Data.UnitTests
             Assert.IsFalse(_data.HMAnalysisObject.Responses.ContainsKey("Responses"));
             Assert.IsFalse(_data.AHATAnalysisObject.Responses.ContainsKey("Responses"));
         }
-        private void AssertFlawResponseAllNotUpdated(int expectedFlawCount)
+        /// Tests for SetPythonEngine(I_IPy4C myPy, string myAnalysisName)
+        private Mock<I_IPy4C> _python;
+        [Test]
+        public void SetPythonEngine_IP4yCArgumentIsNull_NoAnalysisObjectCreated()
         {
-            Assert.That(_data.HMAnalysisObject.Flaws_All.Count, Is.EqualTo(expectedFlawCount));
-            Assert.That(_data.AHATAnalysisObject.Flaws_All.Count, Is.EqualTo(expectedFlawCount));
-            Assert.IsFalse(_data.HMAnalysisObject.Responses.ContainsKey("Responses"));
-            Assert.IsFalse(_data.AHATAnalysisObject.Responses.ContainsKey("Responses"));
+            //Arrange
+            //Act
+            _data.SetPythonEngine(null, string.Empty);
+            //Assert
+            Assert.That(_data.HMAnalysisObject, Is.Null);
+            Assert.That(_data.AHATAnalysisObject, Is.Null);
         }
-        
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.AHat)]
+        [TestCase(AnalysisDataTypeEnum.HitMiss)]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void SetPythonEngine_IP4yCNotNullAndHMAndAHATObjectsNotNull_NoAnalysisObjectCreated(AnalysisDataTypeEnum analysisDataType)
+        {
+            //Arrange
+            SetupIP4yC();
+            _data.HMAnalysisObject = new HMAnalysisObject("myName");
+            _data.AHATAnalysisObject = new AHatAnalysisObject("myName");
+            _data.DataType = analysisDataType;
+            //Act
+            _data.SetPythonEngine(_python.Object, string.Empty);
+            //Assert
+            _python.Verify(p => p.HitMissAnalsysis(It.IsAny<string>()), Times.Never);
+            _python.Verify(p => p.AHatAnalysis(It.IsAny<string>()), Times.Never);
+        }
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void SetPythonEngine_IP4yCNotNullAndInvalidAnalysisDataTypePresent_NoAnalysisObjectCreated(AnalysisDataTypeEnum analysisDataType)
+        {
+            //Arrange
+            SetupIP4yC();
+            _data.DataType = analysisDataType;
+            //Act
+            _data.SetPythonEngine(_python.Object, string.Empty);
+            //Assert
+            _python.Verify(p => p.HitMissAnalsysis(It.IsAny<string>()), Times.Never);
+            _python.Verify(p => p.AHatAnalysis(It.IsAny<string>()), Times.Never);
+        }
+        [Test]
+        public void SetPythonEngine_IP4yCNotNullAndAnalysisDataTypeHitMissButHMAnalysisObjectIsNotNull_NoAnalysisObjectCreated()
+        {
+            //Arrange
+            SetupIP4yC();
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _data.HMAnalysisObject = new HMAnalysisObject("myName");
+            //Act
+            _data.SetPythonEngine(_python.Object, string.Empty);
+            //Assert
+            _python.Verify(p => p.HitMissAnalsysis(It.IsAny<string>()), Times.Never);
+            _python.Verify(p => p.AHatAnalysis(It.IsAny<string>()), Times.Never);
+        }
+        [Test]
+        public void SetPythonEngine_IP4yCNotNullAndAnalysisDataTypeAHatButAHatAnalysisObjectIsNotNull_NoAnalysisObjectCreated()
+        {
+            //Arrange
+            SetupIP4yC();
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            _data.AHATAnalysisObject = new AHatAnalysisObject("myName");
+            //Act
+            _data.SetPythonEngine(_python.Object, string.Empty);
+            //Assert
+            _python.Verify(p => p.HitMissAnalsysis(It.IsAny<string>()), Times.Never);
+            _python.Verify(p => p.AHatAnalysis(It.IsAny<string>()), Times.Never);
+        }
+        [Test]
+        public void SetPythonEngine_IP4yCNotNullAndAnalysisDataTypeHitMiss_HMAnalysisCreated()
+        {
+            //Arrange
+            SetupIP4yC();
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            //Act
+            _data.SetPythonEngine(_python.Object, string.Empty);
+            //Assert
+            _python.Verify(p => p.HitMissAnalsysis(It.IsAny<string>()), Times.Once);
+            _python.Verify(p => p.AHatAnalysis(It.IsAny<string>()), Times.Never);
+            Assert.That(_data.HMAnalysisObject, Is.Not.Null);
+        }
+        [Test]
+        public void SetPythonEngine_IP4yCNotNullAndAnalysisDataTypeAHat_AHatAnalysisCreated()
+        {
+            //Arrange
+            SetupIP4yC();
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            //Act
+            _data.SetPythonEngine(_python.Object, string.Empty);
+            //Assert
+            _python.Verify(p => p.HitMissAnalsysis(It.IsAny<string>()), Times.Never);
+            _python.Verify(p => p.AHatAnalysis(It.IsAny<string>()), Times.Once);
+            Assert.That(_data.AHATAnalysisObject, Is.Not.Null);
+        }
+        private void SetupIP4yC()
+        {
+            _python = new Mock<I_IPy4C>();
+            _python.Setup(p => p.HitMissAnalsysis(It.IsAny<string>())).Returns(new HMAnalysisObject("myName"));
+            _python.Setup(p => p.AHatAnalysis(It.IsAny<string>())).Returns(new AHatAnalysisObject("myName"));
+        }
+
 
     }
 }
