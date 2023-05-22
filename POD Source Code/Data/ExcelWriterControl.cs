@@ -12,11 +12,11 @@ namespace Data
 {
     public class ExcelWriterControl : IExcelWriterControl
     {
-        private ExcelExport _excelWriter;
+        private IExcelExport _excelWriter;
         private string _analysisName;
         private string _worksheetName;
         private bool _partOfProject;
-        public ExcelWriterControl(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject)
+        public ExcelWriterControl(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject)
         {
             _excelWriter = myWriter;
             _analysisName = myAnalysisName;
@@ -284,11 +284,11 @@ namespace Data
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
-        private void WriteAnalysisName(ExcelExport myWriter, string myAnalysisName)
+        private void WriteAnalysisName(IExcelExport myWriter, string myAnalysisName)
         {
             myWriter.SetCellValue(1, 2, myAnalysisName);
         }
-        private void WriteTableOfContentsLink(ExcelExport myWriter, string _worksheetName, bool myPartOfProject, int rowIndex, int colIndex)
+        private void WriteTableOfContentsLink(IExcelExport myWriter, string _worksheetName, bool myPartOfProject, int rowIndex, int colIndex)
         {
             if (myPartOfProject)
             {

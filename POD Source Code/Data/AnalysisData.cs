@@ -1565,7 +1565,7 @@ namespace POD.Data
             return oldNames;
         }
 
-        public void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
+        public void WriteToExcel(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
             IExcelWriterControl excelWriteControlIn=null)
         {
             IExcelWriterControl excelWriteControl = excelWriteControlIn ??
