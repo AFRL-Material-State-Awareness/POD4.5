@@ -716,7 +716,7 @@ namespace Data.UnitTests
         [TestCase(RCalculationType.Full)]
         [TestCase(RCalculationType.None)]
         [TestCase(RCalculationType.ThresholdChange)]
-        public void UpdateOaycutput_DataTypeIsHitMiss_HitMissTablesUpdated(RCalculationType calcType)
+        public void UpdateOutput_DataTypeIsHitMiss_HitMissTablesUpdated(RCalculationType calcType)
         {
             //Arrange
             Mock<IUpdateOutputForHitMissData> updateoutputForHitMissData = new Mock<IUpdateOutputForHitMissData>();
