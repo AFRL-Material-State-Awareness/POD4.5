@@ -64,6 +64,10 @@
       <Project>{BEE41D1E-EBA8-4D3E-B297-4C1CA6FFF8DB}</Project>
       <Name>Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExcelData\ExcelData.csproj">
+      <Project>{678FF9C7-A42A-4AC0-A708-6FC460A27C7D}</Project>
+      <Name>ExcelData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\POD\Global.csproj">
       <Project>{F7DB9280-E09A-470D-8FDB-3C97C538A6C1}</Project>
       <Name>Global</Name>

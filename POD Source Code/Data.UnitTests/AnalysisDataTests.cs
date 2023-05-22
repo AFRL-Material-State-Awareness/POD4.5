@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using POD;
 using CSharpBackendWithR;
+using POD.ExcelData;
 
 namespace Data.UnitTests
 {
@@ -15,6 +16,8 @@ namespace Data.UnitTests
         private AnalysisData _data;
         private DataSource _source;
         private DataTable _table;
+        Mock<IExcelWriterControl> _excelWriterControl;
+        Mock<IExcelExport> _excelExport;
         [SetUp]
         public void Setup()
         {
@@ -22,6 +25,8 @@ namespace Data.UnitTests
             _data = new AnalysisData();
             _source = new DataSource("MyDataSource", "ID", "flawName.centimeters", "Response");
             _table = new DataTable();
+            _excelWriterControl = new Mock<IExcelWriterControl>();
+            _excelExport = new Mock<IExcelExport>();
             GenerateSampleTable();
             
         }
@@ -737,6 +742,40 @@ namespace Data.UnitTests
             updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateResidualPartialUncensoredTable(ref residualPartialCensoredTable));
             updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateIterationsTable(ref iterationsTable));
         }
+        /// tests for the WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
+        /// IExcelWriterControl excelWriteControlIn = null) function
+        [Test]
+        public void WriteToExcel_AnalysisTypeHitMiss_ExecutesTheWriteIterationsToExcelTable()
+        {
+            //Arrange
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            //Act
+            _data.WriteToExcel(_excelExport.Object, "AnalysisName", "WorksheetName", true, _excelWriterControl.Object);
+            //Assert
 
+            _excelWriterControl.Verify(ewc => ewc.WriteIterationsToExcel(_data, It.IsAny<DataTable>()), Times.Exactly(1));
+            _excelWriterControl.Verify(ewc => ewc.WritePODThresholdToExcel(_data, It.IsAny<DataTable>()), Times.Never);
+
+        }
+        [Test]
+        public void WriteToExcel_AnalysisTypeAHat_ExecutesTheWritePODThresholdToExcelTable()
+        {
+            //Arrange
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            //Act
+            _data.WriteToExcel(_excelExport.Object, "AnalysisName", "WorksheetName", true, _excelWriterControl.Object);
+            //Assert
+
+            _excelWriterControl.Verify(ewc => ewc.WriteIterationsToExcel(_data, It.IsAny<DataTable>()), Times.Never);
+            _excelWriterControl.Verify(ewc => ewc.WritePODThresholdToExcel(_data, It.IsAny<DataTable>()), Times.Exactly(1));
+            AssertGeneralWriteToExcelTables();
+        }
+        private void AssertGeneralWriteToExcelTables()
+        {
+            _excelWriterControl.Verify(ewc => ewc.WriteResidualsToExcel(_data, It.IsAny<DataTable>()), Times.Exactly(1));
+            _excelWriterControl.Verify(ewc => ewc.WritePODToExcel(_data, It.IsAny<int>()), Times.Exactly(1));
+            _excelWriterControl.Verify(ewc => ewc.WriteRemovedPointsToExcel(_data, It.IsAny<DataTable>(), It.IsAny<DataTable>(),
+            It.IsAny<DataTable>()), Times.Exactly(1));
+        }
     }
 }
