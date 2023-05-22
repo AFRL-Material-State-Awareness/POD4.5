@@ -1546,7 +1546,7 @@ namespace POD.Data
                 updateOutputForHitMissData.UpdateIterationsTable(ref _iterationsTable);
             }
         }
-        private List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames)
+        public List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames)
         {
             var oldNames = new List<string>();
 
@@ -1565,8 +1565,12 @@ namespace POD.Data
             return oldNames;
         }
 
-        public void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true)
+        public void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
+            IExcelWriterControl excelWriteControlIn=null)
         {
+            IExcelWriterControl excelWriteControl = excelWriteControlIn ??
+                new ExcelWriterControl(myWriter, myAnalysisName, myWorksheetName, myPartOfProject);
+            /*
             WriteResidualsToExcel(myWriter, myAnalysisName, myWorksheetName, myPartOfProject);
 
             WritePODToExcel(myWriter, myAnalysisName, myWorksheetName, myPartOfProject);
@@ -1577,6 +1581,16 @@ namespace POD.Data
                 WritePODThresholdToExcel(myWriter, myAnalysisName, myWorksheetName, myPartOfProject);
 
             WriteRemovedPointsToExcel(myWriter, myAnalysisName, myWorksheetName, myPartOfProject);
+            */
+            excelWriteControl.WriteResidualsToExcel(this, _residualCensoredTable);
+            excelWriteControl.WritePODToExcel(this, _podEndIndex);
+            if(_dataType == AnalysisDataTypeEnum.HitMiss)
+                excelWriteControl.WriteIterationsToExcel(this, _iterationsTable);
+            else
+                excelWriteControl.WritePODThresholdToExcel(this, _thresholdPlotTable);
+            excelWriteControl.WriteRemovedPointsToExcel(this, _podCurveTable_All,
+                _thresholdPlotTable, _thresholdPlotTable_All);
+
         }
 
         public string AdditionalWorksheet1Name
@@ -1736,7 +1750,7 @@ namespace POD.Data
             WriteAnalysisName(myWriter, myAnalysisName, myPartOfProject);
         }
 
-        private DataTable GenerateRemovedPointsTable()
+        public DataTable GenerateRemovedPointsTable()
         {
             DataTable table = new DataTable();
 

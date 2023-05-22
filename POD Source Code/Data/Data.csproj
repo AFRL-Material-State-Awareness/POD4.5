@@ -87,6 +87,7 @@
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSources.cs" />
     <Compile Include="DataTableWithRanges.cs" />
+    <Compile Include="ExcelWriterControl.cs" />
     <Compile Include="IAnalysisData.cs" />
     <Compile Include="ImportTemplate.cs" />
     <Compile Include="ImportTemplates.cs" />

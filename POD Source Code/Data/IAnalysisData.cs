@@ -213,8 +213,9 @@ namespace POD.Data
         DataTable ResidualRawTable { get; }
 
         //Excel Properties
-        void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true);
-
+        void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true, IExcelWriterControl excelWriteControlIn = null);
+        List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames);
+        DataTable GenerateRemovedPointsTable();
         /// tables
     }
 }
