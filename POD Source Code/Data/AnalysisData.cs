@@ -1564,7 +1564,8 @@ namespace POD.Data
 
             return oldNames;
         }
-
+        // Perhaps add an assertion to make sure that myWriter is an object and not an interface
+        // when the application is running?
         public void WriteToExcel(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
             IExcelWriterControl excelWriteControlIn=null)
         {
