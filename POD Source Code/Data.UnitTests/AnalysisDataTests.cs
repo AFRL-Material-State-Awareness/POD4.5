@@ -28,7 +28,7 @@ namespace Data.UnitTests
             _excelWriterControl = new Mock<IExcelWriterControl>();
             _excelExport = new Mock<IExcelExport>();
             GenerateSampleTable();
-            
+
         }
         private void GenerateSampleTable()
         {
@@ -100,7 +100,7 @@ namespace Data.UnitTests
             //Assert
             Assert.AreEqual(result, string.Empty);
             Assert.IsTrue(_data.CommentDictionary.ContainsKey(columnIndex));
-            Assert.AreEqual(_data.CommentDictionary.Count, originalCount+1);
+            Assert.AreEqual(_data.CommentDictionary.Count, originalCount + 1);
         }
         /// Tests for GetRemovedPointComment(int myColIndex, int myRowIndex) function
         [Test]
@@ -112,7 +112,7 @@ namespace Data.UnitTests
             //Arrange
             var _ = _data.CommentDictionary;
             //Alter the row index so that the dictionary contains the column, but not the row
-            _data.CommentDictionary.Add(columnIndex, new Dictionary<int, string>() { { rowIndex+1, "" } });
+            _data.CommentDictionary.Add(columnIndex, new Dictionary<int, string>() { { rowIndex + 1, "" } });
             var originalCount = _data.CommentDictionary.Count;
             var originalColIndexCount = _data.CommentDictionary[columnIndex].Count;
             //Act 
@@ -312,7 +312,7 @@ namespace Data.UnitTests
             //Arrange
             _data.SetPythonEngine(new Mock<I_IPy4C>().Object, "Name");
             //Act
-            Assert.DoesNotThrow(()=>_data.UpdateData());
+            Assert.DoesNotThrow(() => _data.UpdateData());
             _data.UpdateData();
             //Assert
             Assert.That(_data.HMAnalysisObject, Is.Null);
@@ -419,7 +419,7 @@ namespace Data.UnitTests
         {
             //Arrange
             SetupActivationDataSignalResponse();
-            SetupAHatAnalysisObject(new List<double>(), 
+            SetupAHatAnalysisObject(new List<double>(),
                 new Dictionary<string, List<double>>() { { "FakeResponse", new List<double>() { 1.0, 2.0, 3.0 } } });
             //Act
             _data.UpdateData();
@@ -786,7 +786,7 @@ namespace Data.UnitTests
             //Arrange
             _data.DataType = datatype;
             //Act
-            var result=_data.AdditionalWorksheet1Name;
+            var result = _data.AdditionalWorksheet1Name;
             //Assert
             Assert.That(result, Is.EqualTo(Globals.NotApplicable));
         }
@@ -802,5 +802,55 @@ namespace Data.UnitTests
             //Assert
             Assert.That(result, Is.EqualTo(expectedName));
         }
+        /// Tests for the UncensoredFlawRangeMin getter
+        [Test]
+        [TestCase(TransformTypeEnum.Linear , 1.0)]
+        [TestCase(TransformTypeEnum.Log, 4.0)]
+        [TestCase(TransformTypeEnum.Inverse, 7.0)]
+        public void UncensoredFlawRangeMin_DataTypeIsHitMiss_ReturnsMinBasedOnTransformType(TransformTypeEnum transform, double min)
+        {
+            //Arrange
+            _data.FlawTransform = transform;
+            HMAnalysisObject hmAnalysisObject = SetupFlawsAtAllTransforms(new HMAnalysisObject("HitMissName"));
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _data.HMAnalysisObject = hmAnalysisObject;
+            //Act
+            var result = _data.UncensoredFlawRangeMin;
+            //Assert
+            Assert.That(result, Is.EqualTo(min));
+
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 1.0)]
+        [TestCase(TransformTypeEnum.Log, 4.0)]
+        public void UncensoredFlawRangeMin_DataTypeIsAHat_ReturnsMinBasedOnTransformType(TransformTypeEnum transform, double min)
+        {
+            //Arrange
+            _data.FlawTransform = transform;
+            AHatAnalysisObject ahatAnalysisObject = SetupFlawsAtAllTransformsAHAT(new AHatAnalysisObject("AHatName"));
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            _data.AHATAnalysisObject = ahatAnalysisObject;
+            //Act
+            var result = _data.UncensoredFlawRangeMin;
+            //Assert
+            Assert.That(result, Is.EqualTo(min));
+
+        }
+        private HMAnalysisObject SetupFlawsAtAllTransforms(HMAnalysisObject hmAnalysisObject)
+        {
+            hmAnalysisObject.Flaws_All = new List<double>() { 1.0, 2.0, 3.0 };
+            hmAnalysisObject.LogFlaws_All = new List<double>() { 4.0, 5.0, 6.0 };
+            hmAnalysisObject.InverseFlaws_All = new List<double>() { 7.0, 8.0, 9.0 };
+            return hmAnalysisObject;
+        }
+        private AHatAnalysisObject SetupFlawsAtAllTransformsAHAT(AHatAnalysisObject ahatAnalysisObject)
+        {
+            ahatAnalysisObject.Flaws_All = new List<double>() { 1.0, 2.0, 3.0 };
+            ahatAnalysisObject.LogFlaws_All = new List<double>() { 4.0, 5.0, 6.0 };
+            ahatAnalysisObject.InverseFlaws_All = new List<double>() { 7.0, 8.0, 9.0 };
+            return ahatAnalysisObject;
+        }
+
+
     }
 }
