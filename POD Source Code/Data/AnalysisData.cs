@@ -1644,36 +1644,26 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetUncensoredFlawRangeMin();
-
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    if (_flawTransform == TransformTypeEnum.Linear)
+                    switch (_flawTransform)
                     {
-                        return _hmAnalysisObject.Flaws_All.Min();
+                        case TransformTypeEnum.Linear:
+                            return _hmAnalysisObject.Flaws_All.Min();
+                        case TransformTypeEnum.Log:
+                            return _hmAnalysisObject.LogFlaws_All.Min();
+                        case TransformTypeEnum.Inverse:
+                            return _hmAnalysisObject.InverseFlaws_All.Min();
+                        default:
+                            return _hmAnalysisObject.Flaws_All.Min();
                     }
-                    else if(_flawTransform == TransformTypeEnum.Log)
-                    {
-                        return _hmAnalysisObject.LogFlaws_All.Min();
-                    }
-                    else
-                    {
-                        return _hmAnalysisObject.InverseFlaws_All.Min();
-                    }
-                }
                 else
-                {
-                    //return _aHatAnalysisObject.Flaws_All.Max();
-                    if (_flawTransform == TransformTypeEnum.Linear)
+                    switch (_flawTransform)
                     {
-                        return _aHatAnalysisObject.Flaws_All.Min();
+                        case TransformTypeEnum.Log:
+                            return _aHatAnalysisObject.LogFlaws_All.Min();
+                        default:
+                            return _aHatAnalysisObject.Flaws_All.Min();
                     }
-                    else
-                    {
-                        return _aHatAnalysisObject.LogFlaws_All.Min();
-                    }
-                }
-
             }
         }
 
