@@ -777,5 +777,30 @@ namespace Data.UnitTests
             _excelWriterControl.Verify(ewc => ewc.WriteRemovedPointsToExcel(_data, It.IsAny<DataTable>(), It.IsAny<DataTable>(),
             It.IsAny<DataTable>()), Times.Exactly(1));
         }
+        /// Tests for the AdditionalWorksheet1Name getter
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void AdditionalWorksheet1Name_DataTypeIsInvalid_ReturnsNotApplicable(AnalysisDataTypeEnum datatype)
+        {
+            //Arrange
+            _data.DataType = datatype;
+            //Act
+            var result=_data.AdditionalWorksheet1Name;
+            //Assert
+            Assert.That(result, Is.EqualTo(Globals.NotApplicable));
+        }
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.AHat, "Threshold")]
+        [TestCase(AnalysisDataTypeEnum.HitMiss, "Solver")]
+        public void AdditionalWorksheet1Name_DataTypeIsValid_ReturnsAppropriateString(AnalysisDataTypeEnum datatype, string expectedName)
+        {
+            //Arrange
+            _data.DataType = datatype;
+            //Act
+            var result = _data.AdditionalWorksheet1Name;
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedName));
+        }
     }
 }
