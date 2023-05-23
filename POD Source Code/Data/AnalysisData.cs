@@ -1771,7 +1771,7 @@ namespace POD.Data
         }
 
         /// <summary>
-        /// Get the number of flaws used in the analysis (censored or uncensored)
+        /// Get the number of flaws used in the analysis (censored or uncensored), AHat vs A might need to be implmented here
         /// </summary>
         public int FlawCountUnique
         {
