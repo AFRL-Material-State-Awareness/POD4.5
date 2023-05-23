@@ -1733,22 +1733,7 @@ namespace POD.Data
         {
             //FlawTransform
             if (_hmAnalysisObject!=null || _aHatAnalysisObject != null)
-            {
-                //return _podDoc.GetInvtransformedFlawValue(myValue);
-
-                if(_dataType== AnalysisDataTypeEnum.HitMiss)
-                {
-                    //return TransformBackAValue(myValue, _hmAnalysisObject.ModelType);
-                    return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
-                }
-                else
-                {
-                    //return TransformBackAValue(myValue, _aHatAnalysisObject.A_transform);
-                    return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
-                }
-
-                
-            }
+                return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
             else
                 return myValue;
         }
