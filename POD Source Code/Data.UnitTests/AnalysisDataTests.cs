@@ -956,7 +956,7 @@ namespace Data.UnitTests
         [TestCase(4, 2.0)]
         [TestCase(5, 3.0)]
         [TestCase(6, 2.0)]
-        public void InvertTransformedFlaw_AHatAnalysisObjectNotNull_ReturnsTransformedValue(int inputTransform, double expectedTransformValue, double eSquared=0)
+        public void InvertTransformedFlaw_AHatAnalysisObjectNotNull_ReturnsTransformedValue(int inputTransform, double expectedTransformValue)
         {
             //Arrange
             SetupPythonMock();
@@ -981,10 +981,85 @@ namespace Data.UnitTests
             _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
             Assert.That(result, Is.EqualTo(Math.Exp(2)));
         }
+        // BoxCox is never passed in for hitmiss (case = 5)
+        [Test]
+        [TestCase(1, 2.0)]
+        [TestCase(3, 1.0 / 2.0)]
+        [TestCase(4, 2.0)]
+        [TestCase(6, 2.0)]
+        public void InvertTransformedFlaw_HMAnalysisObjectNotNull_ReturnsTransformedValue(int inputTransform, double expectedTransformValue)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(inputTransform);
+            _data.HMAnalysisObject = new HMAnalysisObject("AnalysisName");
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            //Act
+            var result = _data.InvertTransformedFlaw(2.0);
+            //Assert
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
+            Assert.That(result, Is.EqualTo(expectedTransformValue));
+        }
+
         private void SetupPythonMock()
         {
             _python = new Mock<I_IPy4C>();
             _data.SetPythonEngine(_python.Object, "AnalysisName");
         }
+        ///tests for InvertTransformedResponse
+        /// The log transform is in a separate test since it requires Math.Exp
+        [Test]
+        [TestCase(1, 2.0)]
+        [TestCase(3, 1.0/2.0)]
+        [TestCase(4, 2.0)]
+        [TestCase(5, 3.0)]
+        [TestCase(6, 2.0)]
+        public void InvertTransformedResponse_AHatAnalysisObjectNotNull_ReturnsTransformedValue(int inputTransform, double expectedTransformValue)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(inputTransform);
+            _data.AHATAnalysisObject = new AHatAnalysisObject("AnalysisName") { Lambda = 1.0 };
+            //Act
+            var result = _data.InvertTransformedResponse(2.0);
+            //Assert
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
+            Assert.That(result, Is.EqualTo(expectedTransformValue));
+        }
+        [Test]
+        public void InvertTransformedResponse_AHatAnalysisObjectNotNullAndTransformIsLog_ReturnsTransformedValue()
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(2);
+            _data.AHATAnalysisObject = new AHatAnalysisObject("AnalysisName");
+            //Act
+            var result = _data.InvertTransformedResponse(2.0);
+            //Assert
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
+            Assert.That(result, Is.EqualTo(Math.Exp(2)));
+        }
+        [Test]
+        [TestCase(1)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void InvertTransformedResponse_HMAnalysisObjectNotNull_ReturnsTransformedValue(int inputTransform)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(inputTransform);
+            _data.HMAnalysisObject = new HMAnalysisObject("AnalysisName");
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            //Act
+            var result = _data.InvertTransformedResponse(2.0);
+            //Assert
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Never);
+            Assert.That(result, Is.EqualTo(2.0));
+        }
+        ///
+
+
     }
 }
