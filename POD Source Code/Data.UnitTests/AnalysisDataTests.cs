@@ -1006,7 +1006,7 @@ namespace Data.UnitTests
             _python = new Mock<I_IPy4C>();
             _data.SetPythonEngine(_python.Object, "AnalysisName");
         }
-        ///tests for InvertTransformedResponse
+        /// tests for InvertTransformedResponse(double myValue)
         /// The log transform is in a separate test since it requires Math.Exp
         [Test]
         [TestCase(1, 2.0)]
@@ -1058,7 +1058,63 @@ namespace Data.UnitTests
             _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Never);
             Assert.That(result, Is.EqualTo(2.0));
         }
-        ///
+        /// Tests for FlawCount getter
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void FlawCount_DataTypeInvalid_Returns0(AnalysisDataTypeEnum datatype)
+        {
+            // Arrange
+            _data.DataType = datatype;
+            //Act
+            var result = _data.FlawCount;
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        public void FlawCount_DataTypeIsHitMiss_ReturnsTotalFlawCount()
+        {
+            // Arrange
+            HMAnalysisObject hmAnalysisObject = new HMAnalysisObject("AnalysisName") { Flaws = new List<double>() { 1.0, 2.0, 3.0 } };
+            UpdateOutputForHitMissData updateOutput = new UpdateOutputForHitMissData(hmAnalysisObject, new Mock<IMessageBoxWrap>().Object);
+            _data.HMAnalysisObject = hmAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _data.UpdateOutput(RCalculationType.Full, null, updateOutput);
+            // Act
+            var result=_data.FlawCount;
+            // Assert
+            Assert.That(result, Is.EqualTo(3));
+        }
+        [Test]
+        public void FlawCount_DataTypeIsAHat_ReturnsSumOfResidualTables()
+        {
+            // Arrange
+            SetupResidTable();
+            AHatAnalysisObject ahatAnalysisObject = new AHatAnalysisObject("AnalysisName")
+            {
+                Flaws = new List<double>() { 1.0, 2.0, 3.0 },
+                AHatResultsResidUncensored = _table,
+                AHatResultsResid = _table,
+                FlawsCensored = new List<double>() { 2.0 }
+            };
+            UpdateOutputForAHatData updateOutput = new UpdateOutputForAHatData(ahatAnalysisObject, new Mock<IMessageBoxWrap>().Object);
+            _data.AHATAnalysisObject = ahatAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            _data.UpdateOutput(RCalculationType.Full, updateOutput);
+            // Act
+            var result = _data.FlawCount;
+            // Assert
+            Assert.That(result, Is.EqualTo(10));
+        }
+        private void SetupResidTable()
+        {
+            _table.Columns.Add("Column4");
+            _table.Columns["Column1"].ColumnName = "flaw";
+            _table.Columns["Column2"].ColumnName = "y";
+            for (int i = 0; i < 10; i++)
+                _table.Rows.Add(i, i * .25, i + 1, i + 2);
+
+        }
 
 
     }
