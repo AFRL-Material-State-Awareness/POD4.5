@@ -1162,6 +1162,71 @@ namespace Data.UnitTests
                 _table.Rows.Add(i, i * .25, i + 1, i + 2);
         }
 
+        /// Tests for FlawCountUnique getter
+        /// This getter is only really used for hitmiss
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void FlawCountUnique_DataTypeNotValid_Returns0(AnalysisDataTypeEnum datatype)
+        {
+            //Arrange
+            _data.DataType = datatype;
+            //Act
+            var result = _data.FlawCountUnique;
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        public void FlawCountUnique_DataTypeAHat_Returns0()
+        {
+            //Arrange
+            SetupResidTable();
+            AHatAnalysisObject ahatAnalysisObject = CreateFakeAHatObject(null, null);
+            UpdateOutputForAHatData updateOutput = new UpdateOutputForAHatData(ahatAnalysisObject, new Mock<IMessageBoxWrap>().Object);
+            _data.AHATAnalysisObject = ahatAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            _data.UpdateOutput(RCalculationType.Full, updateOutput);
+            //Act
+            var result = _data.FlawCountUnique;
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        public void FlawCountUnique_DataTypeIsHitMissAndResidualTableIsNull_Returns0()
+        {
+            //Arrange
+            SetupResidTable();
+            HMAnalysisObject hmAnalysisObject = new HMAnalysisObject("AnalysisName") { 
+                Flaws = new List<double>() { 1.0, 2.0, 3.0 },
+                ResidualTable = null
+            };
+            UpdateOutputForHitMissData updateOutput = new UpdateOutputForHitMissData(hmAnalysisObject, new Mock<IMessageBoxWrap>().Object);
+            _data.HMAnalysisObject = hmAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _data.UpdateOutput(RCalculationType.Full, null, updateOutput);
+            //Act
+            var result = _data.FlawCountUnique;
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        public void FlawCountUnique_DataTypeIsHitMissAndResidualTableIsNotNull_ReturnsCountOfRows()
+        {
+            //Arrange
+            SetupResidTable();
+            HMAnalysisObject hmAnalysisObject = new HMAnalysisObject("AnalysisName") { 
+                Flaws = new List<double>() { 1.0, 2.0, 3.0 },
+                ResidualTable = _table,  
+            };
+            UpdateOutputForHitMissData updateOutput = new UpdateOutputForHitMissData(hmAnalysisObject, new Mock<IMessageBoxWrap>().Object);
+            _data.HMAnalysisObject = hmAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _data.UpdateOutput(RCalculationType.Full, null, updateOutput);
+            //Act
+            var result = _data.FlawCountUnique;
+            //Assert
+            Assert.That(result, Is.EqualTo(10));
+        }
 
     }
 }
