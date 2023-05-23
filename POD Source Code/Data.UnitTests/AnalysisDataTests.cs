@@ -1228,5 +1228,41 @@ namespace Data.UnitTests
             Assert.That(result, Is.EqualTo(10));
         }
 
+        /// Skipping buffered ranges and minmax functions for now
+        /// 
+
+        /// Tests for TransformAValue(double myValue, int transform) function
+        [Test]
+        [TestCase(1, 2.0)]
+        [TestCase(3, 0.5)]
+        [TestCase(4, 2.0)]
+        [TestCase(6, 2.0)]
+        public void TransformAValue_LinearOrInverseTransformPassed_ReturnsTransformedValue(int transform, double expectedValue)
+        {
+            //Arrange
+            //Act
+            var result = _data.TransformAValue(2.0, transform);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedValue));
+        }
+        [Test]
+        public void TransformAValue_LogTransformPassed_ReturnsTransformedValue()
+        {
+            //Arrange
+            //Act
+            var result = _data.TransformAValue(Math.E, 2);
+            //Assert
+            Assert.That(result, Is.EqualTo(1));
+        }
+        [Test]
+        public void TransformAValue_BoxCoxTransformPassed_ReturnsTransformedValue()
+        {
+            //Arrange
+            _data.AHATAnalysisObject = new AHatAnalysisObject("AnalysisName") { Lambda = 2.0 };
+            //Act
+            var result = _data.TransformAValue(2.0, 5);
+            //Assert
+            Assert.That(result, Is.EqualTo(3.5));
+        }
     }
 }
