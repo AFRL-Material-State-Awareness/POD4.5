@@ -62,14 +62,15 @@ namespace Data
         {
             try
             {
-                residualRawTable = _backwardsTransform.TransformBackColResidualTables(_aHatAnalysisObject.AHatResultsResid);
-                residualRawTable = _backwardsTransform.DeleteCensoredPointsForRUT(residualRawTable);
+                //in the original code, this table does not take the average of the reponses and instead displays the results for inspector 1?
+                residualRawTable = _aHatAnalysisObject.AHatResultsResid;
+                residualRawTable = _backwardsTransform.TransformBackColResidualTables(residualRawTable);
                 residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
                 residualRawTable = residualRawTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
+                _messageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
             }
         }
         /// <summary>
