@@ -1647,8 +1647,6 @@ namespace POD.Data
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
                     switch (_flawTransform)
                     {
-                        case TransformTypeEnum.Linear:
-                            return _hmAnalysisObject.Flaws_All.Min();
                         case TransformTypeEnum.Log:
                             return _hmAnalysisObject.LogFlaws_All.Min();
                         case TransformTypeEnum.Inverse:
@@ -1674,22 +1672,11 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetFlawRangeMin();
-                if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    if (_hmAnalysisObject.Flaws.Count > 0)
-                        return _hmAnalysisObject.Flaws.Min();
-                    else
-                        return double.NaN;
-                }
-                else 
-                {
-                    if (_aHatAnalysisObject.Flaws.Count > 0)
-                        return _aHatAnalysisObject.Flaws.Min();
-                    else
-                        return double.NaN;
-                }
-
+                if (_dataType == AnalysisDataTypeEnum.HitMiss && _hmAnalysisObject?.Flaws.Count > 0)
+                    return _hmAnalysisObject.Flaws.Min();
+                else if (_dataType == AnalysisDataTypeEnum.AHat && _aHatAnalysisObject?.Flaws.Count > 0)
+                    return _aHatAnalysisObject.Flaws.Min();
+                return double.NaN;
             }
         }
 
@@ -1702,33 +1689,23 @@ namespace POD.Data
             {
 
                 if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    if(_flawTransform == TransformTypeEnum.Linear)
+                    switch (_flawTransform)
                     {
-                        return _hmAnalysisObject.Flaws_All.Max();
+                        case TransformTypeEnum.Log:
+                            return _hmAnalysisObject.LogFlaws_All.Max();
+                        case TransformTypeEnum.Inverse:
+                            return _hmAnalysisObject.InverseFlaws_All.Max();
+                        default:
+                            return _hmAnalysisObject.Flaws_All.Max();
                     }
-                    else if (_flawTransform == TransformTypeEnum.Log)
-                    {
-                        return _hmAnalysisObject.LogFlaws_All.Max();
-                    }
-                    else
-                    {
-                        return _hmAnalysisObject.InverseFlaws_All.Max();
-                    }
-                }
                 else
-                {
-                    //return _aHatAnalysisObject.Flaws_All.Max();
-                    if (_flawTransform == TransformTypeEnum.Linear)
+                    switch (_flawTransform)
                     {
-                        return _aHatAnalysisObject.Flaws_All.Max();
+                        case TransformTypeEnum.Log:
+                            return _aHatAnalysisObject.LogFlaws_All.Max();
+                        default:
+                            return _aHatAnalysisObject.Flaws_All.Max();
                     }
-                    else
-                    {
-                        return _aHatAnalysisObject.LogFlaws_All.Max();
-                    }
-                }
-
             }
         }
 
@@ -1739,20 +1716,11 @@ namespace POD.Data
         {
             get
             {
-                if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    if (_hmAnalysisObject.Flaws.Count > 0)
-                        return _hmAnalysisObject.Flaws.Max();
-                    else
-                        return double.NaN;
-                }
-                else
-                {
-                    if (_aHatAnalysisObject.Flaws.Count > 0)
-                        return _aHatAnalysisObject.Flaws.Max();
-                    else
-                        return double.NaN;
-                }
+                if (_dataType == AnalysisDataTypeEnum.HitMiss && _hmAnalysisObject?.Flaws.Count > 0)
+                    return _hmAnalysisObject.Flaws.Max();
+                else if (_dataType == AnalysisDataTypeEnum.AHat && _aHatAnalysisObject?.Flaws.Count > 0)
+                    return _aHatAnalysisObject.Flaws.Max();        
+                return double.NaN;
             }
         }
 
