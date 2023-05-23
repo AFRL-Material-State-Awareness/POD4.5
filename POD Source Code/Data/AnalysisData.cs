@@ -1746,22 +1746,9 @@ namespace POD.Data
         public double InvertTransformedResponse(double myValue)
         {
             if (_hmAnalysisObject != null || _aHatAnalysisObject != null)
-            {
-                //return _podDoc.GetInvtransformedResponseValue(myValue);
-
-                if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    //return TransformBackAValue(myValue, _hmAnalysisObject.ModelType);
-                    return myValue;
-                }
-                else
-                {
-                    return TransformBackAValue(myValue, _aHatAnalysisObject.Ahat_transform);
-                }
-            }
-
-            else
-                return myValue;
+                if(_dataType == AnalysisDataTypeEnum.AHat)
+                    return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
+            return myValue;
         }
 
         /// <summary>
