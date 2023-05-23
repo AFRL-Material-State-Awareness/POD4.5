@@ -1758,19 +1758,15 @@ namespace POD.Data
         {
             get
             {
-                if (_dataType == AnalysisDataTypeEnum.AHat)
+                switch (_dataType)
                 {
-                    if (_residualUncensoredTable != null && _residualCensoredTable != null)
-                        return _residualUncensoredTable.Rows.Count + _residualCensoredTable.Rows.Count;
-                    else
+                    case AnalysisDataTypeEnum.AHat:
+                        return (_residualUncensoredTable?.Rows.Count ?? 0) + (_residualCensoredTable?.Rows.Count ?? 0);
+                    case AnalysisDataTypeEnum.HitMiss:
+                        return _totalFlawCount;
+                    default:
                         return 0;
                 }
-                else if(_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    return _totalFlawCount;
-                }
-
-                return 0;
             }
         }
 
