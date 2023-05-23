@@ -1086,34 +1086,80 @@ namespace Data.UnitTests
             Assert.That(result, Is.EqualTo(3));
         }
         [Test]
-        public void FlawCount_DataTypeIsAHat_ReturnsSumOfResidualTables()
+        public void FlawCount_DataTypeIsAHatAndTablesAreNotNull_ReturnsSumOfResidualTables()
         {
             // Arrange
             SetupResidTable();
-            AHatAnalysisObject ahatAnalysisObject = new AHatAnalysisObject("AnalysisName")
-            {
-                Flaws = new List<double>() { 1.0, 2.0, 3.0 },
-                AHatResultsResidUncensored = _table,
-                AHatResultsResid = _table,
-                FlawsCensored = new List<double>() { 2.0 }
-            };
-            UpdateOutputForAHatData updateOutput = new UpdateOutputForAHatData(ahatAnalysisObject, new Mock<IMessageBoxWrap>().Object);
-            _data.AHATAnalysisObject = ahatAnalysisObject;
-            _data.DataType = AnalysisDataTypeEnum.AHat;
-            _data.UpdateOutput(RCalculationType.Full, updateOutput);
+            AHatAnalysisObject ahatAnalysisObject = CreateFakeAHatObject(_table, _table.Copy());
+            SetupUpdateOutputDataAHAT(ahatAnalysisObject);
             // Act
             var result = _data.FlawCount;
             // Assert
             Assert.That(result, Is.EqualTo(10));
+        }
+        [Test]
+        public void FlawCount_DataTypeIsAHatAndBothTablesAreNull_ReturnsSumOfResidualTables()
+        {
+            // Arrange
+            SetupResidTable();
+            AHatAnalysisObject ahatAnalysisObject = CreateFakeAHatObject(null, null);
+            _data.AHATAnalysisObject = ahatAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            // Act
+            var result = _data.FlawCount;
+            // Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        public void FlawCount_DataTypeIsAHatAndUncensoredTableIsNull_ReturnsSumOfResidualTables()
+        {
+            // Arrange
+            SetupResidTable();
+            AHatAnalysisObject ahatAnalysisObject = CreateFakeAHatObject(_table, null);
+            SetupUpdateOutputDataAHAT(ahatAnalysisObject);
+            // Act
+            var result = _data.FlawCount;
+            // Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        public void FlawCount_DataTypeIsAHatAndCensoredTableIsNull_ReturnsSumOfResidualTables()
+        {
+            // Arrange
+            SetupResidTable();
+            AHatAnalysisObject ahatAnalysisObject = CreateFakeAHatObject(null, _table);
+            SetupUpdateOutputDataAHAT(ahatAnalysisObject);
+            // Act
+            var result = _data.FlawCount;
+            // Assert
+            Assert.That(result, Is.Zero);
+        }
+        private AHatAnalysisObject CreateFakeAHatObject(DataTable table1, DataTable table2)
+        {
+            AHatAnalysisObject ahatAnalysisObject = new AHatAnalysisObject("AnalysisName")
+            {
+                Flaws = new List<double>() { 1.0, 2.0, 3.0 },
+                AHatResultsResidUncensored = table1,
+                AHatResultsResid = table2,
+                //Censor one of the points to ensure that all the flaws are still being added up
+                FlawsCensored = new List<double>() { 2.0 }
+            };
+            return ahatAnalysisObject;
+        }
+        private void SetupUpdateOutputDataAHAT(AHatAnalysisObject ahatAnalysisObject)
+        {
+            UpdateOutputForAHatData updateOutput = new UpdateOutputForAHatData(ahatAnalysisObject, new Mock<IMessageBoxWrap>().Object);
+            _data.AHATAnalysisObject = ahatAnalysisObject;
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            _data.UpdateOutput(RCalculationType.Full, updateOutput);
         }
         private void SetupResidTable()
         {
             _table.Columns.Add("Column4");
             _table.Columns["Column1"].ColumnName = "flaw";
             _table.Columns["Column2"].ColumnName = "y";
-            for (int i = 0; i < 10; i++)
+            for (int i = 1; i < 11; i++)
                 _table.Rows.Add(i, i * .25, i + 1, i + 2);
-
         }
 
 
