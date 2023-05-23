@@ -1743,7 +1743,8 @@ namespace POD.Data
                 }
                 else
                 {
-                    return TransformBackAValue(myValue, _aHatAnalysisObject.A_transform);
+                    //return TransformBackAValue(myValue, _aHatAnalysisObject.A_transform);
+                    return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
                 }
 
                 
