@@ -850,7 +850,84 @@ namespace Data.UnitTests
             ahatAnalysisObject.InverseFlaws_All = new List<double>() { 7.0, 8.0, 9.0 };
             return ahatAnalysisObject;
         }
+        /// Tests for the FlawRangeMin getter
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        [TestCase(AnalysisDataTypeEnum.HitMiss)]
+        [TestCase(AnalysisDataTypeEnum.AHat)]
+        public void FlawRangeMin_DataTypePassedButFlawsForbothHitMissAndAHatAreEmpty_ReturnsNaN(AnalysisDataTypeEnum dataType)
+        {
+            //Arrange
+            _data.DataType = dataType;
+            SetupAHatAndHMAnalysisObjects();
+            //Act
+            var result = _data.FlawRangeMin;
+            //Assert
+            Assert.That(result, Is.EqualTo(double.NaN));
+        }
+        [Test]
+        public void FlawRangeMin_DataTypeIsHitMissAndFlawsCountIsGreaterThan0_ReturnsMinFlaw()
+        {
+            //Arrange
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            SetupAHatAndHMAnalysisObjects();
+            _data.HMAnalysisObject.Flaws = new List<double>() { 1.0, 2.0, 3.0 };
+            //Act
+            var result = _data.FlawRangeMin;
+            //Assert
+            Assert.That(result, Is.EqualTo(1.0));
+        }
+        [Test]
+        public void FlawRangeMin_DataTypeIsAHatAndFlawsCountIsGreaterThan0_ReturnsMinFlaw()
+        {
+            //Arrange
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            SetupAHatAndHMAnalysisObjects();
+            _data.AHATAnalysisObject.Flaws = new List<double>() { 1.0, 2.0, 3.0 };
+            //Act
+            var result = _data.FlawRangeMin;
+            //Assert
+            Assert.That(result, Is.EqualTo(1.0));
+        }
+        private void SetupAHatAndHMAnalysisObjects()
+        {
+            _data.HMAnalysisObject = new HMAnalysisObject("HitMissName");
+            _data.AHATAnalysisObject = new AHatAnalysisObject("AHatName");
+        }
+        /// Tests for the UncensoredFlawRangeMax getter
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 3.0)]
+        [TestCase(TransformTypeEnum.Log, 6.0)]
+        [TestCase(TransformTypeEnum.Inverse, 9.0)]
+        public void UncensoredFlawRangeMax_DataTypeIsHitMiss_ReturnsMaxBasedOnTransformType(TransformTypeEnum transform, double min)
+        {
+            //Arrange
+            _data.FlawTransform = transform;
+            HMAnalysisObject hmAnalysisObject = SetupFlawsAtAllTransforms(new HMAnalysisObject("HitMissName"));
+            _data.DataType = AnalysisDataTypeEnum.HitMiss;
+            _data.HMAnalysisObject = hmAnalysisObject;
+            //Act
+            var result = _data.UncensoredFlawRangeMax;
+            //Assert
+            Assert.That(result, Is.EqualTo(min));
 
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 3.0)]
+        [TestCase(TransformTypeEnum.Log, 6.0)]
+        public void UncensoredFlawRangeMax_DataTypeIsAHat_ReturnsMaxBasedOnTransformType(TransformTypeEnum transform, double min)
+        {
+            //Arrange
+            _data.FlawTransform = transform;
+            AHatAnalysisObject ahatAnalysisObject = SetupFlawsAtAllTransformsAHAT(new AHatAnalysisObject("AHatName"));
+            _data.DataType = AnalysisDataTypeEnum.AHat;
+            _data.AHATAnalysisObject = ahatAnalysisObject;
+            //Act
+            var result = _data.UncensoredFlawRangeMax;
+            //Assert
+            Assert.That(result, Is.EqualTo(min));
 
+        }
     }
 }
