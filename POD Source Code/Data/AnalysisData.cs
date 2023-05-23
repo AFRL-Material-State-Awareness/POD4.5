@@ -1760,8 +1760,8 @@ namespace POD.Data
             {
                 switch (_dataType)
                 {
-                    case AnalysisDataTypeEnum.AHat:
-                        return (_residualUncensoredTable?.Rows.Count ?? 0) + (_residualCensoredTable?.Rows.Count ?? 0);
+                    case AnalysisDataTypeEnum.AHat when _residualUncensoredTable != null && _residualCensoredTable != null:
+                        return _residualUncensoredTable.Rows.Count + _residualCensoredTable.Rows.Count;
                     case AnalysisDataTypeEnum.HitMiss:
                         return _totalFlawCount;
                     default:
@@ -1777,18 +1777,8 @@ namespace POD.Data
         {
             get
             {
-                if (_dataType == AnalysisDataTypeEnum.AHat)
-                {
-                    return 0;
-                }
-                else if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                {
-                    if (_residualUncensoredTable != null)
-                        return _residualUncensoredTable.Rows.Count;
-                    else
-                        return 0;
-                }
-
+                if (_dataType == AnalysisDataTypeEnum.HitMiss)
+                    return _residualUncensoredTable?.Rows.Count ?? 0;
                 return 0;
             }
         }
@@ -1860,8 +1850,6 @@ namespace POD.Data
             }
 
             Compute.SanityCheck(ref myMin, ref myMax);
-
-
         }
 
         public static void GetBufferedRange(Control chart, IAxisObject myAxis, DataTable myTable, AxisKind kind)
