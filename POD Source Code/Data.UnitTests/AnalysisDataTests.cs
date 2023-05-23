@@ -18,6 +18,7 @@ namespace Data.UnitTests
         private DataTable _table;
         Mock<IExcelWriterControl> _excelWriterControl;
         Mock<IExcelExport> _excelExport;
+        private Mock<I_IPy4C> _python;
         [SetUp]
         public void Setup()
         {
@@ -542,7 +543,7 @@ namespace Data.UnitTests
             Assert.IsFalse(_data.AHATAnalysisObject.Responses.ContainsKey("Responses"));
         }
         /// Tests for SetPythonEngine(I_IPy4C myPy, string myAnalysisName)
-        private Mock<I_IPy4C> _python;
+        
         [Test]
         public void SetPythonEngine_IP4yCArgumentIsNull_NoAnalysisObjectCreated()
         {
@@ -928,6 +929,62 @@ namespace Data.UnitTests
             //Assert
             Assert.That(result, Is.EqualTo(min));
 
+        }
+        /// Tests for InvertTransformedFlaw(double myValue)
+        [Test]
+        [TestCase(TransformTypeEnum.Linear)]
+        [TestCase(TransformTypeEnum.Log)]
+        [TestCase(TransformTypeEnum.Exponetial)]
+        [TestCase(TransformTypeEnum.Inverse)]
+        [TestCase(TransformTypeEnum.BoxCox)]
+        [TestCase(TransformTypeEnum.None)]
+        public void InvertTransformedFlaw_BothAHatandHMAnalysisObjectIsNull_ReturnsTheSameValue(TransformTypeEnum transform)
+        {
+            //Arrange
+            SetupPythonMock();
+            _data.FlawTransform = transform;
+            //Act
+            var result = _data.InvertTransformedFlaw(1.0);
+            //Assert
+            Assert.That(result, Is.EqualTo(1));
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Never);
+        }
+        /// The log transform is in a separate test since it requires Math.Exp
+        [Test]
+        [TestCase(1, 2.0)]
+        [TestCase(3, 1.0/2.0)]
+        [TestCase(4, 2.0)]
+        [TestCase(5, 3.0)]
+        [TestCase(6, 2.0)]
+        public void InvertTransformedFlaw_AHatAnalysisObjectNotNull_ReturnsTransformedValue(int inputTransform, double expectedTransformValue, double eSquared=0)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(inputTransform);
+            _data.AHATAnalysisObject = new AHatAnalysisObject("AnalysisName") { Lambda = 1.0 };
+            //Act
+            var result = _data.InvertTransformedFlaw(2.0);
+            //Assert
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
+            Assert.That(result, Is.EqualTo(expectedTransformValue));
+        }
+        [Test]
+        public void InvertTransformedFlaw_AHatAnalysisObjectNotNullAndTransformIsLog_ReturnsTransformedValue()
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(2);
+            _data.AHATAnalysisObject = new AHatAnalysisObject("AnalysisName");
+            //Act
+            var result = _data.InvertTransformedFlaw(2.0);
+            //Assert
+            _python.Verify(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>()), Times.Once);
+            Assert.That(result, Is.EqualTo(Math.Exp(2)));
+        }
+        private void SetupPythonMock()
+        {
+            _python = new Mock<I_IPy4C>();
+            _data.SetPythonEngine(_python.Object, "AnalysisName");
         }
     }
 }
