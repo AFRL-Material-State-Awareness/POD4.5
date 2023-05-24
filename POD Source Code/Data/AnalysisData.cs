@@ -2254,11 +2254,10 @@ namespace POD.Data
             tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Flaw, _availableFlawsTable, _activatedFlawTable, _availableFlaws, _activatedFlaws);
             tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
         }
-
-        public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue,
-            IUpdaterExcelPropertyValue updaterExcelPropIn = null)
+        public IUpdaterExcelPropertyValue UpdaterExcelPropertyValue { set; get; }
+        public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue)
         {
-            IUpdaterExcelPropertyValue updaterExcelProp = updaterExcelPropIn ?? new UpdaterExcelPropertyValue();
+            IUpdaterExcelPropertyValue updaterExcelProp = UpdaterExcelPropertyValue ?? new UpdaterExcelPropertyValue();
             DataColumnCollection columns = null;
             var values = new List<double>();
 
@@ -2271,7 +2270,6 @@ namespace POD.Data
             {
                 values.Add(updaterExcelProp.GetUpdatedValue(myExtColProperty, currentValue, column));
             }
-
             if (myExtColProperty == ExtColProperty.Min)
             {
                 newValue = values.Min();
@@ -2290,7 +2288,20 @@ namespace POD.Data
 
                 throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
             }
-
+            /*
+            switch (myExtColProperty)
+            {
+                case ExtColProperty.Max:
+                    newValue = values.Max();
+                    break;
+                case ExtColProperty.Min:
+                case ExtColProperty.Thresh:
+                    newValue = values.Min();
+                    break;
+                default:
+                    newValue = currentValue;
+                    throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
+            }*/
         }
 
         public void GetNewValue(ColType myType, string myExtColProperty, out double newValue)
