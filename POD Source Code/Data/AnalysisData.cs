@@ -2125,68 +2125,33 @@ namespace POD.Data
         }
         public double TransformAValue(double myValue, int transform)
         {
-            double transformValue = 0.0;
             switch (transform)
             {
-                case 1:
-                    transformValue = myValue;
-                    break;
-                case 2:
-                    transformValue = Math.Log(myValue);
-                    break;
-                case 3:
-                    transformValue = 1.0/myValue;
-                    break;
-                case 5:
-                    transformValue = (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
-                    break;
-                default:
-                    transformValue = myValue;
-                    break;
+                case 2: //log transform
+                    return Math.Log(myValue);
+                case 3: //inverse transform
+                    return 1.0 / myValue;
+                case 5: //BoxCox transform
+                    return (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
+                default: //linear or unknown transform
+                    return myValue;
             }
-            return transformValue;
-
         }
+        public ITransformBackLambdaControl TransformBackLambda { get; set; }
         public double TransformBackAValue(double myValue, int transform)
         {
-            double transformValue = 0.0;
+            ITransformBackLambdaControl transformBackLambdaControl = TransformBackLambda ?? new TransformBackLambdaControl(_aHatAnalysisObject);
             switch (transform)
             {
-                case 1:
-                    transformValue = myValue;
-                    break;
                 case 2:
-                    transformValue = Math.Exp(myValue);
-                    break;
+                    return Math.Exp(myValue);
                 case 3:
-                    transformValue = 1.0/myValue;
-                    break;
+                    return 1.0 / myValue;
                 case 5:
-                    // prevents the threshold line from becoming negative when the lambda value is negative
-                    // DO NOT DELETE
-                    if (myValue >= -(1 / _aHatAnalysisObject.Lambda) && _aHatAnalysisObject.Lambda < 0)
-                    {
-                        return AHATAnalysisObject.Signalmax*10;
-                    }
-                    //convert lambda to an improper fraction to handle negtive values with the nth root
-                    long num, den;
-                    double whole = Math.Floor(_aHatAnalysisObject.Lambda);
-                    double decimalVal = _aHatAnalysisObject.Lambda - whole;
-                    IPy4C.DecimalToFraction(decimalVal, out num, out den);
-                    transformValue = IPy4C.NthRoot(myValue * _aHatAnalysisObject.Lambda + 1, _aHatAnalysisObject.Lambda, den);
-                    if (double.IsNaN(transformValue))
-                    {
-                        //add a very small '.01' number to the denominator to return a valid value to scale      
-                        double approxLambda = whole+ Convert.ToDouble(num) /(Convert.ToDouble(den) + .000000000001);
-                        transformValue = IPy4C.NthRoot(myValue * approxLambda + 1, approxLambda, 1.0);
-                    }                   
-                    break;
+                   return transformBackLambdaControl.TransformBackLambda(myValue);
                 default:
-                    transformValue = myValue;
-                    break;
+                    return myValue;
             }
-            return transformValue;
-
         }
         public double TransformValueForXAxis(double myValue)
         {
