@@ -1068,6 +1068,8 @@ namespace POD.Data
             _responseTransform = TransformTypeEnum.Linear;
 
             _updatePythonData = true;
+
+            TransformBackLambda = null;
         }
 
         /// <summary>

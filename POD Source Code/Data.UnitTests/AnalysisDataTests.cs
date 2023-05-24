@@ -1311,5 +1311,38 @@ namespace Data.UnitTests
             //Assert
             Assert.That(result, Is.EqualTo(inputValue));
         }
+
+        /// Tests for TransformValueForXAxis
+        [Test]
+        [TestCase(TransformTypeEnum.Log, 0.0)]
+        [TestCase(TransformTypeEnum.Log, -1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 0.0)]
+        [TestCase(TransformTypeEnum.Inverse, -1.0)]
+        public void TransformValueForXAxis_ValueIsZeroOrLessAndTransformIsLogOrInverse_Returns0(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            _data.FlawTransform = transform;
+            //Act
+            var result=_data.TransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 0.0)]
+        [TestCase(TransformTypeEnum.Linear, -1.0)]
+        [TestCase(TransformTypeEnum.Exponetial, 0.0)]
+        [TestCase(TransformTypeEnum.Exponetial, -1.0)]
+        [TestCase(TransformTypeEnum.BoxCox, 0.0)]
+        [TestCase(TransformTypeEnum.BoxCox, -1.0)]
+        [TestCase(TransformTypeEnum.Custom, 0.0)]
+        [TestCase(TransformTypeEnum.Custom, -1.0)]
+        [TestCase(TransformTypeEnum.None, 0.0)]
+        [TestCase(TransformTypeEnum.None, -1.0)]
+        public void TransformValueForXAxis_MyValueIsGreaterThan0OrTransformIsNotLogOrInverse_Returns0(TransformTypeEnum transform, double inputValue)
+        {
+
+        }
+
+
     }
 }
