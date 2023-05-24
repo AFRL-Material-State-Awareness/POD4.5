@@ -2255,45 +2255,6 @@ namespace POD.Data
             tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
         }
 
-        private static void UpdateTableFromInfos(SourceInfo sourceInfo, ColType type, DataTable table, DataTable activeTable, List<string> availableNames, List<string> activatedNames)
-        {
-            //fix the available columns
-            var infos = sourceInfo.GetInfos(type);
-            var originals = GetOriginalNamesFromTable(table);
-            var columns = table.Columns;
-            var activeColumns = activeTable.Columns;
-
-            foreach (DataColumn col in columns)
-            {
-                foreach (var info in infos)
-                {
-                    if (info.OriginalName == originals[col.Ordinal])
-                    {
-                        UpdateColumnFromInfo(col, info);
-
-                        var index = availableNames.IndexOf(info.NewName);                            
-
-                        availableNames[col.Ordinal] = info.NewName;
-                        if(col.Ordinal < activatedNames.Count)
-                            activatedNames[col.Ordinal] = info.NewName;
-                        break;
-                    }
-                }
-            }
-
-            foreach (DataColumn col in activeColumns)
-            {
-                foreach (var info in infos)
-                {
-                    if (info.OriginalName == originals[col.Ordinal])
-                    {
-                        UpdateColumnFromInfo(col, info);
-                        break;
-                    }
-                }
-            }
-        }
-
         public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue)
         {
             DataColumnCollection columns = null;
@@ -2409,54 +2370,6 @@ namespace POD.Data
             else
                 newValue = currentValue;
             return newValue;
-        }
-
-        private static void UpdateColumnFromInfo(DataColumn column, ColumnInfo info)
-        {
-            column.ColumnName = info.NewName;
-
-            var prevMin = GetPreviousValue(column, ExtColProperty.Min, info, InfoType.Min, ExtColProperty.MinDefault);
-            var prevMax = GetPreviousValue(column, ExtColProperty.Max, info, InfoType.Max, ExtColProperty.MaxDefault);
-            var prevThresh = GetPreviousValue(column, ExtColProperty.Thresh, info, InfoType.Threshold, ExtColProperty.ThreshDefault);
-
-            column.ExtendedProperties[ExtColProperty.MinPrev] = prevMin.ToString();
-            column.ExtendedProperties[ExtColProperty.MaxPrev] = prevMax.ToString();
-            column.ExtendedProperties[ExtColProperty.ThreshPrev] = prevThresh.ToString();
-
-            column.ExtendedProperties[ExtColProperty.Min] = info.Min.ToString();
-            column.ExtendedProperties[ExtColProperty.Max] = info.Max.ToString();
-            column.ExtendedProperties[ExtColProperty.Thresh] = info.Threshold.ToString();
-            column.ExtendedProperties[ExtColProperty.Unit] = info.Unit;
-        }
-
-        private static double GetPreviousValue(DataColumn column, string colType, ColumnInfo info, InfoType infoType, double defaultValue)
-        {
-            double prevValue = 0.0;
-            double currentValue = 0.0;
-            string prevString = "";
-
-            if (colType == ExtColProperty.Min)
-                prevString = ExtColProperty.MinPrev;
-            else if (colType == ExtColProperty.Max)
-                prevString = ExtColProperty.MaxPrev;
-            else if (colType == ExtColProperty.Thresh)
-                prevString = ExtColProperty.ThreshPrev;
-
-            if (!Double.TryParse(GetExtendedProperty(column, colType), out currentValue))
-                currentValue = 0.0;
-
-            if (!column.ExtendedProperties.ContainsKey(prevString))
-                column.ExtendedProperties[prevString] = defaultValue;
-
-            if (!Double.TryParse(GetExtendedProperty(column, prevString), out prevValue))
-                prevValue = 0.0;
-
-            if (prevValue == defaultValue)
-                prevValue = info.GetDoubleValue(infoType);
-            else
-                prevValue = currentValue;
-
-            return prevValue;
         }
 
         private static string GetExtendedProperty(DataColumn column, string colType)
