@@ -104,6 +104,7 @@
     <Compile Include="TableRangePair.cs" />
     <Compile Include="UpdateOutputForAHatData.cs" />
     <Compile Include="UpdateOutputForHitMissData.cs" />
+    <Compile Include="UpdaterExcelPropertyValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">

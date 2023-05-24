@@ -2255,8 +2255,10 @@ namespace POD.Data
             tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
         }
 
-        public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue)
+        public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue,
+            IUpdaterExcelPropertyValue updaterExcelPropIn = null)
         {
+            IUpdaterExcelPropertyValue updaterExcelProp = updaterExcelPropIn ?? new UpdaterExcelPropertyValue();
             DataColumnCollection columns = null;
             var values = new List<double>();
 
@@ -2267,7 +2269,7 @@ namespace POD.Data
 
             foreach (DataColumn column in columns)
             {
-                values.Add(GetUpdatedValue(myExtColProperty, currentValue, column));
+                values.Add(updaterExcelProp.GetUpdatedValue(myExtColProperty, currentValue, column));
             }
 
             if (myExtColProperty == ExtColProperty.Min)
