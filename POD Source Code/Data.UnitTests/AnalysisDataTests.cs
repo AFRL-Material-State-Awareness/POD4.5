@@ -1470,5 +1470,41 @@ namespace Data.UnitTests
             Assert.That(result, Is.EqualTo(inputValue));
             _python.Verify(p => p.TransformEnumToInt(transform));
         }
+        // Get FlawTransFormLabel tests
+        [Test]
+        [TestCase(TransformTypeEnum.Log, "ln(a)")]
+        [TestCase(TransformTypeEnum.Linear, "{{a}}")]
+        [TestCase(TransformTypeEnum.Exponetial, "e^a")]
+        [TestCase(TransformTypeEnum.Inverse, "1/a")]
+        [TestCase(TransformTypeEnum.None, "Custom")]
+        [TestCase(TransformTypeEnum.Custom, "Custom")]
+        public void FlawTransFormLabel_ValidTransform_ReturnsEquationStringFlaw(TransformTypeEnum flawTransform, string expectedString)
+        {
+            //Arrange
+            _data.FlawTransform = flawTransform;
+            //Act
+            var result = _data.FlawTransFormLabel;
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedString));
+        }
+        // Get ResponseTransformLabel tests
+        [Test]
+        [TestCase(TransformTypeEnum.Log, "ln(ahat)")]
+        [TestCase(TransformTypeEnum.Linear, "{{ahat}}")]
+        [TestCase(TransformTypeEnum.Exponetial, "e^ahat")]
+        [TestCase(TransformTypeEnum.Inverse, "1/ahat")]
+        [TestCase(TransformTypeEnum.BoxCox, "[(ahat)^(lambda)-1]/lambda")]
+        [TestCase(TransformTypeEnum.Custom, "Custom")]
+        [TestCase(TransformTypeEnum.None, "Custom")]
+        public void ResponseTransFormLabel_ValidTransform_ReturnsEquationStringFlaw(TransformTypeEnum responseResponse, string expectedString)
+        {
+            //Arrange
+            _data.ResponseTransform = responseResponse;
+            //Act
+            var result = _data.ResponseTransformLabel;
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedString));
+        }
+
     }
 }
