@@ -1338,11 +1338,137 @@ namespace Data.UnitTests
         [TestCase(TransformTypeEnum.Custom, -1.0)]
         [TestCase(TransformTypeEnum.None, 0.0)]
         [TestCase(TransformTypeEnum.None, -1.0)]
-        public void TransformValueForXAxis_MyValueIsGreaterThan0OrTransformIsNotLogOrInverse_Returns0(TransformTypeEnum transform, double inputValue)
+        [TestCase(TransformTypeEnum.Log, 1.0)]
+        [TestCase(TransformTypeEnum.Log, 1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 1.0)]
+        public void TransformValueForXAxis_MyValueIsGreaterThan0OrTransformIsNotLogOrInverse_ReturnsTransformValue(TransformTypeEnum transform, double inputValue)
         {
-
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(1); //Effectively makes the transform linear
+            _data.FlawTransform=transform;
+            //Act
+            var result=_data.TransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(inputValue));
+            _python.Verify(p => p.TransformEnumToInt(transform));
         }
-
-
+        [Test]
+        [TestCase(TransformTypeEnum.Log, 0.0)]
+        [TestCase(TransformTypeEnum.Log, -1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 0.0)]
+        [TestCase(TransformTypeEnum.Inverse, -1.0)]
+        /// Tests for TransformValueForYAxis
+        public void TransformValueForYAxis_ValueIsZeroOrLessAndTransformIsLogOrInverse_Returns0(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            _data.ResponseTransform = transform;
+            //Act
+            var result = _data.TransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 0.0)]
+        [TestCase(TransformTypeEnum.Linear, -1.0)]
+        [TestCase(TransformTypeEnum.Exponetial, 0.0)]
+        [TestCase(TransformTypeEnum.Exponetial, -1.0)]
+        [TestCase(TransformTypeEnum.BoxCox, 0.0)]
+        [TestCase(TransformTypeEnum.BoxCox, -1.0)]
+        [TestCase(TransformTypeEnum.Custom, 0.0)]
+        [TestCase(TransformTypeEnum.Custom, -1.0)]
+        [TestCase(TransformTypeEnum.None, 0.0)]
+        [TestCase(TransformTypeEnum.None, -1.0)]
+        [TestCase(TransformTypeEnum.Log, 1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 1.0)]
+        public void TransformValueForYAxis_MyValueIsGreaterThan0OrTransformIsNotLogOrInverse_ReturnsTransformValue(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(1); //Effectively makes the transform linear
+            _data.ResponseTransform = transform;
+            //Act
+            var result = _data.TransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(inputValue));
+            _python.Verify(p => p.TransformEnumToInt(transform));
+        }
+        /// Tests for InvertTransformValueForXAxis
+        [TestCase(TransformTypeEnum.Inverse, 0.0)]
+        [Test]
+        public void InvertTransformValueForXAxis_ValueIsZeroOrLessAndTransformIsLogOrInverse_Returns0(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            _data.FlawTransform = transform;
+            //Act
+            var result = _data.InvertTransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 0.0)]
+        [TestCase(TransformTypeEnum.Linear, -1.0)]
+        [TestCase(TransformTypeEnum.Log, 0.0)]
+        [TestCase(TransformTypeEnum.Log, -1.0)]
+        [TestCase(TransformTypeEnum.Exponetial, 0.0)]
+        [TestCase(TransformTypeEnum.Exponetial, -1.0)]
+        [TestCase(TransformTypeEnum.BoxCox, 0.0)]
+        [TestCase(TransformTypeEnum.BoxCox, -1.0)]
+        [TestCase(TransformTypeEnum.Custom, 0.0)]
+        [TestCase(TransformTypeEnum.Custom, -1.0)]
+        [TestCase(TransformTypeEnum.None, 0.0)]
+        [TestCase(TransformTypeEnum.Inverse, -1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 1.0)]
+        public void InvertTransformValueForXAxis_MyValueIsGreaterThan0OrTransformIsNotLogOrInverse_ReturnsTransformBackValue(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(1); //Effectively makes the transform linear
+            _data.FlawTransform = transform;
+            //Act
+            var result = _data.InvertTransformValueForXAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(inputValue));
+            _python.Verify(p => p.TransformEnumToInt(transform));
+        }
+        /// Tests for InvertTransformValueForXAxis
+        [Test]
+        [TestCase(TransformTypeEnum.Inverse, 0.0)]
+        public void InvertTransformValueForYAxis_ValueIsZeroOrLessAndTransformIsLogOrInverse_Returns0(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            _data.ResponseTransform = transform;
+            //Act
+            var result = _data.InvertTransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.Zero);
+        }
+        [Test]
+        [TestCase(TransformTypeEnum.Linear, 0.0)]
+        [TestCase(TransformTypeEnum.Linear, -1.0)]
+        [TestCase(TransformTypeEnum.Log, 0.0)]
+        [TestCase(TransformTypeEnum.Log, -1.0)]
+        [TestCase(TransformTypeEnum.Exponetial, 0.0)]
+        [TestCase(TransformTypeEnum.Exponetial, -1.0)]
+        [TestCase(TransformTypeEnum.BoxCox, 0.0)]
+        [TestCase(TransformTypeEnum.BoxCox, -1.0)]
+        [TestCase(TransformTypeEnum.Custom, 0.0)]
+        [TestCase(TransformTypeEnum.Custom, -1.0)]
+        [TestCase(TransformTypeEnum.None, 0.0)]
+        [TestCase(TransformTypeEnum.Inverse, -1.0)]
+        [TestCase(TransformTypeEnum.Inverse, 1.0)]
+        public void InvertTransformValueForYAxis_MyValueIsGreaterThan0OrTransformIsNotLogOrInverse_ReturnsTransformBackValue(TransformTypeEnum transform, double inputValue)
+        {
+            //Arrange
+            SetupPythonMock();
+            _python.Setup(p => p.TransformEnumToInt(It.IsAny<TransformTypeEnum>())).Returns(1); //Effectively makes the transform linear
+            _data.ResponseTransform = transform;
+            //Act
+            var result = _data.InvertTransformValueForYAxis(inputValue);
+            //Assert
+            Assert.That(result, Is.EqualTo(inputValue));
+            _python.Verify(p => p.TransformEnumToInt(transform));
+        }
     }
 }
