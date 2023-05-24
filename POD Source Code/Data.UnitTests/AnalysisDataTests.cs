@@ -1262,7 +1262,54 @@ namespace Data.UnitTests
             //Act
             var result = _data.TransformAValue(2.0, 5);
             //Assert
-            Assert.That(result, Is.EqualTo(3.5));
+            Assert.That(result, Is.EqualTo(1.5));
+        }
+
+        /// Tests for TransformBackAValue(double myValue, int transform) function
+        [Test]
+        [TestCase(1, 1.0 / 2.0, 1.0 / 2.0)]
+        [TestCase(3, 1.0 / 2.0, 2.0)]
+        public void TransformBackAValue_LinearOrInverseTransformPassed_ReturnsTransformedBackValue(int transform, double transformedValue, double expectedBackValue)
+        {
+            //Arrange
+            //Act
+            var result = _data.TransformBackAValue(transformedValue, transform);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedBackValue));
+        }
+        [Test]
+        public void TransformBackAValue_TransformTypeIsLog_ReturnsTransformedBackValue()
+        {
+            //Arrange
+
+            //Act
+            var result = _data.TransformBackAValue(2.0, 2);
+            //Assert
+            Assert.That(result, Is.EqualTo(Math.Exp(2.0)));
+        }
+        [Test]
+        public void TransformBackAValue_TransformIsBoxCox_ReturnsTransformedBackValue()
+        {
+            //Arrange
+            Mock<ITransformBackLambdaControl> transformBackLambdaControl = new Mock<ITransformBackLambdaControl>();
+            transformBackLambdaControl.Setup(tblc => tblc.TransformBackLambda(It.IsAny<double>())).Returns(-1.0);
+            _data.TransformBackLambda = transformBackLambdaControl.Object;
+            //Act
+            var result = _data.TransformBackAValue(2.0, 5);
+            //Assert
+            Assert.That(result, Is.EqualTo(-1.0));
+        }
+        [Test]
+        [TestCase(4, .5)]
+        [TestCase(4, 1.0)]
+        [TestCase(6, .5)]
+        [TestCase(6, 1.0)]
+        public void TransformBackAValue_InvalidTransformPassed_ReturnsTheSameValue(int transform, double inputValue)
+        {
+            //Act
+            var result = _data.TransformBackAValue(inputValue, transform);
+            //Assert
+            Assert.That(result, Is.EqualTo(inputValue));
         }
     }
 }
