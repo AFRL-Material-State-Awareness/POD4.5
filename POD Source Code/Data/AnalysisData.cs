@@ -2206,28 +2206,19 @@ namespace POD.Data
         {
             get
             {
-                var xText = "";
-
                 switch (_flawTransform)
                 {
                     case TransformTypeEnum.Log:
-                        xText = "ln(a)";
-                        break;
+                        return "ln(a)";
                     case TransformTypeEnum.Linear:
-                        xText = "{{a}}";
-                        break;
+                        return "{{a}}";
                     case TransformTypeEnum.Exponetial:
-                        xText = "e^a";
-                        break;
+                        return "e^a";
                     case TransformTypeEnum.Inverse:
-                        xText = "1/a";
-                        break;
+                        return "1/a";
                     default:
-                        xText = "Custom";
-                        break;
+                        return "Custom";
                 }
-
-                return xText;
             }
         }
 
@@ -2235,41 +2226,33 @@ namespace POD.Data
         {
             get
             {
-                var yText = "";
-
                 switch (_responseTransform)
                 {
                     case TransformTypeEnum.Log:
-                        yText = "ln(ahat)";
-                        break;
+                        return "ln(ahat)";
                     case TransformTypeEnum.Linear:
-                        yText = "{{ahat}}";
-                        break;
+                        return "{{ahat}}";
                     case TransformTypeEnum.Exponetial:
-                        yText = "e^ahat";
-                        break;
+                        return "e^ahat";
                     case TransformTypeEnum.Inverse:
-                        yText = "1/ahat";
-                        break;
+                        return "1/ahat";
                     case TransformTypeEnum.BoxCox:
-                        yText = "[(ahat)^(lambda)-1]/lambda";
-                        break;
+                        return "[(ahat)^(lambda)-1]/lambda";
                     default:
-                        yText = "Custom";
-                        break;
+                        return "Custom";
                 }
-               
-
-                return yText;
             }
         }
 
 
 
-        public void UpdateSourceFromInfos(SourceInfo sourceInfo)
+        public void UpdateSourceFromInfos(SourceInfo sourceInfo, ITableUpdaterFromInfos tableUpdaterFromInfosIn = null)
         {
-            UpdateTableFromInfos(sourceInfo, ColType.Flaw, _availableFlawsTable, _activatedFlawTable, _availableFlaws, _activatedFlaws);
-            UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
+            //UpdateTableFromInfos(sourceInfo, ColType.Flaw, _availableFlawsTable, _activatedFlawTable, _availableFlaws, _activatedFlaws);
+            //UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
+            ITableUpdaterFromInfos tableUpdaterFromInfos = tableUpdaterFromInfosIn ?? new TableUpdaterFromInfos();
+            tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Flaw, _availableFlawsTable, _activatedFlawTable, _availableFlaws, _activatedFlaws);
+            tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
         }
 
         private static void UpdateTableFromInfos(SourceInfo sourceInfo, ColType type, DataTable table, DataTable activeTable, List<string> availableNames, List<string> activatedNames)

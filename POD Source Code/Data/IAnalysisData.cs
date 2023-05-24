@@ -164,7 +164,7 @@ namespace POD.Data
         double SmallestResponse { get; }
         string FlawTransFormLabel { get; }
         string ResponseTransformLabel { get; }
-        void UpdateSourceFromInfos(SourceInfo sourceInfo);
+        void UpdateSourceFromInfos(SourceInfo sourceInfo, ITableUpdaterFromInfos tableUpdaterFromInfosIn = null);
         void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue);
         void GetNewValue(ColType myType, string myExtColProperty, out double newValue);
         void SetSource(DataSource source, string flawName, List<string> responses);

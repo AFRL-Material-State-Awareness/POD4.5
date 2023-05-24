@@ -82,6 +82,9 @@
   <ItemGroup>
     <Compile Include="AnalysisData.cs" />
     <Compile Include="AxisObject.cs" />
+    <Compile Include="ColumnUpdaterFromInfos.cs" />
+    <Compile Include="GetPreviousValueControl.cs" />
+    <Compile Include="TableUpdaterFromInfos.cs" />
     <Compile Include="TransformBackLambdaControl.cs" />
     <Compile Include="DataHelpers.cs" />
     <Compile Include="DataPointIndex.cs" />
