@@ -13,7 +13,7 @@ namespace Data
         IGetExtendedPropertyControl _getExtendPropControl;
         public UpdaterExcelPropertyValue(IGetExtendedPropertyControl getExtendPropControl = null)
         {
-            _getExtendPropControl = getExtendPropControl;
+            _getExtendPropControl = getExtendPropControl ?? new GetExtendedPropertyControl();
         }
         public double GetUpdatedValue(string myExtColProperty, double currentValue, DataColumn column)
         {
