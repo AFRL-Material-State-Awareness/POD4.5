@@ -2185,11 +2185,6 @@ namespace POD.Data
             if (myValue == 0.0 && _responseTransform == TransformTypeEnum.Inverse)
                 return 0.0;
             return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
-
-        }
-        public void UpdateHitMissModel(int modelType)
-        {
-            _hmAnalysisObject.ModelType = modelType;
         }
         public double SmallestFlaw
         {

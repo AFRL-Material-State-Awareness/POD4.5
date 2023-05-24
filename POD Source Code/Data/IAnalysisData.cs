@@ -160,7 +160,6 @@ namespace POD.Data
         double TransformValueForYAxis(double myValue);
         double InvertTransformValueForXAxis(double myValue);
         double InvertTransformValueForYAxis(double myValue);
-        void UpdateHitMissModel(int modelType);
         double SmallestFlaw { get; }
         double SmallestResponse { get; }
         string FlawTransFormLabel { get; }
