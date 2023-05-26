@@ -38,7 +38,7 @@ namespace POD.Data
                 return _commentDictionary;
             }
         }
-        
+
         /// <summary>
         ///     a data table containing data from activated flaw size columns
         /// </summary>
@@ -334,7 +334,7 @@ namespace POD.Data
 
             sortByX = new List<SortPoint>();
 
-           // UpdateData();
+            // UpdateData();
         }
 
         /// <summary>
@@ -422,10 +422,10 @@ namespace POD.Data
         public string GetRemovedPointComment(int myColIndex, int myRowIndex)
         {
             //if column entry is there
-            if(CommentDictionary.ContainsKey(myColIndex))
+            if (CommentDictionary.ContainsKey(myColIndex))
             {
                 //if row entry is there
-                if(CommentDictionary[myColIndex].ContainsKey(myRowIndex))
+                if (CommentDictionary[myColIndex].ContainsKey(myRowIndex))
                     return CommentDictionary[myColIndex][myRowIndex];
                 //add row entry
                 else
@@ -459,7 +459,7 @@ namespace POD.Data
                 TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
                                   _customFlawTransformEquation);
 
-                return _activatedTransformedFlawTable; 
+                return _activatedTransformedFlawTable;
             }
         }
 
@@ -499,7 +499,7 @@ namespace POD.Data
                               _customResponseTransformEquation);
 
 
-                return _activatedTransformedResponseTable; 
+                return _activatedTransformedResponseTable;
             }
         }
 
@@ -588,7 +588,7 @@ namespace POD.Data
                 _flawTransform = value;
 
                 TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable,
-                    _flawTransform, _customFlawTransformEquation);                
+                    _flawTransform, _customFlawTransformEquation);
 
                 RefreshTurnedOffPoints();
             }
@@ -642,7 +642,7 @@ namespace POD.Data
                 _responseTransform = value;
 
                 TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable,
-                    _responseTransform, _customResponseTransformEquation);                
+                    _responseTransform, _customResponseTransformEquation);
 
                 RefreshTurnedOffPoints();
             }
@@ -692,7 +692,7 @@ namespace POD.Data
             TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
                 _customFlawTransformEquation);
 
-            if(runUpdate)
+            if (runUpdate)
                 UpdateData();
 
             return _activatedFlawTable;
@@ -709,7 +709,7 @@ namespace POD.Data
             TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
                 _customFlawTransformEquation);
 
-            if(runUpdate)
+            if (runUpdate)
                 UpdateData();
 
             return _activatedFlawTable;
@@ -796,7 +796,7 @@ namespace POD.Data
                                                 DataTable myData)
         {
             myCalcTable = ActivateValues(ref myList, myNames, ref myTable, myData).DefaultView.ToTable(false, myNames.ToArray());
-            
+
             return myTable;
         }
 
@@ -825,7 +825,7 @@ namespace POD.Data
         /// <returns>duplicated analysis data</returns>
         public AnalysisData CreateDuplicate()
         {
-            var data = (AnalysisData) MemberwiseClone();
+            var data = (AnalysisData)MemberwiseClone();
 
             data._python = null;// _python.CreateDuplicate();
 
@@ -864,7 +864,7 @@ namespace POD.Data
                 _originalData
             };
 
-            
+
 
             data._activatedFlawTable = new DataTable();
             data._activatedMetaDataTable = new DataTable();
@@ -987,7 +987,7 @@ namespace POD.Data
 
             data._commentDictionary = new Dictionary<int, Dictionary<int, string>>();
 
-            foreach(KeyValuePair<int, Dictionary<int, string>> entry in _commentDictionary)
+            foreach (KeyValuePair<int, Dictionary<int, string>> entry in _commentDictionary)
             {
                 data._commentDictionary.Add(entry.Key, CloneDictionaryCloningValues<int, string>(entry.Value));
             }
@@ -1026,7 +1026,7 @@ namespace POD.Data
 
         //Taken From: http://stackoverflow.com/questions/139592/what-is-the-best-way-to-clone-deep-copy-a-net-generic-dictionarystring-t
         //Code by Jon Skeet
-        public static Dictionary<TKey, TValue> CloneDictionaryCloningValues<TKey, TValue> (Dictionary<TKey, TValue> original) where TValue : ICloneable
+        public static Dictionary<TKey, TValue> CloneDictionaryCloningValues<TKey, TValue>(Dictionary<TKey, TValue> original) where TValue : ICloneable
         {
             Dictionary<TKey, TValue> ret = new Dictionary<TKey, TValue>(original.Count,
                                                                     original.Comparer);
@@ -1096,7 +1096,7 @@ namespace POD.Data
         public void SetSource(DataSource mySource, List<string> myFlaws, List<string> myMetaDatas,
             List<string> myResponses, List<string> mySpecIDs)
         {
-             _availableResponses = myResponses;
+            _availableResponses = myResponses;
             _availableFlaws = myFlaws;
             _availableMetaDatas = myMetaDatas;
             _availableSpecIDs = mySpecIDs;
@@ -1109,11 +1109,11 @@ namespace POD.Data
             BuildAvailableData(mySource, ref _availableSpecIDsTable, _availableSpecIDs);
 
             //if quick analysis data
-            if(mySource.Original.Rows.Count == 0)
+            if (mySource.Original.Rows.Count == 0)
             {
                 _quickTable.Columns.Clear();
 
-                foreach(DataColumn col in mySource.Original.Columns)
+                foreach (DataColumn col in mySource.Original.Columns)
                 {
                     _quickTable.Columns.Add(col.ColumnName, col.DataType);
                 }
@@ -1125,12 +1125,12 @@ namespace POD.Data
             ActivateSpecIDs(mySpecIDs);
 
             //Variable used to store analysis type (hit/miss, ahat, etc)
-             _dataType = mySource.AnalysisDataType;
+            _dataType = mySource.AnalysisDataType;
 
             _flawTransform = TransformTypeEnum.Linear;
             _responseTransform = TransformTypeEnum.Linear;
 
-            if(_dataType == AnalysisDataTypeEnum.HitMiss)
+            if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 _flawTransform = TransformTypeEnum.Log;
 
             TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
@@ -1179,7 +1179,7 @@ namespace POD.Data
                 foreach (DataColumn col in responses.Columns)
                 {
                     double response = dr.Field<double>(col);
-                    
+
                     minResponse = Math.Min(minResponse, response);
                 }
             }
@@ -1238,11 +1238,11 @@ namespace POD.Data
                     //var maxChanged = new List<int>();
 
                     //filter or keep values to transform safe
-                    if(myTransformType == TransformTypeEnum.Inverse || myTransformType == TransformTypeEnum.Log || myTransformType == TransformTypeEnum.BoxCox)// || FilterTransformedDataByRanges)
+                    if (myTransformType == TransformTypeEnum.Inverse || myTransformType == TransformTypeEnum.Log || myTransformType == TransformTypeEnum.BoxCox)// || FilterTransformedDataByRanges)
                     {
-                        for(int i = 0; i < values.Count; i++)
+                        for (int i = 0; i < values.Count; i++)
                         {
-                            if(values[i] <= minValue)
+                            if (values[i] <= minValue)
                             {
                                 minChanged.Add(i);
                                 values[i] = safeValue;
@@ -1250,9 +1250,9 @@ namespace POD.Data
                         }
                     }
 
-                    for(int i=0; i < values.Count(); i++)
+                    for (int i = 0; i < values.Count(); i++)
                     {
-                        values[i]=TransformAValue(values[i], _python.TransformEnumToInt(myTransformType));
+                        values[i] = TransformAValue(values[i], _python.TransformEnumToInt(myTransformType));
                     }
                     //copy transformed data back to the other table
                     int index = 0;
@@ -1261,8 +1261,8 @@ namespace POD.Data
                         myTransformTable.Rows[index][column.ColumnName] = value;
                         index++;
                     }
-                    
-                    foreach(var changedIndex in minChanged)
+
+                    foreach (var changedIndex in minChanged)
                     {
                         myTransformTable.Rows[changedIndex][column.ColumnName] = minValueTransformed;
                     }
@@ -1403,7 +1403,7 @@ namespace POD.Data
         /// <param name="myTurnOn">should the data point be turned on?</param>
         private void TurnPoints(int myRowIndex, bool myTurnOn)
         {
-            for (int i = 0; i < ActivatedResponseNames.Count; i++ )
+            for (int i = 0; i < ActivatedResponseNames.Count; i++)
             {
                 TurnPoint(i, myRowIndex, myTurnOn);
             }
@@ -1412,7 +1412,7 @@ namespace POD.Data
         public void UpdateData(bool quickFlag = false)
         {
             //only update data when appropriate
-            if (_updatePythonData == true && _python != null && (_hmAnalysisObject!=null || _aHatAnalysisObject!=null))
+            if (_updatePythonData == true && _python != null && (_hmAnalysisObject != null || _aHatAnalysisObject != null))
             {
                 //create list to store the flaws
                 List<double> flaws = new List<double>();
@@ -1448,21 +1448,21 @@ namespace POD.Data
                         _aHatAnalysisObject.SignalResponseName = col.ColumnName;
 
                 }
-                if(_dataType == AnalysisDataTypeEnum.HitMiss)
+                if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 {
-                    if (_hmAnalysisObject.Flaws_All.Count()==0 || quickFlag)
+                    if (_hmAnalysisObject.Flaws_All.Count() == 0 || quickFlag)
                     {
                         _hmAnalysisObject.Flaws_All = flaws;
                         //set the dataset size
                         _hmAnalysisObject.Count = _hmAnalysisObject.Flaws_All.Count();
                         List<double> logOfFlaws = new List<double>();
                         List<double> inverseOfFlaws = new List<double>();
-                        for (int i=0; i<flaws.Count(); i++)
+                        for (int i = 0; i < flaws.Count(); i++)
                         {
                             logOfFlaws.Add(Math.Log(flaws[i]));
                             inverseOfFlaws.Add(1.0 / flaws[i]);
                         }
-                        _hmAnalysisObject.LogFlaws_All = logOfFlaws;                            
+                        _hmAnalysisObject.LogFlaws_All = logOfFlaws;
                         _hmAnalysisObject.InverseFlaws_All = inverseOfFlaws;
                     }
                     if (_hmAnalysisObject.Responses_all.Count() == 0 || quickFlag)
@@ -1470,7 +1470,7 @@ namespace POD.Data
 
                     _hmAnalysisObject.Flaws = flaws;
                     _hmAnalysisObject.Responses = responses;
-                      
+
                 }
                 else if (_dataType == AnalysisDataTypeEnum.AHat)
                 {
@@ -1488,7 +1488,7 @@ namespace POD.Data
                     _aHatAnalysisObject.Flaws = flaws;
                     _aHatAnalysisObject.Responses = responses;
                 }
-                
+
             }
         }
 
@@ -1514,10 +1514,10 @@ namespace POD.Data
         }
 
         public void UpdateOutput(RCalculationType myCalculationType,
-            IUpdateOutputForAHatData updateOutputForAHatDataIn=null,
-            IUpdateOutputForHitMissData updateOutputForHitMissDataIn=null)
+            IUpdateOutputForAHatData updateOutputForAHatDataIn = null,
+            IUpdateOutputForHitMissData updateOutputForHitMissDataIn = null)
         {
-            
+
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
                 IUpdateOutputForAHatData updateOutputForAHatData = updateOutputForAHatDataIn ??
@@ -1553,7 +1553,7 @@ namespace POD.Data
             var oldNames = new List<string>();
 
             if (myTable != null)
-            {         
+            {
                 for (int i = 0; i < myNewNames.Count; i++)
                 {
                     if (i < myTable.Columns.Count)
@@ -1569,13 +1569,13 @@ namespace POD.Data
         // Perhaps add an assertion to make sure that myWriter is an object and not an interface
         // when the application is running?
         public void WriteToExcel(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
-            IExcelWriterControl excelWriteControlIn=null)
+            IExcelWriterControl excelWriteControlIn = null)
         {
             IExcelWriterControl excelWriteControl = excelWriteControlIn ??
                 new ExcelWriterControl(myWriter, myAnalysisName, myWorksheetName, myPartOfProject);
             excelWriteControl.WriteResidualsToExcel(this, _residualCensoredTable);
             excelWriteControl.WritePODToExcel(this, _podEndIndex);
-            if(_dataType == AnalysisDataTypeEnum.HitMiss)
+            if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 excelWriteControl.WriteIterationsToExcel(this, _iterationsTable);
             else
                 excelWriteControl.WritePODThresholdToExcel(this, _thresholdPlotTable);
@@ -1610,7 +1610,7 @@ namespace POD.Data
             table.Columns.Add("Response", typeof(Double));
             table.Columns.Add("Comment", typeof(string));
 
-            foreach(DataPointIndex index in _turnedOffPoints)
+            foreach (DataPointIndex index in _turnedOffPoints)
             {
                 DataRow row = table.NewRow();
 
@@ -1721,7 +1721,7 @@ namespace POD.Data
                 if (_dataType == AnalysisDataTypeEnum.HitMiss && _hmAnalysisObject?.Flaws.Count > 0)
                     return _hmAnalysisObject.Flaws.Max();
                 else if (_dataType == AnalysisDataTypeEnum.AHat && _aHatAnalysisObject?.Flaws.Count > 0)
-                    return _aHatAnalysisObject.Flaws.Max();        
+                    return _aHatAnalysisObject.Flaws.Max();
                 return double.NaN;
             }
         }
@@ -1734,7 +1734,7 @@ namespace POD.Data
         public double InvertTransformedFlaw(double myValue)
         {
             //FlawTransform
-            if (_hmAnalysisObject!=null || _aHatAnalysisObject != null)
+            if (_hmAnalysisObject != null || _aHatAnalysisObject != null)
                 return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
             else
                 return myValue;
@@ -1748,7 +1748,7 @@ namespace POD.Data
         public double InvertTransformedResponse(double myValue)
         {
             if (_hmAnalysisObject != null || _aHatAnalysisObject != null)
-                if(_dataType == AnalysisDataTypeEnum.AHat)
+                if (_dataType == AnalysisDataTypeEnum.AHat)
                     return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
             return myValue;
         }
@@ -1843,7 +1843,7 @@ namespace POD.Data
             myMax = Compute.InitMaxValue;
             myMin = Compute.InitMinValue;
 
-            if(myTable.Rows.Count > 0)
+            if (myTable.Rows.Count > 0)
             {
                 foreach (DataColumn col in myTable.Columns)
                 {
@@ -1904,7 +1904,7 @@ namespace POD.Data
             {
                 myAxis.Max = ++myMax;
                 myAxis.Min = --myMin;
-                
+
                 myAxis.Interval = .25;
             }
         }
@@ -1937,14 +1937,14 @@ namespace POD.Data
         {
             DataTable table;
             var isLinear = !myGetTransformed || _flawTransform == TransformTypeEnum.Linear || _flawTransform == TransformTypeEnum.Inverse;
-            
+
             if (_dataType == AnalysisDataTypeEnum.HitMiss)
             {
                 _hmAnalysisObject.ModelType = _python.TransformEnumToInt(_flawTransform);
             }
             else if (_dataType == AnalysisDataTypeEnum.AHat)
             {
-                _aHatAnalysisObject.A_transform= _python.TransformEnumToInt(_flawTransform);
+                _aHatAnalysisObject.A_transform = _python.TransformEnumToInt(_flawTransform);
             }
 
             if (_dataType == AnalysisDataTypeEnum.AHat)
@@ -1953,7 +1953,7 @@ namespace POD.Data
                 AHatModelUpdate();
             }
 
-            
+
             AxisObject maxAxis = new AxisObject();
             GetXBufferedRange(chart, maxAxis, false);
 
@@ -1963,7 +1963,7 @@ namespace POD.Data
                 table = _activatedFlawTable;
 
             double myMin = Double.MaxValue;
-            double myMax = Double.MinValue;            
+            double myMax = Double.MinValue;
 
             double uncensoredMin = double.MaxValue;
             double uncensoredMax = double.MinValue;
@@ -1986,8 +1986,8 @@ namespace POD.Data
             var podCol = PodCurveTable.Columns["flaw"];
             var podPODCol = PodCurveTable.Columns["pod"];
             var podPOD95Col = PodCurveTable.Columns["confidence"];
-        
-            if(podCol == null)
+
+            if (podCol == null)
                 podCol = PodCurveTable.Columns["a"];
 
             if (podCol == null)
@@ -2029,7 +2029,7 @@ namespace POD.Data
 
             GetBufferedRange(null, myAxis, myMin, myMax, AxisKind.X);
 
-            
+
         }
 
         public AxisObject GetXBufferedRange(Control chart, bool myGetTransformed)
@@ -2150,7 +2150,7 @@ namespace POD.Data
                 case 3:
                     return 1.0 / myValue;
                 case 5:
-                   return transformBackLambdaControl.TransformBackLambda(myValue);
+                    return transformBackLambdaControl.TransformBackLambda(myValue);
                 default:
                     return myValue;
             }
@@ -2162,7 +2162,7 @@ namespace POD.Data
 
             return TransformAValue(myValue, _python.TransformEnumToInt(_flawTransform));
         }
-        
+
         public double TransformValueForYAxis(double myValue)
         {
             if (myValue <= 0.0 && (_responseTransform == TransformTypeEnum.Log || _responseTransform == TransformTypeEnum.Inverse))
@@ -2265,66 +2265,48 @@ namespace POD.Data
         public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue)
         {
             IUpdaterExcelPropertyValue updaterExcelProp = UpdaterExcelProp ?? new UpdaterExcelPropertyValue();
-            IDataTableWrapper availableFlawsTable = AvailableFlawsTable ?? new DataTableWrapper(_availableFlawsTable);
-            IDataTableWrapper availableResponsesTable = AvailableResponsesTable ?? new DataTableWrapper(_availableResponsesTable);
 
-            DataColumnCollection columns;
+            DataColumnCollection columns = AssignColumnsBasedOnColumnType(myType);
             var values = new List<double>();
-
-            if (myType == ColType.Flaw)
-                columns = availableFlawsTable.Columns;
-            else if (myType == ColType.Response)
-                columns = availableResponsesTable.Columns;
-            else
-                throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
 
             foreach (DataColumn column in columns)
                 values.Add(updaterExcelProp.GetUpdatedValue(myExtColProperty, currentValue, column));
-
-            switch (myExtColProperty)
-            {
-                case ExtColProperty.Max:
-                    newValue = values.Max();
-                    break;
-                case ExtColProperty.Min:
-                case ExtColProperty.Thresh:
-                    newValue = values.Min();
-                    break;
-                default:
-                    newValue = currentValue;
-                    throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
-            }
+            newValue = AssignNewValueBasedOnExtColProperty(values, myExtColProperty);
         }
 
         public void GetNewValue(ColType myType, string myExtColProperty, out double newValue)
         {
 
             IUpdaterExcelPropertyValue updaterExcelProp = UpdaterExcelProp ?? new UpdaterExcelPropertyValue();
-            IDataTableWrapper availableFlawsTable = AvailableFlawsTable ?? new DataTableWrapper(_availableFlawsTable);
-            IDataTableWrapper availableResponsesTable = AvailableResponsesTable ?? new DataTableWrapper(_availableResponsesTable);
 
-            DataColumnCollection columns;
+            DataColumnCollection columns = AssignColumnsBasedOnColumnType(myType);
             var values = new List<double>();
-
-            if (myType == ColType.Flaw)
-                columns = availableFlawsTable.Columns;
-            else if (myType == ColType.Response)
-                columns = availableResponsesTable.Columns;
-            else
-                throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
 
             foreach (DataColumn column in columns)
                 values.Add(updaterExcelProp.GetNewValue(myExtColProperty, column));
 
+            newValue=AssignNewValueBasedOnExtColProperty(values, myExtColProperty);
+        }
+        private DataColumnCollection AssignColumnsBasedOnColumnType(ColType myType)
+        {
+            IDataTableWrapper availableFlawsTable = AvailableFlawsTable ?? new DataTableWrapper(_availableFlawsTable);
+            IDataTableWrapper availableResponsesTable = AvailableResponsesTable ?? new DataTableWrapper(_availableResponsesTable);
+            if (myType == ColType.Flaw)
+                return availableFlawsTable.Columns;
+            else if (myType == ColType.Response)
+                return availableResponsesTable.Columns;
+            else
+                throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
+        }
+        private double AssignNewValueBasedOnExtColProperty(List<double> values, string myExtColProperty)
+        {
             switch (myExtColProperty)
             {
                 case ExtColProperty.Max:
-                    newValue = values.Max();
-                    break;
+                    return values.Max();
                 case ExtColProperty.Min:
                 case ExtColProperty.Thresh:
-                    newValue = values.Min();
-                    break;
+                    return values.Min();
                 default:
                     throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
             }
