@@ -168,12 +168,8 @@ namespace POD.Data
         void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue);
         void GetNewValue(ColType myType, string myExtColProperty, out double newValue);
         void SetSource(DataSource source, string flawName, List<string> responses);
-        DataTable TransformedInput { get; }
         bool FilterTransformedDataByRanges { get; set; }
-        bool IsResponseTable(DataTable mySourceTable);
-        bool IsFlawTable(DataTable mySourceTable);
         void CreateNewSortList();
-        void UpdateTable(int rowIndex, int colIndex, Flag bounds);
         void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints);
         void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints);
         void ForceRefillSortListAndClearPoints();

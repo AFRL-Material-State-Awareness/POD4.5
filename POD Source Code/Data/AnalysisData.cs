@@ -2338,31 +2338,6 @@ namespace POD.Data
             SetSource(source, new List<string>(new string[] {flawName}) , source.MetaDataLabels, responses, source.IDLabels);
         }
 
-
-
-        public DataTable TransformedInput
-        {
-            get
-            {
-                var flaws = ActivatedTransformedFlaws;
-                var responses = ActivatedTransformedResponses;
-                var column = new DataColumn(ActivatedFlawName, typeof(double));
-
-                responses.Columns.Add(column);
-
-                column.SetOrdinal(0);
-
-                for (int index = 0; index < flaws.Rows.Count; index++ )
-                {
-                    responses.Rows[index][0] = flaws.Rows[index][0];
-                }
-
-                responses.AcceptChanges();
-
-                return responses;
-            }
-        }
-
         public bool FilterTransformedDataByRanges
         {
             get
@@ -2375,22 +2350,12 @@ namespace POD.Data
             }
         }
 
-        public bool IsResponseTable(DataTable mySourceTable)
-        {
-            return _activatedResponseTable == mySourceTable;
-        }
-
-        public bool IsFlawTable(DataTable mySourceTable)
-        {
-            return _activatedFlawTable == mySourceTable;
-        }
-
         public void CreateNewSortList()
         {
             sortByX = new List<SortPoint>();
         }
 
-        public void UpdateTable(int rowIndex, int colIndex, Flag bounds)
+        private void UpdateTable(int rowIndex, int colIndex, Flag bounds)
         {
             switch (bounds)
             {
