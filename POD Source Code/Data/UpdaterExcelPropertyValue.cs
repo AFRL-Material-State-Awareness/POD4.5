@@ -57,7 +57,7 @@ namespace Data
             double newTableValue = 0.0;
 
 
-            if (!Double.TryParse(column.ExtendedProperties[myExtColProperty].ToString(), out newTableValue))
+            if (!Double.TryParse(column.ExtendedProperties[myExtColProperty]?.ToString(), out newTableValue))
                 newTableValue = 0.0;
 
             newValue = newTableValue;
