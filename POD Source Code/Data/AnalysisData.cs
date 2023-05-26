@@ -2306,7 +2306,7 @@ namespace POD.Data
             IDataTableWrapper availableFlawsTable = AvailableFlawsTable ?? new DataTableWrapper(_availableFlawsTable);
             IDataTableWrapper availableResponsesTable = AvailableResponsesTable ?? new DataTableWrapper(_availableResponsesTable);
 
-            DataColumnCollection columns = null;
+            DataColumnCollection columns;
             var values = new List<double>();
 
             if (myType == ColType.Flaw)
@@ -2317,25 +2317,19 @@ namespace POD.Data
                 throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
 
             foreach (DataColumn column in columns)
-            {
                 values.Add(updaterExcelProp.GetNewValue(myExtColProperty, column));
-            }
 
-            if (myExtColProperty == ExtColProperty.Min)
+            switch (myExtColProperty)
             {
-                newValue = values.Min();
-            }
-            else if (myExtColProperty == ExtColProperty.Max)
-            {
-                newValue = values.Max();
-            }
-            else if (myExtColProperty == ExtColProperty.Thresh)
-            {
-                newValue = values.Min();
-            }
-            else
-            {
-                throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
+                case ExtColProperty.Max:
+                    newValue = values.Max();
+                    break;
+                case ExtColProperty.Min:
+                case ExtColProperty.Thresh:
+                    newValue = values.Min();
+                    break;
+                default:
+                    throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
             }
         }
 
