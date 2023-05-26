@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static POD.Data.SortPoint;
 
 namespace POD.Data
 {
@@ -44,7 +45,7 @@ namespace POD.Data
         }
     }
 
-    public class SortPoint : IComparable<SortPoint>
+    public class SortPoint : ISortPoint
     {
         public int ColIndex { get; set; }
         public int RowIndex { get; set; }
@@ -59,7 +60,7 @@ namespace POD.Data
 
         public double YValue { get; set; }
 
-        public int CompareTo(SortPoint otherSortPoint)
+        public int CompareTo(ISortPoint otherSortPoint)
         {
             if (otherSortPoint == null)
             {
@@ -91,6 +92,21 @@ namespace POD.Data
                 }
             }
             return result;
+        }
+        public interface ISortPoint : IComparable<ISortPoint>
+        {
+            int ColIndex { get; set; }
+            int RowIndex { get; set; }
+
+            string SeriesName { get; set; }
+
+            int SeriesIndex { get; set; }
+
+            int SeriesPtIndex { get; set; }
+
+            double XValue { get; set; }
+
+            double YValue { get; set; }
         }
 
 

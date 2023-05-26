@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static POD.Data.SortPoint;
 
 namespace POD.Data
 {
@@ -170,7 +171,8 @@ namespace POD.Data
         void SetSource(DataSource source, string flawName, List<string> responses);
         bool FilterTransformedDataByRanges { get; set; }
         void CreateNewSortList();
-        void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints);
+        void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints,
+            List<ISortPoint> sortByXIn = null);
         void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints);
         void ForceRefillSortListAndClearPoints();
         void ForceRefillSortList();

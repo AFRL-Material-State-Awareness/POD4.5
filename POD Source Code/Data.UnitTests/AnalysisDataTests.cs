@@ -1640,5 +1640,7 @@ namespace Data.UnitTests
             updaterExcelProp.Setup(uep => uep.GetNewValue(ExtColProperty.Max,  It.IsAny<DataColumn>())).Returns(2);
             return updaterExcelProp;
         }
+
+        /// UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
     }
 }
