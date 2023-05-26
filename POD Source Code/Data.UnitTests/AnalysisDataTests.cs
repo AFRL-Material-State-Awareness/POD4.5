@@ -1575,6 +1575,61 @@ namespace Data.UnitTests
             //Assert
             Assert.Throws<Exception>(() => _data.GetUpdatedValue(colType, extColProp, -1.0, out double newValue));
         }
+
+        /// Tests for the GetNewValue(ColType myType, string myExtColProperty, out double newValue) function
+        [Test]
+        [TestCase(ColType.Flaw, ExtColProperty.Min, 1)]
+        [TestCase(ColType.Flaw, ExtColProperty.Thresh, 1)]
+        [TestCase(ColType.Flaw, ExtColProperty.Max, 2)]
+        public void GetNewValue_FlawColumnTypeWithValidExtColProp_ReturnsTheNewValueAccordingly(ColType colType, string extColProp, double expectedValue)
+        {
+            //Arrange
+            AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable);
+            //Act
+            _data.GetNewValue(colType, extColProp, out double newValue);
+            //Assert
+            Assert.That(newValue, Is.EqualTo(expectedValue));
+            availableFlawsTable.VerifyGet(aft => aft.Columns, Times.Once);
+            availableResponsesTable.VerifyGet(aft => aft.Columns, Times.Never);
+        }
+        [Test]
+        [TestCase(ColType.Response, ExtColProperty.Min, 1)]
+        [TestCase(ColType.Response, ExtColProperty.Thresh, 1)]
+        [TestCase(ColType.Response, ExtColProperty.Max, 2)]
+        public void GetNewValue_ResponseColumnTypeWithValidExtColProp_ReturnsTheNewValueAccordingly(ColType colType, string extColProp, double expectedValue)
+        {
+            //Arrange
+            AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable);
+            //Act
+            _data.GetNewValue(colType, extColProp, out double newValue);
+            //Assert
+            Assert.That(newValue, Is.EqualTo(expectedValue));
+            availableFlawsTable.VerifyGet(aft => aft.Columns, Times.Never);
+            availableResponsesTable.VerifyGet(aft => aft.Columns, Times.Once);
+        }
+        [Test]
+        [TestCase(ColType.ID)]
+        [TestCase(ColType.Meta)]
+        public void GetNewValue_InvalidColumnTypePassed_ThrowsArgumentException(ColType colType)
+        {
+            //Arrange
+            AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable);
+            //Act
+            //Assert
+            Assert.Throws<ArgumentException>(() => _data.GetNewValue(colType, It.IsAny<string>(), out double newValue));
+        }
+        [Test]
+        [TestCase(ColType.Flaw, "", 0.25)]
+        [TestCase(ColType.Response, "", 1.1)]
+        public void GetNewValue_InvalidExtColPropertyPassed_ReturnsTheCurrentValueAndThrowsException(ColType colType, string extColProp, double expectedValue)
+        {
+            //Arrange
+            //Act
+            //Assert
+            Assert.Throws<Exception>(() => _data.GetNewValue(colType, extColProp, out double newValue));
+        }
+
+
         private void AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable)
         {
             Mock<IUpdaterExcelPropertyValue> updaterExcelProp = SetupValuesAddInExcelPropertyValue();
@@ -1589,9 +1644,12 @@ namespace Data.UnitTests
         private Mock<IUpdaterExcelPropertyValue> SetupValuesAddInExcelPropertyValue()
         {
             Mock<IUpdaterExcelPropertyValue> updaterExcelProp = new Mock<IUpdaterExcelPropertyValue>();
-            updaterExcelProp.Setup(uep => uep.GetUpdatedValue(ExtColProperty.Thresh, It.IsAny<double>(), It.IsAny<DataColumn>())).Returns(1);
+            updaterExcelProp.Setup(uep => uep.GetUpdatedValue(ExtColProperty.Thresh, It.IsAny<double>(), It.IsAny<DataColumn>())).Returns(1); // GetUpdatedValue setup
             updaterExcelProp.Setup(uep => uep.GetUpdatedValue(ExtColProperty.Min, It.IsAny<double>(), It.IsAny<DataColumn>())).Returns(1);
             updaterExcelProp.Setup(uep => uep.GetUpdatedValue(ExtColProperty.Max, It.IsAny<double>(), It.IsAny<DataColumn>())).Returns(2);
+            updaterExcelProp.Setup(uep => uep.GetNewValue(ExtColProperty.Thresh,  It.IsAny<DataColumn>())).Returns(1); // GetNewValue setup
+            updaterExcelProp.Setup(uep => uep.GetNewValue(ExtColProperty.Min,  It.IsAny<DataColumn>())).Returns(1);
+            updaterExcelProp.Setup(uep => uep.GetNewValue(ExtColProperty.Max,  It.IsAny<DataColumn>())).Returns(2);
             return updaterExcelProp;
         }
     }
