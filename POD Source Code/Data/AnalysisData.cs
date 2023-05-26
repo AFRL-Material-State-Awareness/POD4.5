@@ -2301,17 +2301,24 @@ namespace POD.Data
 
         public void GetNewValue(ColType myType, string myExtColProperty, out double newValue)
         {
+
+            IUpdaterExcelPropertyValue updaterExcelProp = UpdaterExcelProp ?? new UpdaterExcelPropertyValue();
+            IDataTableWrapper availableFlawsTable = AvailableFlawsTable ?? new DataTableWrapper(_availableFlawsTable);
+            IDataTableWrapper availableResponsesTable = AvailableResponsesTable ?? new DataTableWrapper(_availableResponsesTable);
+
             DataColumnCollection columns = null;
             var values = new List<double>();
 
             if (myType == ColType.Flaw)
-                columns = _availableFlawsTable.Columns;
+                columns = availableFlawsTable.Columns;
             else if (myType == ColType.Response)
-                columns = _availableResponsesTable.Columns;
+                columns = availableResponsesTable.Columns;
+            else
+                throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
 
             foreach (DataColumn column in columns)
             {
-                values.Add(GetNewValue(myExtColProperty, column));
+                values.Add(updaterExcelProp.GetNewValue(myExtColProperty, column));
             }
 
             if (myExtColProperty == ExtColProperty.Min)
@@ -2330,54 +2337,6 @@ namespace POD.Data
             {
                 throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
             }
-        }
-
-        private double GetNewValue(string myExtColProperty, DataColumn column)
-        {
-            double newValue;
-            double newTableValue = 0.0;
-
-
-            if (!Double.TryParse(column.ExtendedProperties[myExtColProperty].ToString(), out newTableValue))
-                newTableValue = 0.0;
-
-            newValue = newTableValue;
-
-            return newValue;
-        }
-
-        private static double GetUpdatedValue(string myExtColProperty, double currentValue, DataColumn column)
-        {
-            double newValue;
-            var prevString = "";
-
-            if (myExtColProperty == ExtColProperty.Min)
-                prevString = ExtColProperty.MinPrev;
-            else if (myExtColProperty == ExtColProperty.Max)
-                prevString = ExtColProperty.MaxPrev;
-            else if (myExtColProperty == ExtColProperty.Thresh)
-                prevString = ExtColProperty.ThreshPrev;
-
-            if (prevString == "")
-            {
-                throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
-            }
-
-            double prevValue = 0.0;
-            double newTableValue = 0.0;
-
-
-            if (!Double.TryParse(GetExtendedProperty(column, prevString), out prevValue))
-                prevValue = 0.0;
-
-            if (!Double.TryParse(GetExtendedProperty(column, myExtColProperty), out newTableValue))
-                newTableValue = 0.0;
-
-            if (currentValue == prevValue)
-                newValue = newTableValue;
-            else
-                newValue = currentValue;
-            return newValue;
         }
 
         private static string GetExtendedProperty(DataColumn column, string colType)
@@ -2400,8 +2359,6 @@ namespace POD.Data
 
             return value;
         }
-
-        
 
         public void SetSource(DataSource source, string flawName, List<string> responses)
         {
