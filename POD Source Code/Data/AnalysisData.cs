@@ -2254,17 +2254,32 @@ namespace POD.Data
             tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Flaw, _availableFlawsTable, _activatedFlawTable, _availableFlaws, _activatedFlaws);
             tableUpdaterFromInfos.UpdateTableFromInfos(sourceInfo, ColType.Response, _availableResponsesTable, _activatedResponseTable, _availableResponses, _activatedResponses);
         }
-        public IUpdaterExcelPropertyValue UpdaterExcelPropertyValue { set; get; }
+        /// These setters are for Unit Testing only, They cannot be injected as function arguments because 
+        /// then certain tests in Analysis.cs will throw a compilation error
+        public IUpdaterExcelPropertyValue UpdaterExcelProp { set; private get; }
+        public IDataTableWrapper AvailableFlawsTable { set; private get; }
+        public IDataTableWrapper AvailableResponsesTable { set; private get; }
+        /// <remarks>
+        /// DataTables and Excel property value injected for unit testing purposes
+        /// </remarks>
         public void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue)
         {
-            IUpdaterExcelPropertyValue updaterExcelProp = UpdaterExcelPropertyValue ?? new UpdaterExcelPropertyValue();
+            IUpdaterExcelPropertyValue updaterExcelProp = UpdaterExcelProp ?? new UpdaterExcelPropertyValue();
+            IDataTableWrapper availableFlawsTable = AvailableFlawsTable ?? new DataTableWrapper(_availableFlawsTable);
+            IDataTableWrapper availableResponsesTable = AvailableResponsesTable ?? new DataTableWrapper(_availableResponsesTable);
+
             DataColumnCollection columns = null;
             var values = new List<double>();
 
             if (myType == ColType.Flaw)
-                columns = _availableFlawsTable.Columns;
+                columns = availableFlawsTable.Columns;
             else if (myType == ColType.Response)
-                columns = _availableResponsesTable.Columns;
+                columns = availableResponsesTable.Columns;
+            else
+            {
+                newValue = currentValue;
+                throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
+            }
 
             foreach (DataColumn column in columns)
             {
