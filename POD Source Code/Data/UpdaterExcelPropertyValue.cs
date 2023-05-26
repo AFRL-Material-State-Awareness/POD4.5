@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Data
 {
+    /// <summary>
+    /// This class controls the value of the input double based on the Excel column property
+    /// </summary>
     public class UpdaterExcelPropertyValue : IUpdaterExcelPropertyValue
     {
         IGetExtendedPropertyControl _getExtendPropControl;
@@ -48,6 +51,19 @@ namespace Data
                 newValue = currentValue;
             return newValue;
         }
+        public double GetNewValue(string myExtColProperty, DataColumn column)
+        {
+            double newValue;
+            double newTableValue = 0.0;
+
+
+            if (!Double.TryParse(column.ExtendedProperties[myExtColProperty].ToString(), out newTableValue))
+                newTableValue = 0.0;
+
+            newValue = newTableValue;
+
+            return newValue;
+        }
 
 
     }
@@ -77,6 +93,7 @@ namespace Data
     public interface IUpdaterExcelPropertyValue
     {
         double GetUpdatedValue(string myExtColProperty, double currentValue, DataColumn column);
+        double GetNewValue(string myExtColProperty, DataColumn column);
     }
     public interface IGetExtendedPropertyControl
     {
