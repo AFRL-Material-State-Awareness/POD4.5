@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -102,6 +103,21 @@ namespace POD
         void Dispose();
         bool IsDisposed { get; }
         void Update();
-        Point PointToScreen(Point p);      
+        Point PointToScreen(Point p);
+    }
+    public class DataTableWrapper : IDataTableWrapper
+    {
+        private DataTable _dataTable;
+        public DataTableWrapper(DataTable inputTable)
+        {
+            _dataTable = inputTable;
+        }
+        public DataRowCollection Rows => _dataTable.Rows;
+        public DataColumnCollection Columns => _dataTable.Columns;
+    }
+    public interface IDataTableWrapper
+    {
+        DataRowCollection Rows { get; }
+        DataColumnCollection Columns { get; }
     }
 }
