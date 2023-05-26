@@ -1614,7 +1614,7 @@ namespace Data.UnitTests
         [TestCase(ColType.Response, "", 1.1)]
         public void GetNewValue_InvalidExtColPropertyPassed_ReturnsTheCurrentValueAndThrowsException(ColType colType, string extColProp, double expectedValue)
         {
-            Assert.Throws<ArgumentException>(() => _data.GetNewValue(colType, extColProp, out double newValue));
+            Assert.Throws<Exception>(() => _data.GetNewValue(colType, extColProp, out double newValue));
         }
 
 
