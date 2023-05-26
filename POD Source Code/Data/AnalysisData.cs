@@ -2276,10 +2276,7 @@ namespace POD.Data
             else if (myType == ColType.Response)
                 columns = availableResponsesTable.Columns;
             else
-            {
-                newValue = currentValue;
                 throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
-            }
 
             foreach (DataColumn column in columns)
                 values.Add(updaterExcelProp.GetUpdatedValue(myExtColProperty, currentValue, column));
