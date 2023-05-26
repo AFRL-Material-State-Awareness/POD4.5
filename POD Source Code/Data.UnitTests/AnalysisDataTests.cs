@@ -1522,24 +1522,42 @@ namespace Data.UnitTests
         [TestCase(ColType.Flaw, ExtColProperty.Min, 1)]
         [TestCase(ColType.Flaw, ExtColProperty.Thresh,1)]
         [TestCase(ColType.Flaw, ExtColProperty.Max, 2)]
-        [TestCase(ColType.Response, ExtColProperty.Min, 1)]
-        [TestCase(ColType.Response, ExtColProperty.Thresh, 1)]
-        [TestCase(ColType.Response, ExtColProperty.Max, 2)]
-        public void GetUpdatedValue_ValidExtColPropertyPassed_ReturnsTheNewValueAccordingly(ColType colType, string extColProp, double expectedValue)
+        public void GetUpdatedValue_FlawColumnTypeWithValidExtColProp_ReturnsTheNewValueAccordingly(ColType colType, string extColProp, double expectedValue)
         {
             //Arrange
-            Mock<IUpdaterExcelPropertyValue> updaterExcelProp = SetupValuesAdd();
-            var ahatTable = CreateSampleDataTable();
-            for (int i = 0; i < 10; i++)
-                ahatTable.Rows.Add(i, i * .25, i + .1);
-            DataSource sourceWithActualData = SetupSampleDataSource(ahatTable);
-            SetUpFakeData(out List<string> myFlaws, out List<string> myMetaDatas, out List<string> myResponses, out List<string> mySpecIDs);
-            _data.SetSource(sourceWithActualData, myFlaws, myMetaDatas, myResponses, mySpecIDs);
-            _data.UpdaterExcelPropertyValue = updaterExcelProp.Object;
+            AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable);
             //Act
             _data.GetUpdatedValue(colType, extColProp, .5, out double newValue);
             //Assert
-            Assert.That(newValue, Is.EqualTo(expectedValue));    
+            Assert.That(newValue, Is.EqualTo(expectedValue));
+            availableFlawsTable.VerifyGet(aft => aft.Columns, Times.Once);
+            availableResponsesTable.VerifyGet(aft => aft.Columns, Times.Never);
+        }
+        [Test]
+        [TestCase(ColType.Response, ExtColProperty.Min, 1)]
+        [TestCase(ColType.Response, ExtColProperty.Thresh, 1)]
+        [TestCase(ColType.Response, ExtColProperty.Max, 2)]
+        public void GetUpdatedValue_ResponseColumnTypeWithValidExtColProp_ReturnsTheNewValueAccordingly(ColType colType, string extColProp, double expectedValue)
+        {
+            //Arrange
+            AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable);
+            //Act
+            _data.GetUpdatedValue(colType, extColProp, .5, out double newValue);
+            //Assert
+            Assert.That(newValue, Is.EqualTo(expectedValue));
+            availableFlawsTable.VerifyGet(aft => aft.Columns, Times.Never);
+            availableResponsesTable.VerifyGet(aft => aft.Columns, Times.Once);
+        }
+        [Test]
+        [TestCase(ColType.ID)]
+        [TestCase(ColType.Meta)]
+        public void GetUpdatedValue_InvalidColumnTypePassed_ThrowsArgumentException(ColType colType)
+        {
+            //Arrange
+            AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable);
+            //Act
+            //Assert
+            Assert.Throws<ArgumentException>(() => _data.GetUpdatedValue(colType, It.IsAny<string>(), It.IsAny<double>(), out double newValue));
         }
         [Test]
         [TestCase(ColType.Flaw, "", 0.25)]
@@ -1557,7 +1575,18 @@ namespace Data.UnitTests
             //Assert
             Assert.Throws<Exception>(() => _data.GetUpdatedValue(colType, extColProp, -1.0, out double newValue));
         }
-        private Mock<IUpdaterExcelPropertyValue> SetupValuesAdd()
+        private void AssignExcelAndDataTableMocksToGetUpdatedValue(out Mock<IDataTableWrapper> availableFlawsTable, out Mock<IDataTableWrapper> availableResponsesTable)
+        {
+            Mock<IUpdaterExcelPropertyValue> updaterExcelProp = SetupValuesAddInExcelPropertyValue();
+            availableFlawsTable = new Mock<IDataTableWrapper>();
+            availableResponsesTable = new Mock<IDataTableWrapper>();
+            availableFlawsTable.SetupGet(aft => aft.Columns).Returns(_table.Columns);
+            availableResponsesTable.SetupGet(art => art.Columns).Returns(_table.Columns);
+            _data.UpdaterExcelProp = updaterExcelProp.Object;
+            _data.AvailableFlawsTable = availableFlawsTable.Object;
+            _data.AvailableResponsesTable = availableResponsesTable.Object;
+        }
+        private Mock<IUpdaterExcelPropertyValue> SetupValuesAddInExcelPropertyValue()
         {
             Mock<IUpdaterExcelPropertyValue> updaterExcelProp = new Mock<IUpdaterExcelPropertyValue>();
             updaterExcelProp.Setup(uep => uep.GetUpdatedValue(ExtColProperty.Thresh, It.IsAny<double>(), It.IsAny<DataColumn>())).Returns(1);
