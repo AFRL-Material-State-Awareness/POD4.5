@@ -1564,15 +1564,6 @@ namespace Data.UnitTests
         [TestCase(ColType.Response, "", 1.1)]
         public void GetUpdatedValue_InvalidExtColPropertyPassed_ReturnsTheCurrentValueAndThrowsException(ColType colType, string extColProp, double expectedValue)
         {
-            //Arrange
-            var ahatTable = CreateSampleDataTable();
-            for (int i = 0; i < 10; i++)
-                ahatTable.Rows.Add(i, i * .25, i + .1);
-            DataSource sourceWithActualData = SetupSampleDataSource(ahatTable);
-            SetUpFakeData(out List<string> myFlaws, out List<string> myMetaDatas, out List<string> myResponses, out List<string> mySpecIDs);
-            _data.SetSource(sourceWithActualData, myFlaws, myMetaDatas, myResponses, mySpecIDs);
-            //Act
-            //Assert
             Assert.Throws<Exception>(() => _data.GetUpdatedValue(colType, extColProp, -1.0, out double newValue));
         }
 
@@ -1623,10 +1614,7 @@ namespace Data.UnitTests
         [TestCase(ColType.Response, "", 1.1)]
         public void GetNewValue_InvalidExtColPropertyPassed_ReturnsTheCurrentValueAndThrowsException(ColType colType, string extColProp, double expectedValue)
         {
-            //Arrange
-            //Act
-            //Assert
-            Assert.Throws<Exception>(() => _data.GetNewValue(colType, extColProp, out double newValue));
+            Assert.Throws<ArgumentException>(() => _data.GetNewValue(colType, extColProp, out double newValue));
         }
 
 
