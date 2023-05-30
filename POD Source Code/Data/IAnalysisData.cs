@@ -171,8 +171,7 @@ namespace POD.Data
         void SetSource(DataSource source, string flawName, List<string> responses);
         bool FilterTransformedDataByRanges { get; set; }
         void CreateNewSortList();
-        void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints,
-            List<ISortPoint> sortByXIn = null);
+        void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints);
         void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints);
         void ForceRefillSortListAndClearPoints();
         void ForceRefillSortList();

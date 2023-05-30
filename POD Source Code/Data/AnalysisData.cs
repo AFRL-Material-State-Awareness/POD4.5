@@ -217,6 +217,10 @@ namespace POD.Data
         /// </summary>
         private List<DataPointIndex> _turnedOffPoints;
         private bool _updatePythonData = true;
+        /// <summary>
+        /// Updates the tables based on the flags
+        /// </summary>
+        private IUpdateTableControl _updateTables;
 
         private DataTable _residualUncensoredTable;
 
@@ -316,11 +320,13 @@ namespace POD.Data
         /// <summary>
         ///     create a new analysis data with no associated data source.
         /// </summary>
-        public AnalysisData()
+        public AnalysisData(IUpdateTableControl tableUpdateIn = null)
         {
             Initialize();
 
             sortByX = new List<SortPoint>();
+
+            _updateTables = tableUpdateIn ?? new UpdateTableControl(this);
         }
 
         /// <summary>
@@ -1071,6 +1077,8 @@ namespace POD.Data
             _updatePythonData = true;
 
             TransformBackLambda = null;
+            SortByXIn = null;
+
         }
 
         /// <summary>
@@ -2370,13 +2378,11 @@ namespace POD.Data
                     throw new ArgumentOutOfRangeException("bounds must be either InBounds or OutBounds");
             }
         }
-
-        public void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints,
-            List<ISortPoint> sortByXIn= null)
+        public ISortPointListWrapper SortByXIn { set; private get; }
+        public void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
         {
-            List<ISortPoint> sortByXUpdate = sortByXIn ?? new List<ISortPoint>(sortByX);
-
-            if (sortByXUpdate.Any())
+            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<ISortPoint>(sortByX));
+            if (sortByXWrapper.HasAnyPoints())
             {
                 //keep track if they actually found the values in the data points
                 //var aboveDoesNotInclude = false;
@@ -2384,8 +2390,8 @@ namespace POD.Data
 
 
 
-                int xAboveIndex = sortByXUpdate.BinarySearch(new SortPoint { XValue = aboveX });
-                int xBelowIndex = sortByXUpdate.BinarySearch(new SortPoint { XValue = belowX });
+                int xAboveIndex = sortByXWrapper.BinarySearch(new SortPoint { XValue = aboveX });
+                int xBelowIndex = sortByXWrapper.BinarySearch(new SortPoint { XValue = belowX });
 
                 if (xAboveIndex < 0)
                 {
@@ -2405,30 +2411,34 @@ namespace POD.Data
                 {
                     for (int i = _prevAbove; i < xAboveIndex; i++)
                     {
-                        fixPoints.Add(new FixPoint(sortByXUpdate[i].SeriesPtIndex, sortByXUpdate[i].SeriesIndex, Flag.InBounds));
-                        UpdateTable(sortByXUpdate[i].RowIndex, sortByXUpdate[i].ColIndex, Flag.InBounds);
+                        fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex, 
+                            sortByXWrapper.SortPointList[i].SeriesIndex, Flag.InBounds));
+                        _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex, 
+                            sortByXWrapper.SortPointList[i].ColIndex, Flag.InBounds);
                     }
                 }
                 else if (xAboveIndex < _prevAbove)
                 {
                     int indexL = xAboveIndex;
 
-                    if (indexL >= sortByXUpdate.Count)
+                    if (indexL >= sortByXWrapper.GetCount)
                     {
-                        indexL = sortByXUpdate.Count - 1;
+                        indexL = sortByXWrapper.GetCount - 1;
                     }
 
                     int indexR = _prevAbove;
 
-                    if (indexR >= sortByXUpdate.Count)
+                    if (indexR >= sortByXWrapper.GetCount)
                     {
-                        indexR = sortByXUpdate.Count - 1;
+                        indexR = sortByXWrapper.GetCount - 1;
                     }
 
                     for (int i = indexR; i >= indexL; i--)
                     {
-                        fixPoints.Add(new FixPoint(sortByXUpdate[i].SeriesPtIndex, sortByXUpdate[i].SeriesIndex, Flag.OutBounds));
-                        UpdateTable(sortByXUpdate[i].RowIndex, sortByXUpdate[i].ColIndex, Flag.OutBounds);
+                        fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex, 
+                            sortByXWrapper.SortPointList[i].SeriesIndex, Flag.OutBounds));
+                        _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex, 
+                            sortByXWrapper.SortPointList[i].ColIndex, Flag.OutBounds);
                     }
                 }
 
@@ -2438,9 +2448,9 @@ namespace POD.Data
                 {
                     int indexL = xBelowIndex;
 
-                    if (indexL >= sortByXUpdate.Count)
+                    if (indexL >= sortByXWrapper.GetCount)
                     {
-                        indexL = sortByXUpdate.Count - 1;
+                        indexL = sortByXWrapper.GetCount - 1;
                     }
 
                     //if max line went below min line then shift index over
@@ -2453,17 +2463,18 @@ namespace POD.Data
                     if (_prevBelowDoesNotInclude)
                         indexR--;
 
-                    if (indexR >= sortByXUpdate.Count)
+                    if (indexR >= sortByXWrapper.GetCount)
                     {
-                        indexR = sortByXUpdate.Count - 1;
+                        indexR = sortByXWrapper.GetCount - 1;
                     }
 
                     for (int i = indexR; i >= indexL; i--)
                     {
                         if (i >= 0)
                         {
-                            fixPoints.Add(new FixPoint(sortByXUpdate[i].SeriesPtIndex, sortByXUpdate[i].SeriesIndex, Flag.InBounds));
-                            UpdateTable(sortByXUpdate[i].RowIndex, sortByXUpdate[i].ColIndex, Flag.InBounds);
+                            fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex,
+                                sortByXWrapper.SortPointList[i].SeriesIndex, Flag.InBounds));
+                            _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex, sortByXWrapper.SortPointList[i].ColIndex, Flag.InBounds);
                         }
                     }
                 }
@@ -2471,8 +2482,10 @@ namespace POD.Data
                 {
                     for (int i = _prevBelow; i < xBelowIndex; i++)
                     {
-                        fixPoints.Add(new FixPoint(sortByXUpdate[i].SeriesPtIndex, sortByXUpdate[i].SeriesIndex, Flag.OutBounds));
-                        UpdateTable(sortByXUpdate[i].RowIndex, sortByXUpdate[i].ColIndex, Flag.OutBounds);
+                        fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex,
+                            sortByXWrapper.SortPointList[i].SeriesIndex, Flag.OutBounds));
+                        _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex,
+                            sortByXWrapper.SortPointList[i].ColIndex, Flag.OutBounds);
                     }
                 }
 

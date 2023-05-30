@@ -82,8 +82,10 @@
   <ItemGroup>
     <Compile Include="AnalysisData.cs" />
     <Compile Include="AxisObject.cs" />
+    <Compile Include="SortPointListWrapper.cs" />
     <Compile Include="ColumnUpdaterFromInfos.cs" />
     <Compile Include="GetPreviousValueControl.cs" />
+    <Compile Include="SortPoints.cs" />
     <Compile Include="TableUpdaterFromInfos.cs" />
     <Compile Include="TransformBackLambdaControl.cs" />
     <Compile Include="DataHelpers.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="UpdateOutputForAHatData.cs" />
     <Compile Include="UpdateOutputForHitMissData.cs" />
     <Compile Include="UpdaterExcelPropertyValue.cs" />
+    <Compile Include="UpdateTableControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpBackendTempSolutionForPOD4Point5\CSharpBackendWithR\CSharpBackendWithR.csproj">
