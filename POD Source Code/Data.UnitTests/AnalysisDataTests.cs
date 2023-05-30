@@ -7,6 +7,8 @@ using System.Data;
 using POD;
 using CSharpBackendWithR;
 using POD.ExcelData;
+using static POD.Data.SortPoint;
+using System.Linq;
 
 namespace Data.UnitTests
 {
@@ -19,11 +21,12 @@ namespace Data.UnitTests
         Mock<IExcelWriterControl> _excelWriterControl;
         Mock<IExcelExport> _excelExport;
         private Mock<I_IPy4C> _python;
+        private Mock<IUpdateTableControl> _updateTables;
         [SetUp]
         public void Setup()
         {
-
-            _data = new AnalysisData();
+            _updateTables = new Mock<IUpdateTableControl>();
+            _data = new AnalysisData(_updateTables.Object);
             _source = new DataSource("MyDataSource", "ID", "flawName.centimeters", "Response");
             _table = new DataTable();
             _excelWriterControl = new Mock<IExcelWriterControl>();
@@ -1642,5 +1645,25 @@ namespace Data.UnitTests
         }
 
         /// UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
+        private Mock<ISortPointListWrapper> _sortByXList;
+        [Test]
+        public void UpdateIncludedPointsBasedFlawRange_SortByXDoesntHavePoints_FixPointsNotAddedAndTableNotUpdated()
+        {
+            //Arrange
+            SetupSortByX();
+            _sortByXList.Setup(sbx => sbx.HasAnyPoints()).Returns(false);
+            //Act
+            _data.UpdateIncludedPointsBasedFlawRange(.1, 1.0, new List<FixPoint>());
+            //Assert
+            _sortByXList.Verify(sbx => sbx.BinarySearch(It.IsAny<SortPoint>()), Times.Never);
+            _sortByXList.VerifyGet(sbx => sbx.GetCount, Times.Never);
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
+        }
+        private void  SetupSortByX()
+        {
+            _sortByXList = new Mock<ISortPointListWrapper>();
+            _data.SortByXIn = _sortByXList.Object;
+        }
+
     }
 }
