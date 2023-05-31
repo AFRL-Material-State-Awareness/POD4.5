@@ -2521,8 +2521,9 @@ namespace POD.Data
         public void RefillSortList()
         {
             FixMissingSortList();
+            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<SortPoint>(sortByX));
 
-            if (!sortByX.Any())
+            if (!sortByXWrapper.HasAnyPoints())
             {
                 //first Xth series will always be data series
                 //everything after that is additional helper series
@@ -2544,7 +2545,6 @@ namespace POD.Data
         {
             string seriesName = responseTable.Columns[index].ColumnName;
             int seriesIndex = index + 3;
-            //Series series = null;
 
             for (int i = 0; i < flawTable.Rows.Count; i++)
             {
