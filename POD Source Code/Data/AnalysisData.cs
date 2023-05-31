@@ -2465,35 +2465,28 @@ namespace POD.Data
             ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<SortPoint>(sortByX));
 
             int index = sortByXWrapper.BinarySearch(new SortPoint { XValue = pointX, YValue = pointY, SeriesName = seriesName, RowIndex = rowIndex, ColIndex = colIndex });
-            bool skipIndex = false;
 
-            if (index < 0)
+            if (index < 0 )
             {
                 index = _flipBitsControl.FlipBits(index);
                 if (index > sortByXWrapper.GetCountOfList())
-                {
-                    skipIndex = true;
-                }
+                    return;         
             }
 
-            if(!skipIndex)
-            {
-                SortPoint foundPoint = sortByXWrapper.SortPointList[index];
+            SortPoint foundPoint = sortByXWrapper.SortPointList[index];
 
-                var comment = GetRemovedPointComment(foundPoint.ColIndex, foundPoint.RowIndex);
-                var dpIndex = new DataPointIndex(foundPoint.ColIndex, foundPoint.RowIndex, comment);
+            var comment = GetRemovedPointComment(foundPoint.ColIndex, foundPoint.RowIndex);
+            var dpIndex = new DataPointIndex(foundPoint.ColIndex, foundPoint.RowIndex, comment);
 
-                if (TurnedOffPoints.Contains(dpIndex))
-                {
-                    _updateTables.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.InBounds);
-                    fixPoints.Add(new FixPoint(foundPoint.SeriesPtIndex, foundPoint.SeriesIndex, Flag.InBounds));
-                }
-                else
-                {
-                    _updateTables.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.OutBounds);
-                    fixPoints.Add(new FixPoint(foundPoint.SeriesPtIndex, foundPoint.SeriesIndex, Flag.OutBounds));
-                }
-            }
+            if (TurnedOffPoints.Contains(dpIndex))
+                AddFixPointsAndUpdateTable(foundPoint, fixPoints, Flag.InBounds);
+            else
+                AddFixPointsAndUpdateTable(foundPoint, fixPoints, Flag.OutBounds);
+        }
+        private void AddFixPointsAndUpdateTable(SortPoint foundPoint, List<FixPoint> fixPoints, Flag flagBounds)
+        {
+            _updateTables.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, flagBounds);
+            fixPoints.Add(new FixPoint(foundPoint.SeriesPtIndex, foundPoint.SeriesIndex, flagBounds));
         }
 
         public void ForceRefillSortListAndClearPoints()
