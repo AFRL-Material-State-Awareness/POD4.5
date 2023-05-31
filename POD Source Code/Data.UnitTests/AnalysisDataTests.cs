@@ -1879,6 +1879,106 @@ namespace Data.UnitTests
             new SortPoint() { ColIndex = 2, RowIndex = 2 } });
             _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(countOfList);
         }
-
+        /// Tests for the ForceRefillSortListAndClearPoints()
+        [Test]
+        public void ForceRefillSortListAndClearPoints_SortByXIsNull_CreatesTheListAndResetsAllTheSortListPoints()
+        {
+            //Arrange
+            _data.TurnOffPoint(1, 1);
+            _data.sortByX = null;
+            //Act
+            _data.ForceRefillSortListAndClearPoints();
+            //Assert
+            Assert.That(_data.TurnedOffPoints.Count, Is.Zero);
+            Assert.That(_data.sortByX, Is.Not.Null);
+            Assert.That(_data.sortByX.Count, Is.Zero);
+        }
+        [Test]
+        public void ForceRefillSortListAndClearPoints_SortByXIsNOTNull_ResetsAllTheSortListPoints()
+        {
+            //Arrange
+            _data.TurnOffPoint(1, 1);
+            _data.sortByX = new List<SortPoint>() { new SortPoint() };
+            //Act
+            _data.ForceRefillSortListAndClearPoints();
+            //Assert
+            Assert.That(_data.TurnedOffPoints.Count, Is.Zero);
+            Assert.That(_data.sortByX.Count, Is.Zero);
+        }
+        /// Tests for ForceRefillSortList function
+        [Test]
+        public void ForceRefillSortList_SortByXIsNull_CreatesTheListAndDoesNotResetTurnedOffPoints()
+        {
+            //Arrange
+            _data.TurnOffPoint(1, 1);
+            _data.sortByX = null;
+            //Act
+            _data.ForceRefillSortList();
+            //Assert
+            Assert.That(_data.TurnedOffPoints.Count, Is.GreaterThan(0));
+            Assert.That(_data.sortByX, Is.Not.Null);
+            Assert.That(_data.sortByX.Count, Is.Zero);
+        }
+        [Test]
+        public void ForceRefillSortList_SortByXIsNOTNull_DoesNotResetTurnedOffPoints()
+        {
+            //Arrange
+            _data.TurnOffPoint(1, 1);
+            _data.sortByX = new List<SortPoint>() { new SortPoint() };
+            //Act
+            _data.ForceRefillSortList();
+            //Assert
+            Assert.That(_data.TurnedOffPoints.Count, Is.GreaterThan(0));
+            Assert.That(_data.sortByX.Count, Is.Zero);
+        }
+        /// Tests for RefillSortList function
+        [Test]
+        public void RefillSortList_sortByXIsNull_CreatesListButFillListsNotCalled()
+        {
+            //Arrange
+            SetupSortByX(true);
+            _data.sortByX = null;
+            SetupActivatedFlawsAndResponses();
+            //Act
+            _data.RefillSortList();
+            //Assert
+            Assert.That(_data.sortByX, Is.Not.Null);
+            Assert.That(_data.sortByX.Count, Is.Zero);
+        }
+        [Test]
+        public void RefillSortList_sortByXIsNullAndActivatedFlawsResponsesNotEmpty_CreatesListAndFillListsCalled()
+        {
+            //Arrange
+            SetupSortByX(false);
+            _data.sortByX = null;
+            SetupActivatedFlawsAndResponses();
+            //Act
+            _data.RefillSortList();
+            //Assert
+            Assert.That(_data.sortByX, Is.Not.Null);
+            Assert.That(_data.sortByX.Count, Is.GreaterThan(0));
+        }
+        [Test]
+        public void RefillSortList_sortByXIsNOTNullAndActivatedFlawsResponsesNotEmpty_FillListsCalledAndAddedToSortByX()
+        {
+            //Arrange
+            SetupSortByX(false);
+            _data.sortByX = new List<SortPoint>() { new SortPoint() };
+            SetupActivatedFlawsAndResponses();
+            //Act
+            _data.RefillSortList();
+            //Assert
+            Assert.That(_data.sortByX.Count, Is.GreaterThan(1));
+        }
+        private void SetupActivatedFlawsAndResponses()
+        {
+            _data.ActivatedFlaws.Columns.Add(new DataColumn("Flaws"));
+            _data.ActivatedResponses.Columns.Add(new DataColumn("Responses"));
+            for(int i =0; i < 11; i++)
+            {
+                _data.ActivatedFlaws.Rows.Add(Convert.ToDouble(i));
+                _data.ActivatedResponses.Rows.Add(Convert.ToDouble(i * 10));
+            }
+        }
     }
 }
