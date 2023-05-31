@@ -2368,21 +2368,6 @@ namespace POD.Data
         {
             sortByX = new List<SortPoint>();
         }
-
-        private void UpdateTable(int rowIndex, int colIndex, Flag bounds)
-        {
-            switch (bounds)
-            {
-                case Flag.InBounds:
-                    TurnOnPoint(colIndex, rowIndex);
-                    break;
-                case Flag.OutBounds:
-                    TurnOffPoint(colIndex, rowIndex);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("bounds must be either InBounds or OutBounds");
-            }
-        }
         //The following getters and setters are used for unit testing purposes - DO NOT REMOVE***
         public ISortPointListWrapper SortByXIn { set; private get; }
         public int PrevAbove { set { _prevAbove = value; } }
