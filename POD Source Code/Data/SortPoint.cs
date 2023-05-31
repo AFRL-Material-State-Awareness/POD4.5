@@ -45,7 +45,7 @@ namespace POD.Data
         }
     }
 
-    public class SortPoint : ISortPoint
+    public class SortPoint : IComparable<SortPoint>
     {
         public int ColIndex { get; set; }
         public int RowIndex { get; set; }
@@ -60,7 +60,7 @@ namespace POD.Data
 
         public double YValue { get; set; }
 
-        public int CompareTo(ISortPoint otherSortPoint)
+        public int CompareTo(SortPoint otherSortPoint)
         {
             if (otherSortPoint == null)
             {

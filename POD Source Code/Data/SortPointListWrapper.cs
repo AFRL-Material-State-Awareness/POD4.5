@@ -11,14 +11,14 @@ namespace Data
 {
     public class SortPointListWrapper : ISortPointListWrapper
     {
-        private List<ISortPoint> _sortPointList;
-        public SortPointListWrapper(List<ISortPoint> sortPointInput)
+        private List<SortPoint> _sortPointList;
+        public SortPointListWrapper(List<SortPoint> sortPointInput)
         {
             _sortPointList = sortPointInput;
         }
         public int GetCountOfList() => _sortPointList.Count;
         public bool HasAnyPoints() => _sortPointList.Any();
-        public List<ISortPoint> SortPointList =>_sortPointList;
+        public List<SortPoint> SortPointList =>_sortPointList;
         public int BinarySearch(SortPoint item)
         {
             return _sortPointList.BinarySearch(item);
@@ -29,7 +29,7 @@ namespace Data
     {
         int GetCountOfList();
         bool HasAnyPoints();
-        List<ISortPoint> SortPointList { get; }
+        List<SortPoint> SortPointList { get; }
         int BinarySearch(SortPoint item);
         //int SeriesPtIndex { get; }
     }

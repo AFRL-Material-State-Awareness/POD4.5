@@ -2376,7 +2376,7 @@ namespace POD.Data
         /// **********************************************************************
         public void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
         {
-            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<ISortPoint>(sortByX));
+            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<SortPoint>(sortByX));
             if (sortByXWrapper.HasAnyPoints())
             {
                 //keep track if they actually found the values in the data points
@@ -2451,7 +2451,7 @@ namespace POD.Data
                 _prevBelowDoesNotInclude = belowDoesNotInclude;
             }
         }
-        private void AddFixPointsAndUpdateTable(int index, List<ISortPoint> sortByXWrapperList, 
+        private void AddFixPointsAndUpdateTable(int index, List<SortPoint> sortByXWrapperList, 
             List<FixPoint> fixPoints, Flag flagBounds)
         {
             fixPoints.Add(new FixPoint(sortByXWrapperList[index].SeriesPtIndex,
@@ -2462,7 +2462,7 @@ namespace POD.Data
 
         public void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints)
         {
-            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<ISortPoint>(sortByX));
+            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<SortPoint>(sortByX));
 
             int index = sortByXWrapper.BinarySearch(new SortPoint { XValue = pointX, YValue = pointY, SeriesName = seriesName, RowIndex = rowIndex, ColIndex = colIndex });
             bool skipIndex = false;
@@ -2478,7 +2478,7 @@ namespace POD.Data
 
             if(!skipIndex)
             {
-                ISortPoint foundPoint = sortByXWrapper.SortPointList[index];
+                SortPoint foundPoint = sortByXWrapper.SortPointList[index];
 
                 var comment = GetRemovedPointComment(foundPoint.ColIndex, foundPoint.RowIndex);
                 var dpIndex = new DataPointIndex(foundPoint.ColIndex, foundPoint.RowIndex, comment);
