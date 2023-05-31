@@ -178,7 +178,7 @@ namespace POD.Data
         void RefillSortList();
         void ToggleAllResponses(double pointX, List<FixPoint> fixPoints);
         DataTable QuickTable { get; }
-        void AddData(string myID, double myFlaw, double myResponse, int index);
+        void AddData(string myID, double myFlaw, double myResponse, int index, IAddRowToTableControl addRowControlIn = null);
         void RecreateTables();
         AnalysisDataTypeEnum RecheckAnalysisType(AnalysisDataTypeEnum myForcedType);
         void GetRow(int rowIndex, out string myID, out double myFlaw, out double myResponse);

@@ -2615,11 +2615,12 @@ namespace POD.Data
             }
         }
 
-        public void AddData(string myID, double myFlaw, double myResponse, int index)
+        public void AddData(string myID, double myFlaw, double myResponse, int index, IAddRowToTableControl addRowControlIn = null)
         {
-            AddStringRowToTable(myID, index, _availableSpecIDsTable);
-            AddDoubleRowToTable(myFlaw, index, _availableFlawsTable);
-            AddDoubleRowToTable(myResponse, index, _availableResponsesTable);
+            IAddRowToTableControl addRowControl = addRowControlIn ?? new AddRowToTableControl();
+            addRowControl.AddStringRowToTable(myID, index, _availableSpecIDsTable);
+            addRowControl.AddDoubleRowToTable(myFlaw, index, _availableFlawsTable);
+            addRowControl.AddDoubleRowToTable(myResponse, index, _availableResponsesTable);
         }
 
         private static void AddStringRowToTable(string myID, int index, DataTable table)
