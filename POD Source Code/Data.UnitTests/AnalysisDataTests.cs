@@ -1647,6 +1647,7 @@ namespace Data.UnitTests
         }
 
         /// UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
+        private List<FixPoint> _fixPointList = new List<FixPoint>();
         private Mock<ISortPointListWrapper> _sortByXList;
         [Test]
         public void UpdateIncludedPointsBasedFlawRange_SortByXDoesntHavePoints_FixPointsNotAddedAndTableNotUpdated()
@@ -1654,11 +1655,12 @@ namespace Data.UnitTests
             //Arrange
             SetupSortByX(false);
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             _sortByXList.Verify(sbx => sbx.BinarySearch(It.IsAny<SortPoint>()), Times.Never);
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
+            Assert.That(_fixPointList.Count, Is.Zero);
         }
         [Test]
         public void UpdateIncludedPointsBasedFlawRange_SortByXDoesntHasPointsAndIndicesAreGreaterThan0_BinarySearchPerformedWithoutFlippingBits()
@@ -1669,14 +1671,11 @@ namespace Data.UnitTests
             _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp=>sp.XValue == 0.1))).Returns(0);
             _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(0);
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
-            _sortByXList.Verify(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1)), Times.Once);
-            _sortByXList.Verify(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0)), Times.Once);
-            _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
             _flipBinaryControl.Verify(fbc => fbc.FlipBits(It.IsAny<int>()), Times.Never);
-            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
-
+            AsertBinarySearchCallsAndNoUpdateTableOrPointsAdded();
+            Assert.That(_fixPointList.Count, Is.Zero);
         }
         [Test]
         [TestCase(-1, 0, 1)]
@@ -1691,9 +1690,14 @@ namespace Data.UnitTests
             // ensures no other branches are entered during these tests
             _flipBinaryControl.Setup(fbc => fbc.FlipBits(It.IsAny<int>())).Returns(0);
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             _flipBinaryControl.Verify(fbc => fbc.FlipBits(It.IsAny<int>()), Times.Exactly(expectedFlipBitsCalls));
+            AsertBinarySearchCallsAndNoUpdateTableOrPointsAdded();
+            Assert.That(_fixPointList.Count, Is.Zero);
+        }
+        private void AsertBinarySearchCallsAndNoUpdateTableOrPointsAdded()
+        {
             _sortByXList.Verify(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1)), Times.Once);
             _sortByXList.Verify(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0)), Times.Once);
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
@@ -1709,10 +1713,11 @@ namespace Data.UnitTests
             _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(0);
             _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint() { SeriesPtIndex = 0 } });
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.Once);
+            Assert.That(_fixPointList.Count, Is.GreaterThanOrEqualTo(1));
         }
         [Test]
         [TestCase(3, 2)]
@@ -1728,10 +1733,11 @@ namespace Data.UnitTests
             _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(getCountNum);
             _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint()});
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Exactly(expectedGetCountCalls));
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.OutBounds), Times.AtLeastOnce);
+            Assert.That(_fixPointList.Count, Is.GreaterThanOrEqualTo(1));
         }
         [Test]
         public void UpdateIncludedPointsBasedFlawRange_xBelowIndexGreaterThanPreviousBelow_UpdateTablesCalledButNotGetCount()
@@ -1742,10 +1748,11 @@ namespace Data.UnitTests
             _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(1);
             _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint() { SeriesPtIndex = 0 } });
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.OutBounds), Times.Once);
+            Assert.That(_fixPointList.Count, Is.GreaterThanOrEqualTo(1));
         }
         [Test]
         [TestCase(3, 2)]
@@ -1761,10 +1768,11 @@ namespace Data.UnitTests
             _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(getCountNum);
             _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint() });
             //Act
-            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Exactly(expectedGetCountCalls));
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.AtLeastOnce);
+            Assert.That(_fixPointList.Count, Is.GreaterThanOrEqualTo(1));
         }
         private void  SetupSortByX(bool hasPoints)
         {
