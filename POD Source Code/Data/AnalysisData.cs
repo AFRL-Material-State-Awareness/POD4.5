@@ -2482,7 +2482,7 @@ namespace POD.Data
 
             if (index < 0)
             {
-                index = ~index;
+                index = _flipBitsControl.FlipBits(index);
                 if (index > sortByX.Count)
                 {
                     skipIndex = true;
@@ -2498,12 +2498,12 @@ namespace POD.Data
 
                 if (TurnedOffPoints.Contains(dpIndex))
                 {
-                    UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.InBounds);
+                    _updateTables.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.InBounds);
                     fixPoints.Add(new FixPoint(foundPoint.SeriesPtIndex, foundPoint.SeriesIndex, Flag.InBounds));
                 }
                 else
                 {
-                    UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.OutBounds);
+                    _updateTables.UpdateTable(foundPoint.RowIndex, foundPoint.ColIndex, Flag.OutBounds);
                     fixPoints.Add(new FixPoint(foundPoint.SeriesPtIndex, foundPoint.SeriesIndex, Flag.OutBounds));
                 }
             }
