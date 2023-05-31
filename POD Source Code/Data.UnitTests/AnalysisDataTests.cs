@@ -1657,7 +1657,7 @@ namespace Data.UnitTests
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
             //Assert
             _sortByXList.Verify(sbx => sbx.BinarySearch(It.IsAny<SortPoint>()), Times.Never);
-            _sortByXList.VerifyGet(sbx => sbx.GetCountOfList(), Times.Never);
+            _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
         }
         [Test]
@@ -1673,7 +1673,7 @@ namespace Data.UnitTests
             //Assert
             _sortByXList.Verify(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1)), Times.Once);
             _sortByXList.Verify(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0)), Times.Once);
-            _sortByXList.VerifyGet(sbx => sbx.GetCountOfList(), Times.Never);
+            _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
             _flipBinaryControl.Verify(fbc => fbc.FlipBits(It.IsAny<int>()), Times.Never);
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
 
@@ -1712,7 +1712,7 @@ namespace Data.UnitTests
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
-            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Once);
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.Once);
         }
         [Test]
         [TestCase(3, 2)]
@@ -1730,8 +1730,8 @@ namespace Data.UnitTests
             //Act
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
             //Assert
-            _sortByXList.VerifyGet(sbx => sbx.GetCountOfList(), Times.Exactly(expectedGetCountCalls));
-            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.AtLeastOnce);
+            _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Exactly(expectedGetCountCalls));
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.OutBounds), Times.AtLeastOnce);
         }
         [Test]
         public void UpdateIncludedPointsBasedFlawRange_xBelowIndexGreaterThanPreviousBelow_UpdateTablesCalledButNotGetCount()
@@ -1745,7 +1745,7 @@ namespace Data.UnitTests
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
-            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Once);
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.OutBounds), Times.Once);
         }
         [Test]
         [TestCase(3, 2)]
@@ -1764,7 +1764,7 @@ namespace Data.UnitTests
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, new List<FixPoint>());
             //Assert
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Exactly(expectedGetCountCalls));
-            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.AtLeastOnce);
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.AtLeastOnce);
         }
         private void  SetupSortByX(bool hasPoints)
         {
