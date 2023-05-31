@@ -2472,8 +2472,8 @@ namespace POD.Data
                 _prevBelowDoesNotInclude = belowDoesNotInclude;
             }
         }
-        private void AddFixPointsAndUpdateTable(int index, List<ISortPoint> sortByXWrapperList, List<FixPoint> fixPoints, 
-            Flag flagBounds)
+        private void AddFixPointsAndUpdateTable(int index, List<ISortPoint> sortByXWrapperList, 
+            List<FixPoint> fixPoints, Flag flagBounds)
         {
             fixPoints.Add(new FixPoint(sortByXWrapperList[index].SeriesPtIndex,
                             sortByXWrapperList[index].SeriesIndex, flagBounds));
