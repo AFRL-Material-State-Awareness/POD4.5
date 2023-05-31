@@ -1797,6 +1797,25 @@ namespace Data.UnitTests
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.Exactly(expectedIterations));
             Assert.That(_fixPointList.Count, Is.GreaterThanOrEqualTo(1));
         }
+        [Test]
+        public void UpdateIncludedPointsBasedFlawRange_iBecomesNegative_ForLoopOnlyAddsWhileIIsPositive()
+        {
+            //Arrange
+            SetupSortByX(true);
+            //PrevAbove is set to xAboveIndex so that no additional fixpoints are added
+            _data.PrevAbove = 2;
+            _data.PrevBelow = 2;
+            _data.PrevBelowNotInclude = true;
+            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1))).Returns(2);
+            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(1);
+            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(0);
+            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint() });
+            //Act
+            _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
+            //Assert
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.Never);
+            Assert.That(_fixPointList.Count, Is.Zero);
+        }
         private void  SetupSortByX(bool hasPoints)
         {
             _sortByXList = new Mock<ISortPointListWrapper>();
