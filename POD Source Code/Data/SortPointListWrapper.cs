@@ -16,7 +16,7 @@ namespace Data
         {
             _sortPointList = sortPointInput;
         }
-        public int GetCount => _sortPointList.Count;
+        public int GetCountOfList() => _sortPointList.Count;
         public bool HasAnyPoints() => _sortPointList.Any();
         public List<ISortPoint> SortPointList =>_sortPointList;
         public int BinarySearch(SortPoint item)
@@ -27,7 +27,7 @@ namespace Data
     }
     public interface ISortPointListWrapper
     {
-        int GetCount { get; }
+        int GetCountOfList();
         bool HasAnyPoints();
         List<ISortPoint> SortPointList { get; }
         int BinarySearch(SortPoint item);

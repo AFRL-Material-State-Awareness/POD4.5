@@ -221,6 +221,10 @@ namespace POD.Data
         /// Updates the tables based on the flags
         /// </summary>
         private IUpdateTableControl _updateTables;
+        /// <summary>
+        /// This class is used to flip binary bits when necessary
+        /// </summary>
+        private IFlipBinarySign _flipBitsControl;
 
         private DataTable _residualUncensoredTable;
 
@@ -320,13 +324,14 @@ namespace POD.Data
         /// <summary>
         ///     create a new analysis data with no associated data source.
         /// </summary>
-        public AnalysisData(IUpdateTableControl tableUpdateIn = null)
+        public AnalysisData(IUpdateTableControl tableUpdateIn = null, IFlipBinarySign flipBinaryControlIn = null)
         {
             Initialize();
 
             sortByX = new List<SortPoint>();
 
             _updateTables = tableUpdateIn ?? new UpdateTableControl(this);
+            _flipBitsControl = flipBinaryControlIn ?? new FlipBinarySign();
         }
 
         /// <summary>
@@ -2378,7 +2383,11 @@ namespace POD.Data
                     throw new ArgumentOutOfRangeException("bounds must be either InBounds or OutBounds");
             }
         }
+        //The following getters and setters are used for unit testing purposes
         public ISortPointListWrapper SortByXIn { set; private get; }
+        public int PrevAbove { set { _prevAbove = value; } }
+        public int PrevBelow { set { _prevBelow = value; } }
+        ///
         public void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
         {
             ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<ISortPoint>(sortByX));
@@ -2395,13 +2404,15 @@ namespace POD.Data
 
                 if (xAboveIndex < 0)
                 {
-                    xAboveIndex = ~xAboveIndex;
+                    //xAboveIndex = ~xAboveIndex;
+                    xAboveIndex = _flipBitsControl.FlipBits(xAboveIndex);
                     //aboveDoesNotInclude = true;
                 }
 
                 if (xBelowIndex < 0)
                 {
-                    xBelowIndex = ~xBelowIndex;
+                    //xBelowIndex = ~xBelowIndex;
+                    xBelowIndex = _flipBitsControl.FlipBits(xBelowIndex);
                     belowDoesNotInclude = true;
                 }
 
@@ -2421,16 +2432,16 @@ namespace POD.Data
                 {
                     int indexL = xAboveIndex;
 
-                    if (indexL >= sortByXWrapper.GetCount)
+                    if (indexL >= sortByXWrapper.GetCountOfList())
                     {
-                        indexL = sortByXWrapper.GetCount - 1;
+                        indexL = sortByXWrapper.GetCountOfList() - 1;
                     }
 
                     int indexR = _prevAbove;
 
-                    if (indexR >= sortByXWrapper.GetCount)
+                    if (indexR >= sortByXWrapper.GetCountOfList())
                     {
-                        indexR = sortByXWrapper.GetCount - 1;
+                        indexR = sortByXWrapper.GetCountOfList() - 1;
                     }
 
                     for (int i = indexR; i >= indexL; i--)
@@ -2448,9 +2459,9 @@ namespace POD.Data
                 {
                     int indexL = xBelowIndex;
 
-                    if (indexL >= sortByXWrapper.GetCount)
+                    if (indexL >= sortByXWrapper.GetCountOfList())
                     {
-                        indexL = sortByXWrapper.GetCount - 1;
+                        indexL = sortByXWrapper.GetCountOfList() - 1;
                     }
 
                     //if max line went below min line then shift index over
@@ -2463,9 +2474,9 @@ namespace POD.Data
                     if (_prevBelowDoesNotInclude)
                         indexR--;
 
-                    if (indexR >= sortByXWrapper.GetCount)
+                    if (indexR >= sortByXWrapper.GetCountOfList())
                     {
-                        indexR = sortByXWrapper.GetCount - 1;
+                        indexR = sortByXWrapper.GetCountOfList() - 1;
                     }
 
                     for (int i = indexR; i >= indexL; i--)
@@ -2488,16 +2499,13 @@ namespace POD.Data
                             sortByXWrapper.SortPointList[i].ColIndex, Flag.OutBounds);
                     }
                 }
-
-
                 // update the prevIndex values for next check
                 _prevAbove = xAboveIndex;
                 _prevBelow = xBelowIndex;
                 _prevBelowDoesNotInclude = belowDoesNotInclude;
-
-
             }
         }
+        
 
         public void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints)
         {
