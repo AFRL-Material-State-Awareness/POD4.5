@@ -2462,13 +2462,15 @@ namespace POD.Data
 
         public void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints)
         {
-            int index = sortByX.BinarySearch(new SortPoint { XValue = pointX, YValue = pointY, SeriesName = seriesName, RowIndex = rowIndex, ColIndex = colIndex });
+            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<ISortPoint>(sortByX));
+
+            int index = sortByXWrapper.BinarySearch(new SortPoint { XValue = pointX, YValue = pointY, SeriesName = seriesName, RowIndex = rowIndex, ColIndex = colIndex });
             bool skipIndex = false;
 
             if (index < 0)
             {
                 index = _flipBitsControl.FlipBits(index);
-                if (index > sortByX.Count)
+                if (index > sortByXWrapper.GetCountOfList())
                 {
                     skipIndex = true;
                 }
@@ -2476,7 +2478,7 @@ namespace POD.Data
 
             if(!skipIndex)
             {
-                SortPoint foundPoint = sortByX[index];
+                ISortPoint foundPoint = sortByXWrapper.SortPointList[index];
 
                 var comment = GetRemovedPointComment(foundPoint.ColIndex, foundPoint.RowIndex);
                 var dpIndex = new DataPointIndex(foundPoint.ColIndex, foundPoint.RowIndex, comment);
