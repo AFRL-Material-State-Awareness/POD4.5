@@ -93,22 +93,5 @@ namespace POD.Data
             }
             return result;
         }
-        public interface ISortPoint : IComparable<ISortPoint>
-        {
-            int ColIndex { get; set; }
-            int RowIndex { get; set; }
-
-            string SeriesName { get; set; }
-
-            int SeriesIndex { get; set; }
-
-            int SeriesPtIndex { get; set; }
-
-            double XValue { get; set; }
-
-            double YValue { get; set; }
-        }
-
-
     }
 }
