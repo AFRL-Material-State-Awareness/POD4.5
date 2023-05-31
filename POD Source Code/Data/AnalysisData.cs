@@ -2623,38 +2623,6 @@ namespace POD.Data
             addRowControl.AddDoubleRowToTable(myResponse, index, _availableResponsesTable);
         }
 
-        private static void AddStringRowToTable(string myID, int index, DataTable table)
-        {
-            if (table.Rows.Count <= index)
-            {
-                var row = table.NewRow();
-
-                row[0] = myID;
-
-                table.Rows.Add(row);
-            }
-            else
-            {
-                table.Rows[index][0] = myID;
-            }
-        }
-
-        private static void AddDoubleRowToTable(double myValues, int index, DataTable table)
-        {
-            if (table.Rows.Count <= index)
-            {
-                var row = table.NewRow();
-
-                row[0] = myValues;
-
-                table.Rows.Add(row);
-            }
-            else
-            {
-                table.Rows[index][0] = myValues;
-            }
-        }
-
         public void RecreateTables()
         {
             
