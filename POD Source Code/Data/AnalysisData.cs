@@ -2387,6 +2387,7 @@ namespace POD.Data
         public ISortPointListWrapper SortByXIn { set; private get; }
         public int PrevAbove { set { _prevAbove = value; } }
         public int PrevBelow { set { _prevBelow = value; } }
+        public bool PrevBelowNotInclude { set { _prevBelowDoesNotInclude = value; } }
         /// **********************************************************************
         public void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
         {
