@@ -2413,10 +2413,8 @@ namespace POD.Data
                 // remove points from out of bounds
                 // else add points to out of bounds
                 if (xAboveIndex > _prevAbove)
-                {
                     for (int i = _prevAbove; i < xAboveIndex; i++)
                         AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.InBounds);
-                }
                 else if (xAboveIndex < _prevAbove)
                 {
                     int indexL = xAboveIndex;
@@ -2456,16 +2454,12 @@ namespace POD.Data
                         indexR = sortByXWrapper.GetCountOfList() - 1;
 
                     for (int i = indexR; i >= indexL; i--)
-                    {
                         if (i >= 0)
                             AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.InBounds);
-                    }
                 }
                 else if (xBelowIndex > _prevBelow)
-                {
                     for (int i = _prevBelow; i < xBelowIndex; i++)
                         AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.OutBounds);
-                }
                 // update the prevIndex values for next check
                 _prevAbove = xAboveIndex;
                 _prevBelow = xBelowIndex;
