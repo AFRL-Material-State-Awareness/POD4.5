@@ -1728,10 +1728,7 @@ namespace Data.UnitTests
             //Arrange
             SetupSortByX(true);
             _data.PrevAbove = 2;
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1))).Returns(1);
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(0);
-            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(getCountNum);
-            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint()});
+            SetupBinarySearchFunctionsAndList(xAboveIndex: 1, xBelowIndex: 0, listCount: getCountNum);
             //Act
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
@@ -1748,10 +1745,7 @@ namespace Data.UnitTests
             //Arrange
             SetupSortByX(true);
             _data.PrevBelow = 2;
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1))).Returns(0);
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(1);
-            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(getCountNum);
-            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint() });
+            SetupBinarySearchFunctionsAndList(xAboveIndex: 0, xBelowIndex: 1, listCount: getCountNum);
             //Act
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
@@ -1787,10 +1781,7 @@ namespace Data.UnitTests
             _data.PrevAbove = xAboveIndex;
             _data.PrevBelow = 3;
             _data.PrevBelowNotInclude = prevBelowDoesNotInclude;
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1))).Returns(xAboveIndex);
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(1);
-            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(5);
-            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint() });
+            SetupBinarySearchFunctionsAndList(xAboveIndex: xAboveIndex, xBelowIndex: 1, listCount: 5);
             //Act
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
@@ -1806,16 +1797,26 @@ namespace Data.UnitTests
             _data.PrevAbove = 2;
             _data.PrevBelow = 2;
             _data.PrevBelowNotInclude = true;
+            SetupBinarySearchFunctionsAndList(xAboveIndex: 2, xBelowIndex: 1, listCount: 0);
+            /*
             _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1))).Returns(2);
             _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(1);
             _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(0);
             _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint() });
+            */
             //Act
             _data.UpdateIncludedPointsBasedFlawRange(0.1, 1.0, _fixPointList);
             //Assert
             //For loop iterates once, but the AddFixPointsAndUpdateTable function is never called
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), Flag.InBounds), Times.Never);
             Assert.That(_fixPointList.Count, Is.Zero);
+        }
+        private void SetupBinarySearchFunctionsAndList(int xAboveIndex, int xBelowIndex, int listCount)
+        {
+            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 0.1))).Returns(xAboveIndex);
+            _sortByXList.Setup(sbx => sbx.BinarySearch(It.Is<SortPoint>(sp => sp.XValue == 1.0))).Returns(xBelowIndex);
+            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(listCount);
+            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<ISortPoint>() { new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint(), new SortPoint() });
         }
         private void  SetupSortByX(bool hasPoints)
         {
