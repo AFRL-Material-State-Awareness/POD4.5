@@ -80,6 +80,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddRowToTableControl.cs" />
     <Compile Include="AnalysisData.cs" />
     <Compile Include="AxisObject.cs" />
     <Compile Include="SortPointListWrapper.cs" />
