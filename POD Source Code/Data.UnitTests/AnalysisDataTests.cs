@@ -1648,7 +1648,7 @@ namespace Data.UnitTests
 
         /// UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
         private List<FixPoint> _fixPointList = new List<FixPoint>();
-        private Mock<SortPointListWrapper> _sortByXList;
+        private Mock<ISortPointListWrapper> _sortByXList;
         [Test]
         public void UpdateIncludedPointsBasedFlawRange_SortByXDoesntHavePoints_FixPointsNotAddedAndTableNotUpdated()
         {
@@ -1814,7 +1814,7 @@ namespace Data.UnitTests
         }
         private void  SetupSortByX(bool hasPoints)
         {
-            _sortByXList = new Mock<SortPointListWrapper>();
+            _sortByXList = new Mock<ISortPointListWrapper>();
             _data.SortByXIn = _sortByXList.Object;
             _sortByXList.Setup(sbx => sbx.HasAnyPoints()).Returns(hasPoints);
         }
