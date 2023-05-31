@@ -1995,5 +1995,46 @@ namespace Data.UnitTests
             addRowControl.Verify(arc => arc.AddDoubleRowToTable(.1, 1, It.IsAny<DataTable>()));
             addRowControl.Verify(arc => arc.AddDoubleRowToTable(10.0, 1, It.IsAny<DataTable>()));
         }
+        /// Tests for the RecheckAnalysisType(AnalysisDataTypeEnum myForcedType) function
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.AHat)]
+        [TestCase(AnalysisDataTypeEnum.HitMiss)]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void RecheckAnalysisType_ActivatedResponsesCount0_DataTypeBecomesMyForcedTypeAndReturns(AnalysisDataTypeEnum myForcedType)
+        {
+            //Arrange
+            //Act
+            var result =_data.RecheckAnalysisType(myForcedType);
+            //Assert
+            Assert.That(_data.DataType, Is.EqualTo(myForcedType));
+            Assert.That(result, Is.EqualTo(myForcedType));
+        }
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.AHat)]
+        [TestCase(AnalysisDataTypeEnum.HitMiss)]
+        public void RecheckAnalysisType_ActivatedResponsesNot0AndMyForcedTypeAHatOrHitMiss_DataTypeBecomesMyForcedTypeAndReturns(AnalysisDataTypeEnum myForcedType)
+        {
+            //Arrange
+            SetupActivatedFlawsAndResponses();
+            //Act
+            var result = _data.RecheckAnalysisType(myForcedType);
+            //Assert
+            Assert.That(_data.DataType, Is.EqualTo(myForcedType));
+            Assert.That(result, Is.EqualTo(myForcedType));
+        }
+        [Test]
+        [TestCase(AnalysisDataTypeEnum.None)]
+        [TestCase(AnalysisDataTypeEnum.Undefined)]
+        public void RecheckAnalysisType_ActivatedResponsesNot0AndMyForcedTypeNotAHatOrHitMiss_AssignsDataTypeAsAHatAndReturnsBasedOnSampleActivatedResponses(AnalysisDataTypeEnum myForcedType)
+        {
+            //Arrange
+            SetupActivatedFlawsAndResponses();
+            //Act
+            var result = _data.RecheckAnalysisType(myForcedType);
+            //Assert
+            Assert.That(_data.DataType, Is.EqualTo(AnalysisDataTypeEnum.AHat));
+            Assert.That(result, Is.EqualTo(AnalysisDataTypeEnum.AHat));
+        }
     }
 }
