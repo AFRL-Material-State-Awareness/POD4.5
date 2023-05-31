@@ -1980,5 +1980,20 @@ namespace Data.UnitTests
                 _data.ActivatedResponses.Rows.Add(Convert.ToDouble(i * 10));
             }
         }
+        /// Skipping Unit tests for ToggleAllResponses(double pointX, List<FixPoint> fixPoints) for now
+
+        /// Test for the AddData(string myID, double myFlaw, double myResponse, int index, IAddRowToTableControl addRowControlIn = null) function
+        [Test]
+        public void AddData_ValidArgsPassed_CallsStringRowToTableOnceAndDoubleRowToTableTwice()
+        {
+            //Arrange
+            Mock<IAddRowToTableControl> addRowControl = new Mock<IAddRowToTableControl>();
+            //Act
+            _data.AddData("1", .1, 10.0, 1, addRowControl.Object);
+            //Assert
+            addRowControl.Verify(arc => arc.AddStringRowToTable("1", 1, It.IsAny<DataTable>()));
+            addRowControl.Verify(arc => arc.AddDoubleRowToTable(.1, 1, It.IsAny<DataTable>()));
+            addRowControl.Verify(arc => arc.AddDoubleRowToTable(10.0, 1, It.IsAny<DataTable>()));
+        }
     }
 }
