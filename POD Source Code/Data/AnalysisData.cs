@@ -2383,35 +2383,28 @@ namespace POD.Data
                     throw new ArgumentOutOfRangeException("bounds must be either InBounds or OutBounds");
             }
         }
-        //The following getters and setters are used for unit testing purposes
+        //The following getters and setters are used for unit testing purposes - DO NOT REMOVE***
         public ISortPointListWrapper SortByXIn { set; private get; }
         public int PrevAbove { set { _prevAbove = value; } }
         public int PrevBelow { set { _prevBelow = value; } }
-        ///
+        /// **********************************************************************
         public void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
         {
             ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<ISortPoint>(sortByX));
             if (sortByXWrapper.HasAnyPoints())
             {
                 //keep track if they actually found the values in the data points
-                //var aboveDoesNotInclude = false;
                 var belowDoesNotInclude = false;
-
-
 
                 int xAboveIndex = sortByXWrapper.BinarySearch(new SortPoint { XValue = aboveX });
                 int xBelowIndex = sortByXWrapper.BinarySearch(new SortPoint { XValue = belowX });
 
                 if (xAboveIndex < 0)
-                {
-                    //xAboveIndex = ~xAboveIndex;
                     xAboveIndex = _flipBitsControl.FlipBits(xAboveIndex);
-                    //aboveDoesNotInclude = true;
-                }
+
 
                 if (xBelowIndex < 0)
                 {
-                    //xBelowIndex = ~xBelowIndex;
                     xBelowIndex = _flipBitsControl.FlipBits(xBelowIndex);
                     belowDoesNotInclude = true;
                 }
@@ -2421,36 +2414,22 @@ namespace POD.Data
                 if (xAboveIndex > _prevAbove)
                 {
                     for (int i = _prevAbove; i < xAboveIndex; i++)
-                    {
-                        fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex, 
-                            sortByXWrapper.SortPointList[i].SeriesIndex, Flag.InBounds));
-                        _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex, 
-                            sortByXWrapper.SortPointList[i].ColIndex, Flag.InBounds);
-                    }
+                        AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.InBounds);
                 }
                 else if (xAboveIndex < _prevAbove)
                 {
                     int indexL = xAboveIndex;
 
                     if (indexL >= sortByXWrapper.GetCountOfList())
-                    {
                         indexL = sortByXWrapper.GetCountOfList() - 1;
-                    }
 
                     int indexR = _prevAbove;
 
                     if (indexR >= sortByXWrapper.GetCountOfList())
-                    {
                         indexR = sortByXWrapper.GetCountOfList() - 1;
-                    }
 
                     for (int i = indexR; i >= indexL; i--)
-                    {
-                        fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex, 
-                            sortByXWrapper.SortPointList[i].SeriesIndex, Flag.OutBounds));
-                        _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex, 
-                            sortByXWrapper.SortPointList[i].ColIndex, Flag.OutBounds);
-                    }
+                        AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.OutBounds);
                 }
 
 
@@ -2460,9 +2439,7 @@ namespace POD.Data
                     int indexL = xBelowIndex;
 
                     if (indexL >= sortByXWrapper.GetCountOfList())
-                    {
                         indexL = sortByXWrapper.GetCountOfList() - 1;
-                    }
 
                     //if max line went below min line then shift index over
                     //so last out of bounds point isn't added back in
@@ -2475,29 +2452,18 @@ namespace POD.Data
                         indexR--;
 
                     if (indexR >= sortByXWrapper.GetCountOfList())
-                    {
                         indexR = sortByXWrapper.GetCountOfList() - 1;
-                    }
 
                     for (int i = indexR; i >= indexL; i--)
                     {
                         if (i >= 0)
-                        {
-                            fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex,
-                                sortByXWrapper.SortPointList[i].SeriesIndex, Flag.InBounds));
-                            _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex, sortByXWrapper.SortPointList[i].ColIndex, Flag.InBounds);
-                        }
+                            AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.InBounds);
                     }
                 }
                 else if (xBelowIndex > _prevBelow)
                 {
                     for (int i = _prevBelow; i < xBelowIndex; i++)
-                    {
-                        fixPoints.Add(new FixPoint(sortByXWrapper.SortPointList[i].SeriesPtIndex,
-                            sortByXWrapper.SortPointList[i].SeriesIndex, Flag.OutBounds));
-                        _updateTables.UpdateTable(sortByXWrapper.SortPointList[i].RowIndex,
-                            sortByXWrapper.SortPointList[i].ColIndex, Flag.OutBounds);
-                    }
+                        AddFixPointsAndUpdateTable(i, sortByXWrapper.SortPointList, fixPoints, Flag.OutBounds);
                 }
                 // update the prevIndex values for next check
                 _prevAbove = xAboveIndex;
@@ -2505,7 +2471,14 @@ namespace POD.Data
                 _prevBelowDoesNotInclude = belowDoesNotInclude;
             }
         }
-        
+        private void AddFixPointsAndUpdateTable(int index, List<ISortPoint> sortByXWrapperList, List<FixPoint> fixPoints, 
+            Flag flagBounds)
+        {
+            fixPoints.Add(new FixPoint(sortByXWrapperList[index].SeriesPtIndex,
+                            sortByXWrapperList[index].SeriesIndex, flagBounds));
+            _updateTables.UpdateTable(sortByXWrapperList[index].RowIndex,
+                sortByXWrapperList[index].ColIndex, flagBounds);
+        }
 
         public void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints)
         {
@@ -2553,8 +2526,6 @@ namespace POD.Data
             sortByX.Clear();
 
             RefillSortList();
-
-
         }
 
         public void ForceRefillSortList()
@@ -2563,9 +2534,7 @@ namespace POD.Data
 
             sortByX.Clear();
 
-            RefillSortList();
-
-            
+            RefillSortList();    
         }
 
         private void FixMissingSortList()
