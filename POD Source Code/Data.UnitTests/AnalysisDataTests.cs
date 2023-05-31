@@ -1647,7 +1647,7 @@ namespace Data.UnitTests
         }
 
         /// UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints)
-        private List<FixPoint> _fixPointList = new List<FixPoint>();
+        private List<FixPoint> _fixPointList;
         private Mock<ISortPointListWrapper> _sortByXList;
         [Test]
         public void UpdateIncludedPointsBasedFlawRange_SortByXDoesntHavePoints_FixPointsNotAddedAndTableNotUpdated()
@@ -1817,6 +1817,7 @@ namespace Data.UnitTests
             _sortByXList = new Mock<ISortPointListWrapper>();
             _data.SortByXIn = _sortByXList.Object;
             _sortByXList.Setup(sbx => sbx.HasAnyPoints()).Returns(hasPoints);
+            _fixPointList = new List<FixPoint>();
         }
 
         /// Tests for the  ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints) function
@@ -1824,9 +1825,7 @@ namespace Data.UnitTests
         public void ToggleResponse_IndexIsNegativeFlippedIndexBitsGreaterThanSortByXCount_SortPointListAndUpdateTableNeverCalled()
         {
             //arrange
-            SetupSortByX(true);
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.IsAny<SortPoint>())).Returns(-1);
-            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(0);
+            SetupSortByXForToggleResponse(-1, 0);
             _flipBinaryControl.Setup(fbc => fbc.FlipBits(It.IsAny<int>())).Returns(1);
             //Act
             _data.ToggleResponse(1.0, 10.0, "", 1, 1, _fixPointList);
@@ -1837,20 +1836,48 @@ namespace Data.UnitTests
             _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
         }
         [Test]
-        public void ToggleResponse_IndexIsNotNegative_FoundPointAssignedWithUpdateTableAndFixPointsAddCalledAccordingly()
+        [TestCase(2, 2, Flag.InBounds)]
+        [TestCase(0, 0, Flag.OutBounds)]
+        public void ToggleResponse_IndexIsNegativeButFlippedIndexBitsNOTGreaterThanSortByXCount_FoundPointAssignedWithUpdateTableAndFixPointsAddCalledAccordingly(
+            int rowIndex, int colIndex, Flag expectedFlag)
         {
             //arrange
-            SetupSortByX(true);
-            _data.TurnedOffPoints.Add(new DataPointIndex(1, 1, ""));
-            _sortByXList.Setup(sbx => sbx.BinarySearch(It.IsAny<SortPoint>())).Returns(1);
-            _sortByXList.Setup(sbx => sbx.SortPointList).Returns(new List<SortPoint>() { new SortPoint() { ColIndex = 1, RowIndex = 1 } });
+            _data.TurnOffPoint(rowIndex, colIndex);
+            SetupSortByXForToggleResponse(-1, 1);
+            _flipBinaryControl.Setup(fbc => fbc.FlipBits(It.IsAny<int>())).Returns(1);
             //Act
             _data.ToggleResponse(1.0, 10.0, "", 1, 1, _fixPointList);
             //Assert
             _flipBinaryControl.Verify(fbc => fbc.FlipBits(It.IsAny<int>()), Times.Once);
             _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Once);
-            _sortByXList.VerifyGet(sbx => sbx.SortPointList, Times.Never);
-            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Flag>()), Times.Never);
+            _sortByXList.VerifyGet(sbx => sbx.SortPointList, Times.Once);
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), expectedFlag), Times.Once);
+            Assert.That(_fixPointList.Count, Is.EqualTo(1));
+        }
+        [Test]
+        [TestCase(1,1, Flag.InBounds)]
+        [TestCase(0, 0, Flag.OutBounds)]
+        public void ToggleResponse_IndexIsNotNegative_FoundPointAssignedWithUpdateTableAndFixPointsAddCalledAccordingly(int rowIndex, int colIndex, Flag expectedFlag)
+        {
+            //arrange            
+            _data.TurnOffPoint(rowIndex, colIndex);
+            SetupSortByXForToggleResponse(0, 0);
+            //Act
+            _data.ToggleResponse(1.0, 10.0, "", 1, 1, _fixPointList);
+            //Assert
+            _flipBinaryControl.Verify(fbc => fbc.FlipBits(It.IsAny<int>()), Times.Never);
+            _sortByXList.Verify(sbx => sbx.GetCountOfList(), Times.Never);
+            _sortByXList.VerifyGet(sbx => sbx.SortPointList, Times.Once);
+            _updateTables.Verify(ut => ut.UpdateTable(It.IsAny<int>(), It.IsAny<int>(), expectedFlag), Times.Once);
+            Assert.That(_fixPointList.Count, Is.EqualTo(1));
+        }
+        private void SetupSortByXForToggleResponse(int binarySearchVal, int countOfList)
+        {
+            SetupSortByX(true);
+            _sortByXList.Setup(sbx => sbx.BinarySearch(It.IsAny<SortPoint>())).Returns(binarySearchVal);
+            _sortByXList.Setup(sbx => sbx.SortPointList).Returns(new List<SortPoint>() { new SortPoint() { ColIndex = 1, RowIndex = 1 },
+            new SortPoint() { ColIndex = 2, RowIndex = 2 } });
+            _sortByXList.Setup(sbx => sbx.GetCountOfList()).Returns(countOfList);
         }
 
     }
