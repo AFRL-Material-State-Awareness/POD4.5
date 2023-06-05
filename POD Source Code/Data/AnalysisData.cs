@@ -2569,7 +2569,9 @@ namespace POD.Data
 
         public void ToggleAllResponses(double pointX, List<FixPoint> fixPoints)
         {
-            List<SortPoint> foundPoints = sortByX.Where(p => p.XValue == pointX).ToList();
+            ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<SortPoint>(sortByX));
+
+            List<SortPoint> foundPoints = sortByXWrapper.SortPointList.Where(p => p.XValue == pointX).ToList();
             var found = false;
             List<int> rowIndex = foundPoints.Select(p => p.RowIndex).Distinct().ToList();
 

@@ -1974,7 +1974,7 @@ namespace Data.UnitTests
         {
             _data.ActivatedFlaws.Columns.Add(new DataColumn("Flaws"));
             _data.ActivatedResponses.Columns.Add(new DataColumn("Responses"));
-            for(int i =0; i < 11; i++)
+            for (int i =0; i < 11; i++)
             {
                 _data.ActivatedFlaws.Rows.Add(Convert.ToDouble(i));
                 _data.ActivatedResponses.Rows.Add(Convert.ToDouble(i * 10));
@@ -2035,6 +2035,35 @@ namespace Data.UnitTests
             //Assert
             Assert.That(_data.DataType, Is.EqualTo(AnalysisDataTypeEnum.AHat));
             Assert.That(result, Is.EqualTo(AnalysisDataTypeEnum.AHat));
+        }
+        /// ToggleAllResponses
+        [Test]
+        public void ToggleAllResponses_NoPointsFound_NoReponsesChanged()
+        {
+            SetupActivatedFlawsAndResponses();
+            SetupSortByX(true);
+            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<SortPoint>());
+            //Act
+            _data.ToggleAllResponses(1.0, _fixPointList);
+            //Assert
+            _sortByXList.VerifyGet(sbx => sbx.SortPointList, Times.Once);
+            Assert.That(_fixPointList.Count, Is.Zero);
+            Assert.That(_data.TurnedOffPoints.Count, Is.Zero);
+        }
+        [Test]
+        public void ToggleAllResponses_PointsFoundAndNotInTurnedOffPoints_PointsNotTurnedOff()
+        {
+            SetupActivatedFlawsAndResponses();
+            SetupSortByX(true);
+            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<SortPoint>() { new SortPoint() {RowIndex=1, XValue = 10.0 } });
+            SetUpFakeData(out List<string> myFlaws, out List<string> myMetaDatas, out List<string> myResponses, out List<string> mySpecIDs);
+            _data.SetSource(_source, myFlaws, myMetaDatas, myResponses, mySpecIDs);
+            //Act
+            _data.ToggleAllResponses(10.0, _fixPointList);
+            //Assert
+            _sortByXList.VerifyGet(sbx => sbx.SortPointList, Times.Once);
+            Assert.That(_fixPointList.Count, Is.Zero);
+            Assert.That(_data.TurnedOffPoints.Count, Is.Zero);
         }
     }
 }
