@@ -1546,18 +1546,16 @@ namespace POD.Data
         {
             var oldNames = new List<string>();
 
-            if (myTable != null)
+            for (int i = 0; i < myNewNames.Count; i++)
             {
-                for (int i = 0; i < myNewNames.Count; i++)
+                if (i < myTable?.Columns.Count)
                 {
-                    if (i < myTable.Columns.Count)
-                    {
-                        oldNames.Add(myTable.Columns[i].ColumnName);
-                        myTable.Columns[i].ColumnName = myNewNames[i];
-                    }
+                    oldNames.Add(myTable.Columns[i].ColumnName);
+                    myTable.Columns[i].ColumnName = myNewNames[i];
                 }
+                else
+                    break;
             }
-
             return oldNames;
         }
         // Perhaps add an assertion to make sure that myWriter is an object and not an interface
