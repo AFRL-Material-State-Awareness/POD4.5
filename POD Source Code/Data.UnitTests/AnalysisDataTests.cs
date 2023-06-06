@@ -2040,6 +2040,7 @@ namespace Data.UnitTests
         [Test]
         public void ToggleAllResponses_NoPointsFound_NoReponsesChanged()
         {
+            //Arrange
             SetupActivatedFlawsAndResponses();
             SetupSortByX(true);
             _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<SortPoint>());
@@ -2051,19 +2052,42 @@ namespace Data.UnitTests
             Assert.That(_data.TurnedOffPoints.Count, Is.Zero);
         }
         [Test]
-        public void ToggleAllResponses_PointsFoundAndNotInTurnedOffPoints_PointsNotTurnedOff()
+        public void ToggleAllResponses_PointsFoundAndNotInTurnedOffPoints_FixPointListHasValueAndTurnedOffPointsContainsValue()
         {
-            SetupActivatedFlawsAndResponses();
-            SetupSortByX(true);
-            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<SortPoint>() { new SortPoint() {RowIndex=1, XValue = 10.0 } });
-            SetUpFakeData(out List<string> myFlaws, out List<string> myMetaDatas, out List<string> myResponses, out List<string> mySpecIDs);
-            _data.SetSource(_source, myFlaws, myMetaDatas, myResponses, mySpecIDs);
+            //Arrange
+            SetupDataSourceToToggleAllResponses();
             //Act
             _data.ToggleAllResponses(10.0, _fixPointList);
             //Assert
             _sortByXList.VerifyGet(sbx => sbx.SortPointList, Times.Once);
-            Assert.That(_fixPointList.Count, Is.Zero);
+            Assert.That(_fixPointList.Count, Is.EqualTo(1));
+            Assert.That(_fixPointList[0].Flag, Is.EqualTo(Flag.OutBounds));
+            Assert.That(_data.TurnedOffPoints.Count, Is.EqualTo(1));
+        }
+        [Test]
+        public void ToggleAllResponses_PointsFoundAndInTurnedOffPoints_FixPointListHaveValueAndPointTurnedOn()
+        {
+            //Arrange
+            SetupDataSourceToToggleAllResponses();
+            //_data.TurnedOffPoints.Add(new DataPointIndex(1,1,""));
+            _data.TurnOffPoint(0, 1);
+            //Act
+            _data.ToggleAllResponses(10, _fixPointList);
+            //Assert
+            Assert.That(_fixPointList.Count, Is.EqualTo(1));
+            Assert.That(_fixPointList[0].Flag, Is.EqualTo(Flag.InBounds));
             Assert.That(_data.TurnedOffPoints.Count, Is.Zero);
+        }
+        private void SetupDataSourceToToggleAllResponses()
+        {
+            SetupSortByX(true);
+            _sortByXList.SetupGet(sbx => sbx.SortPointList).Returns(new List<SortPoint>() { new SortPoint() { RowIndex = 1, ColIndex = 1, XValue = 10.0 } });
+            var ahatTable = CreateSampleDataTable();
+            for (int i = 0; i < 10; i++)
+                ahatTable.Rows.Add(i, i * .25, i * 10);
+            SetUpFakeData(out List<string> myFlaws, out List<string> myMetaDatas, out List<string> myResponses, out List<string> mySpecIDs);
+            DataSource sourceWithActualData = SetupSampleDataSource(ahatTable);
+            _data.SetSource(sourceWithActualData, myFlaws, myMetaDatas, myResponses, mySpecIDs);
         }
     }
 }
