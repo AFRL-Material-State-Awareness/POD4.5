@@ -38,9 +38,6 @@ namespace Data.UnitTests
         }
         private void GenerateSampleTable()
         {
-            List<int> list1 = new List<int>();
-            List<int> list2 = new List<int>();
-            List<int> list3 = new List<int>();
             _table.Columns.Add("Column1");
             _table.Columns.Add("Column2");
             _table.Columns.Add("Column3");

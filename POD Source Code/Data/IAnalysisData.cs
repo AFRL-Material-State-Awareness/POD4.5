@@ -109,14 +109,6 @@ namespace POD.Data
         /// </summary>
         void SetSource(DataSource mySource);
         /// <summary>
-        ///     Turn off a set of points all at once.
-        /// </summary>
-        void SetTurnedOffPoints(List<DataPointIndex> myList);
-        /// <summary>
-        ///     Turn ON all response data points previously turned OFF.
-        /// </summary>
-        void TurnAllPointsOn();
-        /// <summary>
         ///     Turn off a point in the table response data.
         /// </summary>
         void TurnOffPoint(int myResponseColumnIndex, int myRowIndex);

@@ -1211,15 +1211,6 @@ namespace POD.Data
         }
 
         /// <summary>
-        ///     Turn off a set of points all at once.
-        /// </summary>
-        /// <param name="myList">list of points to turn off</param>
-        public void SetTurnedOffPoints(List<DataPointIndex> myList)
-        {
-            _turnedOffPoints = new List<DataPointIndex>(myList);
-        }
-
-        /// <summary>
         ///     Transforms data found in the source table and stores it in the transform table.
         /// </summary>
         /// <param name="mySourceTable">the data to transform</param>
@@ -1281,17 +1272,6 @@ namespace POD.Data
                         myTransformTable.Rows[changedIndex][column.ColumnName] = minValueTransformed;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Turn ON all response data points previously turned OFF.
-        /// </summary>
-        public void TurnAllPointsOn()
-        {
-            foreach (DataPointIndex index in _turnedOffPoints)
-            {
-                TurnPoint(index.ColumnIndex, index.RowIndex, true);
             }
         }
 
