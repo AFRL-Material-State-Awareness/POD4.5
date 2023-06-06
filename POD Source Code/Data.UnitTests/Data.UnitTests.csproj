@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AddRowToDataTableControlTests.cs" />
     <Compile Include="AnalysisDataTests.cs" />
+    <Compile Include="ColumnUpdaterFromInfosTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
