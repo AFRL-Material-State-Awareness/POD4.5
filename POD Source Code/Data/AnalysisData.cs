@@ -1580,14 +1580,12 @@ namespace POD.Data
         {
             get
             {
-                var worksheetName = Globals.NotApplicable;
-
                 if (_dataType == AnalysisDataTypeEnum.AHat)
-                    worksheetName = "Threshold";
+                    return "Threshold";
                 else if (_dataType == AnalysisDataTypeEnum.HitMiss)
-                    worksheetName = "Solver";
-
-                return worksheetName;
+                    return "Solver";
+                else
+                    return Globals.NotApplicable;
             }
         }
         public DataTable GenerateRemovedPointsTable()
