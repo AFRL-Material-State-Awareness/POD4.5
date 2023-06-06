@@ -20,9 +20,7 @@ namespace Data
                 table.Rows.Add(row);
             }
             else
-            {
                 table.Rows[index][0] = myID;
-            }
         }
 
         public void AddDoubleRowToTable(double myValues, int index, DataTable table)
@@ -36,9 +34,7 @@ namespace Data
                 table.Rows.Add(row);
             }
             else
-            {
                 table.Rows[index][0] = myValues;
-            }
         }
     }
     public interface IAddRowToTableControl
