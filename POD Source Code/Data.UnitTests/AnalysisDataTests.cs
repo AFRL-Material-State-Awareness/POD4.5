@@ -805,6 +805,7 @@ namespace Data.UnitTests
 
             _excelWriterControl.Verify(ewc => ewc.WriteIterationsToExcel(_data, It.IsAny<DataTable>()), Times.Exactly(1));
             _excelWriterControl.Verify(ewc => ewc.WritePODThresholdToExcel(_data, It.IsAny<DataTable>()), Times.Never);
+            AssertGeneralWriteToExcelTables();
 
         }
         [Test]
