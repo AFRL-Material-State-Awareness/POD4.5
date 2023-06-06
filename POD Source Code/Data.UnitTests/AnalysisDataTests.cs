@@ -2114,7 +2114,57 @@ namespace Data.UnitTests
             Assert.That(flaw, Is.EqualTo(2.25));
             Assert.That(response, Is.EqualTo(90));
         }
-        
+        /// Test for the DeleteRow(int index) function
+        [Test]
+        public void DeleteRow_IndexPassed_RemovedTheRowFromSpecIDsFlawsAndResponses()
+        {
+            //Arrange
+            SetupDataSourceToToggleAllResponses();//row count is 9
+            //Act
+            _data.DeleteRow(8);
+            //Assert
+            Assert.That(_data.RowCount, Is.EqualTo(8));
+        }
+        /// Test for EverythingCommented
+        [Test]
+        public void EverythingCommented_TurnedOffPointsIsEmpty_ReturnsTrue()
+        {
+            //Arrange
+            //Act
+            var result = _data.EverythingCommented;
+            //Assert
+            Assert.That(result, Is.True);
+        }
+        [Test]
+        public void EverythingCommented_TurnedOffPointsIsNotEmptyAndCommentDictionaryNotNullAndTrimmedLengthIsNot0_ReturnsTrue()
+        {
+            //Arrange
+            SetupDataSourceToToggleAllResponses();
+            _data.TurnOffPoint(0, 1);
+            _data.CommentDictionary[0][1] = "NotEmptyComment";
+            //Act
+            var result = _data.EverythingCommented;
+            //Assert
+            Assert.That(result, Is.True);
+        }
+        [Test]
+        [TestCase(1, "")]
+        [TestCase(1, " ")]
+        [TestCase(1, "\t")]
+        [TestCase(1, null)]
+        [TestCase(0, "NotEmptyComment")]
+        public void EverythingCommented_TurnedOffPointsIsNotEmptyAndEitherCommentDictionaryIsNullOrTrimmedLengthIs0_ReturnsFalse(int commentIndexDict, string comment)
+        {
+            //Arrange
+            SetupDataSourceToToggleAllResponses();
+            _data.TurnOffPoint(0, 1);
+            _data.CommentDictionary[0][commentIndexDict] = comment;
+            //Act
+            var result = _data.EverythingCommented;
+            //Assert
+            Assert.That(result, Is.False);
+        }
+
 
     }
 }
