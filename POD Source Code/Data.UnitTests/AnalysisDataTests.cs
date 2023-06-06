@@ -745,6 +745,53 @@ namespace Data.UnitTests
             updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateResidualPartialUncensoredTable(ref residualPartialCensoredTable));
             updateoutputForHitMissData.Verify(upahitmiss => upahitmiss.UpdateIterationsTable(ref iterationsTable));
         }
+        /// Tests ChangeTableColumnNames(DataTable myTable, List<string> myNewNames)
+        [Test]
+
+        public void ChangeTableColumnNames_myTableIsNull_ReturnsEmptyStringOfOldNames()
+        {
+            //Arrange
+            //Act
+            var result=_data.ChangeTableColumnNames(null, new List<string>() { "MyNewName", "MyOtherNewName", "MyFinalNewName" });
+            //Assert
+            Assert.That(result.Count, Is.Zero);
+        }
+        [Test]
+        public void ChangeTableColumnNames_MyTableHasNoColumns_ReturnsEmptyStringOfOldNames()
+        {
+            //Arrange
+            _table = new DataTable();
+            //Act
+            var result = _data.ChangeTableColumnNames(_table, new List<string>() { "MyNewName", "MyOtherNewName", "MyFinalNewName"});
+            //Assert
+            Assert.That(result.Count, Is.Zero);
+        }
+        [Test]
+        public void ChangeTableColumnNames_MyTableHasColumnsEqualToNewNames_ReturnsStringOfOldNames()
+        {
+            //Arrange
+            //Act
+            var result = _data.ChangeTableColumnNames(_table, new List<string>() { "MyNewName", "MyOtherNewName", "MyFinalNewName" });
+            //Assert
+            AssertOldColumnNames(result);
+        }
+        [Test]
+        public void ChangeTableColumnNames_MyTableHasColumnsEqualLessNewNames_ReturnsStringOfOldNames()
+        {
+            //Arrange
+            //Act
+            var result = _data.ChangeTableColumnNames(_table, new List<string>() { "MyNewName", "MyOtherNewName", "MyFinalNewName", "OneExtraFinalNewName" });
+            //Assert
+            AssertOldColumnNames(result);
+        }
+        private void AssertOldColumnNames(List<string> result)
+        {
+            Assert.That(result.Count, Is.EqualTo(3));
+            Assert.That(result.Contains("Column1"));
+            Assert.That(result.Contains("Column2"));
+            Assert.That(result.Contains("Column3"));
+        }
+
         /// tests for the WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true,
         /// IExcelWriterControl excelWriteControlIn = null) function
         [Test]
