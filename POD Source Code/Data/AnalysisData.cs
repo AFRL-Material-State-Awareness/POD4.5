@@ -2638,12 +2638,8 @@ namespace POD.Data
             {
                 myID = _availableSpecIDsTable.Rows[rowIndex][0].ToString();
 
-                myFlaw = 0.0;
-
                 if (!double.TryParse(_availableFlawsTable.Rows[rowIndex][0].ToString(), out myFlaw))
                     myFlaw = double.NaN;
-
-                myResponse = 0.0;
 
                 if (!double.TryParse(_availableResponsesTable.Rows[rowIndex][0].ToString(), out myResponse))
                     myResponse = double.NaN;

@@ -2087,6 +2087,34 @@ namespace Data.UnitTests
             Assert.That(_data.DataType, Is.EqualTo(AnalysisDataTypeEnum.AHat));
             Assert.That(result, Is.EqualTo(AnalysisDataTypeEnum.AHat));
         }
+        /// Tests for the GetRow(int rowIndex, out string myID, out double myFlaw, out double myResponse) function
+        [Test]
+        [TestCase(9)]
+        [TestCase(10)]
+        public void GetRow_RowIndexGreaterThanOrEqualToAvailableSpecIDsTableRowsCount_ReturnsEmptyStringAnd0s(int testIndex)
+        {
+            //Arrange
+            SetupDataSourceToToggleAllResponses(); //row count is 9
+            //Act
+            _data.GetRow(testIndex, out string myID, out double flaw, out double response);
+            //Assert
+            Assert.That(myID, Is.EqualTo(string.Empty));
+            Assert.That(flaw, Is.Zero);
+            Assert.That(response, Is.Zero);
+        }
+        [Test]
+        public void GetRow_RowIndexLessThanAvailableSpecIDsTableRowsCount_AssignsParameters()
+        {
+            //Arrange
+            SetupDataSourceToToggleAllResponses(); //row count is 9
+            //Act
+            _data.GetRow(8, out string myID, out double flaw, out double response);
+            //Assert
+            Assert.That(myID, Is.EqualTo("9"));
+            Assert.That(flaw, Is.EqualTo(2.25));
+            Assert.That(response, Is.EqualTo(90));
+        }
+        
 
     }
 }
