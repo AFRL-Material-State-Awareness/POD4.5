@@ -2572,36 +2572,23 @@ namespace POD.Data
             ISortPointListWrapper sortByXWrapper = SortByXIn ?? new SortPointListWrapper(new List<SortPoint>(sortByX));
 
             List<SortPoint> foundPoints = sortByXWrapper.SortPointList.Where(p => p.XValue == pointX).ToList();
-            var found = false;
             List<int> rowIndex = foundPoints.Select(p => p.RowIndex).Distinct().ToList();
-
             if (rowIndex.Any())
-            {
-                found = true;
-            }
-
-            if (found)
             {
                 bool turnedOff = TurnedOffPoints.Where(p => rowIndex.Contains(p.RowIndex)).ToList().Any();
 
                 foreach (int index in rowIndex)
                 {
                     if (turnedOff)
-                    {
                         TurnOnPoints(index);
-                    }
                     else
-                    {
                         TurnOffPoints(index);
-                    }
                 }
 
                 Flag state = turnedOff ? Flag.InBounds : Flag.OutBounds;
 
                 foreach (SortPoint point in foundPoints)
-                {
                     fixPoints.Add(new FixPoint(point.SeriesPtIndex, point.SeriesIndex, state));
-                }
             }
         }
 
@@ -2609,13 +2596,13 @@ namespace POD.Data
         private int _podEndIndex;
         private int _totalFlawCount;
 
-        public DataTable QuickTable
-        {
+        public DataTable QuickTable => _quickTable;
+        /*{
             get
             {
                 return _quickTable;
             }
-        }
+        }*/
 
         public void AddData(string myID, double myFlaw, double myResponse, int index, IAddRowToTableControl addRowControlIn = null)
         {
