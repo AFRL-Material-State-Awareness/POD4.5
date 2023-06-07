@@ -32,7 +32,6 @@ namespace Data
                 uncensoredNames = new List<string>(new string[] { "a", "ahat", data.FlawTransFormLabel, data.ResponseTransformLabel, "fit", "diff" });
             else
                 uncensoredNames = new List<string>(new string[] { "a", data.FlawTransFormLabel, "hitrate", "fit", "diff" });
-            //var censoredNames = new List<string>(new string[] { "a", FlawTransFormLabel, "ahat", ResponseTransformLabel, "fit", "diff" });
             var censoredNames = new List<string>(new string[] { "a", "ahat", data.FlawTransFormLabel, data.ResponseTransformLabel, "fit", "diff" });
             var oldNames = new List<string>();
 

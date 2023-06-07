@@ -200,20 +200,6 @@ namespace POD.Data
             }
         }
 
-        /*public DataSource(SerializationInfo myInfo, StreamingContext myContext)
-        {
-            _processedTable = (DataTable)myInfo.GetValue("ProcessedTable", typeof(DataTable));
-            _specimenIDRange = (TableRange)myInfo.GetValue("SpecimenIDRange", typeof(TableRange));
-            _metaDataRange = (TableRange)myInfo.GetValue("MetaDataRange", typeof(TableRange));
-            _flawSizeRange = (TableRange)myInfo.GetValue("FlawSizeRange", typeof(TableRange));
-            _responseRange = (TableRange)myInfo.GetValue("ResponseRange", typeof(TableRange));
-
-            _defaultFlawSizeIndex = (int)myInfo.GetValue("DefaultFlawSizeIndex", typeof(int));
-            _defaultIDIndex = (int)myInfo.GetValue("DefaultIDIndex", typeof(int));
-            _template = (ImportTemplate)myInfo.GetValue("ImportTemplate", typeof(ImportTemplate));
-            _analysisDataType = (AnalysisDataTypeEnum)myInfo.GetValue("AnalysisDataType", typeof(AnalysisDataTypeEnum));
-        }*/
-
         #endregion
 
         /// <summary>
