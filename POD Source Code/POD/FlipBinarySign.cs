@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace POD
 {
+    [Serializable]
     public class FlipBinarySign : IFlipBinarySign
     {
         public int FlipBits(int inputBinary)

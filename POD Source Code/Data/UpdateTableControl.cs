@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
+    [Serializable]
     public class UpdateTableControl : IUpdateTableControl
     {
         private IAnalysisData _data;
