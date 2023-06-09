@@ -221,9 +221,7 @@ namespace Data
 
 
             if (data.DataType == AnalysisDataTypeEnum.AHat && removedPoints.Rows.Count > 0)
-            {
                 rowIndex = 24;
-            }
 
             _excelWriter.SetCellValue(rowIndex, colIndex, "REMOVED POINTS:");
             _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex++, colIndex + 2);
