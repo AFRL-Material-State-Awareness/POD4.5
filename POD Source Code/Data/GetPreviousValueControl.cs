@@ -14,32 +14,31 @@ namespace Data
        
         public double GetPreviousValue(DataColumn column, string colType, IColumnInfo info, InfoType infoType, double defaultValue)
         {
-            double prevValue = 0.0;
-            double currentValue = 0.0;
-            string prevString = "";
+            string prevString = AssignPrevString(colType);
 
-            if (colType == ExtColProperty.Min)
-                prevString = ExtColProperty.MinPrev;
-            else if (colType == ExtColProperty.Max)
-                prevString = ExtColProperty.MaxPrev;
-            else if (colType == ExtColProperty.Thresh)
-                prevString = ExtColProperty.ThreshPrev;
-
-            if (!Double.TryParse(GetExtendedProperty(column, colType), out currentValue))
-                currentValue = 0.0;
-
+            double.TryParse(GetExtendedProperty(column, colType), out double currentValue);
             if (column != null && !column.ExtendedProperties.ContainsKey(prevString))
                 column.ExtendedProperties[prevString] = defaultValue;
 
-            if (!Double.TryParse(GetExtendedProperty(column, prevString), out prevValue))
-                prevValue = 0.0;
-
+            double.TryParse(GetExtendedProperty(column, prevString), out double prevValue);
             if (prevValue == defaultValue)
-                prevValue = info.GetDoubleValue(infoType);
+                return info.GetDoubleValue(infoType);
             else
-                prevValue = currentValue;
-
-            return prevValue;
+                return currentValue;
+        }
+        private string AssignPrevString(string colType)
+        {
+            switch (colType)
+            {
+                case ExtColProperty.Min:
+                    return ExtColProperty.MinPrev;
+                case ExtColProperty.Max:
+                    return ExtColProperty.MaxPrev;
+                case ExtColProperty.Thresh:
+                    return ExtColProperty.ThreshPrev;
+                default:
+                    return "";
+            }
         }
         private static string GetExtendedProperty(DataColumn column, string colType)
         {
