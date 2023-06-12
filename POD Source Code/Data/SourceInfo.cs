@@ -296,7 +296,7 @@ namespace POD.Data
     }
 
     [Serializable]
-    public class ColumnInfo
+    public class ColumnInfo : IColumnInfo
     {
         string _originalName;
 
@@ -443,6 +443,10 @@ namespace POD.Data
         {
             return new ColumnInfo(_originalName, _newName, _unit, _minimum, _maximum, _threshold, _index);
         }
+    }
+    public interface IColumnInfo
+    {
+        double GetDoubleValue(InfoType myDataType);
     }
 
     

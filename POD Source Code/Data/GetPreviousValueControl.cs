@@ -12,7 +12,7 @@ namespace Data
     public class GetPreviousValueControl : IGetPreviousValueControl
     {
        
-        public double GetPreviousValue(DataColumn column, string colType, ColumnInfo info, InfoType infoType, double defaultValue)
+        public double GetPreviousValue(DataColumn column, string colType, IColumnInfo info, InfoType infoType, double defaultValue)
         {
             double prevValue = 0.0;
             double currentValue = 0.0;
@@ -28,7 +28,7 @@ namespace Data
             if (!Double.TryParse(GetExtendedProperty(column, colType), out currentValue))
                 currentValue = 0.0;
 
-            if (!column.ExtendedProperties.ContainsKey(prevString))
+            if (column != null && !column.ExtendedProperties.ContainsKey(prevString))
                 column.ExtendedProperties[prevString] = defaultValue;
 
             if (!Double.TryParse(GetExtendedProperty(column, prevString), out prevValue))
@@ -64,6 +64,6 @@ namespace Data
     }
     public interface IGetPreviousValueControl
     {
-        double GetPreviousValue(DataColumn column, string colType, ColumnInfo info, InfoType infoType, double defaultValue);
+        double GetPreviousValue(DataColumn column, string colType, IColumnInfo info, InfoType infoType, double defaultValue);
     }
 }
