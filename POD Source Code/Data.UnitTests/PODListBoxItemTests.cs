@@ -297,15 +297,62 @@ namespace Data.UnitTests
             Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo("MynewColumnName"));
         }
         /// Tests for the SetDoubleValue(InfoType myDataType, double myValue) function
-        /*
         [Test]
-        public void SetDoubleValue_DataTypeIsInvalid_returnsMyValuesWithNoAssignments()
+        public void SetDoubleValue_InfoTypeIsInvalid_ReturnsMyValueWithNoAssignments()
         {
             //Arrange
             _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
                 "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetDoubleValue(InfoType.Unit, 10.0);
+            //Assert
+            Assert.That(result, Is.EqualTo(10.0));
+            Assert.That(_podlistboxItemWithProps.Max, Is.EqualTo(1.0));
+            Assert.That(_podlistboxItemWithProps.Min, Is.EqualTo(0.0));
+            Assert.That(_podlistboxItemWithProps.Threshold, Is.EqualTo(0.5));
         }
-        */
+        [Test]
+        public void SetDoubleValue_InfoTypeIsMax_ReturnsMyValueWithAndAssignsMax()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetDoubleValue(InfoType.Max, 10.0);
+            //Assert
+            Assert.That(result, Is.EqualTo(10.0));
+            Assert.That(_podlistboxItemWithProps.Max, Is.EqualTo(10.0));
+            Assert.That(_podlistboxItemWithProps.Min, Is.EqualTo(0.0));
+            Assert.That(_podlistboxItemWithProps.Threshold, Is.EqualTo(0.5));
+        }
+        [Test]
+        public void SetDoubleValue_InfoTypeIsMin_ReturnsMyValueWithAndAssignsMin()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetDoubleValue(InfoType.Min, 10.0);
+            //Assert
+            Assert.That(result, Is.EqualTo(10.0));
+            Assert.That(_podlistboxItemWithProps.Max, Is.EqualTo(1.0));
+            Assert.That(_podlistboxItemWithProps.Min, Is.EqualTo(10.0));
+            Assert.That(_podlistboxItemWithProps.Threshold, Is.EqualTo(0.5));
+        }
+        [Test]
+        public void SetDoubleValue_InfoTypeIsThreshold_ReturnsMyValuesAndAssignsThreshold()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetDoubleValue(InfoType.Threshold, 10.0);
+            //Assert
+            Assert.That(result, Is.EqualTo(10.0));
+            Assert.That(_podlistboxItemWithProps.Max, Is.EqualTo(1.0));
+            Assert.That(_podlistboxItemWithProps.Min, Is.EqualTo(0.0));
+            Assert.That(_podlistboxItemWithProps.Threshold, Is.EqualTo(10.0));
+        }
 
     }
 }
