@@ -10,7 +10,8 @@ namespace POD.Data
     public enum Flag
     {
         InBounds,
-        OutBounds
+        OutBounds,
+        None
     }
 
     public class FixPoint

@@ -80,6 +80,7 @@
     <Compile Include="GetPreviousValueControlTests.cs" />
     <Compile Include="PODListBoxItemTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateTableControlTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
