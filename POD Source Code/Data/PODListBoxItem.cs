@@ -68,27 +68,17 @@ namespace POD.Data
 
         public override string ToString()
         {
-            var name = "";
-            
-            if(DataSourceName != string.Empty)
-                name = DataSourceName + ".";
-
-            if ((FlawColumnName == string.Empty || FlawColumnName == "") &&
-                (ResponseColumnName == string.Empty || ResponseColumnName == ""))
-            {
-                name = DataSourceName;
-            }
+            var name = DataSourceName;
+            if (FlawColumnName == "" && ResponseColumnName == "")
+                return name;
+            if (name != "")
+                name += ".";
+            if (ResponseColumnName == "")
+                return  name + FlawColumnName;
+            else if (FlawColumnName == "")
+                return name + ResponseColumnName;
             else
-            {
-                if (FlawColumnName == string.Empty || FlawColumnName == "")
-                    name += ResponseColumnName;
-                else if (ResponseColumnName == string.Empty || ResponseColumnName == "")
-                    name += FlawColumnName;
-                else
-                    name += FlawColumnName + "." + ResponseColumnName;
-            }
-
-            return name;
+                return name + FlawColumnName + "." + ResponseColumnName;
         }
 
         public override int GetHashCode()
