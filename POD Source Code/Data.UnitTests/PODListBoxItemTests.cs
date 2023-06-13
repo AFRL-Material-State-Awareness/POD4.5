@@ -229,7 +229,83 @@ namespace Data.UnitTests
             //Assert
             Assert.That(result, Is.EqualTo("DataSource.MyColumnName (cm), [0,1], 0.5"));
         }
+        /// Tests for the SetStringValue(InfoType myDataType, string myValue) function
+        [Test]
+        public void SetStringValue_InvalidValuePassedFlaw_ReturnsMyValuedTrimmed()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result =_podlistboxItemWithProps.SetStringValue(InfoType.OriginalName, "  MyNewName  ");
+            //Assert
+            Assert.That(result, Is.EqualTo("MyNewName"));
+            Assert.That(_podlistboxItemWithProps.Unit, Is.EqualTo("cm"));
+            Assert.That(_podlistboxItemWithProps.FlawColumnName, Is.EqualTo("MyColumnName"));
 
+        }
+        [Test]
+        public void SetStringValue_InvalidValuePassedResponse_ReturnsMyValuedTrimmed()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetStringValue(InfoType.OriginalName, "  MyNewName  ");
+            //Assert
+            Assert.That(result, Is.EqualTo("MyNewName"));
+            Assert.That(_podlistboxItemWithProps.Unit, Is.EqualTo("cm"));
+            Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo("MyColumnName"));
+        }
+        [Test]
+        public void SetStringValue_UnitInfoTypePassed_ReturnsMyValuedTrimmedAndAssignsUnit()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetStringValue(InfoType.Unit, "  MyNewUnit  ");
+            //Assert
+            Assert.That(result, Is.EqualTo("MyNewUnit"));
+            Assert.That(_podlistboxItemWithProps.Unit, Is.EqualTo("MyNewUnit"));
+            Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo("MyColumnName"));
+        }
+        [Test]
+        public void SetStringValue_InfoTypeNewNameAndColumnnamePassedFlaw_ReturnsMyValuedTrimmedAndAssignsColumnNameAccordingly()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetStringValue(InfoType.NewName, "  MynewColumnName  ");
+            //Assert
+            Assert.That(result, Is.EqualTo("MynewColumnName"));
+            Assert.That(_podlistboxItemWithProps.Unit, Is.EqualTo("cm"));
+            Assert.That(_podlistboxItemWithProps.FlawColumnName, Is.EqualTo("MynewColumnName"));
+        }
+        [Test]
+        public void SetStringValue_InfoTypeNewNameAndColumnnamePassedResponse_ReturnsMyValuedTrimmedAndAssignsColumnNameAccordingly()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            //Act
+            var result = _podlistboxItemWithProps.SetStringValue(InfoType.NewName, "  MynewColumnName  ");
+            //Assert
+            Assert.That(result, Is.EqualTo("MynewColumnName"));
+            Assert.That(_podlistboxItemWithProps.Unit, Is.EqualTo("cm"));
+            Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo("MynewColumnName"));
+        }
+        /// Tests for the SetDoubleValue(InfoType myDataType, double myValue) function
+        /*
+        [Test]
+        public void SetDoubleValue_DataTypeIsInvalid_returnsMyValuesWithNoAssignments()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+        }
+        */
 
     }
 }
