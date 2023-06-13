@@ -26,7 +26,7 @@ namespace POD.Data
         List<ColumnInfo> _flaws;
         List<ColumnInfo> _responses;
 
-        public SourceInfo(string myOriginalName, string myNewName, DataSource mySource)
+        public SourceInfo(string myOriginalName, string myNewName, IDataSource mySource)
         {
             OriginalName = myOriginalName;
             NewName = myNewName;
@@ -71,8 +71,10 @@ namespace POD.Data
         {
             if (myType == ColType.Flaw)
                 return _flaws;
-            else
+            else if (myType == ColType.Response)
                 return _responses;
+            else
+                throw new ArgumentOutOfRangeException("Not a valid column Type argument!");
         }
 
         public List<string> NewNames(ColType myType)
