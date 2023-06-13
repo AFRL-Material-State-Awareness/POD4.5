@@ -56,11 +56,11 @@ namespace Data.UnitTests
             //Arrange
             _podListBoxItem.DataSourceName = string.Empty;
             _podListBoxItem.FlawColumnName = string.Empty;
-            _podListBoxItem.ResponseColumnName = "MyResponseColumnName";
+            _podListBoxItem.ResponseColumnName = "MyColumnName";
             //Act
             var result = _podListBoxItem.ToString();
             //Assert
-            Assert.That(result, Is.EqualTo("MyResponseColumnName"));
+            Assert.That(result, Is.EqualTo("MyColumnName"));
         }
         [Test]
         public void ToString_DataSourceNameIsEmptyStringAndFlawResponseColumnNameNotEmptyString_ReturnsFlawDOTResponseName()
@@ -68,11 +68,11 @@ namespace Data.UnitTests
             //Arrange
             _podListBoxItem.DataSourceName = string.Empty;
             _podListBoxItem.FlawColumnName = "MyFlawColumnName";
-            _podListBoxItem.ResponseColumnName = "MyResponseColumnName";
+            _podListBoxItem.ResponseColumnName = "MyColumnName";
             //Act
             var result = _podListBoxItem.ToString();
             //Assert
-            Assert.That(result, Is.EqualTo("MyFlawColumnName.MyResponseColumnName"));
+            Assert.That(result, Is.EqualTo("MyFlawColumnName.MyColumnName"));
         }
         [Test]
         public void ToString_DataSourceNameIsNOTEmptyStringAndFlawResponseColumnNameIsEmptyString_ReturnsDataSourceName()
@@ -104,11 +104,11 @@ namespace Data.UnitTests
             //Arrange
             _podListBoxItem.DataSourceName = "MyDataSource";
             _podListBoxItem.FlawColumnName = string.Empty;
-            _podListBoxItem.ResponseColumnName = "MyResponseColumnName";
+            _podListBoxItem.ResponseColumnName = "MyColumnName";
             //Act
             var result = _podListBoxItem.ToString();
             //Assert
-            Assert.That(result, Is.EqualTo("MyDataSource.MyResponseColumnName"));
+            Assert.That(result, Is.EqualTo("MyDataSource.MyColumnName"));
         }
         [Test]
         public void ToString_DataSourceNameIsNOTEmptyStringAndFlawNameNotEmptyStringColumnNotEmptyString_ReturnsDataSourceNameDotFlawName()
@@ -116,11 +116,11 @@ namespace Data.UnitTests
             //Arrange
             _podListBoxItem.DataSourceName = "MyDataSource";
             _podListBoxItem.FlawColumnName = "MyFlawColumnName";
-            _podListBoxItem.ResponseColumnName = "MyResponseColumnName";
+            _podListBoxItem.ResponseColumnName = "MyColumnName";
             //Act
             var result = _podListBoxItem.ToString();
             //Assert
-            Assert.That(result, Is.EqualTo("MyDataSource.MyFlawColumnName.MyResponseColumnName"));
+            Assert.That(result, Is.EqualTo("MyDataSource.MyFlawColumnName.MyColumnName"));
         }
         /// Tests for the _podlistboxItemWithProps constructor
         [Test]
@@ -128,13 +128,13 @@ namespace Data.UnitTests
         {
             //Arrange
             //Act
-            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyResponseColumnName", "OriginalResponseColumnName",
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
                 "DataSource", "cm", 0.0, 1.0, 0.5);
             //Assert
             Assert.That(_podlistboxItemWithProps.BoxType, Is.EqualTo(ColType.Response));
             Assert.That(_podlistboxItemWithProps.FlawColumnName, Is.EqualTo(""));
             Assert.That(_podlistboxItemWithProps.FlawOriginalName, Is.EqualTo(""));
-            Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo("MyResponseColumnName"));
+            Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo("MyColumnName"));
             Assert.That(_podlistboxItemWithProps.ResponseOriginalName, Is.EqualTo("OriginalResponseColumnName"));
             Assert.That(_podlistboxItemWithProps.Threshold, Is.EqualTo(0.5));
 
@@ -145,11 +145,11 @@ namespace Data.UnitTests
         {
             //Arrange
             //Act
-            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyResponseColumnName", "OriginalResponseColumnName",
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyColumnName", "OriginalResponseColumnName",
                 "DataSource", "cm", 0.0, 1.0, 0.5);
             //Assert
             Assert.That(_podlistboxItemWithProps.BoxType, Is.EqualTo(ColType.Flaw));
-            Assert.That(_podlistboxItemWithProps.FlawColumnName, Is.EqualTo("MyResponseColumnName"));
+            Assert.That(_podlistboxItemWithProps.FlawColumnName, Is.EqualTo("MyColumnName"));
             Assert.That(_podlistboxItemWithProps.FlawOriginalName, Is.EqualTo("OriginalResponseColumnName"));
             Assert.That(_podlistboxItemWithProps.ResponseColumnName, Is.EqualTo(""));
             Assert.That(_podlistboxItemWithProps.ResponseOriginalName, Is.EqualTo(""));
@@ -179,6 +179,55 @@ namespace Data.UnitTests
             var result = _podlistboxItemWithProps.GetColumnName();
             //Arrange
             Assert.That(result, Is.EqualTo(expectedName));
+        }
+        /// Tests for the toString Method
+        [Test]
+        public void ToString_HideExtendedTextIsFalse_ReturnsTheBaseToString()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            _podlistboxItemWithProps.HideExtendedText = true;
+            //Act
+            var result = _podlistboxItemWithProps.ToString();
+            //Assert
+            Assert.That(result, Is.EqualTo("DataSource.MyColumnName"));
+        }
+        [Test]
+        public void ToString_HideExtendedTextIsTrueAndLengthOfUnitIs0AndBoxTypeIsNotResponse_OverwritesTextToTextPlusFlawLabelMinMax()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "", 0.0, 1.0, 0.5);
+            _podlistboxItemWithProps.HideExtendedText = false;
+            //Act
+            var result = _podlistboxItemWithProps.ToString();
+            //Assert
+            Assert.That(result, Is.EqualTo("DataSource.MyColumnName [0,1]"));
+        }
+        [Test]
+        public void ToString_HideExtendedTextIsTrueAndLengthOfUnitIsGreaterThan0AndBoxTypeIsNotResponse_OverwritesTextToTextPlusUnitPlusFlawLabelMinMax()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Flaw, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            _podlistboxItemWithProps.HideExtendedText = false;
+            //Act
+            var result = _podlistboxItemWithProps.ToString();
+            //Assert
+            Assert.That(result, Is.EqualTo("DataSource.MyColumnName (cm), [0,1]"));
+        }
+        [Test]
+        public void ToString_HideExtendedTextIsTrueAndLengthOfUnitIsGreaterThan0AndBoxTypeIsResponse_OverwritesTextToTextPlusUnitPlusFlawLabelMinMaxPlusThreshold()
+        {
+            //Arrange
+            _podlistboxItemWithProps = new PODListBoxItemWithProps(System.Drawing.Color.Black, ColType.Response, "MyColumnName", "OriginalResponseColumnName",
+                "DataSource", "cm", 0.0, 1.0, 0.5);
+            _podlistboxItemWithProps.HideExtendedText = false;
+            //Act
+            var result = _podlistboxItemWithProps.ToString();
+            //Assert
+            Assert.That(result, Is.EqualTo("DataSource.MyColumnName (cm), [0,1], 0.5"));
         }
 
 
