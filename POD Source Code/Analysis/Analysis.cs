@@ -1833,7 +1833,6 @@ namespace POD.Analyze
         public override void SetREngine(IREngineObject myREngine)
         {
             _rDotNet = myREngine;
-            _data.SetREngine(_rDotNet, Name);
         }
 
         #region Event Handling
@@ -2496,8 +2495,8 @@ namespace POD.Analyze
         }
         public decimal InvertTransformValueForXAxis(decimal myValue)
         {
-            decimal value = 0.0M;
-
+            if (_python== null) { return myValue; }
+            decimal value;
             try
             {
                 value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InFlawTransform)));
@@ -2512,8 +2511,8 @@ namespace POD.Analyze
 
         public decimal InvertTransformValueForYAxis(decimal myValue)
         {
-            decimal value = 0.0M;
-
+            if (_python == null) { return myValue; }
+            decimal value;
             try
             {
                 value = Convert.ToDecimal(_data.TransformBackAValue(Convert.ToDouble(myValue), _python.TransformEnumToInt(InResponseTransform)));

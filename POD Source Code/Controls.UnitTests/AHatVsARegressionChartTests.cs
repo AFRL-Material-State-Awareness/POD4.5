@@ -1,13 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using POD.Controls;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Reflection;
-using Moq;
 using POD;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.Text.RegularExpressions;
 using System.Linq;
 
 namespace Controls.UnitTests

@@ -1,4 +1,5 @@
 ﻿using CSharpBackendWithR;
+using Data;
 using POD;
 using POD.Data;
 using POD.ExcelData;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static POD.Data.SortPoint;
 
 namespace POD.Data
 {
@@ -107,14 +109,6 @@ namespace POD.Data
         /// </summary>
         void SetSource(DataSource mySource);
         /// <summary>
-        ///     Turn off a set of points all at once.
-        /// </summary>
-        void SetTurnedOffPoints(List<DataPointIndex> myList);
-        /// <summary>
-        ///     Turn ON all response data points previously turned OFF.
-        /// </summary>
-        void TurnAllPointsOn();
-        /// <summary>
         ///     Turn off a point in the table response data.
         /// </summary>
         void TurnOffPoint(int myResponseColumnIndex, int myRowIndex);
@@ -133,8 +127,9 @@ namespace POD.Data
         void TurnOnPoints(int myRowIndex);
         void UpdateData(bool quickFlag = false);
         void SetPythonEngine(I_IPy4C myPy, string myAnalysisName);
-        void SetREngine(IREngineObject myREngine, string myAnalysisName);
-        void UpdateOutput(RCalculationType myCalculationType = RCalculationType.Full);
+        void UpdateOutput(RCalculationType myCalculationType,
+            IUpdateOutputForAHatData updateOutputForAHatDataIn = null,
+            IUpdateOutputForHitMissData updateOutputForHitMissDataIn = null);
         string AdditionalWorksheet1Name { get; }
         double UncensoredFlawRangeMin { get; }
         double FlawRangeMin { get; }
@@ -158,21 +153,16 @@ namespace POD.Data
         double TransformValueForYAxis(double myValue);
         double InvertTransformValueForXAxis(double myValue);
         double InvertTransformValueForYAxis(double myValue);
-        void UpdateHitMissModel(int modelType);
         double SmallestFlaw { get; }
         double SmallestResponse { get; }
         string FlawTransFormLabel { get; }
         string ResponseTransformLabel { get; }
-        void UpdateSourceFromInfos(SourceInfo sourceInfo);
+        void UpdateSourceFromInfos(SourceInfo sourceInfo, ITableUpdaterFromInfos tableUpdaterFromInfosIn = null);
         void GetUpdatedValue(ColType myType, string myExtColProperty, double currentValue, out double newValue);
         void GetNewValue(ColType myType, string myExtColProperty, out double newValue);
         void SetSource(DataSource source, string flawName, List<string> responses);
-        DataTable TransformedInput { get; }
         bool FilterTransformedDataByRanges { get; set; }
-        bool IsResponseTable(DataTable mySourceTable);
-        bool IsFlawTable(DataTable mySourceTable);
         void CreateNewSortList();
-        void UpdateTable(int rowIndex, int colIndex, Flag bounds);
         void UpdateIncludedPointsBasedFlawRange(double aboveX, double belowX, List<FixPoint> fixPoints);
         void ToggleResponse(double pointX, double pointY, string seriesName, int rowIndex, int colIndex, List<FixPoint> fixPoints);
         void ForceRefillSortListAndClearPoints();
@@ -180,7 +170,7 @@ namespace POD.Data
         void RefillSortList();
         void ToggleAllResponses(double pointX, List<FixPoint> fixPoints);
         DataTable QuickTable { get; }
-        void AddData(string myID, double myFlaw, double myResponse, int index);
+        void AddData(string myID, double myFlaw, double myResponse, int index, IAddRowToTableControl addRowControlIn = null);
         void RecreateTables();
         AnalysisDataTypeEnum RecheckAnalysisType(AnalysisDataTypeEnum myForcedType);
         void GetRow(int rowIndex, out string myID, out double myFlaw, out double myResponse);
@@ -211,8 +201,9 @@ namespace POD.Data
         DataTable ResidualRawTable { get; }
 
         //Excel Properties
-        void WriteToExcel(ExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true);
-
+        void WriteToExcel(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true, IExcelWriterControl excelWriteControlIn = null);
+        List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames);
+        DataTable GenerateRemovedPointsTable();
         /// tables
     }
 }

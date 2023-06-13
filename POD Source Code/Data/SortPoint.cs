@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static POD.Data.SortPoint;
 
 namespace POD.Data
 {
     public enum Flag
     {
         InBounds,
-        OutBounds
+        OutBounds,
+        None
     }
 
     public class FixPoint
@@ -92,7 +94,5 @@ namespace POD.Data
             }
             return result;
         }
-
-
     }
 }

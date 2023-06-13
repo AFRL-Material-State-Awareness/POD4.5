@@ -91,6 +91,7 @@
     <Compile Include="AHatAnalysisObject.cs" />
     <Compile Include="ErrorArgs.cs" />
     <Compile Include="EventRaisingStreamWriter.cs" />
+    <Compile Include="FlipBinarySign.cs" />
     <Compile Include="GetProjectInfoArgs.cs" />
     <Compile Include="HMAnalysisObject.cs" />
     <Compile Include="IPy4C.cs" />

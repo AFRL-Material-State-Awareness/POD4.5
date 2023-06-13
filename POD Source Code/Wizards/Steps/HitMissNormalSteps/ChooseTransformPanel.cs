@@ -161,7 +161,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                         _analysis.InResponseTransform = TransformTypeEnum.Linear;
                         _analysis.InHitMissModel = yTrans.ModelType;
                         //assign the analysis as transform only
-                        Analysis.AnalysisCalculationType = RCalculationType.Transform;
+                        //Analysis.AnalysisCalculationType = RCalculationType.Transform;
                         var yColumnIndex = yAxisIndex;
                         var xColumnIndex = xAxisIndex;
 

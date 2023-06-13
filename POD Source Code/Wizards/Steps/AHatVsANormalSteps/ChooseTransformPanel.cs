@@ -178,7 +178,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                             _analysis.SetUpLambda();
                         }
                         //assign the analysis as transform only
-                        Analysis.AnalysisCalculationType = RCalculationType.Transform;
+                        //Analysis.AnalysisCalculationType = RCalculationType.Transform;
                         var yColumnIndex = yAxisIndex;
                         var xColumnIndex = xAxisIndex;
 

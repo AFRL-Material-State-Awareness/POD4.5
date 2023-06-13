@@ -1187,8 +1187,8 @@ namespace POD
     public enum RCalculationType
     {
         Full,
-        Transform,
-        ThresholdChange
+        ThresholdChange,
+        None
     }
     public static class RangeNames
     {
@@ -1266,18 +1266,6 @@ namespace POD
 
         public static string GetDefaultValue(string colType)
         {
-            /*
-            if (colType == ExtColProperty.Unit)
-                return ExtColProperty.UnitDefault;
-            else if (colType == ExtColProperty.Max)
-                return ExtColProperty.MaxDefault.ToString();
-            else if (colType == ExtColProperty.Min)
-                return ExtColProperty.MinDefault.ToString();
-            else if (colType == ExtColProperty.Thresh)
-                return ExtColProperty.ThreshDefault.ToString();
-            else
-                return "";
-            */
             switch (colType)
             {
                 case ExtColProperty.Unit:

@@ -16,7 +16,7 @@ namespace POD.Data
     /// A project can hold more than one source but an anlaysis can only feature data from one source. 
     /// </summary>
     [Serializable]
-    public class DataSource
+    public class DataSource : IDataSource
     {
         #region Fields
         /// <summary>
@@ -27,7 +27,7 @@ namespace POD.Data
         /// <summary>
         /// Index of default specimen ID column relative to specimen ID table range.
         /// </summary>
-        private int _defaultIDIndex;      
+        private int _defaultIDIndex;
 
         /// <summary>
         /// The data table holding the data with the noise information. Will have lots of NaN values.
@@ -44,7 +44,7 @@ namespace POD.Data
         DataTableWithRanges _processed;
         DataTableWithRanges _original;
 
-        
+
 
         /// <summary>
         /// name of the data source
@@ -167,7 +167,7 @@ namespace POD.Data
             _analysisDataType = DecideAnalysisType(GetData(ResponseLabels));
 
             CleanUpZeroSizedFlaws();
-            
+
         }
 
         private void CleanUpZeroSizedFlaws()
@@ -199,20 +199,6 @@ namespace POD.Data
                 }
             }
         }
-
-        /*public DataSource(SerializationInfo myInfo, StreamingContext myContext)
-        {
-            _processedTable = (DataTable)myInfo.GetValue("ProcessedTable", typeof(DataTable));
-            _specimenIDRange = (TableRange)myInfo.GetValue("SpecimenIDRange", typeof(TableRange));
-            _metaDataRange = (TableRange)myInfo.GetValue("MetaDataRange", typeof(TableRange));
-            _flawSizeRange = (TableRange)myInfo.GetValue("FlawSizeRange", typeof(TableRange));
-            _responseRange = (TableRange)myInfo.GetValue("ResponseRange", typeof(TableRange));
-
-            _defaultFlawSizeIndex = (int)myInfo.GetValue("DefaultFlawSizeIndex", typeof(int));
-            _defaultIDIndex = (int)myInfo.GetValue("DefaultIDIndex", typeof(int));
-            _template = (ImportTemplate)myInfo.GetValue("ImportTemplate", typeof(ImportTemplate));
-            _analysisDataType = (AnalysisDataTypeEnum)myInfo.GetValue("AnalysisDataType", typeof(AnalysisDataTypeEnum));
-        }*/
 
         #endregion
 
@@ -260,7 +246,7 @@ namespace POD.Data
             }
         }
 
-        
+
 
         #region Properties
         /// <summary>
@@ -299,7 +285,7 @@ namespace POD.Data
         /// Get the Response original labels.
         /// </summary>
         public List<string> Originals(ColType myType)
-        {            
+        {
             return GetStringProperty(GetRange(myType), ExtColProperty.Original);
         }
 
@@ -383,7 +369,7 @@ namespace POD.Data
         /// <returns></returns>
         public List<ColumnInfo> ColumnInfos(ColType myType)
         {
-            
+
             var list = new List<ColumnInfo>();
 
             var names = GetLabels(GetRange(myType));
@@ -400,7 +386,7 @@ namespace POD.Data
 
             return list;
         }
-        
+
 
         /// <summary>
         /// Get/set the default Flaw Size Data column index. Relative to the Flaw Size Range. This is the x-axis data for a plot.
@@ -442,7 +428,7 @@ namespace POD.Data
             }
         }
 
-        
+
 
         /// <summary>
         /// Get the meta-data labels.
@@ -470,8 +456,8 @@ namespace POD.Data
         {
             get { return _template; }
             set { _template = value; }
-        }      
-  
+        }
+
         /// <summary>
         /// The data table that stores all of the data. This is the table after it's been processed and
         /// not the original data table. Only what was specified by the Table Ranges is included here.
@@ -485,11 +471,11 @@ namespace POD.Data
         }
 
         public string SourceName { get; set; }
-        
+
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Copies values from a Data Row in to an Object array based Table Range parameters.
         /// </summary>
@@ -548,7 +534,7 @@ namespace POD.Data
                         {
                             myObjArray[colIndex] = valueStr;
                         }
-        
+
                     }
 
                     next++;
@@ -558,7 +544,7 @@ namespace POD.Data
             return hasInvalidFlaw;
         }
 
-        
+
 
         /// <summary>
         /// Figures it the data table is for hit/miss or aHat vs a.
@@ -760,7 +746,7 @@ namespace POD.Data
             }
 
             return values;
-        }        
+        }
 
         /// <summary>
         /// Get a table of all of the Specimen ID columns data.
@@ -821,7 +807,7 @@ namespace POD.Data
             myPair.To.StartIndex = _processed.LastIndex;
 
             foreach (int index in myPair.From.Range)
-            {                
+            {
                 var col = _processed.Table.Columns.Add(myTable.Columns[index].ColumnName, myType);
                 col.ExtendedProperties.Add(ExtColProperty.Unit, ExtColProperty.UnitDefault);
                 col.ExtendedProperties.Add(ExtColProperty.Max, ExtColProperty.MaxDefault);
@@ -851,7 +837,7 @@ namespace POD.Data
             for (int i = myPair.To.StartIndex; i <= myPair.To.MaxIndex; i++)
             {
                 toRange.Add(i);
-            }   
+            }
             myPair.To.Range = toRange;
 
             myPair.To.DataType = myType;
@@ -914,7 +900,7 @@ namespace POD.Data
                 colIndex = colIndex + range.Count;
             }
 
-            
+
         }
 
         private void WriteRange(ExcelExport myWriter, TableRange myRange, int myColumnIndex)
@@ -957,7 +943,7 @@ namespace POD.Data
                 myWriter.Workbook.AutoFitColumn(1, myColumnIndex + colInc - 1);
             }
 
-            
+
         }
 
         public DataTable Original
