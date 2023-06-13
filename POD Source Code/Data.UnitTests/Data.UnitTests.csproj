@@ -78,6 +78,7 @@
     <Compile Include="ColumnUpdaterFromInfosTests.cs" />
     <Compile Include="ExcelWriterControlTests.cs" />
     <Compile Include="GetPreviousValueControlTests.cs" />
+    <Compile Include="PODListBoxItemTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
