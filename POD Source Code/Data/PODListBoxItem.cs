@@ -200,7 +200,7 @@ namespace POD.Data
 
         }
 
-        public void SetColumnName(string columnName)
+        private void SetColumnName(string columnName)
         {
             if (this.BoxType == ColType.Response)
             {
@@ -214,7 +214,7 @@ namespace POD.Data
             }
         }
 
-        public void SetOriginalName(string columnName)
+        private void SetOriginalName(string columnName)
         {
             if (this.BoxType == ColType.Response)
             {
@@ -240,16 +240,12 @@ namespace POD.Data
             }
         }
 
-        public string GetOriginalName()
+        private string GetOriginalName()
         {
             if (this.BoxType == ColType.Response)
-            {
-                return this.ResponseOriginalName;
-            }
+                return ResponseOriginalName;
             else
-            {
-                return this.FlawOriginalName;
-            }
+                return FlawOriginalName;
         }
         
         public override string ToString()
