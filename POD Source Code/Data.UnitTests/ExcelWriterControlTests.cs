@@ -5,10 +5,7 @@ using POD.Data;
 using System.Collections.Generic;
 using System.Data;
 using POD;
-using CSharpBackendWithR;
 using POD.ExcelData;
-using static POD.Data.SortPoint;
-using System.Linq;
 using SpreadsheetLight;
 
 namespace Data.UnitTests
