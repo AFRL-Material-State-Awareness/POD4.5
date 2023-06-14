@@ -18,7 +18,7 @@ namespace POD.Data
 
 
     [Serializable]
-    public class SourceInfo
+    public class SourceInfo : ISourceInfo
     {
         string _originalName;
         string _newName;
@@ -51,7 +51,7 @@ namespace POD.Data
             _flaws = new List<ColumnInfo>();
             _responses = new List<ColumnInfo>();
 
-            foreach(ColumnInfo column in currentInfo._flaws)
+            foreach (ColumnInfo column in currentInfo._flaws)
             {
                 _flaws.Add(column.Copy());
             }
@@ -90,8 +90,8 @@ namespace POD.Data
         public List<string> Units(ColType myType)
         {
             return GetStringValues(myType, InfoType.Unit);
-        }       
-        
+        }
+
         public List<double> Maximums(ColType myType)
         {
             return GetDoubleValues(myType, InfoType.Max);
@@ -149,20 +149,22 @@ namespace POD.Data
         /// Update data source with latest source info settings
         /// </summary>
         /// <param name="mySource"></param>
-        public void UpdateDataSource(DataSource mySource)
+        public void UpdateDataSource(DataSource mySource, 
+            ISetSourceColumnsFromInfosControl sourceInfosControlInput = null)
         {
+            ISetSourceColumnsFromInfosControl sourceinfosControl = sourceInfosControlInput ?? new SetSourceColumnsFromInfosControl(this);
             if (mySource == null)
                 return;
 
-            if(mySource.SourceName == _originalName)
+            if (mySource.SourceName == _originalName)
             {
                 mySource.SourceName = _newName;
             }
 
-            if(mySource.SourceName == _newName)
+            if (mySource.SourceName == _newName)
             {
-                SetSourceColumnsFromInfos(mySource, ColType.Flaw);
-                SetSourceColumnsFromInfos(mySource, ColType.Response);       
+                sourceinfosControl.SetSourceColumnsFromInfos(mySource, ColType.Flaw);
+                sourceinfosControl.SetSourceColumnsFromInfos(mySource, ColType.Response);
             }
         }
 
@@ -187,7 +189,7 @@ namespace POD.Data
                 {
                     if (info.OriginalName == newInfos[i].OriginalName)
                     {
-                        mySource.UpdateFromColumnInfo(type, i, info);                        
+                        mySource.UpdateFromColumnInfo(type, i, info);
                         found = true;
                         break;
                     }
@@ -206,7 +208,7 @@ namespace POD.Data
                 foreach (ColumnInfo newInfo in newInfos)
                 {
                     if (newInfo.OriginalName == oldInfos[i].OriginalName)
-                    {                  
+                    {
                         found = true;
                         break;
                     }
@@ -219,7 +221,7 @@ namespace POD.Data
             }
 
             while (deleteList.Count > 0)
-            { 
+            {
                 oldInfos.Remove(deleteList[0]);
                 deleteList.RemoveAt(0);
             }
@@ -227,7 +229,7 @@ namespace POD.Data
             SortInfos(oldInfos);
         }
 
-        private void SortInfos(List<ColumnInfo> columnInfos)
+        public void SortInfos(List<ColumnInfo> columnInfos)
         {
             var newList = new List<ColumnInfo>();
 
@@ -235,7 +237,7 @@ namespace POD.Data
             {
                 var insertIndex = 0;
 
-                for(int i = 0; i < newList.Count;i++)
+                for (int i = 0; i < newList.Count; i++)
                 {
                     if (item.Index > newList[i].Index)
                         insertIndex++;
@@ -294,7 +296,7 @@ namespace POD.Data
             newValue = GetInfos(myType)[index].SetDoubleValue(myInfo, newValue);
 
             return newValue;
-        }        
+        }
     }
 
     [Serializable]

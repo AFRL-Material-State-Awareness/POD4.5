@@ -84,6 +84,8 @@
     <Compile Include="AnalysisData.cs" />
     <Compile Include="AxisObject.cs" />
     <Compile Include="IDataSource.cs" />
+    <Compile Include="ISourceInfo.cs" />
+    <Compile Include="SetSourceColumnsFromInfosControl.cs" />
     <Compile Include="SortPointListWrapper.cs" />
     <Compile Include="ColumnUpdaterFromInfos.cs" />
     <Compile Include="GetPreviousValueControl.cs" />
