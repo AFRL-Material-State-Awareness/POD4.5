@@ -32,7 +32,7 @@ namespace Data
 
             if (prevString == "")
             {
-                throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
+                throw new ArgumentException("ExtColProprty: " + myExtColProperty + " is not valid.");
             }
 
             double prevValue = 0.0;
