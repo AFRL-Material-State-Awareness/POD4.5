@@ -39,16 +39,8 @@ namespace Data
         }
         public double GetNewValue(string myExtColProperty, DataColumn column)
         {
-            double newValue;
-            double newTableValue = 0.0;
-
-
-            if (!Double.TryParse(column.ExtendedProperties[myExtColProperty]?.ToString(), out newTableValue))
-                newTableValue = 0.0;
-
-            newValue = newTableValue;
-
-            return newValue;
+            double.TryParse(column.ExtendedProperties[myExtColProperty]?.ToString(), out double newTableValue);
+            return newTableValue;
         }
 
 
