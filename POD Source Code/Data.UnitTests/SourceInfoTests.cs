@@ -3,7 +3,7 @@ using System;
 using Moq;
 using POD.Data;
 using System.Collections.Generic;
-
+using System.Data;
 namespace Data.UnitTests
 {
     [TestFixture]
@@ -13,6 +13,8 @@ namespace Data.UnitTests
         private Mock<IDataSource> _dataSource;
         private List<ColumnInfo> _flawInfo;
         private List<ColumnInfo> _responseInfo;
+
+        private Mock<ISetSourceColumnsFromInfosControl> _setSourceInfosControl;
         [SetUp]
         public void Setup()
         {
@@ -22,7 +24,9 @@ namespace Data.UnitTests
             _responseInfo = new List<ColumnInfo>() { new ColumnInfo("", "Response", "", 1.0, 10.0, 1) };
             _dataSource.Setup(ds => ds.ColumnInfos(ColType.Flaw)).Returns(_flawInfo);
             _dataSource.Setup(ds => ds.ColumnInfos(ColType.Response)).Returns(_responseInfo);
-            
+            _setSourceInfosControl = new Mock<ISetSourceColumnsFromInfosControl>();
+
+
         }
         /// <summary>
         /// Tests for the SourceInfo(string myOriginalName, string myNewName, IDataSource mySource) contructor
@@ -68,6 +72,29 @@ namespace Data.UnitTests
             var result = _sourceInfo.GetInfos(ColType.Response);
             //Assert
             Assert.That(result, Is.EqualTo(_responseInfo));
+        }
+        /// Tests for the UpdateDataSource(DataSource mysource) function
+        [Test]
+        public void UpdateDataSource_SourceIsNull_DoesNotCallAnyFunctionsAndReturns()
+        {
+            //Arrange
+            //Act
+            _sourceInfo.UpdateDataSource(null, _setSourceInfosControl.Object);
+            //Assert
+            _setSourceInfosControl.Verify(ssic => ssic.SetSourceColumnsFromInfos(It.IsAny<DataSource>(), It.IsAny<ColType>()), Times.Never);
+        
+        }
+        [Test]
+        public void UpdateDataSource_SourceNameIsOriginalName_AssignsNewName()
+        {
+            //Arrange
+            _sourceInfo = new SourceInfo("MyOriginalName", "MyNewName", _dataSource.Object);
+            DataSource dataSource = new DataSource("MyOriginalName", "", "", "");
+            //Act
+            _sourceInfo.UpdateDataSource(dataSource, _setSourceInfosControl.Object);
+            //Assert
+            Assert.That(dataSource.SourceName, Is.EqualTo("MyNewName"));
+            _setSourceInfosControl.Verify(ssic => ssic.SetSourceColumnsFromInfos(It.IsAny<DataSource>(), It.IsAny<ColType>()), Times.Never);
         }
     }
 }

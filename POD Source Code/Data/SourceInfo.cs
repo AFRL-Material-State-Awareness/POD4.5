@@ -152,9 +152,9 @@ namespace POD.Data
         public void UpdateDataSource(DataSource mySource, 
             ISetSourceColumnsFromInfosControl sourceInfosControlInput = null)
         {
-            ISetSourceColumnsFromInfosControl sourceinfosControl = sourceInfosControlInput ?? new SetSourceColumnsFromInfosControl(this);
             if (mySource == null)
                 return;
+            ISetSourceColumnsFromInfosControl sourceinfosControl = sourceInfosControlInput ?? new SetSourceColumnsFromInfosControl(this);
 
             if (mySource.SourceName == _originalName)
             {

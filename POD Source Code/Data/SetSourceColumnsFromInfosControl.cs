@@ -9,7 +9,7 @@ namespace POD.Data
 {
     public class SetSourceColumnsFromInfosControl : ISetSourceColumnsFromInfosControl
     {
-        private ISourceInfo _source;
+        private readonly ISourceInfo _source;
         public SetSourceColumnsFromInfosControl(ISourceInfo sourceInput)
         {
             _source = sourceInput;
