@@ -114,4 +114,63 @@ namespace Data.UnitTests
         }
 
     }
+    [TestFixture]
+    public class GetExtendedPropertyControlTests
+    {
+        private GetExtendedPropertyControl _getExtendedPropertyControl;
+        [SetUp]
+        public void Setup()
+        {
+            ExtColProperty.UnitDefault = "cm";
+            ExtColProperty.MaxDefault = 1.0;
+            ExtColProperty.MinDefault = 0.0;
+            ExtColProperty.ThreshDefault = 0.5;
+            _getExtendedPropertyControl = new GetExtendedPropertyControl();
+        }
+        /// Tests for GetExtendedProperty
+        [Test]
+        [TestCase(ExtColProperty.Min, "0")]
+        [TestCase(ExtColProperty.Max, "1")]
+        [TestCase(ExtColProperty.Thresh, "0.5")]
+        [TestCase(ExtColProperty.Unit, "cm")]
+        [TestCase("other", "")]
+        public void GetExtendedProperty_ColumnIsNullAndDefault_ReturnsDefaultValueOfColType(string colType, string expectedValue)
+        {
+            //Arrange
+            //Act
+            var result = _getExtendedPropertyControl.GetExtendedProperty(null, colType);
+            Assert.That(result, Is.EqualTo(expectedValue));
+        }
+        [Test]
+        [TestCase(ExtColProperty.Min, 10.0, "10")]
+        [TestCase(ExtColProperty.Max, 100.0, "100")]
+        [TestCase(ExtColProperty.Thresh, 50.0, "50")]
+        [TestCase(ExtColProperty.Unit, -1.1, "-1.1")]
+        public void GetExtendedProperty_ColumnIsNotNullAndContainsColTypeKey_ReturnsExtendedPropertiesAsString(string colType, double assignedValue, string expectedValue)
+        {
+            //Arrange
+            DataColumn dataColumn = new DataColumn();
+            dataColumn.ExtendedProperties[colType] = assignedValue;
+            //Act
+            var result = _getExtendedPropertyControl.GetExtendedProperty(dataColumn, colType);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedValue));
+        }
+        [Test]
+        [TestCase(ExtColProperty.Min, "0")]
+        [TestCase(ExtColProperty.Max, "1")]
+        [TestCase(ExtColProperty.Thresh, "0.5")]
+        [TestCase(ExtColProperty.Unit, "cm")]
+        public void GetExtendedProperty_ColumnIsNotNullAndDOESNOTContainColTypeKey_ReturnsExtendedPropertiesAsString(string colType, string expectedValue)
+        {
+            //Arrange
+            DataColumn dataColumn = new DataColumn();
+            //Act
+            var result = _getExtendedPropertyControl.GetExtendedProperty(dataColumn, colType);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedValue));
+            Assert.That(dataColumn.ExtendedProperties.ContainsKey(colType));
+            Assert.That(dataColumn.ExtendedProperties[colType], Is.EqualTo(expectedValue));
+        }
+    }
 }
