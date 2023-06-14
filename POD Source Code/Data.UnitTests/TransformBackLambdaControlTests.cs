@@ -23,13 +23,59 @@ namespace Data.UnitTests
         public void TransformBackLambda_ValueIsGreaterThanOrEqualToNegative1OverLambdaAndLambdaIsNegative_ReturnsSignalMaxTimes10(double input)
         {
             //Arrange 
-            _ahatAnalysisObject.Lambda = -1;
-            _ahatAnalysisObject.Signalmax = 10;
-            _transformBackLambda = new TransformBackLambdaControl(_ahatAnalysisObject);
+            SetupAHatMetrics(-1);
             //Act
-            var result=_transformBackLambda.TransformBackLambda(input);
+            var result = _transformBackLambda.TransformBackLambda(input);
             //Assert
             Assert.That(result, Is.EqualTo(100));
+        }
+        [Test]
+        public void TransformBackLambda_MyValueIsLessThanNegative1OverLambdaAndLambda_ReturnsValidTransformBack()
+        {
+            //Arrange
+            SetupAHatMetrics(2.0);
+            //Act
+            var result = _transformBackLambda.TransformBackLambda(1.5);
+            //Assert
+            Assert.That(result, Is.EqualTo(2));
+        }
+        [Test]
+        [TestCase(1.5, 2.0)]
+        [TestCase(-5, -3)]
+        public void TransformBackLambda_LambdaIsGreaterThanZero_ReturnsValidTransformBack(double input, double expectedTransformBack)
+        {
+            //Arrange
+            SetupAHatMetrics(2.0);
+            //Act
+            var result = _transformBackLambda.TransformBackLambda(input);
+            //Assert
+            Assert.That(result, Is.EqualTo(expectedTransformBack));
+        }
+        [Test]
+        public void TransformBackLambda_LambdaIsLessThanZeroAndReturnsValidValue_ReturnsValidTransformBack()
+        {
+            //Arrange
+            SetupAHatMetrics(3.0);
+            //Act
+            var result = _transformBackLambda.TransformBackLambda(-3.0);
+            //Assert
+            Assert.That(result, Is.EqualTo(-2.0));
+        }
+        [Test]
+        public void TransformBackLambda_LambdaIsLessThanZeroAndReturnsNaNValue_ReturnsAdjustedTransformBack()
+        {
+            //Arrange
+            SetupAHatMetrics(2.5);
+            //Act
+            var result = _transformBackLambda.TransformBackLambda(-2.0);
+            //Assert
+            Assert.That(result, Is.Not.EqualTo(double.NaN));
+        }
+        private void SetupAHatMetrics(double lambdaValue)
+        {
+            _ahatAnalysisObject.Lambda = lambdaValue;
+            _ahatAnalysisObject.Signalmax = 10;
+            _transformBackLambda = new TransformBackLambdaControl(_ahatAnalysisObject);
         }
     }
 }
