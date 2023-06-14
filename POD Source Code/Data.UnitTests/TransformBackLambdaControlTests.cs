@@ -6,7 +6,7 @@ using CSharpBackendWithR;
 namespace Data.UnitTests
 {
     [TestFixture]
-    public class TransformBackLambdaControlTest
+    public class TransformBackLambdaControlTests
     {
         private TransformBackLambdaControl _transformBackLambda;
         private AHatAnalysisObject _ahatAnalysisObject;
