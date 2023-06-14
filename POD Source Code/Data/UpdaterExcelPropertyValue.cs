@@ -20,36 +20,22 @@ namespace Data
         }
         public double GetUpdatedValue(string myExtColProperty, double currentValue, DataColumn column)
         {
-            double newValue;
-            var prevString = "";
-
+            string prevString;
             if (myExtColProperty == ExtColProperty.Min)
                 prevString = ExtColProperty.MinPrev;
             else if (myExtColProperty == ExtColProperty.Max)
                 prevString = ExtColProperty.MaxPrev;
             else if (myExtColProperty == ExtColProperty.Thresh)
                 prevString = ExtColProperty.ThreshPrev;
-
-            if (prevString == "")
-            {
-                throw new ArgumentException("ExtColProprty: " + myExtColProperty + " is not valid.");
-            }
-
-            double prevValue = 0.0;
-            double newTableValue = 0.0;
-
-
-            if (!Double.TryParse(_getExtendPropControl.GetExtendedProperty(column, prevString), out prevValue))
-                prevValue = 0.0;
-
-            if (!Double.TryParse(_getExtendPropControl.GetExtendedProperty(column, myExtColProperty), out newTableValue))
-                newTableValue = 0.0;
-
-            if (currentValue == prevValue)
-                newValue = newTableValue;
             else
-                newValue = currentValue;
-            return newValue;
+                throw new ArgumentException("ExtColProprty: " + myExtColProperty + " is not valid.");
+
+            double.TryParse(_getExtendPropControl.GetExtendedProperty(column, prevString), out double prevValue);
+            double.TryParse(_getExtendPropControl.GetExtendedProperty(column, myExtColProperty), out double newTableValue);
+            if (currentValue == prevValue)
+                return newTableValue;
+            else
+                return currentValue;
         }
         public double GetNewValue(string myExtColProperty, DataColumn column)
         {
