@@ -49,23 +49,15 @@ namespace Data
     {
         public string GetExtendedProperty(DataColumn column, string colType)
         {
-            string value = "";
-
-            if (column == null)
+            if (column?.ExtendedProperties.ContainsKey(colType) == true)
+                return column.ExtendedProperties[colType].ToString();
+            else if(column?.ExtendedProperties.ContainsKey(colType) == false)
             {
-                value = ExtColProperty.GetDefaultValue(colType);
-                return value;
+                column.ExtendedProperties[colType] = ExtColProperty.GetDefaultValue(colType);
+                return column.ExtendedProperties[colType].ToString();
             }
-
-            if (column.ExtendedProperties.ContainsKey(colType))
-                value = column.ExtendedProperties[colType].ToString();
             else
-            {
-                value = ExtColProperty.GetDefaultValue(colType);
-                column.ExtendedProperties[colType] = value;
-            }
-
-            return value;
+                return ExtColProperty.GetDefaultValue(colType);
         }
     }
     public interface IUpdaterExcelPropertyValue
