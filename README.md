@@ -1,4 +1,4 @@
-![POD Logo](Images/POD website logo.png)
+![POD Logo](Images/POD%20website%20logo.png)
 
 # Probability of Detection Professional version 4.5        
 
