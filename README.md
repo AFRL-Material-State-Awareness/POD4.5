@@ -1,4 +1,4 @@
-![POD Logo](Images/POD%20website%20logo.png)
+<img src="Images/POD website logo.png" alt="POD Logo" width="300" />
 
 # Probability of Detection Professional version 4.5        
 
