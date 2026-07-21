@@ -1,3 +1,5 @@
+![POD Logo](Images/POD website logo.png)
+
 # Probability of Detection Professional version 4.5        
 
   POD Pro v4.5 (Probability of Detection Professional version 4.5) is the new and improved version of PODv4 which incorporates advanced statistics and an r backend. There have also been bug fixes related to the original PODv4.
