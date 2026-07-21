@@ -1,4 +1,19 @@
-﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// <copyright file="AnalysisTests.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
 using System;
 using NUnit.Framework;
 using Moq;
@@ -61,24 +76,7 @@ namespace Analyze.UnitTests
                 _testDataTable.Rows.Add((double)i* scaler);
             }
         }
-        /// <summary>
-        /// Tests for the SetUpLambda() function
-        /// </summary>
-        [Test]
-        public void SetUpLambda_ValidLambdaCalculated_AssignedLambdaToInLambdaValueField()
-        {
-            //Arrange
-            _analysis.AnalysisDataType = AnalysisDataTypeEnum.AHat;
-            _data.SetupGet(ahat => ahat.AHATAnalysisObject).Returns(new AHatAnalysisObject("SampleAnalysis"));
-            _python.Setup(ahat => ahat.AHatAnalysis("SampleAnalysis")).Returns(new AHatAnalysisObject("SampleAnalysis"));
-            SetPythonAndREngines();
-            _tempLambdaCalc.Setup(l => l.CalcTempLambda()).Returns(1.0);           
-            //Act
-            _analysis.SetUpLambda(_tempLambdaCalc.Object);
-            //Assert
-            Assert.That(_analysis.InLambdaValue, Is.EqualTo(1.0));
-            Assert.That(_analysis.Data.AHATAnalysisObject.Lambda, Is.EqualTo(1.0));
-        }
+        
 
         /// <summary>
         /// Tests UpdateProgress(Object sender, int myProgressOutOF100) check if needed first

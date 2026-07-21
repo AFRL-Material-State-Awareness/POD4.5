@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="DataSource.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -488,6 +504,7 @@ namespace POD.Data
             int next = 0;
             double value;
             bool hasInvalidFlaw = false;
+            bool hasInvalidResponse = false;
             var colIndex = 0;
             var valueStr = "";
 
@@ -525,10 +542,12 @@ namespace POD.Data
                     //FLAW SIZE MUST ALWAYS BE PROCESSED FIRST
                     else if (myPair.To.Name == RangeNames.Response)
                     {
+                        hasInvalidResponse = true;
 
                         if (hasInvalidFlaw == false)
                         {
                             myObjArray[colIndex] = Double.NaN;
+                            
                         }
                         else
                         {
@@ -541,7 +560,7 @@ namespace POD.Data
                 }
             }
 
-            return hasInvalidFlaw;
+            return hasInvalidFlaw || hasInvalidResponse;
         }
 
 
@@ -773,7 +792,7 @@ namespace POD.Data
 
                     foreach (DataColumn column in table.Columns)
                     {
-                        newRow[0] += row[column.ColumnName].ToString() + " - ";
+                        newRow[0] += $"{row[column.ColumnName]} - ";
                     }
 
                     var name = newRow[0].ToString();
@@ -959,7 +978,7 @@ namespace POD.Data
 
         internal void WritePropertiesToExcel(ExcelExport myWriter)
         {
-            myWriter.Workbook.AddWorksheet(SourceName + " Properties");
+            myWriter.Workbook.AddWorksheet($"{SourceName} Properties");
 
             int rowIndex = 1;
 
@@ -1087,7 +1106,7 @@ namespace POD.Data
                 currentNames.RemoveAt(myIndex);
 
                 while (currentNames.Contains(myNewName))
-                    myNewName = myNewName + " Copy";
+                    myNewName = $"{myNewName} Copy";
 
                 _processed.Table.Columns[myIndex + myRange.StartIndex].ColumnName = myNewName;
             }

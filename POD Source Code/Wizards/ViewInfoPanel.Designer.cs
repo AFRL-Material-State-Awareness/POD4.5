@@ -569,13 +569,13 @@
             this.FlawMinimumNumeric.Location = new System.Drawing.Point(27, 234);
             this.FlawMinimumNumeric.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.FlawMinimumNumeric.Maximum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.FlawMinimumNumeric.Minimum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.FlawMinimumNumeric.Name = "FlawMinimumNumeric";
@@ -598,13 +598,13 @@
             this.FlawMaximumNumeric.Location = new System.Drawing.Point(27, 273);
             this.FlawMaximumNumeric.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.FlawMaximumNumeric.Maximum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.FlawMaximumNumeric.Minimum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.FlawMaximumNumeric.Name = "FlawMaximumNumeric";
@@ -627,13 +627,13 @@
             this.ResponseMinimumNumeric.Location = new System.Drawing.Point(27, 537);
             this.ResponseMinimumNumeric.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.ResponseMinimumNumeric.Maximum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.ResponseMinimumNumeric.Minimum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.ResponseMinimumNumeric.Name = "ResponseMinimumNumeric";
@@ -656,13 +656,13 @@
             this.ResponseMaximumNumeric.Location = new System.Drawing.Point(27, 576);
             this.ResponseMaximumNumeric.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.ResponseMaximumNumeric.Maximum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.ResponseMaximumNumeric.Minimum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.ResponseMaximumNumeric.Name = "ResponseMaximumNumeric";
@@ -685,13 +685,13 @@
             this.ResponseThresholdNumeric.Location = new System.Drawing.Point(27, 615);
             this.ResponseThresholdNumeric.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.ResponseThresholdNumeric.Maximum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.ResponseThresholdNumeric.Minimum = new decimal(new int[] {
-            999999999,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.ResponseThresholdNumeric.Name = "ResponseThresholdNumeric";

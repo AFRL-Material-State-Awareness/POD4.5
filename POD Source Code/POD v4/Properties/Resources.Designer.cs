@@ -83,6 +83,46 @@ namespace POD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap POD_help {
+            get {
+                object obj = ResourceManager.GetObject("POD_help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap POD_help_mouse_down {
+            get {
+                object obj = ResourceManager.GetObject("POD_help_mouse_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap POD_help_mouse_over {
+            get {
+                object obj = ResourceManager.GetObject("POD_help_mouse_over", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap POD_Pro_200x200__loading_ {
+            get {
+                object obj = ResourceManager.GetObject("POD_Pro_200x200__loading_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Step_01 {
             get {
                 object obj = ResourceManager.GetObject("Step_01", resourceCulture);

@@ -1,4 +1,20 @@
-﻿using CSharpBackendWithR;
+﻿// <copyright file="IAnalysisData.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using CSharpBackendWithR;
 using Data;
 using POD;
 using POD.Data;
@@ -16,6 +32,9 @@ namespace POD.Data
 {
     public interface IAnalysisData
     {
+        int FlawsCensoredAboveMaxCount { get; }
+        int FlawsCensoredBelowMinCount { get; }
+
         double ResponseLeft { get; set; }
         double ResponseRight { get; set; }
         bool IsFrozen { get; set; }
@@ -39,6 +58,7 @@ namespace POD.Data
         DataTable ActivatedSpecimenIDs { get; }
         DataTable ActivatedTransformedFlaws { get; }
         DataTable ActivatedTransformedResponses { get; }
+
         List<string> AvailableFlawNames { get; }
         List<string> AvailableMetaDataNames { get; }
         List<string> AvailableResponseNames { get; }
@@ -61,6 +81,12 @@ namespace POD.Data
         /// get the table to plot a normal curve overlay
         /// </summary>
         DataTable NormalityCurveTable { get; }
+
+        /// <summary>
+        /// Table holds the theoretical and sample quantiles to plot the Q-Q chart
+        /// </summary>
+        DataTable QQTable { get; }
+
         DataTable OriginalData { get; }
         double LambdaValue { get; }
         /// <summary>
@@ -142,17 +168,21 @@ namespace POD.Data
         void GetXYBufferedRanges(Control chart, IAxisObject myXAxis, IAxisObject myYAxis, bool myGetTransformed);
         void GetYBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed);
         void GetXBufferedRange(Control chart, IAxisObject myAxis, bool myGetTransformed);
+
+        AxisObject GetXBufferedRange(Control chart, double myMin, double myMax, bool myGetTransformed);
         void GetUncensoredXBufferedRange(Control chart, AxisObject myAxis, bool myGetTransformed);
         AxisObject GetXBufferedRange(Control chart, bool myGetTransformed);
         AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed);
         AxisObject GetYBufferedRange(Control chart, bool myGetTransformed);
+        IDataTransformer DuplicateTransformer();
+        void UpdateTransformer(IDataTransformer myUpdateThisTransformer);
         double DoNoTransform(double myValue);
-        double TransformAValue(double myValue, int transform);
-        double TransformBackAValue(double myValue, int transform);
         double TransformValueForXAxis(double myValue);
         double TransformValueForYAxis(double myValue);
         double InvertTransformValueForXAxis(double myValue);
         double InvertTransformValueForYAxis(double myValue);
+        double LargestFlaw { get; }
+        double LargestResponse { get; }
         double SmallestFlaw { get; }
         double SmallestResponse { get; }
         string FlawTransFormLabel { get; }
@@ -175,6 +205,8 @@ namespace POD.Data
         AnalysisDataTypeEnum RecheckAnalysisType(AnalysisDataTypeEnum myForcedType);
         void GetRow(int rowIndex, out string myID, out double myFlaw, out double myResponse);
         void DeleteRow(int index);
+
+        void SetDisplayTransformer(IDataTransformer transformer);
 
         int RowCount { get; }
         bool EverythingCommented { get; }
@@ -199,11 +231,17 @@ namespace POD.Data
         Dictionary<int, Dictionary<int, string>> CommentDictionary { get; }
         DataTable ResidualPartialCensoredTable { get; }
         DataTable ResidualRawTable { get; }
+        bool MissingData { get; }
 
         //Excel Properties
         void WriteToExcel(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject = true, IExcelWriterControl excelWriteControlIn = null);
         List<string> ChangeTableColumnNames(DataTable myTable, List<string> myNewNames);
         DataTable GenerateRemovedPointsTable();
+        void CheckLoadHealth();
+
+        bool IsYSymLog();
+        bool IsXSymLog();
+
         /// tables
     }
 }

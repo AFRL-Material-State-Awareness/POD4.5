@@ -1,4 +1,20 @@
-﻿using System;
+﻿﻿// <copyright file="DataPointChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -12,11 +28,37 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing.Imaging;
 using System.IO;
 using POD.Data;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using CSharpBackendWithR;
 
 namespace POD.Controls
 {
     public partial class DataPointChart : Chart
     {
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
+
+        private const int WM_SETREDRAW = 11;
+
+        private int suspendCounter = 0;
+
+        public void SuspendDrawing()
+        {
+            if (this.IsHandleCreated && suspendCounter++ == 0)
+                SendMessage(this.Handle, WM_SETREDRAW, false, 0);
+        }
+
+        public void ResumeDrawing()
+        {
+            suspendCounter--;
+            if (suspendCounter == 0)
+            {
+                SendMessage(this.Handle, WM_SETREDRAW, true, 0);
+                this.Refresh();
+            }
+        }
+
      
         /// <summary>
         /// image lists
@@ -58,17 +100,49 @@ namespace POD.Controls
         protected Bitmap[,] MenuBitmaps = new Bitmap[3,4];
         protected ToolTip _chartToolTip = null;
         private int _lastWidth = -1;
+        protected PODPanel _menuPanel = new PODPanel();
         /// <summary>
         /// This is needed to keep track the lambda value in the event
         /// the user tries to load a POD analysis with a boxcox transformation
         /// </summary>
         private IAnalysisData _analysisData;
+        protected IDataTransformer _transformer;
+        protected bool _forceZeroXAxis = false;
+        protected bool _forceZeroYAxis = false;
+        // Controls the clean PowerPoint presentation behavior
+        public bool _clampXAxisToZeroOnExport = false;
+        public bool _clampYAxisToZeroOnExport = false;
 
         public ToolTip ChartToolTip
         {
             get { return _chartToolTip; }
             set { _chartToolTip = value; }
         }
+
+        public bool ForceZeroXAxis
+        {
+            get { return _forceZeroXAxis; }
+            set { _forceZeroXAxis = value; }
+        }
+
+        public bool ForceZeroYAxis
+        {
+            get { return _forceZeroYAxis; }
+            set { _forceZeroYAxis = value; }
+        }
+
+        public bool ClampXAxisToZeroOnExport
+        {
+            get { return _clampXAxisToZeroOnExport; }
+            set { _clampXAxisToZeroOnExport = value; }
+        }
+
+        public bool ClampYAxisToZeroOnExport
+        {
+            get { return _clampYAxisToZeroOnExport; }
+            set { _clampYAxisToZeroOnExport = value; }
+        }
+
         public bool ShowChartTitle
         {
             get
@@ -82,6 +156,35 @@ namespace POD.Controls
                 UpdateChartTitle();
             }
         }
+
+        protected virtual void ApplyDynamicFontScaling()
+        {
+            if (ChartAreas.Count > 0 && this.Width > 0 && this.Height > 0)
+            {
+                // 1. Find the shortest edge
+                float minDimension = Math.Min(this.Width, this.Height);
+
+                // 2. Baseline math: 8pt font at 300px
+                float calculatedSize = (minDimension / 300f) * 8f;
+
+                // 3. Clamp the sizes so titles never get unreadable or comically huge
+                float titleFontSize = Math.Max(7.5f, Math.Min(11f, calculatedSize));
+
+                var titleFont = new Font("Segoe UI", titleFontSize, FontStyle.Regular);
+
+                // 4. Apply dynamically ONLY to Axis Titles
+                ChartAreas[0].AxisX.TitleFont = titleFont;
+                ChartAreas[0].AxisY.TitleFont = titleFont;
+
+                // (Tick mark labels - LabelStyle.Font - are intentionally left untouched 
+                //  so the data numbers remain at a static, highly readable size.)
+
+                // 5. Apply to Chart Title (Proportionally larger and Bold)
+                if (Titles.Count > 0)
+                    Titles[0].Font = new Font("Segoe UI", titleFontSize + 1.5f, FontStyle.Regular);
+            }
+        }
+
         /// <summary>
         /// Load analysis data into the parent class in addition to the regression panel
         /// </summary>
@@ -90,12 +193,35 @@ namespace POD.Controls
         {
             _analysisData = data;
         }
+
+        public void UpdateTransformer(IDataTransformer transformer)
+        {
+            _transformer = transformer;
+        }
+
+        public void UpdateTransformer(IDataTransformer transformer, TransformTypeEnum yAxis, TransformTypeEnum xAxis)
+        {
+            _transformer = transformer;
+            _transformer.ForceAxisTransforms(yAxis, xAxis);
+        }
+
+        public virtual void LoadChartData(IAnalysisData data, IDataTransformer transformer)
+        {
+            _analysisData = data;
+            _transformer = transformer;
+        }
+
         public DataPointChart()
         {
-            
+            _transformer = new DataTransformer();
+
             InitializeComponent();
             if (ContextMenuImageList == null || ContextMenuImageList.Images.Count==0)
                 SetUpImageLists();
+
+            // --- ADD THESE TWO LINES TO FIX THE "||" TEXT RENDERING BUG ---
+            this.TextAntiAliasingQuality = TextAntiAliasingQuality.High;
+            this.AntiAliasing = AntiAliasingStyles.All;
 
             _errorsList = new List<string>();
 
@@ -105,6 +231,7 @@ namespace POD.Controls
             MouseDoubleClick += AHatVsAChart_MouseClick;
             Resize += DataPointChart_Resize;
             Customize += DataPointChart_Customize;
+            HasFailedDrawing += DataPointChart_HasFailedDrawing;
 
             _selectable = true;
 
@@ -129,6 +256,10 @@ namespace POD.Controls
                 _legend.Font = new System.Drawing.Font(_legend.Font.FontFamily, 10.0F);
 
                 ChartAreas.Add(new ChartArea("podArea"));
+
+                // Force a modern UI font globally for the axes
+                ChartAreas[0].AxisX.TitleFont = new Font("Segoe UI", 10.0f, FontStyle.Regular);
+                ChartAreas[0].AxisY.TitleFont = new Font("Segoe UI", 10.0f, FontStyle.Regular);
             }
 
             PostPaint += DataPointChart_PostPaint;
@@ -145,9 +276,233 @@ namespace POD.Controls
 
             TurnOffAllMenuButtons();
 
+            this.GetToolTipText += DataPointChart_GetToolTipText;
+
             TabStop = false;
 
-            
+            if (FullSizeImageList.Images.Count > 0)
+            {
+                _menuPanel.Visible = false;
+                _menuPanel.Size = FullSizeImageList.Images[0].Size;
+                _menuPanel.Location = new Point(0, 0);
+                _menuPanel.BackColor = Color.Transparent;
+                _menuPanel.MouseLeave += _menuPanel_MouseLeave;
+                _menuPanel.MouseMove += _menuPanel_MouseMove;
+                _menuPanel.MouseDown += _menuPanel_MouseDown;
+                _menuPanel.Paint += _menuPanel_Paint;
+                _menuPanel.MouseClick += _menuPanel_MouseClick;
+                this.Controls.Add(_menuPanel);
+            }
+        }
+
+        private void DataPointChart_GetToolTipText(object sender, ToolTipEventArgs e)
+        {
+            // If your menu is open (or your new panel is visible), 
+            // force the tooltip text to be empty. 
+            // This entirely cancels the tooltip from rendering.
+            if (MenuIsOpen)
+            {
+                e.Text = string.Empty;
+            }
+        }
+
+
+        private void _menuPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (MenuIsOpen)
+            {
+
+
+                int rowIndex = 0;
+                int colIndex = 0;
+                int width = 0;
+                int height = 0;
+                float fontSize = 0.0F;
+                int lineWidth = 0;
+                int axisWidth = 0;
+                int markerHeight = 0;
+                int dpi = 0;
+
+                MenuIsOpen = false;
+                InvalidateMenu();
+
+                GetMenuIndex(e.X, e.Y, out rowIndex, out colIndex);
+
+                switch (rowIndex)
+                {
+                    case 0:
+                        height = 480;
+                        fontSize = 10.0F;
+                        lineWidth = 2;
+                        markerHeight = 7;
+                        axisWidth = 1;
+                        dpi = 120;
+                        switch (colIndex)
+                        {
+                            case 1:
+                                width = 480;
+                                break;
+                            case 2:
+                                width = 640;
+                                break;
+                            case 3:
+                                width = 854;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 1:
+                        height = 720;
+                        fontSize = 12.0F;
+                        lineWidth = 3;
+                        markerHeight = 9;
+                        axisWidth = 1;
+                        dpi = 120;
+                        switch (colIndex)
+                        {
+                            case 1:
+                                width = 720;
+                                break;
+                            case 2:
+                                width = 960;
+                                break;
+                            case 3:
+                                width = 1280;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 2:
+                        height = 1080;
+                        fontSize = 18.0F;
+                        lineWidth = 5;
+                        markerHeight = 11;
+                        axisWidth = 3;
+                        dpi = 120;
+                        switch (colIndex)
+                        {
+                            case 1:
+                                width = 1080;
+                                break;
+                            case 2:
+                                width = 1440;
+                                break;
+                            case 3:
+                                width = 1920;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+
+                }
+
+                if (width > 0 && height > 0)
+                {
+                    //Enter your chart building code here
+                    DataPointChart clone = CloneAndScaleChartForClipboard(width, height, fontSize, lineWidth, axisWidth, markerHeight);
+
+                    try
+                    {
+                        if (clone != null)
+                            CreateImageForClipboardAndOffice(dpi, clone, this);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Chart Image file being used by another application.", "POD Professional v4.5 Error");
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        private void _menuPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            // We are already inside the panel, so its ONLY job is to highlight the buttons
+    if (InMenuBounds(e.X, e.Y))
+    {
+        HighlightMenuOption(e.X, e.Y);
+        InvalidateMenu();
+    }
+        }
+
+        private void _menuPanel_Paint(object sender, PaintEventArgs e)
+        {
+            if (MenuIsOpen)
+            {
+                if (FullSizeImageList.Images.Count > 0)
+                    e.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        e.Graphics.DrawImage(MenuBitmaps[j, i], i * ImageSize + MenuMinX, j * ImageSize + MenuMinY);
+                    }
+                }
+
+                e.Graphics.DrawImage(_wideBitmap, 0, 4 * ImageSize);
+                e.Graphics.DrawImage(_aspectBitmap, 0, 100);
+                e.Graphics.DrawImage(_sizeBitmap, 0, 120);
+                if (WideImageList.Images.Count > 0)
+                    e.Graphics.DrawImage(WideImageList.Images[1], 0, 0);
+
+            }
+        }
+
+        private void _menuPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (MenuIsOpen)
+            {
+                int rowIndex = 0;
+                int colIndex = 0;
+
+                GetMenuIndex(e.X, e.Y, out rowIndex, out colIndex);
+
+                TurnOffAllMenuButtons();
+                PressMenuButton(rowIndex, colIndex);
+                InvalidateMenu();
+
+
+            }
+
+            base.OnMouseDown(e);
+        }
+
+        private void _menuPanel_MouseLeave(object sender, EventArgs e)
+        {
+            // Close the menu when the mouse completely leaves the panel
+            MenuIsOpen = false;
+            TurnOffAllMenuButtons(); // Resets the button images so they aren't stuck on "highlighted" next time
+        }
+
+
+        private void DataPointChart_HasFailedDrawing(DataPointChart chart, string myError)
+        {
+            foreach (var series in this.Series)
+            {
+                series.Points.Clear();
+            }
+
+            foreach (var area in this.ChartAreas)
+            {
+                area.AxisX.Minimum = double.NaN;
+                area.AxisX.Maximum = double.NaN;
+                area.AxisY.Minimum = double.NaN;
+                area.AxisY.Maximum = double.NaN;
+            }
+
+            this.Width += 1;
+            this.Height += 1;
+            this.Invalidate();
+            this.Update();
+            this.Width -= 1;
+            this.Height -= 1;
         }
 
         int ImageSize = 20;
@@ -155,7 +510,36 @@ namespace POD.Controls
         int MenuMaxX = 80;
         int MenuMinY = 20;
         int MenuMinX = 0;
-        public bool MenuIsOpen = false;
+
+        bool _menuIsOpen = false;
+
+        public bool MenuIsOpen
+        {
+            get
+            {
+                return _menuIsOpen;
+            }
+            set
+            {
+                if (ChartToolTip != null)
+                {
+                    if (value)
+                    {
+                        // Menu is opening: turn custom tooltip off
+                        ChartToolTip.Active = false;
+                    }
+                    else
+                    {
+                        // Menu is closing: turn custom tooltip back on
+                        ChartToolTip.Active = true;
+                    }
+                }
+
+                _menuPanel.Visible = value;
+                _menuIsOpen = value;
+            }
+        }
+
         private void SetUpImageLists()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataPointChart));
@@ -263,43 +647,21 @@ namespace POD.Controls
         }
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            
-
+            // The chart's ONLY job is to open the menu if you hover the top-left corner
             if (!MenuIsOpen && e.X < ImageSize && e.Y < ImageSize)
             {
                 MenuIsOpen = true;
-
-                if (ChartToolTip != null)
-                    ChartToolTip.Active = false;
-
-                InvalidateMenu();
             }
-            else if(MenuIsOpen && InMenuBounds(e.X, e.Y))
+
+            // Only process normal chart mouse events (like tooltips) if the menu is CLOSED
+            if (!MenuIsOpen)
             {
-                HighlightMenuOption(e.X, e.Y);
-                InvalidateMenu();
-
-                if (ChartToolTip != null && ChartToolTip.Active == true)
-                    ChartToolTip.Active = false;
+                try
+                {
+                    base.OnMouseMove(e);
+                }
+                catch (OverflowException) { }
             }
-            else if (MenuIsOpen && !InMenuBounds(e.X, e.Y))
-            {
-                MenuIsOpen = false;
-                InvalidateMenu();
-
-                if (ChartToolTip != null && ChartToolTip.Active == false)
-                    ChartToolTip.Active = true;
-            }
-            try
-            {
-                base.OnMouseMove(e);
-            }
-            catch(OverflowException)
-            {
-                //var uhoh = 0.0;
-            }
-
-
         }
 
         private void HighlightMenuOption(int x, int y)
@@ -315,6 +677,11 @@ namespace POD.Controls
 
         private void TurnOnMenuButton(int rowIndex, int colIndex)
         {
+            if(MenuOnImageList.Images == null || MenuOnImageList.Images.Count == 0)
+            {
+                return;
+            }
+
             MenuBitmaps[rowIndex, colIndex] = new Bitmap(MenuOnImageList.Images[colIndex * 3 + rowIndex]);
 
             switch(colIndex)
@@ -399,34 +766,14 @@ namespace POD.Controls
 
         private void InvalidateMenu()
         {
-            if(FullSizeImageList.Images.Count > 0)
-                Invalidate(new Rectangle(0, 0, FullSizeImageList.Images[0].Width, FullSizeImageList.Images[0].Height));
+            if (FullSizeImageList.Images.Count > 0)
+            {
+                _menuPanel.Invalidate(new Rectangle(0, 0, FullSizeImageList.Images[0].Width, FullSizeImageList.Images[0].Height));
+            }
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            /*if (e.X < ImageSize && e.Y < ImageSize)
-            {
-                var image = ButtonImageList.Images[1];
-                _bitmap = new Bitmap(image);
-                InvalidateMenu();
-                
-            }*/
-
-            if(MenuIsOpen)
-            {
-                int rowIndex = 0;
-                int colIndex = 0;
-
-                GetMenuIndex(e.X, e.Y, out rowIndex, out colIndex);
-
-                TurnOffAllMenuButtons();
-                PressMenuButton(rowIndex, colIndex);
-                InvalidateMenu();
-
-                
-            }
-
             base.OnMouseDown(e);
         }
 
@@ -435,173 +782,142 @@ namespace POD.Controls
         protected override void OnMouseUp(MouseEventArgs e)
         {
 
-            if (MenuIsOpen)
-            {
-                int rowIndex = 0;
-                int colIndex = 0;
-
-                GetMenuIndex(e.X, e.Y, out rowIndex, out colIndex);
-
-                TurnOffAllMenuButtons();
-                TurnOnMenuButton(rowIndex, colIndex);
-                InvalidateMenu();
-
-                
-            }
-
             base.OnMouseUp(e);
         }
 
-        protected override void OnMouseClick(MouseEventArgs e)
+        
+
+        private void AddStripsBack(Axis axis, List<StripLine> strips)
         {
-            if (MenuIsOpen)
+            foreach (var strip in strips)
             {
-                
-
-                int rowIndex = 0;
-                int colIndex = 0;
-                int width = 0;
-                int height = 0;
-                float fontSize = 0.0F;
-                int lineWidth = 0;
-                int axisWidth = 0;
-                int markerHeight = 0;
-                int dpi = 0;
-
-                MenuIsOpen = false;
-                InvalidateMenu();
-
-                if (ChartToolTip != null && ChartToolTip.Active == false)
-                    ChartToolTip.Active = true;
-
-                GetMenuIndex(e.X, e.Y, out rowIndex, out colIndex);
-
-                switch(rowIndex)
-                {
-                    case 0:
-                        height = 480;
-                        fontSize = 10.0F;
-                        lineWidth = 2;
-                        markerHeight = 7;
-                        axisWidth = 1;
-                        dpi = 120;
-                        switch (colIndex)
-                        {
-                            case 1:
-                                width = 480;
-                                break;
-                            case 2:
-                                width = 640;
-                                break;
-                            case 3:
-                                width = 854;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case 1:
-                        height = 720;
-                        fontSize = 12.0F;
-                        lineWidth = 3;
-                        markerHeight = 9;
-                        axisWidth = 1;
-                        dpi = 120;
-                        switch (colIndex)
-                        {
-                            case 1:
-                                width = 720;
-                                break;
-                            case 2:
-                                width = 960;
-                                break;
-                            case 3:
-                                width = 1280;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case 2:
-                        height = 1080;
-                        fontSize = 18.0F;
-                        lineWidth = 5;
-                        markerHeight = 11;
-                        axisWidth = 3;
-                        dpi = 120;
-                        switch (colIndex)
-                        {
-                            case 1:
-                                width = 1080;
-                                break;
-                            case 2:
-                                width = 1440;
-                                break;
-                            case 3:
-                                width = 1920;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
-
-                }
-
-                if(width > 0 && height > 0)
-                {
-                    //Enter your chart building code here
-                    DataPointChart clone = CloneAndScaleChartForClipboard(width, height, fontSize, lineWidth, axisWidth, markerHeight);
-
-                    try
-                    {
-                        if(clone != null)
-                            CreateImageForClipboardAndOffice(dpi, clone);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Chart Image file being used by another application.", "POD v4 Error");
-                    }
-                                        
-                    return;
-                }
+                axis.StripLines.Add(strip);
             }
-
-            if(!MenuIsOpen)
-                base.OnMouseClick(e);
         }
 
         private DataPointChart CloneAndScaleChartForClipboard(int width, int height, float fontSize, int lineWidth, int axisWidth, int markerHeight)
         {
-            System.IO.MemoryStream myStream = new System.IO.MemoryStream();
-            DataPointChart clone = new DataPointChart();
-            this.Serializer.Save(myStream);
-            clone.Serializer.Load(myStream);
+            // 1. BACKUP: Move all current annotations to a temporary list
+            var tempAnnotations = this.Annotations.ToList();
+            var tempYStrips = this.YAxis.StripLines.ToList();
+            var tempXStrips = this.XAxis.StripLines.ToList();
 
+            // 2. DETACH: Clear the original chart's annotations so the Serializer is "blind" to them
+            this.Annotations.Clear();
+            this.YAxis.StripLines.Clear();
+            this.XAxis.StripLines.Clear();
+
+            DataPointChart clone = new DataPointChart();
+
+            try
+            {
+                using (System.IO.MemoryStream myStream = new System.IO.MemoryStream())
+                {
+                    this.Serializer.Content = SerializationContents.All;
+                    clone.Serializer.Content = SerializationContents.All;
+                    clone.Serializer.IsResetWhenLoading = true;
+
+                    // 3. SERIALIZE: Save/Load the "Skeleton" (Axes, Series, etc.)
+                    // This will NOT crash because the problematic annotations are gone.
+                    this.Serializer.Save(myStream);
+                    myStream.Position = 0;
+                    clone.Serializer.Load(myStream);
+                }
+            }
+            finally
+            {
+                // 4. RESTORE SOURCE: Put the original annotations back where they belong
+                // We do this in 'finally' so your UI is safe even if an error occurs.
+                foreach (var anno in tempAnnotations)
+                {
+                    this.Annotations.Add(anno);
+                }
+
+                AddStripsBack(this.YAxis, tempYStrips);
+                AddStripsBack(this.XAxis, tempXStrips);
+            }
+
+            // --- Start Building the Clone ---
             clone.Height = height;
             clone.Width = width;
 
-            var removed = new List<Annotation>();
+            // make sure clone follows same axis flags as original
+            clone.ForceZeroXAxis = ForceZeroXAxis;
+            clone.ForceZeroYAxis = ForceZeroYAxis;
+            clone.ClampXAxisToZeroOnExport = ClampXAxisToZeroOnExport;
+            clone.ClampYAxisToZeroOnExport = ClampYAxisToZeroOnExport;
 
-            foreach (Annotation anno in clone.Annotations)
+            // 5. COPY TO CLONE: Manually create copies for the new chart
+            // 5. COPY TO CLONE: Manually create copies for the new chart
+            foreach (var source in tempAnnotations)
             {
-                if (anno.Name != null && anno.Name.StartsWith("Equation"))
-                    removed.Add(anno);
+                // Skip Text and Polygon annotations entirely for a cleaner presentation export
+                if (source is TextAnnotation || source is PolygonAnnotation)
+                    continue;
 
+                // Use Activator to create the exact same type (e.g., VerticalLineAnnotation)
+                Annotation copy = (Annotation)Activator.CreateInstance(source.GetType());
+
+                // Copy critical layout properties
+                copy.Name = source.Name;
+                copy.X = source.X;
+                copy.Y = source.Y;
+                copy.Width = source.Width;
+                copy.Height = source.Height;
+
+                // Point to the CLONE'S axes so the dashed lines scale correctly
+                if (source.AxisX != null) copy.AxisX = clone.ChartAreas[0].AxisX;
+                if (source.AxisY != null) copy.AxisY = clone.ChartAreas[0].AxisY;
+
+                copy.ClipToChartArea = source.ClipToChartArea;
+                copy.Alignment = source.Alignment;
+
+                // Visual properties (Colors, line thickness, dashes)
+                copy.ForeColor = source.ForeColor;
+                copy.BackColor = source.BackColor;
+                copy.LineColor = source.LineColor;
+                copy.LineDashStyle = source.LineDashStyle;
+                copy.LineWidth = source.LineWidth;
+
+                // Specific handling to make the spanning lines visible
+                if (source is HorizontalLineAnnotation sourceHLine && copy is HorizontalLineAnnotation copyHLine)
+                {
+                    copyHLine.IsInfinitive = sourceHLine.IsInfinitive;
+                }
+                else if (source is VerticalLineAnnotation sourceVLine && copy is VerticalLineAnnotation copyVLine)
+                {
+                    copyVLine.IsInfinitive = sourceVLine.IsInfinitive;
+                }
+                else if (source is LineAnnotation sourceLine && copy is LineAnnotation copyLine)
+                {
+                    copyLine.IsSizeAlwaysRelative = sourceLine.IsSizeAlwaysRelative;
+                    copyLine.StartCap = sourceLine.StartCap;
+                    copyLine.EndCap = sourceLine.EndCap;
+                }
+
+                clone.Annotations.Add(copy);
             }
 
-            foreach (Annotation anno in removed)
+            foreach (var source in tempXStrips)
             {
-                clone.Annotations.Remove(anno);
+                NamedStripLine copy = DuplicateNamedStripLine((NamedStripLine)source);
+
+                clone.XAxis.StripLines.Add(copy);
             }
 
+            foreach (var source in tempYStrips)
+            {
+                NamedStripLine copy = DuplicateNamedStripLine((NamedStripLine)source);
+
+                clone.YAxis.StripLines.Add(copy);
+            }
+
+            // --- Standard Scaling Logic for Series, Axes, and Titles ---
             foreach (Series series in clone.Series)
             {
                 series.Font = new Font(series.Font.FontFamily, fontSize);
                 series.BorderWidth = lineWidth;
                 series.MarkerSize = markerHeight;
-
                 foreach (DataPoint point in series.Points)
                 {
                     point.MarkerSize = markerHeight;
@@ -612,19 +928,17 @@ namespace POD.Controls
             foreach (Legend legend in clone.Legends)
             {
                 legend.Font = new Font(legend.Font.FontFamily, fontSize);
-
-                foreach (var item in legend.CustomItems)
-                {
-                    item.MarkerSize = markerHeight;
-                }
             }
 
-            foreach (Axis axis in clone.ChartAreas[0].Axes.ToList())
+            if (clone.ChartAreas.Count > 0)
             {
-                axis.TitleFont = new Font(axis.TitleFont.FontFamily, fontSize);
-                axis.LabelStyle.Font = new Font(axis.LabelStyle.Font.FontFamily, fontSize);
-                axis.LineWidth = axisWidth;
-                axis.MajorTickMark.LineWidth = axisWidth;
+                foreach (Axis axis in clone.ChartAreas[0].Axes)
+                {
+                    axis.TitleFont = new Font(axis.TitleFont.FontFamily, fontSize);
+                    axis.LabelStyle.Font = new Font(axis.LabelStyle.Font.FontFamily, fontSize);
+                    axis.LineWidth = axisWidth;
+                    axis.MajorTickMark.LineWidth = axisWidth;
+                }
             }
 
             foreach (Title title in clone.Titles)
@@ -635,10 +949,72 @@ namespace POD.Controls
             return clone;
         }
 
-        private static void CreateImageForClipboardAndOffice(int dpi, DataPointChart clone)
+        private NamedStripLine DuplicateNamedStripLine(NamedStripLine source)
+        {
+            // Use Activator to create the exact same type (e.g., NamedStripLine)
+            NamedStripLine copy = (NamedStripLine)Activator.CreateInstance(source.GetType());
+
+            // Copy your custom subclass name identifier
+            copy.Name = source.Name;
+
+            // 1. Copy critical placement properties (StripLines use Offset and Width instead of X/Y/Height)
+            copy.IntervalOffset = source.IntervalOffset;
+            copy.StripWidth = source.StripWidth;
+            copy.Interval = source.Interval;
+            copy.IntervalType = source.IntervalType;
+            copy.IntervalOffsetType = source.IntervalOffsetType;
+
+            // 2. Copy Text and Label layout properties
+            copy.Text = source.Text;
+            copy.TextAlignment = source.TextAlignment;
+            copy.TextLineAlignment = source.TextLineAlignment;
+            copy.Font = source.Font;
+            copy.ForeColor = source.ForeColor;
+
+            // 3. Copy Background visual properties (Fills and Gradients)
+            copy.BackColor = source.BackColor;
+            copy.BackGradientStyle = source.BackGradientStyle;
+            copy.BackSecondaryColor = source.BackSecondaryColor;
+            copy.BackHatchStyle = source.BackHatchStyle;
+
+            // 4. Copy Edge/Line properties (MS Chart StripLines use Border properties instead of Line properties)
+            copy.BorderColor = source.BorderColor;
+            copy.BorderDashStyle = source.BorderDashStyle;
+            copy.BorderWidth = source.BorderWidth;
+
+            // 5. Copy administrative helpers
+            copy.ToolTip = source.ToolTip;
+
+            return copy;
+        }
+
+        public virtual void PrepareCloneSeries(DataPointChart clone, double finalMinY)
+        {
+            // The base class does nothing by default.
+            // Derived charts will override this to clean up their specific series.
+        }
+
+        private static void CreateImageForClipboardAndOffice(int dpi, DataPointChart clone, DataPointChart parent)
         {
             Bitmap chartBitmap = new Bitmap(clone.DisplayRectangle.Width, clone.DisplayRectangle.Height);
             clone.DoPostPaint = false;
+            
+            if (clone.ClampXAxisToZeroOnExport && clone.ChartAreas[0].AxisX.Minimum < 0.0)
+            {
+                clone.ChartAreas[0].AxisX.Minimum = 0.0;
+            }
+
+            if (clone.ClampYAxisToZeroOnExport && clone.ChartAreas[0].AxisY.Minimum < 0.0)
+            {
+                clone.ChartAreas[0].AxisY.Minimum = 0.0;
+            }
+
+            // 1. Force the layout engine to calculate the final visible bounds (e.g., 33)
+            clone.ChartAreas[0].RecalculateAxesScale();
+            double finalMinY = clone.ChartAreas[0].AxisY.Minimum;
+
+            parent.PrepareCloneSeries(clone, finalMinY);
+
             clone.Invalidate();
             clone.DrawToBitmap(chartBitmap, clone.DisplayRectangle);
             chartBitmap.SetResolution(dpi, dpi);
@@ -725,6 +1101,8 @@ namespace POD.Controls
                 //MessageBox.Show(exp.Message, "Error While Drawing Chart");
                 e.Graphics.FillRectangle(Brushes.White, e.ClipRectangle);
                 e.Graphics.DrawString(exp.Message, DefaultFont, Brushes.DarkSlateGray, new PointF(10.0F, DefaultFont.Height + 5));
+                
+
                 RaiseHasFailedEvent(exp);
             }
         }
@@ -765,6 +1143,8 @@ namespace POD.Controls
             }
         }
 
+        public int DataPointCount => Series.Where(x => x.ChartType == SeriesChartType.Point).Count();
+
         protected void UpdateChartTitle()
         {
             if (!DesignMode)
@@ -780,12 +1160,12 @@ namespace POD.Controls
                         title.Font = new Font(title.Font.FontFamily, 10.0F, FontStyle.Regular);
                     }
 
-                    if (_chartTitle.Length == 0)
+                    if (_chartTitle == "")
                     {
-                        if (Series.Count > SingleSeriesCount)
-                            Titles[0].Text = "Combined Responses vs " + XAxisTitle;
+                        if (DataPointCount > SingleSeriesCount)
+                            Titles[0].Text = $"Combined Responses vs{XAxisTitle}";
                         else
-                            Titles[0].Text = YAxisTitle + " vs " + XAxisTitle;
+                            Titles[0].Text = $"{YAxisTitle} vs {XAxisTitle}";
                     }
                     else
                     {
@@ -805,7 +1185,7 @@ namespace POD.Controls
                 }
                 else
                 {
-                    if (Series.Count > SingleSeriesCount && AutoNameYAxis)
+                    if (DataPointCount > SingleSeriesCount && AutoNameYAxis)
                         YAxis.Title = "Combined Responses";
                     else
                         YAxis.Title = YAxisTitle;
@@ -835,7 +1215,10 @@ namespace POD.Controls
             {
                 if (!DesignMode)
                 {
-                    return _xAxisTitle + XAxisUnitForTitle;
+                    if (_xAxisTitle == "")
+                        return $"Flaw{XAxisUnitForTitle}";
+                    else
+                        return $"{_xAxisTitle}{XAxisUnitForTitle}";
                 }
                 else
                 {
@@ -884,10 +1267,7 @@ namespace POD.Controls
             {
                 if (!DesignMode)
                 {
-                    if (_xAxisUnit.Length > 0)
-                        return " (" + _xAxisUnit + ")";
-                    else
-                        return "";
+                    return _xAxisUnit.Length > 0 ? $" ({_xAxisUnit})" : "";
                 }
 
                 return "";
@@ -902,7 +1282,10 @@ namespace POD.Controls
             {
                 if (!DesignMode)
                 {
-                    return _yAxisTitle + " Response" + YAxisUnitForTitle;
+                    if (_yAxisTitle == "")
+                        return $"Response{YAxisUnitForTitle}";
+                    else
+                        return $"{_yAxisTitle}{YAxisUnitForTitle}";
                 }
 
                 return "";
@@ -948,10 +1331,7 @@ namespace POD.Controls
             {
                 if (!DesignMode)
                 {
-                    if (_yAxisUnit.Length > 0)
-                        return " (" + _yAxisUnit + ")";
-                    else
-                        return "";
+                    return _yAxisUnit.Length > 0 ? $" ({_yAxisUnit})" : "";
                 }
 
                 return "";
@@ -1233,6 +1613,16 @@ namespace POD.Controls
                 ChartAreas[0].AxisX.Maximum = ChartAreas[0].AxisX.Minimum;
                 ChartAreas[0].AxisX.Minimum = temp;
             }
+
+            if (ForceZeroXAxis && ChartAreas[0].AxisX.Minimum < 0.0)
+            {
+                ChartAreas[0].AxisX.Minimum = 0.0;
+            }
+
+            if (ForceZeroYAxis && ChartAreas[0].AxisY.Minimum < 0.0)
+            {
+                ChartAreas[0].AxisY.Minimum = 0.0;
+            }
         }
 
         private void StoreLabelingParameters(IAxisObject xAxis, IAxisObject yAxis, Globals.InvertAxisFunction invertX, Globals.InvertAxisFunction invertY, 
@@ -1281,9 +1671,9 @@ namespace POD.Controls
         private int GetPrecisionFromData()
         {
             int maxPrecision=10;
-            if (_analysisData.RecheckAnalysisType(AnalysisDataTypeEnum.None) == AnalysisDataTypeEnum.AHat)
+            if (_analysisData.RecheckAnalysisType(_analysisData.DataType) == AnalysisDataTypeEnum.AHat)
                 maxPrecision = _analysisData.AHATAnalysisObject.MaxPrecision;
-            else if (_analysisData.RecheckAnalysisType(AnalysisDataTypeEnum.None) == AnalysisDataTypeEnum.HitMiss)
+            else if (_analysisData.RecheckAnalysisType(_analysisData.DataType) == AnalysisDataTypeEnum.HitMiss)
                 maxPrecision = _analysisData.HMAnalysisObject.MaxPrecision;
 
             return maxPrecision;
@@ -1292,68 +1682,99 @@ namespace POD.Controls
         private void LabelLinearAxis(Axis chartAxis, IAxisObject axis, Globals.InvertAxisFunction invert, int labelCount, double offset, bool redoing = false, TransformTypeEnum myTransform=TransformTypeEnum.Linear, double lambdaValue=double.NaN)
         {
             var lastString = "";
-            var precision = 1;
-            var maxPrecision = 10;
-            if(_analysisData != null)
-            {
-                maxPrecision = GetPrecisionFromData();
-            }
-
 
             // when lambda value is negative. The top label will be negative due to the nature of the backwards transform function
             // thus, the top label is simply omitted. DO NOT DELETE.
             if (lambdaValue < 0)
             {
-                labelCount -=1;
+                labelCount -= 1;
             }
+            // Determine the format for "normal" numbers based on the overall scale of the axis.
+            // This ensures consistent precision for all non-scientific labels.
+            string numberFormat;
+            if (invert != null)
+            {
+                // Find the largest absolute value on the axis after transformation.
+                double maxDisplayValue = Math.Max(
+                    Math.Abs(TransformBackValue(axis.Axis, axis.Max)),
+                    Math.Abs(TransformBackValue(axis.Axis, axis.Min))
+                );
+
+                // Use G (general) format for most cases to avoid trailing zeros, and N0 for large integers.
+                if (maxDisplayValue < 100)
+                {
+                    numberFormat = "G3"; // General, 3 significant digits is a good default
+                }
+                else // maxDisplayValue >= 100
+                {
+                    numberFormat = "N0"; // Integer with comma for large numbers
+                }
+            }
+            else
+            {
+                numberFormat = "G3"; // A reasonable default for non-transformed axes
+            }
+
             for (int i = 0; i < labelCount; i++)
             {                
                 var modify = 0.0;
                 
-                var format = GetFormat(precision);
                 double intv = (axis.Interval * i + axis.Min + axis.IntervalOffset + offset + modify);
-                string intvString = intv.ToString(format);
+                string intvString;
 
+                // Get the actual value to be displayed on the label.
+                double displayValue;
                 if (invert != null && intv != 0.0)
-                    //intvString = invert(intv).ToString(format);                   
-                    intvString = Math.Round(TransformBackValue(intv, myTransform, lambdaValue), maxPrecision).ToString();
-                else
-                    intvString = intv.ToString(format);
-
-                double convertedIntv = double.Parse(intvString);
-
-                double diff = Math.Abs(intv - convertedIntv);
-
-                if ((intvString == lastString || diff > Math.Abs(intv * .1)) && precision < maxPrecision)
                 {
-                    i = -1;
-                    precision++;
-                    chartAxis.CustomLabels.Clear();
+                    displayValue = TransformBackValue(axis.Axis, intv);
                 }
-                else if (intv >= axis.Min && intv <= axis.Max)
+                else
+                {
+                    displayValue = intv;
+                }
+
+                double absValue = Math.Abs(displayValue);
+
+                // HYBRID FORMATTING LOGIC:
+                // 1. If the number is very small, use scientific notation.
+                if (absValue > 0 && absValue < 0.01)
+                {
+                    intvString = displayValue.ToString("G2"); // e.g., "4.5E-06"
+                }
+                // 2. Otherwise, use the consistent format determined earlier.
+                else
+                {
+                    intvString = displayValue.ToString(numberFormat);
+                }
+
+                // Avoid duplicate labels
+                if (lastString == intvString)
+                {
+                    continue;
+                }
+
+                if (intv >= axis.Min && intv <= axis.Max)
                 {
                     CustomLabel label = new CustomLabel
                     {
-                        FromPosition = axis.Interval * i - axis.Interval + axis.Min + axis.IntervalOffset + offset + modify,
-                        ToPosition = axis.Interval * i + axis.Interval + axis.Min + axis.IntervalOffset + offset + modify,
+                        // Centering the label on the tick mark
+                        FromPosition = intv - (axis.Interval / 2.0),
+                        ToPosition = intv + (axis.Interval / 2.0),
                         Text = intvString,
                         RowIndex = 0,
                         GridTicks = GridTickTypes.All
                     };
 
                     chartAxis.CustomLabels.Add(label);
-                    
-
-                    lastString = label.Text;
+                    lastString = intvString;
                 }
-                
             }
 
             if(chartAxis.CustomLabels.Count <= 2 && redoing == false)
             {
                 axis.Interval = axis.Interval / 2.0;
                 chartAxis.CustomLabels.Clear();
-                LabelLinearAxis(chartAxis, axis, invert, labelCount*2-1, offset, true, myTransform);
+                LabelLinearAxis(chartAxis, axis, invert, labelCount * 2 - 1, offset, true, myTransform);
             }
         }
 
@@ -1361,9 +1782,9 @@ namespace POD.Controls
         {
             var format = "0.#";
 
-            for(int i = 1; i < precision; i++)
+            for (int i = 1; i < precision; i++)
             {
-                format = format + "#";
+                format = $"{format}#";
             }
 
             return format;
@@ -1379,13 +1800,13 @@ namespace POD.Controls
                 {
                     var value = Math.Pow(10, exp) * subExp;
                     //var intv = transform(value);
-                    var intv = TransformValue(value);
+                    var intv = TransformValue(axis.Axis, value, TransformTypeEnum.Log);
                     var exponent = exp;
                     var valLabel = value.ToString();
 
                     if(exponent > 3)
                     {
-                        valLabel = "1E+" + String.Format("{0:###}", exponent);
+                        valLabel = $"1E+{exponent:###}";
                     }
 
                     if (subExp != 1 && subExp != 2 && subExp != 5 && forceAll == false)
@@ -1417,75 +1838,49 @@ namespace POD.Controls
                 LabelLog10Axis(chartAxis, axis, transform, true);
             }
         }
-        private double TransformBackValue(double myValue, TransformTypeEnum transform, double lambdaValue= Double.NaN)
+
+        public void UpdateTransformer(IAnalysisData data)
         {
-            double transformValue = 0.0;
-            switch (transform)
+            if (_transformer == null)
             {
-                case TransformTypeEnum.Linear:
-                    transformValue = myValue;
-                    break;
-                case TransformTypeEnum.Log:
-                    transformValue = Math.Exp(myValue);
-                    break;
-                case TransformTypeEnum.Inverse:
-                    transformValue = 1.0 / myValue;
-                    break;
-                case TransformTypeEnum.BoxCox:
-                    if(!double.IsNaN(lambdaValue))
-                    {
-                        //convert lambda to an improper fraction to handle negtive values with the nth root
-                        if (myValue >= -(1 / lambdaValue) && lambdaValue < 0)
-                        {
-                            return lambdaValue * 10;
-                        }
-                        long num, den;
-                        double whole = Math.Floor(lambdaValue);
-                        double decimalVal = lambdaValue - whole;
-                        IPy4C.DecimalToFraction(decimalVal, out num, out den);
-                        transformValue = IPy4C.NthRoot(myValue * lambdaValue + 1, lambdaValue, den);
-                        if (double.IsNaN(transformValue))
-                        {
-                            //add a very small '.01' number to the denominator to return a valid value to scale      
-                            double approxLambda = whole + Convert.ToDouble(num) / (Convert.ToDouble(den) + .000000000001);
-                            transformValue = IPy4C.NthRoot(myValue * approxLambda + 1, approxLambda, 1.0);
-                        }
-                    }
-                    else
-                    {
-                        transformValue = myValue;
-                    }
-                    break;
-                default:
-                    transformValue = myValue;
-                    break;
+                _transformer = data.DuplicateTransformer();
             }
-            return transformValue;
+            else
+            {
+                data.UpdateTransformer(_transformer);
+            }
         }
-        private  double TransformValue(double myValue, TransformTypeEnum transform= TransformTypeEnum.Log)
+
+        private double TransformBackValue(AxisKind axis, double myValue)
         {
-            double transformValue = 0.0;
-            switch (transform)
+            if (_transformer != null)
             {
-                case TransformTypeEnum.Linear:
-                    transformValue = myValue;
-                    break;
-                case TransformTypeEnum.Log:
-                    transformValue = Math.Log(myValue);
-                    break;
-                case TransformTypeEnum.Inverse:
-                    transformValue = 1.0 / myValue;
-                    break;
-                //case TransformTypeEnum.BoxCox:
-                //case 5:
-                    //transformValue = (Math.Pow(myValue, InLambdaValue) - 1) / InLambdaValue;
-                //    break;
-                default:
-                    transformValue = myValue;
-                    break;
+                return _transformer.InverseTransformAxisValue(axis, myValue);
             }
-            return transformValue;
+
+            throw new MissingMemberException("Transformer missing for DataPointChart. Check object initialization.");
         }
+
+        private double TransformValue(AxisKind axis, double myValue, TransformTypeEnum forcedTransform)
+        {
+            if (_transformer != null)
+            {
+                return _transformer.TransformAxisValue(axis, myValue, forcedTransform);
+            }
+
+            throw new MissingMemberException("Transformer missing for DataPointChart. Check object initialization.");
+        }
+
+        private  double TransformValue(AxisKind axis, double myValue)
+        {
+            if (_transformer != null)
+            {
+                return _transformer.TransformAxisValue(axis, myValue);
+            }
+
+            throw new MissingMemberException("Transformer missing for DataPointChart. Check object initialization.");
+        }
+
         public virtual void ClearEverythingButPoints()
         {
 
@@ -1574,6 +1969,8 @@ namespace POD.Controls
             }
             
             _lastWidth = Width;
+
+            ApplyDynamicFontScaling();
         }
 
         
@@ -1625,7 +2022,9 @@ namespace POD.Controls
                 mouseInside = false;
             }
 
-            MenuIsOpen = false;
+            // Unconditionally force the top-left corner to repaint so the _bitmap clears!
+            Invalidate(new Rectangle(0, 0, 20, 20));
+
             InvalidateMenu();
         }
 
@@ -1697,6 +2096,8 @@ namespace POD.Controls
 
         public void ReloadChartData(DataRowCollection xRows, DataTable yData, DataTable names)
         {
+            //if (this.IsDisposed) return;
+
             var nameColumnNames = new List<string>();
 
             foreach (DataColumn col in names.Columns)
@@ -1714,7 +2115,6 @@ namespace POD.Controls
                 }
             }
 
-            //var flawRows = _flaws.Rows;
             for (int i = 0; i < xRows.Count; i++)
             {
                 for (var j = 0; j < yData.Columns.Count; j++)
@@ -1733,7 +2133,7 @@ namespace POD.Controls
                         lastPoint.SetCustomProperty("Name", pointName);
                         lastPoint.SetCustomProperty("Row Index", i.ToString());
                         lastPoint.SetCustomProperty("Column Index", j.ToString());
-                        lastPoint.ToolTip = "";// +Environment.NewLine;// this.Series[j + 3].Name + "[" + pointName + "]" + Environment.NewLine;
+                        lastPoint.ToolTip = "";
                         
                         
                     }
@@ -1746,7 +2146,7 @@ namespace POD.Controls
                         lastPoint.SetCustomProperty("Name", pointName);
                         lastPoint.SetCustomProperty("Row Index", i.ToString());
                         lastPoint.SetCustomProperty("Column Index", j.ToString());
-                        lastPoint.ToolTip = "";// +Environment.NewLine;// this.Series[j + 3].Name + "[" + pointName + "]" + Environment.NewLine;
+                        lastPoint.ToolTip = "";
                     }
                 }
                 
@@ -1757,31 +2157,15 @@ namespace POD.Controls
 
         private string CreateNameFromRow(DataRow dataRow, List<string> names)
         {
-            var finalName = "";
-            var cellName = "";
-            var colName = "";
-            int longest = 6;
-            var maxCol = longest;
-            var maxCell = longest;
-            
+            // Determine the safe limit: whichever collection is smaller
+            int safeCount = Math.Min(names.Count, dataRow.ItemArray.Length);
 
-            for(int i = 0; i < names.Count; i++)
-            {
-                cellName = Convert.ToString(dataRow.ItemArray[i]);
-                colName = names[i];
+            // Only iterate up to the safeCount
+            var values = names
+                .Take(safeCount)
+                .Select((_, i) => Convert.ToString(dataRow.ItemArray[i]));
 
-                maxCol = (colName.Length < longest) ? colName.Length : longest;
-                maxCell = (cellName.Length < longest) ? cellName.Length : longest;
-
-                //finalName += colName.Substring(0, maxCol).Trim() + ":" + cellName.Substring(0, maxCell).Trim();
-
-                finalName += cellName;
-
-                if(i != names.Count - 1)
-                    finalName += "|";
-            }
-
-            return finalName;
+            return string.Join("|", values);
         }
 
         public void SetXAxisRange(IAxisObject myAxis, IAnalysisData data, bool forceLinear = false, bool keepLabelCount = false, 
@@ -1857,6 +2241,9 @@ namespace POD.Controls
             }
             else if(e.ChartElement is ChartArea)
             {
+                // setting chart area clip to size of chart control because it can get messed up when errors occur plotting the data (e.g., pod chart's visible clip bounds on 2nd plotting error)
+                e.ChartGraphics.Graphics.SetClip(new RectangleF(0.0f, 0.0f, this.Width, this.Height));
+
                 if (DoPostPaint)
                 {
                     if (IsHighlighted)
@@ -1885,36 +2272,12 @@ namespace POD.Controls
                         e.ChartGraphics.Graphics.DrawRectangle(pen, rect);
                     }
 
-                    
-
-                    if(MenuIsOpen)
-                    {
-                        if(FullSizeImageList.Images.Count > 0)
-                            e.ChartGraphics.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
-
-                        for (int i = 0; i < 4; i++)
-                        {
-                            for (int j = 0; j < 3; j++)
-                            {
-                                e.ChartGraphics.Graphics.DrawImage(MenuBitmaps[j, i], i * ImageSize + MenuMinX, j * ImageSize + MenuMinY);
-                            }
-                        }
-
-                        e.ChartGraphics.Graphics.DrawImage(_wideBitmap, 0, 4 * ImageSize);
-                        e.ChartGraphics.Graphics.DrawImage(_aspectBitmap, 0, 100);
-                        e.ChartGraphics.Graphics.DrawImage(_sizeBitmap, 0, 120);
-                        if (WideImageList.Images.Count > 0)
-                            e.ChartGraphics.Graphics.DrawImage(WideImageList.Images[1], 0, 0);
-                        
-                    }
-
                     if (ClientRectangle.Contains(PointToClient(Control.MousePosition)))
                     {
                         e.ChartGraphics.Graphics.DrawImage(_bitmap, 0.0F, 0.0F);
                     }
-                }
 
-                
+                }                
             }
         }
 
@@ -2049,15 +2412,7 @@ namespace POD.Controls
         {
             var messageBox = messageBoxInput ?? new MessageBoxWrap();
 
-            var finalErrorString = "";
-
-            foreach (string error in _errorsList)
-            {
-                if (finalErrorString.Length > 0)
-                    finalErrorString += Environment.NewLine;
-
-                finalErrorString += error;
-            }
+            var finalErrorString = string.Join(Environment.NewLine, _errorsList);
 
             _errorsList.Clear();
 
@@ -2077,7 +2432,7 @@ namespace POD.Controls
             }
             catch(Exception exp)
             {
-                messageBox.Show("FinalizeErrors: " + exp.Message, "POD v4 Error");
+                messageBox.Show($"FinalizeErrors: {exp.Message}", "POD Professional v4.5 Error");
             }
         }
 
@@ -2446,4 +2801,5 @@ namespace POD.Controls
         }
 
     }
+
 }

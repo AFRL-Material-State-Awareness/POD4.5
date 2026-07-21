@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="ChooseTransformPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +45,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private BackgroundWorker analysisLauncher;
         List<Color> _colors = new List<Color>();
         List<TransformChart> _charts = new List<TransformChart>();
+
+        //DataTable _backupPOD = null;
+        //DataTable _backupUncensored = null;
+        //DataTable _backupPartial = null;
+        //double _a50Backup = 0.0;
+        //double _a9095Backup = 0.0;
+        //double _a90Backup = 0.0;
 
         public ChooseTransformPanel(PODToolTip tooltip)
             : base(tooltip)
@@ -98,6 +121,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             SelectChartBasedOnAnalysis();
 
+            //AnalysisData.DuplicateTable(_backupPOD, _analysis.Data.PodCurveTable);
+            //AnalysisData.DuplicateTable(_backupUncensored, _analysis.Data.ResidualUncensoredTable);
+            //AnalysisData.DuplicateTable(_backupPartial, _analysis.Data.ResidualPartialCensoredTable);
+            //_analysis.RestoreBackup(_a50Backup, _a90Backup, _a9095Backup);
+
             UpdateModelCompares();
 
             _updatingTransformResults = false;
@@ -118,11 +146,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
             Stopwatch watch = new Stopwatch();
-
             _analysis.IsBusy = true;
 
-            //_analysis.SetREngine(new CSharpBackendWithR.REngineObject());
-                        
             var xAxisIndex = 0;
             var yAxisIndex = 0;
 
@@ -130,38 +155,33 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             var sortedSelectedX = GetSortedSelectedIndicies(XAxisTransformList);
 
             var xRowCount = XAxisTransformList.Rows.Count;
-
             var initialX = _analysis.InFlawTransform;
             var initialY = _analysis.InHitMissModel;
 
             _topX = sortedSelectedX.Max() + 1;
             _topY = sortedSelectedY.Max() + 1;
 
-            //var fixList = new List<FixPoint>();
-            //_analysis.Data.UpdateIncludedPointsBasedFlawRange(_analysis.InFlawMax, _analysis.InFlawMin, fixList);
             REngineObject.REngineRunning = true;
-            
+
             foreach (var xTrans in AllXTransforms)
             {
                 yAxisIndex = 0;
 
-                this.Invoke((MethodInvoker)delegate()
+                this.Invoke((MethodInvoker)delegate ()
                 {
                     Parent.Cursor = Cursors.WaitCursor;
                 });
 
                 foreach (var yTrans in AllModels)
                 {
-
                     if (yAxisIndex < _topY && xAxisIndex < _topX)
                     {
-
-                        _analysis.Data.FilterTransformedDataByRanges = true;
                         _analysis.InFlawTransform = xTrans.TransformType;
                         _analysis.InResponseTransform = TransformTypeEnum.Linear;
                         _analysis.InHitMissModel = yTrans.ModelType;
-                        //assign the analysis as transform only
-                        //Analysis.AnalysisCalculationType = RCalculationType.Transform;
+
+                        _analysis.CalculateAndSetBoxCoxParameters();
+
                         var yColumnIndex = yAxisIndex;
                         var xColumnIndex = xAxisIndex;
 
@@ -169,61 +189,59 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                         {
                             _analysis.RunOnlyFitAnalysis();
                         }
-                        catch(Exception eProblem)
+                        catch (Exception eProblem)
                         {
                             MessageBox.Show(eProblem.ToString());
                         }
-                        this.Invoke((MethodInvoker)delegate()
+
+                        this.Invoke((MethodInvoker)delegate ()
                         {
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
-
-                            //watch.Restart();
-                            //watch.Stop();
-                            //MessageBox.Show(xTrans.ConfIntervalType.ToString() + " " + yTrans.ConfIntervalType.ToString() + " " + watch.ElapsedMilliseconds + "ms");
-                            chart.FillFromAnalysis(_analysis.Data, _analysis.InHitMissModel, _colors, xColumnIndex, yColumnIndex);
+                            chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _analysis.InHitMissModel, _colors, xColumnIndex, yColumnIndex);
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
                         });
-
                     }
-
 
                     yAxisIndex++;
                 }
 
                 xAxisIndex++;
             }
+
             if (Analysis.SeparatedFlag)
             {
                 if (WarningTextBox.InvokeRequired)
                 {
-                    WarningTextBox.Invoke(new MethodInvoker(delegate {
-                        //MessageBox.Show("Warning: Hit Miss data has total(or almost total) separation!"+'\n'+ "Please consider using the following metrics:"+'\n' +"-Firth Logistic Regression" +'\n' +
-                        //    "-Likelihood Ratio(LR)" + '\n' + "-Modified Likelihood Ratio (MLR)" + '\n' + "-Ranked Set Sampling" + '\n' + "-Or a combination of these.");
-                        string warningSepMessage = "Warning: Hit Miss data has total(or almost total) separation!" + '\n' + "Please consider using the following metrics:" +
-                        '\n' + "-Firth Logistic Regression" + '\n' + "-Likelihood Ratio(LR)" + '\n' + "-Modified Likelihood Ratio (MLR)" +
-                        '\n' + "-Ranked Set Sampling" + '\n' + "-Or a combination of these.";
-                        //MessageBox.Show(warningSepMessage,"Separated Data Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                        //        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                    WarningTextBox.Invoke(new MethodInvoker(delegate
+                    {
+                        string warningSepMessage = "Warning: Hit Miss data has total(or almost total) separation!\n" +
+                                                    "Please consider using the following metrics:\n" +
+                                                    "- Firth Logistic Regression\n" +
+                                                    "- Likelihood Ratio (LR)\n" +
+                                                    "- Modified Likelihood Ratio (MLR)\n" +
+                                                    "- Ranked Set Sampling\n" +
+                                                    "- Or a combination of these.";
+
                         WarningTextBox.Text = warningSepMessage;
-                        //WarningTextBox.BackColor = Color.Red;
-                     }));
+                    }));
                 }
             }
             else
             {
-                //WarningTextBox.Clear();
-                //WarningTextBox.BackColor = Color.White;
                 if (WarningTextBox.InvokeRequired)
                 {
-                    WarningTextBox.Invoke(new MethodInvoker(delegate {
+                    WarningTextBox.Invoke(new MethodInvoker(delegate
+                    {
                         WarningTextBox.Clear();
                         WarningTextBox.BackColor = Color.White;
                     }));
                 }
             }
+
             REngineObject.REngineRunning = false;
-            this.Invoke((MethodInvoker)delegate()
+
+            this.Invoke((MethodInvoker)delegate ()
             {
                 Parent.Cursor = Cursors.Default;
             });
@@ -231,7 +249,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             _analysis.InFlawTransform = initialX;
             _analysis.InHitMissModel = initialY;
 
-            this.Invoke((MethodInvoker)delegate()
+            this.Invoke((MethodInvoker)delegate ()
             {
                 Refresh();
             });
@@ -748,7 +766,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                     graphLayoutPanel.Controls.Add(chart, yRow.Index, xRow.Index);
 
                     chart.ChartToolTip = StepToolTip;
-                    StepToolTip.SetToolTip(chart, xRow.Cells[0].Value + "-" + yRow.Cells[0].Value);
+                    StepToolTip.SetToolTip(chart, $"{xRow.Cells[0].Value}-{yRow.Cells[0].Value}");
                 }
             }
 
@@ -821,12 +839,12 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 row.Cells[1].Value = Properties.Resources.question;
                 row.Cells[1].ToolTipText = Column1ToolTip(listBox);
                 listBox.Rows.Add(row);
-                row = listBox.CreateNewCloneRow(listBox.Columns.Count);
-                row.Cells[0].Value = new TransformObj(TransformTypeEnum.Inverse);
-                row.Cells[0].ToolTipText = Column0ToolTip(listBox);
-                row.Cells[1].Value = Properties.Resources.question;
-                row.Cells[1].ToolTipText = Column1ToolTip(listBox);
-                listBox.Rows.Add(row);
+                //row = listBox.CreateNewCloneRow(listBox.Columns.Count);
+                //row.Cells[0].Value = new TransformObj(TransformTypeEnum.Inverse);
+                //row.Cells[0].ToolTipText = Column0ToolTip(listBox);
+                //row.Cells[1].Value = Properties.Resources.question;
+                //row.Cells[1].ToolTipText = Column1ToolTip(listBox);
+                //listBox.Rows.Add(row);
 
                 listBox.Rows[0].Selected = true;
                 listBox.Rows[1].Selected = true;

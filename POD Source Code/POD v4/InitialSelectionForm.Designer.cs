@@ -55,7 +55,7 @@
             // 
             // layoutTable
             // 
-            this.layoutTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.layoutTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.layoutTable.ColumnCount = 4;
             this.layoutTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.layoutTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -84,10 +84,7 @@
             this.layoutTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.layoutTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.layoutTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.layoutTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.layoutTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.layoutTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.layoutTable.Size = new System.Drawing.Size(714, 501);
+            this.layoutTable.Size = new System.Drawing.Size(809, 501);
             this.layoutTable.TabIndex = 0;
             // 
             // NewProjectLabel
@@ -181,14 +178,15 @@
             this.OverviewTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.OverviewTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.OverviewTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.OverviewTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OverviewTextBox.ForeColor = System.Drawing.Color.White;
             this.OverviewTextBox.Location = new System.Drawing.Point(203, 19);
             this.OverviewTextBox.Margin = new System.Windows.Forms.Padding(3, 3, 20, 6);
             this.OverviewTextBox.Name = "OverviewTextBox";
             this.OverviewTextBox.ReadOnly = true;
             this.layoutTable.SetRowSpan(this.OverviewTextBox, 7);
-            this.OverviewTextBox.Size = new System.Drawing.Size(359, 480);
+            this.OverviewTextBox.Size = new System.Drawing.Size(454, 480);
             this.OverviewTextBox.TabIndex = 3;
             this.OverviewTextBox.Text = "";
             this.OverviewTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
@@ -227,7 +225,7 @@
             this.HelpViewLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.HelpViewLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HelpViewLabel.ForeColor = System.Drawing.Color.White;
-            this.HelpViewLabel.Location = new System.Drawing.Point(585, 8);
+            this.HelpViewLabel.Location = new System.Drawing.Point(680, 8);
             this.HelpViewLabel.Margin = new System.Windows.Forms.Padding(3, 8, 3, 8);
             this.HelpViewLabel.Name = "HelpViewLabel";
             this.layoutTable.SetRowSpan(this.HelpViewLabel, 2);
@@ -245,7 +243,7 @@
             this.panel1.Controls.Add(this.LargeViewButton);
             this.panel1.Controls.Add(this.DualViewButton);
             this.panel1.Controls.Add(this.DefaultViewButton);
-            this.panel1.Location = new System.Drawing.Point(585, 39);
+            this.panel1.Location = new System.Drawing.Point(680, 39);
             this.panel1.Name = "panel1";
             this.layoutTable.SetRowSpan(this.panel1, 6);
             this.panel1.Size = new System.Drawing.Size(106, 463);
@@ -253,7 +251,8 @@
             // 
             // HelpBox
             // 
-            this.HelpBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("HelpBox.BackgroundImage")));
+            this.HelpBox.BackColor = System.Drawing.Color.Transparent;
+            this.HelpBox.BackgroundImage = global::POD.Properties.Resources.POD_help;
             this.HelpBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.HelpBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.HelpBox.InitialImage = null;
@@ -280,7 +279,7 @@
             this.LargeViewButton.Name = "LargeViewButton";
             this.LargeViewButton.Size = new System.Drawing.Size(106, 73);
             this.LargeViewButton.TabIndex = 6;
-            this.LargeViewButton.Text = "Large";
+            this.LargeViewButton.Text = "Ultrawide";
             this.LargeViewButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LargeViewButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.LargeViewButton.UseVisualStyleBackColor = true;
@@ -338,15 +337,15 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "POD help logo.png");
-            this.imageList1.Images.SetKeyName(1, "POD help logo mouse over.png");
-            this.imageList1.Images.SetKeyName(2, "POD help logo mouse down.png");
+            this.imageList1.Images.SetKeyName(0, "POD help.png");
+            this.imageList1.Images.SetKeyName(1, "POD help mouse over.png");
+            this.imageList1.Images.SetKeyName(2, "POD help mouse down.png");
             // 
             // InitialSelectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(714, 501);
+            this.ClientSize = new System.Drawing.Size(809, 501);
             this.Controls.Add(this.layoutTable);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -355,7 +354,7 @@
             this.MinimizeBox = false;
             this.Name = "InitialSelectionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "UDRI POD v4.5.2 - Welcome!";
+            this.Text = "UDRI POD Professional v4.5.X - Welcome!";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SelectionForm_Closing);
             this.Shown += new System.EventHandler(this.frmMain_Shown);
@@ -388,7 +387,5 @@
         private System.Windows.Forms.RadioButton LargeViewButton;
         private System.Windows.Forms.PictureBox HelpBox;
         private System.Windows.Forms.ImageList imageList1;
-
-
     }
 }

@@ -1,4 +1,20 @@
-﻿using CSharpBackendWithR;
+﻿// <copyright file="UpdateOutputForHitMissData.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using CSharpBackendWithR;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,9 +29,9 @@ namespace Data
         private TransformBackCSharpTablesHITMISS _backwardsTransform;
         private HMAnalysisObject _hmAnalysisObject;
         private IMessageBoxWrap _messageBox;
-        public UpdateOutputForHitMissData(HMAnalysisObject hmAnalysis, IMessageBoxWrap messageBox = null)
+        public UpdateOutputForHitMissData(IDataTransformer displayTransformer, HMAnalysisObject hmAnalysis, IMessageBoxWrap messageBox = null)
         {
-            _backwardsTransform = new TransformBackCSharpTablesHITMISS(hmAnalysis);
+            _backwardsTransform = new TransformBackCSharpTablesHITMISS(hmAnalysis, displayTransformer);
             _hmAnalysisObject = hmAnalysis;
             _messageBox = messageBox ?? new MessageBoxWrap();
         }
@@ -27,13 +43,13 @@ namespace Data
             try
             {
                 originalData = _backwardsTransform.TransformBackOrigData(_hmAnalysisObject.HitMissDataOrig);
-                originalData.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                originalData.DefaultView.Sort = "transformFlaw ASC";
                 originalData = originalData.DefaultView.ToTable();
 
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4.5 Reading Original Data Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Original Data Error", _messageBox);
             }
         }
         /// <summary>
@@ -47,7 +63,7 @@ namespace Data
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4.5 Reading Total flaw count Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Total Flaw Count Error", _messageBox);
             }
         }
         /// <summary>
@@ -63,12 +79,12 @@ namespace Data
                 {
                     podCurveTable.Columns.Remove("transformFlaw");
                 }
-                podCurveTable.DefaultView.Sort = "flaw" + " " + "ASC";
+                podCurveTable.DefaultView.Sort = "flaw ASC";
                 podCurveTable = podCurveTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4.5 Reading POD Curve Error");
+                Globals.ShowErrorMessageBox(exp, "Reading POD Curve Table Error", _messageBox);
             }
         }
         /// <summary>
@@ -79,12 +95,12 @@ namespace Data
             try
             {
                 residualUncensoredTable = _backwardsTransform.TransformBackResidualUncensoredTable(_hmAnalysisObject.ResidualTable);
-                residualUncensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                residualUncensoredTable.DefaultView.Sort = "transformFlaw ASC";
                 residualUncensoredTable = residualUncensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4.5 Reading Residual Uncensored Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Uncensored Error", _messageBox);
             }
         }
         /// <summary>
@@ -95,12 +111,12 @@ namespace Data
             try
             {
                 residualPartialUncensoredTable = _hmAnalysisObject.ResidualTable;
-                residualPartialUncensoredTable.DefaultView.Sort = "transformFlaw" + " " + "ASC";
+                residualPartialUncensoredTable.DefaultView.Sort = "transformFlaw ASC";
                 residualPartialUncensoredTable = residualPartialUncensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4.5 Reading Residual Partial Censored Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Partial Censored Error", _messageBox);
             }
         }
         /// <summary>
@@ -114,7 +130,7 @@ namespace Data
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4.5 Reading Iterations Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Iterations Error", _messageBox);
             }
         }
     }

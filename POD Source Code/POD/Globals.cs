@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="Globals.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +28,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Drawing.Imaging;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace POD
 {
@@ -19,9 +36,6 @@ namespace POD
     public delegate void FinishEventHandler(object sender, FinishArgs e);
     public delegate void AnalysisErrorHandler(object sender, ErrorArgs e);
     public delegate void GetProjectInfoHandler(object sender, GetProjectInfoArgs e);
-
-    
-
     public class ClipboardMetafileHelper
     {
 	    [DllImport("user32.dll")]
@@ -72,6 +86,11 @@ namespace POD
 
     public static class Globals
     {
+        /// <summary>
+        /// Decides if ShowErrorMessageBox methods will show the error message or write it to the debug console. 
+        /// </summary>
+        public static bool ShowErrorMessageBoxes = false;
+
         public delegate double InvertAxisFunction(double x);
 
         private static IMessageBoxWrap _messageBoxWrapper = null;
@@ -109,7 +128,7 @@ namespace POD
 
         public const string ReportDockLabel = "Report Viewer";
         public const string ProjectDockLabel = "Project Manager";
-        public const string ProgressDockLabel = "Analysis Progress";
+        public const string ProgressDockLabel = "Progress";
         public const string SnashotDockLabel = "Snapshot Manager";
         public const string HandbookDockLabel = "1823A Help";
         public const string QuickDockLabel = "Quick Help";
@@ -152,6 +171,9 @@ namespace POD
 
         private static double CalculateScreenScaling(Control control)
         {
+            // VERY IMPORTANT: CreateGraphics() will crash if the control is disposed
+            //if (control == null || control.IsDisposed || !control.IsHandleCreated) return 1.0;
+
             var scale = 1.0;
 
             if (control != null)
@@ -162,6 +184,127 @@ namespace POD
                 }
             }
             return scale;
+        }
+
+        public static void ShowErrorMessageBox(Exception exp, string errorTypeName = "Analysis", IMessageBoxWrap box = null)
+        {
+            if (exp.Message.StartsWith("Error in"))
+            {
+                errorTypeName = "R Source Code";
+            }
+
+            var location = Globals.GetAllErrorLocationsAsSingle(exp);
+
+            if(!ShowErrorMessageBoxes)
+            {
+                Debug.WriteLine(location);
+                return;
+            }
+
+            if (box == null)
+            {
+                MessageBox.Show(Globals.GetErrorMessageHeader(exp, errorTypeName) + location, $"POD Professional v4.5 Error");
+            }
+            else
+            {
+                box.Show(Globals.GetErrorMessageHeader(exp, errorTypeName) + location, $"POD Professional v4.5 Error");
+            }
+        }
+
+        public static string CreateAppendItemsLine<T>(List<T> items, string splitter, int maxItems = 0, T end = default)
+        {
+            if (items.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var builder = new StringBuilder();
+
+            var allbutLast = new List<T>(items);
+
+            allbutLast.RemoveAt(allbutLast.Count - 1);
+
+            bool needLimitedVersion = maxItems > 0 && allbutLast.Count > maxItems;
+
+            if (needLimitedVersion)
+            {
+                allbutLast = allbutLast.Where(x => allbutLast.IndexOf(x) < maxItems).ToList();
+            }
+
+            foreach (var item in allbutLast)
+            {
+                builder.Append($"{item}{splitter}");
+            }
+
+            if (needLimitedVersion)
+            {
+                builder.Append(end);
+            }
+            else
+            {
+                builder.Append(items.Last());
+            }
+
+            var itemList = builder.ToString();
+
+            return itemList;
+        }
+
+        public static string GetAllErrorLocationsAsSingle(Exception ex)
+        {
+            var locations = GetAllErrorLocationsAsList(ex);
+
+            return Globals.CreateAppendItemsLine(locations, Environment.NewLine);
+        }
+
+        public static List<string> GetAllErrorLocationsAsList(Exception ex)
+        {
+            List<string> errorLocations = new List<string>();
+            StackTrace stackTrace = new StackTrace(ex, true);
+
+            for (int i = 0; i < stackTrace.FrameCount; i++)
+            {
+                StackFrame frame = stackTrace.GetFrame(i);
+                string fileName = Path.GetFileName(frame.GetFileName());
+                int lineNumber = frame.GetFileLineNumber();
+                string methodName = frame.GetMethod().Name;
+
+                if (fileName != null)
+                {
+                    errorLocations.Add($"{fileName}, #{lineNumber}, {methodName}()");
+                }
+                else
+                {
+                    errorLocations.Add($"?.cs, #?, {methodName}()");
+                }
+            }
+
+            return errorLocations;
+        }
+
+        public static string GetFinalErrorLocation(Exception ex)
+        {
+            StackTrace stackTrace = new StackTrace(ex, true);
+            if (stackTrace.FrameCount > 0)
+            {
+                StackFrame frame = stackTrace.GetFrame(0);
+                string fileName = Path.GetFileName(frame.GetFileName());
+                int lineNumber = frame.GetFileLineNumber();
+                string methodName = frame.GetMethod().Name;
+
+                if (fileName != null)
+                {
+                    return $"{fileName}, #{lineNumber}, {methodName}()";
+                }
+                else
+                {
+                    return $"?.cs, #?, {methodName}()";
+                }
+            }
+            else
+            {
+                return "Could not retrieve stack trace information.";
+            }
         }
 
         public static Color AlphaOverWhiteToOpaque(Color color)
@@ -255,7 +398,13 @@ namespace POD
         {
             get
             {
-                return CreateMissingFolder(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\UDRI\\PODv4\\");
+                // Get the common documents path
+                string commonDocs = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments);
+
+                // Use interpolation and Path.Combine for a clean, safe path
+                string fullPath = Path.Combine(commonDocs, @"UDRI\PODv4\");
+
+                return CreateMissingFolder(fullPath);
             }
         }
 
@@ -273,7 +422,8 @@ namespace POD
         {
             get
             {
-                return CreateMissingFolder(PODv4Folder + "Images\\");
+                // Interpolated verbatim string for a cleaner path structure
+                return CreateMissingFolder($@"{PODv4Folder}Images\");
             }
         }
 
@@ -281,7 +431,8 @@ namespace POD
         {
             get
             {
-                return CreateMissingFolder(PODv4Folder + "Logs\\");
+                // Interpolated verbatim string for clean pathing
+                return CreateMissingFolder($@"{PODv4Folder}Logs\");
             }
         }
 
@@ -289,121 +440,37 @@ namespace POD
         {
             get
             {
-                return CreateMissingFolder(PODv4Folder + "Data\\");
+                return CreateMissingFolder($@"{PODv4Folder}Data\");
             }
         }
 
-        public static string PODv4MRUFile
-        {
-            get
-            {
-                return PODv4DataFolder + "mru.bin";
-            }
-        }
+        public static string PODv4MRUFile => $"{PODv4DataFolder}mru.bin";
 
-        public static string PODv4ProjectFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Project.bin";
-            }
-        }
+        public static string PODv4ProjectFile => $"{PODv4DataFolder}Project.bin";
 
-        public static string PODv4OperatorFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Operator.bin";
-            }
-        }
+        public static string PODv4OperatorFile => $"{PODv4DataFolder}Operator.bin";
 
-        public static string PODv4InstrumentFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Instrument.bin";
-            }
-        }
+        public static string PODv4InstrumentFile => $"{PODv4DataFolder}Instrument.bin";
 
-        public static string PODv4SpecimenFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Specimen.bin";
-            }
-        }
+        public static string PODv4SpecimenFile => $"{PODv4DataFolder}Specimen.bin";
 
-        public static string PODv4HelpViewFile
-        {
-            get
-            {
-                return PODv4DataFolder + "HelpView.bin";
-            }
-        }
+        public static string PODv4HelpViewFile => $"{PODv4DataFolder}HelpView.bin";
 
-        public static string PODv4ParentFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Parent.bin";
-            }
-        }
+        public static string PODv4ParentFile => $"{PODv4DataFolder}Parent.bin";
 
-        public static string PODv4CustomerCompanyFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Customer.bin";
-            }
-        }
+        public static string PODv4CustomerCompanyFile => $"{PODv4DataFolder}Customer.bin";
 
-        public static string PODv4NotesFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Notes.bin";
-            }
-        }
+        public static string PODv4NotesFile => $"{PODv4DataFolder}Notes.bin";
 
-        public static string PODv4CustomerNameFile
-        {
-            get
-            {
-                return PODv4DataFolder + "CustomerName.bin";
-            }
-        }
+        public static string PODv4CustomerNameFile => $"{PODv4DataFolder}CustomerName.bin";
 
-        public static string PODv4AnalystCompanyFile
-        {
-            get
-            {
-                return PODv4DataFolder + "Analyst.bin";
-            }
-        }
+        public static string PODv4AnalystCompanyFile => $"{PODv4DataFolder}Analyst.bin";
 
-        public static string PODv4AnalystNameFile
-        {
-            get
-            {
-                return PODv4DataFolder + "AnalystName.bin";
-            }
-        }
+        public static string PODv4AnalystNameFile => $"{PODv4DataFolder}AnalystName.bin";
 
-        public static string PODv4LogFile
-        {
-            get
-            {
-                return PODv4LogFolder + "log.txt";
-            }
-        }
+        public static string PODv4LogFile => $"{PODv4LogFolder}log.txt";
 
-        public static string PODv4CommentsFile
-        {
-            get
-            {
-                return PODv4DataFolder + "RemoveComments.bin";
-            }
-        }
+        public static string PODv4CommentsFile => $"{PODv4DataFolder}RemoveComments.bin";
 
         public static void DeleteMRUList(string value, string fileName)
         {
@@ -487,9 +554,9 @@ namespace POD
                 {
                     var newLine = SplitString("|", line);
 
-                    linesSplitted.Add(newLine + "|");
+                    linesSplitted.Add($"{newLine}|");
 
-                    line = line.Substring(newLine.Length+1);
+                    line = line.Substring(newLine.Length + 1);
                 }
 
                 while (linesSplitted.Contains(value))
@@ -770,7 +837,7 @@ namespace POD
         {
             get
             {
-                return " (" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ")";
+                return $" ({DateTime.Now:yyyyMMdd-HHmmss})";
             }
         }
 
@@ -784,7 +851,7 @@ namespace POD
                 if(!Directory.Exists(Globals.PODv4ImageFolder))
                     Directory.CreateDirectory(Globals.PODv4ImageFolder);
 
-                return Globals.PODv4ImageFolder + Globals.FileTimeStamp + ".png";
+                return $"{Globals.PODv4ImageFolder}{Globals.FileTimeStamp}.png";
             }
         }
 
@@ -827,6 +894,11 @@ namespace POD
             }
             return new string(myCharArray);
         }
+
+        public static string GetErrorMessageHeader(Exception exp, string errorTypeName = "Analysis")
+        {
+            return $"{errorTypeName} Error:\n\n{exp.Message}\n\n";
+        }
     }
 
     /// <summary>
@@ -847,9 +919,15 @@ namespace POD
         public const string Original = "Original";
         public const string LeftCensor = "Left Censor";
         public const string RightCensor = "Right Censor";
+        public const string LeftCensorStrip = "Left Censor Strip";
+        public const string RightCensorStrip = "Right Censor Strip";
         public const string CompleteCensored = "Complete Censored";
         public const string PartialCensored = "Partial Censored";
         public const string LegendTitle = "Fitted Data";
+        public const string AMinLimit = "A Minimum";
+        public const string AMaxLimit = "A Maximum";
+        public const string AMinLimitStrip = "A Minimum Strip";
+        public const string AMaxLimitStrip = "A Maximum Strip";
     }
 
     public enum ChartDataType
@@ -884,6 +962,59 @@ namespace POD
         A9095,
         Decision,
         Undefined
+    }
+
+    public static class VersionHelper
+    {
+        static public string GetVersion()
+        {
+            // Get the location of the current executable
+            string executablePath = Assembly.GetExecutingAssembly().Location;
+
+            // Get the FileVersionInfo object
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(executablePath);
+
+            // Access the version information
+            string productVersion = fileVersionInfo.ProductVersion;
+
+            return productVersion;
+        }
+
+        public static DateTime GetExecutableLastModifiedDate()
+        {
+            try
+            {
+                string executablePath = Assembly.GetExecutingAssembly().Location;
+                return File.GetLastWriteTime(executablePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting last modified date: {ex.Message}");
+                return DateTime.MinValue; // Or handle the error as appropriate
+            }
+        }
+
+        static public void UpdatePODVersionHeader(Form form)
+        {
+            if (form.Text.Contains("v4.5."))
+            {
+                int beforeIndex = form.Text.IndexOf("v4.5.");
+                string before = form.Text.Substring(0, beforeIndex);
+                string after = form.Text.Substring(beforeIndex);
+
+                var afters = after.Split(' ');
+                var version = GetVersion();
+
+                afters[0] = $"v{version}";
+
+                string afterNew = string.Join(" ", afters);
+
+                form.Text = $"{before}{afterNew}".Trim();
+
+
+                
+            }
+        }
     }
 
     public static class FontHelper
@@ -948,6 +1079,63 @@ namespace POD
 
     public static class Compute
     {
+        public static readonly double IllegalZero = 1E-1;
+        public static readonly double Epsilon = 1E-10; // so the fix transform goes to 1E-6
+        public static readonly double ZeroTransformEpsilon = .0025; // so the fix transform goes to 1E-6
+        public static readonly decimal EpsilonDecimal = 1E-10m;
+
+        public static bool ApproximatelyLessThan(double a, double b)
+        {
+            return a < b && Math.Abs(a - b) > Compute.Epsilon;
+        }
+
+        public static bool ApproximatelyMoreThan(double a, double b)
+        {
+            return a > b && Math.Abs(a - b) > Compute.Epsilon;
+        }
+
+
+        public static bool ApproximatelyLessThanOrEqual(double a, double b)
+        {
+            return a < b || Math.Abs(a - b) < Compute.Epsilon;
+        }
+
+        public static bool ApproximatelyMoreThanOrEqual(double a, double b)
+        {
+            return a > b || Math.Abs(a - b) < Compute.Epsilon;
+        }
+
+        public static bool ApproximatelyEqual(double a, double b)
+        {
+            return Math.Abs(a - b) < Compute.Epsilon;
+        }
+
+        public static bool ApproximatelyLessThan(decimal a, decimal b)
+        {
+            return a < b && Math.Abs(a - b) > Compute.EpsilonDecimal;
+        }
+
+        public static bool ApproximatelyMoreThan(decimal a, decimal b)
+        {
+            return a > b && Math.Abs(a - b) > Compute.EpsilonDecimal;
+        }
+
+
+        public static bool ApproximatelyLessThanOrEqual(decimal a, decimal b)
+        {
+            return a < b || Math.Abs(a - b) < Compute.EpsilonDecimal;
+        }
+
+        public static bool ApproximatelyMoreThanOrEqual(decimal a, decimal b)
+        {
+            return a > b || Math.Abs(a - b) < Compute.EpsilonDecimal;
+        }
+
+        public static bool ApproximatelyEqual(decimal a, decimal b)
+        {
+            return Math.Abs(a - b) < Compute.EpsilonDecimal;
+        }
+
         public static void MinMax(DataTable myTable, DataColumn column, ref double myMin, ref double myMax)
         {
             var value = 0.0;
@@ -963,6 +1151,24 @@ namespace POD
                 }
 
             }
+        }
+
+        public static double FixMin(double min)
+        {
+            if (POD.Compute.ApproximatelyEqual(min, 0.0))
+            {
+                min = POD.Compute.IllegalZero;
+            }
+            else if (min < 0.0)
+            {
+                min = -min;
+            }
+            else
+            {
+                min = 0;
+            }
+
+            return min;
         }
 
         public static void MinMax(DataTable myTable, DataColumn column, ref double myMin, ref double myMax, double xMin, double xMax, DataColumn xCol)
@@ -1015,7 +1221,7 @@ namespace POD
             }
         }
 
-        
+        public static string Format => "0.#################";
     }
 
     public static class PODRegressionLabels
@@ -1064,6 +1270,16 @@ namespace POD
         public const string NormalityHistogram = "NormalityHistogram";
         public const string NormalCurve = "NormalCurveOverlay";
     }
+
+    public static class QQChart
+    {
+        public const string QQPoints = "QQPoints";
+        public const string ReferenceLine = "ReferenceLine";
+        public const string LowerConfidence = "LowerConfidence";
+        public const string UpperConfidence = "UpperConfidence";
+    }
+
+
     public static class ChartColors
     {
         public static Color a50Color = Color.DarkSlateGray;
@@ -1151,6 +1367,15 @@ namespace POD
         QuickHitMissTutorial,
         QuickHitMissBeginner,
         None,        
+    }
+
+    public enum RModelTypeEnum
+    {
+        Linear = 1,
+        Log = 2,
+        Inverse = 3,
+        Exponetial = 4,
+        BoxCox = 5,
     }
 
     public enum TransformTypeEnum

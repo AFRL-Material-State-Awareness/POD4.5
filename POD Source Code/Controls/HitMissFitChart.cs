@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="HitMissFitChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -8,6 +24,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using POD.Data;
+using CSharpBackendWithR;
 
 using System.Diagnostics;
 namespace POD.Controls
@@ -23,17 +40,19 @@ namespace POD.Controls
 
             //all charts should be added through SetupChart()
             //Series.Clear();
+
+            _transformer = new DataTransformer(null, TransformTypeEnum.Linear, 0, 1, null, TransformTypeEnum.Linear, 0, 1);
+
         }
-        
+
         public override string TooltipText
         {
             get
             {
-                var text = "";
+                var text = "Model Parameters\n";
 
-                text += "Model Parameters" + Environment.NewLine;
-                text += "mu:\t" + _mu.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
-                text += "sigma:\t" + _sigma.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
+                text += $"mu:\t{_mu:F3} {XAxisUnit}\n";
+                text += $"sigma:\t{_sigma:F3} {XAxisUnit}";
 
                 return text;
             }
@@ -97,8 +116,10 @@ namespace POD.Controls
                 uncensoredMin = -1.0;
             }
 
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            _transformer.UpdateAxisTransformParameters(null, myData.ResponseTransform, myYMin, myYMax, null, myData.FlawTransform, uncensoredMin, uncensoredMax);
+
+            AxisObject yAxis = new AxisObject(AxisKind.Y);
+            AxisObject xAxis = new AxisObject(AxisKind.X);
 
             //setup axis for typical hitmiss y-axis
             yAxis.Interval = .5;
@@ -109,6 +130,9 @@ namespace POD.Controls
 
             AnalysisData.GetBufferedRange(this, xAxis, uncensoredMin, uncensoredMax, AxisKind.X);
             //AnalysisData.GetBufferedRange(yAxis, myYMin, myYMax);
+
+            
+
 
             //xAxis.Interval /= 2.0;
             //yAxis.Interval /= 2.0;

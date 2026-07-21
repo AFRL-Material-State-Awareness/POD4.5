@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="CreateAnalysesPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -215,9 +231,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             this.analysesChart.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             _colors = DataPointChart.GetLargeColorList(this.DesignMode);
-
-
-            //this.Layout += CreateAnalysesPanel_Layout;
         }
 
         
@@ -381,15 +394,17 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
         private void OpenSelectedOnFinish_Click(object sender, EventArgs e)
         {
-            TreeNode node = analysesTree.SelectedNode;
-            List<string> names = new List<string>();
+            //TreeNode node = analysesTree.SelectedNode;
+            //List<string> names = new List<string>();
 
-            if (node != null)
-            {
-                node.Checked = true;
+            //if (node != null)
+            //{
+            //    node.Checked = true;
 
-                analysesTree.Select();
-            }
+            //    analysesTree.Select();
+            //}
+
+
         }
 
         private void Invert3_Click(object sender, EventArgs e)
@@ -688,7 +703,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             while (currentNodeNames.Contains(newName))
             {
-                postfix = "_" + postIndex.ToString("##");
+                postfix = $"_{postIndex:##}";
                 newName = analysisName + postfix;
                 isUsingCustomName = true;
                 postIndex++;
@@ -750,16 +765,16 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             //PODTreeNode podNode as analysesTree.Selected;
             DataSource source = project.Sources[0];
             //Disabled the ability for the user to have multiple hit miss responses in one analysis.
-            if (control.SelectedRows.Count > 1 && source.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
-            {
-                //testing
-                MessageBox.Show("Cannot add multiple responses in one Analysis when using HitMiss Data");
-                return;
-            }
+            //if (control.SelectedRows.Count > 1 && source.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+            //{
+            //    //testing
+            //    MessageBox.Show("Cannot add multiple responses in one Analysis when using HitMiss Data");
+            //    return;
+            //}
             
             if (analysesTree.GetNodeCount(false) >= 50)
             {
-                MessageBox.Show("The maximum amount of analyses that can fit into one project in PODv4.5.2 is 50.");
+                MessageBox.Show("The maximum amount of analyses that can fit into one project in POD Professional v4.5.004 is 50.");
                 return;
             }
             
@@ -807,21 +822,20 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
         private void CopyToAnalysisListBox(PODListBoxItemWithProps flaw, List<PODListBoxItemWithProps> names)
         {
             var multipleSources = false;
-            var flawName  = string.Empty;
+            var flawName = string.Empty;
             var primarySource = string.Empty;
             var originalFlaw = "";
             var flawDidntMatch = false;
             var indicies = GetIndiciesFromNames(names);
 
             if (flaw != null)
-                flawName = flaw.FlawColumnName;
-
-            if(flawName == string.Empty)
             {
-                MessageBox.Show(
-                    string.Format(
-                        "Need at least one Flaw column."));
+                flawName = flaw.FlawColumnName;
+            }
 
+            if (flawName == string.Empty)
+            {
+                MessageBox.Show("Need at least one Flaw column.");
                 return;
             }
 
@@ -830,8 +844,8 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                 originalFlaw = (EditListBox.Rows[0].Cells[0].Value as PODListBoxItemWithProps).FlawColumnName;
 
                 if (flawName != originalFlaw)
-                {                    
-                    flawDidntMatch = true;                    
+                {
+                    flawDidntMatch = true;
                 }
             }
 
@@ -845,9 +859,11 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                 {
                     var name2 = (PODListBoxItemWithProps)row.Cells[0].Value;
 
-                    //get the primary source of existing items
+                    // get the primary source of existing items
                     if (primarySource == string.Empty)
+                    {
                         primarySource = name2.DataSourceName;
+                    }
 
                     if (flawDidntMatch)
                     {
@@ -855,10 +871,10 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                     }
 
                     if (name.ResponseColumnName == name2.ResponseColumnName)
-                    {                        
+                    {
                         cantAdd = true;
                     }
-                    
+
                     if (name.DataSourceName != primarySource)
                     {
                         cantAdd = true;
@@ -866,18 +882,20 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                     }
                 }
 
-                //if there are no existing items then compare with new items
+                // if there are no existing items then compare with new items
                 if (primarySource == string.Empty)
+                {
                     primarySource = name.DataSourceName;
+                }
 
-                //make sure new item is from primary source
-                if(name.DataSourceName != primarySource)
+                // make sure new item is from primary source
+                if (name.DataSourceName != primarySource)
                 {
                     cantAdd = true;
                     multipleSources = true;
                 }
 
-                //make sure flaw is from the primary source
+                // make sure flaw is from the primary source
                 if (flaw.DataSourceName != primarySource)
                 {
                     cantAdd = true;
@@ -886,38 +904,52 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                 if (cantAdd == false)
                 {
-                    var newItem = new PODListBoxItemWithProps(name.RowColor, ColType.Response, name.ResponseColumnName, name.ResponseOriginalName, name.DataSourceName, name.Unit, name.Min, name.Max, name.Threshold);
+                    var newItem = new PODListBoxItemWithProps(name.RowColor, 
+                                                              ColType.Response, 
+                                                              name.ResponseColumnName, 
+                                                              name.ResponseOriginalName, 
+                                                              name.DataSourceName, 
+                                                              name.Unit, 
+                                                              name.Min, 
+                                                              name.Max, 
+                                                              name.Threshold);
 
                     newItem.FlawColumnName = flaw.FlawColumnName;
                     newItem.FlawOriginalName = flaw.FlawOriginalName;
 
                     if (indicies[index] < EditListBox.Rows.Count)
+                    {
                         EditListBox.Rows.Insert(indicies[index], newItem);
+                    }
                     else
+                    {
                         EditListBox.Rows.Add(newItem);
+                    }
                 }
 
                 index++;
             }
 
             while (EditListBox.Columns.Count > 1)
+            {
                 EditListBox.Columns.RemoveAt(EditListBox.Columns.Count - 1);
+            }
 
             if (multipleSources)
             {
-                MessageBox.Show(
-                    string.Format(
-                        "Mixing data sources in one analysis is not allowed. All data not from {0} will be removed.", primarySource));                
+                // Replaced string.Format with interpolation for the data source warning
+                MessageBox.Show("Mixing data sources in one analysis is not allowed. " +
+                                $"All data not from {primarySource} will be removed.");
             }
-            else if(flawDidntMatch)
+            else if (flawDidntMatch)
             {
-                MessageBox.Show("Only add response columns with the flaw column: " + originalFlaw + ".");
+                // Cleaned up the flaw mismatch message
+                MessageBox.Show($"Only add response columns with the flaw column: {originalFlaw}.");
 
-                foreach(DataGridViewRow row in AvailableFlawsListBox.Rows)
+                foreach (DataGridViewRow row in AvailableFlawsListBox.Rows)
                 {
                     var matches = (row.Cells[0].Value as PODListBoxItemWithProps).FlawColumnName == originalFlaw;
-
-                    row.Selected = matches;                         
+                    row.Selected = matches;
                 }
             }
         }
@@ -926,24 +958,20 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
         {
             var list = GetCurrentDataList();
             var indices = new List<int>();
-            var responses = new List<string>();
 
             if (names.Count > 0)
             {
                 var sourceName = names[0].DataSourceName;
                 var source = Project.Sources[sourceName];
-
-                responses = source.ResponseLabels;
+                var responses = source.ResponseLabels;
 
                 foreach (PODListBoxItemWithProps newItem in names)
                 {
-                    foreach (string name in responses)
+                    int foundIndex = responses.IndexOf(newItem.ResponseColumnName);
+
+                    if (foundIndex != -1)
                     {
-                        if (newItem.ResponseColumnName == name)
-                        {
-                            indices.Add(responses.IndexOf(name));
-                            break;
-                        }
+                        indices.Add(foundIndex);
                     }
                 }
             }
@@ -1686,8 +1714,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             {
                 var item = AvailableSourcesListBox.SingleSelectedItem as PODListBoxItem;
 
-                
-
                 if (item != null && AvailableResponsesListBox.Rows.Count > 0)
                 {
                     var flawList = _selectedFlawList[item.DataSourceName];
@@ -1708,8 +1734,6 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                     }                    
 
                     UpdateLists = true;
-
-                    
 
                     if (flawList != null)
                     {
@@ -1946,34 +1970,13 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                         //if the name has actually changed
                         if (newName != oldName)
                         {
-                            /*//get the name of the analysis that is going to be renamed
-                            var analysisName = selectedNode.AnalysisName;
-                            //get a alist of all of the names of existing analyses
-                            var names = _currentAnalyses.Names;
-                            //get the location of the analysis in the list
-                            var analysisIndex = names.IndexOf(analysisName);
-
-                            //if the analysis exists
-                            if (analysisIndex >= 0)
-                            {
-                                //remove analysis name since we are replacing it
-                                names.Remove(analysisName);
-
-                                while (names.IndexOf(newName) != -1)
-                                {
-                                    newName = newName + " Copy";
-                                }
-                                                                
-                                //_currentAnalyses[analysisIndex].Name = newName;
-                            }*/
-
                             foreach(PODTreeNode treeNode in analysesTree.Nodes)
                             {
                                 if(treeNode != selectedNode)
                                 {
                                     if(treeNode.Text == newName)
                                     {
-                                        newName = newName + " Copy";
+                                        newName = $"{newName} Copy";
                                         break;
                                     }
                                 }
@@ -2003,13 +2006,10 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
         private string GetNameFromTextBox(TextBox myTextBox)
         {
-            var newName = _lastSourceUsed + ".";
+            // Build the name template: Source . [Optional Flaw .] TextBoxText
+            string flawPart = !string.IsNullOrEmpty(_lastFlawUsed) ? $"{_lastFlawUsed}." : "";
 
-            if (_lastFlawUsed.Length > 0)
-                newName = newName + _lastFlawUsed + ".";
-
-            newName = newName + myTextBox.Text;
-            return newName;
+            return $"{_lastSourceUsed}.{flawPart}{myTextBox.Text}";
         }
 
         private string GetNameWithoutSource(string analysisName)
@@ -2132,14 +2132,16 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                         {
                             source = project.Sources[podNode.DataSource];
                             info = project.Infos.GetFromOriginalName(source.SourceName);
+                            var rEngine = ((Project)Source).RDotNet;
+                            var pyEngine = ((Project)Source).Python;
 
                             if (source.AnalysisDataType == AnalysisDataTypeEnum.AHat)
                             {
-                                analysis = new AHatAnalysis(source, info, flawName, responses);
+                                analysis = new AHatAnalysis(source, info, flawName, responses, rEngine, pyEngine, podNode.NewAnalysisName, podNode.HasCustomName);
                             }
                             else
                             {
-                                analysis = new HitMissAnalysis(source, info, flawName, responses);
+                                analysis = new HitMissAnalysis(source, info, flawName, responses, rEngine, pyEngine, podNode.NewAnalysisName, podNode.HasCustomName);
                             }
                         }
 
@@ -2147,8 +2149,8 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                         
 
-                        analysis.Name = podNode.NewAnalysisName;
-                        analysis.UsingCustomName = podNode.HasCustomName;
+                        //analysis.Name = podNode.NewAnalysisName;
+                        //analysis.UsingCustomName = podNode.HasCustomName;
 
                         
 

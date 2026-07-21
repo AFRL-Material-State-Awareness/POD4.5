@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="ProjectPropertiesPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -236,7 +252,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             {
                 foreach (string flaw in source.FlawLabels)
                 {
-                    var labelName = source.SourceName + "." + flaw;
+                    var labelName = $"{source.SourceName}.{flaw}";
 
                     if (!_graphsAndLabels.ContainsKey(labelName))
                     {
@@ -310,7 +326,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                     
                     _propertiesToolTip.SetToolTip(chart, analysis.ToolTipText);
 
-                    var index = sourceLabelNames.IndexOf(analysis.SourceName + "." + analysis.FlawName);
+                    var index = sourceLabelNames.IndexOf($"{analysis.SourceName}.{analysis.FlawName}");
                     var label = sourceLabels[index];
                     var positionIndex = overviewFlowPanel.Controls.IndexOf(label);
                     overviewFlowPanel.Controls.Add(overview);
@@ -511,7 +527,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             }
             catch(Exception exp)
             {
-                MessageBox.Show("comboBox1_DropDownClosed: " + exp.Message);
+                MessageBox.Show($"comboBox1_DropDownClosed: {exp.Message}");
             }
         }
 
@@ -563,7 +579,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             Globals.UpdateMRUList(Project.Properties.Customer.Company, Globals.PODv4CustomerCompanyFile);
             Globals.UpdateMRUList(Project.Properties.Name, Globals.PODv4ProjectFile);
             Globals.UpdateMRUList(Project.Properties.Parent, Globals.PODv4ParentFile);
-            Globals.UpdateMRUListMultiLine(Project.Properties.Notes + "|", Globals.PODv4NotesFile);
+            Globals.UpdateMRUListMultiLine($"{Project.Properties.Notes}|", Globals.PODv4NotesFile);
         }
         public override bool CheckStuck()
         {

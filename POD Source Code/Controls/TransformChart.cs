@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="TransformChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +23,7 @@ using POD.Data;
 using System.Data;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
+using CSharpBackendWithR;
 
 using System.Diagnostics;
 namespace POD.Controls
@@ -60,11 +77,13 @@ namespace POD.Controls
             }
             else
             {
-                var newTitle = "Combined Responses" + " (" + responseUnits[0] + ")";
+                var newTitle = $"Combined Responses ({responseUnits[0]})";
                 YAxisNameIsUnitlessConstant = true;
                 YAxisTitle = newTitle;
                 OriginalYAxisTitle = newTitle;
-            }   
+            }
+
+            ClampXAxisToZeroOnExport = true;
         }
 
         private void AddAllSeries()
@@ -139,10 +158,10 @@ namespace POD.Controls
                 series.MarkerSize = 8;
             }           
 
-            _residualXAxis = new AxisObject(); ;
-            _residualYAxis = new AxisObject(); ;
-            _normalXAxis = new AxisObject(); ;
-            _normalYAxis = new AxisObject(); ;
+            _residualXAxis = new AxisObject(AxisKind.X);
+            _residualYAxis = new AxisObject(AxisKind.Y);
+            _normalXAxis = new AxisObject(AxisKind.X); ;
+            _normalYAxis = new AxisObject(AxisKind.Y); ;
         }
 
         public void SwitchModelCompare()
@@ -211,8 +230,9 @@ namespace POD.Controls
             }
         }
 
-        public void FillFromAnalysis(IAnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
+        public void FillFromAnalysis(IAnalysisData data, IDataTransformer transformer, List<Color> colors, int colorIndex, int styleIndex)
         {
+            LoadChartData(data, transformer);
             xTransform = data.FlawTransform;
             yTransform = data.ResponseTransform;
 
@@ -225,11 +245,11 @@ namespace POD.Controls
             AddFitSeries(data);
 
             AddResidualSeries(data, colors, colorIndex, styleIndex);
-            
         }
 
-        public void FillFromAnalysis(IAnalysisData data, HitMissRegressionType model, List<Color> colors, int colorIndex, int styleIndex)
+        public void FillFromAnalysis(IAnalysisData data, IDataTransformer transformer, HitMissRegressionType model, List<Color> colors, int colorIndex, int styleIndex)
         {
+            LoadChartData(data, transformer);
             xTransform = data.FlawTransform;
             yTransform = TransformTypeEnum.Linear;
             hitmissModel = model;
@@ -268,10 +288,13 @@ namespace POD.Controls
 
             ModelCompare.Enabled = _compareModels;
         }
-
+        
         private void addOriginalSeries(IAnalysisData data, List<Color> colors, int colorIndex, int styleIndex)
         {
             var view = data.ResidualRawTable.AsDataView();
+
+            //ReplaceValuesInDataView(view, "transformResponse");
+            //ReplaceValuesInDataView(view, "transformFlaw");
 
             int modelType = data.AHATAnalysisObject.ModelType;
             if (modelType == 7 || modelType==8 || modelType == 9 || modelType == 12)
@@ -306,8 +329,8 @@ namespace POD.Controls
                 xMax = temp;
             }
 
-            _normalYAxis = new AxisObject();
-            _normalXAxis = new AxisObject();
+            _normalYAxis = new AxisObject(AxisKind.Y);
+            _normalXAxis = new AxisObject(AxisKind.X);
 
             _normalYAxis.Interval = .5;
             _normalYAxis.IntervalOffset = 0.0;
@@ -323,6 +346,16 @@ namespace POD.Controls
             double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
             double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
 
+            //if (POD.Compute.ApproximatelyEqual(xMin, POD.Compute.IllegalZero))
+            //{
+            //    xMin = 0.0;
+            //}
+
+            //if (POD.Compute.ApproximatelyEqual(xMax, POD.Compute.IllegalZero))
+            //{
+            //    xMax = 0.0;
+            //}
+
             xMin = myData.TransformValueForXAxis(xMin);
             xMax = myData.TransformValueForXAxis(xMax);
 
@@ -333,8 +366,8 @@ namespace POD.Controls
                 xMax = temp;
             }
 
-            _normalYAxis = new AxisObject();
-            _normalXAxis = new AxisObject();
+            _normalYAxis = new AxisObject(AxisKind.Y);
+            _normalXAxis = new AxisObject(AxisKind.X);
 
             var uncensoredMax = Double.NegativeInfinity;
             var uncensoredMin = Double.PositiveInfinity;
@@ -347,6 +380,16 @@ namespace POD.Controls
 
             var globalResponseMax = uncensoredMax;
             var globalResponseMin = uncensoredMin;
+
+            //if (POD.Compute.ApproximatelyEqual(globalResponseMax, POD.Compute.IllegalZero))
+            //{
+            //    globalResponseMax = 0.0;
+            //}
+
+            //if (POD.Compute.ApproximatelyEqual(globalResponseMin, POD.Compute.IllegalZero))
+            //{
+            //    globalResponseMin = 0.0;
+            //}
 
             AnalysisData.GetBufferedRange(this, _normalXAxis, xMin, xMax, AxisKind.X);
             AnalysisData.GetBufferedRange(this, _normalYAxis, globalResponseMin, globalResponseMax, AxisKind.Y);
@@ -376,6 +419,9 @@ namespace POD.Controls
 
             Series series = null;
             DataView view = myData.ResidualRawTable.DefaultView;
+
+            // ReplaceValuesInDataView(view, "t_diff");
+
             //Uncensored.Points.DataBindXY(view, "t_flaw", view, "t_diff");
             Uncensored.Points.DataBindXY(view, "transformFlaw", view, "t_diff");
             Uncensored.Enabled = false;
@@ -407,8 +453,8 @@ namespace POD.Controls
             FlawResidual.Points.AddXY(xMin, 0.0);
             FlawResidual.Points.AddXY(xMax, 0.0);
 
-            _residualYAxis = new AxisObject();
-            _residualXAxis = new AxisObject();
+            _residualYAxis = new AxisObject(AxisKind.Y);
+            _residualXAxis = new AxisObject(AxisKind.X);
 
             _residualYAxis.Interval = .5;
             _residualYAxis.IntervalOffset = 0.0;
@@ -440,8 +486,8 @@ namespace POD.Controls
             FlawResidual.Points.AddXY(xMin, 0.0);
             FlawResidual.Points.AddXY(xMax, 0.0);
 
-            _residualYAxis = new AxisObject();
-            _residualXAxis = new AxisObject();
+            _residualYAxis = new AxisObject(AxisKind.Y);
+            _residualXAxis = new AxisObject(AxisKind.X);
 
             var uncensoredMax = Double.NegativeInfinity;
             var uncensoredMin = Double.PositiveInfinity;
@@ -490,7 +536,7 @@ namespace POD.Controls
 
             RelabelAxesBetter(_normalXAxis, _normalYAxis, data.InvertTransformedFlaw, data.InvertTransformedResponse, 
                               Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, false, 
-                              XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis);
+                              XTransform, YTransform, data.TransformValueForXAxis, data.TransformValueForYAxis, false, false, data.LambdaValue);
         }
 
         private void ColorSeries(List<Color> colors, int colorIndex, int styleIndex, Series series)

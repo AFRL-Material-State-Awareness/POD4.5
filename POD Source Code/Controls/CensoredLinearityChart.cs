@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="CensoredLinearityChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -70,11 +86,13 @@ namespace POD.Controls
             }
 
             AutoNameYAxis = false;
-            YAxisNameIsUnitlessConstant = true;
-            YAxisTitle = "Residuals";
+
+            this.SingleSeriesCount = 3;
+
             XAxisTitle = flawName;
             XAxisUnit = flawUnit;
-            ChartTitle = "Residuals";
+            YAxisTitle = $"Residual";
+            YAxisUnit = responseUnits[0];
         }
 
         public override void ClearEverythingButPoints()
@@ -121,13 +139,12 @@ namespace POD.Controls
         {
             get
             {
-                var text = "";
+                var text = "Linear Fit Parameters\n";
 
-                text += "Linear Fit Parameters" + Environment.NewLine;
-                text += "Slope:\t\t" + _slope.ToString("F3") + Environment.NewLine;
-                text += "Intercept:\t" + _intercept.ToString("F3") + Environment.NewLine;
-                text += "Residual Error:\t" + _fitError.ToString("F3") + Environment.NewLine;
-                text += "Repeat Error:\t" + _repeatError.ToString("F3");
+                text += $"Slope:\t\t{_slope:F3}\n";
+                text += $"Intercept:\t{_intercept:F3}\n";
+                text += $"Residual Error:\t{_fitError:F3}\n";
+                text += $"Repeat Error:\t{_repeatError:F3}";
 
                 return text;
             }
@@ -135,8 +152,17 @@ namespace POD.Controls
 
         public void FillChart(IAnalysisData myData, double mySlope, double myIntercept, double fitError, double repeatError)
         {
-            double xMin = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMin);
-            double xMax = myData.InvertTransformedFlaw(myData.UncensoredFlawRangeMax);
+            UpdateTransformer(myData);
+
+            double xMin = 0.0;
+            double xMax = 0.0;
+
+            // Extract Min and Max directly from the "flaw" column of ResidualUncensoredTable
+            if (myData.ResidualUncensoredTable != null && myData.ResidualUncensoredTable.Rows.Count > 0)
+            {
+                xMin = Convert.ToDouble(myData.ResidualUncensoredTable.Compute("MIN(flaw)", string.Empty));
+                xMax = Convert.ToDouble(myData.ResidualUncensoredTable.Compute("MAX(flaw)", string.Empty));
+            }
 
             FlawEstimate.Points.Clear();
             FlawEstimate.Points.AddXY(xMin, 0.0);
@@ -174,14 +200,14 @@ namespace POD.Controls
             var globalResponseMax = (uncensoredMax > censoredMax) ? uncensoredMax : censoredMax;
             var globalResponseMin = (uncensoredMin < censoredMin) ? uncensoredMin : censoredMin;
 
-            if(globalResponseMax < globalResponseMin)
+            if (globalResponseMax < globalResponseMin)
             {
                 globalResponseMax = 1.0;
                 globalResponseMin = -1.0;
             }
 
-            AxisObject yAxis = new AxisObject();
-            AxisObject xAxis = new AxisObject();
+            AxisObject yAxis = new AxisObject(AxisKind.Y);
+            AxisObject xAxis = new AxisObject(AxisKind.X);
 
             AnalysisData.GetBufferedRange(this, xAxis, xMin, xMax, AxisKind.X);
             AnalysisData.GetBufferedRange(this, yAxis, globalResponseMin, globalResponseMax, AxisKind.Y);//myData.ResponseTransform == TransformTypeEnum.Linear);
@@ -192,9 +218,8 @@ namespace POD.Controls
             SetXAxisRange(xAxis, myData);
             SetYAxisRange(yAxis, myData);
 
-            RelabelAxesBetter(xAxis, yAxis, null, null, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X), 
+            RelabelAxesBetter(xAxis, yAxis, null, null, Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.X),
                               Globals.GetLabelIntervalBasedOnChartSize(this, AxisKind.Y), false, true);
-          
         }
     }
 }

@@ -36,7 +36,8 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                                       pODDataFrame="data.frame",
                                                                       medianResidDataframe="data.frame",
                                                                       covarMatrix="matrix",
-                                                                      goodnessOfFit="numeric"),
+                                                                      goodnessOfFit="numeric",
+                                                                      aic="numeric"),
                                                         methods = list(
                                                         setMedianAValues=function(psMedianAValues){
                                                           medianAValues<<-psMedianAValues
@@ -67,6 +68,16 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                         },
                                                         getGoodnessOfFit=function(){
                                                           return(goodnessOfFit)
+                                                        },
+                                                        # --- ADD THESE AIC METHODS ---
+                                                        setAIC=function(psAIC){
+                                                          aic<<-psAIC
+                                                        },
+                                                        getAIC=function(){
+                                                          if(length(aic)==0){
+                                                            return(-1.0)
+                                                          }
+                                                          return(aic)
                                                         },
                                                         executeRSSPOD=function(){
                                                           if(CITypeRSS=="ModifiedWald" || CITypeRSS=="LR" || CITypeRSS=="MLR"){
@@ -129,6 +140,7 @@ RSSMainClassObject <- setRefClass("RSSMainClassObject", fields = list(dataFrame=
                                                             setMedianCovarMatrix(newPODCurve$getMedianCovarMatrix())
                                                             setPODDataFrame(newPODCurve$getPODCurveDF())
                                                             genAValues(logitResultsSet, RankedResultsSet)
+                                                            setAIC(newPODCurve$getAIC())
                                                           }
                                                           else{
                                                             print("all logit models failed to converge!")

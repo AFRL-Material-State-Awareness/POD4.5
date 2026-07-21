@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="MainForm.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +29,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using POD.Wizards;
 using POD.ExcelData;
 using POD.Data;
+using POD.Controls;
 using System.IO;
 using System.Windows.Forms.DataVisualization;
 using System.Diagnostics;
@@ -44,6 +61,8 @@ namespace POD
         {
             InitializeComponent();
 
+            VersionHelper.UpdatePODVersionHeader(this);
+
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
         }
 
@@ -51,19 +70,78 @@ namespace POD
         {
             InitializeComponent();
 
+            VersionHelper.UpdatePODVersionHeader(this);
+
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
             _loader = myForm;
 
             _loader.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
+            this.menuStrip1.Renderer = new DarkThemeMenuStripRenderer();
+
+            this.VisibleChanged += MainForm_VisibleChanged;
+            this.Shown += MainForm_Shown;
+
+            //this.ColorMainMenu(this.menuStrip1, Color.FromArgb(30, 30, 30), Color.White);
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void MainForm_VisibleChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void ColorMainMenu(MenuStrip strip, Color background, Color text)
+        {
+            strip.BackColor = background;
+            strip.ForeColor = text;
+
+            foreach (ToolStripMenuItem item in strip.Items)
+            {
+                RecurseThroughMenuStrip(item, background, text);
+            }
+        }
+
+        private void RecurseThroughMenuStrip(ToolStripMenuItem parentItem, Color background, Color text)
+        {
+            // Process the current item (e.g., print its text)
+            Console.WriteLine(parentItem.Text);
+
+            parentItem.BackColor = background;
+            parentItem.ForeColor = text;
+
+            // Recursively process its child items
+            foreach (ToolStripItem item in parentItem.DropDownItems)
+            {
+                if (item is ToolStripMenuItem menuItem)
+                {
+                    item.BackColor = background;
+                    item.ForeColor = text;
+
+                    RecurseThroughMenuStrip(menuItem, background, text);
+                }
+                else if (item is ToolStripSeparator sep)
+                {
+                    sep.BackColor = background;
+                    sep.ForeColor = text;
+
+                    // Handle other types of items (e.g., separators) if needed
+                    //Console.WriteLine(item.Text);
+                }
+            }
         }
 
         private void Dock_Paint(object sender, PaintEventArgs e)
         {
             if (_showQuickAnalysis && _dockToShow != null)
-            {                
-                _dockMgr.Show(_dockToShow);
-                _dockToShow.RefreshValues();
+            {
+                _dockMgr.Show(_dockToShow);                
+                _dockToShow.RefreshValues();                
                 _showQuickAnalysis = false;
             }
 
@@ -243,27 +321,22 @@ namespace POD
 
         private void Load_RDotNet(object sender, DoWorkEventArgs e)
         {
-            
-
-            //this.Invoke((MethodInvoker)delegate()
-            //{
             try
             {
                 Stopwatch newTimer = new Stopwatch();
                 newTimer.Start();
-                //initialize the iron python engine either by .dll or by importing the .py modules
+
                 py = new IPy4C();
                 newTimer.Stop();
-                //MessageBox.Show("Total time was:" + newTimer.ElapsedMilliseconds);
-                //py = new IPy4C(PyTypeEnum.DLLFiles, false);
-                //initialize the REngine Object to create an instance with the R.Net engine
+
                 REngineInstance = new REngineObject();
-                //give a notification to the user if python enhancements fail to load
+
                 if (REngineObject.PythonLoaded == false)
                 {
                     MessageBox.Show("Python engine could not be loaded! Application will continue without optimization.");
                 }
-                //forcing assemblies to load while the user is picking out a file to load    
+
+                // Forcing assemblies to load while the user is picking out a file to load   
                 var wizard = new WizardActionBar();
                 var export = new ExcelExport();
                 var point = new FixPoint(0, 0, Flag.InBounds);
@@ -274,43 +347,55 @@ namespace POD
                 chart.Dispose();
                 wizard.Dispose();
             }
-            catch(Exception exp) 
+            catch (Exception exp)
             {
                 string myExceptionName = exp.GetType().Name;
                 switch (myExceptionName)
                 {
                     case "RNotInstalledException":
-                        MessageBox.Show("Error, PODv4 application was unable to find the appropriate version of R. Make sure that you have the correct version of R installed",
-                        "Error: Unable to initialize R Engine", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        MessageBox.Show("Error, POD Professional v4.5 application was unable to find the appropriate version of R. " +
+                                        "Make sure that you have the correct version of R installed",
+                                        "Error: Unable to initialize R Engine", 
+                                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         break;
+
                     case "ArgumentException":
                         MessageBox.Show(exp.Message,
-                        "Bad Arguments Passed to R Environment", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                                        "Bad Arguments Passed to R Environment", 
+                                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         break;
+
                     case "FailedLoadingLibrariesException":
-                        MessageBox.Show(exp.Message + ". " + "Be sure to make sure the rsetup script was run, and there were no errors in installing any libraries.",
-                        "Failed To Load R Libraries", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        MessageBox.Show($"{exp.Message}. " +
+                                        "Be sure to make sure the rsetup script was run, " +
+                                        "and there were no errors in installing any libraries.",
+                                        "Failed To Load R Libraries", 
+                                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         break;
+
                     case "FailedLoadingRScriptsException":
                         MessageBox.Show(exp.Message,
-                            "Failed to Load R Scripts", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                            MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                                        "Failed to Load R Scripts", 
+                                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         break;
+
                     default:
-                        MessageBox.Show(exp.Message + ". " + "An unknown error has occurred in loading R.NET. Contact support for assistance",
-                        "Uknown Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
-                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+                        MessageBox.Show($"{exp.Message}. " +
+                                        "An unknown error has occurred in loading R.NET. " +
+                                        "Contact support for assistance",
+                                        "Unknown Error", 
+                                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation,
+                                        MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         break;
                 }
-                //MessageBox.Show(exp.Message);
-                //MessageBox.Show("OOPS! Something Went Wrong in initializing the main form!");
-                //MessageBox.Show("An unknown error has occurred in loading R.NET. Contact support for assistance");
-                this.Invoke((MethodInvoker)delegate()
+
+                this.Invoke((MethodInvoker)delegate ()
                 {
-                    _loader.Close();                   
+                    _loader.Close();
                 });
 
                 return;
@@ -416,6 +501,7 @@ namespace POD
 
             _dockMgr.ProjectDock.Hide();
             _dockMgr.WizardProgressDock.Hide();
+
             if (isHitMiss)
             {
                 _controller.AddAnalysis(_analysis);
@@ -427,10 +513,14 @@ namespace POD
             }
             var aDock = _controller.CreateWizardDock("QuickAnalysis").Dock;
 
+            _dockMgr.SetPreviousDock(aDock);
+
             _dockToShow = aDock;
             _dockToShow.CloseButton = false;
             _dockToShow.CloseButtonVisible = false;
             _showQuickAnalysis = true;
+
+            aDock.Activate();
         }
 
         private void ShowNewNormalProject(Project proj)
@@ -490,14 +580,13 @@ namespace POD
             try
             {
                 var lines = Globals.GetMRUList(Globals.PODv4MRUFile);
-
                 var parent = recentToolStripSeperator.GetCurrentParent();
 
                 var index = parent.Items.IndexOf(recentToolStripSeperator);
                 var indexEnd = parent.Items.IndexOf(exitToolStripSeperator);
 
-                //get rid of previous items in the list
-                while(index+1 != indexEnd)
+                // get rid of previous items in the list
+                while (index + 1 != indexEnd)
                 {
                     parent.Items.RemoveAt(index + 1);
                     indexEnd = parent.Items.IndexOf(exitToolStripSeperator);
@@ -507,19 +596,24 @@ namespace POD
 
                 foreach (string file in lines)
                 {
-                    ToolStripMenuItem item = new ToolStripMenuItem((itemsAdded + 1).ToString() + ") " + Path.GetFileName(file) + "...");
+                    // Cleaned up the numbered list item format
+                    string itemText = $"{itemsAdded + 1}) " +
+                                      $"{Path.GetFileName(file)}...";
+
+                    ToolStripMenuItem item = new ToolStripMenuItem(itemText);
                     item.Tag = file;
                     item.ToolTipText = file;
-                    var args = new EventArgs();
 
+                    var args = new EventArgs();
                     item.Click += (sender, e) => item_Click(item, args);
 
                     if (itemsAdded < 6)
+                    {
                         parent.Items.Insert(index + 1 + itemsAdded, item);
+                    }
 
                     itemsAdded++;
                 }
-
             }
             catch (Exception exp)
             {
@@ -527,8 +621,7 @@ namespace POD
             }
             finally
             {
-                if(sr != null)
-                    sr.Close();
+                sr?.Close();
             }
         }
 
@@ -716,6 +809,7 @@ namespace POD
                 }
 
                 OpenWizardByName(wizardLabel);
+
                 return;
             }
         }
@@ -805,8 +899,7 @@ namespace POD
             {
                 if (control.AutoOpen(node.Text) == true)
                 {
-                    Tree_NodeMouseDoubleClick(node, new TreeNodeMouseClickEventArgs(node, MouseButtons.Left, 2, 0, 0));
-                    break;
+                    this.Tree_NodeMouseDoubleClick(node, new TreeNodeMouseClickEventArgs(node, MouseButtons.Left, 2, 0, 0));
                 }
             }
 
@@ -843,12 +936,14 @@ namespace POD
 
             if (initialForm != null && !initialForm.ClosedWithoutSelection)
             {
-
-                var result = MessageBox.Show("Would you like to save your file before closing?", "Save " + _controller.Project.Name, MessageBoxButtons.YesNoCancel);
+                // Cleaned up the dialog title using interpolation
+                var result = MessageBox.Show("Would you like to save your file before closing?",
+                                             $"Save {_controller.Project.Name}",
+                                             MessageBoxButtons.YesNoCancel);
 
                 if (result == DialogResult.Yes)
                 {
-                    if (_lastFile.Length > 0)
+                    if (!string.IsNullOrEmpty(_lastFile))
                     {
                         SaveFile(_lastFile);
                     }
@@ -856,23 +951,25 @@ namespace POD
                     {
                         var saveAsResult = SaveFileAs();
 
-                        if (saveAsResult == System.Windows.Forms.DialogResult.Cancel)
+                        if (saveAsResult == DialogResult.Cancel)
+                        {
                             e.Cancel = true;
+                        }
                     }
                 }
 
                 if (result == DialogResult.Yes || result == DialogResult.No)
                 {
                     if (_controller != null)
+                    {
                         _controller.ClosePyEngine();
+                    }
                 }
                 else
                 {
                     e.Cancel = true;
                 }
-
             }
-            
         }
 
         private void Control_Removed(object sender, ControlEventArgs e)
@@ -970,7 +1067,7 @@ namespace POD
                     _dockMgr.Add(aDock);
                     _dockMgr.Show(aDock);
                     aDock.Visible = true;
-                    aDock.RefreshValues();                    
+                    aDock.RefreshValues();
                     aDock.Activate();
                     aDock.Select();
                 }
@@ -1035,7 +1132,7 @@ namespace POD
             dialog.Filter = "POD Projects (*.pod)|*.pod";
             dialog.AddExtension = false;
             dialog.DefaultExt = "pod";
-            dialog.Title = "Save POD v4 File";
+            dialog.Title = "Save POD Professional v4.5 File";
             dialog.OverwritePrompt = false;
 
             dialog.FileName = GetFileNameForSaving("Project", false);
@@ -1060,7 +1157,7 @@ namespace POD
             dialog.Filter = "POD Projects (*.pod)|*.pod";
             dialog.AddExtension = false;
             dialog.DefaultExt = "pod";
-            dialog.Title = "Save POD v4 File";
+            dialog.Title = "Save POD Professional v4.5 File";
 
             dialog.FileName = GetFileNameForSaving("Project", true);
 
@@ -1112,27 +1209,32 @@ namespace POD
             var name = GetFileNameForSaving(defaultName, true);
 
             name = _export.AskUserToSave(name, out shouldSave);
-            if(name == null && !shouldSave)
+
+            if (name == null && !shouldSave)
             {
-                MessageBox.Show("Cannot export to excel because file is being used by another process! If you have the file open in excel, " +
-                    "close excel and retry.");
+                MessageBox.Show("Cannot export to excel because file is being used by another process! " +
+                                "If you have the file open in excel, close excel and retry.");
                 return;
             }
+
             if (shouldSave)
             {
                 this.Cursor = Cursors.WaitCursor;
-                //keep the program from crashing
+
                 try
                 {
                     _controller.WriteToExcel(_export);
                 }
-                catch(Exception noExcelForYou)
+                catch (Exception noExcelForYou)
                 {
-                    MessageBox.Show("Unable to export Data to excel ERROR: "+'\n'+ noExcelForYou);
+                    // Using interpolation for the error message
+                    MessageBox.Show($"Unable to export Data to excel ERROR:\n{noExcelForYou}");
+
                     Application.UseWaitCursor = false;
                     this.Cursor = Cursors.Default;
                     return;
-                }                
+                }
+
                 _export.SaveToFile(name);
                 this.Cursor = Cursors.Default;
             }

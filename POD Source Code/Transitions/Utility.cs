@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="Utility.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -18,10 +34,12 @@ namespace Transitions
         {
             Type targetType = target.GetType();
             PropertyInfo propertyInfo = targetType.GetProperty(strPropertyName);
+
             if (propertyInfo == null)
             {
-                throw new Exception("Object: " + target.ToString() + " does not have the property: " + strPropertyName);
+                throw new Exception($"Object: {target} does not have the property: {strPropertyName}");
             }
+
             return propertyInfo.GetValue(target, null);
         }
 
@@ -32,17 +50,19 @@ namespace Transitions
         {
             Type targetType = target.GetType();
             PropertyInfo propertyInfo = targetType.GetProperty(strPropertyName);
+
             if (propertyInfo == null)
             {
-                throw new Exception("Object: " + target.ToString() + " does not have the property: " + strPropertyName);
+                throw new Exception($"Object: {target} does not have the property: {strPropertyName}");
             }
+
             propertyInfo.SetValue(target, value, null);
         }
 
-		/// <summary>
-		/// Returns a value between d1 and d2 for the percentage passed in.
-		/// </summary>
-		public static double interpolate(double d1, double d2, double dPercentage)
+        /// <summary>
+        /// Returns a value between d1 and d2 for the percentage passed in.
+        /// </summary>
+        public static double interpolate(double d1, double d2, double dPercentage)
 		{
 			double dDifference = d2 - d1;
 			double dDistance = dDifference * dPercentage;

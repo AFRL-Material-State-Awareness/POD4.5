@@ -18,3 +18,28 @@ POD Source Code/UpgradeLog.htm
 POD Source Code/UpgradeLog2.htm
 POD Source Code/UpgradeLog3.htm
 POD Source Code/UpgradeLog4.htm
+/POD Source Code/PODv4Point5Installer/*Install*
+/POD Source Code/PODv4Point5Installer/*.zip
+*.csv
+POD Source Code/gemini.md
+/POD Source Code/boxcox.dm
+/POD Source Code/TODO.txt
+POD Source Code/next_time.txt
+/POD Source Code/branch_diff.txt
+git_history.log
+# NuGet Packages
+*.nupkg
+packages/
+App_Data/packages/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+[Bin]
+[Obj]
+bin/
+obj/

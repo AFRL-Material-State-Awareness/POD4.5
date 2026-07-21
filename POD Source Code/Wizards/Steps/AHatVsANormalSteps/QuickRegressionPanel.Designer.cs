@@ -332,15 +332,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.leftCensorControl.Location = new System.Drawing.Point(3, 133);
             this.leftCensorControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.leftCensorControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.leftCensorControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.leftCensorControl.Name = "leftCensorControl";
             this.leftCensorControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.leftCensorControl.PartType = POD.ChartPartType.Undefined;
@@ -370,15 +370,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.rightCensorControl.Location = new System.Drawing.Point(3, 94);
             this.rightCensorControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.rightCensorControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.rightCensorControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.rightCensorControl.Name = "rightCensorControl";
             this.rightCensorControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.rightCensorControl.PartType = POD.ChartPartType.Undefined;
@@ -408,15 +408,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.aMaxControl.Location = new System.Drawing.Point(3, 16);
             this.aMaxControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMaxControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.aMaxControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.aMaxControl.Name = "aMaxControl";
             this.aMaxControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMaxControl.PartType = POD.ChartPartType.Undefined;
@@ -456,15 +456,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.aMinControl.Location = new System.Drawing.Point(3, 55);
             this.aMinControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMinControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.aMinControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.aMinControl.Name = "aMinControl";
             this.aMinControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMinControl.PartType = POD.ChartPartType.Undefined;
@@ -534,15 +534,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.thresholdControl.Location = new System.Drawing.Point(3, 172);
             this.thresholdControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.thresholdControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.thresholdControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.thresholdControl.Name = "thresholdControl";
             this.thresholdControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.thresholdControl.PartType = POD.ChartPartType.Undefined;
@@ -571,13 +571,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelErrorOut.Location = new System.Drawing.Point(3, 211);
             this.modelErrorOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelErrorOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.modelErrorOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.modelErrorOut.Name = "modelErrorOut";
@@ -618,13 +618,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelBOut.Location = new System.Drawing.Point(3, 172);
             this.modelBOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelBOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.modelBOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.modelBOut.Name = "modelBOut";
@@ -675,15 +675,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.a50Out.Location = new System.Drawing.Point(3, 16);
             this.a50Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a50Out.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.a50Out.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.a50Out.Name = "a50Out";
             this.a50Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a50Out.PartType = POD.ChartPartType.Undefined;
@@ -819,13 +819,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelMOut.Location = new System.Drawing.Point(3, 133);
             this.modelMOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelMOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.modelMOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.modelMOut.Name = "modelMOut";
@@ -856,15 +856,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelErrorStdErrOut.Location = new System.Drawing.Point(6, 95);
             this.modelErrorStdErrOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelErrorStdErrOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.modelErrorStdErrOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.modelErrorStdErrOut.Name = "modelErrorStdErrOut";
             this.modelErrorStdErrOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelErrorStdErrOut.PartType = POD.ChartPartType.Undefined;
@@ -902,15 +902,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelBStdErrOut.Location = new System.Drawing.Point(6, 56);
             this.modelBStdErrOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelBStdErrOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.modelBStdErrOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.modelBStdErrOut.Name = "modelBStdErrOut";
             this.modelBStdErrOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelBStdErrOut.PartType = POD.ChartPartType.Undefined;
@@ -948,15 +948,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.modelMStdErrOut.Location = new System.Drawing.Point(6, 17);
             this.modelMStdErrOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelMStdErrOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.modelMStdErrOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.modelMStdErrOut.Name = "modelMStdErrOut";
             this.modelMStdErrOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.modelMStdErrOut.PartType = POD.ChartPartType.Undefined;
@@ -994,15 +994,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.normalityTestOut.Location = new System.Drawing.Point(6, 134);
             this.normalityTestOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.normalityTestOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.normalityTestOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.normalityTestOut.Name = "normalityTestOut";
             this.normalityTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.normalityTestOut.Rating = POD.TestRating.Undefined;
@@ -1032,7 +1032,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.lackOfFitTestLabel.Name = "lackOfFitTestLabel";
             this.lackOfFitTestLabel.Size = new System.Drawing.Size(57, 13);
             this.lackOfFitTestLabel.TabIndex = 12;
-            this.lackOfFitTestLabel.Text = "Lack of Fit";
+            this.lackOfFitTestLabel.Text = "Whole Model";
             // 
             // lackOfFitTestOut
             // 
@@ -1049,15 +1049,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.lackOfFitTestOut.Location = new System.Drawing.Point(6, 174);
             this.lackOfFitTestOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.lackOfFitTestOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.lackOfFitTestOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.lackOfFitTestOut.Name = "lackOfFitTestOut";
             this.lackOfFitTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.lackOfFitTestOut.Rating = POD.TestRating.Undefined;
@@ -1095,15 +1095,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.equalVarianceTestOut.Location = new System.Drawing.Point(6, 214);
             this.equalVarianceTestOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.equalVarianceTestOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.equalVarianceTestOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.equalVarianceTestOut.Name = "equalVarianceTestOut";
             this.equalVarianceTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.equalVarianceTestOut.Rating = POD.TestRating.Undefined;
@@ -1149,15 +1149,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.repeatabilityErrorOut.Location = new System.Drawing.Point(6, 279);
             this.repeatabilityErrorOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.repeatabilityErrorOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.repeatabilityErrorOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.repeatabilityErrorOut.Name = "rSquaredValueOut";
             this.repeatabilityErrorOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.repeatabilityErrorOut.PartType = POD.ChartPartType.Undefined;
@@ -1282,15 +1282,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.SigmaOut.Location = new System.Drawing.Point(9, 456);
             this.SigmaOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.SigmaOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.SigmaOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.SigmaOut.Name = "SigmaOut";
             this.SigmaOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.SigmaOut.PartType = POD.ChartPartType.POD;
@@ -1328,15 +1328,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             this.MuOut.Location = new System.Drawing.Point(11, 499);
             this.MuOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.MuOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.MuOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.MuOut.Name = "MuOut";
             this.MuOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.MuOut.PartType = POD.ChartPartType.POD;

@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="WizardActionBar.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -212,13 +228,27 @@ namespace POD.Wizards
             _rightButtons = new ButtonHandlerList();
             _leftButtons = new ButtonHandlerList();
 
-            switchViewButton = new PODButton("Switch Help View", "Switch help windows between pre-defined views." + Environment.NewLine + "(small screen, large screen, dual screen) (Ctrl + ])", StepToolTip);
-            snapShotButton = new PODButton("Duplicate", "Duplicate analysis and add to project. (Ctrl + Alt + D)", StepToolTip);
-            cancelButton = new PODButton("Cancel", "Cancel all changes.", StepToolTip);
-            resetButton = new PODButton("Reset", "Reset changes on the current step.", StepToolTip);
-            prevButton = new PODButton("Previous", "Go to the previous step. (Ctrl + P)", StepToolTip);
-            nextButton = new PODButton("Next", "Go to the next step. (Ctrl + N)", StepToolTip);
-            finishButton = new PODButton("Finish", "Auto-complete remaining steps. (Ctrl + F)", StepToolTip);
+            switchViewButton = new PODButton("Switch Help View",
+                "Switch help windows between pre-defined views.\n" +
+                "(small screen, large screen, dual screen) (Ctrl + ])", StepToolTip);
+
+            snapShotButton = new PODButton("Duplicate",
+                "Duplicate analysis and add to project. (Ctrl + Alt + D)", StepToolTip);
+
+            cancelButton = new PODButton("Cancel",
+                "Cancel all changes.", StepToolTip);
+
+            resetButton = new PODButton("Reset",
+                "Reset changes on the current step.", StepToolTip);
+
+            prevButton = new PODButton("Previous",
+                "Go to the previous step. (Ctrl + P)", StepToolTip);
+
+            nextButton = new PODButton("Next",
+                "Go to the next step. (Ctrl + N)", StepToolTip);
+
+            finishButton = new PODButton("Finish",
+                "Auto-complete remaining steps. (Ctrl + F)", StepToolTip);
 
             //snapShotButton.Enabled = false;
 
@@ -284,7 +314,7 @@ namespace POD.Wizards
 
             if (button != null)
             {
-                var key = button.Name + ".png";
+                var key = $"{button.Name}.png";
 
                 if (ActionIcons.Images.ContainsKey(key) && button.Image == null)
                 {
@@ -539,38 +569,29 @@ namespace POD.Wizards
         internal void SyncStepContextMenu(List<ToolStripItem> myMenu)
         {
             ToolStripMenuItem item;
-
             ToolStripMenuItem parent = new ToolStripMenuItem();
-
-            ////parent.Text = "Navigate";
-            ////parent.Enabled = false;
-            ////myMenu.Add(parent);
 
             var actionPanel = ContextMenuStripConnected.MakeNewMenuFlowLayoutPanel("Action");
             var actionButtons = new ToolStripControlHost(actionPanel);
-            
 
-        //if (NavigateButtons == null)
-        //{
-            var navigatePanel = ContextMenuStripConnected.MakeNewMenuFlowLayoutPanel("Navigate");                
+            var navigatePanel = ContextMenuStripConnected.MakeNewMenuFlowLayoutPanel("Navigate");
             var navigateButtons = new ToolStripControlHost(navigatePanel);
 
+            // Process Navigation Buttons (Right-aligned logic)
             foreach (ButtonHandler button in _rightButtons.Values)
             {
                 var navButton = new PODButton(StepToolTip, StepToolTip.GetToolTip(button.Button));
                 navButton.TextImageRelation = TextImageRelation.Overlay;
 
-                item = new ToolStripMenuItem();
-
-                navButton.Text = "";// button.Button.Text;
-                navButton.Name = navigatePanel.Name + "_" + button.Button.Text;
+                navButton.Text = "";
+                navButton.Name = $"{navigatePanel.Name}_{button.Button.Text}"; // Interpolated naming
                 navButton.BackgroundImage = button.Button.Image;
                 navButton.BackgroundImageLayout = ImageLayout.Center;
-                //navButton.ImageAlign = ContentAlignment.MiddleCenter;// = ToolStripItemImageScaling.None;
+
                 navButton.Width = button.Button.Image.Width + 10;
                 navButton.Height = button.Button.Image.Height + 10;
-                navButton.Padding = new Padding(0, 0, 0, 0);
-                navButton.Margin = new Padding(0, 0, 0, 0);
+                navButton.Padding = new Padding(0);
+                navButton.Margin = new Padding(0);
                 navButton.Enabled = button.Button.Enabled;
 
                 foreach (EventHandler handle in button.Handler)
@@ -578,58 +599,33 @@ namespace POD.Wizards
                     navButton.Click += handle;
                 }
 
-                //navButton.Click += SaveNavigateAsLast;
-                //navButton.Click += ContextMenuStripConnected.CloseEverythingElse;
-                //navButton.Click += RefreshActions;
-                //navButton.Click += navButton_Click;
-
                 navigatePanel.Controls.Add(navButton);
                 navigatePanel.Controls.SetChildIndex(navButton, 0);
-                
+
                 ContextMenuStripConnected.ForcePanelToDraw(navigatePanel);
-                //myMenu.Add(item);
-
-                ////parent.DropDownItems.Add(item);
-
-                ////parent.Enabled = true;
             }
-
-            //NavigateButtons = navigateButtons;
-        //}
 
             myMenu.Insert(0, navigateButtons);
 
-            //if (_leftButtons.Values.Count > 0)
-            //    myMenu.Add(new ToolStripSeparator());
-
-            ////parent.DropDownItems.Add("-");
-
-            ////parent = new ToolStripMenuItem();
-            ////parent.Text = "Actions";
-            ////parent.Enabled = false;
-            ////myMenu.Add(parent);
-            
+            // Process Action Buttons (Left-aligned logic)
             foreach (ButtonHandler button in _leftButtons.Values)
             {
                 var actButton = new PODButton(StepToolTip, StepToolTip.GetToolTip(button.Button));
                 actButton.TextImageRelation = TextImageRelation.Overlay;
 
-                item = new ToolStripMenuItem();
-
-                actButton.Text = "";// button.Button.Text;
-                actButton.Name = actionPanel.Name + "_" + button.Button.Text;
+                actButton.Text = "";
+                actButton.Name = $"{actionPanel.Name}_{button.Button.Text}"; // Interpolated naming
 
                 if (button.Button.Image != null)
                 {
                     actButton.BackgroundImage = button.Button.Image;
                     actButton.BackgroundImageLayout = ImageLayout.Center;
-                    //navButton.ImageAlign = ContentAlignment.MiddleCenter;// = ToolStripItemImageScaling.None;
                     actButton.Width = button.Button.Image.Width + 10;
                     actButton.Height = button.Button.Image.Height + 10;
                 }
 
-                actButton.Padding = new Padding(0, 0, 0, 0);
-                actButton.Margin = new Padding(0, 0, 0, 0);
+                actButton.Padding = new Padding(0);
+                actButton.Margin = new Padding(0);
                 actButton.Enabled = button.Button.Enabled;
 
                 foreach (EventHandler handle in button.Handler)
@@ -637,42 +633,31 @@ namespace POD.Wizards
                     actButton.Click += handle;
                 }
 
-                //actButton.Click += SaveActionAsLast;
-                //actButton.Click += ContextMenuStripConnected.CloseEverythingElse;
-
                 ContextMenuStripConnected.ForcePanelToDraw(actionPanel);
-                ////parent.DropDownItems.Add(item);
-
-                ////parent.Enabled = true;
-
-                //myMenu.Add(item);
-
                 actionPanel.Controls.Add(actButton);
-                //actionPanel.Controls.SetChildIndex(actButton, 0);
             }
 
-            if(actionPanel.Controls.Count > 0)
+            if (actionPanel.Controls.Count > 0)
+            {
                 myMenu.Insert(1, actionButtons);
+            }
 
             Actions = actionButtons;
 
-            //no point in having a step list with 1 step
+            // No point in having a step list with only 1 step
             if (Source.ProgressStepListNode != null && Source.ProgressStepListNode.Nodes.Count > 1)
             {
                 if (Source.ProgressStepListNode.Nodes.Count > 0)
+                {
                     myMenu.Add(new ToolStripSeparator());
+                }
 
                 foreach (TreeNode node in Source.ProgressStepListNode.Nodes)
                 {
                     item = new ToolStripMenuItem();
-
                     item.Text = node.Text;
                     item.Click += JumpToStep;
-                    item.Name = parent.Text + "_" + item.Text;
-
-                    ////parent.DropDownItems.Add(item);
-
-                    ////parent.Enabled = true;
+                    item.Name = $"{parent.Text}_{item.Text}"; // Interpolated naming
 
                     myMenu.Add(item);
                 }
@@ -681,60 +666,9 @@ namespace POD.Wizards
             _menuItems.Add(myMenu);
         }
 
-        
-
-        
-
-        //private void RefreshActions(object sender, EventArgs e)
-        //{
-        //    var actions = CurrentActions;
-        //    var button = sender as Button;
-
-        //    if (button != null)
-        //    {
-        //        var menu = button.Parent.Parent as ContextMenuStripConnected;
-        //        var removeList = new List<ToolStripItem>();
-
-        //        if (menu != null)
-        //        {
-        //            ToolStripControlHost remove = null;
-
-        //            foreach (var item in menu.Items)
-        //            {
-        //                var container = item as ToolStripControlHost;
-
-        //                if (container != null)
-        //                {
-        //                    if(container.Control != button.Parent)
-        //                    {
-        //                        remove = container;
-        //                        break;
-        //                    }
-        //                }
-        //            }
-
-        //            if (remove != null)
-        //            {
-        //                var width = menu.Width;
-        //                menu.SuspendLayout();
-        //                var index = menu.Items.IndexOf(remove);
-        //                menu.Items.Remove(remove);
-        //                menu.Items.Insert(index, CurrentActions);                        
-        //                menu.ResumeLayout(true);
-        //                menu.Width = width;
-                        
-        //            }
-        //        }
-        //    }
-        //}
-
-        
-
         void navButton_Click(object sender, EventArgs e)
         {
-            //var button = sender as Button;
 
-            //button.Parent.Parent.Hide();
         }
 
         private void SaveActionAsLast(object sender, EventArgs e)

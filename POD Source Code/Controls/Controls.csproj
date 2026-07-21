@@ -57,10 +57,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
-      <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -70,6 +68,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.3.1.1\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2012, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2012.3.1.1\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2012.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.1\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionIconsList.cs">
@@ -89,11 +96,31 @@
     <Compile Include="ColorMap.Designer.cs">
       <DependentUpon>ColorMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="DarkThemeMenuStripRenderer.cs" />
+    <Compile Include="ExtendedToolStripSeparator.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Firework.cs" />
+    <Compile Include="LaunchParticle.cs" />
+    <Compile Include="NamedStripLine.cs" />
+    <Compile Include="Particle.cs" />
     <Compile Include="PDFLoader.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODHorizontalLineAnnotation.cs" />
+    <Compile Include="PODPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PODPdfiumViewer.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PODTimer.cs" />
+    <Compile Include="PODVerticalLineAnnotation.cs" />
+    <Compile Include="QQChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="QQChart.Designer.cs">
+      <DependentUpon>QQChart.cs</DependentUpon>
     </Compile>
     <Compile Include="SamplingTypeBox.cs" />
     <Compile Include="SamplingTypeBox.Designer.cs">
@@ -389,6 +416,10 @@
       <Project>{BEE41D1E-EBA8-4D3E-B297-4C1CA6FFF8DB}</Project>
       <Name>Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PdfiumViewer-smooth-scroll\PdfiumViewer\PdfiumViewer.csproj">
+      <Project>{438914b6-5d1c-482c-b942-5c0e057eef6f}</Project>
+      <Name>PdfiumViewer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\POD\Global.csproj">
       <Project>{f7db9280-e09a-470d-8fdb-3c97c538a6c1}</Project>
       <Name>Global</Name>
@@ -418,6 +449,33 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Show Normality.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ThemeVS2012\Resources\Dockindicator_PaneDiamond_Hotspot.png" />
+    <Content Include="ThemeVS2012\Resources\DockIndicator_PaneDiamond_HotspotIndex.png" />
+    <Content Include="ThemeVS2012\Resources\MaskArrowBottom.png" />
+    <Content Include="ThemeVS2012\Resources\MaskArrowLeft.png" />
+    <Content Include="ThemeVS2012\Resources\MaskArrowRight.png" />
+    <Content Include="ThemeVS2012\Resources\MaskArrowTop.png" />
+    <Content Include="ThemeVS2012\Resources\MaskCoreBottom.png" />
+    <Content Include="ThemeVS2012\Resources\MaskCoreCenter.png" />
+    <Content Include="ThemeVS2012\Resources\MaskCoreLeft.png" />
+    <Content Include="ThemeVS2012\Resources\MaskCoreRight.png" />
+    <Content Include="ThemeVS2012\Resources\MaskCoreTop.png" />
+    <Content Include="ThemeVS2012\Resources\MaskDock.png" />
+    <Content Include="ThemeVS2012\Resources\MaskDockFive.png" />
+    <Content Include="ThemeVS2012\Resources\MaskTabClose.png" />
+    <Content Include="ThemeVS2012\Resources\MaskTabList.png" />
+    <Content Include="ThemeVS2012\Resources\MaskTabOverflow.png" />
+    <Content Include="ThemeVS2012\Resources\MaskToolWindowAutoHide.png" />
+    <Content Include="ThemeVS2012\Resources\MaskToolWindowClose.png" />
+    <Content Include="ThemeVS2012\Resources\MaskToolWindowDock.png" />
+    <Content Include="ThemeVS2012\Resources\MaskToolWindowOption.png" />
+    <Content Include="ThemeVS2012\Resources\MaskWindowBottom.png" />
+    <Content Include="ThemeVS2012\Resources\MaskWindowCenter.png" />
+    <Content Include="ThemeVS2012\Resources\MaskWindowLeft.png" />
+    <Content Include="ThemeVS2012\Resources\MaskWindowRight.png" />
+    <Content Include="ThemeVS2012\Resources\MaskWindowTop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -426,6 +484,11 @@
     <Error Condition="!Exists('..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props'))" />
     <Error Condition="!Exists('..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86.v8-xfa.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86.v8-xfa.props'))" />
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>if "$(ConfigurationName)" == "Debug" goto skip
+powershell -noprofile -ExecutionPolicy Unrestricted -File "$(SolutionDir)contrib\update_version.ps1" "'$(SolutionDir)'" "'$(ProjectDir)'"
+:skip</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

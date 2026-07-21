@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="QuickRegressionPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,6 +29,7 @@ using POD.ExcelData;
 namespace POD.Wizards.Steps.HitMissNormalSteps
 {
     using System.Data;
+    using System.Threading;
     using System.Windows.Forms.DataVisualization.Charting;
 
     using POD.Analyze;
@@ -42,6 +59,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         PODButton _addButton;
         PODButton _pasteButton;
         NewHitMissRangeForm _form;
+        private List<Control> _outputWithLabels;
+        private List<Control> _inputWithLabels;
 
         public QuickRegressionPanel(PODToolTip tooltip) : base(tooltip)
         {
@@ -74,9 +93,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             mainChart.FreezeThresholdLine(.5);
 
-
             CreateButtons();
-            
+
+            this.DisplayPanel.BackgroundControl = this.MainChart;
         }
 
         private void Grid_RunAnalysis(object sender, EventArgs e)
@@ -183,6 +202,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             //MessageBox.Show("Called RefreshValues()");
 
             //SuspendDrawing();
+            //Analysis.Transformer.ForceAxisTransforms(TransformTypeEnum.Linear, TransformTypeEnum.Linear);
             Analysis.Data.FilterTransformedDataByRanges = false;
             Analysis.CalculateInitialValuesWithNewData();
             SetupSideCharts();
@@ -191,7 +211,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             {
                 AddChartListeningForErrors();
 
-                MainChart.LoadChartData(Analysis.Data);
+                MainChart.LoadChartData(Analysis.Data, Analysis.Transformer);
                 MainChart.PickBestAxisRange();
                 MainChart.ForceResizeAnnotations();
             }
@@ -276,6 +296,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             //MessageBox.Show("Called UpdateAnalysisFromTable()");
 
+            Analysis.UsingQuickAnalysis = true;
+
             if (dataGridView1.CheckForValidDataGrid(mainChart, Analysis.Name))
             {
 
@@ -316,7 +338,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                     Analysis.Data.RecreateTables();
                     Analysis.ForceUpdateInputsFromData(true, AnalysisDataTypeEnum.HitMiss);
 
-                    MainChart.LoadChartData(Analysis.Data);
+                    MainChart.LoadChartData(Analysis.Data, Analysis.Transformer);
                     Analysis.Data.ForceRefillSortListAndClearPoints();
 
                     MainChart.ForceResizeAnnotations();
@@ -347,6 +369,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         public override void RunAnalysis(bool disableControls=true)
         {
             //ResumeDrawing();
+
+            Analysis.UsingQuickAnalysis = true;
 
             if (dataGridView1.CheckForValidDataGrid(mainChart, Analysis.Name))
             {
@@ -439,10 +463,10 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 //ResizeControlsToAllFit(outputTablePanel);
                 //MakeInputMatchOutputWidth();
 
-                FixTableSize(outputTablePanel);
+                //FixTableSize(outputTablePanel);
 
 
-                //ResumeDrawing();
+                ResumeDrawing();
             }
         }
 
@@ -453,7 +477,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             base.AddOutputControls();
             PrepareRichTextBox();
-            var list = new List<Control> { PodModelParametersHeader,
+            _outputWithLabels = new List<Control> { PodModelParametersHeader,
                                            a50label, a50Out,
                                            a90Label, a90Out,
                                            a90_95Label, a90_95Out,                                           
@@ -470,7 +494,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                                            TestColorMap,
                                            _helpfulRTF};
 
-            foreach (Control control in list)
+            foreach (Control control in _outputWithLabels)
             {
                 control.Dock = DockStyle.Fill;
 
@@ -478,7 +502,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             }
 
-            outputTablePanel.Controls.AddRange(list.ToArray());
+            outputTablePanel.Controls.AddRange(_outputWithLabels.ToArray());
 
             outputTablePanel.SetColumnSpan(TestColorMap, 2);
             outputTablePanel.SetColumnSpan(PodModelParametersHeader, 2);
@@ -519,7 +543,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             IntitalizeTransformBoxes();
             InitializeCITypeBox();
             InitializeSamplingTypeBox();
-            var list = new List<Control> {
+            _inputWithLabels = new List<Control> {
                                            AxisTransformsHeader,
                                            _xTransformLabel, _xTransformBox,
                                            _confIntLabel, _confIntBox,
@@ -531,12 +555,12 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                                            AMaxInputLabel, aMaxControl, 
                                            AMinInputLabel, aMinControl };
 
-            foreach (Control control in list)
+            foreach (Control control in _inputWithLabels)
             {
                 control.Dock = DockStyle.Fill;
             }
 
-            inputTablePanel.Controls.AddRange(list.ToArray());
+            inputTablePanel.Controls.AddRange(_inputWithLabels.ToArray());
 
             inputTablePanel.SetColumnSpan(AxisTransformsHeader, 2);
             inputTablePanel.SetColumnSpan(FlawRangeHeader, 2);
@@ -558,6 +582,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             PrepareLabelBoxPair(ref _xTransformLabel, "Flaw", ref _xTransformBox);
 
+            _xTransformBox.SelectedTransform = TransformTypeEnum.Linear;
             ModelBox.SelectedIndex = 0;
         }
         public void InitializeCITypeBox()
@@ -669,21 +694,24 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             _helpfulRTF.Text = " ";
             colorBackTextInHelpfulRTF();
+
             switch (e.ItemIndex)
             {
                 case 0:
-                    _helpfulRTF.Text = "Calculate the POD curve using traditional logistic regression. This algorithm uses an iterative re-weighted " +
-                        "least squares algorithm until convergence is found.";
+                    _helpfulRTF.Text = "Calculate the POD curve using traditional logistic regression. " +
+                                       "This algorithm uses an iterative re-weighted least squares algorithm until convergence is found.";
                     break;
+
                 case 1:
-                    _helpfulRTF.Text = "Calculate the POD curve using Firth's bias reduction. This is an alternative to traditional logistic regression that " +
-                        "utilizes a penalized likelihood approach. This is especially useful for handling separated data and/or rare events where traditional" +
-                        "logistic regression does not converge.";
+                    _helpfulRTF.Text = "Calculate the POD curve using Firth's bias reduction. " +
+                                       "This is an alternative to traditional logistic regression that utilizes a penalized likelihood approach. " +
+                                       "This is especially useful for handling separated data and/or rare events where traditional " +
+                                       "logistic regression does not converge.";
                     break;
+
                 default:
                     DefaultRTFMessage();
                     break;
-
             }
         }
         private void ConfIntBox_ValueChanged(object sender, EventArgs e)
@@ -721,28 +749,35 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             _helpfulRTF.Text = " ";
             colorBackTextInHelpfulRTF();
+
             switch (e.ItemIndex)
             {
-
                 case 0:
-                    _helpfulRTF.Text = "Performs a standard wald 95% confidence interval on the POD curve. This is the defualt option.";
+                    _helpfulRTF.Text = "Performs a standard Wald 95% confidence interval on the POD curve. " +
+                                       "This is the default option.";
                     break;
+
                 case 1:
-                    _helpfulRTF.Text = "Performs modified wald confidence interval. Calculated the same way as standard wald, but first generates " +
-                        "normally distributed crack sizes to address smoothing issues with the confidence interval curve when linear interpolating.";
+                    _helpfulRTF.Text = "Performs a modified Wald confidence interval. " +
+                                       "Calculated the same way as standard Wald, but first generates normally distributed crack sizes " +
+                                       "to address smoothing issues with the confidence interval curve when linear interpolating.";
                     break;
+
                 case 2:
-                    _helpfulRTF.Text = "Performs a likelihood ratio confidence interval. This is the theoretically correct way to calculate the confidence " +
-                        "interval when dealing with binomial data. It is compuational intense optimization that takes around 5-10 seconds to run. ";
+                    _helpfulRTF.Text = "Performs a likelihood ratio confidence interval. " +
+                                       "This is the theoretically correct way to calculate the confidence interval when dealing with binomial data. " +
+                                       "It is a computationally intense optimization that takes around 5-10 seconds to run.";
                     break;
+
                 case 3:
-                    _helpfulRTF.Text = "Performs a modified likelihood ratio confidence interval. Similar to the likelihood ratio confidence interval " +
-                        "except that it uses higher order approximation to deal with potential smoothing issues. It is compuational intense optimization that takes around 10-15 seconds to run. ";
+                    _helpfulRTF.Text = "Performs a modified likelihood ratio confidence interval. " +
+                                       "Similar to the likelihood ratio confidence interval except that it uses a higher order approximation " +
+                                       "to deal with potential smoothing issues. It is a computationally intense optimization that takes around 10-15 seconds to run.";
                     break;
+
                 default:
                     DefaultRTFMessage();
                     break;
-
             }
         }
         private void SamplingTypeBox_ValueChanged(object sender, EventArgs e)
@@ -780,51 +815,70 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         {
             _helpfulRTF.Text = " ";
             colorBackTextInHelpfulRTF();
+
             switch (e.ItemIndex)
             {
                 case 0:
-                    _helpfulRTF.Text = "Performs a HitMiss Analysis using simple random sampling (i.e. the data 'as is')";
+                    _helpfulRTF.Text = "Performs a Hit/Miss Analysis using simple random sampling (i.e. the data 'as is').";
                     break;
+
                 case 1:
-                    _helpfulRTF.Text = "Performes a HitMiss Analysis using ranked set sampling. Ranked set sampling is an alternative to " +
-                        "simple random sampling in which a certain number of 'resamples' are generated (30 by default) using ranked set sampling techniques " +
-                        "(see manual for more information). This metric is especially useful when the original dataset has a relatively small sample size";
+                    _helpfulRTF.Text = "Performs a Hit/Miss Analysis using ranked set sampling. " +
+                                       "Ranked set sampling is an alternative to simple random sampling in which a certain number of 'resamples' " +
+                                       "are generated (30 by default) using ranked set sampling techniques (see manual for more information). " +
+                                       "This metric is especially useful when the original dataset has a relatively small sample size.";
                     break;
+
                 default:
                     _helpfulRTF.Text = "This text box displays information about transform types, confidence intervals, sampling types, and more!";
                     break;
-
             }
         }
+
         /// <summary>
         /// this function is used as a check to warn the user ahead of time if the analysis config selected is going to take an excessive amount of time
         /// </summary>
         /// <returns></returns>
         public DialogResult CheckLongRuntime()
         {
-            //dialog will be yes by default in case the user uses either standard wald or modified wald with ranked set sampling
+            // Default to Yes unless a Yes/No dialog changes it
             DialogResult dialogResult = DialogResult.Yes;
-            if (_confIntBox.SelectedConfInt.ToString() == "StandardWald" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
+
+            string samplingType = _sampleTypeBox.SelectedSamplingType.ToString();
+            string confIntType = _confIntBox.SelectedConfInt.ToString();
+
+            // Check sampling type once at the beginning
+            if (samplingType == "RankedSetSampling")
             {
-                MessageBox.Show("WARNING: Using standard wald with ranked set sampling can produce wacky results." + '\n' +
-                    "It is recommended to use modified wald instead.");
+                if (confIntType == "StandardWald")
+                {
+                    dialogResult = MessageBox.Show(
+                        "WARNING: Using standard Wald with ranked set sampling can produce unexpected results.\n" +
+                        "It is recommended to use modified Wald instead.\n" +
+                        "Do you still want to proceed?", "Unexpected Results", 
+                        MessageBoxButtons.YesNo);
+                }
+                else if (confIntType == "LR")
+                {
+                    dialogResult = MessageBox.Show(
+                        "WARNING: You've selected Likelihood Ratio (LR) confidence interval with Ranked Set Sampling.\n\n" +
+                        "This process could take anywhere from 5-10min to complete.\n" +
+                        "Do you still want to proceed?", "Time To Execute Warning", 
+                        MessageBoxButtons.YesNo);
+                }
+                else if (confIntType == "MLR")
+                {
+                    dialogResult = MessageBox.Show(
+                        "WARNING: You've selected Modified Likelihood Ratio (MLR) confidence interval with Ranked Set Sampling.\n\n" +
+                        "This process could take anywhere from 10-20min to complete.\n" +
+                        "Do you still want to proceed?", "Time To Execute Warning", 
+                        MessageBoxButtons.YesNo);
+                }
             }
-            else if (_confIntBox.SelectedConfInt.ToString() == "LR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
-            {
-                dialogResult = MessageBox.Show("WARNING: You've selected Likelihood Ratio (LR) confidence interval " +
-                    "with Ranked Set Sampling. This process" +
-                    "could take anywhere from 5-10min to complete." + '\n' +
-                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo);
-            }
-            else if (_confIntBox.SelectedConfInt.ToString() == "MLR" && _sampleTypeBox.SelectedSamplingType.ToString() == "RankedSetSampling")
-            {
-                dialogResult = MessageBox.Show("WARNING: You've selected Modified Likelihood Ratio (MLR) confidence interval " +
-                    "with Ranked Set Sampling. This process" +
-                    "could take anywhere from 10-20min to complete." + '\n' +
-                    "Do you still want to proceed?", "Time To Execute Warning", MessageBoxButtons.YesNo);
-            }
+
             return dialogResult;
         }
+
         /// <summary>
         /// Sets up properties for right side numeric controls.  Only call after InitializeComponent().
         /// </summary>
@@ -898,27 +952,37 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         public override void ProcessAnalysisOutput(Object sender, EventArgs e)
         {
             if (MainChart != null)
+            {
                 MainChart.ClearProgressBar();
+            }
 
             EnableInputControls();
 
+            if (Analysis.Data.MissingData)
+            {
+                return;
+            }
+
+            // Capture initial values from the Analysis object
             double a90Transformed = Analysis.OutResponseDecisionPODLevelValue;
             double a9095Transformed = Analysis.OutResponseDecisionPODConfidenceValue;
             double a50Transformed = Analysis.OutResponseDecisionPODA50Value;
+
             double a90Original = Analysis.OutResponseDecisionPODLevelValue;
             double a9095Original = Analysis.OutResponseDecisionPODConfidenceValue;
             double a50Original = Analysis.OutResponseDecisionPODA50Value;
-            double podMu = Analysis.OutPODMu;
-            double podSigma = Analysis.OutPODSigma;
-            double covV11 = Analysis.OutPFCovarianceV11;
-            double covV12 = Analysis.OutPFCovarianceV12;
-            double covV22 = Analysis.OutPFCovarianceV22;
+
             double lackOfFit = Analysis.OutTestLackOfFit;
-            //in case the user accidently puts signal response into the quick analysis-hitMiss
-            if((a50Original==-1 && a90Original == -1 && a9095Original == -1) || (a50Original ==Math.Exp(-1) && a90Original == Math.Exp(-1) && a9095Original == Math.Exp(-1)))
+
+            // Safety check: Ensure Hit/Miss data wasn't accidentally swapped with Signal Response
+            bool isInvalidDefault = a50Original == -1 && a90Original == -1 && a9095Original == -1;
+            bool isInvalidExp = a50Original == Math.Exp(-1) && a90Original == Math.Exp(-1) && a9095Original == Math.Exp(-1);
+
+            if (isInvalidDefault || isInvalidExp)
             {
-                Source.Python.AddErrorText("Invalid data was used! Please make sure that the data being entered is HitMiss." + '\n' +
-                    "If you intended a signal response analysis, switch Signal Reponse quick analysis");
+                Source.Python.AddErrorText("Invalid data was used! Please make sure that the data being entered is Hit/Miss.\n" +
+                                           "If you intended a signal response analysis, switch to Signal Response quick analysis.");
+
                 MainChart.ClearEverythingButPoints();
                 linearityChart.ClearEverythingButPoints();
                 podChart.ClearEverythingButPoints();
@@ -927,65 +991,74 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             try
             {
-                a90Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a90Transformed)));
-                a9095Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a9095Transformed)));
-                a50Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a50Transformed)));
-                a90Out.Value = Convert.ToDecimal(a90Original);
-                a90_95Out.Value = Convert.ToDecimal(a9095Original);
-                a50Out.Value = Convert.ToDecimal(a50Original);
-                MuOut.Value = Convert.ToDecimal(Analysis.OutPODMu);
-                SigmaOut.Value = Convert.ToDecimal(Analysis.OutPODSigma);
-                likelihoodRatioTestOut.Value = Convert.ToDecimal(lackOfFit);
+                // Transform values for display on the X-Axis
+                a90Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis((decimal)a90Transformed));
+                a9095Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis((decimal)a9095Transformed));
+                a50Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis((decimal)a50Transformed));
 
-                covV11Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV11);
-                covV12Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV12);
-                covV22Out.Value = Convert.ToDecimal(Analysis.OutPFCovarianceV22);
+                // Update UI Output Controls
+                a90Out.Value = (decimal)a90Original;
+                a90_95Out.Value = (decimal)a9095Original;
+                a50Out.Value = (decimal)a50Original;
+
+                MuOut.Value = (decimal)Analysis.OutPODMu;
+                SigmaOut.Value = (decimal)Analysis.OutPODSigma;
+                likelihoodRatioTestOut.Value = (decimal)lackOfFit;
+
+                covV11Out.Value = (decimal)Analysis.OutPFCovarianceV11;
+                covV12Out.Value = (decimal)Analysis.OutPFCovarianceV12;
+                covV22Out.Value = (decimal)Analysis.OutPFCovarianceV22;
             }
-            catch
+            catch (Exception exp)
             {
-                //MessageBox.Show("Analysis Error caused invalid output values that are out of range.");
-                //Source.Python.AddErrorText("Output values out of range.");
-                //ADD click to continue? in order to ensure the user doesn't think the program is broken
+                POD.Globals.ShowErrorMessageBox(exp);
                 _knownErrorFound = false;
-                if (Analysis.AnalysisDataType.ToString() == "HitMiss")
+
+                if (Analysis.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                 {
                     SearhForHitMissErrors(a9095Original);
                 }
+
                 if (!_knownErrorFound)
                 {
-                    //Source.Python.AddErrorText("Output values out of range.");
-                    Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a Statistician if Necessary");
+                    Source.Python.AddErrorText("DEFAULT UNKNOWN ERROR: Contact support or a statistician if necessary.");
                 }
 
                 MainChart.ClearEverythingButPoints();
                 linearityChart.ClearEverythingButPoints();
                 podChart.ClearEverythingButPoints();
-
                 return;
             }
 
+            // Update Charts
             podChart.FillChart(Analysis.Data);
             podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
-            podChart.UpdateLevelConfidenceLines(a50Original,
-                                                a90Original,
-                                                a9095Original);
+            podChart.UpdateLevelConfidenceLines(a50Original, a90Original, a9095Original);
 
             StepToolTip.SetToolTip(podChart, podChart.TooltipText);
             podChart.ChartToolTip = StepToolTip;
 
             TestRating lackOfFitRating = Analysis.GetTestRatingFromLabel(Analysis.OutTestLackOfFitRating);
             likelihoodRatioTestOut.Rating = lackOfFitRating;
-            mainChart.UpdateBestFitLine();
 
-            mainChart.UpdateLevelConfidenceLines(a50Transformed,
-                                                 a90Transformed,
-                                                 a9095Transformed);
+            mainChart.UpdateBestFitLine();
+            mainChart.UpdateLevelConfidenceLines(a50Transformed, a90Transformed, a9095Transformed);
 
             linearityChart.FillChart(Analysis.Data, Analysis.OutPODMu, Analysis.OutPODSigma);
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
             linearityChart.ChartToolTip = StepToolTip;
         }
-                   
+
+        private string GetOutputControlLabelText(Control ctrl)
+        {
+            return GetControlLabelText(ctrl, _outputWithLabels);
+        }
+
+        private string GetInputControlLabelText(Control ctrl)
+        {
+            return GetControlLabelText(ctrl, _inputWithLabels);
+        }
+
         public int LinearityIndex
         {
             get { return SideCharts.IndexOf(linearityChart); }

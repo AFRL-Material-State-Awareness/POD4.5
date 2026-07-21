@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="MixedCheckBoxesTreeView.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -157,10 +173,13 @@ namespace POD.Controls
             // prevent checking/unchecking of HiddenCheckBoxTreeNode,
             // otherwise, we will have to repeat checkbox hiding
             if (e.Node is HiddenCheckBoxTreeNode && ((HiddenCheckBoxTreeNode)e.Node).IsHidden == true)
-                e.Cancel = true;
+               e.Cancel = true;
             //since parallelization does not work well with R.NET
             //automatically uncheck any boxes the user didn't just click to ensure only one box can be check at a time
-            TraverseTree(base.Nodes, e);
+
+            // TRB (11-6-2024)
+            // Added back in so we can load mutiple analyses at a time but doing them one at a time
+            //TraverseTree(base.Nodes, e);
         }
     }
 

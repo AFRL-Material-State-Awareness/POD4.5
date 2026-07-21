@@ -1,4 +1,20 @@
-﻿using System;
+// <copyright file="WizardController.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +31,111 @@ using System.IO;
 using POD.ExcelData;
 using SpreadsheetLight;
 using System.Data;
-
 using CSharpBackendWithR;
+using System.Security;
+using System.Diagnostics;
+
 namespace POD
 {
+    namespace Security
+    {
+        public class WizardControllerSerializationBinder : SerializationBinder
+        {
+            public override Type BindToType(string assemblyName, string typeName)
+            {
+                // The most secure approach is to check for exact Type Names (Equals).
+                // We use StartsWith for Generics (List, Dictionary) because their full type strings
+                // include versioning and are extremely long/dynamic.
+
+                bool isAuthorized =
+                // --- Core POD Types (Sorted Alphabetically) ---
+                typeName.Equals("Data.UpdateTableControl") ||
+                typeName.Equals("POD.Analyze.AHatAnalysis") ||
+                typeName.Equals("POD.Analyze.Analysis") ||
+                typeName.Equals("POD.Analyze.HitMissAnalysis") ||
+                typeName.Equals("POD.AnalysisDataTypeEnum") ||
+                typeName.Equals("POD.AnalysisTypeEnum") ||
+                typeName.Equals("POD.ConfidenceIntervalTypeEnum") ||
+                typeName.Equals("POD.Data.AnalysisData") ||
+                typeName.Equals("POD.Data.ColumnInfo") ||
+                typeName.Equals("POD.Data.DataPointIndex") ||
+                typeName.Equals("POD.Data.DataSource") ||
+                typeName.Equals("POD.Data.DataSources") ||
+                typeName.Equals("POD.Data.DataTableWithRanges") ||
+                typeName.Equals("POD.Data.SourceInfo") ||
+                typeName.Equals("POD.Data.SourceInfos") ||
+                typeName.Equals("POD.Data.TableRange") ||
+                typeName.Equals("POD.FlipBinarySign") ||
+                typeName.Equals("POD.HitMissRegressionType") ||
+                typeName.Equals("POD.Person") ||
+                typeName.Equals("POD.PODObjectTypeEnum") ||
+                typeName.Equals("POD.Project") ||
+                typeName.Equals("POD.ProjectProperties") ||
+                typeName.Equals("POD.RCalculationType") ||
+                typeName.Equals("POD.SamplingTypeEnum") ||
+                typeName.Equals("POD.SkillLevelEnum") ||
+                typeName.Equals("POD.TransformTypeEnum") ||
+
+                // --- R/Python Backend Types (Sorted Alphabetically) ---
+                typeName.Equals("CSharpBackendWithR.AHatAnalysisObject") ||
+                typeName.Equals("CSharpBackendWithR.BoxCoxAnalysisResult") ||
+                typeName.Equals("CSharpBackendWithR.BoxCoxTransformer") ||
+                typeName.Equals("CSharpBackendWithR.DataTransformer") ||
+                typeName.Equals("CSharpBackendWithR.HMAnalysisObject") ||
+                typeName.Equals("CSharpBackendWithR.TransformationDataSnapshot") ||
+
+                // --- System Types (Generic Containers - Sorted Alphabetically) ---
+                typeName.StartsWith("System.Collections.Generic.Dictionary") ||
+                typeName.StartsWith("System.Collections.Generic.GenericEqualityComparer") ||
+                typeName.StartsWith("System.Collections.Generic.KeyValuePair") ||
+                typeName.StartsWith("System.Collections.Generic.List") ||
+
+                // --- System Types (Data/Primitives - Sorted Alphabetically) ---
+                typeName.Contains("System.Lazy") ||
+                typeName.StartsWith("System.Data.DataColumn") ||
+                typeName.StartsWith("System.Data.DataRow") ||
+                typeName.StartsWith("System.Data.DataTable") ||
+                typeName.Equals("System.DateTime") ||
+                typeName.Equals("System.String") ||
+                typeName.Equals("System.UnitySerializationHolder") ||
+                typeName.Equals("System.Version");
+
+                if (isAuthorized)
+                {
+                    return Type.GetType($"{typeName}, {assemblyName}");
+                }
+
+                // Copy missing type to clipboard to help developer expand the whitelist
+                try
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Clipboard.SetText($"\r\n\t\t\t\ttypeName.Equals(\"{typeName}\") ||");
+                    }
+                }
+                catch { /* Ignore if not in STA thread */ }
+
+                // Block everything else and exit the software
+                string errorMsg = $"Unauthorized type found in file: {typeName}.\r\n\r\n" +
+                                  "This file appears to be corrupted or tampered with. " +
+                                  "To ensure system security, the application will now close.";
+
+                if (Debugger.IsAttached)
+                {
+                    // Block everything else and exit the software
+                    errorMsg = $"Add {typeName} to the WizardControllerSerializationBinder.\r\n\r\n" +
+                                "This likely happened because you forgot to add a new class\r\n" +
+                                "that appears in one of the save file objects to the binder.\r\n" +
+                                "The required line has been copied to the clipboard.";
+                }
+                
+
+                // This throw is unreachable due to Environment.Exit, but kept for compiler satisfaction
+                throw new SecurityException(errorMsg);
+            }
+        }
+    }
+
     /// <summary>
     /// Wizard Controller is in charge managing the project and associated analyses.
     /// It also provides a way for the project and analyses to interact with outside
@@ -72,6 +189,7 @@ namespace POD
         ///create a private variable for the Rengine
         [NonSerialized]
         REngineObject _r;
+
         #region Constructors
         /// <summary>
         /// Create a controller with an empty project and no analyses
@@ -79,7 +197,7 @@ namespace POD
         public WizardController()
         {
             _wizards = new WizardDockList();
-        }     
+        }
         #endregion
 
         #region Properties
@@ -93,7 +211,7 @@ namespace POD
                 return _wizards.Names;
             }
 
-        }        
+        }
         /// <summary>
         /// Get the project.
         /// </summary>
@@ -108,9 +226,9 @@ namespace POD
         /// Add a new analysis to the project.
         /// </summary>
         /// <param name="myAnalysis">the analysis to add</param>
-        public void AddAnalysis(Analysis myAnalysis, int isQuickAHat=0)
+        public void AddAnalysis(Analysis myAnalysis, int isQuickAHat = 0)
         {
-            if (isQuickAHat==1)
+            if (isQuickAHat == 1)
             {
                 myAnalysis.Data.DataType = AnalysisDataTypeEnum.AHat;
             }
@@ -212,7 +330,7 @@ namespace POD
                 pair = new WizardDockPair(Wizard.GenerateWizard(myAnalysis, ref HowToDisplay), myDock);
                 _wizards.Add(pair);
 
-                if(pair.Wizard != null && pair.Dock != null)
+                if (pair.Wizard != null && pair.Dock != null)
                     AddEventHandling(pair);
             }
             else
@@ -232,7 +350,7 @@ namespace POD
             var createdFrom = sender as Analysis;
             var listIndex = -1;
 
-            foreach(Analysis analysis in e.Analyses)
+            foreach (Analysis analysis in e.Analyses)
             {
                 var form = new NewSourceForm(analysis.Name, AnalysisNames);
 
@@ -241,25 +359,25 @@ namespace POD
                 analysis.Name = form.NewName;
                 analysis.UsingCustomName = true;
 
-                if(createdFrom != null)
+                if (createdFrom != null)
                 {
                     listIndex = AnalysisNames.IndexOf(createdFrom.Name);
 
                     if (listIndex != -1)
                         listIndex++;
                 }
-                
+
                 InsertAnalysis(analysis, listIndex);
             }
 
             OnProjectUpdated(this, e);
         }
 
-        
+
 
         private void ExportProjectToExcel(object sender, EventArgs e)
         {
-            if(ExportProject != null)
+            if (ExportProject != null)
             {
                 ExportProject.Invoke(sender, e);
             }
@@ -267,7 +385,7 @@ namespace POD
 
         private void GetProjectInfo(object sender, GetProjectInfoArgs e)
         {
-            if(NeedProjectInfo != null)
+            if (NeedProjectInfo != null)
             {
                 NeedProjectInfo.Invoke(sender, e);
             }
@@ -283,7 +401,7 @@ namespace POD
         {
             int pairIndex = 1;
 
-            foreach(WizardDockPair pair in _wizards)
+            foreach (WizardDockPair pair in _wizards)
             {
                 pair.Analysis.WorksheetName = string.Format("{0:00000}", pairIndex);
 
@@ -318,7 +436,7 @@ namespace POD
 
         private void OpenExistingAnalsyis(object sender, GetProjectInfoArgs e)
         {
-            if(NeedOpenAnalysis != null)
+            if (NeedOpenAnalysis != null)
             {
                 NeedOpenAnalysis.Invoke(sender, e);
             }
@@ -330,7 +448,7 @@ namespace POD
 
             e.Analyses.Clear();
 
-            foreach(WizardDockPair pair in _wizards)
+            foreach (WizardDockPair pair in _wizards)
             {
                 e.Analyses.Add(pair.Analysis);
             }
@@ -350,47 +468,23 @@ namespace POD
             //var analysisType = AnalysisTypeEnum.Full;
             //var skillLevel = SkillLevelEnum.LogisticRegression;
 
-            
+
             myPair.Source.SkillLevel = SkillLevel;
             myPair.Source.AnalysisType = AnalysisType;
             myPair.Source.JumpTo += JumpToIndex;
             myPair.Source.NeedSwitchHelpView += SwitchHelpView;
 
             myPair.StepChanged += Step_Changed;
-            myPair.StepChanging += Step_Changing;            
+            myPair.StepChanging += Step_Changing;
         }
 
         private void SwitchHelpView(object sender, EventArgs e)
         {
-            if(NeedSwitchHelpView != null)
+            if (NeedSwitchHelpView != null)
             {
                 NeedSwitchHelpView.Invoke(sender, e);
             }
         }
-
-        /*/// <summary>
-        /// Raise event to update all of the docks on the main window to match the contents of this dock.
-        /// </summary>
-        /// <param name="myDock">te dock to syncronize with</param>
-        public void UpdateRelatedDocks(WizardDock myDock)
-        {
-            Wizard wizard = null;
-
-            //if (myDock == _wizards.Project.Dock)
-            //{
-            //    wizard = _wizards.Project.Wizard;
-            //}
-            //else
-            //{
-                WizardDockPair pair = _wizards[myDock];
-
-                if (pair != null)
-                    wizard = _wizards[myDock].Wizard;
-            //}
-
-            if (wizard != null)
-                Step_Changing(wizard, new StepArgs(wizard.CurrentStep.Index, wizard.CurrentStep.HelpFile, myDock.ProgressStepListNode));
-        }*/
 
         /// <summary>
         /// Press Previous or Next button until the step at the specified index is reached
@@ -448,7 +542,7 @@ namespace POD
             var args = new StepArgs(afterIndex);
             OnWizardFinalPositionUpdated(this, args);
         }
-      
+
         /// <summary>
         /// Create a dock for the specified analysis.
         /// </summary>
@@ -475,30 +569,30 @@ namespace POD
             if (mySource != null)
             {
                 WizardDockPair pair = _wizards[mySource];
-                
+
                 if (pair != null)
                 {
-                    if(pair.Wizard.CurrentStep != null)
+                    if (pair.Wizard.CurrentStep != null)
                     {
                         if (pair.Wizard.CurrentStep.IsDisposed)
                         {
                             ControlOrganize control = ControlOrganize.NaviBottom;
                             Analysis tempAnalysis = pair.Analysis;
-                            if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
+                            if (tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.HitMiss)
                             {
                                 pair.Reloading = true;
                                 pair.Wizard = new HitMissNormalWizard((HitMissAnalysis)tempAnalysis, ref control);
                             }
-                            else if(tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.AHat)
+                            else if (tempAnalysis.AnalysisDataType == AnalysisDataTypeEnum.AHat)
                             {
                                 pair.Reloading = true;
                                 pair.Wizard = new AHatvsANormalWizard((AHatAnalysis)tempAnalysis, ref control);
                             }
-                             
+
                         }
-                    }                   
+                    }
                     pair.SyncDock();
-                    return pair; 
+                    return pair;
                 }
 
                 return null;
@@ -506,13 +600,7 @@ namespace POD
 
             return null;
         }
-        
 
-        /// <summary>
-        /// Sets the controller's project.
-        /// </summary>
-        /// <param name="myProject"></param>
-        
         #endregion
 
         #region Event Handling
@@ -632,53 +720,54 @@ namespace POD
 
             ChangeStep(_wizards[source].Dock, e.Index);
         }
-        #endregion        
-     
+        #endregion
+
         public bool Serialize(string myFile)
         {
-            var stream = File.Open(myFile, FileMode.Create);
-            var bin = new BinaryFormatter();
-            var analyses = new List<Analysis>();
-
-            foreach(WizardDockPair pair in _wizards)
+            using (var stream = File.Open(myFile, FileMode.Create))
             {
-                analyses.Add(pair.Analysis);
-            }
+                var bin = new BinaryFormatter();
+                // GUARD: Whitelist types allowed in the file
+                bin.Binder = new Security.WizardControllerSerializationBinder();
 
-            if (_wizards.Project.Project.AnalysisType == AnalysisTypeEnum.Quick)
-            {
-                if(analyses[0].Data.ActivatedFlaws.Rows.Count == 0)
+                var analyses = new List<Analysis>();
+
+                foreach (WizardDockPair pair in _wizards)
                 {
-                    MessageBox.Show("Please run a valid analysis with at least 8 data points \nbefore saving your quick analysis.", "POD v4 Error");
-                    return false;
+                    analyses.Add(pair.Analysis);
+                }
+
+                if (_wizards.Project.Project.AnalysisType == AnalysisTypeEnum.Quick)
+                {
+                    if (analyses[0].Data.ActivatedFlaws.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Please run a valid analysis with at least 8 data points \nbefore saving your quick analysis.", "POD v4 Error");
+                        return false;
+                    }
+                }
+
+                // Sequence of objects in the binary stream
+                bin.Serialize(stream, CreateInfoString(myFile, _wizards.Project.Project, analyses, false));
+                bin.Serialize(stream, _wizards.Project.Source);
+
+                foreach (WizardDockPair pair in _wizards)
+                {
+                    bin.Serialize(stream, pair.Source);
                 }
             }
-
-            bin.Serialize(stream, CreateInfoString(myFile, _wizards.Project.Project, analyses, false));
-
-            bin.Serialize(stream, _wizards.Project.Source);
-
-            foreach(WizardDockPair pair in _wizards)
-            {
-                bin.Serialize(stream, pair.Source);
-            }
-
-            stream.Close();
 
             return true;
         }
 
         public static string CreateInfoString(string myFile, Project project, List<Analysis> myAnalyses, bool useFileTimeStamp)
         {
-
             if (project == null || myAnalyses == null)
                 return "";
 
             if (project.AnalysisType != AnalysisTypeEnum.Quick)
             {
-
-                var analysisInfo = "ANALYSIS INFO:" + Environment.NewLine;
-                var fileInfo = "FILE INFO:" + Environment.NewLine;
+                var analysisInfo = $"ANALYSIS INFO:\n";
+                var fileInfo = $"FILE INFO:\n";
 
                 var fileAccessDate = "";
                 var fileAccessTime = "";
@@ -687,7 +776,6 @@ namespace POD
                 {
                     fileAccessDate = File.GetLastAccessTime(myFile).ToLongDateString();
                     fileAccessTime = File.GetLastAccessTime(myFile).ToLongTimeString();
-
                 }
                 else
                 {
@@ -695,61 +783,41 @@ namespace POD
                     fileAccessTime = DateTime.Now.ToLongTimeString();
                 }
 
-                fileInfo += "File Location:\t" + Path.GetDirectoryName(myFile) + Environment.NewLine;
-                fileInfo += "Last Accessed:\t" + fileAccessDate + ", " + fileAccessTime + Environment.NewLine + Environment.NewLine;
+                fileInfo += $"File Location:\t{Path.GetDirectoryName(myFile)}\n";
+                fileInfo += $"Last Accessed:\t{fileAccessDate}, {fileAccessTime}\n\n";
 
                 foreach (Analysis analysis in myAnalyses)
                 {
-                    analysisInfo += "Name:\t" + analysis.Name + Environment.NewLine +
-                                    "Type:\t" + Globals.GetLongVersion(analysis.AnalysisDataType) + Environment.NewLine + Environment.NewLine;
+                    analysisInfo += $"Name:\t{analysis.Name}\n" +
+                                    $"Type:\t{Globals.GetLongVersion(analysis.AnalysisDataType)}\n\n";
                 }
 
-                var projectInfo = fileInfo + "PROJECT INFO:" + Environment.NewLine;
+                var projectInfo = $"{fileInfo}PROJECT INFO:\n";
 
-                var name = project.Properties.Name;
-                var parent = project.Properties.Parent;
-                var analyst = project.Properties.Analyst.Name;
-                var analystCompany = project.Properties.Analyst.Company;
-                var customer = project.Properties.Customer.Name;
-                var customerCompany = project.Properties.Customer.Company;
-                var notes = project.Properties.Notes;
+                var props = project.Properties;
+                var sourceInfo = $"DATA SOURCE INFO:\n" +
+                                 $"# of Data Sources:\t{project.Sources.Count}\n";
 
-                var sourceCount = project.Sources.Count.ToString();
-
-                var sourceNames = new List<string>();
-                var sourceType = new List<string>();
-                var headerNames = new List<string>();
-                var rowCounts = new List<string>();
-
-                var sourceInfo = "DATA SOURCE INFO:" + Environment.NewLine +
-                                 "# of Data Sources:\t" + sourceCount + Environment.NewLine;
-
-                projectInfo += "Project Name:\t\t" + name + Environment.NewLine +
-                              "Parent Project Name:\t" + parent + Environment.NewLine +
-                              "Analyst:\t\t\t" + analyst + Environment.NewLine +
-                              "Analyst Company:\t" + analystCompany + Environment.NewLine +
-                              "Customer POC:\t\t" + customer + Environment.NewLine +
-                              "Customer Company:\t" + customerCompany + Environment.NewLine +
-                              "Notes:" + Environment.NewLine + notes + Environment.NewLine + Environment.NewLine;
-
+                projectInfo += $"Project Name:\t\t{props.Name}\n" +
+                               $"Parent Project Name:\t{props.Parent}\n" +
+                               $"Analyst:\t\t\t{props.Analyst.Name}\n" +
+                               $"Analyst Company:\t{props.Analyst.Company}\n" +
+                               $"Customer POC:\t\t{props.Customer.Name}\n" +
+                               $"Customer Company:\t{props.Customer.Company}\n" +
+                               $"Notes:\n{props.Notes}\n\n";
 
                 foreach (DataSource source in project.Sources)
                 {
-                    sourceNames.Add(source.SourceName);
-                    sourceType.Add(source.AnalysisDataType.ToString());
+                    var headerName = "";
 
                     if (source.Original != null)
                     {
-
-                        var headerName = "";
-
                         if (source.Original.Columns.Count > 0)
                         {
                             foreach (DataColumn col in source.Original.Columns)
                             {
-                                headerName += col.ColumnName + ", ";
+                                headerName += $"{col.ColumnName}, ";
                             }
-
                             headerName = headerName.Substring(0, headerName.Length - 2);
                         }
                         else
@@ -757,208 +825,206 @@ namespace POD
                             headerName = "No data table associated with this source.";
                         }
 
-                        headerNames.Add(headerName);
-
-                        rowCounts.Add(source.Original.Rows.Count.ToString());
+                        sourceInfo += $"Source Name:\t\t{source.SourceName}\n" +
+                                      $"Source Type:\t\t{source.AnalysisDataType}\n" +
+                                      $"Row Count:\t\t{source.Original.Rows.Count}\n" +
+                                      $"Column Headers:\n{headerName}\n\n";
                     }
                     else
                     {
-                        headerNames.Add("No data table associated with this source.");
-
-                        rowCounts.Add("0");
+                        sourceInfo += $"Source Name:\t\t{source.SourceName}\n" +
+                                      $"Source Type:\t\t{source.AnalysisDataType}\n" +
+                                      $"Row Count:\t\t0\n" +
+                                      $"Column Headers:\nNo data table associated with this source.\n\n";
                     }
-
-                    var currentSourceInfo = "Source Name:\t\t" + sourceNames.Last() + Environment.NewLine +
-                                            "Source Type:\t\t" + sourceType.Last() + Environment.NewLine +
-                                            "Row Count:\t\t" + rowCounts.Last() + Environment.NewLine +
-                                            "Column Headers:" + Environment.NewLine + headerNames.Last() + Environment.NewLine + Environment.NewLine;
-
-                    sourceInfo += currentSourceInfo;
-                    
                 }
 
-                sourceInfo += analysisInfo;
-
-                projectInfo += sourceInfo;
-
-                return projectInfo;
+                return $"{projectInfo}{sourceInfo}{analysisInfo}";
             }
             else
             {
                 Analysis analysis = myAnalyses[0];
                 string projectInfo = "";
 
-                projectInfo += "Operator:\t\t" + analysis.Operator + Environment.NewLine + Environment.NewLine;
-                projectInfo += "Specimen Set:\t\t" + analysis.SpecimenSet + Environment.NewLine;
-                projectInfo += "Specimen Range:\t" + analysis.InFlawMin.ToString("F3") + " - " + analysis.InFlawMax.ToString("F3") +
-                               " (" + analysis.SpecimentUnit + ")" + Environment.NewLine + Environment.NewLine;
+                projectInfo += $"Operator:\t\t{analysis.Operator}\n\n";
+                projectInfo += $"Specimen Set:\t\t{analysis.SpecimenSet}\n";
+                projectInfo += $"Specimen Range:\t{analysis.InFlawMin:F3} - {analysis.InFlawMax:F3} ({analysis.SpecimentUnit})\n\n";
 
-                if(analysis.Data.DataType == AnalysisDataTypeEnum.AHat)
+                if (analysis.Data.DataType == AnalysisDataTypeEnum.AHat)
                 {
-                    projectInfo += "Instrument:\t\t" + analysis.Instrument + Environment.NewLine;
-                    projectInfo += "Instrument Range:\t" + analysis.InResponseMin.ToString("F3") + " - " + analysis.InResponseMax.ToString("F3") + 
-                                   " (" + analysis.InstrumentUnit + ")" + Environment.NewLine + Environment.NewLine;
+                    projectInfo += $"Instrument:\t\t{analysis.Instrument}\n";
+                    projectInfo += $"Instrument Range:\t{analysis.InResponseMin:F3} - {analysis.InResponseMax:F3} ({analysis.InstrumentUnit})\n\n";
                 }
 
-                projectInfo += "Data Point Count:\t" + analysis.Data.ActivatedSpecimenIDs.Rows.Count + Environment.NewLine + Environment.NewLine;
-
-                projectInfo += "ID\t\tFlaw\t\tResponse" + Environment.NewLine + Environment.NewLine;
+                projectInfo += $"Data Point Count:\t{analysis.Data.ActivatedSpecimenIDs.Rows.Count}\n\n";
+                projectInfo += $"ID\t\tFlaw\t\tResponse\n\n";
 
                 var index = 0;
-                foreach(DataRow row in analysis.Data.ActivatedSpecimenIDs.Rows)
+                foreach (DataRow row in analysis.Data.ActivatedSpecimenIDs.Rows)
                 {
-                    projectInfo += row[0].ToString() + "\t\t";
+                    projectInfo += $"{row[0]}\t\t";
 
                     var flaw = analysis.Data.ActivatedFlaws.Rows[index][0].ToString();
-                    var flawValue = 0.0;
-
-                    if(Double.TryParse(flaw, out flawValue))
-                        projectInfo += analysis.Data.InvertTransformedFlaw(flawValue).ToString("F3") + "\t\t";
+                    if (Double.TryParse(flaw, out double flawValue))
+                        projectInfo += $"{analysis.Data.InvertTransformedFlaw(flawValue):F3}\t\t";
                     else
-                        projectInfo += flaw + "\t\t";
+                        projectInfo += $"{flaw}\t\t";
 
                     var response = analysis.Data.ActivatedResponses.Rows[index][0].ToString();
-                    var responseValue = 0.0;
-
-                    if (Double.TryParse(response, out responseValue))
-                        projectInfo += analysis.Data.InvertTransformedResponse(responseValue).ToString("F3") + Environment.NewLine;
+                    if (Double.TryParse(response, out double responseValue))
+                        projectInfo += $"{analysis.Data.InvertTransformedResponse(responseValue):F3}\n";
                     else
-                        projectInfo += response + Environment.NewLine;
+                        projectInfo += $"{response}\n";
 
                     index++;
                 }
 
                 return projectInfo;
-
             }
-
-            
         }
 
         public static string DeserializeProjectInfo(string myFile)
         {
-            var stream = File.Open(myFile, FileMode.Open);
-            var bin = new BinaryFormatter();
-            var analyses = new List<Analysis>();
-
-            Project project = null;
-
-            
-            try
+            using (var stream = File.Open(myFile, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                project = (Project)bin.Deserialize(stream);
-            }
-            catch
-            {
-                stream.Position = 0;
-                string info = (String)bin.Deserialize(stream);
+                var bin = new BinaryFormatter();
+                // GUARD
+                bin.Binder = new Security.WizardControllerSerializationBinder();
 
-                stream.Close();
+                var analyses = new List<Analysis>();
+                Project project = null;
 
-                return info;
-            }
-
-            try
-            {
-                while (true)
+                try
                 {
-                    var analysis = (Analysis)bin.Deserialize(stream);
+                    object firstObj = bin.Deserialize(stream);
 
-                    analyses.Add(analysis);
+                    if (firstObj is Project proj)
+                    {
+                        project = proj;
+                    }
+                    else
+                    {
+                        // Assume first object was the info string, move to Project
+                        project = (Project)bin.Deserialize(stream);
+                        // If it fails here, the catch block resets and returns the string
+                    }
                 }
-            }
-            catch (SerializationException)
-            {
-                
-            }
-            finally
-            {
-                stream.Close();
-            }
+                catch (SecurityException secExp)
+                {
+                    // Catch security violation, inform user and exit software gracefully
+                    ShowSecurityWarningAndExit(secExp.Message);
+                    return string.Empty;
+                }
+                catch
+                {
+                    stream.Position = 0;
+                    string info = (String)bin.Deserialize(stream);
+                    return info;
+                }
 
-            return CreateInfoString(myFile, project, analyses, true);
+                try
+                {
+                    while (stream.Position < stream.Length)
+                    {
+                        var analysis = (Analysis)bin.Deserialize(stream);
+                        analyses.Add(analysis);
+                    }
+                }
+                catch (SecurityException secExp)
+                {
+                    ShowSecurityWarningAndExit(secExp.Message);
+                }
+                catch (SerializationException) { /* End of Stream */ }
+
+                return CreateInfoString(myFile, project, analyses, true);
+            }
         }
 
         public void Deserialize(string myFile, List<WizardDock> myDocks)
         {
-            Stream stream = File.Open(myFile, FileMode.Open);
-            BinaryFormatter bin = new BinaryFormatter();
-            List<string> dockNames = new List<string>();
-            
-
-            foreach(WizardDock dock in myDocks)
+            using (Stream stream = File.Open(myFile, FileMode.Open))
             {
-                dockNames.Add(dock.Label);
-            }
+                BinaryFormatter bin = new BinaryFormatter();
+                // GUARD
+                bin.Binder = new Security.WizardControllerSerializationBinder();
 
-            Project project = null;
-
-            try
-            {
-                project = (Project)bin.Deserialize(stream);
-            }
-            catch
-            {
-                try
-                {
-                    stream.Position = 0;
-                    var info = (String)bin.Deserialize(stream);
-                    project = (Project)bin.Deserialize(stream);
-                }
-                catch(Exception exp)
-                {
-                    MessageBox.Show(exp.Message, "Error Loading File");
-
-                    stream.Close();
-                }
-            }
-
-            if (project != null)
-            {
-
-                if (dockNames.Contains(project.Name) == true)
-                {
-                    WizardDock dock = myDocks[dockNames.IndexOf(project.Name)];
-                    AddProject(project, dock);
-                }
-                else
-                {
-                    AddProject(project);
-                }
+                List<string> dockNames = myDocks.Select(d => d.Label).ToList();
+                Project project = null;
 
                 try
                 {
-                    Analysis analysis = (Analysis)bin.Deserialize(stream);
-
-                    while (true)
+                    object firstObj = bin.Deserialize(stream);
+                    if (firstObj is Project)
                     {
-                        if (dockNames.Contains(analysis.Name) == true)
-                        {
-                            WizardDock dock = myDocks[dockNames.IndexOf(analysis.Name)];
-                            AddAnalysis(analysis, dock);
-                        }
-                        else
-                        {
-                            AddAnalysis(analysis);
-                        }
-
-                        analysis = (Analysis)bin.Deserialize(stream);
+                        project = (Project)firstObj;
+                    }
+                    else if (firstObj is string)
+                    {
+                        // Skip the info string and get the project
+                        project = (Project)bin.Deserialize(stream);
                     }
                 }
-                catch
+                catch (SecurityException secExp)
                 {
-                     
+                    ShowSecurityWarningAndExit(secExp.Message);
+                    return;
                 }
-                finally
+                catch (Exception exp)
                 {
-                    stream.Close();
+                    MessageBox.Show(exp.Message, "Error Loading File");
+                    return;
+                }
+
+                if (project != null)
+                {
+                    if (dockNames.Contains(project.Name))
+                    {
+                        WizardDock dock = myDocks[dockNames.IndexOf(project.Name)];
+                        AddProject(project, dock);
+                    }
+                    else
+                    {
+                        AddProject(project);
+                    }
+
+                    try
+                    {
+                        while (stream.Position < stream.Length)
+                        {
+                            Analysis analysis = (Analysis)bin.Deserialize(stream);
+                            analysis.CheckLoadHealth();
+
+                            if (dockNames.Contains(analysis.Name))
+                            {
+                                WizardDock dock = myDocks[dockNames.IndexOf(analysis.Name)];
+                                AddAnalysis(analysis, dock);
+                            }
+                            else
+                            {
+                                AddAnalysis(analysis);
+                            }
+                        }
+                    }
+                    catch (SecurityException secExp)
+                    {
+                        ShowSecurityWarningAndExit(secExp.Message);
+                    }
+                    catch (SerializationException) { /* End of objects */ }
                 }
             }
         }
 
-        private void AddProject(POD.Project project, bool createDock)
+        private static void ShowSecurityWarningAndExit(string errorMsg)
         {
-            if(!createDock)
+            MessageBox.Show(errorMsg, "Security Violation", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+            Application.Exit();
+            Environment.Exit(0);
+        }
+
+        private void AddProject(Project project, bool createDock)
+        {
+            if (!createDock)
             {
                 AddGUIlessProject(project);
             }
@@ -968,7 +1034,7 @@ namespace POD
             }
         }
 
-        private void AddGUIlessProject(POD.Project project)
+        private void AddGUIlessProject(Project project)
         {
             _wizards.Project = new WizardDockPair(Wizard.GenerateWizard(project, ref HowToDisplay), null);
 
@@ -1008,7 +1074,7 @@ namespace POD
 
                 docks.Add(_wizards.Project.Dock);
 
-                foreach(WizardDockPair pair in _wizards)
+                foreach (WizardDockPair pair in _wizards)
                 {
                     docks.Add(pair.Dock);
                 }
@@ -1065,7 +1131,7 @@ namespace POD
             myWriter.SetCellValue(rowIndex, colIndex++, "Removed Points Link");
 
             rowIndex++;
-            
+
             foreach (WizardDockPair pair in _wizards)
             {
                 colIndex = 1;
@@ -1082,11 +1148,11 @@ namespace POD
                 rowIndex++;
             }
 
-            myWriter.Workbook.AutoFitColumn(1, colIndex-1);
+            myWriter.Workbook.AutoFitColumn(1, colIndex - 1);
 
             Project.WriteDataToExcel(myWriter);
 
-            foreach(WizardDockPair pair in _wizards)
+            foreach (WizardDockPair pair in _wizards)
             {
                 pair.Analysis.WriteToExcel(myWriter);
             }
@@ -1106,7 +1172,7 @@ namespace POD
         public void ClearEverything()
         {
             DeleteProject();
-            
+
             var analyses = new List<Analysis>();
 
             foreach (WizardDockPair pair in _wizards)
@@ -1116,7 +1182,7 @@ namespace POD
                 DisposeWizardDockPair(pair);
             }
 
-            foreach(Analysis analysis in analyses)
+            foreach (Analysis analysis in analyses)
             {
                 DeleteAnalysis(analysis);
             }

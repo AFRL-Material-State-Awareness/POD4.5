@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\POD Source Code",
+    "\\POD Source Code\\Wizards",
+    "\\POD Source Code\\Wizards\\Properties",
+    "\\POD Source Code\\Wizards\\Resources"
   ],
-  "SelectedNode": "\\Winforms POD UI.sln",
+  "SelectedNode": "\\POD Source Code\\Wizards\\Properties\\Resources.resx",
   "PreviewInSolutionExplorer": false
 }

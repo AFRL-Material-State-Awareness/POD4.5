@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="FullRegressionBar.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +30,12 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         PODBooleanButton _podButton;
         PODBooleanButton _thresholdButton;
         PODBooleanButton _normalityButton;
+        PODBooleanButton _qqButton;
         PODBooleanButton _hideAllButton;
         PODButton _cycleButton;
 
         private PODBooleanButton _snapToGridButton;
+        private bool _isRBusy = false;
 
         public override bool SendKeys(Keys keyData)
         {
@@ -50,14 +68,19 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             }
             if (keyData == (Keys.Control | Keys.D3))
             {
-                _podButton.PerformClick();
+                _qqButton.PerformClick();
                 return true;
             }
             if (keyData == (Keys.Control | Keys.D4))
             {
-                _thresholdButton.PerformClick();
+                _podButton.PerformClick();
                 return true;
             }
+            if (keyData == (Keys.Control | Keys.D5))
+            {
+                _thresholdButton.PerformClick();
+                return true;
+            }            
             if (keyData == (Keys.Control | Keys.D0))
             {
                 _hideAllButton.PerformClick();
@@ -85,11 +108,14 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _normalityButton = new PODBooleanButton("Show N&ormality", "Hide N&ormality", true, "Show Or hide the response Normality chart. (Ctrl + 2)", StepToolTip);
             AddLeftButton(_normalityButton, Normality_Click);
-            
-            _podButton = new PODBooleanButton("Show POD Curve", "Hide POD Curve", true, "Show or hide POD side chart. (Ctrl + 3)", StepToolTip);
+
+            _qqButton = new PODBooleanButton("Show QQ", "Hide QQ", true, "Show or hide QQ side chart. (Ctrl + 3)", StepToolTip);
+            AddLeftButton(_qqButton, QQ_Click);
+
+            _podButton = new PODBooleanButton("Show POD Curve", "Hide POD Curve", true, "Show or hide POD side chart. (Ctrl + 4)", StepToolTip);
             AddLeftButton(_podButton, Pod_Click);
 
-            _thresholdButton = new PODBooleanButton("Show Threshold", "Hide Threshold", true, "Show or hide Threshold side chart. (Ctrl + 4)", StepToolTip);
+            _thresholdButton = new PODBooleanButton("Show Threshold", "Hide Threshold", true, "Show or hide Threshold side chart. (Ctrl + 5)", StepToolTip);
             AddLeftButton(_thresholdButton, Threshold_Click);
 
             _hideAllButton = new PODBooleanButton("Show All Charts", "Hide All Charts", true, "Show or hide all side charts. (Ctrl + 0)", StepToolTip);
@@ -116,23 +142,40 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         {
             MyPanel.UpdateAnalysis();
         }
-        
-
-        
 
         private void CycleButton_Click(object sender, EventArgs e)
         {
+            // 1. Immediate exit if R is currently thinking.
+            // This prevents "stacking" of clicks.
+            if (_isRBusy) return;
+
             try
             {
+                _isRBusy = true;
+
+                // 2. Temporarily disable the button to prevent double-clicks
+                _cycleButton.Enabled = false;
+
+                // 3. Force the UI to process its current message queue 
+                // This clears out any "ghost" clicks before we start the R work.
+                Application.DoEvents();
+
+                // 4. Run the R logic (STAYS ON UI THREAD)
                 MyPanel.CycleTransforms();
             }
-            catch(Exception exp)
+            catch (Exception exp)
             {
-                MessageBox.Show("CycleTransforms: " + exp.Message);
+                MessageBox.Show($"CycleTransforms: {exp.Message}");
+            }
+            finally
+            {
+                // 5. Release the gate
+                _isRBusy = false;
+                _cycleButton.Enabled = true;
             }
         }
 
-        
+
 
         private void SnapGrid_Click(object sender, EventArgs e)
         {
@@ -157,6 +200,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 UpdateChartAndButton(MyPanel.PodIndex, _podButton);
             if (_thresholdButton.ButtonState == _hideAllButton.ButtonState)
                 UpdateChartAndButton(MyPanel.ThresholdIndex, _thresholdButton);
+            if (_qqButton.ButtonState == _hideAllButton.ButtonState)
+                UpdateChartAndButton(MyPanel.QQIndex, _qqButton);
 
             _hideAllButton.ButtonState = !_hideAllButton.ButtonState;
         }
@@ -164,6 +209,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         private void Threshold_Click(object sender, EventArgs e)
         {
             UpdateChartAndButton(MyPanel.ThresholdIndex, _thresholdButton);
+        }
+
+        private void QQ_Click(object sender, EventArgs e)
+        {
+            UpdateChartAndButton(MyPanel.QQIndex, _qqButton);
         }
 
         private void Pod_Click(object sender, EventArgs e)

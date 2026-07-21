@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="Transition.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -114,47 +130,50 @@ namespace Transitions
 			m_TransitionMethod = transitionMethod;
         }
 
-		/// <summary>
-		/// Adds a property that should be animated as part of this transition.
-		/// </summary>
-		public void add(object target, string strPropertyName, object destinationValue)
-		{
-			// We get the property info...
-			Type targetType = target.GetType();
-			PropertyInfo propertyInfo = targetType.GetProperty(strPropertyName);
-			if (propertyInfo == null)
-			{
-				throw new Exception("Object: " + target.ToString() + " does not have the property: " + strPropertyName);
-			}
+        /// <summary>
+        /// Adds a property that should be animated as part of this transition.
+        /// </summary>
+        public void add(object target, string strPropertyName, object destinationValue)
+        {
+            // We get the property info...
+            Type targetType = target.GetType();
+            PropertyInfo propertyInfo = targetType.GetProperty(strPropertyName);
 
-			// We check that we support the property type...
-			Type propertyType = propertyInfo.PropertyType;
-			if (m_mapManagedTypes.ContainsKey(propertyType) == false)
-			{
-				throw new Exception("Transition does not handle properties of type: " + propertyType.ToString());
-			}
+            if (propertyInfo == null)
+            {
+                throw new Exception($"Object: {target} does not have the property: {strPropertyName}");
+            }
+
+            // We check that we support the property type...
+            Type propertyType = propertyInfo.PropertyType;
+            if (m_mapManagedTypes.ContainsKey(propertyType) == false)
+            {
+                throw new Exception($"Transition does not handle properties of type: {propertyType}");
+            }
 
             // We can only transition properties that are both getable and setable...
             if (propertyInfo.CanRead == false || propertyInfo.CanWrite == false)
             {
-                throw new Exception("Property is not both getable and setable: " + strPropertyName);
+                throw new Exception($"Property is not both getable and setable: {strPropertyName}");
             }
 
             IManagedType managedType = m_mapManagedTypes[propertyType];
-            
+
             // We can manage this type, so we store the information for the
-			// transition of this property...
-			TransitionedPropertyInfo info = new TransitionedPropertyInfo();
-			info.endValue = destinationValue;
-			info.target = target;
-			info.propertyInfo = propertyInfo;
-			info.managedType = managedType;
+            // transition of this property...
+            TransitionedPropertyInfo info = new TransitionedPropertyInfo
+            {
+                endValue = destinationValue,
+                target = target,
+                propertyInfo = propertyInfo,
+                managedType = managedType
+            };
 
             lock (m_Lock)
             {
                 m_listTransitionedProperties.Add(info);
             }
-		}
+        }
 
         /// <summary>
         /// Starts the transition.

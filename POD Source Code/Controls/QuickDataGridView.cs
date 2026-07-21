@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="QuickDataGridView.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -343,22 +359,14 @@ namespace POD.Controls
             if (tempTable.Rows.Count == 0)
                 return;
 
+            FindPastedTableColumnIndexes(tempTable, out int idIndex, out int flawIndex, out int responseIndex);
+
             var usingAutoID = true;
 
-            int beforeColCount = Columns.Count;
-
-            var newCols = new List<DataColumn>();
-
-            //if they have copied more than 2 columns (2+1 auto)
-            if (tempTable.Columns.Count > 3)
+            if (idIndex == -1 && flawIndex == -1 && responseIndex == -1)
             {
-                usingAutoID = false;
-                tempTable.Columns.RemoveAt(0); //remove the auto ID
+                return;
             }
-
-            //only using 3 columns
-            while (tempTable.Columns.Count > 3)
-                tempTable.Columns.RemoveAt(tempTable.Columns.Count - 1);
 
             AllowUserToAddRows = false;
 
@@ -372,11 +380,32 @@ namespace POD.Controls
 
             foreach (DataRow row in tempTable.Rows)
             {
-                id = row[0].ToString();
+                if (idIndex != -1)
+                {
+                    id = row[idIndex].ToString();
+                }
+                else
+                {
+                    id = $"{rowIndex + 1}";
+                }
 
-                flaw = row[1].ToString();
+                if (flawIndex != -1)
+                {
+                    flaw = row[flawIndex].ToString();
+                }
+                else
+                {
+                    flaw = "0.0";
+                }
 
-                response = row[2].ToString();
+                if (responseIndex != -1)
+                {
+                    response = row[responseIndex].ToString();
+                }
+                else
+                {
+                    response = "0.0";
+                }
 
                 var newRow = Rows[rowIndex];
 
@@ -393,6 +422,231 @@ namespace POD.Controls
             AllowUserToAddRows = true;
 
             GridCheckForProblems();
+        }
+
+        private void FindPastedTableColumnIndexes(DataTable pastedTable, out int idIndex, out int flawIndex, out int responseIndex)
+        {
+            idIndex = -1;
+            flawIndex = -1;
+            responseIndex = -1;
+
+            // if one column, then leave all indexes at -1
+            if (pastedTable.Columns.Count <= 1)
+            {
+                return;
+            }
+
+            // if there are more than 3 columns, remove any columns with index greater than 2
+            while (pastedTable.Columns.Count > 3)
+            {
+                pastedTable.Columns.RemoveAt(pastedTable.Columns.Count - 1);
+            }
+
+            List<int> nonNumericColumns = new List<int>();
+            for (int i = 0; i < pastedTable.Columns.Count; i++)
+            {
+                if (!IsNumericColumn(pastedTable, i))
+                {
+                    nonNumericColumns.Add(i);
+                }
+            }
+
+            if (nonNumericColumns.Count > 1)
+            {
+                // If more than one column has non-numeric text then leave all indexes at -1
+                return;
+            }
+
+            if (nonNumericColumns.Count == 1)
+            {
+                // if a column has text that is not a number, then that column has to be the ID column.
+                idIndex = nonNumericColumns[0];
+                
+                List<int> remainingIndexes = new List<int>();
+                for(int i=0; i < pastedTable.Columns.Count; i++)
+                {
+                    if (i != idIndex)
+                    {
+                        remainingIndexes.Add(i);
+                    }
+                }
+
+                if (remainingIndexes.Count == 2)
+                {
+                    // two remaining columns, apply two column logic
+                    int col1 = remainingIndexes[0];
+                    int col2 = remainingIndexes[1];
+
+                    double range1 = GetColumnRange(pastedTable, col1);
+                    double range2 = GetColumnRange(pastedTable, col2);
+
+                    if (range1 < range2)
+                    {
+                        flawIndex = col1;
+                        responseIndex = col2;
+                    }
+                    else
+                    {
+                        flawIndex = col2;
+                        responseIndex = col1;
+                    }
+                }
+                else if (remainingIndexes.Count == 1)
+                {
+                    responseIndex = remainingIndexes[0];
+                }
+                return; 
+            }
+
+            // If we are here, all columns are numeric.
+            if (pastedTable.Columns.Count == 2)
+            {
+                // if two columns then column with smallest range is the flaw column and the other is the response column
+                double range1 = GetColumnRange(pastedTable, 0);
+                double range2 = GetColumnRange(pastedTable, 1);
+
+                if (range1 < range2)
+                {
+                    flawIndex = 0;
+                    responseIndex = 1;
+                }
+                else
+                {
+                    flawIndex = 1;
+                    responseIndex = 0;
+                }
+            }
+            else if (pastedTable.Columns.Count == 3)
+            {
+                // if three columns, then the column with the most consistent increment that is all interger values is the ID index, 
+                // for the remaining two columns apply two column logic
+
+                bool[] isIntColumn = new bool[3];
+                double[] incrementConsistency = new double[3];
+
+                for (int i = 0; i < 3; i++)
+                {
+                    isIntColumn[i] = IsIntegerColumn(pastedTable, i);
+                    if (isIntColumn[i])
+                    {
+                        incrementConsistency[i] = GetIncrementConsistency(pastedTable, i);
+                    }
+                    else
+                    {
+                        incrementConsistency[i] = double.MaxValue;
+                    }
+                }
+
+                // Find the column with the minimum increment consistency that is an integer column
+                double minConsistency = double.MaxValue;
+                int potentialIdIndex = -1;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (isIntColumn[i] && incrementConsistency[i] < minConsistency)
+                    {
+                        minConsistency = incrementConsistency[i];
+                        potentialIdIndex = i;
+                    }
+                }
+
+                if (potentialIdIndex != -1)
+                {
+                    idIndex = potentialIdIndex;
+                    List<int> remainingIndexes = new List<int> { 0, 1, 2 };
+                    remainingIndexes.Remove(idIndex);
+                    
+                    int col1 = remainingIndexes[0];
+                    int col2 = remainingIndexes[1];
+
+                    double range1 = GetColumnRange(pastedTable, col1);
+                    double range2 = GetColumnRange(pastedTable, col2);
+
+                    if (range1 < range2)
+                    {
+                        flawIndex = col1;
+                        responseIndex = col2;
+                    }
+                    else
+                    {
+                        flawIndex = col2;
+                        responseIndex = col1;
+                    }
+                }
+            }
+        }
+
+        private bool IsNumericColumn(DataTable table, int columnIndex)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                if (!double.TryParse(row[columnIndex].ToString(), out _))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private double GetColumnRange(DataTable table, int columnIndex)
+        {
+            double min = double.MaxValue;
+            double max = double.MinValue;
+
+            foreach (DataRow row in table.Rows)
+            {
+                if (double.TryParse(row[columnIndex].ToString(), out double value))
+                {
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                }
+            }
+
+            if (min == double.MaxValue || max == double.MinValue)
+            {
+                return 0; // No numeric data
+            }
+
+            return max - min;
+        }
+
+        private bool IsIntegerColumn(DataTable table, int columnIndex)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                if (!int.TryParse(row[columnIndex].ToString(), out _))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private double GetIncrementConsistency(DataTable table, int columnIndex)
+        {
+            if (table.Rows.Count < 2)
+            {
+                return 0;
+            }
+
+            List<double> increments = new List<double>();
+            for (int i = 1; i < table.Rows.Count; i++)
+            {
+                if (double.TryParse(table.Rows[i][columnIndex].ToString(), out double val2) &&
+                    double.TryParse(table.Rows[i - 1][columnIndex].ToString(), out double val1))
+                {
+                    increments.Add(val2 - val1);
+                }
+            }
+
+            if (increments.Count < 1)
+            {
+                return double.MaxValue;
+            }
+
+            double avg = increments.Average();
+            double sumOfSquares = increments.Sum(inc => (inc - avg) * (inc - avg));
+            return Math.Sqrt(sumOfSquares / increments.Count); // Standard deviation
         }
 
         private void SetColumnColors(DataGridView grid)
@@ -495,11 +749,20 @@ namespace POD.Controls
             string statusMessage = "";
 
             if (cellStatus == CellStatus.InvalidWholeRow)
-                statusMessage = "Flaw size is invalid." + System.Environment.NewLine + "The entire row will not be included in the analysis.";
+            {
+                statusMessage = "Flaw size is invalid.\n" +
+                                "The entire row will not be included in the analysis.";
+            }
             else if (rowStatus == RowStatus.Invalid)
-                statusMessage = "Row contains an invalid flaw size." + System.Environment.NewLine + "The entire row will not be included in the analysis.";
+            {
+                statusMessage = "Row contains an invalid flaw size.\n" +
+                                "The entire row will not be included in the analysis.";
+            }
             else if (cellStatus == CellStatus.Invalid)
-                statusMessage = "Response value is invalid." + System.Environment.NewLine + "The response will not be included in the analysis.";
+            {
+                statusMessage = "Response value is invalid.\n" +
+                                "The response will not be included in the analysis.";
+            }
 
             return statusMessage;
         }

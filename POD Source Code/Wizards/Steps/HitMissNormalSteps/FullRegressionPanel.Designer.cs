@@ -64,7 +64,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.ModelLabel = new System.Windows.Forms.Label();
             this.ModelBox = new POD.Controls.PFModelBox();
             this.TestColorMap = new POD.Controls.ColorMap();
-            this.likelihoodRatioTestOut = new POD.Controls.PODRatedNumericUpDown(false);
+            this.likelihoodRatioTestOut = new POD.Controls.PODRatedNumericUpDown();
             this.lackOfFitTestLabel = new System.Windows.Forms.Label();
             this.FlawRangeHeader = new System.Windows.Forms.Label();
             this.TestOfAssumptionsHeader = new System.Windows.Forms.Label();
@@ -72,6 +72,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.AxisTransformsHeader = new System.Windows.Forms.Label();
             this.PodModelParametersHeader = new System.Windows.Forms.Label();
             this.PODModelTypeHeader = new System.Windows.Forms.Label();
+            this.aicTestLabel = new System.Windows.Forms.Label();
+            this.aicTestOut = new POD.Controls.PODRatedNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.graphSplitter)).BeginInit();
             this.graphSplitter.Panel2.SuspendLayout();
             this.graphSplitter.SuspendLayout();
@@ -98,6 +100,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             ((System.ComponentModel.ISupportInitialize)(this.a90_95Out)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MuOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.likelihoodRatioTestOut)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aicTestOut)).BeginInit();
             this.SuspendLayout();
             // 
             // graphSplitter
@@ -120,17 +123,20 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.PutControlsHerePanel.Controls.Add(this.AxisTransformsHeader);
             this.PutControlsHerePanel.Controls.Add(this.PodModelParametersHeader);
             this.PutControlsHerePanel.Controls.Add(this.TestColorMap);
+            this.PutControlsHerePanel.Controls.Add(this.aicTestOut);
+            this.PutControlsHerePanel.Controls.Add(this.aicTestLabel);
             this.PutControlsHerePanel.Controls.Add(this.likelihoodRatioTestOut);
             this.PutControlsHerePanel.Controls.Add(this.lackOfFitTestLabel);
             this.PutControlsHerePanel.Controls.Add(this.ModelBox);
             this.PutControlsHerePanel.Controls.Add(this.ModelLabel);
-            this.PutControlsHerePanel.Size = new System.Drawing.Size(199, 289);
+            this.PutControlsHerePanel.Size = new System.Drawing.Size(200, 289);
             // 
             // linearityChart
             // 
             this.linearityChart.BorderlineColor = System.Drawing.SystemColors.ControlDark;
             this.linearityChart.CanUnselect = false;
             this.linearityChart.ChartTitle = "";
+            this.linearityChart.ChartToolTip = null;
             this.linearityChart.IsSelected = false;
             this.linearityChart.IsSquare = false;
             this.linearityChart.Location = new System.Drawing.Point(3, 3);
@@ -140,6 +146,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.linearityChart.SingleSeriesCount = 1;
             this.linearityChart.Size = new System.Drawing.Size(160, 160);
             this.linearityChart.TabIndex = 0;
+            this.linearityChart.TabStop = false;
             this.linearityChart.Text = "aHatVsAChart1";
             this.linearityChart.XAxisTitle = "";
             this.linearityChart.XAxisUnit = "";
@@ -151,6 +158,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.normalityChart.BorderlineColor = System.Drawing.Color.Transparent;
             this.normalityChart.CanUnselect = false;
             this.normalityChart.ChartTitle = "";
+            this.normalityChart.ChartToolTip = null;
             this.normalityChart.IsSelected = false;
             this.normalityChart.IsSquare = false;
             this.normalityChart.Location = new System.Drawing.Point(3, 169);
@@ -160,6 +168,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.normalityChart.SingleSeriesCount = 1;
             this.normalityChart.Size = new System.Drawing.Size(160, 160);
             this.normalityChart.TabIndex = 0;
+            this.normalityChart.TabStop = false;
             this.normalityChart.Text = "aHatVsAChart1";
             this.normalityChart.XAxisTitle = "";
             this.normalityChart.XAxisUnit = "";
@@ -171,6 +180,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.equalVarianceChart.BorderlineColor = System.Drawing.Color.Transparent;
             this.equalVarianceChart.CanUnselect = false;
             this.equalVarianceChart.ChartTitle = "";
+            this.equalVarianceChart.ChartToolTip = null;
             this.equalVarianceChart.IsSelected = false;
             this.equalVarianceChart.IsSquare = false;
             this.equalVarianceChart.Location = new System.Drawing.Point(3, 335);
@@ -180,6 +190,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.equalVarianceChart.SingleSeriesCount = 1;
             this.equalVarianceChart.Size = new System.Drawing.Size(160, 160);
             this.equalVarianceChart.TabIndex = 0;
+            this.equalVarianceChart.TabStop = false;
             this.equalVarianceChart.Text = "aHatVsAChart1";
             this.equalVarianceChart.XAxisTitle = "";
             this.equalVarianceChart.XAxisUnit = "";
@@ -191,6 +202,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.podChart.BorderlineColor = System.Drawing.Color.Transparent;
             this.podChart.CanUnselect = false;
             this.podChart.ChartTitle = "";
+            this.podChart.ChartToolTip = null;
             this.podChart.IsSelected = false;
             this.podChart.IsSquare = false;
             this.podChart.Location = new System.Drawing.Point(3, 501);
@@ -200,6 +212,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.podChart.SingleSeriesCount = 1;
             this.podChart.Size = new System.Drawing.Size(160, 160);
             this.podChart.TabIndex = 1;
+            this.podChart.TabStop = false;
             this.podChart.Text = "aHatVsAChart5";
             this.podChart.XAxisTitle = "";
             this.podChart.XAxisUnit = "";
@@ -211,6 +224,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.thresholdChart.BorderlineColor = System.Drawing.Color.Transparent;
             this.thresholdChart.CanUnselect = false;
             this.thresholdChart.ChartTitle = "";
+            this.thresholdChart.ChartToolTip = null;
             this.thresholdChart.IsSelected = false;
             this.thresholdChart.IsSquare = false;
             this.thresholdChart.Location = new System.Drawing.Point(3, 667);
@@ -220,6 +234,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.thresholdChart.SingleSeriesCount = 1;
             this.thresholdChart.Size = new System.Drawing.Size(160, 160);
             this.thresholdChart.TabIndex = 2;
+            this.thresholdChart.TabStop = false;
             this.thresholdChart.Text = "aHatVsAChart6";
             this.thresholdChart.XAxisTitle = "";
             this.thresholdChart.XAxisUnit = "";
@@ -231,6 +246,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.mainChart.BorderlineColor = System.Drawing.SystemColors.ControlDark;
             this.mainChart.CanUnselect = false;
             this.mainChart.ChartTitle = "";
+            this.mainChart.ChartToolTip = null;
             this.mainChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainChart.IsSelected = false;
             this.mainChart.IsSquare = false;
@@ -239,8 +255,9 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.mainChart.Selectable = false;
             this.mainChart.ShowChartTitle = false;
             this.mainChart.SingleSeriesCount = 1;
-            this.mainChart.Size = new System.Drawing.Size(634, 640);
+            this.mainChart.Size = new System.Drawing.Size(633, 640);
             this.mainChart.TabIndex = 0;
+            this.mainChart.TabStop = false;
             this.mainChart.Text = "aHatVsAChart1";
             this.mainChart.XAxisTitle = "";
             this.mainChart.XAxisUnit = "";
@@ -250,7 +267,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // aMaxControl
             // 
             this.aMaxControl.AutoSize = true;
-            this.aMaxControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(235)))), ((int)(((byte)(255)))));
+            this.aMaxControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.aMaxControl.BackColor = System.Drawing.SystemColors.Control;
             this.aMaxControl.DecimalPlaces = 0;
             this.aMaxControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.aMaxControl.Increment = new decimal(new int[] {
@@ -260,17 +278,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.aMaxControl.InterceptArrowKeys = true;
             this.aMaxControl.Location = new System.Drawing.Point(3, 16);
+            this.aMaxControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMaxControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.aMaxControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.aMaxControl.Name = "aMaxControl";
+            this.aMaxControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMaxControl.PartType = POD.ChartPartType.Undefined;
             this.aMaxControl.ReadOnly = false;
             this.aMaxControl.Size = new System.Drawing.Size(153, 20);
@@ -295,7 +315,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // aMinControl
             // 
             this.aMinControl.AutoSize = true;
-            this.aMinControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(235)))), ((int)(((byte)(255)))));
+            this.aMinControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.aMinControl.BackColor = System.Drawing.SystemColors.Control;
             this.aMinControl.DecimalPlaces = 0;
             this.aMinControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.aMinControl.Increment = new decimal(new int[] {
@@ -305,17 +326,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.aMinControl.InterceptArrowKeys = true;
             this.aMinControl.Location = new System.Drawing.Point(3, 55);
+            this.aMinControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMinControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.aMinControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.aMinControl.Name = "aMinControl";
+            this.aMinControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMinControl.PartType = POD.ChartPartType.Undefined;
             this.aMinControl.ReadOnly = false;
             this.aMinControl.Size = new System.Drawing.Size(153, 20);
@@ -340,6 +363,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // covV22Out
             // 
             this.covV22Out.AutoSize = true;
+            this.covV22Out.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.covV22Out.BackColor = System.Drawing.SystemColors.Control;
             this.covV22Out.DecimalPlaces = 6;
             this.covV22Out.Increment = new decimal(new int[] {
             0,
@@ -348,17 +373,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.covV22Out.InterceptArrowKeys = false;
             this.covV22Out.Location = new System.Drawing.Point(3, 289);
+            this.covV22Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV22Out.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.covV22Out.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.covV22Out.Name = "covV22Out";
+            this.covV22Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV22Out.PartType = POD.ChartPartType.Undefined;
             this.covV22Out.ReadOnly = true;
             this.covV22Out.Size = new System.Drawing.Size(153, 20);
@@ -382,6 +409,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // covV11Out
             // 
             this.covV11Out.AutoSize = true;
+            this.covV11Out.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.covV11Out.BackColor = System.Drawing.SystemColors.Control;
             this.covV11Out.DecimalPlaces = 6;
             this.covV11Out.Increment = new decimal(new int[] {
             0,
@@ -390,17 +419,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.covV11Out.InterceptArrowKeys = false;
             this.covV11Out.Location = new System.Drawing.Point(3, 211);
+            this.covV11Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV11Out.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.covV11Out.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.covV11Out.Name = "covV11Out";
+            this.covV11Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV11Out.PartType = POD.ChartPartType.Undefined;
             this.covV11Out.ReadOnly = true;
             this.covV11Out.Size = new System.Drawing.Size(153, 20);
@@ -424,6 +455,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // covV12Out
             // 
             this.covV12Out.AutoSize = true;
+            this.covV12Out.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.covV12Out.BackColor = System.Drawing.SystemColors.Control;
             this.covV12Out.DecimalPlaces = 6;
             this.covV12Out.Increment = new decimal(new int[] {
             0,
@@ -432,17 +465,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.covV12Out.InterceptArrowKeys = false;
             this.covV12Out.Location = new System.Drawing.Point(3, 250);
+            this.covV12Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV12Out.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.covV12Out.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.covV12Out.Name = "covV12Out";
+            this.covV12Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV12Out.PartType = POD.ChartPartType.Undefined;
             this.covV12Out.ReadOnly = true;
             this.covV12Out.Size = new System.Drawing.Size(153, 20);
@@ -463,9 +498,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.CovV11OutLabel.TabIndex = 16;
             this.CovV11OutLabel.Text = "V11";
             // 
-            // podSigmaOut
+            // SigmaOut
             // 
             this.SigmaOut.AutoSize = true;
+            this.SigmaOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.SigmaOut.BackColor = System.Drawing.SystemColors.Control;
             this.SigmaOut.DecimalPlaces = 3;
             this.SigmaOut.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SigmaOut.Increment = new decimal(new int[] {
@@ -475,17 +512,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.SigmaOut.InterceptArrowKeys = false;
             this.SigmaOut.Location = new System.Drawing.Point(3, 172);
+            this.SigmaOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.SigmaOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.SigmaOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
-            this.SigmaOut.Name = "podSigmaOut";
+            this.SigmaOut.Name = "SigmaOut";
+            this.SigmaOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.SigmaOut.PartType = POD.ChartPartType.Undefined;
             this.SigmaOut.ReadOnly = true;
             this.SigmaOut.Size = new System.Drawing.Size(153, 20);
@@ -519,7 +558,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // a50Out
             // 
             this.a50Out.AutoSize = true;
-            this.a50Out.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(175)))), ((int)(((byte)(255)))), ((int)(((byte)(175)))));
+            this.a50Out.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.a50Out.BackColor = System.Drawing.SystemColors.Control;
             this.a50Out.DecimalPlaces = 3;
             this.a50Out.Dock = System.Windows.Forms.DockStyle.Fill;
             this.a50Out.Increment = new decimal(new int[] {
@@ -529,6 +569,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.a50Out.InterceptArrowKeys = true;
             this.a50Out.Location = new System.Drawing.Point(3, 16);
+            this.a50Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a50Out.Maximum = new decimal(new int[] {
             276447232,
             23283,
@@ -540,6 +581,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0,
             -2147483648});
             this.a50Out.Name = "a50Out";
+            this.a50Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a50Out.PartType = POD.ChartPartType.Undefined;
             this.a50Out.ReadOnly = true;
             this.a50Out.Size = new System.Drawing.Size(153, 20);
@@ -574,7 +616,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // a90Out
             // 
             this.a90Out.AutoSize = true;
-            this.a90Out.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(255)))), ((int)(((byte)(205)))));
+            this.a90Out.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.a90Out.BackColor = System.Drawing.SystemColors.Control;
             this.a90Out.DecimalPlaces = 3;
             this.a90Out.Dock = System.Windows.Forms.DockStyle.Fill;
             this.a90Out.Increment = new decimal(new int[] {
@@ -584,6 +627,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.a90Out.InterceptArrowKeys = true;
             this.a90Out.Location = new System.Drawing.Point(3, 55);
+            this.a90Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a90Out.Maximum = new decimal(new int[] {
             276447232,
             23283,
@@ -595,6 +639,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0,
             -2147483648});
             this.a90Out.Name = "a90Out";
+            this.a90Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a90Out.PartType = POD.ChartPartType.Undefined;
             this.a90Out.ReadOnly = true;
             this.a90Out.Size = new System.Drawing.Size(153, 20);
@@ -619,7 +664,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // a90_95Out
             // 
             this.a90_95Out.AutoSize = true;
-            this.a90_95Out.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(255)))), ((int)(((byte)(235)))));
+            this.a90_95Out.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.a90_95Out.BackColor = System.Drawing.SystemColors.Control;
             this.a90_95Out.DecimalPlaces = 3;
             this.a90_95Out.Dock = System.Windows.Forms.DockStyle.Fill;
             this.a90_95Out.Increment = new decimal(new int[] {
@@ -629,6 +675,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.a90_95Out.InterceptArrowKeys = true;
             this.a90_95Out.Location = new System.Drawing.Point(3, 94);
+            this.a90_95Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a90_95Out.Maximum = new decimal(new int[] {
             276447232,
             23283,
@@ -640,6 +687,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0,
             -2147483648});
             this.a90_95Out.Name = "a90_95Out";
+            this.a90_95Out.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.a90_95Out.PartType = POD.ChartPartType.Undefined;
             this.a90_95Out.ReadOnly = true;
             this.a90_95Out.Size = new System.Drawing.Size(153, 20);
@@ -651,9 +699,11 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0,
             0});
             // 
-            // podMuOut
+            // MuOut
             // 
             this.MuOut.AutoSize = true;
+            this.MuOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MuOut.BackColor = System.Drawing.SystemColors.Control;
             this.MuOut.DecimalPlaces = 3;
             this.MuOut.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MuOut.Increment = new decimal(new int[] {
@@ -663,17 +713,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.MuOut.InterceptArrowKeys = false;
             this.MuOut.Location = new System.Drawing.Point(3, 133);
+            this.MuOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.MuOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.MuOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
-            this.MuOut.Name = "podMuOut";
+            this.MuOut.Name = "MuOut";
+            this.MuOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.MuOut.PartType = POD.ChartPartType.Undefined;
             this.MuOut.ReadOnly = true;
             this.MuOut.Size = new System.Drawing.Size(153, 20);
@@ -696,23 +748,26 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             // 
             // ModelBox
             // 
+            this.ModelBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ModelBox.FormattingEnabled = true;
             this.ModelBox.Location = new System.Drawing.Point(6, 29);
             this.ModelBox.Name = "ModelBox";
-            this.ModelBox.Size = new System.Drawing.Size(121, 21);
+            this.ModelBox.Size = new System.Drawing.Size(129, 21);
             this.ModelBox.TabIndex = 1;
             // 
             // TestColorMap
             // 
-            this.TestColorMap.Location = new System.Drawing.Point(6, 92);
+            this.TestColorMap.Location = new System.Drawing.Point(6, 132);
             this.TestColorMap.Margin = new System.Windows.Forms.Padding(0);
             this.TestColorMap.Name = "TestColorMap";
             this.TestColorMap.Size = new System.Drawing.Size(140, 20);
             this.TestColorMap.TabIndex = 17;
             // 
-            // lackOfFitTestOut
+            // likelihoodRatioTestOut
             // 
             this.likelihoodRatioTestOut.AutoSize = true;
+            this.likelihoodRatioTestOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.likelihoodRatioTestOut.BackColor = System.Drawing.SystemColors.Control;
             this.likelihoodRatioTestOut.DecimalPlaces = 3;
             this.likelihoodRatioTestOut.Increment = new decimal(new int[] {
             0,
@@ -721,20 +776,22 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             0});
             this.likelihoodRatioTestOut.InterceptArrowKeys = false;
             this.likelihoodRatioTestOut.Location = new System.Drawing.Point(6, 69);
+            this.likelihoodRatioTestOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.likelihoodRatioTestOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.likelihoodRatioTestOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
-            this.likelihoodRatioTestOut.Name = "lackOfFitTestOut";
+            -2147483648});
+            this.likelihoodRatioTestOut.Name = "likelihoodRatioTestOut";
+            this.likelihoodRatioTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.likelihoodRatioTestOut.Rating = POD.TestRating.Undefined;
             this.likelihoodRatioTestOut.ReadOnly = true;
-            this.likelihoodRatioTestOut.Size = new System.Drawing.Size(120, 20);
+            this.likelihoodRatioTestOut.Size = new System.Drawing.Size(158, 24);
             this.likelihoodRatioTestOut.TabIndex = 16;
             this.likelihoodRatioTestOut.TooltipForNumeric = "";
             this.likelihoodRatioTestOut.Value = new decimal(new int[] {
@@ -748,16 +805,16 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.lackOfFitTestLabel.AutoSize = true;
             this.lackOfFitTestLabel.Location = new System.Drawing.Point(3, 53);
             this.lackOfFitTestLabel.Name = "lackOfFitTestLabel";
-            this.lackOfFitTestLabel.Size = new System.Drawing.Size(83, 13);
+            this.lackOfFitTestLabel.Size = new System.Drawing.Size(66, 13);
             this.lackOfFitTestLabel.TabIndex = 15;
-            this.lackOfFitTestLabel.Text = "Likelihood Ratio";
+            this.lackOfFitTestLabel.Text = "Pseudo R^2";
             // 
             // FlawRangeHeader
             // 
             this.FlawRangeHeader.AutoSize = true;
             this.FlawRangeHeader.BackColor = System.Drawing.SystemColors.Control;
             this.FlawRangeHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FlawRangeHeader.Location = new System.Drawing.Point(3, 188);
+            this.FlawRangeHeader.Location = new System.Drawing.Point(3, 228);
             this.FlawRangeHeader.Margin = new System.Windows.Forms.Padding(0);
             this.FlawRangeHeader.Name = "FlawRangeHeader";
             this.FlawRangeHeader.Size = new System.Drawing.Size(90, 16);
@@ -769,7 +826,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.TestOfAssumptionsHeader.AutoSize = true;
             this.TestOfAssumptionsHeader.BackColor = System.Drawing.SystemColors.Control;
             this.TestOfAssumptionsHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TestOfAssumptionsHeader.Location = new System.Drawing.Point(2, 155);
+            this.TestOfAssumptionsHeader.Location = new System.Drawing.Point(2, 195);
             this.TestOfAssumptionsHeader.Margin = new System.Windows.Forms.Padding(0);
             this.TestOfAssumptionsHeader.Name = "TestOfAssumptionsHeader";
             this.TestOfAssumptionsHeader.Size = new System.Drawing.Size(148, 16);
@@ -781,7 +838,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.CovarianceHeader.AutoSize = true;
             this.CovarianceHeader.BackColor = System.Drawing.SystemColors.Control;
             this.CovarianceHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CovarianceHeader.Location = new System.Drawing.Point(3, 139);
+            this.CovarianceHeader.Location = new System.Drawing.Point(3, 179);
             this.CovarianceHeader.Margin = new System.Windows.Forms.Padding(0);
             this.CovarianceHeader.Name = "CovarianceHeader";
             this.CovarianceHeader.Size = new System.Drawing.Size(132, 16);
@@ -793,7 +850,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.AxisTransformsHeader.AutoSize = true;
             this.AxisTransformsHeader.BackColor = System.Drawing.SystemColors.Control;
             this.AxisTransformsHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AxisTransformsHeader.Location = new System.Drawing.Point(2, 171);
+            this.AxisTransformsHeader.Location = new System.Drawing.Point(2, 211);
             this.AxisTransformsHeader.Margin = new System.Windows.Forms.Padding(0);
             this.AxisTransformsHeader.Name = "AxisTransformsHeader";
             this.AxisTransformsHeader.Size = new System.Drawing.Size(86, 16);
@@ -805,7 +862,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.PodModelParametersHeader.AutoSize = true;
             this.PodModelParametersHeader.BackColor = System.Drawing.SystemColors.Control;
             this.PodModelParametersHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PodModelParametersHeader.Location = new System.Drawing.Point(3, 121);
+            this.PodModelParametersHeader.Location = new System.Drawing.Point(3, 161);
             this.PodModelParametersHeader.Margin = new System.Windows.Forms.Padding(0);
             this.PodModelParametersHeader.Name = "PodModelParametersHeader";
             this.PodModelParametersHeader.Size = new System.Drawing.Size(171, 16);
@@ -817,12 +874,58 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.PODModelTypeHeader.AutoSize = true;
             this.PODModelTypeHeader.BackColor = System.Drawing.SystemColors.Control;
             this.PODModelTypeHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PODModelTypeHeader.Location = new System.Drawing.Point(3, 204);
+            this.PODModelTypeHeader.Location = new System.Drawing.Point(3, 244);
             this.PODModelTypeHeader.Margin = new System.Windows.Forms.Padding(0);
             this.PODModelTypeHeader.Name = "PODModelTypeHeader";
             this.PODModelTypeHeader.Size = new System.Drawing.Size(127, 16);
             this.PODModelTypeHeader.TabIndex = 23;
             this.PODModelTypeHeader.Text = "POD Model Type";
+            // 
+            // aicTestLabel
+            // 
+            this.aicTestLabel.AutoSize = true;
+            this.aicTestLabel.Location = new System.Drawing.Point(3, 95);
+            this.aicTestLabel.Name = "aicTestLabel";
+            this.aicTestLabel.Size = new System.Drawing.Size(24, 13);
+            this.aicTestLabel.TabIndex = 15;
+            this.aicTestLabel.Text = "AIC";
+            // 
+            // aicTestOut
+            // 
+            this.aicTestOut.AutoSize = true;
+            this.aicTestOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.aicTestOut.BackColor = System.Drawing.SystemColors.Control;
+            this.aicTestOut.DecimalPlaces = 3;
+            this.aicTestOut.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.aicTestOut.InterceptArrowKeys = false;
+            this.aicTestOut.Location = new System.Drawing.Point(6, 107);
+            this.aicTestOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.aicTestOut.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
+            this.aicTestOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            -2147483648});
+            this.aicTestOut.Name = "aicTestOut";
+            this.aicTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.aicTestOut.Rating = POD.TestRating.Undefined;
+            this.aicTestOut.ReadOnly = true;
+            this.aicTestOut.Size = new System.Drawing.Size(158, 24);
+            this.aicTestOut.TabIndex = 16;
+            this.aicTestOut.TooltipForNumeric = "";
+            this.aicTestOut.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // FullRegressionPanel
             // 
@@ -856,6 +959,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             ((System.ComponentModel.ISupportInitialize)(this.a90_95Out)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MuOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.likelihoodRatioTestOut)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aicTestOut)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -900,5 +1004,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
         private Label AxisTransformsHeader;
         private Label PodModelParametersHeader;
         private Label PODModelTypeHeader;
+        private Controls.PODRatedNumericUpDown aicTestOut;
+        private Label aicTestLabel;
     }
 }

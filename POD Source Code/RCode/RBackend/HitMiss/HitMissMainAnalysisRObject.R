@@ -51,6 +51,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                         rankedSetSampleObject="RSSComponents",
                                         covarianceMatrix="matrix",
                                         goodnessOfFit="numeric",
+                                        aic="numeric",
                                         separation="numeric",
                                         convergeFailLogit="numeric"),
                           methods = list(
@@ -157,6 +158,15 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               }
                               return(goodnessOfFit)
                             },
+                            setAIC=function(aicValue){
+                              aic<<-aicValue
+                            },
+                            getAIC=function(){
+                              if(length(aic)==0){
+                                return(0.0)
+                              }
+                              return(aic)
+                            },
                             setSeparation=function(psSeparated){
                               separation<<-psSeparated
                             },
@@ -197,6 +207,7 @@ HMAnalysis <- setRefClass("HMAnalysis",
                               ))
                               setCovMatrix(newRSSMainObject$getMedianCovarMatrix())
                               setGoodnessOfFit(newRSSMainObject$getGoodnessOfFit())
+                              setAIC(newRSSMainObject$getAIC())
                             },
                             determineRegressionType=function(){
                               if(modelType=="Logistic Regression"){
@@ -235,8 +246,15 @@ HMAnalysis <- setRefClass("HMAnalysis",
                                 fnorm=-1,
                                 damping=1
                               ))
-                              #calculate the goodness of fit
-                              setGoodnessOfFit(regressionResults$deviance/regressionResults$null.deviance)
+                              
+                              # Calculate McFadden's Pseudo R-Squared
+                              pseudo_r2 <- 1 - (regressionResults$deviance / regressionResults$null.deviance)
+
+                              aic_value <- AIC(regressionResults)
+
+                              setGoodnessOfFit(pseudo_r2)
+                              setAIC(aic_value)
+
                               if(CIType=="StandardWald"){
                                 #set t_trans
                                 t_trans=regressionResults$fitted.values

@@ -168,7 +168,7 @@
             this.btnLrgMntr.Name = "btnLrgMntr";
             this.btnLrgMntr.Size = new System.Drawing.Size(23, 22);
             this.btnLrgMntr.Text = "toolStripButton2";
-            this.btnLrgMntr.ToolTipText = "Large Monitor Help View";
+            this.btnLrgMntr.ToolTipText = "Ultrawide Monitor Help View";
             // 
             // RtnToAnlysBtn
             // 

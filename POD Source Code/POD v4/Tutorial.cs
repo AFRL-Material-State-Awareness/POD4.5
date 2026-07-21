@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="Tutorial.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,6 +34,8 @@ namespace POD
         public Tutorial()
         {
             InitializeComponent();
+
+            VersionHelper.UpdatePODVersionHeader(this);
 
             _steps.Add(this.step01.BackgroundImage = global::POD.Properties.Resources.Step_01);
             _steps.Add(this.step01.BackgroundImage = global::POD.Properties.Resources.Step_02);
@@ -78,7 +96,9 @@ namespace POD
             ResumeLayout();
 
             comboBox1.SelectedIndex = index;
-            label1.Text = "Step " + (index + 1).ToString("00") + " of " + (_steps.Count).ToString("00");
+
+            // Combined math and formatting into a single interpolated string
+            label1.Text = $"Step {(index + 1):00} of {_steps.Count:00}";
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

@@ -69,6 +69,12 @@ GenerateNormalityTable <- setRefClass("GenerateNormalityTable", fields = list(re
                                           
                                         },
                                         DetermineIncrement=function(maxTenVal, override){
+                                          #print("DetermineIncrement")
+                                          if(responsesMin == 0.0) 
+                                          {
+                                                responsesMin<-.00000000001;
+                                                #print("Fixed ResponsesMin")
+                                          }
                                           if(maxTenVal > 0 && responsesMin >=0){
                                             incrementSeq<- seq(from=RoundDownNice(responsesMin), to = maxTenVal, length.out = SturgesRule()*override)
                                           }else if(maxTenVal > 0 && responsesMin < 0){

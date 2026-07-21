@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Tutorial));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.Next = new POD.Controls.TutorialButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.step01 = new POD.Controls.TutorialPanel();
-            this.Next = new POD.Controls.TutorialButton();
             this.Previous = new POD.Controls.TutorialButton();
+            this.step01 = new POD.Controls.TutorialPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -59,6 +59,19 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1280, 60);
             this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // Next
+            // 
+            this.Next.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Next.Location = new System.Drawing.Point(646, 0);
+            this.Next.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.Next.Name = "Next";
+            this.Next.Size = new System.Drawing.Size(100, 57);
+            this.Next.TabIndex = 1;
+            this.Next.Text = "Next";
+            this.Next.UseVisualStyleBackColor = true;
+            this.Next.Click += new System.EventHandler(this.Next_Click);
             // 
             // panel1
             // 
@@ -110,31 +123,6 @@
             this.comboBox1.TabIndex = 2;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.Combo_Changed);
             // 
-            // step01
-            // 
-            this.step01.BackgroundImage = global::POD.Properties.Resources.Step_01;
-            this.step01.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.step01.Location = new System.Drawing.Point(0, 0);
-            this.step01.Margin = new System.Windows.Forms.Padding(0);
-            this.step01.Name = "step01";
-            this.step01.Size = new System.Drawing.Size(1280, 700);
-            this.step01.TabIndex = 0;
-            this.step01.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Mouse_Click);
-            this.step01.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Mouse_Click);
-            // 
-            // Next
-            // 
-            this.Next.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Next.Location = new System.Drawing.Point(646, 0);
-            this.Next.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.Next.Name = "Next";
-            this.Next.Size = new System.Drawing.Size(100, 57);
-            this.Next.TabIndex = 1;
-            this.Next.Text = "Next";
-            this.Next.UseVisualStyleBackColor = true;
-            this.Next.Click += new System.EventHandler(this.Next_Click);
-            // 
             // Previous
             // 
             this.Previous.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -147,6 +135,18 @@
             this.Previous.Text = "Previous";
             this.Previous.UseVisualStyleBackColor = true;
             this.Previous.Click += new System.EventHandler(this.Previous_Click);
+            // 
+            // step01
+            // 
+            this.step01.BackgroundImage = global::POD.Properties.Resources.Step_01;
+            this.step01.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.step01.Location = new System.Drawing.Point(0, 0);
+            this.step01.Margin = new System.Windows.Forms.Padding(0);
+            this.step01.Name = "step01";
+            this.step01.Size = new System.Drawing.Size(1280, 700);
+            this.step01.TabIndex = 0;
+            this.step01.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Mouse_Click);
+            this.step01.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Mouse_Click);
             // 
             // Tutorial
             // 
@@ -165,7 +165,7 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tutorial";
+            this.Text = "Tutorial for POD Professional v4.5.X";
             this.TopMost = true;
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

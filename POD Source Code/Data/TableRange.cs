@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="TableRange.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -271,18 +287,20 @@ namespace POD.Data
             int startRowIndex = myRowIndex;
             int colIndex = 1;
 
-            myWriter.SetCellValue(myRowIndex++, colIndex, _name + " StartIndex");
-            myWriter.SetCellValue(myRowIndex++, colIndex, _name + " Count");
-            myWriter.SetCellValue(myRowIndex++, colIndex, _name + " Data Type");
-            myWriter.SetCellValue(myRowIndex++, colIndex, _name + " Increment");
-            myWriter.SetCellValue(myRowIndex++, colIndex, _name + " Max Index");
+            // Use interpolation for the labels in the first column
+            myWriter.SetCellValue(myRowIndex++, colIndex, $"{_name} StartIndex");
+            myWriter.SetCellValue(myRowIndex++, colIndex, $"{_name} Count");
+            myWriter.SetCellValue(myRowIndex++, colIndex, $"{_name} Data Type");
+            myWriter.SetCellValue(myRowIndex++, colIndex, $"{_name} Increment");
+            myWriter.SetCellValue(myRowIndex++, colIndex, $"{_name} Max Index");
 
             myRowIndex = startRowIndex;
             colIndex++;
 
+            // Use interpolation for the enum to string conversion
             myWriter.SetCellValue(myRowIndex++, colIndex, _startIndex);
             myWriter.SetCellValue(myRowIndex++, colIndex, _count);
-            myWriter.SetCellValue(myRowIndex++, colIndex, _dataType.ToString());
+            myWriter.SetCellValue(myRowIndex++, colIndex, $"{_dataType}");
             myWriter.SetCellValue(myRowIndex++, colIndex, _increment);
             myWriter.SetCellValue(myRowIndex++, colIndex, _maxIndex);
 

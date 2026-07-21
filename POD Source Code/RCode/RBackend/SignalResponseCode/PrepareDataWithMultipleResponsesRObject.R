@@ -35,12 +35,10 @@ PrepareData<-setRefClass("PrepareData", fields = list(signalRespDF="data.frame",
                              return(avgSignalRespDF)
                            },
                            createAvgRespDF=function(){
-                             responsesOnlyDF= subset(signalRespDF, select = -c(Index, x, event))
-                             avgResponses=c()
-                             for(i in 1:nrow(signalRespDF)){
-                               avgResponses=c(avgResponses, mean(as.numeric(responsesOnlyDF[i,])))
-                             }
-                             #print(avgResponses)
+                             # A vectorized approach is more idiomatic and efficient in R for calculating row averages.
+                             response_cols <- setdiff(names(signalRespDF), c("Index", "x", "event"))
+                             # The `sapply` ensures all response columns are numeric before calculating the mean.
+                             avgResponses <- rowMeans(sapply(signalRespDF[, response_cols, drop = FALSE], as.numeric), na.rm = TRUE)
                              avgResponseDF=data.frame(
                                Index=signalRespDF$Index,
                                x=signalRespDF$x,

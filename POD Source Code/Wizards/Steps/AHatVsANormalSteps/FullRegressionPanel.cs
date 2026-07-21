@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="FullRegressionPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +25,13 @@ using POD.Analyze;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 using CSharpBackendWithR;
+using POD.Data;
+
 namespace POD.Wizards.Steps.AHatVsANormalSteps
 {
     using System.Data;
+    using System.Diagnostics;
+    using System.Threading;
     using System.Windows.Forms.DataVisualization.Charting;
 
     using POD.Analyze;
@@ -35,6 +55,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         //this flag is used in order to prevent the boxcox numeric updown from being disable if the user
         //selects boxcox in the choose transform panel
         private bool _startingWithBoxCox = false;
+
+        // used to snap the left censor line back to a valid negative position on a log scale
+        private decimal _lastValidNegativeLeftCensor = -10.0m;
+
         public FullRegressionPanel(PODToolTip tooltip) : base(tooltip)
         {
             InitializeComponent();
@@ -64,7 +88,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             //Paint += FullRegressionPanel_Paint;
             ControlSizesFixed = false;
 
-            
+            this.DisplayPanel.BackgroundControl = this.MainChart;
         }
 
         
@@ -79,10 +103,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                 //default to showing the charts (must match with Full RegressionBar initial button states)                
                 DisplayChart(LinearityIndex);
+                DisplayChart(QQIndex);
                 DisplayChart(PodIndex);
                 DisplayChart(ThresholdIndex);
                 DisplayChart(NormalityIndex);
-                SetSideChartSize(4);                
+                SetSideChartSize(5);                
 
                 //ResizeControlsToAllFit(inputTablePanel);
                 //ResizeControlsToAllFit(outputTablePanel);
@@ -348,29 +373,34 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             modelErrorStdErrOut.TooltipForNumeric = Globals.SplitIntoLines("Standard deviation of the estimate of the residual error. Indicates degree of precision.");
             normalityTestOut.TooltipForNumeric = Globals.SplitIntoLines("Normality hypothesis test for the model fit. High p values indicate data compatible with assumption.");
             equalVarianceTestOut.TooltipForNumeric = Globals.SplitIntoLines("Equal variance hypothesis test for the model fit. High p values indicate data compatible with assumption.");
-            lackOfFitTestOut.TooltipForNumeric = Globals.SplitIntoLines("Lack of fit hypothesis test for the model fit. High p values indicate data compatible with assumption.");
-            lackOfFitTestOut.TooltipForNumeric = Globals.SplitIntoLines("Lack of fit hypothesis test for the model fit. LOW p values indicate data compatible with assumption.");
+            lackOfFitTestOut.TooltipForNumeric = Globals.SplitIntoLines("Whole model test. LOW p values indicate data compatible with assumption.");
             //autoCorrelationTestOut.TooltipForNumeric = Globals.SplitIntoLines("Durbin Watson test for auto-correlation. High p values indicate there is auto-correlation in the data.");
         }
 
         public void CycleTransforms()
         {
-
             if (Analysis.Data.RowCount > 0)
             {
                 try
                 {
+                    // Detach event handlers to prevent multiple analysis runs
+                    _xTransformBox.SelectedIndexChanged -= this.TransformBox_ValueChanged;
+                    _yTransformBox.SelectedIndexChanged -= this.TransformBox_ValueChanged;
+
                     if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.Linear) //linlin
                     {
                         _xTransformBox.SelectedTransform = TransformTypeEnum.Log; //loglin
+                        _yTransformBox.SelectedTransform = TransformTypeEnum.Linear;
                     }
                     else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log && _yTransformBox.SelectedTransform == TransformTypeEnum.Linear) //loglin
                     {
+                        _xTransformBox.SelectedTransform = TransformTypeEnum.Log;
                         _yTransformBox.SelectedTransform = TransformTypeEnum.Log; //loglog
                     }
                     else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //loglog
                     {
                         _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; //linlog
+                        _yTransformBox.SelectedTransform = TransformTypeEnum.Log;
                     }
                     else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear && _yTransformBox.SelectedTransform == TransformTypeEnum.Log) //lin Boxcox
                     {
@@ -382,18 +412,26 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                         _xTransformBox.SelectedTransform = TransformTypeEnum.Log; //log Boxcox
                         _yTransformBox.SelectedTransform = TransformTypeEnum.BoxCox;
                     }
-                    else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log && _yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox) //linlog
+                    else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log && _yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox) //log boxcox
                     {
                         _xTransformBox.SelectedTransform = TransformTypeEnum.Linear;
                         _yTransformBox.SelectedTransform = TransformTypeEnum.Linear; //linlin
                     }
+
+                    // Manually trigger the logic that was in the event handler
+                    TransformBox_ValueChanged(this, EventArgs.Empty);
                 }
                 catch(Exception exp)
                 {
-                    MessageBox.Show("CycleTransforms: " + exp.Message);
+                    MessageBox.Show($"CycleTransforms: {exp.Message}");
+                }
+                finally
+                {
+                    // Re-attach event handlers
+                    _xTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
+                    _yTransformBox.SelectedIndexChanged += this.TransformBox_ValueChanged;
                 }
             }
-
         }
 
         protected override void AddInputControls()
@@ -460,6 +498,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             thresholdControl.TooltipForNumeric = Globals.SplitIntoLines("Values above the threshold are hits. Values below are misses. aHat value where 50% POD occurs.");
         }
 
+        private bool IsValidDouble(double value)
+        {
+            return !double.IsNaN(value) && !double.IsInfinity(value);
+        }
+
         private void IntitalizeTransformBoxes()
         {
             PrepareLabelBoxPair(ref _xTransformLabel, "Flaw", ref _xTransformBox);
@@ -485,10 +528,27 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _boxCoxLambda.ValueChanged += this.NumericUpDown_ValueChanged;
         }
 
-        private void TransformBox_ValueChanged(object sender, EventArgs e)
+        private async void TransformBox_ValueChanged(object sender, EventArgs e)
         {
-            Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
-            Analysis.InResponseTransform = _yTransformBox.SelectedTransform;
+            //if (this.IsDisposed || this.mainChart.IsDisposed)
+            //{
+            //    return;
+            //}
+
+            mainChart.SuspendDrawing();
+            
+            try
+            {
+                Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
+                Analysis.InResponseTransform = _yTransformBox.SelectedTransform;
+
+                MainChart.UpdateTransformer(Analysis.Transformer);
+            }
+            finally
+            {
+                mainChart.ResumeDrawing();
+            }
+
             //used to prevent the lambda numeric up down event from firing when the user selects boxcox
             if (_yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox)
             {
@@ -498,25 +558,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             //get temporary lambda if box-cox is selected-this needs to be before the boundry line updates in order to transform back with the correct lambda value
             if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox)
             {
-                //if statement needs to be nested in order to ensure the lambda input box is enabled upon box-cox being selected in
-                //the chooseTransform panel.
-                if (Analysis._finalAnalysisAHat != null)
-                {
-                    double lambdaTemp;
-                    AHatAnalysisObject currAnalysis = Analysis._finalAnalysisAHat;
-                    List<double> tempFlaws = currAnalysis.Flaws;
-                    List<double> tempResponses = currAnalysis.Responses[currAnalysis.SignalResponseName];
-                    TemporaryLambdaCalc TempLambda = new TemporaryLambdaCalc(tempFlaws, tempResponses, Analysis.RDotNet);
-                    lambdaTemp = TempLambda.CalcTempLambda();
-                    Analysis.InLambdaValue = lambdaTemp;
-                    _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
-                    //keep from running the analyis twice
-                    //return;
-                }
-                else
-                {
-                    _boxCoxLambda.Value = Convert.ToDecimal(Analysis.InLambdaValue);
-                }
+                Analysis.CalculateAndSetBoxCoxParameters();
+                double lambdaTemp = UndoLambda501(Analysis.InLambdaValue);
+                _boxCoxLambda.Value = Convert.ToDecimal(lambdaTemp);
+                
                 _labelForLamdaInput.Enabled = true;
                 _boxCoxLambda.Enabled = true;
             }
@@ -525,56 +570,76 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _labelForLamdaInput.Enabled = false;
                 _boxCoxLambda.Enabled = false;
             }
-            if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
-            {
-                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-                mainChart.SetAMaxBoundary(x, false);
-                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-                mainChart.SetAMinBoundary(x, false);
-            }
-            else
-            {
-                /*
-                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-                mainChart.SetAMinBoundary(x, false);
-                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-                mainChart.SetAMaxBoundary(x, false);
-                */
-                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-                mainChart.SetAMaxBoundary(x, false);
-                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-                mainChart.SetAMinBoundary(x, false);
-            }
 
-            if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
+            mainChart.SuspendDrawing(); // Suspend again for boundary updates
+            try
             {
-               
-                var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
-                mainChart.SetLeftCensorBoundary(y, false);
-                y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
-                mainChart.SetRightCensorBoundary(y, false);
-                y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
-                mainChart.SetThresholdBoundary(y, false);
+                if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
+                {
+                    var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                    if (IsValidDouble(x))
+                        mainChart.SetAMaxBoundary(x, false);
+                    x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                    if (IsValidDouble(x))
+                        mainChart.SetAMinBoundary(x, false);
+                }
+                else
+                {
+                    /*
+                    var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                    if (IsValidDouble(x)) mainChart.SetAMinBoundary(x, false);
+                    x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                    if (IsValidDouble(x)) mainChart.SetAMaxBoundary(x, false);
+                    */
+                    var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                    if (IsValidDouble(x))
+                        mainChart.SetAMaxBoundary(x, false);
+                    x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                    if (IsValidDouble(x))
+                        mainChart.SetAMinBoundary(x, false);
+                }
+
+                if (Analysis.InResponseTransform != TransformTypeEnum.Inverse)
+                {
+
+                    var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
+                    if (IsValidDouble(y))
+                        mainChart.SetLeftCensorBoundary(y, false);
+                    y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
+                    if (IsValidDouble(y))
+                        mainChart.SetRightCensorBoundary(y, false);
+                    y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
+                    mainChart.SetThresholdBoundary(y, false);
+                }
+                else
+                {
+                    /*
+                    var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
+                    if (IsValidDouble(y)) mainChart.SetRightCensorBoundary(y, false);
+                    y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
+                    if (IsValidDouble(y)) mainChart.SetLeftCensorBoundary(y, false);
+                    y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
+                    if (IsValidDouble(y)) mainChart.SetThresholdBoundary(y, false);
+                    */
+                    var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
+                    if (IsValidDouble(y))
+                        mainChart.SetLeftCensorBoundary(y, false);
+
+                    y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
+                    if (IsValidDouble(y))
+                        mainChart.SetRightCensorBoundary(y, false);
+
+                    y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
+                    mainChart.SetThresholdBoundary(y, false);
+                }
             }
-            else
+            finally
             {
-                /*
-                var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
-                mainChart.SetRightCensorBoundary(y, false);
-                y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
-                mainChart.SetLeftCensorBoundary(y, false);
-                y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
-                mainChart.SetThresholdBoundary(y, false);
-                */
-                var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
-                mainChart.SetLeftCensorBoundary(y, false);
-                y = Convert.ToDouble(Analysis.TransformValueForYAxis(rightCensorControl.Value));
-                mainChart.SetRightCensorBoundary(y, false);
-                y = Convert.ToDouble(Analysis.TransformValueForYAxis(thresholdControl.Value));
-                mainChart.SetThresholdBoundary(y, false);
+                mainChart.ResumeDrawing();
             }
             
-
+            // A small delay to allow the UI to process events before running analysis.
+            //await Task.Delay(10);
             ForceUpdateAfterTransformChange();
 
             if(_yTransformBox.SelectedTransform == TransformTypeEnum.BoxCox)
@@ -582,15 +647,18 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _boxCoxLambda.ValueChanged += this.NumericUpDown_ValueChanged;
             }
         }
+
+        
+
         /*
-        private void GetTempLambda()
-        {
-            //need to set the value of lambda beforehand in boxcox or bounds will be incorrect
-            List<double> tempflaws=Analysis._finalAnalysisAHat.Flaws;
-            List<double> tempResponses = Analysis._finalAnalysisAHat.Responses[Analysis._finalAnalysisAHat.SignalResponseName];
-            Analysis.RDotNet.RDotNetEngine.Evaluate("");
-        }
-        */
+private void GetTempLambda()
+{
+   //need to set the value of lambda beforehand in boxcox or bounds will be incorrect
+   List<double> tempflaws=Analysis._finalAnalysisAHat.Flaws;
+   List<double> tempResponses = Analysis._finalAnalysisAHat.Responses[Analysis._finalAnalysisAHat.SignalResponseName];
+   Analysis.RDotNet.RDotNetEngine.SafeEvaluate("");
+}
+*/
 
         protected override void SetupNumericControlPrecision()
         {
@@ -614,6 +682,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         {
             SideCharts.Add(linearityChart);
             SideCharts.Add(normalityChart);
+            SideCharts.Add(qqChart);
             //SideCharts.Add(equalVarianceChart);
             SideCharts.Add(podChart);
             SideCharts.Add(thresholdChart);
@@ -627,14 +696,14 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         {
             double yMin = mainChart.ChartAreas[0].AxisY.Minimum;
 
-            if (yMin <= 0.0 && _yTransformBox.SelectedTransform == TransformTypeEnum.Log)
-                yMin = 1.0;
-            // This may be where the problem occurs *****************************
-            Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
-            Analysis.InResponseTransform = _yTransformBox.SelectedTransform;
+            //if (yMin <= 0.0 && _yTransformBox.SelectedTransform == TransformTypeEnum.Log)
+            //    yMin = 1.0;
 
+            // This may be where the problem occurs *****************************
             Analysis.InFlawMin = Convert.ToDouble(aMinControl.Value);
             Analysis.InFlawMax = Convert.ToDouble(aMaxControl.Value);
+            Analysis.InFlawTransform = _xTransformBox.SelectedTransform;
+            Analysis.InResponseTransform = _yTransformBox.SelectedTransform;            
             var xAxis = Analysis.Data.GetXBufferedRange(null, false);
             Analysis.InFlawCalcMax = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Max));
             Analysis.InFlawCalcMin = Convert.ToDouble(Analysis.TransformValueForXAxis(xAxis.Min));
@@ -653,6 +722,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 MainChart.ClearProgressBar();
 
             EnableInputControls();
+
+            if (Analysis.Data.MissingData)
+            {
+                return;
+            }
 
             mainChart.UpdateBestFitLine();
             
@@ -712,42 +786,78 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             else if(showA9095Error)
                 Source.Python.AddErrorText("Calculated a90/95 is less than zero. Consider adjusting your threshold.");
 
+            string controlName = "";
+
             try
             {
-
+                
                 a90Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a90Transformed)));
                 a9095Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a9095Transformed)));
                 a50Transformed = Convert.ToDouble(Analysis.TransformValueForXAxis(Convert.ToDecimal(a50Transformed)));
+                
+                controlName = GetOutputControlLabelText(a90Out);
                 a90Out.Value = Convert.ToDecimal(a90Original);
+                
+                controlName = GetOutputControlLabelText(a90_95Out);
                 a90_95Out.Value = Convert.ToDecimal(a9095Original);
+                
+                controlName = GetOutputControlLabelText(a50Out);
                 a50Out.Value = Convert.ToDecimal(a50Original);
+                
                 responseMinTransformed = Convert.ToDouble(Analysis.TransformValueForYAxis(Convert.ToDecimal(responseMinTransformed)));
                 responseMaxTransformed = Convert.ToDouble(Analysis.TransformValueForYAxis(Convert.ToDecimal(responseMaxTransformed)));
 
+                controlName = GetOutputControlLabelText(modelMOut);
                 modelMOut.Value = Convert.ToDecimal(modelM);
+                
+                controlName = GetOutputControlLabelText(modelBOut);
                 modelBOut.Value = Convert.ToDecimal(modelB);
+                
+                controlName = GetOutputControlLabelText(modelErrorOut);
                 modelErrorOut.Value = Convert.ToDecimal(modelError);
+                
+                controlName = GetOutputControlLabelText(modelMStdErrOut);
                 modelMStdErrOut.Value = Convert.ToDecimal(modelMStdError);
+                
+                controlName = GetOutputControlLabelText(modelBStdErrOut);
                 modelBStdErrOut.Value = Convert.ToDecimal(modelBStdError);
+                
+                controlName = GetOutputControlLabelText(modelErrorStdErrOut);
                 modelErrorStdErrOut.Value = Convert.ToDecimal(modelErrorStdError);
+                
+                controlName = GetOutputControlLabelText(rSquaredValueOut);
                 rSquaredValueOut.Value = Convert.ToDecimal(rSquaredValue);
+                
+                controlName = GetOutputControlLabelText(SigmaOut);
                 SigmaOut.Value = Convert.ToDecimal(sigma);
+                
+                controlName = GetOutputControlLabelText(MuOut);
                 MuOut.Value = Convert.ToDecimal(mu);
+                
+                controlName = GetOutputControlLabelText(normalityTestOut);
                 normalityTestOut.Value = Convert.ToDecimal(normality);
+                
+                controlName = GetOutputControlLabelText(lackOfFitTestOut);
                 lackOfFitTestOut.Value = Convert.ToDecimal(lackOfFit);
+                
+                controlName = GetOutputControlLabelText(equalVarianceTestOut);
                 equalVarianceTestOut.Value = Convert.ToDecimal(equalVariance);
                 //autoCorrelationTestOut.Value = Convert.ToDecimal(autoCorrelation);
 
             }
-            catch
+            catch(Exception exp)
             {
+                POD.Globals.ShowErrorMessageBox(exp);
+
                 //MessageBox.Show("Analysis Error caused invalid output values that are out of range.");
-                Source.Python.AddErrorText("Output values out of range.");
+                Source.Python.AddErrorText($"{controlName} value is out of range.");
+
 
                 MainChart.ClearEverythingButPoints();
                 linearityChart.ClearEverythingButPoints();
                 thresholdChart.ClearEverythingButPoints();
                 podChart.ClearEverythingButPoints();
+                qqChart.ClearEverythingButPoints();
                 //if there is an error, allow the user to open another analysis tab since it is no longer running
                 REngineObject.REngineRunning = false;
                 return;
@@ -774,7 +884,15 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                                                  a9095Transformed,
                                                  Analysis.OutModelSlope, Analysis.OutModelIntercept);
 
-            mainChart.UpdateEquation(Analysis.InFlawTransform, Analysis.InResponseTransform);
+            mainChart.UpdateEquation(Analysis.InFlawTransform, 
+                                     Analysis.InResponseTransform,
+                                     Analysis.Data.ResponseCompleteBelowMinCount,
+                                     Analysis.Data.ResponseCompleteAboveMaxCount);
+
+
+            qqChart.FillChart(Analysis.Data); 
+            StepToolTip.SetToolTip(qqChart, qqChart.TooltipText);
+            qqChart.ChartToolTip = StepToolTip;
 
             //linearityChart.XAxis.Interval = mainChart.XAxis.Interval;
             //linearityChart.SetXAxisRange(Analysis.Data.GetXBufferedRange(false));
@@ -784,6 +902,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             linearityChart.FillChart(Analysis.Data, Analysis.OutModelSlope, Analysis.OutModelIntercept, Analysis.OutModelResidualError, Analysis.OutRSquaredValue);
 
             StepToolTip.SetToolTip(linearityChart, linearityChart.TooltipText);
+            linearityChart.ChartToolTip = StepToolTip;
 
             podChart.FillChart(Analysis.Data);
             podChart.SetXAxisRange(Analysis.Data.GetUncensoredXBufferedRange(podChart, false), Analysis.Data, true);
@@ -794,9 +913,9 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             StepToolTip.SetToolTip(podChart, podChart.TooltipText);
             podChart.ChartToolTip = StepToolTip;
 
-            thresholdChart.SetXAxisRange(Analysis.Data.GetYBufferedRange(thresholdChart, false), Analysis.Data, true);
-            thresholdChart.SetYAxisRange(Analysis.Data.GetUncensoredXBufferedRange(thresholdChart, false), Analysis.Data, true);
             thresholdChart.FillChart(Analysis.Data);
+            thresholdChart.SetXAxisRange(Analysis.Data.GetYBufferedRange(thresholdChart, false), Analysis.Data, true);
+            thresholdChart.SetYAxisRange(Analysis.Data.GetUncensoredXBufferedRange(thresholdChart, false), Analysis.Data, true);            
             thresholdChart.UpdateLevelConfidenceLines(a50Original,
                                                       a90Original,
                                                       a9095Original,
@@ -808,18 +927,36 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             thresholdChart.ChartToolTip = StepToolTip;
 
             normalityChart.FillChart(Analysis.Data.NormalityTable, Analysis.Data.NormalityCurveTable);
-            normalityChart.SetXAxisRange(Analysis.Data.GetYBufferedRange(normalityChart, false), Analysis.Data, true);
+            Analysis.Data.NormalityTable.GetMinMaxOfColumn(0, out double overallMin, out double overallMax);
+            var axisObject = Analysis.Data.GetXBufferedRange(normalityChart, overallMin, overallMax, false);
+            normalityChart.SetXAxisRange(axisObject, Analysis.Data, true);
             StepToolTip.SetToolTip(normalityChart, normalityChart.TooltipText);
+            normalityChart.ChartToolTip = StepToolTip;
 
 
 
             REngineObject.REngineRunning = false;
             //RefreshValues();
-        }        
+        }
+
+        private string GetOutputControlLabelText(Control ctrl)
+        {
+            return GetControlLabelText(ctrl, _outputWithLabels);
+        }
+
+        private string GetInputControlLabelText(Control ctrl)
+        {
+            return GetControlLabelText(ctrl, _inputWithLabels);
+        }
 
         public int LinearityIndex
         {
             get { return SideCharts.IndexOf(linearityChart); }
+        }
+
+        public int QQIndex
+        {
+            get { return SideCharts.IndexOf(qqChart); }
         }
 
         public int NormalityIndex
@@ -863,11 +1000,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _activeControl = aMinControl;
 
+            decimal originalValue = aMinControl.Value;
+
             var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
             mainChart.SetAMinBoundary(x, true);
-            Analysis.AnalysisCalculationType = RCalculationType.Full;
+            Analysis.AnalysisCalculationType = RCalculationType.Full;            
             RunAnalysis();
-
+            //aMinControl.Value = originalValue;
             //controlValueChanged = false;
         }
 
@@ -877,10 +1016,25 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _activeControl = leftCensorControl;
 
+            decimal originalValue = leftCensorControl.Value;
+
+            if (leftCensorControl.Value < 0.0m)
+            {
+                // The user has dragged the line into the invalid region (< 1 on a log scale).
+                // Snap back to the last known valid "no-censoring" position.
+                _lastValidNegativeLeftCensor = leftCensorControl.Value;
+                ValidateInputControls();
+            }
+
             var y = Convert.ToDouble(Analysis.TransformValueForYAxis(leftCensorControl.Value));
             mainChart.SetLeftCensorBoundary(y, true);
             Analysis.AnalysisCalculationType = RCalculationType.Full;
+            
             RunAnalysis();
+
+            ValidateInputControls();
+
+            //leftCensorControl.Value = originalValue;
 
             //controlValueChanged = false;
         }
@@ -920,14 +1074,17 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 return;
             }
             double customLambda = Convert.ToDouble(_boxCoxLambda.Value);
-            Analysis.InLambdaValue = customLambda;
+            Analysis.UpdateBoxCoxLambda(customLambda);
 
             if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
             {
                 var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
-                mainChart.SetAMaxBoundary(x, false);
+                if (IsValidDouble(x))
+                    mainChart.SetAMaxBoundary(x, false);
+
                 x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
-                mainChart.SetAMinBoundary(x, false);
+                if (IsValidDouble(x))
+                    mainChart.SetAMinBoundary(x, false);
             }
             else
             {
@@ -995,8 +1152,27 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 _activeControl.Focus();
         }
 
+        protected override void ValidateInputControls()
+        {
+            // This is called from the base class right before RunAnalysis is triggered by the chart.
+            if (Analysis.InResponseTransform == TransformTypeEnum.Log)
+            {
+                if (leftCensorControl.Value < 1.0m)
+                {
+                    mainChart.SetLeftCensorBoundary(Analysis.TransformValueForYAxis((double)_lastValidNegativeLeftCensor), true);
+                }
+            }
+        }
+
         protected override void MainChart_LinesChanged(object sender, EventArgs e)
         {
+            // Temporarily detach events to prevent infinite update loops during floating point line drags
+            aMaxControl.NumericUpDown.ValueChanged -= this.aMaxControl_ValueChanged;
+            aMinControl.NumericUpDown.ValueChanged -= this.aMinControl_ValueChanged;
+            leftCensorControl.NumericUpDown.ValueChanged -= this.leftCensorControl_ValueChanged;
+            rightCensorControl.NumericUpDown.ValueChanged -= this.rightControl_ValueChanged;
+            thresholdControl.NumericUpDown.ValueChanged -= this.thresholdControl_ValueChanged;
+
             double value = 0.0;
 
             if (Analysis.InFlawTransform != TransformTypeEnum.Inverse)
@@ -1028,10 +1204,6 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 if (mainChart.FindValue(ControlLine.LeftCensor, ref value))
                 {
                     this.leftCensorControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
-                    //if (Analysis.InResponseTransform == TransformTypeEnum.BoxCox && this.leftCensorControl.Value > Convert.ToDecimal(Analysis.InResponseMin))
-                    //{
-                    //    this.leftCensorControl.Value = Convert.ToDecimal(Analysis.InResponseMin) - 1.0m;
-                    //}
                 }
                 
 
@@ -1051,6 +1223,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 
                 if (mainChart.FindValue(ControlLine.Threshold, ref value))
                     this.thresholdControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
+
+                if (this.leftCensorControl.Value < 0.0m)
+                {
+                    this._lastValidNegativeLeftCensor = leftCensorControl.Value;
+                }
             }
             else
             {
@@ -1073,6 +1250,13 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 if (mainChart.FindValue(ControlLine.Threshold, ref value))
                     this.thresholdControl.Value = Analysis.InvertTransformValueForYAxis(Convert.ToDecimal(value));
             }
+
+            // Temporarily detach events to prevent infinite update loops during floating point line drags
+            aMaxControl.NumericUpDown.ValueChanged += this.aMaxControl_ValueChanged;
+            aMinControl.NumericUpDown.ValueChanged += this.aMinControl_ValueChanged;
+            leftCensorControl.NumericUpDown.ValueChanged += this.leftCensorControl_ValueChanged;
+            rightCensorControl.NumericUpDown.ValueChanged += this.rightControl_ValueChanged;
+            thresholdControl.NumericUpDown.ValueChanged += this.thresholdControl_ValueChanged;
         }
 
         private void controlSplitter_Panel1_Paint(object sender, PaintEventArgs e)

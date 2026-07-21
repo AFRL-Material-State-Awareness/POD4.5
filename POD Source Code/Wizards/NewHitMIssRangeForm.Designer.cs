@@ -32,8 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewHitMissRangeForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label7 = new System.Windows.Forms.Label();
-            this.MinFlaw = new POD.Controls.PODChartNumericUpDown();
-            this.MaxFlaw = new POD.Controls.PODChartNumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,10 +46,12 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.MinFlaw = new POD.Controls.PODChartNumericUpDown();
+            this.MaxFlaw = new POD.Controls.PODChartNumericUpDown();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinFlaw)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxFlaw)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -102,93 +102,19 @@
             this.label7.Dock = System.Windows.Forms.DockStyle.Left;
             this.label7.Location = new System.Drawing.Point(3, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(310, 47);
+            this.label7.Size = new System.Drawing.Size(310, 45);
             this.label7.TabIndex = 27;
             this.label7.Text = "Please provide information about the person collecting the data, the specimen set" +
     " and instrument used.";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // MinFlaw
-            // 
-            this.MinFlaw.AutoSize = true;
-            this.MinFlaw.DecimalPlaces = 3;
-            this.MinFlaw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MinFlaw.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MinFlaw.InterceptArrowKeys = true;
-            this.MinFlaw.Location = new System.Drawing.Point(82, 193);
-            this.MinFlaw.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.MinFlaw.Minimum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            -2147483648});
-            this.MinFlaw.Name = "MinFlaw";
-            this.MinFlaw.PartType = POD.ChartPartType.Undefined;
-            this.MinFlaw.ReadOnly = false;
-            this.MinFlaw.Size = new System.Drawing.Size(135, 20);
-            this.MinFlaw.TabIndex = 6;
-            this.MinFlaw.TooltipForNumeric = "";
-            this.MinFlaw.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
-            this.MinFlaw.Enter += new System.EventHandler(this.Numeric_Entered);
-            this.MinFlaw.Validating += new System.ComponentModel.CancelEventHandler(this.Numeric_Validating);
-            this.MinFlaw.Validated += new System.EventHandler(this.Numeric_Validated);
-            // 
-            // MaxFlaw
-            // 
-            this.MaxFlaw.AutoSize = true;
-            this.MaxFlaw.DecimalPlaces = 3;
-            this.MaxFlaw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MaxFlaw.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MaxFlaw.InterceptArrowKeys = true;
-            this.MaxFlaw.Location = new System.Drawing.Point(82, 167);
-            this.MaxFlaw.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.MaxFlaw.Minimum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            -2147483648});
-            this.MaxFlaw.Name = "MaxFlaw";
-            this.MaxFlaw.PartType = POD.ChartPartType.Undefined;
-            this.MaxFlaw.ReadOnly = false;
-            this.MaxFlaw.Size = new System.Drawing.Size(135, 20);
-            this.MaxFlaw.TabIndex = 5;
-            this.MaxFlaw.TooltipForNumeric = "";
-            this.MaxFlaw.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MaxFlaw.Enter += new System.EventHandler(this.Numeric_Entered);
-            this.MaxFlaw.Validating += new System.ComponentModel.CancelEventHandler(this.Numeric_Validating);
-            this.MaxFlaw.Validated += new System.EventHandler(this.Numeric_Validated);
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 190);
+            this.label6.Location = new System.Drawing.Point(3, 188);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 26);
+            this.label6.Size = new System.Drawing.Size(73, 28);
             this.label6.TabIndex = 24;
             this.label6.Text = "Minimum";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -197,9 +123,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 164);
+            this.label5.Location = new System.Drawing.Point(3, 160);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 26);
+            this.label5.Size = new System.Drawing.Size(73, 28);
             this.label5.TabIndex = 23;
             this.label5.Text = "Maximum";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -211,7 +137,7 @@
             this.tableLayoutPanel1.SetColumnSpan(this.label4, 4);
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(0, 148);
+            this.label4.Location = new System.Drawing.Point(0, 144);
             this.label4.Margin = new System.Windows.Forms.Padding(0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(330, 16);
@@ -239,9 +165,9 @@
             this.label3.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this.label3, 4);
             this.label3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label3.Location = new System.Drawing.Point(3, 101);
+            this.label3.Location = new System.Drawing.Point(3, 99);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(274, 47);
+            this.label3.Size = new System.Drawing.Size(274, 45);
             this.label3.TabIndex = 21;
             this.label3.Text = "Please provide flaw range of the specimens used before continuing.";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -250,7 +176,7 @@
             // 
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(28, 54);
+            this.label8.Location = new System.Drawing.Point(28, 52);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(48, 13);
             this.label8.TabIndex = 32;
@@ -260,7 +186,7 @@
             // 
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 81);
+            this.label9.Location = new System.Drawing.Point(3, 79);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(73, 13);
             this.label9.TabIndex = 30;
@@ -272,7 +198,7 @@
             this.operatorComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.operatorComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.operatorComboBox.FormattingEnabled = true;
-            this.operatorComboBox.Location = new System.Drawing.Point(82, 50);
+            this.operatorComboBox.Location = new System.Drawing.Point(82, 48);
             this.operatorComboBox.MaximumSize = new System.Drawing.Size(200, 0);
             this.operatorComboBox.Name = "operatorComboBox";
             this.operatorComboBox.Size = new System.Drawing.Size(135, 21);
@@ -284,7 +210,7 @@
             this.specimenComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.specimenComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.specimenComboBox.FormattingEnabled = true;
-            this.specimenComboBox.Location = new System.Drawing.Point(82, 77);
+            this.specimenComboBox.Location = new System.Drawing.Point(82, 75);
             this.specimenComboBox.MaximumSize = new System.Drawing.Size(200, 0);
             this.specimenComboBox.Name = "specimenComboBox";
             this.specimenComboBox.Size = new System.Drawing.Size(135, 21);
@@ -296,7 +222,7 @@
             // 
             this.label12.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(223, 81);
+            this.label12.Location = new System.Drawing.Point(223, 79);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(31, 13);
             this.label12.TabIndex = 29;
@@ -307,7 +233,7 @@
             this.SpecimenUnitComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.SpecimenUnitComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.SpecimenUnitComboBox.FormattingEnabled = true;
-            this.SpecimenUnitComboBox.Location = new System.Drawing.Point(260, 77);
+            this.SpecimenUnitComboBox.Location = new System.Drawing.Point(260, 75);
             this.SpecimenUnitComboBox.MaximumSize = new System.Drawing.Size(200, 0);
             this.SpecimenUnitComboBox.Name = "SpecimenUnitComboBox";
             this.SpecimenUnitComboBox.Size = new System.Drawing.Size(67, 21);
@@ -325,6 +251,88 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // MinFlaw
+            // 
+            this.MinFlaw.AutoSize = true;
+            this.MinFlaw.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MinFlaw.BackColor = System.Drawing.SystemColors.Control;
+            this.MinFlaw.DecimalPlaces = 3;
+            this.MinFlaw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MinFlaw.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MinFlaw.InterceptArrowKeys = true;
+            this.MinFlaw.Location = new System.Drawing.Point(79, 190);
+            this.MinFlaw.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.MinFlaw.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
+            this.MinFlaw.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            -2147483648});
+            this.MinFlaw.Name = "MinFlaw";
+            this.MinFlaw.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.MinFlaw.PartType = POD.ChartPartType.Undefined;
+            this.MinFlaw.ReadOnly = false;
+            this.MinFlaw.Size = new System.Drawing.Size(141, 24);
+            this.MinFlaw.TabIndex = 6;
+            this.MinFlaw.TooltipForNumeric = "";
+            this.MinFlaw.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.MinFlaw.Enter += new System.EventHandler(this.Numeric_Entered);
+            this.MinFlaw.Validating += new System.ComponentModel.CancelEventHandler(this.Numeric_Validating);
+            this.MinFlaw.Validated += new System.EventHandler(this.Numeric_Validated);
+            // 
+            // MaxFlaw
+            // 
+            this.MaxFlaw.AutoSize = true;
+            this.MaxFlaw.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MaxFlaw.BackColor = System.Drawing.SystemColors.Control;
+            this.MaxFlaw.DecimalPlaces = 3;
+            this.MaxFlaw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MaxFlaw.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MaxFlaw.InterceptArrowKeys = true;
+            this.MaxFlaw.Location = new System.Drawing.Point(79, 162);
+            this.MaxFlaw.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.MaxFlaw.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
+            this.MaxFlaw.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            -2147483648});
+            this.MaxFlaw.Name = "MaxFlaw";
+            this.MaxFlaw.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.MaxFlaw.PartType = POD.ChartPartType.Undefined;
+            this.MaxFlaw.ReadOnly = false;
+            this.MaxFlaw.Size = new System.Drawing.Size(141, 24);
+            this.MaxFlaw.TabIndex = 5;
+            this.MaxFlaw.TooltipForNumeric = "";
+            this.MaxFlaw.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MaxFlaw.Enter += new System.EventHandler(this.Numeric_Entered);
+            this.MaxFlaw.Validating += new System.ComponentModel.CancelEventHandler(this.Numeric_Validating);
+            this.MaxFlaw.Validated += new System.EventHandler(this.Numeric_Validated);
+            // 
             // NewHitMissRangeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -341,9 +349,9 @@
             this.TopMost = true;
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinFlaw)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxFlaw)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }

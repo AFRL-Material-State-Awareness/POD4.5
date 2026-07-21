@@ -66,6 +66,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                                                         residualTable="data.frame",
                                                                         frequencyTable="data.frame",
                                                                         normalCurveTable="data.frame",
+                                                                        qqTable="data.frame",
                                                                         modelIntercept="numeric",
                                                                         modelSlope="numeric",
                                                                         thesholdTable="data.frame",
@@ -115,6 +116,10 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         Response=c(0,0,0,0,0),
                                         Range=c(0,0,0,0,0)
                                       )
+                                      qqTable<<-data.frame(
+                                        Theoretical=c(0,0,0,0,0),
+                                        Sample=c(0,0,0,0,0)
+                                      )
                                       critPts<<-data.frame(
                                         index=-1,
                                         a_25_25=-1,
@@ -155,11 +160,23 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     getTau=function(){
                                       return(tau)
                                     },
+                                    setRawResidualTable=function(rawResidTable){
+                                      rawResidualTable<<-rawResidTable
+                                    },
+                                    getRawResidualTable=function(){
+                                      names(rawResidualTable)[names(rawResidualTable) == 'x'] <<- 'flaw'
+                                      return(rawResidualTable)
+                                    },
                                     setResidualTable=function(psResidTable){
                                       residualTable<<-psResidTable
                                     },
                                     getResidualTable=function(){
                                       names(residualTable)[names(residualTable) == 'x'] <<- 'flaw'
+
+                                      #cleanPrint("**********START getResidualTable**********")
+                                      #cleanPrint(residualTable)
+                                      #cleanPrint("**********END getResidualTable**********")
+
                                       return(residualTable)
                                     },
                                     setResults=function(psResults){
@@ -190,6 +207,12 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                     },
                                     getNormalCurveTable=function(){
                                       return(normalCurveTable)
+                                    },
+                                    setQQTable=function(psQQTable){
+                                      qqTable<<-psQQTable
+                                    },
+                                    getQQTable=function(){
+                                      return(qqTable)
                                     },
                                     setModelIntercept=function(psModelInt){
                                       modelIntercept<<-psModelInt
@@ -254,114 +277,177 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       testInstance$createAvgRespDF()
                                       signalRespDF<<-testInstance$createAvgRespDF()
                                     },
+                                    get_qq_plot_values = function(res_std) {
+                                      n <- length(res_std)
+                                      # 1. Sort residuals (Y values)
+                                      y_vals <- sort(res_std)
+                                      # 2. Calculate probabilities and theoretical quantiles (X values)
+                                      p_vals <- (1:n - 0.5) / n
+                                      x_vals <- qnorm(p_vals)
+                                      # 3. Calculate robust Reference Line (passes through 25th and 75th percentiles)
+                                      q25_x <- qnorm(0.25)
+                                      q75_x <- qnorm(0.75)
+                                      q25_y <- quantile(y_vals, 0.25, names = FALSE)
+                                      q75_y <- quantile(y_vals, 0.75, names = FALSE)
+                                      slope <- (q75_y - q25_y) / (q75_x - q25_x)
+                                      intercept <- q25_y - slope * q25_x
+                                      expected_line <- intercept + slope * x_vals
+                                      # 4. Calculate 95% Confidence Intervals (Pointwise)
+                                      # Standard error of the theoretical quantiles
+                                      se <- (1 / dnorm(x_vals)) * sqrt((p_vals * (1 - p_vals)) / n)
+                                      lower_ci <- expected_line - 1.96 * slope * se
+                                      upper_ci <- expected_line + 1.96 * slope * se
+                                      # 5. Return as a combined dataframe
+                                      return(data.frame(
+                                        theoretical_x = x_vals,
+                                        sample_y = y_vals,
+                                        reference_line = expected_line,
+                                        lower_ci_95 = lower_ci,
+                                        upper_ci_95 = upper_ci
+                                      ))
+                                    },
                                     executeAhatvsA=function(){
+
                                       #preprocess the input if there's more than one inspector
                                       setOriginalData(signalRespDF)
                                       prepareData()
                                       #perform necessary transforms
                                       performTransforms()
-                                      # Fitting a linear model
-                                      linearModel_lm <- lm(y ~ x, data = signalRespDF, na.action=na.omit)
-                                      setModelIntercept(linearModel_lm$coefficients[[1]])
-                                      setModelSlope(linearModel_lm$coefficients[[2]])
+
+                                      # --- Single, Unified Model Fit using Survival Regression ---
+                                      # survreg handles both censored and uncensored data correctly.
+                                      final_model <- genAhatVersusACensored()
+
+                                      #cleanPrint("---------------FINAL MODEL START----------------")
+                                      #cleanPrint(final_model)
+                                      #cleanPrint("---------------FINAL MODEL END------------------")
+
+                                      # Extract results from the model
+                                      setModelIntercept(final_model$coefficients[[1]])
+                                      setModelSlope(final_model$coefficients[[2]])
+                                      model_fit_values <- final_model$linear.predictors
+                                      
+                                      # Manually calculate residuals, as survreg doesn't provide them directly
+                                      residuals <- signalRespDF$y.trans - model_fit_values
+
+                                      #cleanPrint("---------------RESIDUALS START----------------")
+                                      #cleanPrint(residuals)
+                                      #cleanPrint("---------------RESIDUALS END------------------")
+
                                       #set the linear model so it can be returned
                                       linearModDF=data.frame(
-                                        #Index= 1:length(linearModel_lm$fitted.values),
                                         x=signalRespDF$x,
-                                        fit=linearModel_lm$fitted.values
+                                        fit=model_fit_values
                                       )
                                       #append the responses after the fitted value
                                       responsesAll<-subset(originalData, select = -c(Index, x, event))
                                       linearModDF<-cbind(linearModDF, responsesAll)
                                       setLinearModel(linearModDF)
-                                      #append the responses at the end of the flaws and fitted values
-                                      responsesOnly=or
-                                      setLinearModel(linearModDF)
+
                                       #don't perform linear tests if user is in transform panel
                                       if(fullAnalysis){
-                                        #peformTests
-                                        linearTests(linearM=linearModel_lm)
+                                        # Run linear tests. If censored, this function creates a temporary lm object.
+                                        updateLinearTestsCensored(final_model)
                                       }
+
                                       ##create the residual dataframe
-                                      #ResidualDF=cbind(linearModDF, linearModel_lm$residuals)
-                                      #names(ResidualDF)[names(ResidualDF) == 'linearModel_lm$residuals'] <- 't_diff'
                                       ResidualDF=data.frame(
                                         flaw=signalRespDF$x,
                                         y=signalRespDF$y,
                                         transformFlaw=rep(0, nrow(signalRespDF)),
                                         transformResponse=rep(0, nrow(signalRespDF)),
-                                        fit=linearModel_lm$fitted.values,
-                                        t_diff=linearModel_lm$residuals
+                                        fit=model_fit_values,
+                                        t_diff=residuals
                                       )
+
+                                      #cleanPrint("---------------ResidualDF START----------------")
+                                      #cleanPrint(ResidualDF)
+                                      #cleanPrint("---------------ResidualDF END------------------")
+
+                                      setRawResidualTable(ResidualDF)
+
+                                      #cleanPrint("---------------RAW RESIDUALS START----------------")
+                                      #cleanPrint(rawResidualTable)
+                                      #cleanPrint("---------------RAW RESIDUALS END------------------")
+
+                                      #cleanPrint("---------------signalRespDF START----------------")
+                                      #cleanPrint(signalRespDF)
+                                      #cleanPrint("---------------signalRespDF END------------------")
+                                      
+                                      # Filter out censored data - only include uncensored points (event == 1)
+                                      ResidualDF <- ResidualDF[signalRespDF$event == 1, ]
+
+                                      #cleanPrint("---------------ResidualDF Censored START----------------")
+                                      #cleanPrint(ResidualDF)
+                                      #cleanPrint("---------------ResidualDF Censored END------------------")
+
                                       setResidualTable(ResidualDF)
-                                      #generate ahat versus acensored
-                                      ahatvACensored<-genAhatVersusACensored()
-                                      #attach necessary attributes of the lm object to the survival censored object
-                                      #ahatvACensored$rank=linearModel_lm$rank
-                                      #ahatvACensored$qr=linearModel_lm$qr
-                                      #update paramters if any points are censored
-                                      if(0 %in% signalRespDF$event ||  2 %in% signalRespDF$event){
-                                        setModelIntercept(ahatvACensored$coefficients[[1]])
-                                        setModelSlope(ahatvACensored$coefficients[[2]])
-                                        #set the linear model so it can be returned
-                                        linearModDF=data.frame(
-                                          x=signalRespDF$x,
-                                          fit=ahatvACensored$linear.predictors
-                                        )
-                                        #append the responses after the fitted value
-                                        responsesAll<-subset(originalData, select = -c(Index, x, event))
-                                        linearModDF<-cbind(linearModDF, responsesAll)
-                                        setLinearModel(linearModDF)
-                                        #calculate the residuals from the linear model
-                                        residuals=c()
-                                        for(i in 1:nrow(linearModDF)){
-                                          thisResid=signalRespDF$y[i]-ahatvACensored$linear.predictors[i]
-                                          residuals=c(residuals, thisResid)
-                                        }
-                                        ##create the residual dataframe
-                                        ResidualDF=cbind(linearModDF, residuals)
-                                        names(ResidualDF)[names(ResidualDF) == 'residuals'] <- 't_diff'
-                                        ResidualDF=data.frame(
-                                          flaw=signalRespDF$x,
-                                          y=signalRespDF$y,
-                                          transformFlaw=rep(0, nrow(signalRespDF)),
-                                          transformResponse=rep(0, nrow(signalRespDF)),
-                                          fit=ahatvACensored$linear.predictors,
-                                          t_diff=residuals
-                                        )
-                                        setResidualTable(ResidualDF)
-                                        #don't perform linear tests if user is in transform panel
-                                        if(fullAnalysis){
-                                          #update the linear regression tests with the censored data
-                                          updateLinearTestsCensored(ahatvACensored)
-                                        }
-                                      }
+
+                                      #cleanPrint("---------------UNCENSORED RESIDUALS START----------------")
+                                      #cleanPrint(residualTable)
+                                      #cleanPrint("---------------UNCENSORED RESIDUALS END------------------")
+
                                       #global flag used to speed of transforms for signal response
                                       if(fullAnalysis){
-                                        #get the value of R-squared(TODO: check if this changes with censored data)
-                                        setRSquared(summary(linearModel_lm)$r.squared)
+                                        # R-squared is not directly applicable for survreg in the same way as lm.
+                                        # We will only set it for the uncensored case where survreg is equivalent to lm.
+                                        is_censored <- (0 %in% signalRespDF$event || 2 %in% signalRespDF$event)
+                                        if (!is_censored) {
+                                          # For uncensored data, we can create a temporary lm object to get R-squared
+                                          temp_lm <- lm(y.trans ~ x.trans, data = signalRespDF)
+                                          setRSquared(summary(temp_lm)$r.squared)
+                                        } else {
+                                          # For censored data, calculate a pseudo R-squared based on uncensored points
+                                          uncensored_indices <- which(signalRespDF$event == 1)
+                                          uncensored_y <- signalRespDF$y.trans[uncensored_indices]
+                                          uncensored_fit <- model_fit_values[uncensored_indices]
+                                          ss_res <- sum((uncensored_y - uncensored_fit)^2)
+                                          ss_tot <- sum((uncensored_y - mean(uncensored_y))^2)
+                                          setRSquared(1 - (ss_res / ss_tot))
+                                        }
+
                                         #find the key a values and the covariance matrix
-                                        genAvaluesAndMatrix(ahatvACensored)
+                                        genAvaluesAndMatrix(final_model)
                                         #calculate the standard errors for regression
-                                        calcStandardErrs(ahatvACensored)
+                                        calcStandardErrs(final_model)
                                         #generates the thesholds table for UI
-                                        genThresholdsTable(ahatvACensored)
+                                        genThresholdsTable(final_model)
                                         #function that generates the POD curve and stores the results
                                         genPODCurve()
-                                        #generate the normality chart
-                                        responsesCheck=data.frame(y=signalRespDF$y, event = signalRespDF$event)
-                                        normalityCheck<-GenerateNormalityTable$new(responses=subset(responsesCheck, event==1), responsesMin = min(responsesCheck$y), responsesMax = max(responsesCheck$y))
+                                        # --- New Normality Check Logic (using ResidualDF) ---
+                                        # All subsequent calculations will use the residuals from the main model fit.
+                                        normality_responses <- data.frame(y = residualTable$t_diff)
+
+                                        # This ensures the histogram, its range, and the curve are all consistent.
+                                        normalityCheck <- GenerateNormalityTable$new(
+                                          responses = normality_responses,
+                                          responsesMin = min(normality_responses$y),
+                                          responsesMax = max(normality_responses$y)
+                                        )
                                         normalityCheck$GenFrequencyTable()
                                         setFreqTable(normalityCheck$getFreqTable())
-                                        #generate a dataframe that creates a normal curve based on the responses
-                                        xfit <- seq(min(signalRespDF$y), max(signalRespDF$y), length = nrow(signalRespDF)) 
-                                        yfit <- dnorm(xfit, mean = mean(signalRespDF$y), sd = sd(signalRespDF$y)) 
-                                        #yfit <- yfit * diff(h$mids[1:2]) * length(g) 
-                                        yfit <- yfit * diff(normalityCheck$getFreqTable()$Range[1:2]) * length(signalRespDF$y) 
-                                        setNormalCurveTable(data.frame(Response=xfit, Range=yfit))
-                                        #setNormalCurveTable(data.frame(Response=signalRespDF$y, Range=dnorm(signalRespDF$y, mean = mean(signalRespDF$y),  sd =sd(signalRespDF$y))))
-                                      }
-                                      
+
+                                        # Generate curve data from the same residuals
+                                        xfit <- seq(min(normality_responses$y), max(normality_responses$y), length = nrow(normality_responses))
+                                        yfit <- dnorm(xfit, mean = mean(normality_responses$y), sd = sd(normality_responses$y))
+
+                                        # Perform scaling to match histogram frequencies
+                                        if (nrow(normalityCheck$getFreqTable()) > 1) {
+                                          yfit <- yfit * diff(normalityCheck$getFreqTable()$Range[1:2]) * nrow(normality_responses)
+                                        } else {
+                                          yfit <- yfit * 1 * nrow(normality_responses) # Fallback if only one bin
+                                        }
+
+                                        setNormalCurveTable(data.frame(Response = xfit, Range = yfit))
+                                        # --- End of New Normality Check Logic ---
+
+                                        # Get standardized residuals (using scale() on our existing residuals)
+                                        standard_res <- scale(residualTable$t_diff)
+
+                                        qqDataFrame <- get_qq_plot_values(standard_res)
+
+                                        setQQTable(qqDataFrame)
+                                      }                                      
                                     },
                                     genPODCurve=function(){
                                       #calculate POD dataframe
@@ -388,61 +474,97 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       # Test for auto-correlation (ie, a pattern in the data due to "time," or in this case, order)
                                       # Data does not have auto-correlation. 
                                       durbinWTest=durbinWatsonTest(linearM)
-                                      #test for lack of fit (compare the models when using slope and without)
-                                      full<-lm(y~x, data=signalRespDF)
-                                      #partial<-lm(y~rep(full$coefficients[[1]], nrow(signalRespDF)), data= signalRespDF)
-                                      partial<-lm(y~1, data= signalRespDF)
-                                      #lackOfFitTest<-Anova(full, partial)
+                                      
+                                      # Default fallback data frame to prevent downstream UI crashes
                                       lackOfFitTest<-data.frame(
                                         'Sum sq'=c(0,0),
                                         'Df'=c(1,0),
                                         'F value'=c(0,0),
-                                        'Pr(>F)'=c(0, 0)
+                                        'Pr(>F)'=c(0, 0),
+                                        check.names = FALSE
                                       )
-                                      tryCatch(expr = {lackOfFitTest<-Anova(full, partial)},
-                                               error = function(e){
-                                                 #cat("error ocurred!")
-                                               })
+                                      
+                                      # --- FIX: Move model reduction INSIDE tryCatch and use safer scoping ---
+                                      tryCatch(expr = {
+                                        full <- linearM
+                                        
+                                        # Use the model's internally stored data frame. This prevents scoping/environment crashes.
+                                        partial <- lm(y ~ 1, data = linearM$model)
+                                        
+                                        # Base anova() correctly compares two models to get the lack-of-fit F-test
+                                        a_res <- anova(partial, full)
+                                        
+                                        # Extract the correct row so it matches what the UI expects
+                                        lackOfFitTest <- data.frame(
+                                          'Sum sq' = c(a_res$`Sum of Sq`[2], 0),
+                                          'Df' = c(a_res$Df[2], 0),
+                                          'F value' = c(a_res$F[2], 0),
+                                          'Pr(>F)' = c(a_res$`Pr(>F)`[2], 0),
+                                          check.names = FALSE
+                                        )
+                                      },
+                                      error = function(e){
+                                        # Silently fallback to zeros if test fails
+                                      })
+                                      
                                       setLinearTestResults(list(shapiro,nonConst,durbinWTest,lackOfFitTest[1,]))
                                     },
                                     genAhatVersusACensored=function(){
                                       # It expects a censored object; this data is not censored but we can still use it.
                                       # Note, we are using the Box Cox transformed y and f_a (log) transformed x
-                                      censored.a.hat <- Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event, event=signalRespDF$event, type="interval")
+                                      censored.a.hat <- Surv(signalRespDF$y.trans, signalRespDF$event)
+                                      #cleanPrint("-----START censored.a.hat------")
+                                      #cleanPrint(censored.a.hat)
+                                      #cleanPrint("-----END censored.a.hat------")
+                                        #Surv(time = signalRespDF$y.trans, time2 = signalRespDF$event, event=signalRespDF$event, type="interval")
                                       #censored.a.hat <- Surv(time = signalRespDF$y, time2 = signalRespDF$y, type = "interval2")
                                       a.hat.censor.df <- data.frame(censored.a.hat, x = f_a(signalRespDF$x))
+
+                                      #cleanPrint("-----START a.hat.censor.df------")
+                                      #cleanPrint(a.hat.censor.df)
+                                      #cleanPrint("-----END a.hat.censor.df------")
+
                                       # Here's the linear model.
-                                      a.hat.vs.a.censored <- survreg(formula = censored.a.hat ~ x,
-                                                                     dist = "gaussian", data = a.hat.censor.df)
+                                      a.hat.vs.a.censored <- survreg(censored.a.hat~x,data=a.hat.censor.df, dist='gaussian')
+
+
+                                      #cleanPrint("-----START a.hat.vs.a.censored------")
+                                      #cleanPrint(a.hat.vs.a.censored)
+                                      #cleanPrint("-----END a.hat.censor.df------")
+
+                                        #survreg(formula = censored.a.hat ~ x,
+                                                            #dist = "gaussian", data = a.hat.censor.df)
                                       #a.hat.vs.a.censored <-survreg(formula= Surv(y.trans, event)~x, dist= "gaussian", data= signalRespDF)
                                       return(a.hat.vs.a.censored)
                                     },
                                     ##converts the survreg object into a lm object in order to run the linear tests on the censored data
                                     ##TODO: ask christie about this to see if it's valid
                                     updateLinearTestsCensored=function(ahatvACensored){
-                                      newSignalDF_Fit<-data.frame(x= signalRespDF$x, y=ahatvACensored$linear.predictors)
-                                      newCensoredLMObject<-lm(y~x, data=newSignalDF_Fit,na.action=na.omit)
-                                      newCensoredLMObject$model$y=signalRespDF$y
-                                      newResiduals=c()
-                                      for(i in 1:length(newCensoredLMObject$fitted.values)){
-                                        residual=newCensoredLMObject$model$y[i]-newCensoredLMObject$fitted.values[i]
-                                        newResiduals=c(newResiduals, residual)
-                                      }
-                                      newCensoredLMObject$residuals=newResiduals
-                                      #global<<-newCensoredLMObject
+                                      # --- FIX: Filter out censored data to prevent artificial spikes in residual tests ---
+                                      uncensored_indices <- which(signalRespDF$event == 1)
+                                      
+                                      # Fit a temporary OLS model on STRICTLY the uncensored, transformed data
+                                      temp_uncensored_df <- data.frame(
+                                        x = signalRespDF$x.trans[uncensored_indices], 
+                                        y = signalRespDF$y.trans[uncensored_indices]
+                                      )
+                                      
+                                      newCensoredLMObject<-lm(y~x, data=temp_uncensored_df)
+                                      
+                                      # Run tests on this clean, uncensored lm object
                                       linearTests(newCensoredLMObject)
                                     },
                                     genAvaluesAndMatrix=function(a.hat.vs.a.censored){
                                       a.hat.decision = y_dec 
-                                      if(modelType==3 || modelType==4){
-                                        a.hat.decision=log(a.hat.decision)
-                                      }
-                                      else if(modelType==5 || modelType==6 || modelType==7){
-                                        a.hat.decision=(a.hat.decision^lambda-1)/lambda
-                                      }
-                                      else if(modelType==8 || modelType==9 || modelType==12){
-                                        a.hat.decision= 1/a.hat.decision
-                                      }
+                                      #if(modelType==3 || modelType==4){
+                                      #  a.hat.decision=log(a.hat.decision)
+                                      #}
+                                      #else if(modelType==5 || modelType==6 || modelType==7){
+                                      #  a.hat.decision=(a.hat.decision^lambda-1)/lambda
+                                      #}
+                                      #else if(modelType==8 || modelType==9 || modelType==12){
+                                      #  a.hat.decision= 1/a.hat.decision
+                                      #}
                                       a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                       a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                       a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma
@@ -495,7 +617,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                         a50 <- aMu
                                         a90 <- aMu + qnorm(0.9) * aSigma
                                         z90 <- qnorm(0.9)
-                                        #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -1), nrow = 3, byrow = FALSE)
+                                        #  a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
                                         a.U = (-1/a.b1)*matrix(c(1, aMu, 0, 0, aSigma, -a.tau), nrow = 3, byrow = FALSE)
                                         a.V_POD = t(a.U)%*%varCovarMatrix%*%a.U
                                         SD.a.90 = sqrt(a.V_POD[1,1]+2*z90*a.V_POD[1,2]+(z90^2)*a.V_POD[2,2])
@@ -516,25 +638,15 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       setThresholdDF(threshDataFrame)
                                     },
                                     calcStandardErrs=function(myLinFit){
-                                      #k=number of model parameters
-                                      k=2
-                                      y_residualsSq=c()
-                                      x_residualsSq=c()
-                                      for(i in 1:nrow(signalRespDF)){
-                                        if(class(myLinFit)=="lm"){
-                                          thisResid_y= signalRespDF$y[i] - myLinFit$fitted.values[i]
-                                        }
-                                        else{
-                                          thisResid_y=  signalRespDF$y[i] - myLinFit$linear.predictors[i]
-                                        }
-                                        thisResid_x= signalRespDF$x[i]-mean(signalRespDF$x)
-                                        y_residualsSq=c(y_residualsSq, thisResid_y^2)
-                                        x_residualsSq=c(x_residualsSq, thisResid_x^2)
-                                      }
                                       slopeStdError=summary(myLinFit)$table[2,2]
                                       interceptStdError=summary(myLinFit)$table[1,2]
-                                      residualError=sqrt(sum(y_residualsSq)/(nrow(signalRespDF)-k-1))
-                                      #copied from python code in PODv4.0---need to validate this
+                                      # The residual standard error (sigma) is the 'scale' parameter from the survreg model.
+                                      # The original manual calculation was incorrect due to a faulty calculation of
+                                      # residuals and degrees of freedom. myLinFit$scale is the statistically
+                                      # correct value for this model.
+                                      residualError <- myLinFit$scale
+                                      # This is a valid application of the Delta Method to find the standard error of the scale parameter (residualError).
+                                      # It uses the variance of the Log(scale) parameter, which is myLinFit$var[3,3].
                                       residualErrorStdError=sqrt(varCovarMatrix[3,3])*residualError
                                       #stored as: slope std error, slope intercept std error, and residual error
                                       stdErrors=list(slopeStdError, interceptStdError, residualError, residualErrorStdError)
@@ -567,5 +679,19 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       # Barplot
                                       ggplot(df, aes(x=Range, y=Freq)) + 
                                         geom_bar(stat = "identity", width=.00001)
+                                    },
+                                    cleanPrint=function(x) {
+                                      # 1. Capture the output
+                                      raw_output <- capture.output(print(x))
+
+                                      # 2. Collapse and Strip weird characters
+                                      combined_output <- paste(raw_output, collapse = "\n")
+                                      clean_output <- gsub("[\x02\x03\xff\xfe]", "", combined_output)
+
+                                      # 3. ACTUALLY PRINT TO CONSOLE
+                                      cat(clean_output, "\n") 
+  
+                                      # Return it just in case you need to assign it to a variable
+                                      return(invisible(clean_output)) 
                                     }
                                   ))

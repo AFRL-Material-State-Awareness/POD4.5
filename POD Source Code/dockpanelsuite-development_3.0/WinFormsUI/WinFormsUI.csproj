@@ -60,10 +60,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DockPanelSuite.3.1.1\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DockPanelSuite.ThemeVS2015.3.1.1\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Docking\DockPanel.SplitterDragHandler.cs">
@@ -228,6 +235,9 @@
     <Compile Include="Docking\Win32\NativeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Docking\DockContent.resx">
+      <DependentUpon>DockContent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Docking\DockPane.resx">
       <DependentUpon>DockPane.cs</DependentUpon>
     </EmbeddedResource>
@@ -283,6 +293,7 @@
     <None Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Docking\DockPanel.bmp" />

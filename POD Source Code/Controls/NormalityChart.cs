@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="NormalityChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,25 +34,38 @@ namespace POD.Controls
         public NormalityChart()
         {
             InitializeComponent();
-            if (!this.DesignMode)
-                PrepareChart();
+
+            //all charts should be added through SetupChart()
+            Series.Clear();
         }
-        private void PrepareChart()
+
+        public override void SetupChart(string flawName, string flawUnit, List<string> responseNames, List<string> responseUnits)
         {
-            this.Series.Clear();
-            this.bars = this.Series.Add(POD.NormalityChart.NormalityHistogram);
-            this.Series[POD.NormalityChart.NormalityHistogram].Color = POD.ChartColors.a90Color;
-            this.Series[POD.NormalityChart.NormalityHistogram].IsVisibleInLegend = false;
-            this.normalCurve = this.Series.Add(POD.NormalityChart.NormalCurve);
-            this.Series[POD.NormalityChart.NormalCurve].ChartType= SeriesChartType.Line;
-            this.Series[POD.NormalityChart.NormalCurve].BorderWidth = 4;
-            this.Series[POD.NormalityChart.NormalCurve].Color = POD.ChartColors.a9095Color;
+            if (Series.FindByName(POD.NormalityChart.NormalityHistogram) == null)
+            {
+                this.bars = this.Series.Add(POD.NormalityChart.NormalityHistogram);
+                this.Series[POD.NormalityChart.NormalityHistogram].Color = POD.ChartColors.a90Color;
+                this.Series[POD.NormalityChart.NormalityHistogram].IsVisibleInLegend = false;
+            }
+
+            if (Series.FindByName(POD.NormalityChart.NormalCurve) == null)
+            {
+                this.normalCurve = this.Series.Add(POD.NormalityChart.NormalCurve);
+                this.Series[POD.NormalityChart.NormalCurve].ChartType = SeriesChartType.Line;
+                this.Series[POD.NormalityChart.NormalCurve].BorderWidth = 4;
+                this.Series[POD.NormalityChart.NormalCurve].Color = POD.ChartColors.a9095Color;
+            }
+
             this.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
             this.ChartAreas[0].AxisY.MinorGrid.Enabled = false;
             this.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
             this.ChartAreas[0].AxisX.MinorGrid.Enabled = false;
-            this.ChartAreas[0].AxisX.Title = "Responses";
-            this.ChartAreas[0].AxisY.Title = "Count";
+            this.SingleSeriesCount = 3;
+
+            XAxisTitle = $"Residual ({responseUnits[0]})";
+            YAxisTitle = "Frequency";
+            YAxisNameIsUnitlessConstant = true;
+            ChartTitle = "Normality";
         }
         public void FillChart(DataTable normalityTable, DataTable normalCurveTable)
         {
@@ -67,8 +96,8 @@ namespace POD.Controls
             {
                 var text = "";
 
-                text += "Normality of the transformed responses."+ Environment.NewLine;
-                text += "The responses should roughly be in the shape of a normal distribution." + Environment.NewLine;
+                text += "Normality of the transformed responses.\n";
+                text += "The responses should roughly be in the shape of a normal distribution.\n";
                 text += "If sample size is small, this may not be possible.";
 
                 return text;

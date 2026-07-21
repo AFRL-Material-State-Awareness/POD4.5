@@ -49,6 +49,55 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controls.UnitTests", "Contr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.UnitTests", "Data.UnitTests\Data.UnitTests.csproj", "{62E4AC60-2972-4498-B453-5F36FA9D698A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "R Source Code", "R Source Code", "{5A256A21-220F-489E-A48F-5B92F9CB2904}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HitMiss", "HitMiss", "{521D8858-0A6C-4880-AF08-2CA4061BC8F1}"
+	ProjectSection(SolutionItems) = preProject
+		RCode\RBackend\HitMiss\GenAValuesOnPODCurveRObject.R = RCode\RBackend\HitMiss\GenAValuesOnPODCurveRObject.R
+		RCode\RBackend\HitMiss\GenNormFitClassR.R = RCode\RBackend\HitMiss\GenNormFitClassR.R
+		RCode\RBackend\HitMiss\GenPODCurveRSS.R = RCode\RBackend\HitMiss\GenPODCurveRSS.R
+		RCode\RBackend\HitMiss\GenRSS_A_Values.R = RCode\RBackend\HitMiss\GenRSS_A_Values.R
+		RCode\RBackend\HitMiss\GetHighestPrecision.R = RCode\RBackend\HitMiss\GetHighestPrecision.R
+		RCode\RBackend\HitMiss\GPLv3.R = RCode\RBackend\HitMiss\GPLv3.R
+		RCode\RBackend\HitMiss\HitMissInternalRGraphingOutputFunctions_NO_UI.R = RCode\RBackend\HitMiss\HitMissInternalRGraphingOutputFunctions_NO_UI.R
+		RCode\RBackend\HitMiss\HitMissMainAnalysisRObject.R = RCode\RBackend\HitMiss\HitMissMainAnalysisRObject.R
+		RCode\RBackend\HitMiss\HMFirthApproximationRObject.R = RCode\RBackend\HitMiss\HMFirthApproximationRObject.R
+		RCode\RBackend\HitMiss\HMLogitApproximationRObject.R = RCode\RBackend\HitMiss\HMLogitApproximationRObject.R
+		RCode\RBackend\HitMiss\LinearComboGeneratorClassR.R = RCode\RBackend\HitMiss\LinearComboGeneratorClassR.R
+		RCode\RBackend\HitMiss\LRConfIntRObject.R = RCode\RBackend\HitMiss\LRConfIntRObject.R
+		RCode\RBackend\HitMiss\MainRSSamplingDataInR.R = RCode\RBackend\HitMiss\MainRSSamplingDataInR.R
+		RCode\RBackend\HitMiss\miniMcprofile.R = RCode\RBackend\HitMiss\miniMcprofile.R
+		RCode\RBackend\HitMiss\miniMcprofileChanges_GPL_Compliant.R = RCode\RBackend\HitMiss\miniMcprofileChanges_GPL_Compliant.R
+		RCode\RBackend\HitMiss\MLRConfIntRObject.R = RCode\RBackend\HitMiss\MLRConfIntRObject.R
+		RCode\RBackend\HitMiss\OutputToExcel_ForRunningInOnly_R.R = RCode\RBackend\HitMiss\OutputToExcel_ForRunningInOnly_R.R
+		RCode\RBackend\HitMiss\PODConsoleMainAnalysisControl.R = RCode\RBackend\HitMiss\PODConsoleMainAnalysisControl.R
+		RCode\RBackend\HitMiss\RankedSetRegGen.R = RCode\RBackend\HitMiss\RankedSetRegGen.R
+		RCode\RBackend\HitMiss\RankedSetSamplingMainRObject.R = RCode\RBackend\HitMiss\RankedSetSamplingMainRObject.R
+		RCode\RBackend\HitMiss\RSSComponentsObject.R = RCode\RBackend\HitMiss\RSSComponentsObject.R
+		RCode\RBackend\HitMiss\RunHitmissMainRScript_RankedSetSampling.R = RCode\RBackend\HitMiss\RunHitmissMainRScript_RankedSetSampling.R
+		RCode\RBackend\HitMiss\RunHitmissMainRScript_SimpleRandomSampling.R = RCode\RBackend\HitMiss\RunHitmissMainRScript_SimpleRandomSampling.R
+		RCode\RBackend\HitMiss\TransformBackFunctions_ForRunningInOnly_R.R = RCode\RBackend\HitMiss\TransformBackFunctions_ForRunningInOnly_R.R
+		RCode\RBackend\HitMiss\WaldCI_RObject.R = RCode\RBackend\HitMiss\WaldCI_RObject.R
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AHatVsA", "AHatVsA", "{F71DF557-BDBA-41E5-81C0-09AEC557200E}"
+	ProjectSection(SolutionItems) = preProject
+		RCode\RBackend\SignalResponseCode\BoxCoxTransform.R = RCode\RBackend\SignalResponseCode\BoxCoxTransform.R
+		RCode\RBackend\SignalResponseCode\GenFrequencyTableR.R = RCode\RBackend\SignalResponseCode\GenFrequencyTableR.R
+		RCode\RBackend\SignalResponseCode\GenPODSignalResponeRObject.R = RCode\RBackend\SignalResponseCode\GenPODSignalResponeRObject.R
+		RCode\RBackend\SignalResponseCode\PrepareDataWithMultipleResponsesRObject.R = RCode\RBackend\SignalResponseCode\PrepareDataWithMultipleResponsesRObject.R
+		RCode\RBackend\SignalResponseCode\RecalculatePODGhostCurve.R = RCode\RBackend\SignalResponseCode\RecalculatePODGhostCurve.R
+		RCode\RBackend\SignalResponseCode\RunSignalResponseLocalMainRScript.R = RCode\RBackend\SignalResponseCode\RunSignalResponseLocalMainRScript.R
+		RCode\RBackend\SignalResponseCode\SignalResponseMainAnalysisRObject.R = RCode\RBackend\SignalResponseCode\SignalResponseMainAnalysisRObject.R
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{132D8563-CC29-4DD2-8884-24D8884D5098}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfiumViewer", "PdfiumViewer-smooth-scroll\PdfiumViewer\PdfiumViewer.csproj", "{438914B6-5D1C-482C-B942-5C0E057EEF6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -743,9 +792,43 @@ Global
 		{62E4AC60-2972-4498-B453-5F36FA9D698A}.SingleImage|x64.Build.0 = Debug|Any CPU
 		{62E4AC60-2972-4498-B453-5F36FA9D698A}.SingleImage|x86.ActiveCfg = Debug|Any CPU
 		{62E4AC60-2972-4498-B453-5F36FA9D698A}.SingleImage|x86.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.CD_ROM|Any CPU.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.CD_ROM|Any CPU.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.CD_ROM|x64.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.CD_ROM|x86.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.CD_ROM|x86.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Debug|x64.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Debug|x86.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.DVD-5|x64.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.DVD-5|x64.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.DVD-5|x86.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.DVD-5|x86.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Release|x64.ActiveCfg = Release|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Release|x64.Build.0 = Release|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Release|x86.ActiveCfg = Release|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.Release|x86.Build.0 = Release|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.SingleImage|Any CPU.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.SingleImage|Any CPU.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.SingleImage|x64.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.SingleImage|x64.Build.0 = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.SingleImage|x86.ActiveCfg = Debug|Any CPU
+		{438914B6-5D1C-482C-B942-5C0E057EEF6F}.SingleImage|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{521D8858-0A6C-4880-AF08-2CA4061BC8F1} = {5A256A21-220F-489E-A48F-5B92F9CB2904}
+		{F71DF557-BDBA-41E5-81C0-09AEC557200E} = {5A256A21-220F-489E-A48F-5B92F9CB2904}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4383F24-16AD-4337-9615-43FDCFCEF432}

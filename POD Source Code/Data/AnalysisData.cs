@@ -1,4 +1,20 @@
-﻿using System;
+﻿﻿// <copyright file="AnalysisData.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -24,6 +40,8 @@ namespace POD.Data
 
         [NonSerialized]
         public List<SortPoint> sortByX = new List<SortPoint>();
+        [NonSerialized]
+        private IDataTransformer _displayTransformer;
         private int _prevAbove;
         private int _prevBelow;
         private bool _prevBelowDoesNotInclude;
@@ -185,6 +203,11 @@ namespace POD.Data
         private DataTable _normalityCurveTable;
 
         /// <summary>
+        /// Table holds the theoretical and sample quantiles for the Q-Q plot
+        /// </summary>
+        private DataTable _qqTable;
+
+        /// <summary>
         /// used to store and plot the original data (mainly used when modified wald, lr, or mlr is used
         /// </summary>
         private DataTable _originalData;
@@ -280,8 +303,25 @@ namespace POD.Data
         public double ResponseLeft { get; set; }
         public double ResponseRight { get; set; }
         private double _smallestFlawSize;
+        private double _largestFlawSize;
         private double _smallestResponse;
+        private double _largestResponse;
         public bool IsFrozen { get; set; }
+
+        public bool MissingData
+        {
+            get
+            {
+                if (this.DataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    return this.HMAnalysisObject.Flaws.Count() == 0;
+                }
+                else
+                {
+                    return this.AHATAnalysisObject.Flaws.Count() == 0 || this.AHATAnalysisObject.FlawsCensored.Count() == this.AHATAnalysisObject.Flaws.Count();
+                }
+            }
+        }
 
         private double _minSignal = 0.0;
 
@@ -289,6 +329,36 @@ namespace POD.Data
         {
             get { return _minSignal; }
             set { _minSignal = value; }
+        }
+
+        public int FlawsCensoredAboveMaxCount
+        {
+            get
+            {
+                if (this.DataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    return this.HMAnalysisObject.ExcludedFlaws.Where(x => x >= MaxFlaw).Count();
+                }
+                else
+                {
+                    return this.AHATAnalysisObject.ExcludedFlaws.Where(x => x >= MaxFlaw).Count();
+                }
+            }
+        }
+
+        public int FlawsCensoredBelowMinCount
+        {
+            get
+            {
+                if (this.DataType == AnalysisDataTypeEnum.HitMiss)
+                {
+                    return this.HMAnalysisObject.ExcludedFlaws.Where(x => x <= MinFlaw).Count();
+                }
+                else
+                {
+                    return this.AHATAnalysisObject.ExcludedFlaws.Where(x => x <= MinFlaw).Count();
+                }
+            }
         }
 
         private double _minFlaw = 0.0;
@@ -468,7 +538,7 @@ namespace POD.Data
         {
             get
             {
-                TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
+                TransformData(AxisKind.X, _activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
                                   _customFlawTransformEquation);
 
                 return _activatedTransformedFlawTable;
@@ -507,7 +577,7 @@ namespace POD.Data
         {
             get
             {
-                TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
+                TransformData(AxisKind.Y, _activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
                               _customResponseTransformEquation);
 
 
@@ -599,7 +669,7 @@ namespace POD.Data
             {
                 _flawTransform = value;
 
-                TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable,
+                TransformData(AxisKind.X, _activatedFlawTable, ref _activatedTransformedFlawTable,
                     _flawTransform, _customFlawTransformEquation);
 
                 RefreshTurnedOffPoints();
@@ -635,13 +705,24 @@ namespace POD.Data
             get { return _normalityCurveTable; }
         }
 
+        public DataTable QQTable
+        {
+            get { return _qqTable; }
+        }
+
         public DataTable OriginalData
         {
             get { return _originalData; }
         }
         public double LambdaValue
         {
-            get { return _aHatAnalysisObject.Lambda; }
+            get
+            {
+                if (_aHatAnalysisObject != null)
+                    return _aHatAnalysisObject.Lambda;
+                else
+                    return 0.0;
+            }
         }
         /// <summary>
         ///     Get/set the response data transform type
@@ -653,7 +734,7 @@ namespace POD.Data
             {
                 _responseTransform = value;
 
-                TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable,
+                TransformData(AxisKind.Y, _activatedResponseTable, ref _activatedTransformedResponseTable,
                     _responseTransform, _customResponseTransformEquation);
 
                 RefreshTurnedOffPoints();
@@ -701,7 +782,7 @@ namespace POD.Data
         public DataTable ActivateFlaw(String myName, bool runUpdate = true)
         {
             ActivateValue(ref _activatedFlaws, myName, ref _activatedFlawTable, _availableFlawsTable);
-            TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
+            TransformData(AxisKind.X, _activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
                 _customFlawTransformEquation);
 
             if (runUpdate)
@@ -717,10 +798,8 @@ namespace POD.Data
         /// <returns>a data table containing the flaw data</returns>
         public DataTable ActivateFlaws(List<string> myNames, bool runUpdate = true)
         {
-            ActivateValues(ref _activatedFlaws, myNames, ref _activatedFlawTable, _availableFlawsTable);
-            TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
-                _customFlawTransformEquation);
-
+            ActivateValues(ref _activatedFlaws, myNames, ref _activatedFlawTable, _availableFlawsTable);            
+            
             if (runUpdate)
                 UpdateData();
 
@@ -748,9 +827,7 @@ namespace POD.Data
         public DataTable ActivateResponses(List<string> myNames, bool runUpdate = true)
         {
             ActivateValues(ref _activatedResponses, myNames, ref _activatedResponseTable, ref _calculatedResponseTable, _availableResponsesTable);
-            TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
-                _customResponseTransformEquation);
-
+            
             if (runUpdate)
             {
                 RefreshTurnedOffPoints();
@@ -873,7 +950,8 @@ namespace POD.Data
                 _residualUncensoredTable,
                 _thresholdPlotTable,
                 _thresholdPlotTable_All,
-                _originalData
+                _originalData,
+                _qqTable
             };
 
 
@@ -903,6 +981,7 @@ namespace POD.Data
             data._thresholdPlotTable = new DataTable();
             data._thresholdPlotTable_All = new DataTable();
             data._originalData = new DataTable();
+            data._qqTable = new DataTable();
             var toTables = new List<DataTable>
             {
                 data._activatedFlawTable,
@@ -929,7 +1008,8 @@ namespace POD.Data
                 data._residualUncensoredTable,
                 data._thresholdPlotTable,
                 data._thresholdPlotTable_All,
-                data._originalData
+                data._originalData,
+                data._qqTable
             };
 
             Debug.Assert(fromTables.Count == toTables.Count);
@@ -1073,6 +1153,7 @@ namespace POD.Data
             _activatedTransformedResponseTable = new DataTable();
             _podCurveTable = new DataTable();
             _thresholdPlotTable = new DataTable();
+            _qqTable = new DataTable();
 
             _turnedOffPoints = new List<DataPointIndex>();
 
@@ -1081,9 +1162,7 @@ namespace POD.Data
 
             _updatePythonData = true;
 
-            TransformBackLambda = null;
             SortByXIn = null;
-
         }
 
         /// <summary>
@@ -1147,23 +1226,35 @@ namespace POD.Data
             if (_dataType == AnalysisDataTypeEnum.HitMiss)
                 _flawTransform = TransformTypeEnum.Log;
 
-            TransformData(_activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
-                _customResponseTransformEquation);
-            TransformData(_activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
-                _customFlawTransformEquation);
+            //TransformActiveFlaws();
+            //TransformActivateResponses();
 
             _updatePythonData = true;
 
             RefreshTurnedOffPoints();
             UpdateData();
 
-            CalculateMinFlaw();
-            CalculateMinResponse();
+            CalculateFlawDataRange();
+            CalculateResponseRange();
         }
+
+        private void TransformActivateResponses()
+        {
+            TransformData(AxisKind.Y, _activatedResponseTable, ref _activatedTransformedResponseTable, _responseTransform,
+                _customResponseTransformEquation);
+        }
+
+        private void TransformActiveFlaws()
+        {
+            TransformData(AxisKind.X, _activatedFlawTable, ref _activatedTransformedFlawTable, _flawTransform,
+                _customFlawTransformEquation);
+        }
+
         //Method is used to calculate the minimum flaw size of the dataset
-        private void CalculateMinFlaw()
+        private void CalculateFlawDataRange()
         {
             double minFlaw = double.MaxValue;
+            double maxFlaw = double.MinValue;
             var flaws = _availableFlawsTable;
             //printDT(_availableFlawsTable);
             //used for quick analysis
@@ -1174,14 +1265,17 @@ namespace POD.Data
             {
                 var flaw = dr.Field<double>(0);
                 minFlaw = Math.Min(minFlaw, flaw);
+                maxFlaw = Math.Max(maxFlaw, flaw);
             }
 
             _smallestFlawSize = minFlaw;
+            _largestFlawSize = maxFlaw;
         }
 
-        private void CalculateMinResponse()
+        private void CalculateResponseRange()
         {
             double minResponse = double.MaxValue;
+            double maxResponse = double.MinValue;
             var responses = _availableResponsesTable;
 
             //used for quick analysis
@@ -1195,10 +1289,12 @@ namespace POD.Data
                     double response = dr.Field<double>(col);
 
                     minResponse = Math.Min(minResponse, response);
+                    maxResponse = Math.Max(maxResponse, response);
                 }
             }
 
             _smallestResponse = minResponse;
+            _largestResponse = maxResponse;
         }
 
         /// <summary>
@@ -1217,7 +1313,7 @@ namespace POD.Data
         /// <param name="myTransformTable">table that holds transformed data</param>
         /// <param name="myTransformType">what function should be used to transform the data</param>
         /// <param name="myCustomEquation">equation to use if it is a custom transform</param>
-        private void TransformData(DataTable mySourceTable, ref DataTable myTransformTable,
+        private void TransformData(AxisKind axis, DataTable mySourceTable, ref DataTable myTransformTable,
                                    TransformTypeEnum myTransformType, string myCustomEquation)
         {
             if ((_hmAnalysisObject != null || _aHatAnalysisObject != null) && _python != null)
@@ -1243,7 +1339,7 @@ namespace POD.Data
                     //var maxChanged = new List<int>();
 
                     //filter or keep values to transform safe
-                    if (myTransformType == TransformTypeEnum.Inverse || myTransformType == TransformTypeEnum.Log || myTransformType == TransformTypeEnum.BoxCox)// || FilterTransformedDataByRanges)
+                    if (myTransformType == TransformTypeEnum.Inverse || myTransformType == TransformTypeEnum.Log)// || myTransformType == TransformTypeEnum.BoxCox)// || FilterTransformedDataByRanges)
                     {
                         for (int i = 0; i < values.Count; i++)
                         {
@@ -1255,10 +1351,15 @@ namespace POD.Data
                         }
                     }
 
-                    for (int i = 0; i < values.Count(); i++)
+                    Func<double, double> transform = TransformValueForXAxis;
+
+                    if (axis == AxisKind.Y)
                     {
-                        values[i] = TransformAValue(values[i], _python.TransformEnumToInt(myTransformType));
+                        transform = TransformValueForYAxis;
                     }
+
+                    values = values.Select(x => transform(x)).ToList();
+
                     //copy transformed data back to the other table
                     int index = 0;
                     foreach (double value in values)
@@ -1502,9 +1603,21 @@ namespace POD.Data
                 return;
             _python = myPy;
             if (_hmAnalysisObject == null && _dataType == AnalysisDataTypeEnum.HitMiss)
+            {
                 _hmAnalysisObject = _python.HitMissAnalsysis(myAnalysisName);
+                _aHatAnalysisObject = null;
+            }
             else if (_aHatAnalysisObject == null && _dataType == AnalysisDataTypeEnum.AHat)
+            {
                 _aHatAnalysisObject = _python.AHatAnalysis(myAnalysisName);
+                _hmAnalysisObject = null;
+            }
+            
+        }
+
+        public void SetDisplayTransformer(IDataTransformer transformer)
+        {
+            _displayTransformer = transformer;
         }
 
         public void UpdateOutput(RCalculationType myCalculationType,
@@ -1515,7 +1628,7 @@ namespace POD.Data
             if (_dataType == AnalysisDataTypeEnum.AHat)
             {
                 IUpdateOutputForAHatData updateOutputForAHatData = updateOutputForAHatDataIn ??
-                    new UpdateOutputForAHatData(_aHatAnalysisObject);
+                    new UpdateOutputForAHatData(_displayTransformer, _aHatAnalysisObject);
                 updateOutputForAHatData.UpdatePODCurveTable(ref _podCurveTable);
                 updateOutputForAHatData.UpdatePODCurveAllTable(ref _podCurveTable_All);
                 if (myCalculationType == RCalculationType.ThresholdChange)
@@ -1529,11 +1642,12 @@ namespace POD.Data
                 updateOutputForAHatData.UpdateThresholdCurveTable(ref _thresholdPlotTable);
                 updateOutputForAHatData.UpdateThresholdCurveTableAll(ref _thresholdPlotTable_All);
                 updateOutputForAHatData.UpdateNormalityTable(ref _normalityTable, ref _normalityCurveTable);
+                updateOutputForAHatData.UpdateQQTable(ref _qqTable);
             }
             else
             {
                 IUpdateOutputForHitMissData updateOutputForHitMissData = updateOutputForHitMissDataIn ??
-                new UpdateOutputForHitMissData(_hmAnalysisObject);
+                new UpdateOutputForHitMissData(_displayTransformer, _hmAnalysisObject);
                 updateOutputForHitMissData.UpdateOriginalData(ref _originalData);
                 updateOutputForHitMissData.UpdateTotalFlawCount(ref _totalFlawCount);
                 updateOutputForHitMissData.UpdatePODCurveTable(ref _podCurveTable);
@@ -1621,7 +1735,7 @@ namespace POD.Data
                 table.Rows.Add(row);
             }
 
-            table.DefaultView.Sort = "flaw, response, index" + " " + "ASC";
+            table.DefaultView.Sort = table.DefaultView.Sort = "flaw, response, index ASC";
             table = table.DefaultView.ToTable();
 
 
@@ -1725,7 +1839,7 @@ namespace POD.Data
         {
             //FlawTransform
             if (_hmAnalysisObject != null || _aHatAnalysisObject != null)
-                return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
+                return InvertTransformValueForXAxis(myValue);
             else
                 return myValue;
         }
@@ -1739,7 +1853,7 @@ namespace POD.Data
         {
             if (_hmAnalysisObject != null || _aHatAnalysisObject != null)
                 if (_dataType == AnalysisDataTypeEnum.AHat)
-                    return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
+                    return InvertTransformValueForYAxis(myValue);
             return myValue;
         }
 
@@ -1782,7 +1896,7 @@ namespace POD.Data
             get
             {
                 //return _podDoc.GetFlawCountPartialBelowResponseMin();
-                return -1;
+                return 0;
             }
         }
 
@@ -1791,7 +1905,7 @@ namespace POD.Data
             get
             {
                 //return _podDoc.GetFlawCountPartialAboveResponseMax();
-                return -1;
+                return 0;
             }
         }
 
@@ -1799,8 +1913,7 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetFlawCountFullBelowResponseMin();
-                return -1;
+                return this.AHATAnalysisObject.ResponsesCensoredLeft.Sum(x => x.Value.Count);
             }
         }
 
@@ -1808,8 +1921,7 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetFlawCountFullAboveResponseMax();
-                return -1;
+                return this.AHATAnalysisObject.ResponsesCensoredRight.Sum(x => x.Value.Count);
             }
         }
 
@@ -1817,8 +1929,7 @@ namespace POD.Data
         {
             get
             {
-                //return _podDoc.GetFlawCountUncensored();
-                return -1;
+                return this.AHATAnalysisObject.Responses_all.Sum(x => x.Value.Count) - (this.ResponseCompleteAboveMaxCount + ResponseCompleteBelowMinCount);
             }
         }
 
@@ -1944,7 +2055,7 @@ namespace POD.Data
             }
 
 
-            AxisObject maxAxis = new AxisObject();
+            AxisObject maxAxis = new AxisObject(AxisKind.X);
             GetXBufferedRange(chart, maxAxis, false);
 
             if (myGetTransformed)
@@ -2022,9 +2133,23 @@ namespace POD.Data
 
         }
 
+        public AxisObject GetXBufferedRange(Control chart, double myMin, double myMax, bool myGetTransformed)
+        {
+            AxisObject axis = new AxisObject(AxisKind.X);
+
+            GetXBufferedRange(chart, axis, myMin, myMax, myGetTransformed);
+
+            return axis;
+        }
+
+        private void GetXBufferedRange(Control chart, AxisObject myAxis, double myMin, double myMax, bool myGetTransformed)
+        {
+            GetBufferedRange(chart, myAxis, myMin, myMax, AxisKind.X);
+        }
+
         public AxisObject GetXBufferedRange(Control chart, bool myGetTransformed)
         {
-            AxisObject axis = new AxisObject();
+            AxisObject axis = new AxisObject(AxisKind.X);
 
             GetXBufferedRange(chart, axis, myGetTransformed);
 
@@ -2095,7 +2220,7 @@ namespace POD.Data
         }
         public AxisObject GetUncensoredXBufferedRange(Control chart, bool myGetTransformed)
         {
-            AxisObject axis = new AxisObject();
+            AxisObject axis = new AxisObject(AxisKind.X);
 
             GetUncensoredXBufferedRange(chart, axis, myGetTransformed);
 
@@ -2104,7 +2229,7 @@ namespace POD.Data
 
         public AxisObject GetYBufferedRange(Control chart, bool myGetTransformed)
         {
-            AxisObject axis = new AxisObject();
+            AxisObject axis = new AxisObject(AxisKind.Y);
 
             GetYBufferedRange(chart, axis, myGetTransformed);
 
@@ -2115,67 +2240,70 @@ namespace POD.Data
         {
             return myValue;
         }
-        public double TransformAValue(double myValue, int transform)
+
+        public IDataTransformer DuplicateTransformer()
         {
-            switch (transform)
-            {
-                case 2: //log transform
-                    return Math.Log(myValue);
-                case 3: //inverse transform
-                    return 1.0 / myValue;
-                case 5: //BoxCox transform
-                    return (Math.Pow(myValue, _aHatAnalysisObject.Lambda) - 1) / _aHatAnalysisObject.Lambda;
-                default: //linear or unknown transform
-                    return myValue;
-            }
+            return _displayTransformer.Duplicate();
         }
-        public ITransformBackLambdaControl TransformBackLambda { get; set; }
-        public double TransformBackAValue(double myValue, int transform)
+
+        public void UpdateTransformer(IDataTransformer myTransformer)
         {
-            ITransformBackLambdaControl transformBackLambdaControl = TransformBackLambda ?? new TransformBackLambdaControl(_aHatAnalysisObject);
-            switch (transform)
-            {
-                case 2:
-                    return Math.Exp(myValue);
-                case 3:
-                    return 1.0 / myValue;
-                case 5:
-                    return transformBackLambdaControl.TransformBackLambda(myValue);
-                default:
-                    return myValue;
-            }
+            _displayTransformer.CopyTo(myTransformer);
         }
+
+        public bool IsYSymLog()
+        {
+            return _displayTransformer.IsSymLogActiveY();
+        }
+
+        public bool IsXSymLog()
+        {
+            return _displayTransformer.IsSymLogActiveX();
+        }
+
         public double TransformValueForXAxis(double myValue)
         {
-            if (myValue <= 0.0 && (_flawTransform == TransformTypeEnum.Log || _flawTransform == TransformTypeEnum.Inverse))
-                return 0.0;
+            //if (myValue <= 0.0 && (_flawTransform == TransformTypeEnum.Log || _flawTransform == TransformTypeEnum.Inverse))
+            //    return 0.0;
 
-            return TransformAValue(myValue, _python.TransformEnumToInt(_flawTransform));
+            return _displayTransformer.TransformXAxisValue(myValue);//, myValue, _python.TransformEnumToInt(_flawTransform));
         }
 
         public double TransformValueForYAxis(double myValue)
         {
-            if (myValue <= 0.0 && (_responseTransform == TransformTypeEnum.Log || _responseTransform == TransformTypeEnum.Inverse))
-                return 0.0;
+            //if (myValue <= 0.0 && (_responseTransform == TransformTypeEnum.Log || _responseTransform == TransformTypeEnum.Inverse))
+            //    return 0.0;
 
-            return TransformAValue(myValue, _python.TransformEnumToInt(_responseTransform));
+            return _displayTransformer.TransformYAxisValue(myValue);
         }
 
         public double InvertTransformValueForXAxis(double myValue)
         {
-            if (myValue == 0.0 && _flawTransform == TransformTypeEnum.Inverse)
-                return 0.0;
-
-            return TransformBackAValue(myValue, _python.TransformEnumToInt(_flawTransform));
+            
+            return _displayTransformer.InverseTransformXAxisValue(myValue);
 
         }
 
         public double InvertTransformValueForYAxis(double myValue)
         {
-            if (myValue == 0.0 && _responseTransform == TransformTypeEnum.Inverse)
-                return 0.0;
-            return TransformBackAValue(myValue, _python.TransformEnumToInt(_responseTransform));
+            return _displayTransformer.InverseTransformYAxisValue(myValue);
         }
+        public double LargestFlaw
+        {
+            get
+            {
+                return _largestFlawSize;
+            }
+        }
+
+        public double LargestResponse
+        {
+            get
+            {
+                return _largestResponse;
+            }
+        }
+
         public double SmallestFlaw
         {
             get
@@ -2286,7 +2414,7 @@ namespace POD.Data
             else if (myType == ColType.Response)
                 return availableResponsesTable.Columns;
             else
-                throw new ArgumentException("Column Type: " + myType.ToString() + " is not valid for GetUpdatedValue");
+                throw new ArgumentException($"Column Type: {myType} is not valid for GetUpdatedValue");
         }
         private double AssignNewValueBasedOnExtColProperty(List<double> values, string myExtColProperty)
         {
@@ -2295,10 +2423,11 @@ namespace POD.Data
                 case ExtColProperty.Max:
                     return values.Max();
                 case ExtColProperty.Min:
+                    return values.Min();
                 case ExtColProperty.Thresh:
                     return values.Min();
                 default:
-                    throw new Exception("ExtColProprty: " + myExtColProperty + " is not valid.");
+                    throw new Exception($"ExtColProprty: {myExtColProperty} is not valid.");
             }
         }
 
@@ -2408,8 +2537,11 @@ namespace POD.Data
 
                     int indexR = _prevBelow;
 
-                    if (_prevBelowDoesNotInclude)
-                        indexR--;
+                    //NOTE: I don't know if this is going to add a different error
+                    // but it fixes the issues where the last response is not
+                    // included when multiple series are used TRB, (02-27-2025)
+                    //if (_prevBelowDoesNotInclude)
+                    //    indexR--;
 
                     if (indexR >= sortByXWrapper.GetCountOfList())
                         indexR = sortByXWrapper.GetCountOfList() - 1;
@@ -2659,6 +2791,19 @@ namespace POD.Data
             }
         }
 
+        public void CheckLoadHealth()
+        {
+            if (_flipBitsControl == null)
+            {
+                _flipBitsControl = new FlipBinarySign();
+            }
+
+            if (_updateTables == null)
+            {
+                _updateTables = new UpdateTableControl(this);
+            }
+        }
+
         public List<string> AvailableFlawUnits
         {
             get
@@ -2710,4 +2855,3 @@ namespace POD.Data
     
     
 }
-

@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="ViewInfoPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -79,7 +95,8 @@ namespace POD.Wizards
 
             _colors = DataPointChart.GetLargeColorList(this.DesignMode);
 
-            _illegalCharacterTooltip = @"Name must be unique and cannot use the following characters:" + System.Environment.NewLine + @" ~, (, ), #, \, /, =, >, <, +, -, ,* ,% , &, |, ^, ', "", [, ] ";
+            _illegalCharacterTooltip = $@"Name must be unique and cannot use the following characters:\n" + 
+                                       $@" ~, (, ), #, \, /, =, >, <, +, -, ,* ,% , &, |, ^, ', "", [, ] ";
 
             //ToolTipCtrl.SetToolTip(FlawNameTextBox, illegalCharacterStepToolTip);
             //ToolTipCtrl.SetToolTip(ResponseNameTextBox, illegalCharacterStepToolTip);
@@ -305,11 +322,8 @@ namespace POD.Wizards
 
                     Analysis.GetBufferedMinMax(table, out min, out max);
 
-                    if (mins[i] == 0.0 && maxes[i] == 0.0)
-                    {
-                        info.SetDoubleProperty(i, colType, InfoType.Max, max);
-                        info.SetDoubleProperty(i, colType, InfoType.Min, min);
-                    }
+                    info.SetDoubleProperty(i, colType, InfoType.Max, max);
+                    info.SetDoubleProperty(i, colType, InfoType.Min, min);
                 }
 
                 colType = ColType.Response;
@@ -322,24 +336,27 @@ namespace POD.Wizards
                 {
                     var table = source.GetData(labels[i]);
 
-                    Analysis.GetBufferedMinMax(table, out min, out max);
+                    // need the exact values in order to calculate correct thresholds
+                    Analysis.GetMinMax(table, out min, out max);
 
-                    if (mins[i] == 0.0 && maxes[i] == 0.0)
+                    //change to hit/miss type ranges since that is what it most likely is
+                    if (mins[i] == 0.0 && maxes[i] == 1.0)
                     {
-                        var thresh = (max - min) * .15 + min;
-
-                        //change to hit/miss type ranges since that is what it most likely is
-                        if(min == -.1 && max == 1.1)
-                        {
-                            min = 0.0;
-                            max = 1.0;
-                            thresh = .5;
-                        }
-
-                        info.SetDoubleProperty(i, colType, InfoType.Max, max);
-                        info.SetDoubleProperty(i, colType, InfoType.Min, min);
+                        var thresh = .5;
+                        
                         info.SetDoubleProperty(i, colType, InfoType.Threshold, thresh);
                     }
+                    else
+                    {
+                        var thresh = (max - min) * .40 + min;
+
+                        info.SetDoubleProperty(i, colType, InfoType.Threshold, thresh);
+                    }
+
+                    Analysis.GetBufferedMinMax(table, out min, out max);
+
+                    info.SetDoubleProperty(i, colType, InfoType.Max, max);
+                    info.SetDoubleProperty(i, colType, InfoType.Min, min);
                 }
             }
         }
@@ -864,6 +881,8 @@ namespace POD.Wizards
                         view.Rows[i][0] = specs.Rows[i][0].ToString();
                     }
 
+                    //RemovedInvalidRows(view);
+
                     view.AcceptChanges();
 
                     graphDataGridView.Columns.Clear();
@@ -918,6 +937,19 @@ namespace POD.Wizards
                     graphDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
                     graphDataGridView.ColumnHeadersVisible = true;*/
                 }
+            }
+        }
+
+        private void RemovedInvalidRows(DataTable table)
+        {
+            List<DataRow> rowsToRemove = table.AsEnumerable()
+                                        .Where(row => table.Columns.Cast<DataColumn>()
+                                                       .Any(col => col.Ordinal > 0 && row[col].ToString() == "NaN"))
+                                        .ToList();
+
+            foreach (DataRow row in rowsToRemove)
+            {
+                table.Rows.Remove(row);
             }
         }
 
@@ -1115,6 +1147,9 @@ namespace POD.Wizards
 
                     chart.XAxisUnit = _info.Units(ColType.Flaw)[newIndex];
                     chart.XAxisTitle = _info.NewNames(ColType.Flaw)[newIndex];
+
+                    chart.YAxisUnit = _info.Units(ColType.Response)[newIndex];
+                    chart.YAxisTitle = _info.NewNames(ColType.Response)[newIndex];
                 }
 
                 index++;

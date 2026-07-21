@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="PODChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -9,6 +25,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using POD.Data;
+using CSharpBackendWithR;
 
 namespace POD.Controls
 {
@@ -24,6 +41,8 @@ namespace POD.Controls
 
             //all charts should be added through SetupChart()
             Series.Clear();
+
+            _transformer = new DataTransformer(null, TransformTypeEnum.Linear, 0, 1, null, TransformTypeEnum.Linear, 0, 1);
 
             DoPostPaint = true;
         }
@@ -263,7 +282,9 @@ namespace POD.Controls
             YAxisTitle = "POD";
             XAxisTitle = flawName;
             XAxisUnit = flawUnit;
+            ForceZeroXAxis = true;
             ChartTitle = "POD Curve";
+            ForceZeroYAxis = true;
         }
 
         public override void ClearEverythingButPoints()
@@ -318,12 +339,11 @@ namespace POD.Controls
         {
             get
             {
-                var text = "";
+                var text = "POD Parameters\n";
 
-                text += "POD Parameters" + Environment.NewLine;
-                text += "a50:\t" + _a50.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
-                text += "a90:\t" + _a90.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
-                text += "a90/95:\t" + _a9095.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
+                text += $"a50:\t{_a50:F3} {XAxisUnit}\n";
+                text += $"a90:\t{_a90:F3} {XAxisUnit}\n";
+                text += $"a90/95:\t{_a9095:F3} {XAxisUnit}";
 
                 return text;
             }
@@ -331,6 +351,7 @@ namespace POD.Controls
 
         public void FillChart(IAnalysisData myData, bool usingLoadedFromFileData = false, bool analysisFailed=false)
         {
+            _transformer.UpdateAxisTransformParameters(null, TransformTypeEnum.Linear, 0.0, 1.0, null, TransformTypeEnum.Linear, 0.0, 1.0);
 
             if (!usingLoadedFromFileData)
             {
@@ -377,7 +398,11 @@ namespace POD.Controls
 
         public void FillChart(AnalysisData myData, string my90X, string my90Y, string my95X, string my95Y)
         {
+            UpdateTransformer(myData);
+
             FillChart(myData.PodCurveTable, my90X, my90Y, my95X, my95Y, 0.0, 1.0);
+
+            
         }
 
         public void FillChart(DataTable myTable, string my90X, string my90Y, string my95X, string my95Y, double myYMin, double myYMax, bool analysisFailed = false)
@@ -388,8 +413,6 @@ namespace POD.Controls
             //only plot the confidence interval curve if the analysis doesn't fail
             if(!analysisFailed)
                 POD9095.Points.DataBindXY(view, my95X, view, my95Y);
-
-            
 
             ChartAreas[0].AxisY.Minimum = myYMin;
             ChartAreas[0].AxisY.Maximum = myYMax;
@@ -511,6 +534,12 @@ namespace POD.Controls
                 //line.Points.AddXY(minX, a90_95Y);
                 //line.Points[0].Label = "90/95";*/
             }
+
+            double podMax = POD.Points.FindMaxByValue("X").XValue;
+            double podMin = POD.Points.FindMinByValue("X").XValue;
+
+
+            _transformer.UpdateAxisTransformParameters(null, TransformTypeEnum.None, 0.0, 1.0, null, TransformTypeEnum.None, podMin, podMax);
 
             line = a50Horizontal;
 

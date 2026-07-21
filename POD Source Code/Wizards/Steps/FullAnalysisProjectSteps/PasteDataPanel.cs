@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="PasteDataPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -68,6 +84,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             _views = new Dictionary<string, DataGridViewDB>();
 
             //fix up the first tab
+            DefaultDataGrid.BackgroundColor = Color.FromArgb(30, 30, 30);
             _views.Add("D01", DefaultDataGrid);
             this.DefaultDataGrid.AutoGenerateColumns = true;
             DefaultDataGrid.ContextMenuStrip = contextMenuStrip1;
@@ -473,7 +490,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                     while(currentTable.Columns.Contains(finalName))
                     {
-                        finalName = tempName + "_" + index.ToString("##");
+                        finalName = $"{tempName}_{index:##}";
                         index++;
                     }
 
@@ -858,21 +875,17 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             {
                 if (((Project)Source).Sources.Count == 0)
                 {
-                    MessageBox.Show("Unfortunately, you need at least one source before you can continue." + Environment.NewLine + Environment.NewLine
-                                    + "Please copy and paste data from Excel into the table." + Environment.NewLine
-                                    + "Ctrl+V is supported or select Paste from the available actions.");
+                    MessageBox.Show("Unfortunately, you need at least one source before you can continue.\n\n" +
+                                    "Please copy and paste data from Excel into the table.\n" +
+                                    "Ctrl+V is supported or select Paste from the available actions.");
                 }
-                else if(!AllSourcesHaveRanges())
+                else if (!AllSourcesHaveRanges())
                 {
-                    MessageBox.Show("You need to define the data in your tables before you can continue." + Environment.NewLine + Environment.NewLine
-                                    + "Select what you want to define from the controls above the table then" + Environment.NewLine
-                                    + "simply click on any column in the table to define its purpose." + Environment.NewLine + Environment.NewLine
-                                    + "You need at least one ID column, one flaw column and one response column.");
+                    MessageBox.Show("You need to define the data in your tables before you can continue.\n\n" +
+                                    "Select what you want to define from the controls above the table then\n" +
+                                    "simply click on any column in the table to define its purpose.\n\n" +
+                                    "You need at least one ID column, one flaw column and one response column.");
                 }
-            }
-            else
-            {
-                //_tableBackups.Clear();    
             }
 
             return Stuck;
@@ -889,7 +902,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             while (nameExists == true)
             {
                 index++;
-                newSourceName = "D" + (index + 1).ToString("D2");
+                newSourceName = $"D{(index + 1):D2}";
 
                 nameExists = _views.ContainsKey(newSourceName) || _allIndexes[3].ContainsKey(newSourceName);
             }
@@ -920,7 +933,8 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             CanSourceBeEdited(newTab);
 
-            
+            view.BackgroundColor = Color.FromArgb(30, 30, 30);
+
             DataSourceTabs.ResumeDrawing();
 
             return newSourceName;
@@ -1062,11 +1076,20 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             string statusMessage = "";
 
             if (cellStatus == CellStatus.InvalidWholeRow)
-                statusMessage = "Flaw size is invalid." + System.Environment.NewLine + "The entire row will not be included in the analysis.";
+            {
+                statusMessage = "Flaw size is invalid.\n" +
+                                "The entire row will not be included in the analysis.";
+            }
             else if (rowStatus == RowStatus.Invalid)
-                statusMessage = "Row contains an invalid flaw size." + System.Environment.NewLine + "The entire row will not be included in the analysis.";
+            {
+                statusMessage = "Row contains an invalid flaw size.\n" +
+                                "The entire row will not be included in the analysis.";
+            }
             else if (cellStatus == CellStatus.Invalid)
-                statusMessage = "Response value is invalid." + System.Environment.NewLine + "The response will not be included in the analysis.";
+            {
+                statusMessage = "Response value is invalid.\n" +
+                                "The response will not be included in the analysis.";
+            }
 
             return statusMessage;
         }
@@ -1252,7 +1275,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             }
             else
             {
-                MessageBox.Show(_defaultInUseMessage, "POD v4 Notice");
+                MessageBox.Show(_defaultInUseMessage, "POD Professional v4.5 Notice");
             }
 
             DataSourceTabs.ResumeLayout();
@@ -1480,6 +1503,8 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
                 for(int i = 0; i < myGrid.Columns.Count; i++)
                     allColumns.Add(i);
+
+                myGrid.BackgroundColor = Color.FromArgb(30, 30, 30);
 
                 ColorColumns(myGrid, allColumns, GetClearColor(myGrid));
 
@@ -1804,7 +1829,10 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             var result = true;
             var oldName = name;
 
-            var response = MessageBox.Show(_defaultInUseMessage + "\n\nWould you like to duplicate this data source to create an editable version?", "POD v4 Notice", MessageBoxButtons.YesNo);
+            var response = MessageBox.Show($"{_defaultInUseMessage}\n\n" + 
+                               "Would you like to duplicate this data source to create an editable version?",
+                               "POD Professional v4.5 Notice",
+                               MessageBoxButtons.YesNo);
 
             if (response == DialogResult.Yes)
             {

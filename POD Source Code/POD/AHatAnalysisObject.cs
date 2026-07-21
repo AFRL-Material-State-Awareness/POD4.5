@@ -1,9 +1,26 @@
-﻿using System;
+﻿// <copyright file="AHatAnalysisObject.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+
 namespace CSharpBackendWithR
 {
     [Serializable]
@@ -35,6 +52,7 @@ namespace CSharpBackendWithR
         private DataTable aHatResultsPODAll;
         private DataTable aHatNormalityTable;
         private DataTable aHatNormalCurveTable;
+        private DataTable aHatQQTable;
         //linear model unique metrics
         private double intercept;
         private double slope;
@@ -131,8 +149,8 @@ namespace CSharpBackendWithR
             this.aHatResultsPODAll = new DataTable();
             //use this to generate the histogram normality chart
             this.aHatNormalityTable = new DataTable();
-
             this.aHatNormalCurveTable = new DataTable();
+            this.aHatQQTable = new DataTable();
         }
         public double Signalmin { set; get; }
         public double Signalmax { set; get; }
@@ -314,6 +332,13 @@ namespace CSharpBackendWithR
             set { this.aHatNormalCurveTable = value; }
             get { return this.aHatNormalCurveTable; }
         }
+
+        public DataTable AHatQQTable
+        {
+            set { this.aHatQQTable = value; }
+            get { return this.aHatQQTable; }
+        }
+
         public int MaxPrecision
         {
             get
@@ -324,6 +349,101 @@ namespace CSharpBackendWithR
                     return this.maxPrecisionResponses;
             }
         }
+
+        public int ResponsesPartialCensoredLeft(double minSignal)
+        {
+            int count = 0;
+
+            //foreach(var columnName in this.responsesCensoredLeft.Keys)
+            //{
+            //    foreach(var value in this.responsesCensoredLeft[columnName])
+            //    {
+            //        if (POD.Compute.ApproximatelyEqual(value, minSignal))
+            //        {
+            //            count++;
+            //        }
+            //    }
+            //}
+
+            return count;
+        }
+
+        public int ResponsesPartialCensoredRight(double maxSignal)
+        {
+            int count = 0;
+
+            //foreach (var columnName in this.responsesCensoredRight.Keys)
+            //{
+            //    foreach (var value in responsesCensoredRight[columnName])
+            //    {
+            //        if (POD.Compute.ApproximatelyEqual(value, maxSignal))
+            //        {
+            //            count++;
+            //        }
+            //    }
+            //}
+
+            return count;
+        }
+
+        public int ResponsesCompleteCensoredLeft(double minSignal)
+        {
+            int count = 0;
+
+            foreach (var columnName in this.responsesCensoredLeft.Keys)
+            {
+                count += this.responsesCensoredLeft[columnName].Count();
+            }
+
+            return count;
+        }
+        public int ResponsesCompleteCensoredRight(double maxSignal)
+        {
+            int count = 0;
+
+            foreach (var columnName in this.responsesCensoredRight.Keys)
+            {
+                count += this.responsesCensoredRight[columnName].Count();
+            }
+
+            return count;
+        }
+
+        public int ResponsesUncensored(double minSignal, double maxSignal)
+        {
+            int count = 0;
+
+            foreach (var columnName in this.Responses_all.Keys)
+            {
+                foreach (var value in Responses_all[columnName])
+                {
+                    if (POD.Compute.ApproximatelyLessThan(value, maxSignal) && POD.Compute.ApproximatelyMoreThan(value, minSignal))
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            return count;
+        }
+
+        public double GetMinResponse()
+        {
+            double overallMin = Double.MaxValue;
+            double currMin =  Double.MaxValue;;
+            // iterate over C# Dictionary Keys and Values
+            foreach (KeyValuePair<string, List<double>> entry in Responses_all)
+            {
+                currMin = entry.Value.Min();
+                if (currMin < overallMin)
+                {
+                    overallMin = currMin;
+                }
+            }
+            return overallMin;
+
+        }
+
         public double GetMaxResponse()
         {
             double overallMax = -1;
@@ -358,6 +478,7 @@ namespace CSharpBackendWithR
             this.aHatLinearResults = null;
             this.aHatResidualResults = null;
             this.aHatResultsPOD = null;
+            this.aHatQQTable = null;
         }
     }
 }

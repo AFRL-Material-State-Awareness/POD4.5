@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="IPy4C.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +94,7 @@ namespace POD
 
         public void AddErrorText(string myError)
         {
-             _simpleError = _simpleError + "; " + myError;
+             _simpleError = $"{_simpleError}; {myError}";
 
             if(OnAnalysisError != null)
             {
@@ -148,31 +164,31 @@ namespace POD
         //The transformtypeEnum is located in Globals.cs
         public int TransformEnumToInt(TransformTypeEnum myTransformType)
         {
-            int transform = 0;
+            RModelTypeEnum transform = RModelTypeEnum.Linear;
 
             switch(myTransformType)
             {
                 case TransformTypeEnum.Linear:
-                    transform = 1;
+                    transform = RModelTypeEnum.Linear;
                     break;
                 case TransformTypeEnum.Log:
-                    transform = 2;
+                    transform = RModelTypeEnum.Log;
                     break;
                 case TransformTypeEnum.Inverse:
-                    transform = 3;
+                    transform = RModelTypeEnum.Inverse;
                     break;
                 case TransformTypeEnum.Exponetial:
-                    transform = 4;
+                    transform = RModelTypeEnum.Exponetial;
                     break;
                 case TransformTypeEnum.BoxCox:
-                    transform = 5;
+                    transform = RModelTypeEnum.BoxCox;
                     break;
                 default:
-                    transform = 1;
+                    transform = RModelTypeEnum.Linear;
                     break;
             }
 
-            return transform;
+            return (int)transform;
         }
         //used to output the decision value
         //self.choices = ["P > 0.1", "0.05 < P <= 0.1", ".025 < P <= 0.05",

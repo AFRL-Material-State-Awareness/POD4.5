@@ -1,4 +1,20 @@
-﻿using POD;
+﻿// <copyright file="ExcelWriterControl.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using POD;
 using POD.Data;
 using POD.ExcelData;
 using System;
@@ -35,7 +51,7 @@ namespace Data
             var censoredNames = new List<string>(new string[] { "a", "ahat", data.FlawTransFormLabel, data.ResponseTransformLabel, "fit", "diff" });
             var oldNames = new List<string>();
 
-            _excelWriter.Workbook.AddWorksheet(_worksheetName + " Residuals");
+            _excelWriter.Workbook.AddWorksheet($"{_worksheetName} Residuals");
 
             int rowIndex = 1;
             int colIndex = 1;
@@ -95,7 +111,7 @@ namespace Data
             var podNames = new List<string>(new string[] { "a", "POD(a)", "95 confidence bound" });
             var oldNames = new List<string>();
 
-            _excelWriter.Workbook.AddWorksheet(_worksheetName + " POD");
+            _excelWriter.Workbook.AddWorksheet($"{_worksheetName} POD");
 
             int rowIndex = 1;
             int colIndex = 1;
@@ -127,7 +143,7 @@ namespace Data
             var iterationNames = new List<string>(new string[] { "trial index", "iteration index", "mu", "sigma", "fnorm", "damping" });
             var oldNames = new List<string>();
 
-            _excelWriter.Workbook.AddWorksheet(_worksheetName + " " +data.AdditionalWorksheet1Name);
+            _excelWriter.Workbook.AddWorksheet($"{_worksheetName} {data.AdditionalWorksheet1Name}");
 
             int rowIndex = 1;
             int colIndex = 1;
@@ -156,7 +172,7 @@ namespace Data
             var thresholdNames = new List<string>(new string[] { "Threshold", "a90", "a90_95", "a50", });
             var oldNames = new List<string>();
 
-            _excelWriter.Workbook.AddWorksheet(_worksheetName + " " + data.AdditionalWorksheet1Name);
+            _excelWriter.Workbook.AddWorksheet($"{_worksheetName} {data.AdditionalWorksheet1Name}");
 
             int rowIndex = 1;
             int colIndex = 1;
@@ -186,7 +202,7 @@ namespace Data
         {
             DataTable removedPoints = data.GenerateRemovedPointsTable();
 
-            _excelWriter.Workbook.AddWorksheet(_worksheetName + " Removed Points");
+            _excelWriter.Workbook.AddWorksheet($"{_worksheetName} Removed Points");
 
             int rowIndex = 1;
             int colIndex = 1;

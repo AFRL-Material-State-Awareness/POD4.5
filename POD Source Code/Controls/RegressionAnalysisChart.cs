@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="RegressionAnalysisChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -6,7 +22,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using POD.Data;
-
+using CSharpBackendWithR;
 using System.Diagnostics;
 namespace POD.Controls
 {
@@ -28,21 +44,21 @@ namespace POD.Controls
         private Dictionary<string, string> _originalSeriesNames = new Dictionary<string, string>();
 
         
-        protected VerticalLineAnnotation _aMaxLine = null;
-        protected StripLine _aMaxStrip;
-        protected VerticalLineAnnotation _aMinLine = null;
-        protected StripLine _aMinStrip;
+        protected PODVerticalLineAnnotation _aMaxLine = null;
+        protected NamedStripLine _aMaxStrip;
+        protected PODVerticalLineAnnotation _aMinLine = null;
+        protected NamedStripLine _aMinStrip;
         protected IAnalysisData _analysisData;
         protected DataTable _flaws;
         protected DataTable _names;
-        protected StripLine _leftCensorStrip;
+        protected NamedStripLine _leftCensorStrip;
         protected DataTable _metadatas;
         protected DataTable _responses;
-        protected StripLine _rightCensorStrip;
+        protected NamedStripLine _rightCensorStrip;
         protected DataTable _specimenIDs;
         private bool _thresholdFreeze;
         private double _thresholdFreezeValue;
-        protected HorizontalLineAnnotation _thresholdLine = null;
+        protected PODHorizontalLineAnnotation _thresholdLine = null;
         private bool _painted;
         public event LinesChangedEventHandler LinesChanged;
         public event EventHandler RunAnalysisNeeded;
@@ -97,6 +113,9 @@ namespace POD.Controls
 
             if(!DesignMode)
                 AddEmptySeriesToForceDraw();
+
+            ClampXAxisToZeroOnExport = true;
+            ClampYAxisToZeroOnExport = true;
         }
 
         void RegressionAnalysisChart_MouseLeave(object sender, EventArgs e)
@@ -163,6 +182,63 @@ namespace POD.Controls
             OnLinesChanged(EventArgs.Empty);
         }
 
+
+        public override void PrepareCloneSeries(DataPointChart clone, double finalMinY)
+        {
+            base.PrepareCloneSeries(clone, finalMinY);
+
+            // 2. SURGICALLY TARGET ONLY THE INDICATOR LINES
+            // Using string literals or your PODChartLabels constants if they are accessible here
+            string[] milestoneLines = {
+
+                PODRegressionLabels.a50Line,
+                PODRegressionLabels.a90Line,
+                PODRegressionLabels.a9095Line
+            };
+
+            foreach (string lineName in milestoneLines)
+            {
+                Series s = clone.Series.FindByName(lineName);
+
+                if (s != null && s.Points.Count > 0 && s.Points[0].YValues[0] < finalMinY)
+                {
+                    s.Points[0].YValues[0] = finalMinY;
+                }
+            }
+
+            List<string> removeAnnotations = new List<string>();
+            List<string> removeStrips = new List<string>();
+
+            if (_analysisData.FlawsCensoredAboveMaxCount == 0)
+            {
+                removeStrips.Add(LinearityChartLabels.AMaxLimitStrip);
+                removeAnnotations.Add(LinearityChartLabels.AMaxLimit);
+            }
+
+            if (_analysisData.FlawsCensoredBelowMinCount == 0)
+            {
+                removeStrips.Add(LinearityChartLabels.AMinLimitStrip);
+                removeAnnotations.Add(LinearityChartLabels.AMinLimit);
+            }
+
+            foreach (string annotationName in removeAnnotations)
+            {
+                Annotation s = clone.Annotations.FindByName(annotationName);
+
+                s.Visible = false;
+            }
+
+            foreach (string stripName in removeStrips)
+            {
+                List<StripLine> s = clone.XAxis.StripLines.Where(x => ((NamedStripLine)x).Name == stripName).ToList();
+
+                if (s.Count > 0)
+                {
+                    clone.XAxis.StripLines.Remove(s[0]);
+                }
+            }
+        }
+
         protected void Annotation_Moving(object sender, AnnotationPositionChangingEventArgs e)
         {
             Axis xAxis = ChartAreas[0].AxisX;
@@ -184,6 +260,19 @@ namespace POD.Controls
             else if (e.NewLocationY > yAxis.Maximum)
             {
                 e.NewLocationY = yAxis.Maximum;
+            }
+
+            if (e.Annotation == _thresholdLine)
+            {
+                _thresholdLine.TransformValue = e.NewLocationY;
+            }
+            else if (e.Annotation == _aMinLine)
+            {
+                _aMinLine.TransformValue = e.NewLocationX;
+            }
+            else if (e.Annotation == _aMaxLine)
+            {
+                _aMaxLine.TransformValue = e.NewLocationX;
             }
 
             OnLinesChanged(EventArgs.Empty);
@@ -434,12 +523,13 @@ namespace POD.Controls
         {
             if (_aMaxLine == null)
             {
-                _aMaxLine = new VerticalLineAnnotation();
+                _aMaxLine = new PODVerticalLineAnnotation();
 
                 Axis xAxis = ChartAreas[0].AxisX;
                 Axis yAxis = ChartAreas[0].AxisY;
 
                 var x = GetInitialAMaxLocationFromData();
+                _aMaxLine.TransformValue = x;
 
                 _aMaxLine.AxisX = xAxis;
                 _aMaxLine.AxisY = yAxis;
@@ -451,6 +541,7 @@ namespace POD.Controls
                 _aMaxLine.LineColor = Color.FromArgb(ChartColors.LineAlpha, ChartColors.aMaxColor);
                 _aMaxLine.LineDashStyle = ChartDashStyle.Dash;
                 _aMaxLine.LineWidth = 3;
+                _aMaxLine.Name = LinearityChartLabels.AMaxLimit;
 
                 Annotations.Add(_aMaxLine);
             }
@@ -460,12 +551,13 @@ namespace POD.Controls
         {
             if (_aMinLine == null)
             {
-                _aMinLine = new VerticalLineAnnotation();
+                _aMinLine = new PODVerticalLineAnnotation();
 
                 Axis xAxis = ChartAreas[0].AxisX;
                 Axis yAxis = ChartAreas[0].AxisY;
 
                 var x = GetInitialAMinLocationFromData();
+                _aMinLine.TransformValue = x;
 
                 _aMinLine.AxisX = xAxis;
                 _aMinLine.AxisY = yAxis;
@@ -477,6 +569,7 @@ namespace POD.Controls
                 _aMinLine.LineColor = Color.FromArgb(ChartColors.LineAlpha, ChartColors.aMinColor);
                 _aMinLine.LineDashStyle = ChartDashStyle.Dash;
                 _aMinLine.LineWidth = 3;
+                _aMinLine.Name = LinearityChartLabels.AMinLimit;
 
                 Annotations.Add(_aMinLine);
             }
@@ -537,21 +630,18 @@ namespace POD.Controls
         {
             if (_thresholdLine == null)
             {
-                _thresholdLine = new HorizontalLineAnnotation();
+                _thresholdLine = new PODHorizontalLineAnnotation();
 
                 Axis xAxis = ChartAreas[0].AxisX;
                 Axis yAxis = ChartAreas[0].AxisY;
 
-                double y = yAxis.Maximum/4;
-
-                double x = xAxis.Maximum;
-                //x = Math.Pow(10, Math.Ceiling(Math.Log10(x)));
-
+                double y = .50;
+                _thresholdLine.TransformValue = y;
                 _thresholdLine.AxisX = xAxis;
                 _thresholdLine.AxisY = yAxis;
                 _thresholdLine.IsSizeAlwaysRelative = false;
                 _thresholdLine.AllowMoving = true;
-                //_thresholdLine.AnchorY = y;
+                _thresholdLine.AnchorY = y;
                 _thresholdLine.Y = y;
                 _thresholdLine.IsInfinitive = true;
                 _thresholdLine.ClipToChartArea = ChartAreas[0].Name;
@@ -579,13 +669,13 @@ namespace POD.Controls
             switch (line)
             {
                 case ControlLine.AMin:
-                    myValue = Double.IsNaN(_aMinLine.X) ? _aMinLine.AnchorX : _aMinLine.X;
+                    myValue = _aMinLine.TransformValue;
                     return true;
                 case ControlLine.AMax:
-                    myValue = Double.IsNaN(_aMaxLine.X) ? _aMaxLine.AnchorX : _aMaxLine.X;
+                    myValue = _aMaxLine.TransformValue;
                     return true;
                 case ControlLine.Threshold:
-                    myValue = Double.IsNaN(_thresholdLine.Y) ? _thresholdLine.AnchorY : _thresholdLine.Y;
+                    myValue = _thresholdLine.TransformValue;
                     return true;
                 default:
                     myValue = double.NaN;
@@ -646,11 +736,11 @@ namespace POD.Controls
             if(_aMaxLine == null)
                 DrawAMaxBoundLine();
 
-            if (_aMinLine.X > _aMaxLine.X)
+            if (_aMinLine.TransformValue > _aMaxLine.TransformValue)
             {
-                double temp = _aMinLine.X;
-                _aMinLine.X = _aMaxLine.X;
-                _aMaxLine.X = temp;
+                double temp = _aMinLine.TransformValue;
+                SetAMinBoundary(_aMaxLine.TransformValue, false);
+                SetAMaxBoundary(temp, false);
             }
         }
 
@@ -661,7 +751,20 @@ namespace POD.Controls
 
         public override void LoadChartData(IAnalysisData data)
         {
-            base.LoadChartData(data);
+            LoadChartData(data, null);
+        }
+
+        public override void LoadChartData(IAnalysisData data, IDataTransformer transformer)
+        {
+            if (transformer == null)
+            {
+                base.LoadChartData(data);
+            }
+            else
+            {
+                base.LoadChartData(data, transformer);
+            }
+
             _flaws = data.ActivatedFlaws;
             _responses = data.ActivatedResponses;
             _names = data.ActivatedSpecimenIDs;
@@ -827,28 +930,28 @@ namespace POD.Controls
         {
             if (_aMinStrip == null)
             {
-                _aMinStrip = new StripLine();
+                _aMinStrip = new NamedStripLine(LinearityChartLabels.AMinLimitStrip);
                 _aMinStrip.BackColor = Color.FromArgb(ChartColors.BoundaryAreaAlpha, ChartColors.aMinColor);
                 ChartAreas[0].AxisX.StripLines.Add(_aMinStrip);
             }
 
             if (_aMaxStrip == null)
             {
-                _aMaxStrip = new StripLine();
+                _aMaxStrip = new NamedStripLine(LinearityChartLabels.AMaxLimitStrip);
                 _aMaxStrip.BackColor = Color.FromArgb(ChartColors.BoundaryAreaAlpha, ChartColors.aMaxColor);
                 ChartAreas[0].AxisX.StripLines.Add(_aMaxStrip);
             }
 
             if (_leftCensorStrip == null)
             {
-                _leftCensorStrip = new StripLine();
+                _leftCensorStrip = new NamedStripLine(LinearityChartLabels.LeftCensorStrip);
                 _leftCensorStrip.BackColor = Color.FromArgb(ChartColors.BoundaryAreaAlpha, ChartColors.LeftCensorColor);
                 ChartAreas[0].AxisY.StripLines.Add(_leftCensorStrip);
             }
 
             if (_rightCensorStrip == null)
             {
-                _rightCensorStrip = new StripLine();
+                _rightCensorStrip = new NamedStripLine(LinearityChartLabels.RightCensorStrip);
                 _rightCensorStrip.BackColor = Color.FromArgb(ChartColors.BoundaryAreaAlpha, ChartColors.RightCensorColor);
                 ChartAreas[0].AxisY.StripLines.Add(_rightCensorStrip);
             }
@@ -884,10 +987,10 @@ namespace POD.Controls
 
         
 
-        private void MoveLine(VerticalLineAnnotation lineAbove, VerticalLineAnnotation lineBelow)
+        private void MoveLine(PODVerticalLineAnnotation lineAbove, PODVerticalLineAnnotation lineBelow)
         {
-            var aboveX = lineAbove.AnchorX;
-            var belowX = lineBelow.AnchorX;
+            var aboveX = lineAbove.TransformValue;
+            var belowX = lineBelow.TransformValue;
             var fixPoints = new List<FixPoint>();
 
             if (Double.IsNaN(aboveX) || Double.IsNaN(belowX))
@@ -916,8 +1019,8 @@ namespace POD.Controls
             double myTransformedResponseMax, double myTransformedFlawMin, double myTransformedFlawMax,
             IAxisObject xaxisT = null, IAxisObject yAxisT = null)
         {
-            IAxisObject xAxis = xaxisT ?? new AxisObject();
-            IAxisObject yAxis = yAxisT ?? new AxisObject();
+            IAxisObject xAxis = xaxisT ?? new AxisObject(AxisKind.X);
+            IAxisObject yAxis = yAxisT ?? new AxisObject(AxisKind.Y);
 
             _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);           
 
@@ -949,8 +1052,8 @@ namespace POD.Controls
         }
         public void PickBestAxisRange(IAxisObject xaxisT = null, IAxisObject yAxisT = null)
         {
-            IAxisObject xAxis = xaxisT ?? new AxisObject();
-            IAxisObject yAxis = yAxisT ?? new AxisObject();
+            IAxisObject xAxis = xaxisT ?? new AxisObject(AxisKind.X);
+            IAxisObject yAxis = yAxisT ?? new AxisObject(AxisKind.Y);
 
             _analysisData.GetXYBufferedRanges(this, xAxis, yAxis, true);
             RelabelAxesBetterForAxisRange(xAxis, yAxis);
@@ -1083,13 +1186,15 @@ namespace POD.Controls
                             if (index != -1)
                                 oldLabel = oldLabel.Substring(0, index + 1);
 
-                            _positionString = string.Format("Series: {3}" + "\n" + "ID: {2}" + "\n" + "Value: ({0:0.###}, {1:0.###})", xInvt, yInvt, dataPoint.GetCustomProperty("Name"), result.Series.Name);
+                            _positionString = $"Series: {result.Series.Name}\n" +
+                                              $"ID: {dataPoint.GetCustomProperty("Name")}\n" +
+                                              $"Value: ({xInvt:0.###}, {yInvt:0.###})";
 
                             dataPoint.ToolTip = _positionString;
                         }
                         catch (Exception exp)
                         {
-                            MessageBox.Show("RegressionAnalysisChart_MouseMove: " + exp.Message);
+                            MessageBox.Show($"RegressionAnalysisChart_MouseMove: {exp.Message}");
                         }
 
                     }
@@ -1302,7 +1407,28 @@ namespace POD.Controls
         
         public void SetAMaxBoundary(double myX, bool triggerEvent)
         {
-            MoveBoundaryLine(_aMaxLine, myX, Double.NaN, triggerEvent);
+            if (_aMaxLine != null)
+            {
+                _aMaxLine.TransformValue = myX;
+                _aMaxLine.AnchorX = myX;
+
+                var displayX = myX;
+                if (double.IsNaN(displayX) || (ChartAreas.Count > 0 && ChartAreas[0].AxisX.Maximum < displayX))
+                {
+                    if (ChartAreas.Count > 0)
+                    {
+                        displayX = ChartAreas[0].AxisX.Maximum;
+                    }
+                }
+                
+                _aMaxLine.X = displayX;
+
+                if (triggerEvent)
+                {
+                    DeterminePointsInThreshold();
+                    OnLinesChanged(EventArgs.Empty);
+                }
+            }
         }
 
         public void SetAMaxBoundaryMenu(Object sender, EventArgs e, DataPoint dataPoint)
@@ -1319,7 +1445,28 @@ namespace POD.Controls
 
         public void SetAMinBoundary(double myX, bool triggerEvent)
         {
-            MoveBoundaryLine(_aMinLine, myX, Double.NaN, triggerEvent);
+            if (_aMinLine != null)
+            {
+                _aMinLine.TransformValue = myX;
+                _aMinLine.AnchorX = myX;
+
+                var displayX = myX;
+                if (double.IsNaN(displayX) || (ChartAreas.Count > 0 && ChartAreas[0].AxisX.Minimum > displayX))
+                {
+                    if (ChartAreas.Count > 0)
+                    {
+                        displayX = ChartAreas[0].AxisX.Minimum;
+                    }
+                }
+                
+                _aMinLine.X = displayX;
+
+                if (triggerEvent)
+                {
+                    DeterminePointsInThreshold();
+                    OnLinesChanged(EventArgs.Empty);
+                }
+            }
         }
 
         public void SetAMinBoundaryMenu(Object sender, EventArgs e, DataPoint dataPoint)
@@ -1336,7 +1483,37 @@ namespace POD.Controls
 
         public void SetThresholdBoundary(double myY, bool triggerEvent)
         {
-            MoveBoundaryLine(_thresholdLine, Double.NaN, myY, triggerEvent);
+            if (_thresholdLine != null)
+            {
+                var displayY = myY;
+
+                if (double.IsNaN(myY) || double.IsInfinity(myY))
+                {
+                    // Invalid transform. Don't update the logical value.
+                    // Just hide the line by moving it to the bottom.
+                    displayY = ChartAreas.Count > 0 ? ChartAreas[0].AxisY.Minimum : 0;
+                }
+                else
+                {
+                    // Valid value, update everything.
+                    _thresholdLine.TransformValue = myY;
+                }
+                
+                //ensure displayY is not NaN
+                if(double.IsNaN(displayY))
+                {
+                    displayY = ChartAreas.Count > 0 ? ChartAreas[0].AxisY.Minimum : 0;
+                }
+
+                _thresholdLine.Y = displayY;
+                _thresholdLine.AnchorY = displayY; 
+
+                if (triggerEvent)
+                {
+                    DeterminePointsInThreshold();
+                    OnLinesChanged(EventArgs.Empty);
+                }
+            }
         }
 
         public void SetThresholdBoundaryMenu(Object sender, EventArgs e, DataPoint dataPoint)
@@ -1351,196 +1528,197 @@ namespace POD.Controls
             RaiseRunAnalysis();
         }
 
-        protected virtual void SyncLines()
-        {
-            MoveBoundaryLine(_aMinLine, _aMinLine.X, _aMinLine.Y, true);
-            MoveBoundaryLine(_aMaxLine, _aMaxLine.X, _aMaxLine.Y, true);
-            MoveBoundaryLine(_thresholdLine, _thresholdLine.X, _thresholdLine.Y, true);
-        }
-
-        private void ToggleAllResponses(object sender, EventArgs e, DataPoint dataPoint)
-        {
-            List<FixPoint> fixPoints = new List<FixPoint>();
-
-            _analysisData.ToggleAllResponses(dataPoint.XValue, fixPoints);
-
-            foreach (FixPoint fix in fixPoints)
-            {
-                FixColor(fix.SeriesIndex, fix.PointIndex, fix.Flag);
-            }
-
-            DeterminePointsInThreshold();
-            Invalidate();
-        }
-
-        
-
-        private void ToggleAllResponsesMenu(object sender, EventArgs e, DataPoint dataPoint)
-        {
-            ToggleAllResponses(sender, e, dataPoint);
-
-            RaiseRunAnalysis();
-        }
-
-        private void ToggleResponse(object sender, EventArgs e, DataPoint dataPoint, string seriesName, int rowIndex, int colIndex)
-        {
-            List<FixPoint> fixPoints = new List<FixPoint>();
-
-            _analysisData.ToggleResponse(dataPoint.XValue, dataPoint.YValues.First(), seriesName, rowIndex, colIndex, fixPoints);
-
-            foreach(FixPoint fix in fixPoints)
-            {
-                FixColor(fix.SeriesIndex, fix.PointIndex, fix.Flag);
-            }
-        }
-
-        
-
-
-        private void ToggleResponseMenu(object sender, EventArgs e, DataPoint dataPoint, string seriesName, int rowIndex, int colIndex)
-        {
-            ToggleResponse(sender, e, dataPoint, seriesName, rowIndex, colIndex);
-
-            RaiseRunAnalysis();
-        }
-
-        public void UnfreezeThresholdLine()
-        {
-            _thresholdFreeze = false;
-        }
-
-        public void UpdateBestFitLine()
-        {
-            Series fitLine = Series[PODRegressionLabels.BestFitLine];
-
-            DataView view = _analysisData.ResidualUncensoredTable.DefaultView;
-            
-            this.Invoke((MethodInvoker)delegate()
-            {
-                if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
+                protected virtual void SyncLines()
                 {
-                    //if(_analysisData.FlawTransform.ToString() == "Inverse")
-                    //{
-                    //    fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
-                    //}
-                    //else
-                    //{
-                        fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
-                    //}  
+                    SetAMinBoundary(_aMinLine.TransformValue, true);
+                    SetAMaxBoundary(_aMaxLine.TransformValue, true);
+                    SetThresholdBoundary(_thresholdLine.TransformValue, true);
                 }
-                else
+        
+                private void ToggleAllResponses(object sender, EventArgs e, DataPoint dataPoint)
                 {
-                    if(_analysisData.FlawTransform== TransformTypeEnum.Inverse)
+                    List<FixPoint> fixPoints = new List<FixPoint>();
+        
+                    _analysisData.ToggleAllResponses(dataPoint.XValue, fixPoints);
+        
+                    foreach (FixPoint fix in fixPoints)
                     {
-                        fitLine.Points.DataBindXY(view, "flaw", view, "fit");
+                        FixColor(fix.SeriesIndex, fix.PointIndex, fix.Flag);
                     }
-                    else
+        
+                    DeterminePointsInThreshold();
+                    Invalidate();
+                }
+        
+                
+        
+                private void ToggleAllResponsesMenu(object sender, EventArgs e, DataPoint dataPoint)
+                {
+                    ToggleAllResponses(sender, e, dataPoint);
+        
+                    RaiseRunAnalysis();
+                }
+        
+                private void ToggleResponse(object sender, EventArgs e, DataPoint dataPoint, string seriesName, int rowIndex, int colIndex)
+                {
+                    List<FixPoint> fixPoints = new List<FixPoint>();
+        
+                    _analysisData.ToggleResponse(dataPoint.XValue, dataPoint.YValues.First(), seriesName, rowIndex, colIndex, fixPoints);
+        
+                    foreach(FixPoint fix in fixPoints)
                     {
-                        fitLine.Points.DataBindXY(view, "transformFlaw", view, "fit");
+                        FixColor(fix.SeriesIndex, fix.PointIndex, fix.Flag);
                     }
                 }
-            });
-            
-        }
-
-        public void UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95, double myFitM, double myFitB)
-        {
-            Series a50Line = Series[PODRegressionLabels.a50Line];
-            Series a90Line = Series[PODRegressionLabels.a90Line];
-            Series a90_95Line = Series[PODRegressionLabels.a9095Line];
-
-            double minY = ChartAreas[0].AxisY.Minimum;
-
-            double a50Y = myFitM*myA50 + myFitB;
-            double a90Y = myFitM*myA90 + myFitB;
-
-            Series line = a50Line;
-
-            line.Points.Clear();
-            line.Points.AddXY(myA50, minY);
-            line.Points.AddXY(myA50, a50Y);
-            line.Points[0].Label = "50";
-
-            line = a90Line;
-
-            line.Points.Clear();
-            line.Points.AddXY(myA90, minY);
-            line.Points.AddXY(myA90, a90Y);
-            line.Points[0].Label = "90";
-
-            line = a90_95Line;
-
-            line.Points.Clear();
-
-            //only draw line if the analysis could calculate it
-            if (myA90_95 != 0.0)
-            {
-                line.Points.AddXY(myA90_95, minY);
-                line.Points.AddXY(myA90_95, a90Y);
-                line.Points[0].Label = "90/95";
-            }
-        }
-
-        public void UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95)
-        {
-            Series a50Line = Series[PODRegressionLabels.a50Line];
-            Series a90Line = Series[PODRegressionLabels.a90Line];
-            Series a90_95Line = Series[PODRegressionLabels.a9095Line];
-
-            double minY = ChartAreas[0].AxisY.Minimum;
-
-            double a50Y = .5;
-            double a90Y = .9;
-
-            Series line = a50Line;
-
-            line.Points.Clear();
-            line.Points.AddXY(myA50, minY);
-            line.Points.AddXY(myA50, a50Y);
-            line.Points[0].Label = "50";
-
-            line = a90Line;
-
-            line.Points.Clear();
-            line.Points.AddXY(myA90, minY);
-            line.Points.AddXY(myA90, a90Y);
-            line.Points[0].Label = "90";
-
-            line = a90_95Line;
-
-            line.Points.Clear();
-            line.Points.AddXY(myA90_95, minY);
-            line.Points.AddXY(myA90_95, a90Y);
-            line.Points[0].Label = "90/95";
-        }
-
-        public void RefreshStripLines()
-        {
-            UpdateStripLines();
-        }
-
-        protected virtual void UpdateStripLines()
-        {
-            //fix any potential errors that would cause an invalid strip chart to be displayed
-            if (Double.IsNaN(_aMaxLine.X) || ChartAreas[0].AxisX.Maximum < _aMaxLine.X)
-            {
-                _aMaxLine.X = ChartAreas[0].AxisX.Maximum;
-                _aMaxLine.AnchorX = _aMaxLine.X;
-            }
-
-            if (Double.IsNaN(_aMinLine.X) || ChartAreas[0].AxisX.Minimum > _aMinLine.X)
-            {
-                _aMinLine.X = ChartAreas[0].AxisX.Minimum;
-                _aMinLine.AnchorX = _aMinLine.X;
-            }
-
-            _aMaxStrip.IntervalOffset = _aMaxLine.X;
-            _aMaxStrip.StripWidth = ChartAreas[0].AxisX.Maximum - _aMaxLine.X;
-            _aMinStrip.IntervalOffset = ChartAreas[0].AxisX.Minimum;
-            _aMinStrip.StripWidth = _aMinLine.X - ChartAreas[0].AxisX.Minimum;
-        }
-
         
+                
+        
+        
+                private void ToggleResponseMenu(object sender, EventArgs e, DataPoint dataPoint, string seriesName, int rowIndex, int colIndex)
+                {
+                    ToggleResponse(sender, e, dataPoint, seriesName, rowIndex, colIndex);
+        
+                    RaiseRunAnalysis();
+                }
+        
+                public void UnfreezeThresholdLine()
+                {
+                    _thresholdFreeze = false;
+                }
+        
+                public void UpdateBestFitLine()
+                {
+                    //Debug.WriteLine("----CALLED UpdateBestFitLine()----");
+        
+                    Series fitLine = Series[PODRegressionLabels.BestFitLine];
+        
+                    DataView view = _analysisData.ResidualUncensoredTable.DefaultView;
+                                
+                    this.Invoke((MethodInvoker)delegate()
+                    {
+                        //Debug.WriteLine("----STARTED UPDATING FIT LINE----");
+        
+                        if (_analysisData.DataType == AnalysisDataTypeEnum.HitMiss)
+                        {
+                            //if(_analysisData.FlawTransform.ToString() == "Inverse")
+                            //{
+                            //    fitLine.Points.DataBindXY(view, "flaw", view, "t_fit");
+                            //}
+                            //else
+                            //{
+                                fitLine.Points.DataBindXY(view, "transformFlaw", view, "t_fit");
+                            //}
+                        }
+                        else
+                        {
+                            if(_analysisData.FlawTransform== TransformTypeEnum.Inverse)
+                            {
+                                fitLine.Points.DataBindXY(view, "flaw", view, "fit");
+                            }
+                            else
+                            {
+                                fitLine.Points.DataBindXY(view, "transformFlaw", view, "fit");
+
+                                
+                                //foreach (DataRow row in view.Table.Rows)
+                                //{
+                                //    Debug.WriteLine($"FIT LINE: Crack: {row["flaw"]:F3}\tCrack: {row["transformFlaw"]:F3},\tResponse {row["y"]:F3},\tTResponse {row["transformResponse"]:F3},\tFit: {row["fit"]:F3}");
+                                //}
+
+                            }
+                        }
+        
+                        //Debug.WriteLine("----FINISHED UPDATING FIT LINE----");
+                    });
+        
+                    
+                }
+        
+                public void UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95, double myFitM, double myFitB)
+                {
+                    Series a50Line = Series[PODRegressionLabels.a50Line];
+                    Series a90Line = Series[PODRegressionLabels.a90Line];
+                    Series a90_95Line = Series[PODRegressionLabels.a9095Line];
+        
+                    double minY = ChartAreas[0].AxisY.Minimum;
+        
+                    double a50Y = myFitM*myA50 + myFitB;
+                    double a90Y = myFitM*myA90 + myFitB;
+        
+                    Series line = a50Line;
+        
+                    line.Points.Clear();
+                    line.Points.AddXY(myA50, minY);
+                    line.Points.AddXY(myA50, a50Y);
+                    line.Points[0].Label = "50";
+        
+                    line = a90Line;
+        
+                    line.Points.Clear();
+                    line.Points.AddXY(myA90, minY);
+                    line.Points.AddXY(myA90, a90Y);
+                    line.Points[0].Label = "90";
+        
+                    line = a90_95Line;
+        
+                    line.Points.Clear();
+        
+                    //only draw line if the analysis could calculate it
+                    if (myA90_95 != 0.0)
+                    {
+                        line.Points.AddXY(myA90_95, minY);
+                        line.Points.AddXY(myA90_95, a90Y);
+                        line.Points[0].Label = "90/95";
+                    }
+                }
+        
+                public void UpdateLevelConfidenceLines(double myA50, double myA90, double myA90_95)
+                {
+                    Series a50Line = Series[PODRegressionLabels.a50Line];
+                    Series a90Line = Series[PODRegressionLabels.a90Line];
+                    Series a90_95Line = Series[PODRegressionLabels.a9095Line];
+        
+                    double minY = ChartAreas[0].AxisY.Minimum;
+        
+                    double a50Y = .5;
+                    double a90Y = .9;
+        
+                    Series line = a50Line;
+        
+                    line.Points.Clear();
+                    line.Points.AddXY(myA50, minY);
+                    line.Points.AddXY(myA50, a50Y);
+                    line.Points[0].Label = "50";
+        
+                    line = a90Line;
+        
+                    line.Points.Clear();
+                    line.Points.AddXY(myA90, minY);
+                    line.Points.AddXY(myA90, a90Y);
+                    line.Points[0].Label = "90";
+        
+                    line = a90_95Line;
+        
+                    line.Points.Clear();
+                    line.Points.AddXY(myA90_95, minY);
+                    line.Points.AddXY(myA90_95, a90Y);
+                    line.Points[0].Label = "90/95";
+                }
+        
+                public void RefreshStripLines()
+                {
+                    UpdateStripLines();
+                }
+        
+                        protected virtual void UpdateStripLines()
+                        {
+                            if (_aMaxLine == null || _aMinLine == null) return;
+                            
+                            _aMaxStrip.IntervalOffset = _aMaxLine.X;
+                            _aMaxStrip.StripWidth = ChartAreas[0].AxisX.Maximum - _aMaxLine.X;
+                            _aMinStrip.IntervalOffset = ChartAreas[0].AxisX.Minimum;
+                            _aMinStrip.StripWidth = _aMinLine.X - ChartAreas[0].AxisX.Minimum;
+                        }        
 
         
         public string EquationText

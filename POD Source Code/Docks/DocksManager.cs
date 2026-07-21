@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="DocksManager.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +39,7 @@ namespace POD.Docks
     {
         QuickHelpDock _quickHelpDock;
         HelpView _helpView = HelpView.Small;
-        private WizardDock previousDoc;
+        private WizardDock previousDock;
         public QuickHelpDock QuickHelpDock
         {
             get { return _quickHelpDock; }
@@ -306,15 +322,23 @@ namespace POD.Docks
                 case HelpView.Small:
                     _handbookDock.Show(_panel, DockState.DockRight);
                     _quickHelpDock.DockTo(_handbookDock.Pane, DockStyle.Bottom, 0);
+
                     if (_panel.ActiveDocumentPane != null)
                     {
-                        _show1823ADock.DockTo(_panel.ActiveDocumentPane, DockStyle.Fill, -1);//_panel.ActiveDocumentPane.NestedPanesContainer.NestedPanes.Count.Count - 1);
-                        _showQuickHelp.DockTo(_panel.ActiveDocumentPane, DockStyle.Fill, -1);//_panel.ActiveDocumentPane.NestedPanesContainer.NestedPanes.Count - 1);
+                        _show1823ADock.DockTo(_panel.ActiveDocumentPane, DockStyle.Fill, _panel.ActiveDocumentPane.Contents.Count);
+                        _showQuickHelp.DockTo(_panel.ActiveDocumentPane, DockStyle.Fill, _panel.ActiveDocumentPane.Contents.Count);
                         _show1823ADock.FitWidth();
                         _showQuickHelp.FitWidth();
                     }
+
                     _panel.DockRightPortion = 250.0;
                     Optimized = true;
+
+                    if(_panel.ActiveDocumentPane.Contents.Count > 2 && this.previousDock != null)
+                    {
+                        this.previousDock.Activate();
+                    }
+
                     break;
                 case HelpView.Large:
                     _handbookDock.Show(_panel, DockState.DockRight);                    
@@ -381,6 +405,17 @@ namespace POD.Docks
 
             _handbookDock.FitWidth();
             _quickHelpDock.FitWidth();
+
+            // ensure that whatever dock was activated before adding help, it return to it
+            if (_lastActiveDock != null)
+            {
+                if (!_lastActiveDock.Visible)
+                {
+                    _lastActiveDock.Show();
+                }
+
+                _lastActiveDock.Activate();
+            }
         }
 
         public void SetLeftSideDockHeights()
@@ -468,7 +503,7 @@ namespace POD.Docks
 
                 myWizard.Show(_panel, DockState.Document);
 
-                _panel.ActiveDocumentPane.ContentClosing += ActiveDocumentPane_ContentClosing;
+                //_panel.ActiveDocumentPane.ContentClosing += ActiveDocumentPane_ContentClosing;
                 
                 if(activate)
                     Activate(myWizard);
@@ -476,6 +511,11 @@ namespace POD.Docks
                 if(myWizard.Width > 300)
                     myWizard.Step.FixPanelControlSizes();
             }    
+        }
+
+        public void SetPreviousDock(WizardDock document)
+        {
+            this.previousDock = document;
         }
 
         private void ActiveDocumentPane_ContentClosing(object sender, IDockContent e)
@@ -527,17 +567,17 @@ namespace POD.Docks
 
             if (dock.Visible)
             {
-                if (dock == previousDoc)
+                if (dock == previousDock)
                 {
                     return;
                 }
-                else if (dock != previousDoc && REngineObject.REngineRunning)
+                else if (dock != previousDock && REngineObject.REngineRunning)
                 {
                     MessageBox.Show("Cannot change tabs while analyis is running!");
-                    previousDoc.Activate();
+                    previousDock.Activate();
                 }
 
-                previousDoc = dock;
+                SetPreviousDock(dock);
             }
 
         }
@@ -659,9 +699,10 @@ namespace POD.Docks
             {
                 if (myWizard.Step != null)
                 {
+                    myWizard.Step.SuspendLayout();
+                    myWizard.Step.SuspendDrawing();
 
-
-                    StepArgs args = new StepArgs(myWizard.Step.Index, myWizard.Step.HelpFile, myWizard.ProgressStepListNode);
+                    StepArgs args = new StepArgs(myWizard.Step.Index, myWizard.Step.HelpFile, myWizard.ProgressStepListNode, myWizard.Step.Source.ObjectType);
 
                     Activate(args);
 
@@ -682,11 +723,17 @@ namespace POD.Docks
                             index = 0;
                     }
 
-                    //if (!myWizard.Visible)
+                    myWizard.Show();
+
+                    //if (myWizard.Visible)
+                    
                     myWizard.DockTo(_panel.ActiveDocumentPane, DockStyle.Fill, index);
 
+                    myWizard.Step.ResumeLayout();
+                    myWizard.Step.ResumeDrawing();
+
                     //if(myWizard.IsHidden)
-                    myWizard.Show();
+
                     //else if (!myWizard.IsActivated)
                     //    myWizard.ActiveMdiChild
                 }
@@ -697,7 +744,7 @@ namespace POD.Docks
         {
             if (myWizard != null && myWizard.Step != null)
             {
-                StepArgs args = new StepArgs(myWizard.Step.Index, myWizard.Step.HelpFile, myWizard.ProgressStepListNode);
+                StepArgs args = new StepArgs(myWizard.Step.Index, myWizard.Step.HelpFile, myWizard.ProgressStepListNode, myWizard.WizardInstance.Source.ObjectType);
 
                 Activate(args);
             }
@@ -707,7 +754,7 @@ namespace POD.Docks
         {
             if (myArgs != null)
             {
-                _wizardProgDock.UpdateList(myArgs.ListNode);
+                _wizardProgDock.UpdateList(myArgs.ListNode, myArgs.Type);
                 _wizardProgDock.UpdateIndex(myArgs.Index);
                 _quickHelpDock.SetRTF(myArgs.HelpFile);
                 _handbookDock.SetRTF(myArgs.HelpFile);

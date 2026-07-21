@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="InitialSelectionForm.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +26,8 @@ using System.Windows.Forms;
 using POD.Controls;
 using System.IO;
 using POD.Docks;
+using System.Threading;
+using System.Diagnostics;
 
 namespace POD
 {
@@ -56,10 +74,24 @@ namespace POD
         {
             InitializeComponent();
 
+            POD.VersionHelper.UpdatePODVersionHeader(this);
+
+            this.DoubleBuffered = true;
+
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
             _selectedType = AnalysisTypeEnum.Full;
             _selectedView = HelpView.Small;
+
+            if(HasMultipleMonitors())
+            {
+                _selectedView = HelpView.Dual;
+            }
+
+            if (IsWideScreen())
+            {
+                _selectedView = HelpView.Large;
+            }
 
             BuildMRUList();
 
@@ -83,7 +115,7 @@ namespace POD
                             DualViewButton.Checked = true;
                             break;
                         case HelpView.Large:
-                            DualViewButton.Checked = true;
+                            LargeViewButton.Checked = true;
                             break;
                         default:
                             DefaultViewButton.Checked = true;
@@ -96,6 +128,19 @@ namespace POD
 
                 }
             }
+            else
+            {
+
+            }
+        }
+
+        private bool HasMultipleMonitors()
+        {
+            // Get the number of connected screens.
+            int screenCount = Screen.AllScreens.Length;
+
+            // Check if there is more than one screen.
+            return screenCount > 1;
         }
 
         private void CreatePublicDocumentDirectories()
@@ -125,6 +170,28 @@ namespace POD
             }
         }
 
+        protected static bool IsWideScreen()
+        {
+            // Get the resolution of the primary screen.
+            Screen primaryScreen = Screen.PrimaryScreen;
+            Rectangle bounds = primaryScreen.Bounds;
+            int width = bounds.Width;
+            int height = bounds.Height;
+
+            // Calculate the aspect ratio.
+            double aspectRatio = (double)width / height;
+
+            // Check if the aspect ratio is wider than 16/9.
+            if (aspectRatio > 17.0 / 9.0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void TurnOffFormLevelDoubleBuffering()
         {
             enableFormLevelDoubleBuffering = false;
@@ -134,6 +201,14 @@ namespace POD
         private void frmMain_Shown(object sender, EventArgs e)
         {
             TurnOffFormLevelDoubleBuffering();
+
+            // give programmer the option to show debug windows with stack trace information
+            if (Debugger.IsAttached)
+            {
+                var result = MessageBox.Show("Do you want to display debug windows when an error occurs?", "POD Professional v4.5", MessageBoxButtons.YesNo);
+
+                POD.Globals.ShowErrorMessageBoxes = (result == DialogResult.Yes);
+            }
         }
 
         private void PaintForm(object sender, PaintEventArgs e)
@@ -180,7 +255,7 @@ namespace POD
                     fs.Close();
 
                     var welcomeLabel = new Label();
-                    var welcomeMessage = "Welcome!\n\nIt looks like you've never used POD v4 before. How about going through our tutorial before you start?\n\nClick on the Start Tutorial... link above.";
+                    var welcomeMessage = "Welcome!\n\nIt looks like you've never used POD Pro v4.5 before. How about going through our tutorial before you start?\n\nClick on the Start Tutorial... link above.";
 
                     SetLabelProperties(welcomeLabel, welcomeMessage);
 
@@ -474,55 +549,52 @@ namespace POD
 
         private void Label_Enter(object sender, EventArgs e)
         {
-            Label label = sender as Label;
-
-            if(label != null)
+            if (sender is Label label)
             {
                 label.ForeColor = Color.FromArgb(255, 199, 43);
                 label.Font = new Font(label.Font.FontFamily, label.Font.Size, FontStyle.Underline);
 
                 HighlightParentLabel(label);
-            }
 
-            if(label == NewProjectLabel)
-            {
-                //change text until combining is supported
-                /*
-                OverviewTextBox.Text = "Start a new project containing one or more POD analyses. Each project contains a set of data sources and analyses." + Environment.NewLine + Environment.NewLine +
-                                       "The entire project or individual analyses can be exported to an Exceil file so the results can be easily shared with others." + Environment.NewLine + Environment.NewLine + 
-                                       "Both aHat vs a and Hit/Miss analyses can be mixed together in a single project.";
-                */
-                OverviewTextBox.Text = "Start a new project containing one or more POD analyses. Each project contains a set of data sources and analyses." + Environment.NewLine + Environment.NewLine +
-                                       "The entire project or individual analyses can be exported to an Excel file so the results can be easily shared with others." + Environment.NewLine + Environment.NewLine +
-                                       "aHat vs a and Hit/Miss analyses can be mixed together in a single project as long as their part of different data sources.";
+                if (label == NewProjectLabel)
+                {
+                    OverviewTextBox.Text = "Start a new project containing one or more POD analyses. " +
+                                           "Each project contains a set of data sources and analyses.\n\n" +
+                                           "The entire project or individual analyses can be exported to an Excel file so the results can be easily shared with others.\n\n" +
+                                           "aHat vs a and Hit/Miss analyses can be mixed together in a single project as long as their part of different data sources.";
+                }
+                else if (label == HitMissQuickAnalysisLabel)
+                {
+                    OverviewTextBox.Text = "Start a quick Hit/Miss analysis. " +
+                                           "Quick analyses are not to be used in place of a traditional analysis found in a POD project. " +
+                                           "It is meant to only be used for reference while generating data.\n\n" +
+                                           "It is not possible to export the results to Excel but the data entered can be exported for later reference.\n\n" +
+                                           "Many new advanced features used in hit/miss cannot be used in quick analysis. " +
+                                           "If you wish to use these features, create a new full analysis project.";
+                }
+                else if (label == AHatQuickAnalysisLabel)
+                {
+                    OverviewTextBox.Text = "Start a quick aHat vs a analysis. " +
+                                           "Quick analyses are not to be used in place of a traditional analysis found in a POD project. " +
+                                           "It is meant to only be used for reference while generating data.\n\n" +
+                                           "It is not possible to export the results to Excel but the data entered can be exported for later reference.";
+                }
+                else if (label == OpenProjectLabel)
+                {
+                    OverviewTextBox.Text = "Open a previously created project and continue working on your POD analyses. " +
+                                           "To make getting back to your files as easy as possible, your most recent files can be found in the bottom left corner of this window. " +
+                                           "Place your mouse over each file to see an overview of the project.";
+                }
+                else if (label == StartTutorialLabel)
+                {
+                    OverviewTextBox.Text = "If you're unfamiliar with POD Pro v4.5, this will open a quick tutorial that shows the major features of POD Pro v4.5. " +
+                                           "It is highly recommended for new users.";
+                }
+                else if (fileInfo.TryGetValue(label, out string info))
+                {
+                    OverviewTextBox.Text = info;
+                }
             }
-            else if (label == HitMissQuickAnalysisLabel)
-            {
-                OverviewTextBox.Text = "Start a quick Hit/Miss analysis. Quick analyses are not to be used in place of a traditional analysis found in a POD project. It is meant to only be used for reference while generating data." + 
-                                       Environment.NewLine + Environment.NewLine + "It is not possible to export the results to Excel but the data entered can be exported for later reference."+Environment.NewLine + Environment.NewLine+
-                                       "Many new advanced features used in hit/miss cannot be used in quick analysis. If you wish to use these features, create a new full analysis project.";
-            }
-            else if (label == AHatQuickAnalysisLabel)
-            {
-                OverviewTextBox.Text = "Start a quick aHat vs a analysis. Quick analyses are not to be used in place of a traditional analysis found in a POD project. It is meant to only be used for reference while generating data." +
-                                       Environment.NewLine + Environment.NewLine + "It is not possible to export the results to Excel but the data entered can be exported for later reference.";
-            }
-            else if(label == OpenProjectLabel)
-            {
-                OverviewTextBox.Text = "Open a previously created project and continue working on your POD analyses. To make getting back to your files as easy as possible, your most recent files can be found in the bottom left corner of this window. Place your mouse over each file to see an overview of the project.";
-            }
-            else if (label == StartTutorialLabel)
-            {
-                OverviewTextBox.Text = "If you're unfamilair with POD v4, this will open a quick tutorial that shows the major features of POD v4. It is highly recommended for new users. ";
-            }
-            else if(fileInfo.ContainsKey(label))
-            {
-                string info = fileInfo[label];
-
-                OverviewTextBox.Text = info;
-            }
-
-
         }
 
         private void HighlightParentLabel(Control control)
@@ -641,13 +713,11 @@ namespace POD
 
         private void SelectionForm_Closing(object sender, FormClosingEventArgs e)
         {
-            
-
             Globals.UpdateMRUList(_selectedView.ToString(), Globals.PODv4HelpViewFile);
 
             if (NewProject == false && NewQuickAHatAnalysis == false && NewQuickHitMissAnalysis == false && OpenedProject == false)
             {
-                var result = MessageBox.Show("Are you sure you want to quit POD v4?", "POD v4", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show("Are you sure you want to quit POD Pro v4.5?", "POD Professional v4.5", MessageBoxButtons.YesNo);
 
                 if (result == System.Windows.Forms.DialogResult.Yes)
                 {
@@ -707,13 +777,5 @@ namespace POD
             _helpDisplay.Show();
             _helpDisplay.FitWidth();
         }
-
-        
-
-      
-
-
-
-        
     }
 }

@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="ChooseTransformPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +31,7 @@ using System.Diagnostics;
 namespace POD.Wizards.Steps.AHatVsANormalSteps
 {
     using System.Data;
+    using System.Threading;
     using System.Windows.Forms.DataVisualization.Charting;
     //using CSharpBackendWithR;
     using POD.Analyze;
@@ -34,6 +51,16 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
         double _a50Backup = 0.0;
         double _a9095Backup = 0.0;
         double _a90Backup = 0.0;
+
+        /// <summary>
+        /// Processes a queue of analyses so they don't all happen at once 
+        /// </summary>
+        private static BackgroundWorker runnerBackgroundWorker = null;   
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static Queue<ChooseTransformPanel> runnerQueue = new Queue<ChooseTransformPanel>(); 
 
         public ChooseTransformPanel(PODToolTip tooltip)
             : base(tooltip)
@@ -59,7 +86,44 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             SetupNumericControlPrecision();
 
+            if (runnerBackgroundWorker == null)
+            {
+                runnerBackgroundWorker = new BackgroundWorker();
 
+                runnerBackgroundWorker.WorkerReportsProgress = true;
+                runnerBackgroundWorker.WorkerSupportsCancellation = true;
+
+                runnerBackgroundWorker.ProgressChanged += RunnerQueue_ProgressChanged;
+                runnerBackgroundWorker.DoWork += RunnerQueue_DoWork;
+                runnerBackgroundWorker.RunWorkerCompleted += RunnerQueue_RunWorkerCompleted;
+            }
+        }
+
+        private void RunnerQueue_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void RunnerQueue_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        private void RunnerQueue_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (runnerQueue.Count > 0)
+            {
+                ChooseTransformPanel panel = runnerQueue.Dequeue();
+
+                panel._updatingTransformResults = true;
+                //Debug.WriteLine("Started background analysis");
+                panel.analysisLauncher.RunWorkerAsync();
+
+                while(panel.analysisLauncher != null && panel.analysisLauncher.IsBusy)
+                {
+                    Thread.Sleep(500);
+                }
+            }
         }
 
         void graphLayoutPanel_Resize(object sender, EventArgs e)
@@ -89,13 +153,124 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             analysisLauncher.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Background_FinishedAnalysis);
         }
 
-        private void Background_FinishedAnalysis(object sender, RunWorkerCompletedEventArgs e)
+        private void StartAnalysis(BackgroundWorker worker)
         {
-            if (analysisLauncher != null)
+            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis STARTED [BUSY:{worker.IsBusy}]");
+
+            Stopwatch watch = new Stopwatch();
+
+            var xAxisIndex = 0;
+            var yAxisIndex = 0;
+
+            var sortedSelectedY = GetSortedSelectedIndicies(YAxisTransformList);
+            var sortedSelectedX = GetSortedSelectedIndicies(XAxisTransformList);
+
+            var xRowCount = XAxisTransformList.Rows.Count;
+
+            var initialX = _analysis.InFlawTransform;
+            var initialY = _analysis.InResponseTransform;
+
+            _topX = sortedSelectedX.Max() + 1;
+            _topY = sortedSelectedY.Max() + 1;
+
+            //var fixList = new List<FixPoint>();
+            //_analysis.Data.UpdateIncludedPointsBasedFlawRange(_analysis.InFlawMax, _analysis.InFlawMin, fixList);
+
+            _backupPOD = new DataTable();
+            _backupUncensored = new DataTable();
+            _backupPartial = new DataTable();
+            AnalysisData.DuplicateTable(_analysis.Data.PodCurveTable, _backupPOD);
+            AnalysisData.DuplicateTable(_analysis.Data.ResidualUncensoredTable, _backupUncensored);
+            AnalysisData.DuplicateTable(_analysis.Data.ResidualPartialCensoredTable, _backupPartial);
+
+            _a50Backup = _analysis.OutResponseDecisionPODA50Value;
+            _a90Backup = _analysis.OutResponseDecisionPODLevelValue;
+            _a9095Backup = _analysis.OutResponseDecisionPODConfidenceValue;
+
+            _analysis.LockBusy = true;
+
+            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis LOCK BUSY [BUSY:{worker.IsBusy}]");
+
+            foreach (var xTrans in AllXTransforms)
             {
-                analysisLauncher.Dispose();
-                analysisLauncher = null;
+                yAxisIndex = 0;
+
+                this.Invoke((MethodInvoker)delegate ()
+                {
+                    Parent.Cursor = Cursors.WaitCursor;
+                });
+
+                foreach (var yTrans in AllYTransforms)
+                {
+                    ///while (_analysis.AnalysisRunning) ;                   
+                    if (yAxisIndex < _topY && xAxisIndex < _topX)
+                    {
+                        //_analysis.Data.FilterTransformedDataByRanges = true;
+                        _analysis.InFlawTransform = xTrans.TransformType;
+                        _analysis.InResponseTransform = yTrans.TransformType;
+
+                        if (_analysis.InResponseTransform == TransformTypeEnum.BoxCox)
+                        {
+                            _analysis.CalculateAndSetBoxCoxParameters();
+                        }
+                        //assign the analysis as transform only
+                        //Analysis.AnalysisCalculationType = RCalculationType.Transform;
+                        var yColumnIndex = yAxisIndex;
+                        var xColumnIndex = xAxisIndex;
+
+                        try
+                        {
+
+                            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis RunOnlyFitAnalysis [BUSY:{worker.IsBusy}]");
+                            _analysis.RunOnlyFitAnalysis();
+                        }
+                        catch (Exception exp)
+                        {
+                            MessageBox.Show($"RunOnlyFitAnalysis: {exp.Message}");
+                        }
+
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
+                            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis start chart update [BUSY:{worker.IsBusy}]");
+
+                            var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
+                            chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _colors, xColumnIndex, yColumnIndex);
+                            UpdateChartsWithCurrentView(chart);
+                            chart.Update();
+
+                            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis charts updated [BUSY:{worker.IsBusy}]");
+                        });
+                    }
+
+
+                    yAxisIndex++;
+                }
+
+                xAxisIndex++;
             }
+
+            //var vaariable=1;
+
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                Parent.Cursor = Cursors.Default;
+            });
+
+            _analysis.InFlawTransform = initialX;
+            _analysis.InResponseTransform = initialY;
+
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis Refresh [BUSY:{worker.IsBusy}]");
+                Refresh();
+            });
+
+            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis ENDED [BUSY:{worker.IsBusy}]");
+        }
+
+        private void FinishAnalysis(BackgroundWorker worker)
+        {
+            //Debug.WriteLine("Background_FinishedAnalysis STARTED");
 
             SelectChartBasedOnAnalysis();
 
@@ -108,7 +283,38 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _analysis.LockBusy = false;
 
-            
+            //Debug.WriteLine("Background_FinishedAnalysis FINISHED");
+        }
+
+        private void Background_FinishedAnalysis(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //Debug.WriteLine("Background_FinishedAnalysis STARTED");
+
+            if (analysisLauncher != null)
+            {
+                analysisLauncher.Dispose();
+                analysisLauncher = null;
+            }
+
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                SelectChartBasedOnAnalysis();
+            });
+
+            AnalysisData.DuplicateTable(_backupPOD, _analysis.Data.PodCurveTable);
+            AnalysisData.DuplicateTable(_backupUncensored, _analysis.Data.ResidualUncensoredTable);
+            AnalysisData.DuplicateTable(_backupPartial, _analysis.Data.ResidualPartialCensoredTable);
+
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                _analysis.RestoreBackup(_a50Backup, _a90Backup, _a9095Backup);
+            });
+
+            _updatingTransformResults = false;
+
+            _analysis.LockBusy = false;
+
+            //Debug.WriteLine("Background_FinishedAnalysis FINISHED");
         }
 
         private void Background_AnalysisProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -123,6 +329,10 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
         private void Background_StartAnalysis(object sender, DoWorkEventArgs e)
         {
+            var worker = sender as BackgroundWorker;
+
+            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis STARTED [BUSY:{worker.IsBusy}]");
+
             Stopwatch watch = new Stopwatch();
                         
             var xAxisIndex = 0;
@@ -155,6 +365,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             _analysis.LockBusy = true;
 
+            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis LOCK BUSY [BUSY:{worker.IsBusy}]");
+
             foreach (var xTrans in AllXTransforms)
             {
                 yAxisIndex = 0;
@@ -173,9 +385,9 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                         _analysis.InFlawTransform = xTrans.TransformType;
                         _analysis.InResponseTransform = yTrans.TransformType;
 
-                        if (_analysis.InResponseTransform == TransformTypeEnum.BoxCox && _analysis.InLambdaValue ==0)
+                        if (_analysis.InResponseTransform == TransformTypeEnum.BoxCox)
                         {
-                            _analysis.SetUpLambda();
+                            _analysis.CalculateAndSetBoxCoxParameters();
                         }
                         //assign the analysis as transform only
                         //Analysis.AnalysisCalculationType = RCalculationType.Transform;
@@ -184,25 +396,25 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                         try
                         {
+
+                            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis RunOnlyFitAnalysis [BUSY:{worker.IsBusy}]");
                             _analysis.RunOnlyFitAnalysis();
                         }
                         catch(Exception exp)
                         {
-                            MessageBox.Show("RunOnlyFitAnalysis: " + exp.Message);
+                            MessageBox.Show($"RunOnlyFitAnalysis: {exp.Message}");
                         }
 
                         this.Invoke((MethodInvoker)delegate()
                         {
+                            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis start chart update [BUSY:{worker.IsBusy}]");
+
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
-
-                            //watch.Restart();
-                            
-
-                            //watch.Stop();
-                            //MessageBox.Show(xTrans.ConfIntervalType.ToString() + " " + yTrans.ConfIntervalType.ToString() + " " + watch.ElapsedMilliseconds + "ms");
-                            chart.FillFromAnalysis(_analysis.Data, _colors, xColumnIndex, yColumnIndex);
+                            chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _colors, xColumnIndex, yColumnIndex);
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
+
+                            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis charts updated [BUSY:{worker.IsBusy}]");
                         });
                     }
 
@@ -225,8 +437,11 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             this.Invoke((MethodInvoker)delegate()
             {
+                //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis Refresh [BUSY:{worker.IsBusy}]");
                 Refresh();
             });
+
+            //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis ENDED [BUSY:{worker.IsBusy}]");
         }
 
         private int _rowIndex;
@@ -281,7 +496,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                     _analysis.Data.ForceRefillSortList();
                     var fixPoints = new List<FixPoint>();
-                    _analysis.Data.UpdateIncludedPointsBasedFlawRange(_analysis.TransformValueForXAxis(_analysis.InFlawMax), _analysis.TransformValueForXAxis(_analysis.InFlawMin), fixPoints);
+                    _analysis.Data.UpdateIncludedPointsBasedFlawRange(_analysis.TransformXDataValue(_analysis.InFlawMax), _analysis.TransformXDataValue(_analysis.InFlawMin), fixPoints);
                 }
                 catch
                 {
@@ -667,7 +882,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                     graphLayoutPanel.Controls.Add(chart, yRow.Index, xRow.Index);
 
                     chart.ChartToolTip = StepToolTip;
-                    StepToolTip.SetToolTip(chart, xRow.Cells[0].Value + "-" + yRow.Cells[0].Value);
+                    StepToolTip.SetToolTip(chart, $"{xRow.Cells[0].Value}-{yRow.Cells[0].Value}");
 
                 }
             }
@@ -688,16 +903,17 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             if (XAxisTransformList.SelectedRows.Count == 0 ||
                 YAxisTransformList.SelectedRows.Count == 0)
                 return;
+
             if (analysisLauncher == null)
             {
                 SetupAnalysisLauncher();
             }
 
-            if (analysisLauncher.IsBusy == false)
+            runnerQueue.Enqueue(this);     
+            
+            if (!runnerBackgroundWorker.IsBusy)
             {
-
-                _updatingTransformResults = true;
-                analysisLauncher.RunWorkerAsync();
+                runnerBackgroundWorker.RunWorkerAsync();
             }
         }
 
@@ -740,30 +956,36 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                 row.Cells[1].Value = Properties.Resources.question;
                 row.Cells[1].ToolTipText = Column1ToolTip(listBox);
                 listBox.Rows.Add(row);
+                //row = listBox.CreateNewCloneRow(listBox.Columns.Count);
+                //row.Cells[0].Value = new TransformObj(TransformTypeEnum.Inverse);
+                //row.Cells[0].ToolTipText = Column0ToolTip(listBox);
+                //row.Cells[1].Value = Properties.Resources.question;
+                //row.Cells[1].ToolTipText = Column1ToolTip(listBox);
+                //listBox.Rows.Add(row);
+
+                //if (listBox == YAxisTransformList)
+                //{
                 row = listBox.CreateNewCloneRow(listBox.Columns.Count);
-                row.Cells[0].Value = new TransformObj(TransformTypeEnum.Inverse);
+                row.Cells[0].Value = new TransformObj(TransformTypeEnum.BoxCox);
                 row.Cells[0].ToolTipText = Column0ToolTip(listBox);
                 row.Cells[1].Value = Properties.Resources.question;
                 row.Cells[1].ToolTipText = Column1ToolTip(listBox);
                 listBox.Rows.Add(row);
-
-                //if (listBox == YAxisTransformList)
-                //{
-                    row = listBox.CreateNewCloneRow(listBox.Columns.Count);
-                    row.Cells[0].Value = new TransformObj(TransformTypeEnum.BoxCox);
-                    row.Cells[0].ToolTipText = Column0ToolTip(listBox);
-                    row.Cells[1].Value = Properties.Resources.question;
-                    row.Cells[1].ToolTipText = Column1ToolTip(listBox);
-                    listBox.Rows.Add(row);
                 //}
 
                 listBox.Rows[0].Selected = true;
                 listBox.Rows[1].Selected = true;
+
                 //remove the box-cox for the x transform since it doesn't applly
                 //listbox items do not work properly if the listbox is not 'nxn'
                 if (listBox == XAxisTransformList)
                 {
-                    listBox.Rows[3].Visible = false;
+                    listBox.Rows[2].Visible = false;
+                }
+                else
+                {
+                    listBox.Rows[1].Selected = false;
+                    listBox.Rows[2].Selected = true;
                 }
 
                 listBox.SelectionChanged += myList_SelectionChanged;

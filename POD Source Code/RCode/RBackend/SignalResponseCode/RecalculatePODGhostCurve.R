@@ -103,15 +103,15 @@ RecalcOriginalPOD<- setRefClass("RecalcOriginalPOD", fields = list(signalRespDFF
                                   },
                                   genAvaluesAndMatrix=function(a.hat.vs.a.censored){
                                     a.hat.decision = y_dec 
-                                    if(modelType==3 || modelType==4){
-                                      a.hat.decision=log(a.hat.decision)
-                                    }
-                                    else if(modelType==5 || modelType==6 || modelType==7){
-                                      a.hat.decision=(a.hat.decision^lambda-1)/lambda
-                                    }
-                                    else if(modelType==8 || modelType==9 || modelType==12){
-                                      a.hat.decision= 1/a.hat.decision
-                                    }
+                                    # if(modelType==3 || modelType==4){
+                                    #   a.hat.decision=log(a.hat.decision)
+                                    # }
+                                    # else if(modelType==5 || modelType==6 || modelType==7){
+                                    #   a.hat.decision=(a.hat.decision^lambda-1)/lambda
+                                    # }
+                                    # else if(modelType==8 || modelType==9 || modelType==12){
+                                    #   a.hat.decision= 1/a.hat.decision
+                                    # }
                                     a.b0 <- as.numeric(a.hat.vs.a.censored$coef[1])
                                     a.b1 <- as.numeric(a.hat.vs.a.censored$coef[2])
                                     #a.tau <- as.numeric(a.hat.vs.a.censored$scale) # random sigma

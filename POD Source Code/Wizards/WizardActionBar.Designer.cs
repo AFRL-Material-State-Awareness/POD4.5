@@ -37,7 +37,6 @@ namespace POD.Wizards
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            //System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WizardActionBar));
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.leftFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.leftOverflowButton = new POD.Controls.PODOverButton();
@@ -45,7 +44,6 @@ namespace POD.Wizards
             this.rightOverflowButton = new POD.Controls.PODOverButton();
             this.leftOverflowMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.rightOverflowMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            //this.ActionIcons = new System.Windows.Forms.ImageList(this.components);
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.mainTableLayout.SuspendLayout();
             this.leftFlowPanel.SuspendLayout();
@@ -55,7 +53,7 @@ namespace POD.Wizards
             // mainTableLayout
             // 
             this.mainTableLayout.AutoSize = true;
-            this.mainTableLayout.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.mainTableLayout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(34)))), ((int)(((byte)(54)))));
             this.mainTableLayout.ColumnCount = 2;
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -155,7 +153,7 @@ namespace POD.Wizards
             this.rightFlowPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-            //al UI has been loaded!
+
         }
 
         #endregion

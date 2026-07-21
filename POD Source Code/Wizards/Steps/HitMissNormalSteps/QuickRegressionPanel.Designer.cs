@@ -283,15 +283,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.aMaxControl.Location = new System.Drawing.Point(3, 16);
             this.aMaxControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMaxControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.aMaxControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.aMaxControl.Name = "aMaxControl";
             this.aMaxControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMaxControl.PartType = POD.ChartPartType.Undefined;
@@ -331,15 +331,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.aMinControl.Location = new System.Drawing.Point(3, 55);
             this.aMinControl.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMinControl.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.aMinControl.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.aMinControl.Name = "aMinControl";
             this.aMinControl.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.aMinControl.PartType = POD.ChartPartType.Undefined;
@@ -378,13 +378,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.covV22Out.Location = new System.Drawing.Point(3, 289);
             this.covV22Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV22Out.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.covV22Out.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.covV22Out.Name = "covV22Out";
@@ -424,13 +424,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.covV11Out.Location = new System.Drawing.Point(3, 211);
             this.covV11Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV11Out.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.covV11Out.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.covV11Out.Name = "covV11Out";
@@ -470,13 +470,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.covV12Out.Location = new System.Drawing.Point(3, 250);
             this.covV12Out.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.covV12Out.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.covV12Out.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.covV12Out.Name = "covV12Out";
@@ -517,13 +517,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.SigmaOut.Location = new System.Drawing.Point(3, 172);
             this.SigmaOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.SigmaOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.SigmaOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.SigmaOut.Name = "SigmaOut";
@@ -718,13 +718,13 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.MuOut.Location = new System.Drawing.Point(3, 133);
             this.MuOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.MuOut.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             0});
             this.MuOut.Minimum = new decimal(new int[] {
-            1215752192,
-            23,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.MuOut.Name = "MuOut";
@@ -781,15 +781,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.likelihoodRatioTestOut.Location = new System.Drawing.Point(6, 69);
             this.likelihoodRatioTestOut.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.likelihoodRatioTestOut.Maximum = new decimal(new int[] {
-            100,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.likelihoodRatioTestOut.Minimum = new decimal(new int[] {
+            276447232,
+            23283,
             0,
-            0,
-            0,
-            0});
+            -2147483648});
             this.likelihoodRatioTestOut.Name = "likelihoodRatioTestOut";
             this.likelihoodRatioTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.likelihoodRatioTestOut.Rating = POD.TestRating.Undefined;
@@ -810,7 +810,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             this.lackOfFitTestLabel.Name = "lackOfFitTestLabel";
             this.lackOfFitTestLabel.Size = new System.Drawing.Size(83, 13);
             this.lackOfFitTestLabel.TabIndex = 15;
-            this.lackOfFitTestLabel.Text = "Likelihood Ratio";
+            this.lackOfFitTestLabel.Text = "Pseudo R^2";
             // 
             // FlawRangeHeader
             // 

@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="HMAnalysisObject.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
@@ -30,6 +46,17 @@ namespace CSharpBackendWithR
         //flag used for separated Data and whether or not the alogrithm converged
         private bool isSeparated;
         private bool failureToConverge;
+
+        // add this near the other private variables like goodnessOfFit
+        private double aicValue;
+
+        // add this property anywhere in the class
+        public double AicValue
+        {
+            set { this.aicValue = value; }
+            get { return this.aicValue; }
+        }
+
         public HMAnalysisObject(string nameInput) : base()
         {
             //original HMDataframe
@@ -94,6 +121,7 @@ namespace CSharpBackendWithR
             this.maxResamples = 30; //1 by default
             //goodness of fit test with likelihood ratio
             this.goodnessOfFit = -1.0;
+            this.aicValue = -1.0;
         }
         public DataTable HitMissDataOrig
         {
@@ -172,6 +200,7 @@ namespace CSharpBackendWithR
             A9095 = -1;
             covarMatrix = null;
             this.goodnessOfFit = -1;
+            this.aicValue = -1; 
             LogitFitTable = null;
             ResidualTable = null;
             IterationTable = null;

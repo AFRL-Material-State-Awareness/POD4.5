@@ -1,4 +1,20 @@
-﻿using POD;
+﻿// <copyright file="ParentAnalysisObject.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using POD;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -107,16 +123,30 @@ namespace CSharpBackendWithR
                 return this.flaw_all;
             }
         }
+        /// <summary>
+        /// Holds uncensored ln(Flaw).
+        /// </summary>
         public List<double> LogFlaws_All { set; get; }
-        //TODO: ause this with signal response too?
+        /// <summary>
+        /// Holds uncensored 1.0/Flaw values.
+        /// </summary>
         public List<double> InverseFlaws_All;
+        /// <summary>
+        /// A list of flaw values excluded by the user.
+        /// </summary>
         public List<double> ExcludedFlaws { set; get; }
-        public Dictionary<string, List<double>> Responses { set; get; }//used for POD with excluded points
+        /// <summary>
+        /// Stores the response values for value for analysis points that haven't been excluded by the user.
+        /// </summary>
+        public Dictionary<string, List<double>> Responses { set; get; }
+        /// <summary>
+        /// Stores the response values for the entire analysis as it was originally imported
+        /// </summary>
         public Dictionary<string, List<double>> Responses_all
         {
             set { 
                 this.responses_all = value;
-                this.maxPrecisionFlaws = IPy4C.GetMaxPrecisionDict(value);
+                this.maxPrecisionResponses = IPy4C.GetMaxPrecisionDict(value);
             }
             get
             {

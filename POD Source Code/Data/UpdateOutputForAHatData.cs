@@ -1,4 +1,20 @@
-﻿using CSharpBackendWithR;
+﻿// <copyright file="UpdateOutputForAHatData.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using CSharpBackendWithR;
 using POD;
 using System;
 using System.Collections.Generic;
@@ -15,9 +31,9 @@ namespace Data
         private TransformBackCSharpTablesAHAT _backwardsTransform;
         private AHatAnalysisObject _aHatAnalysisObject;
         private IMessageBoxWrap _messageBox;
-        public UpdateOutputForAHatData(AHatAnalysisObject ahatAnalysis, IMessageBoxWrap messageBox = null)
+        public UpdateOutputForAHatData(IDataTransformer displayTransformer, AHatAnalysisObject ahatAnalysis, IMessageBoxWrap messageBox = null)
         {
-            _backwardsTransform = new TransformBackCSharpTablesAHAT(ahatAnalysis);
+            _backwardsTransform = new TransformBackCSharpTablesAHAT(displayTransformer, ahatAnalysis);
             _aHatAnalysisObject = ahatAnalysis;
             _messageBox = messageBox ?? new MessageBoxWrap();
         }
@@ -30,12 +46,12 @@ namespace Data
             {
                 fitResidualsTable = _backwardsTransform.ConvertFitResidualsTable(_aHatAnalysisObject.AHatResultsLinear);
                 fitResidualsTable.DefaultView.RowFilter = "";
-                fitResidualsTable.DefaultView.Sort = "flaw" + " " + "ASC";
+                fitResidualsTable.DefaultView.Sort = "flaw ASC";
                 fitResidualsTable = fitResidualsTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Fit Error");
+                Globals.ShowErrorMessageBox(exp, "Residual Fit Error", _messageBox);
             }
         }
         /// <summary>
@@ -46,13 +62,12 @@ namespace Data
             try
             {
                 residualUncensoredTable = _backwardsTransform.TransformBackColResidualTables(_aHatAnalysisObject.AHatResultsResidUncensored);
-                residualUncensoredTable = _backwardsTransform.DeleteCensoredPointsForRUT(residualUncensoredTable);
-                residualUncensoredTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
+                residualUncensoredTable.DefaultView.Sort = "flaw, y ASC";
                 residualUncensoredTable = residualUncensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Uncensored Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Uncensored", _messageBox);
             }
         }
         /// <summary>   
@@ -65,12 +80,12 @@ namespace Data
                 //in the original code, this table does not take the average of the reponses and instead displays the results for inspector 1?
                 residualRawTable = _aHatAnalysisObject.AHatResultsResid;
                 residualRawTable = _backwardsTransform.TransformBackColResidualTables(residualRawTable);
-                residualRawTable.DefaultView.Sort = "flaw, y" + " " + "ASC";
+                residualRawTable.DefaultView.Sort = "flaw, y ASC";
                 residualRawTable = residualRawTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Raw Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Raw Error", _messageBox);
             }
         }
         /// <summary>
@@ -89,14 +104,14 @@ namespace Data
                 if (_aHatAnalysisObject.FlawsCensored.Count() != 0)
                 {
                     int pointsLeft = _aHatAnalysisObject.FlawsCensored.Count();
-                    //TODO: need to cover the condition when two flaws have different reponses
+                    
                     for (int i = residualRawTable.Rows.Count - 1; i >= 0; i--)
                     {
                         if (pointsLeft > 0)
                         {
                             for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
                             {
-                                if (Convert.ToDouble(residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
+                                if (Math.Abs(Convert.ToDouble(residualRawTable.Rows[i][0]) - _aHatAnalysisObject.FlawsCensored[j]) < 1E-10)
                                 {
                                     residualCensoredTable.Rows.Add(residualRawTable.Rows[i].ItemArray);
                                     pointsLeft -= 1;
@@ -110,7 +125,7 @@ namespace Data
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Censored Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Partial Error", _messageBox);
             }
         }
         public void UpdateResidualFullCensoredTable(ref DataTable residualFullCensoredTable, DataTable residualRawTable)
@@ -133,7 +148,7 @@ namespace Data
                         {
                             for (int j = 0; j < _aHatAnalysisObject.FlawsCensored.Count(); j++)
                             {
-                                if (Convert.ToDouble(residualRawTable.Rows[i][0]) == _aHatAnalysisObject.FlawsCensored[j])
+                                if (Math.Abs(Convert.ToDouble(residualRawTable.Rows[i][0]) - _aHatAnalysisObject.FlawsCensored[j]) < 1E-10)
                                 {
                                     residualFullCensoredTable.Rows.Add(residualRawTable.Rows[i].ItemArray);
                                     pointsLeft -= 1;
@@ -144,12 +159,12 @@ namespace Data
 
                     }
                 }
-                //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response" + " " + "ASC";
+                //_residualFullCensoredTable.DefaultView.Sort = "t_flaw, t_ave_response ASC";
                 residualFullCensoredTable = residualFullCensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Full Censored Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Full Censored Error", _messageBox);
             }
         }
         public void UpdateResidualPartialCensoredTable(ref DataTable residualPartialCensoredTable)
@@ -157,12 +172,12 @@ namespace Data
             try
             {
                 residualPartialCensoredTable = _aHatAnalysisObject.AHatResultsResid;
-                residualPartialCensoredTable.DefaultView.Sort = "transformFlaw, transformResponse" + " " + "ASC";
+                residualPartialCensoredTable.DefaultView.Sort = "transformFlaw, transformResponse ASC";
                 residualPartialCensoredTable = residualPartialCensoredTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Residual Partial Censored Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Residual Partial Censored Error", _messageBox);
             }
         }
         /// <summary>
@@ -173,13 +188,13 @@ namespace Data
             try
             {
                 podCurveTable = _backwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD);
-                podCurveTable.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                podCurveTable.DefaultView.Sort = "flaw, pod ASC";
                 podCurveTable = podCurveTable.Select("flaw > 0.0").CopyToDataTable();
                 podCurveTable = podCurveTable.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading POD curve Error");
+                Globals.ShowErrorMessageBox(exp, "Reading POD Curve Error", _messageBox);
             }
         }
         /// <summary>
@@ -191,13 +206,13 @@ namespace Data
             {
                 // used to plot the  original ghost curve in the event that the user omits points
                 podCurveAll = _backwardsTransform.TransformBackPODCurveTable(_aHatAnalysisObject.AHatResultsPOD_All);
-                podCurveAll.DefaultView.Sort = "flaw, pod" + " " + "ASC";
+                podCurveAll.DefaultView.Sort = "flaw, pod ASC";
                 podCurveAll = podCurveAll.Select("flaw > 0.0").CopyToDataTable();
                 podCurveAll = podCurveAll.DefaultView.ToTable();
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading POD Error");
+                Globals.ShowErrorMessageBox(exp, "Reading POD Curve Error", _messageBox);
             }
         }
         /// <summary>
@@ -208,11 +223,11 @@ namespace Data
             try
             {
                 thresholdTable = _backwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
-                thresholdTable.DefaultView.Sort = "threshold" + " " + "ASC";
+                thresholdTable.DefaultView.Sort = "threshold ASC";
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Threshold Error");
+                Globals.ShowErrorMessageBox(exp, "Reading Threshold Error", _messageBox);
             }
             try
             {
@@ -239,7 +254,7 @@ namespace Data
                 //_thresholdPlotTable_All = BackwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable);
                 thresholdTableAll = _backwardsTransform.TransformBackThresholdTable(_aHatAnalysisObject.AHatThresholdsTable_All);
                 //_thresholdPlotTable_All = _aHatAnalysisObject.AHatThresholdsTable_All;
-                thresholdTableAll.DefaultView.Sort = "threshold" + " " + "ASC";
+                thresholdTableAll.DefaultView.Sort = "threshold ASC";
                 //remove negative values
                 thresholdTableAll = thresholdTableAll.Select("threshold > 0.0").CopyToDataTable();
                 //remove infiniti values
@@ -248,7 +263,7 @@ namespace Data
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "POD v4 Reading Threshold Error All");
+                Globals.ShowErrorMessageBox(exp, "Reading Threshold Error All", _messageBox);
             }
         }
         /// <summary>
@@ -259,14 +274,36 @@ namespace Data
             try
             {
                 noramlityTable = _aHatAnalysisObject.AHatNormalityTable;
-                noramlityTable.DefaultView.Sort = "Range, Freq" + " " + "ASC";
+                noramlityTable.DefaultView.Sort = "Range, Freq ASC";
 
                 normalityCurveTable = _aHatAnalysisObject.AHatNormalCurveTable;
-                noramlityTable.DefaultView.Sort = "Range, Freq" + " " + "ASC";
+                noramlityTable.DefaultView.Sort = "Range, Freq ASC";
             }
             catch (Exception exp)
             {
-                _messageBox.Show(exp.Message, "NormalityTable reading error");
+                Globals.ShowErrorMessageBox(exp, "Normality Reading Error", _messageBox);
+            }
+        }
+
+        /// <summary>
+        /// Updates QQ table (this table is used to plot theoretical vs sample quantiles to assess normality)
+        /// </summary>
+        public void UpdateQQTable(ref DataTable qqTable)
+        {
+            try
+            {
+                qqTable = _aHatAnalysisObject.AHatQQTable;
+
+                if (qqTable != null && qqTable.Columns.Count >= 2)
+                {
+                    // Sort by Theoretical Quantiles (X-axis) so the line draws correctly
+                    qqTable.DefaultView.Sort = qqTable.Columns[0].ColumnName + " ASC";
+                    qqTable = qqTable.DefaultView.ToTable();
+                }
+            }
+            catch (Exception exp)
+            {
+                Globals.ShowErrorMessageBox(exp, "QQ Reading Error", _messageBox);
             }
         }
     }
@@ -283,5 +320,6 @@ namespace Data
         void UpdateThresholdCurveTable(ref DataTable thresholdTable);
         void UpdateThresholdCurveTableAll(ref DataTable thresholdTableAll);
         void UpdateNormalityTable(ref DataTable noramlityTable, ref DataTable normalityCurveTable);
+        void UpdateQQTable(ref DataTable qqTable);
     }
 }

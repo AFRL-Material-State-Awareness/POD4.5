@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="ComboBoxListEx.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,24 +54,30 @@ namespace POD.Controls
 
         protected override void WndProc(ref Message m)
         {
-            int selItem = -1;
             base.WndProc(ref m);
+
+            int selItem = -1;
+            bool selectionMessageReceived = false;
 
             switch (m.Msg)
             {
                 case CB_GETCURSEL:
                     selItem = m.Result.ToInt32();
+                    selectionMessageReceived = true;
                     break;
-                // .Net Framework prior to 4.8
-                // case CB_GETCURSEL can be left there or removed: it's always -1
-                case 0x0134:
+
+                case 0x0134: // WM_CTLCOLORLISTBOX
                     selItem = SendMessage(listBoxHandle, LB_GETCURSEL, 0, 0);
+                    selectionMessageReceived = true;
                     break;
+
                 default:
-                    // Add Case switches to handle other events
+                    // Ignore all other messages. Do not evaluate selection changes.
                     break;
             }
-            if (listItem != selItem)
+
+            // ONLY evaluate and fire the event if we actually received a selection message
+            if (selectionMessageReceived && listItem != selItem)
             {
                 listItem = selItem;
                 OnListItemSelectionChanged(new ListItemSelectionChangedEventArgs(

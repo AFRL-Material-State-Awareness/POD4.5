@@ -62,6 +62,12 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                               getGoodnessOfFit=function(){
                                 return(goodnessOfFit)
                               },
+                              setAIC=function(psAIC){
+                                aic<<-psAIC
+                              },
+                              getAIC=function(){
+                                return(aic)
+                              },
                               newWaldGen=function(){
                                 t_transDataFrameMed<<-data.frame("Index"=1:length(nrow(origDataSet)))
                                 probsAt95CIDataFrameMed<<-data.frame("Index"=1:length(nrow(origDataSet)))
@@ -72,6 +78,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 covar22=c()
                                 #used to store the goodness of fit values
                                 goodnessOfFitValues=c()
+                                aicValues=c()
                                 for(i in 1:length(logitResultsPOD)){
                                   linear_pred=predict(logitResultsPOD[[i]], type="link", se.fit=TRUE,
                                                       newdata=data.frame(x=origDataSet$x))
@@ -82,8 +89,15 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   covar12=append(covar12, varcovmat[1,2])
                                   covar21=append(covar21, varcovmat[2,1])
                                   covar22=append(covar22, varcovmat[2,2])
-                                  thisGoodnessOfFit=logitResultsPOD[[i]]$deviance/logitResultsPOD[[i]]$null.deviance
-                                  goodnessOfFitValues=append(goodnessOfFitValues, thisGoodnessOfFit)
+
+                                  # Calculate McFadden's Pseudo R-Squared
+                                  pseudo_r2 <- 1 - (logitResultsPOD[[i]]$deviance / logitResultsPOD[[i]]$null.deviance)
+
+                                  goodnessOfFitValues=append(goodnessOfFitValues, pseudo_r2)
+
+                                  aic_value <- AIC(logitResultsPOD[[i]])
+                                  aicValues = append(aicValues, aic_value)
+
                                   sigmaOfCrack_i = sqrt(varcovmat[1,1]+2*varcovmat[1,2]*
                                                           logitResultsPOD[[i]]$data$x+varcovmat[2,2]*
                                                           logitResultsPOD[[i]]$data$x^2)
@@ -94,6 +108,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   probsAt95CIDataFrameMed<<-cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
                                 }
                                 setGoodnessOfFit(median(goodnessOfFitValues))
+                                setAIC(median(aicValues))
                                 medianCovarMatrix=matrix(nrow=2, ncol=2)
                                 medianCovarMatrix[1,1]=median(covar11)
                                 medianCovarMatrix[1,2]=median(covar12)
@@ -257,6 +272,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                 covar22=c()
                                 #used to store the goodness of fit values
                                 goodnessOfFitValues=c()
+                                aicValues=c()
                                 t_transDataFrameMed<<-data.frame("Index"=1:length(simCrackSizes))
                                 probsAt95CIDataFrameMed<<-data.frame("Index"=1:length(simCrackSizes))
                                 for(i in 1:length(logitResultsPOD)){
@@ -267,8 +283,16 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   covar12=append(covar12, varcovmat[1,2])
                                   covar21=append(covar21, varcovmat[2,1])
                                   covar22=append(covar22, varcovmat[2,2])
+
+
                                   thisGoodnessOfFit=logitResultsPOD[[i]]$deviance/logitResultsPOD[[i]]$null.deviance
                                   goodnessOfFitValues=append(goodnessOfFitValues, thisGoodnessOfFit)
+
+                                  thisAic = AIC(logitResultsPOD[[i]])
+
+                                  # [NEW] Calculate AIC for the current model
+                                  aicValues = append(aicValues, thisAic)
+                                  
                                   sigmaOfCrack_i = sqrt(varcovmat[1,1]+2*varcovmat[1,2]*
                                                           simCrackSizes+varcovmat[2,2]*
                                                           simCrackSizes^2)
@@ -279,6 +303,7 @@ GenPODCurveRSS<-setRefClass("GenPODCurveRSS", fields = list(logitResultsPOD="lis
                                   probsAt95CIDataFrameMed<<-cbind(probsAt95CIDataFrameMed, currProbsAt95CI)
                                 }
                                 setGoodnessOfFit(median(goodnessOfFitValues))
+                                setAIC(median(aicValues))
                                 #globalVarCovar<<-varCovarMatrixList
                                 medianCovarMatrix=matrix(nrow=2, ncol=2)
                                 medianCovarMatrix[1,1]=median(covar11)

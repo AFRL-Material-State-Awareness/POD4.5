@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="PODThresholdChart.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -210,10 +226,11 @@ namespace POD.Controls
 
             XAxisNameIsUnitlessConstant = true;
             YAxisNameIsUnitlessConstant = true;
-            XAxisTitle = "POD Threshold";
-            SingleSeriesCount = 9;
-            YAxisTitle = flawName + "(" + flawUnit + ")"; 
+            XAxisTitle = "Decision Threshold";
+            YAxisTitle = $"{flawName} ({flawUnit})";
+            ForceZeroYAxis = true;
             ChartTitle = "Threshold Curve";
+            this.SingleSeriesCount = 12;
         }
 
         public Series POD90
@@ -326,13 +343,12 @@ namespace POD.Controls
         {
             get
             {
-                var text = "";
+                string text = "Threshold Parameters\n";
 
-                text += "Threshold Parameters" + Environment.NewLine;
-                text += "POD Decision:\t" + _threshold.ToString("F3") + " " + YAxisUnit + Environment.NewLine;
-                text += "a50:\t\t" + _a50.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
-                text += "a90:\t\t" + _a90.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
-                text += "a90/95:\t\t" + _a9095.ToString("F3") + " " + XAxisUnit + Environment.NewLine;
+                text += $"POD Decision:\t{_threshold:F3} {YAxisUnit}\n";
+                text += $"a50:\t\t{_a50:F3} {XAxisUnit}\n";
+                text += $"a90:\t\t{_a90:F3} {XAxisUnit}\n";
+                text += $"a90/95:\t\t{_a9095:F3} {XAxisUnit}\n";
 
                 return text;
             }

@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="PODNumericUpDown.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -47,11 +63,13 @@ namespace POD.Controls
 
        protected override void UpdateEditText()
        {
-           if (Value < .00001m)
+           decimal absValue = Math.Abs(Math.Truncate(Value) - Value);
+
+           if (absValue < .00001m)
                this.Text = Value.ToString("F6");
-           else if (Value < .0001m)
+           else if (absValue < .0001m)
                this.Text = Value.ToString("F5");
-           else if (Value < .001m)
+           else if (absValue < .001m)
                this.Text = Value.ToString("F4");             
            else            
                 base.UpdateEditText();

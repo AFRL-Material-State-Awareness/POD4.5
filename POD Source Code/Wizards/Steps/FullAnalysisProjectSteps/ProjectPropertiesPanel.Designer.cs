@@ -57,6 +57,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             // mainLayoutTable
             // 
+            this.mainLayoutTable.BackColor = System.Drawing.SystemColors.Control;
             this.mainLayoutTable.ColumnCount = 4;
             this.mainLayoutTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainLayoutTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -94,6 +95,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.Black;
             this.label4.Location = new System.Drawing.Point(3, 74);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 13);
@@ -105,6 +107,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             this.label9.AutoSize = true;
             this.mainLayoutTable.SetColumnSpan(this.label9, 4);
             this.label9.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label9.ForeColor = System.Drawing.Color.Black;
             this.label9.Location = new System.Drawing.Point(3, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(90, 13);
@@ -116,7 +119,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.customerComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.customerComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.customerComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.customerComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.customerComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.customerComboBox.FormattingEnabled = true;
             this.customerComboBox.Location = new System.Drawing.Point(85, 70);
             this.customerComboBox.MaximumSize = new System.Drawing.Size(160, 0);
@@ -130,6 +135,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.Black;
             this.label6.Location = new System.Drawing.Point(44, 101);
             this.label6.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
             this.label6.Name = "label6";
@@ -139,8 +145,10 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             // notesTextBox
             // 
+            this.notesTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.mainLayoutTable.SetColumnSpan(this.notesTextBox, 3);
             this.notesTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.notesTextBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.notesTextBox.Location = new System.Drawing.Point(85, 97);
             this.notesTextBox.Multiline = true;
             this.notesTextBox.Name = "notesTextBox";
@@ -151,6 +159,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(4, 20);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 13);
@@ -161,7 +170,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.projectComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.projectComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.projectComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.projectComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.projectComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.projectComboBox.FormattingEnabled = true;
             this.projectComboBox.Location = new System.Drawing.Point(85, 16);
             this.projectComboBox.MaximumSize = new System.Drawing.Size(160, 0);
@@ -175,6 +186,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.Black;
             this.label3.Location = new System.Drawing.Point(275, 20);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 13);
@@ -185,6 +197,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(38, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
@@ -195,6 +208,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label7.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Black;
             this.label7.Location = new System.Drawing.Point(261, 47);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(88, 13);
@@ -205,7 +219,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.parentComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.parentComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.parentComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.parentComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.parentComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.parentComboBox.FormattingEnabled = true;
             this.parentComboBox.Location = new System.Drawing.Point(355, 16);
             this.parentComboBox.MaximumSize = new System.Drawing.Size(160, 0);
@@ -219,7 +235,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.analystComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.analystComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.analystComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.analystComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.analystComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.analystComboBox.FormattingEnabled = true;
             this.analystComboBox.Location = new System.Drawing.Point(85, 43);
             this.analystComboBox.MaximumSize = new System.Drawing.Size(160, 0);
@@ -233,7 +251,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.analystCoComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.analystCoComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.analystCoComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.analystCoComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.analystCoComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.analystCoComboBox.FormattingEnabled = true;
             this.analystCoComboBox.Location = new System.Drawing.Point(355, 43);
             this.analystCoComboBox.MaximumSize = new System.Drawing.Size(160, 0);
@@ -247,6 +267,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.Black;
             this.label5.Location = new System.Drawing.Point(251, 74);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
@@ -257,7 +278,9 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             // 
             this.customerCoComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.customerCoComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.customerCoComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.customerCoComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.customerCoComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.customerCoComboBox.FormattingEnabled = true;
             this.customerCoComboBox.Location = new System.Drawing.Point(355, 70);
             this.customerCoComboBox.MaximumSize = new System.Drawing.Size(160, 0);
@@ -272,7 +295,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             this.overviewFlowPanel.AutoScroll = true;
             this.overviewFlowPanel.AutoSize = true;
             this.overviewFlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.overviewFlowPanel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.overviewFlowPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.overviewFlowPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.overviewFlowPanel.Controls.Add(this.NoChartLabel);
             this.overviewFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;

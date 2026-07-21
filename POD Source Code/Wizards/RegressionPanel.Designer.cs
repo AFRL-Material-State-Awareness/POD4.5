@@ -41,6 +41,7 @@ namespace POD.Wizards
             this.MainChartRightControlsSplitter = new System.Windows.Forms.SplitContainer();
             this.graphSplitter = new POD.Controls.SideSplitter();
             this.graphFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.DisplayPanel = new POD.Controls.PODPanel();
             this.graphSplitterOverlay = new POD.Controls.BlendPictureBox();
             this.RightControlsTablePanel = new System.Windows.Forms.TableLayoutPanel();
             this.OutputLabelTable = new System.Windows.Forms.TableLayoutPanel();
@@ -62,6 +63,7 @@ namespace POD.Wizards
             this.MainChartRightControlsSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.graphSplitter)).BeginInit();
             this.graphSplitter.Panel1.SuspendLayout();
+            this.graphSplitter.Panel2.SuspendLayout();
             this.graphSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.graphSplitterOverlay)).BeginInit();
             this.RightControlsTablePanel.SuspendLayout();
@@ -105,6 +107,10 @@ namespace POD.Wizards
             // 
             this.graphSplitter.Panel1.Controls.Add(this.graphFlowPanel);
             this.graphSplitter.Panel1MinSize = 70;
+            // 
+            // graphSplitter.Panel2
+            // 
+            this.graphSplitter.Panel2.Controls.Add(this.DisplayPanel);
             this.graphSplitter.Panel2MinSize = 70;
             this.graphSplitter.Size = new System.Drawing.Size(847, 640);
             this.graphSplitter.SplitterDistance = 210;
@@ -121,6 +127,17 @@ namespace POD.Wizards
             this.graphFlowPanel.Size = new System.Drawing.Size(210, 640);
             this.graphFlowPanel.TabIndex = 0;
             this.graphFlowPanel.WrapContents = false;
+            // 
+            // DisplayPanel
+            // 
+            this.DisplayPanel.BackColor = System.Drawing.Color.Black;
+            this.DisplayPanel.BackgroundControl = null;
+            this.DisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DisplayPanel.Location = new System.Drawing.Point(0, 0);
+            this.DisplayPanel.Name = "DisplayPanel";
+            this.DisplayPanel.Size = new System.Drawing.Size(633, 640);
+            this.DisplayPanel.TabIndex = 0;
+            this.DisplayPanel.Visible = false;
             // 
             // graphSplitterOverlay
             // 
@@ -375,6 +392,7 @@ namespace POD.Wizards
             ((System.ComponentModel.ISupportInitialize)(this.MainChartRightControlsSplitter)).EndInit();
             this.MainChartRightControlsSplitter.ResumeLayout(false);
             this.graphSplitter.Panel1.ResumeLayout(false);
+            this.graphSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.graphSplitter)).EndInit();
             this.graphSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.graphSplitterOverlay)).EndInit();
@@ -397,7 +415,7 @@ namespace POD.Wizards
         protected System.Windows.Forms.SplitContainer MainChartRightControlsSplitter;
         protected TableLayoutPanel outputTablePanel;
         protected BlendPictureBox graphSplitterOverlay;
-        protected Panel PutControlsHerePanel;
+        public Panel PutControlsHerePanel;
         private Label OutputLabel;
         private Label InputLabel;
         private Button InputHideButton;
@@ -408,5 +426,6 @@ namespace POD.Wizards
         private ImageList ShiftLeftRightList;
         private TableLayoutPanel OutputLabelTable;
         private Button ShiftOutputButton;
+        protected PODPanel DisplayPanel;
     }
 }

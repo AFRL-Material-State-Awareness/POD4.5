@@ -367,5 +367,17 @@ namespace WeifenLuo.WinFormsUI.Docking
                 base.OnSizeChanged(e);
             }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // DockContent
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "DockContent";
+            this.ResumeLayout(false);
+
+        }
     }
 }

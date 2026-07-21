@@ -41,7 +41,7 @@ namespace POD.Wizards
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.flowLayoutPanel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(34)))), ((int)(((byte)(54)))));
             this.flowLayoutPanel2.Controls.Add(this._header);
             this.flowLayoutPanel2.Controls.Add(this._dash);
             this.flowLayoutPanel2.Controls.Add(this._subHeader);
@@ -58,7 +58,7 @@ namespace POD.Wizards
             this._header.AutoSize = true;
             this._header.Dock = System.Windows.Forms.DockStyle.Fill;
             this._header.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._header.ForeColor = System.Drawing.Color.White;
+            this._header.ForeColor = System.Drawing.Color.WhiteSmoke;
             this._header.Location = new System.Drawing.Point(3, 0);
             this._header.Name = "_header";
             this._header.Size = new System.Drawing.Size(109, 33);
@@ -70,7 +70,7 @@ namespace POD.Wizards
             this._dash.AutoSize = true;
             this._dash.Dock = System.Windows.Forms.DockStyle.Fill;
             this._dash.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._dash.ForeColor = System.Drawing.Color.White;
+            this._dash.ForeColor = System.Drawing.Color.LightGray;
             this._dash.Location = new System.Drawing.Point(118, 0);
             this._dash.Name = "_dash";
             this._dash.Size = new System.Drawing.Size(25, 33);
@@ -83,7 +83,7 @@ namespace POD.Wizards
             this._subHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.SetFlowBreak(this._subHeader, true);
             this._subHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._subHeader.ForeColor = System.Drawing.Color.White;
+            this._subHeader.ForeColor = System.Drawing.Color.WhiteSmoke;
             this._subHeader.Location = new System.Drawing.Point(149, 0);
             this._subHeader.Name = "_subHeader";
             this._subHeader.Size = new System.Drawing.Size(120, 33);

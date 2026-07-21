@@ -1,4 +1,20 @@
-﻿using System;
+﻿// <copyright file="RegressionPanel.cs" company="The University of Dayton">
+// Copyright © 2025 The University of Dayton. All rights reserved.
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,6 +29,7 @@ namespace POD.Wizards
 {
     using System.Data;
     using System.Diagnostics;
+    using System.Threading;
     using System.Windows.Forms.DataVisualization.Charting;
 
     using POD.Analyze;
@@ -42,6 +59,8 @@ namespace POD.Wizards
         {
             InitializeComponent();
 
+            this.DisplayPanel.SendToBack();
+
             graphSplitter.Panel1MinSize = 70;
             graphSplitter.Panel2MinSize = 70;
             graphFlowPanel.MinimumSize = new System.Drawing.Size(70, 0);
@@ -52,6 +71,31 @@ namespace POD.Wizards
             OutputHideButton.BackgroundImage = ExpandContractList.Images[0];
 
             Load += RegressionPanel_Load;
+        }
+
+        public static double UndoLambda501(double lambdaIn)
+        {
+            double lambdaOut = lambdaIn;
+
+            if (Math.Abs(lambdaIn - .501) < .001)
+            {
+                lambdaOut = .500;
+            }
+
+            return lambdaOut;
+        }
+
+        public static double ApplyLambda501(double lambdaIn)
+        {
+            var lambdaOut = lambdaIn;
+
+            // .500 messes with threshold curve and y-axis
+            if (Math.Abs(lambdaIn - .500) < .001)
+            {
+                lambdaOut = .501;
+            }
+
+            return lambdaOut;
         }
 
         void RegressionPanel_Load(object sender, EventArgs e)
@@ -68,11 +112,13 @@ namespace POD.Wizards
             }*/
         }
 
+            
+
         public void Add_Error_OnChart(object sender, ErrorArgs e)
         {
             if (MainChart != null && Source.Name == e.AnalysisName)
             {
-                MainChart.AddError(e);                
+                MainChart.AddError(e);
             }
         }
 
@@ -101,7 +147,7 @@ namespace POD.Wizards
 
         }
 
-        
+
 
         public void Show_Progress_OnChart(object sender, ErrorArgs e)
         {
@@ -121,7 +167,7 @@ namespace POD.Wizards
             {
                 _source = value;
 
-                
+
             }
         }
 
@@ -208,7 +254,7 @@ namespace POD.Wizards
         {
             var graphics = myNumeric.CreateGraphics();
 
-            var newLength = FontHelper.MeasureDisplayStringWidth(graphics, "0000000000.000", myNumeric.Font) + FontHelper.MeasureDisplayStringWidth(graphics, "00", myNumeric.Font) + 20;
+            var newLength = FontHelper.MeasureDisplayStringWidth(graphics, "0000000000.000", myNumeric.Font) + FontHelper.MeasureDisplayStringWidth(graphics, "00", myNumeric.Font) + 30;
 
             if (_nineCharWidth != newLength)
             {
@@ -220,7 +266,7 @@ namespace POD.Wizards
 
         public void ResizeControlsToAllFit(TableLayoutPanel myTable)
         {
-            
+
 
             foreach (Control control in myTable.Controls)
             {
@@ -249,15 +295,25 @@ namespace POD.Wizards
         {
             if (MainChart != null)
             {
+                MainChart.RunAnalysisNeeded -= mainChart_RunAnalysisNeeded;
+                MainChart.LinesChanged -= MainChart_LinesChanged;
+
                 MainChart.RunAnalysisNeeded += mainChart_RunAnalysisNeeded;
                 MainChart.LinesChanged += MainChart_LinesChanged;
             }
         }
 
+        protected virtual void ValidateInputControls()
+        {
+            // Base implementation is empty. Override in derived classes.
+        }
+
         protected void mainChart_RunAnalysisNeeded(object sender, EventArgs e)
         {
+            ValidateInputControls();
             Analysis.AnalysisCalculationType = RCalculationType.Full;
             RunAnalysis();
+            ValidateInputControls();
         }
 
         public RegressionAnalysisChart MainChart { get; set; }
@@ -296,7 +352,7 @@ namespace POD.Wizards
         {
         }
 
-        
+
 
         public override void AddSideCharts()
         {
@@ -305,7 +361,7 @@ namespace POD.Wizards
         protected virtual void ColorNumericControls()
         {
         }
-        
+
         public virtual void SetupAnalysisInput()
         {
         }
@@ -316,10 +372,10 @@ namespace POD.Wizards
 
         protected virtual void SetupLabels()
         {
-            
+
         }
 
-        public virtual void RunAnalysis(bool disableControls=true)
+        public virtual void RunAnalysis(bool disableControls = true)
         {
             //ResumeDrawing();
             REngineObject.REngineRunning = true;
@@ -333,7 +389,7 @@ namespace POD.Wizards
             if (MainChart != null)
             {
                 //Debug.WriteLine($"Check if annotations is null 1: {MainChart.Annotations}");
-                if(disableControls)
+                if (disableControls)
                     DisableInputControls();
                 MainChart.PrepareForRunAnalysis();
                 MainChart.ResetErrors();
@@ -349,7 +405,7 @@ namespace POD.Wizards
             SetupAnalysisInput();
 
             this.Cursor = Cursors.WaitCursor;
-            
+
             Analysis.RunAnalysis();
 
             this.Cursor = Cursors.Default;
@@ -360,14 +416,25 @@ namespace POD.Wizards
 
         }
 
+        private void Panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private POD.Controls.PODTimer callTimer = new Controls.PODTimer();
+
         protected virtual void DisableInputControls()
         {
             foreach (Annotation anno in MainChart.Annotations)
                 anno.AllowMoving = false;
 
             //_activeControl = ActiveControl;
-            
-            foreach(Control control in inputTablePanel.Controls)
+
+            // cancel any previous timer in case timer was called multiple times before it finished
+            callTimer.CancelTimer();
+            callTimer.StartTimer(() => DisplayPanel.ShowDisplayPanel(), callTimer.Random.Next(5, 10));
+
+            foreach (Control control in inputTablePanel.Controls)
             {
                 var label = control as Label;
 
@@ -381,6 +448,12 @@ namespace POD.Wizards
         {
             foreach (Annotation anno in MainChart.Annotations)
                 anno.AllowMoving = true;
+
+            callTimer.CancelTimer();
+            DisplayPanel.SetMouse(false);
+            Firework.HideAll = true;
+            callTimer.StartTimer(() => DisplayPanel.HideDisplayPanel(), 2);
+            
 
             MainChart.DrawBoundaryLines();
 
@@ -429,7 +502,7 @@ namespace POD.Wizards
 
             if (MainChart != null)
             {
-                //MainChart.LoadChartData(Analysis.Data);
+                //MainChart.LoadChartData(Analysis.Data, Analysis.DisplayTransformer);
                 MainChart.PickBestAxisRange();
                 MainChart.ForceResizeAnnotations();
             }
@@ -439,7 +512,7 @@ namespace POD.Wizards
 
         public override void RefreshValues()
         {
-            //SuspendDrawing();
+            SuspendDrawing();
             Analysis.Data.FilterTransformedDataByRanges = false;
             Analysis.CalculateInitialValuesWithNewData();
             SetupSideCharts();
@@ -448,7 +521,7 @@ namespace POD.Wizards
             {
                 AddChartListeningForErrors();
 
-                MainChart.LoadChartData(Analysis.Data);
+                MainChart.LoadChartData(Analysis.Data, Analysis.Transformer);
                 MainChart.PickBestAxisRange();
                 MainChart.ForceResizeAnnotations();
             }
@@ -475,6 +548,10 @@ namespace POD.Wizards
         protected void AddChartListeningForErrors()
         {
             RemoveChartListeningForErrors();
+
+            Analysis.Python.OnAnalysisError -= Add_Error_OnChart;
+            Analysis.Python.OnProgressUpdate -= Show_Progress_OnChart;
+            Analysis.Python.OnAnalysisFinish -= Show_Error_OnChart;
 
             Analysis.Python.OnAnalysisError += Add_Error_OnChart;
             Analysis.Python.OnProgressUpdate += Show_Progress_OnChart;
@@ -626,6 +703,20 @@ namespace POD.Wizards
             myMainPanel.ResumeLayout();
         }
 
+        protected static string GetControlLabelText(Control ctrl, List<Control> controlWithLabels)
+        {
+            string text = "Unknown";
+
+            int index = controlWithLabels.IndexOf(ctrl);
+
+            if (index > 0)
+            {
+                text = controlWithLabels[index - 1].Text;
+            }
+
+            return text;
+        }
+
         private void Panel_Paint(object sender, PaintEventArgs e)
         {
             
@@ -633,41 +724,44 @@ namespace POD.Wizards
         //get specific hit miss analysis error if possible
         public void SearhForHitMissErrors(double a9095Original)
         {
-            //get the info for the current stats of the hit miss object
+            // get the info for the current stats of the hit miss object
             CSharpBackendWithR.HMAnalysisObject currHitMissSettings = Analysis._finalAnalysis;
+
             if (!(Analysis.FailToConverge) && Double.IsNaN(a9095Original))
             {
                 _knownErrorFound = true;
-                Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity. " + '\n' +
-                    "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)" + '\n' + "Confidence intervals and/or Ranked Set Sampling for potentially better results");
+                Source.Python.AddErrorText("It appears the logistic regression converged, but A9095 is either very large number or infinity.\n" +
+                                           "Try using Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)\n" +
+                                           "Confidence intervals and/or Ranked Set Sampling for potentially better results.");
             }
             else if (Analysis.FailToConverge)
             {
                 _knownErrorFound = true;
-                Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge. " + '\n' +
-                    "Try the Firth Logistic Regression Model Type Instead");
+                Source.Python.AddErrorText("Maximum Likelihood Logistic Regression failed to converge.\n" +
+                                           "Try the Firth Logistic Regression Model Type Instead.");
             }
             else if (currHitMissSettings.RegressionType == "Firth Logistic Regression" && Double.IsNaN(a9095Original))
             {
                 _knownErrorFound = true;
+
                 if (currHitMissSettings.SrsOrRSS == 1 && (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR"))
                 {
-                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful." + '\n' +
-                        "You could try switching between LR and MLR with the current settings." + '\n' +
-                        "Otherwise the true value for A9095 for the data is likely infinity.");
+                    Source.Python.AddErrorText("Error: A9095 doesn't exist or is too large to be useful.\n" +
+                                               "You could try switching between LR and MLR with the current settings.\n" +
+                                               "Otherwise the true value for A9095 for the data is likely infinity.");
                 }
                 else if (currHitMissSettings.CIType == "LR" || currHitMissSettings.CIType == "MLR")
                 {
-                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! You could try" + '\n' +
-                        "to combine Ranked Set Sampling with the current Confidence Interval" + '\n' +
-                        "(WARNING: can take anywhere from 5-20min)");
+                    Source.Python.AddErrorText("A9095 is either infinity or a very large number!\n" +
+                                               "You could try to combine Ranked Set Sampling with the current Confidence Interval\n" +
+                                               "(WARNING: can take anywhere from 5-20min)");
                 }
                 else
                 {
-                    Source.Python.AddErrorText("A9095 is either infinity or a very large number! Try Likelihood Ratio (LR) or" + '\n' +
-                        "Modified Likelihood Ratio (MLR) Confidence Intervals for best results.");
+                    Source.Python.AddErrorText("A9095 is either infinity or a very large number!\n" +
+                                               "Try Likelihood Ratio (LR) or Modified Likelihood Ratio (MLR)\n" +
+                                               "Confidence Intervals for best results.");
                 }
-
             }
         }
     }

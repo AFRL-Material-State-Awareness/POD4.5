@@ -29,21 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.newFullAnalysisProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,32 +36,32 @@
             this.quickAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quickHitMissToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newQuickAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator4 = new POD.ExtendedToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new POD.ExtendedToolStripSeparator();
             this.exportToExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator10 = new POD.ExtendedToolStripSeparator();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator5 = new POD.ExtendedToolStripSeparator();
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
-            this.recentToolStripSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.recentToolStripSeperator = new POD.ExtendedToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.recentQuickAnalysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripSeperator = new POD.ExtendedToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1 = new POD.ExtendedToolStripSeparator();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator8 = new POD.ExtendedToolStripSeparator();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripMenuItem();
             this.newUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.intermediateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +74,7 @@
             this.reportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.milHandbook1823aToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new POD.ExtendedToolStripSeparator();
             this.alaysis1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysis1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,7 +82,7 @@
             this.openManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
             this.pODV3UserManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator7 = new POD.ExtendedToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.licenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -106,14 +91,14 @@
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.vS2012LightTheme1 = new WeifenLuo.WinFormsUI.Docking.VS2012LightTheme();
+            this.vS2012LightTheme1 = new WeifenLuo.WinFormsUI.Docking.VS2015DarkTheme();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
@@ -162,7 +147,7 @@
             this.quickAnalysisToolStripMenuItem,
             this.quickHitMissToolStripMenuItem});
             this.newFullAnalysisProjectToolStripMenuItem.Name = "newFullAnalysisProjectToolStripMenuItem";
-            this.newFullAnalysisProjectToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.newFullAnalysisProjectToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.newFullAnalysisProjectToolStripMenuItem.Text = "&New";
             // 
             // fullAnalysisToolStripMenuItem
@@ -189,21 +174,21 @@
             // newQuickAnalysisToolStripMenuItem
             // 
             this.newQuickAnalysisToolStripMenuItem.Name = "newQuickAnalysisToolStripMenuItem";
-            this.newQuickAnalysisToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.newQuickAnalysisToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.newQuickAnalysisToolStripMenuItem.Text = "&Open...";
             this.newQuickAnalysisToolStripMenuItem.Click += new System.EventHandler(this.MenuOpenFile_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(199, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(198, 6);
             this.toolStripSeparator4.Visible = false;
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Enabled = false;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(201, 22);
             this.toolStripMenuItem2.Text = "Close Analysis";
             this.toolStripMenuItem2.Visible = false;
             // 
@@ -211,34 +196,34 @@
             // 
             this.toolStripMenuItem3.Enabled = false;
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(201, 22);
             this.toolStripMenuItem3.Text = "Close Project";
             this.toolStripMenuItem3.Visible = false;
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(199, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(198, 6);
             this.toolStripSeparator3.Visible = false;
             // 
             // exportToExcelToolStripMenuItem
             // 
             this.exportToExcelToolStripMenuItem.Name = "exportToExcelToolStripMenuItem";
             this.exportToExcelToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.exportToExcelToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.exportToExcelToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.exportToExcelToolStripMenuItem.Text = "&Export To Excel...";
             this.exportToExcelToolStripMenuItem.Click += new System.EventHandler(this.MenuExportExcel_Click);
             // 
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(199, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(198, 6);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.MenuSaveFile_Click);
             // 
@@ -246,7 +231,7 @@
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.MenuSaveAsFile_Click);
             // 
@@ -254,21 +239,21 @@
             // 
             this.toolStripMenuItem5.Enabled = false;
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(201, 22);
             this.toolStripMenuItem5.Text = "Save All";
             this.toolStripMenuItem5.Visible = false;
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(199, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(198, 6);
             this.toolStripSeparator5.Visible = false;
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Enabled = false;
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(201, 22);
             this.toolStripMenuItem11.Text = "Page Setup...";
             this.toolStripMenuItem11.Visible = false;
             // 
@@ -276,20 +261,20 @@
             // 
             this.toolStripMenuItem12.Enabled = false;
             this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem12.Size = new System.Drawing.Size(201, 22);
             this.toolStripMenuItem12.Text = "Print...";
             this.toolStripMenuItem12.Visible = false;
             // 
             // recentToolStripSeperator
             // 
             this.recentToolStripSeperator.Name = "recentToolStripSeperator";
-            this.recentToolStripSeperator.Size = new System.Drawing.Size(199, 6);
+            this.recentToolStripSeperator.Size = new System.Drawing.Size(198, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Enabled = false;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.exitToolStripMenuItem.Text = "Recent Projects...";
             this.exitToolStripMenuItem.Visible = false;
             // 
@@ -297,7 +282,7 @@
             // 
             this.toolStripMenuItem6.Enabled = false;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(201, 22);
             this.toolStripMenuItem6.Text = "Recent Full Analysis...";
             this.toolStripMenuItem6.Visible = false;
             // 
@@ -305,19 +290,19 @@
             // 
             this.recentQuickAnalysisToolStripMenuItem.Enabled = false;
             this.recentQuickAnalysisToolStripMenuItem.Name = "recentQuickAnalysisToolStripMenuItem";
-            this.recentQuickAnalysisToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.recentQuickAnalysisToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.recentQuickAnalysisToolStripMenuItem.Text = "Recent Quick Analysis...";
             this.recentQuickAnalysisToolStripMenuItem.Visible = false;
             // 
             // exitToolStripSeperator
             // 
             this.exitToolStripSeperator.Name = "exitToolStripSeperator";
-            this.exitToolStripSeperator.Size = new System.Drawing.Size(199, 6);
+            this.exitToolStripSeperator.Size = new System.Drawing.Size(198, 6);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(202, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(201, 22);
             this.exitToolStripMenuItem1.Text = "E&xit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.Exit_Application);
             // 
@@ -515,47 +500,47 @@
             // pODQuickHelpToolStripMenuItem
             // 
             this.pODQuickHelpToolStripMenuItem.Name = "pODQuickHelpToolStripMenuItem";
-            this.pODQuickHelpToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.pODQuickHelpToolStripMenuItem.Text = "POD v4.5 Quick Help...";
+            this.pODQuickHelpToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.pODQuickHelpToolStripMenuItem.Text = "POD Pro v4.5 Quick Help...";
             this.pODQuickHelpToolStripMenuItem.Click += new System.EventHandler(this.QuickHelp_Show);
             // 
             // openManualToolStripMenuItem
             // 
             this.openManualToolStripMenuItem.Name = "openManualToolStripMenuItem";
-            this.openManualToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.openManualToolStripMenuItem.Text = "POD v4 User Manual...";
+            this.openManualToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.openManualToolStripMenuItem.Text = "POD Pro v4.5 User Manual...";
             this.openManualToolStripMenuItem.Click += new System.EventHandler(this.PODManual_Show);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(221, 22);
             this.toolStripMenuItem8.Text = "Mil Handbook 1823A...";
             this.toolStripMenuItem8.Click += new System.EventHandler(this.Mil1823A_Show);
             // 
             // pODV3UserManualToolStripMenuItem
             // 
             this.pODV3UserManualToolStripMenuItem.Name = "pODV3UserManualToolStripMenuItem";
-            this.pODV3UserManualToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.pODV3UserManualToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.pODV3UserManualToolStripMenuItem.Text = "POD v3 Report...";
             this.pODV3UserManualToolStripMenuItem.Click += new System.EventHandler(this.PODv3_Show);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(191, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(218, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.About_Show);
             // 
             // licenseToolStripMenuItem
             // 
             this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-            this.licenseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.licenseToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.licenseToolStripMenuItem.Text = "License";
             this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click);
             // 
@@ -615,61 +600,16 @@
             // 
             this.dockPanel1.BackColor = System.Drawing.SystemColors.Control;
             this.dockPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dockPanel1.DockBackColor = System.Drawing.SystemColors.Control;
+            this.dockPanel1.DockBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.dockPanel1.DockBottomPortion = 0.5D;
             this.dockPanel1.DockLeftPortion = 250D;
             this.dockPanel1.DockRightPortion = 250D;
             this.dockPanel1.DockTopPortion = 0.5D;
-            this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
             this.dockPanel1.Location = new System.Drawing.Point(0, 24);
             this.dockPanel1.Name = "dockPanel1";
+            this.dockPanel1.Padding = new System.Windows.Forms.Padding(6);
+            this.dockPanel1.ShowAutoHideContentOnHover = false;
             this.dockPanel1.Size = new System.Drawing.Size(1511, 769);
-            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(206)))), ((int)(((byte)(219)))));
-            tabGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            tabGradient2.TextColor = System.Drawing.Color.White;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(151)))), ((int)(((byte)(234)))));
-            tabGradient3.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient3.TextColor = System.Drawing.Color.Black;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(170)))), ((int)(((byte)(220)))));
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            tabGradient4.TextColor = System.Drawing.Color.White;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient5.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient5.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.ControlDark;
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient6.TextColor = System.Drawing.SystemColors.GrayText;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient7.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient7.TextColor = System.Drawing.SystemColors.GrayText;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dockPanel1.Skin = dockPanelSkin1;
             this.dockPanel1.TabIndex = 4;
             this.dockPanel1.Theme = this.vS2012LightTheme1;
             this.dockPanel1.ContentRemoved += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.Content_Removed);
@@ -692,7 +632,7 @@
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "UDRI Probability of Detection v4.5.2";
+            this.Text = "UDRI Probability of Detection Professional v4.5.X";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -707,14 +647,14 @@
 
         #endregion
 
-        private WeifenLuo.WinFormsUI.Docking.VS2012LightTheme vS2012LightTheme1;
+        private WeifenLuo.WinFormsUI.Docking.VS2015DarkTheme vS2012LightTheme1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private POD.ExtendedToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectManagerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analysisLocationToolStripMenuItem;
@@ -723,26 +663,26 @@
         private System.Windows.Forms.ToolStripMenuItem fullAnalysisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quickAnalysisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newQuickAnalysisToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private POD.ExtendedToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private POD.ExtendedToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private POD.ExtendedToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem recentQuickAnalysisToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator exitToolStripSeperator;
+        private POD.ExtendedToolStripSeparator exitToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem reportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private POD.ExtendedToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem alaysis1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analysis1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openManualToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private POD.ExtendedToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
@@ -757,15 +697,15 @@
         private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
-        private System.Windows.Forms.ToolStripSeparator recentToolStripSeperator;
+        private POD.ExtendedToolStripSeparator recentToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private POD.ExtendedToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem13;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripMenuItem exportToExcelToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private POD.ExtendedToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripMenuItem quickHitMissToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pODQuickHelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pODV3UserManualToolStripMenuItem;

@@ -1,6 +1,80 @@
+# User-specific files
 *.suo
 *.user
+*.userosscache
+*.sln.docstates
+
 _ReSharper.*
 bin
 !R-4.1.2/bin
 obj
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Mono auto generated files
+mono_crash.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015 and newer cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build results of an analyzer
+Project/obj/
+
+# NuGet Packages
+*.nupkg
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Packages folder
+packages/
+# If you are using NuGet Packages, you should ignore the packages folder.
+# But if you want to commit the packages, comment out the line above and 
+# uncomment the lines below.
+#!packages/build/
+#!packages/repositories.config
+
+# Profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Roslyn cache directories
+*.ide/
+
+# Misc
+*.log
+*.cache
+*.bak

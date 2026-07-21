@@ -363,13 +363,13 @@
             this.MinFlaw.InterceptArrowKeys = true;
             this.MinFlaw.Location = new System.Drawing.Point(82, 228);
             this.MinFlaw.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.MinFlaw.Minimum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.MinFlaw.Name = "MinFlaw";
@@ -400,13 +400,13 @@
             this.MaxFlaw.InterceptArrowKeys = true;
             this.MaxFlaw.Location = new System.Drawing.Point(82, 202);
             this.MaxFlaw.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.MaxFlaw.Minimum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.MaxFlaw.Name = "MaxFlaw";
@@ -437,13 +437,13 @@
             this.MinResponse.InterceptArrowKeys = true;
             this.MinResponse.Location = new System.Drawing.Point(82, 296);
             this.MinResponse.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.MinResponse.Minimum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.MinResponse.Name = "MinResponse";
@@ -475,13 +475,13 @@
             this.MaxResponse.InterceptArrowKeys = true;
             this.MaxResponse.Location = new System.Drawing.Point(82, 270);
             this.MaxResponse.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             0});
             this.MaxResponse.Minimum = new decimal(new int[] {
-            1000000000,
-            0,
+            276447232,
+            23283,
             0,
             -2147483648});
             this.MaxResponse.Name = "MaxResponse";
