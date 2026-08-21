@@ -109,7 +109,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             _normalityButton = new PODBooleanButton("Show N&ormality", "Hide N&ormality", true, "Show Or hide the response Normality chart. (Ctrl + 2)", StepToolTip);
             AddLeftButton(_normalityButton, Normality_Click);
 
-            _qqButton = new PODBooleanButton("Show QQ", "Hide QQ", true, "Show or hide QQ side chart. (Ctrl + 3)", StepToolTip);
+            _qqButton = new PODBooleanButton("Show QQ Plot", "Hide QQ Plot", true, "Show or hide QQ side chart. (Ctrl + 3)", StepToolTip);
             AddLeftButton(_qqButton, QQ_Click);
 
             _podButton = new PODBooleanButton("Show POD Curve", "Hide POD Curve", true, "Show or hide POD side chart. (Ctrl + 4)", StepToolTip);

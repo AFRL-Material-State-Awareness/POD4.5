@@ -41,8 +41,8 @@
             this.ActionIcons.Images.SetKeyName(1, "Previous.png");
             this.ActionIcons.Images.SetKeyName(2, "Finish.png");
             this.ActionIcons.Images.SetKeyName(3, "Duplicate.png");
-            this.ActionIcons.Images.SetKeyName(4, "Use Last.png");
-            this.ActionIcons.Images.SetKeyName(5, "Paste.png");
+            this.ActionIcons.Images.SetKeyName(4, "Use Last Input.png");
+            this.ActionIcons.Images.SetKeyName(5, "Paste From Clipboard.png");
             this.ActionIcons.Images.SetKeyName(6, "New Source.png");
             this.ActionIcons.Images.SetKeyName(7, "Delete Source.png");
             this.ActionIcons.Images.SetKeyName(8, "Restore Source.png");
@@ -63,14 +63,14 @@
             this.ActionIcons.Images.SetKeyName(23, "Export to Excel.png");
             this.ActionIcons.Images.SetKeyName(24, "Show POD Curve.png");
             this.ActionIcons.Images.SetKeyName(25, "Select Empty.png");
-            this.ActionIcons.Images.SetKeyName(26, "Select All.png");
+            this.ActionIcons.Images.SetKeyName(26, "Select All Responses.png");
             this.ActionIcons.Images.SetKeyName(27, "Select None.png");
             this.ActionIcons.Images.SetKeyName(28, "Invert Selection.png");
             this.ActionIcons.Images.SetKeyName(29, "Refresh Charts.png");
             this.ActionIcons.Images.SetKeyName(30, "Undo Deleted.png");
             this.ActionIcons.Images.SetKeyName(31, "Check.png");
             this.ActionIcons.Images.SetKeyName(32, "X.png");
-            this.ActionIcons.Images.SetKeyName(33, "Check All.png");
+            this.ActionIcons.Images.SetKeyName(33, "Check All Analyses.png");
             this.ActionIcons.Images.SetKeyName(34, "Check None.png");
             this.ActionIcons.Images.SetKeyName(35, "Create Analysis.png");
             this.ActionIcons.Images.SetKeyName(36, "Delete Selected.png");
@@ -86,6 +86,7 @@
             this.ActionIcons.Images.SetKeyName(46, "Show Properties.png");
             this.ActionIcons.Images.SetKeyName(47, "Switch Help View.png");
             this.ActionIcons.Images.SetKeyName(48, "Show Normality.png");
+            this.ActionIcons.Images.SetKeyName(49, "Show QQ Plot.png");
             // 
             // ActionIconsList
             // 

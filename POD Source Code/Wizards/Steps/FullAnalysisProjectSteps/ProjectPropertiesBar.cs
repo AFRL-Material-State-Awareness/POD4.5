@@ -60,7 +60,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             StepToolTip = new PODToolTip();
 
-            _useLastButton = new PODButton("Use Last", "Auto-fill with last values that were used. (Ctrl + L)", StepToolTip);
+            _useLastButton = new PODButton("Use Last Input", "Auto-fill with last values that were used. (Ctrl + L)", StepToolTip);
             _showProperties = new PODBooleanButton("Show Properties", "Hide Properties", true, "Show/hide Project Properties. (Ctrl + [)", StepToolTip);
 
             prevButton.Enabled = false;

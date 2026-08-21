@@ -266,10 +266,10 @@ namespace POD.Controls
 
             SingleSeriesCount = 1;
 
-            _bitmap = new Bitmap(ButtonImageList.Images[0]);
-            _wideBitmap = new Bitmap(WideImageList.Images[0]);
-            _aspectBitmap = new Bitmap(WideImageList.Images[5]);
-            _sizeBitmap = new Bitmap(WideImageList.Images[5]);
+            _bitmap = new Bitmap(ColorManager.TransformImage(new Bitmap(ButtonImageList.Images[0])));
+            _wideBitmap = new Bitmap(ColorManager.TransformImage(new Bitmap(WideImageList.Images[0])));
+            _aspectBitmap = new Bitmap(ColorManager.TransformImage(new Bitmap(WideImageList.Images[5])));
+            _sizeBitmap = new Bitmap(ColorManager.TransformImage(new Bitmap(WideImageList.Images[5])));
 
             //ChartAreas.Add(new ChartArea());
             DoPostPaint = true;
@@ -409,7 +409,22 @@ namespace POD.Controls
                     try
                     {
                         if (clone != null)
-                            CreateImageForClipboardAndOffice(dpi, clone, this);
+                        {
+                            var image = CreateImageForClipboardAndOffice(dpi, clone, this);
+
+                            if (_chartTitle == string.Empty && (_xAxisTitle == null || _xAxisTitle == string.Empty || _yAxisTitle == null || _yAxisTitle == string.Empty))
+                            {
+                                ToastNotification.Show($"Copied chart to clipboard.", image, 2500);
+                            }
+                            else if (_chartTitle == string.Empty)
+                            {
+                                ToastNotification.Show($"Copied {_xAxisTitle} vs. {_yAxisTitle} chart to clipboard.", image, 2500);
+                            }
+                            else
+                            {
+                                ToastNotification.Show($"Copied {_chartTitle} chart to clipboard.", image, 2500);
+                            }
+                        }
                     }
                     catch
                     {
@@ -424,11 +439,11 @@ namespace POD.Controls
         private void _menuPanel_MouseMove(object sender, MouseEventArgs e)
         {
             // We are already inside the panel, so its ONLY job is to highlight the buttons
-    if (InMenuBounds(e.X, e.Y))
-    {
-        HighlightMenuOption(e.X, e.Y);
-        InvalidateMenu();
-    }
+            if (InMenuBounds(e.X, e.Y))
+            {
+                HighlightMenuOption(e.X, e.Y);
+                InvalidateMenu();
+            }
         }
 
         private void _menuPanel_Paint(object sender, PaintEventArgs e)
@@ -436,7 +451,7 @@ namespace POD.Controls
             if (MenuIsOpen)
             {
                 if (FullSizeImageList.Images.Count > 0)
-                    e.Graphics.DrawImage(FullSizeImageList.Images[0], 0, 0);
+                    e.Graphics.DrawImage(ColorManager.TransformImage(FullSizeImageList.Images[0]), 0, 0);
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -648,19 +663,20 @@ namespace POD.Controls
         protected override void OnMouseMove(MouseEventArgs e)
         {
             // The chart's ONLY job is to open the menu if you hover the top-left corner
-            if (!MenuIsOpen && e.X < ImageSize && e.Y < ImageSize)
+            if (!MenuIsOpen && e != null && e.X < ImageSize && e.Y < ImageSize)
             {
                 MenuIsOpen = true;
             }
 
             // Only process normal chart mouse events (like tooltips) if the menu is CLOSED
-            if (!MenuIsOpen)
+            if (!MenuIsOpen && this.Visible && this.ChartAreas.Count > 0)
             {
                 try
                 {
                     base.OnMouseMove(e);
                 }
                 catch (OverflowException) { }
+                catch (NullReferenceException) { }
             }
         }
 
@@ -682,21 +698,21 @@ namespace POD.Controls
                 return;
             }
 
-            MenuBitmaps[rowIndex, colIndex] = new Bitmap(MenuOnImageList.Images[colIndex * 3 + rowIndex]);
+            MenuBitmaps[rowIndex, colIndex] = new Bitmap(ColorManager.TransformImage(MenuOnImageList.Images[colIndex * 3 + rowIndex]));
 
             switch(colIndex)
             {
                 case 1:
-                    _aspectBitmap = new Bitmap(WideImageList.Images[2]);
+                    _aspectBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[2]));
                     break;
                 case 2:
-                    _aspectBitmap = new Bitmap(WideImageList.Images[3]);
+                    _aspectBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[3]));
                     break;
                 case 3:
-                    _aspectBitmap = new Bitmap(WideImageList.Images[4]);
+                    _aspectBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[4]));
                     break;
                 default:
-                    _aspectBitmap = new Bitmap(WideImageList.Images[5]);
+                    _aspectBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[5]));
                     break;
 
             }
@@ -704,16 +720,16 @@ namespace POD.Controls
             switch (rowIndex)
             {
                 case 0:
-                    _sizeBitmap = new Bitmap(WideImageList.Images[6]);
+                    _sizeBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[6]));
                     break;
                 case 1:
-                    _sizeBitmap = new Bitmap(WideImageList.Images[7]);
+                    _sizeBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[7]));
                     break;
                 case 2:
-                    _sizeBitmap = new Bitmap(WideImageList.Images[8]);
+                    _sizeBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[8]));
                     break;
                 default:
-                    _sizeBitmap = new Bitmap(WideImageList.Images[5]);
+                    _sizeBitmap = new Bitmap(ColorManager.TransformImage(WideImageList.Images[5]));
                     break;
 
             }
@@ -722,7 +738,7 @@ namespace POD.Controls
 
         private void PressMenuButton(int rowIndex, int colIndex)
         {
-            MenuBitmaps[rowIndex, colIndex] = new Bitmap(MenuPressedImageList.Images[colIndex * 3 + rowIndex]);
+            MenuBitmaps[rowIndex, colIndex] = new Bitmap(ColorManager.TransformImage(MenuPressedImageList.Images[colIndex * 3 + rowIndex]));
         }
 
         private void TurnOffAllMenuButtons()
@@ -735,7 +751,7 @@ namespace POD.Controls
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    MenuBitmaps[j, i] = new Bitmap(MenuOffImageList.Images[i * 3 + j]); //0,0 = 0; 1,0 = 1; 2,0 = 2, 0,1 = 3
+                    MenuBitmaps[j, i] = new Bitmap(ColorManager.TransformImage(MenuOffImageList.Images[i * 3 + j])); //0,0 = 0; 1,0 = 1; 2,0 = 2, 0,1 = 3
                 }
             }
         }
@@ -994,7 +1010,7 @@ namespace POD.Controls
             // Derived charts will override this to clean up their specific series.
         }
 
-        private static void CreateImageForClipboardAndOffice(int dpi, DataPointChart clone, DataPointChart parent)
+        private static Image CreateImageForClipboardAndOffice(int dpi, DataPointChart clone, DataPointChart parent)
         {
             Bitmap chartBitmap = new Bitmap(clone.DisplayRectangle.Width, clone.DisplayRectangle.Height);
             clone.DoPostPaint = false;
@@ -1034,6 +1050,8 @@ namespace POD.Controls
             dataObject.SetFileDropList(list);
 
             Clipboard.SetDataObject(dataObject);
+
+            return resolution;
         }
 
         public void FixUpLegend(bool showLegend)
@@ -2301,13 +2319,15 @@ namespace POD.Controls
                     color = Series[series.Name].Color;
 
                 _colorMap.Add(series.Name, color);
+
+                Series[series.Name].Color = ColorManager.TransformColor(color);
             }
         }
 
         public Color GetColor(Series series)
         {
             if (_colorMap.ContainsKey(series.Name))
-                return _colorMap[series.Name];
+                return ColorManager.TransformColor(_colorMap[series.Name]);
             else
                 return Color.Transparent;
         }
@@ -2659,7 +2679,7 @@ namespace POD.Controls
         {
             get
             {
-                return Color.LightSteelBlue;
+                return ColorManager.TransformColor(Color.LightSteelBlue);
             }
         }
 
@@ -2667,7 +2687,7 @@ namespace POD.Controls
         {
             get
             {
-                return Color.SteelBlue;
+                return ColorManager.TransformColor(Color.SteelBlue);
             }
         }
 

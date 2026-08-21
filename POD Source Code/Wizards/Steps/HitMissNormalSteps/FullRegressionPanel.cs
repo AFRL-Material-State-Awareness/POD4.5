@@ -987,7 +987,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             TestRating lackOfFitRating = Analysis.GetTestRatingFromLabel(Analysis.OutTestLackOfFitRating);
             likelihoodRatioTestOut.Rating = lackOfFitRating;
-            aicTestOut.Rating = TestRating.Undefined;
+            aicTestOut.Rating = TestRating.Hidden;
 
 
 

@@ -83,6 +83,16 @@ namespace POD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap colorfilter_preview {
+            get {
+                object obj = ResourceManager.GetObject("colorfilter_preview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap POD_help {
             get {
                 object obj = ResourceManager.GetObject("POD_help", resourceCulture);

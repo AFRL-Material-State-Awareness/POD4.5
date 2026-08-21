@@ -1168,6 +1168,7 @@ namespace POD
             {
                 SaveFile(dialog.FileName);
                 _lastFile = dialog.FileName;
+                FileExplorerUtility.OpenFolderAndHighlightFile(dialog.FileName);
             }
 
             return result;
@@ -1237,6 +1238,8 @@ namespace POD
 
                 _export.SaveToFile(name);
                 this.Cursor = Cursors.Default;
+
+                FileExplorerUtility.OpenFolderAndHighlightFile(name);
             }
         }
 

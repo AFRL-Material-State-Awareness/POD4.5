@@ -862,8 +862,8 @@ namespace POD.Controls
 
             if ((cellStatus != CellStatus.Valid || rowStatus != RowStatus.Valid) && !IsAddByUserRow(rowIndex))
             {
-                var errorImage = CellIcons.Images[0];
-                var rowErrorImage = CellIcons.Images[1];
+                var errorImage = ColorManager.TransformImage(CellIcons.Images[0]);
+                var rowErrorImage = ColorManager.TransformImage(CellIcons.Images[1]);
                 var heightDiff = (cellBounds.Height - errorImage.Height) / 2;
                 var buffer = 5;
                 var errorImageWidth = errorImage.Width + buffer;

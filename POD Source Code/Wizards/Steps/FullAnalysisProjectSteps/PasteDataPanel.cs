@@ -2748,8 +2748,8 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             if (cellStatus != CellStatus.Valid || rowStatus != RowStatus.Valid || rowIndex == grid.RowCount - 1)
             {
-                var errorImage = CellIcons.Images[0];
-                var rowErrorImage = CellIcons.Images[1];
+                var errorImage = ColorManager.TransformImage(CellIcons.Images[0]);
+                var rowErrorImage = ColorManager.TransformImage(CellIcons.Images[1]);
                 var heightDiff = (cellBounds.Height - errorImage.Height) / 2;
                 var buffer = 5;
                 var errorWidth = errorImage.Width + buffer;
@@ -2886,7 +2886,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             get
             {
                 //nice blue
-                return Color.FromArgb(204, 235, 255);
+                return ColorManager.TransformColor(Color.FromArgb(204, 235, 255));
             }
         }
 
@@ -2895,7 +2895,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             get
             {
                 //nice dark blue
-                return Color.FromArgb(190, 198, 247);
+                return ColorManager.TransformColor(Color.FromArgb(190, 198, 247));
                 //return Color.FromArgb(255, 245, 201);
             }
         }
@@ -2905,7 +2905,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             get
             {
                 //nice dark green
-                return Color.FromArgb(84, 184, 96);
+                return ColorManager.TransformColor(Color.FromArgb(84, 184, 96));
             }
         }
 
@@ -2914,7 +2914,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             get
             {
                 //nice green
-                return Color.FromArgb(166, 237, 175);
+                return ColorManager.TransformColor(Color.FromArgb(166, 237, 175));
                 ////nice purple
                 //return Color.FromArgb(214, 171, 255);
             }
@@ -2968,7 +2968,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
                     bgColor = GetClearColor(grid);;
                     break;
                 default:
-                    bgColor = Color.FromKnownColor(KnownColor.Highlight);
+                    bgColor = ColorManager.TransformColor(Color.FromKnownColor(KnownColor.Highlight));
                     break;
             }
 

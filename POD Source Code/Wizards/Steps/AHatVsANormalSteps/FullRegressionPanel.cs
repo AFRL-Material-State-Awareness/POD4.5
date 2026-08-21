@@ -65,6 +65,8 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
             StepToolTip = new PODToolTip();
 
+
+
             //assign main chart for base class
             MainChart = mainChart;
 

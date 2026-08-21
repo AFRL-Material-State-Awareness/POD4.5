@@ -60,7 +60,7 @@ namespace POD.Controls
             if (index >= 0)
                 image = RatingImages.Images[index];
 
-            ImageBox.Image = image;
+            ImageBox.Image = ColorManager.TransformImage(image);
 
             FixBackgrounColor();
         }

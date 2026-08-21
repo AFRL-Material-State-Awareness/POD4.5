@@ -28,13 +28,6 @@ using System.Reflection;
 using CSharpBackendWithR;
 namespace POD.Docks
 {
-    public enum HelpView
-    {
-        Small,
-        Large,
-        Dual
-    }
-
     public class DocksManager
     {
         QuickHelpDock _quickHelpDock;

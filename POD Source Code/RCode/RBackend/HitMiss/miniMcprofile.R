@@ -74,12 +74,18 @@ minimcprofile <-
     clust= makeCluster(detectCores()/2)
     clusterEvalQ(clust,library(quadprog))
     clusterExport(cl = clust, list("constructGrid", "glm_profiling", "orglm.fit"))
-    prolist <- parLapply(clust, 1:nrow(CM), function(i){
-      K <- CM[i,,drop=FALSE]
-      glmpro <- glm_profiling(X, Y, W, etastart, O, fam, glmcontrol, est, OriginalDeviance, DispersionParameter, K, grid[[i]])
-      return(glmpro)
+
+    prolist <- tryCatch({
+      parLapply(clust, 1:nrow(CM), function(i){
+        K <- CM[i,,drop=FALSE]
+        glmpro <- glm_profiling(X, Y, W, etastart, O, fam, glmcontrol, est, OriginalDeviance, DispersionParameter, K, grid[[i]])
+        return(glmpro)
+      })
+    }, error = function(e) {
+      stop(paste("Parallel processing encountered a temporary file or math error. Please try again. System error:", e$message))
+    }, finally = {
+      stopCluster(clust)
     })
-    stopCluster(clust)
     
     # prolist <- lapply(1:nrow(CM), function(i){
     #   K <- CM[i,,drop=FALSE]
@@ -132,12 +138,19 @@ mcprofile <-
     clust= makeCluster(detectCores()-1)
     clusterEvalQ(clust,library(quadprog))
     clusterExport(cl = clust, list("constructGrid", "glm_profiling", "orglm.fit"))
-    prolist <- parLapply(clust, 1:nrow(CM), function(i){
-      K <- CM[i,,drop=FALSE]
-      glmpro <- glm_profiling(X, Y, W, etastart, O, fam, glmcontrol, est, OriginalDeviance, DispersionParameter, K, grid[[i]])
-      return(glmpro)
+
+    
+    prolist <- tryCatch({
+      parLapply(clust, 1:nrow(CM), function(i){
+        K <- CM[i,,drop=FALSE]
+        glmpro <- glm_profiling(X, Y, W, etastart, O, fam, glmcontrol, est, OriginalDeviance, DispersionParameter, K, grid[[i]])
+        return(glmpro)
+      })
+    }, error = function(e) {
+      stop(paste("Parallel processing encountered a temporary file or math error. Please try again. System error:", e$message))
+    }, finally = {
+      stopCluster(clust)
     })
-    stopCluster(clust)
     
     # prolist <- lapply(1:nrow(CM), function(i){
     #   K <- CM[i,,drop=FALSE]

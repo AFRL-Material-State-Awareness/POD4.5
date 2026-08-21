@@ -36,6 +36,8 @@ namespace POD.Controls
             InitializeComponent();
 
             Font myFont = heightTest.Font;// new Font("Arial", 12, FontStyle.Bold, GraphicsUnit.Point);
+
+            pictureBox1.Image = ColorManager.TransformImage(pictureBox1.Image);
         }
 
         private void Paint_ColorMap(object sender, PaintEventArgs e)

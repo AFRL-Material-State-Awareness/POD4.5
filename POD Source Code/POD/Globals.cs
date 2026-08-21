@@ -78,6 +78,13 @@ namespace POD
 	    }
     }
 
+    public enum HelpView
+    {
+        Small,
+        Large,
+        Dual
+    }
+
     public enum AxisKind
     {
         X,
@@ -946,7 +953,8 @@ namespace POD
         P01to025,
         P005to01,
         P005,
-        Undefined
+        Undefined,
+        Hidden
     }
 
     public enum ChartPartType
@@ -1282,25 +1290,42 @@ namespace POD
 
     public static class ChartColors
     {
-        public static Color a50Color = Color.DarkSlateGray;
-        public static Color a90Color = Color.RoyalBlue;
-        public static Color a9095Color = Color.DarkOrange;
-        public static Color POD90Color = a90Color;
-        public static Color POD9095Color = a9095Color;
-        public static Color ThresholdColor = a50Color;
-        public static Color aMinColor = Color.Gray;
-        public static Color aMaxColor = Color.Gray;
-        public static Color LeftCensorColor = Color.Firebrick;
-        public static Color RightCensorColor = Color.Firebrick;
-        public static Color HorizontalColor = Color.Gray;
-        public static Color FitColor = Color.Green;
-        public static Color FitStdErrorColor = Color.LightGreen;
-        public static Color UncensoredPoints = Color.MediumBlue;
-        public static Color TestUnknownColor = Color.Yellow;
-        public static Color TestFailColor = Color.Red;
-        public static Color TestPassColor = Color.Green;
-        public static Color CensoredPoints = LeftCensorColor;
-        public static Color SemiCensoredPoints = Color.MediumPurple;
+        // 1. Store the originals as read-only base values
+        private static readonly Color Original_a50Color = Color.DarkSlateGray;
+        private static readonly Color Original_a90Color = Color.RoyalBlue;
+        private static readonly Color Original_a9095Color = Color.DarkOrange;
+        private static readonly Color Original_aMinColor = Color.Gray;
+        private static readonly Color Original_LeftCensorColor = Color.Firebrick;
+        private static readonly Color Original_FitColor = Color.Green;
+        private static readonly Color Original_FitStdErrorColor = Color.LightGreen;
+        private static readonly Color Original_UncensoredPoints = Color.MediumBlue;
+        private static readonly Color Original_TestUnknownColor = Color.Yellow;
+        private static readonly Color Original_TestFailColor = Color.Red;
+        private static readonly Color Original_SemiCensoredPoints = Color.MediumPurple;
+        private static readonly Color Original_NormalityCurveColor = Color.FromArgb(255, 130, 2, 41);
+
+        // 2. These are the active colors your charts/LEDs/gradients will use
+        public static Color a50Color = Original_a50Color;
+        public static Color a90Color = Original_a90Color;
+        public static Color a9095Color = Original_a9095Color;
+        public static Color POD90Color = Original_a90Color;
+        public static Color POD9095Color = Original_a9095Color;
+        public static Color ThresholdColor = Original_a50Color;
+        public static Color aMinColor = Original_aMinColor;
+        public static Color aMaxColor = Original_aMinColor;
+        public static Color LeftCensorColor = Original_LeftCensorColor;
+        public static Color RightCensorColor = Original_LeftCensorColor;
+        public static Color HorizontalColor = Original_aMinColor;
+        public static Color FitColor = Original_FitColor;
+        public static Color FitStdErrorColor = Original_FitStdErrorColor;
+        public static Color UncensoredPoints = Original_UncensoredPoints;
+        public static Color TestUnknownColor = Original_TestUnknownColor;
+        public static Color TestFailColor = Original_TestFailColor;
+        public static Color TestPassColor = Original_FitColor;
+        public static Color CensoredPoints = Original_LeftCensorColor;
+        public static Color SemiCensoredPoints = Original_SemiCensoredPoints;
+        public static Color ResponseBarsColor = Original_a90Color;
+        public static Color NormalityCurveColor = Original_NormalityCurveColor;
 
         public static int LineAlpha = 255;
         public static int AreaAlpha = 0;
@@ -1308,9 +1333,30 @@ namespace POD
         public static int ControlBackColorAlpha = 40;
         public static int ModelCompareAlpha = 128;
 
-        public static Color ResponseBarsColor = Color.RoyalBlue;
-        public static Color NormalityCurveColor = Color.FromArgb(255, 130 , 2, 41);
-        
+        public static void ApplyColorFilter(ColorFilterType filter)
+        {
+            a50Color = ColorManager.TransformColor(Original_a50Color, filter);
+            a90Color = ColorManager.TransformColor(Original_a90Color, filter);
+            a9095Color = ColorManager.TransformColor(Original_a9095Color, filter);
+            POD90Color = a90Color;
+            POD9095Color = a9095Color;
+            ThresholdColor = a50Color;
+            aMinColor = ColorManager.TransformColor(Original_aMinColor, filter);
+            aMaxColor = aMinColor;
+            LeftCensorColor = ColorManager.TransformColor(Original_LeftCensorColor, filter);
+            RightCensorColor = LeftCensorColor;
+            HorizontalColor = aMinColor;
+            FitColor = ColorManager.TransformColor(Original_FitColor, filter);
+            FitStdErrorColor = ColorManager.TransformColor(Original_FitStdErrorColor, filter);
+            UncensoredPoints = ColorManager.TransformColor(Original_UncensoredPoints, filter);
+            TestUnknownColor = ColorManager.TransformColor(Original_TestUnknownColor, filter);
+            TestFailColor = ColorManager.TransformColor(Original_TestFailColor, filter);
+            TestPassColor = FitColor;
+            CensoredPoints = LeftCensorColor;
+            SemiCensoredPoints = ColorManager.TransformColor(Original_SemiCensoredPoints, filter);
+            ResponseBarsColor = a90Color;
+            NormalityCurveColor = ColorManager.TransformColor(Original_NormalityCurveColor, filter);
+        }
     }
 
     public enum PODObjectTypeEnum

@@ -40,6 +40,20 @@ namespace POD.Controls
                     _tip.SetToolTip(this, TipForControl);
             }
         }
+
+        public new Image Image
+        {
+            get
+            {
+                return base.Image;
+            }
+
+            set
+            {
+                base.Image = ColorManager.TransformImage(value);
+            }
+        }
+
         string _tooltip = "";
 
         public string TipForControl
@@ -66,7 +80,9 @@ namespace POD.Controls
             Height = StdHeight;
             Width = StdWidth;
 
-            Text = myLabel;
+            Text = myLabel + Environment.NewLine;
+
+            
 
             Name = myLabel.Replace("&", "");
 
@@ -136,7 +152,7 @@ namespace POD.Controls
         public ButtonHolder(string name, Image image, EventHandler handler, string toolTip = "")
         {
             Name = name;
-            Image = image;
+            Image = ColorManager.TransformImage(image);
             Event = handler;
             ToolTip = toolTip;
         }

@@ -128,6 +128,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
             {
                 Analysis.WriteToExcel(writer, false, table);
                 writer.SaveToFile(name);
+                FileExplorerUtility.OpenFolderAndHighlightFile(name);
             }
         }
 

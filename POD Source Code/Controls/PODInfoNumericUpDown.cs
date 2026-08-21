@@ -49,7 +49,7 @@ namespace POD.Controls
             //if (Parent != null)
             //    ImageBox.BackColor = Parent.BackColor;
 
-            ImageBox.Image = image;
+            ImageBox.Image = ColorManager.TransformImage(image);
 
             FixBackgrounColor();
         }

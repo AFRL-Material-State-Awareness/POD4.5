@@ -74,25 +74,19 @@ namespace POD
         {
             InitializeComponent();
 
+            ColorManager.RegisterForm(this);
+
+            SetInitialValuesFromSettings();
+
+            POD.VersionHelper.UpdatePODVersionHeader(this);
+
             POD.VersionHelper.UpdatePODVersionHeader(this);
 
             this.DoubleBuffered = true;
 
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
-            _selectedType = AnalysisTypeEnum.Full;
-            _selectedView = HelpView.Small;
-
-            if(HasMultipleMonitors())
-            {
-                _selectedView = HelpView.Dual;
-            }
-
-            if (IsWideScreen())
-            {
-                _selectedView = HelpView.Large;
-            }
-
+            
             BuildMRUList();
 
             CreatePublicDocumentDirectories();
@@ -103,13 +97,13 @@ namespace POD
 
             var help = Globals.GetMRUList(Globals.PODv4HelpViewFile);
 
-            if(help.Count > 0)
+            if (help.Count > 0)
             {
                 try
                 {
                     _selectedView = (HelpView)Enum.Parse(typeof(HelpView), help[0]);
 
-                    switch(_selectedView)
+                    switch (_selectedView)
                     {
                         case HelpView.Dual:
                             DualViewButton.Checked = true;
@@ -122,7 +116,7 @@ namespace POD
                             break;
                     }
                 }
-                catch(ArgumentException)
+                catch (ArgumentException)
                 {
                     DefaultViewButton.Checked = true;
 
@@ -134,14 +128,19 @@ namespace POD
             }
         }
 
-        private bool HasMultipleMonitors()
+        private void SetInitialValuesFromSettings()
         {
-            // Get the number of connected screens.
-            int screenCount = Screen.AllScreens.Length;
+            _selectedType = AnalysisTypeEnum.Full;
+            _selectedView = HelpView.Small;
 
-            // Check if there is more than one screen.
-            return screenCount > 1;
+            colorFilterComboBox.SelectedIndex = ((int)GlobalSettings.Instance.ColorFilter);
+            colorFilterImage.Visible = false;
+
+            _selectedView = GlobalSettings.Instance.HelpViewSetting;
+            
         }
+
+        
 
         private void CreatePublicDocumentDirectories()
         {
@@ -170,27 +169,7 @@ namespace POD
             }
         }
 
-        protected static bool IsWideScreen()
-        {
-            // Get the resolution of the primary screen.
-            Screen primaryScreen = Screen.PrimaryScreen;
-            Rectangle bounds = primaryScreen.Bounds;
-            int width = bounds.Width;
-            int height = bounds.Height;
-
-            // Calculate the aspect ratio.
-            double aspectRatio = (double)width / height;
-
-            // Check if the aspect ratio is wider than 16/9.
-            if (aspectRatio > 17.0 / 9.0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        
 
         private void TurnOffFormLevelDoubleBuffering()
         {
@@ -217,12 +196,12 @@ namespace POD
 
             if (GotSize == false)
             {
-                var heights = layoutTable.GetRowHeights();
+                var heights = mainLayoutTable.GetRowHeights();
                 var row = 0;
 
                 foreach (int rowHeight in heights)
                 {
-                    var control = layoutTable.GetControlFromPosition(0, row);
+                    var control = mainLayoutTable.GetControlFromPosition(0, row);
 
                     if (control != null)
                     {
@@ -266,7 +245,7 @@ namespace POD
                 {
                     string readLine = "";
 
-                    layoutTable.SuspendLayout();
+                    mainLayoutTable.SuspendLayout();
 
                     int filesProcessed = 0;
 
@@ -305,7 +284,7 @@ namespace POD
 
                     sr.Close();
 
-                    layoutTable.ResumeLayout();
+                    mainLayoutTable.ResumeLayout();
 
                     
 
@@ -378,24 +357,22 @@ namespace POD
             labelToolTip.SetToolTip(myLabel, myToolTip);
             //layoutTable.RowStyles.Insert(7, new RowStyle(SizeType.AutoSize, 100.0F));
             //layoutTable.RowCount = layoutTable.RowStyles.Count;
-            layoutTable.Controls.Add(myLabel, 0, layoutTable.RowCount);
-            var index = layoutTable.GetRow(myLabel);
+            mruTableLayoutPanel.Controls.Add(myLabel, 0, mruTableLayoutPanel.RowCount);
+            var index = mainLayoutTable.GetRow(myLabel);
 
-            if(layoutTable.RowStyles.Count >= index)
+            if(mruTableLayoutPanel.RowStyles.Count >= index)
             {
-                layoutTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                mruTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
 
-            layoutTable.RowStyles[index].SizeType = SizeType.AutoSize;
-            layoutTable.RowStyles[index].Height = 100;
+            mruTableLayoutPanel.RowStyles[index].SizeType = SizeType.AutoSize;
+            mruTableLayoutPanel.RowStyles[index].Height = 100;
 
-            layoutTable.RowStyles.Add(new RowStyle(SizeType.AutoSize, 100));
-            layoutTable.RowCount++;
-            
-            layoutTable.SetRowSpan(OverviewTextBox, layoutTable.RowCount-1);
-            layoutTable.SetCellPosition(myLabel, new TableLayoutPanelCellPosition(0, index));
+            mruTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize, 100));
+            mruTableLayoutPanel.RowCount++;
 
-            layoutTable.SetRowSpan(panel1, layoutTable.GetRowSpan(panel1) + 1);
+            mruTableLayoutPanel.SetCellPosition(myLabel, new TableLayoutPanelCellPosition(0, index));
+
         }
 
         void Project_Click(object sender, EventArgs e)
@@ -731,6 +708,8 @@ namespace POD
 
             if(e.Cancel == false)
                 _helpDisplay.Dispose();
+
+            GlobalSettings.Instance.Save();
         }
 
         public string SelectedFile { get; set; }
@@ -746,24 +725,25 @@ namespace POD
 
         private void Help_MouseEnter(object sender, EventArgs e)
         {
-            HelpBox.BackgroundImage = imageList1.Images[1];
+            HelpBox.Image = imageList1.Images[1];
 
             OverviewTextBox.Text = "Click to open help window.";
         }
 
         private void Help_MouseLeave(object sender, EventArgs e)
         {
-            HelpBox.BackgroundImage = imageList1.Images[0];
+            HelpBox.Image = ColorManager.TransformImage(imageList1.Images[0]);
         }
 
         private void Help_MouseDown(object sender, MouseEventArgs e)
         {
-            HelpBox.BackgroundImage = imageList1.Images[2];
+            HelpBox.Image = ColorManager.TransformImage(imageList1.Images[2]);
         }
 
         private void Help_MouseUp(object sender, MouseEventArgs e)
         {
-            HelpBox.BackgroundImage = imageList1.Images[1];
+            HelpBox.Image = ColorManager.TransformImage(imageList1.Images[1]);
+
         }
 
         private void Open_Help(object sender, EventArgs e)
@@ -776,6 +756,25 @@ namespace POD
             _helpDisplay.OpenSimplePDF();
             _helpDisplay.Show();
             _helpDisplay.FitWidth();
+        }
+
+        private void ColorFileComboBox_IndexChanged(object sender, EventArgs e)
+        {
+            ColorFilterType selected = (ColorFilterType)colorFilterComboBox.SelectedIndex;
+
+            CheckFilerImageVisibility(selected);
+
+            // Broadcasts the change software-wide!
+            ColorManager.SetGlobalFilter(selected);
+
+            GlobalSettings.Instance.ColorFilter = selected;
+            ChartColors.ApplyColorFilter(selected);
+
+        }
+
+        private void CheckFilerImageVisibility(ColorFilterType selected)
+        {
+            colorFilterImage.Visible = true;
         }
     }
 }

@@ -126,14 +126,14 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
             AvailableVBar.AddLabel("Analyses");
             _addButton = AvailableVBar.AddButton("Create Analysis", CopyAndAdd_Click, "Add a new analysis to the project. (Ctrl + G)");
             AvailableVBar.AddLabel("Responses");
-            _selectAllButton = AvailableVBar.AddButton("Select All", All_Click, "Select all Responses from the list. (Ctrl + A)");
+            _selectAllButton = AvailableVBar.AddButton("Select All Responses", All_Click, "Select all Responses from the list. (Ctrl + A)");
             _selectNoneButton = AvailableVBar.AddButton("Select None", Clear_Click, "Unselect all Responses from the list. (Ctrl + Shift + A)");
             _invertSelectButton = AvailableVBar.AddButton("Invert Selection", Invert_Click, "Invert selection of Responses. (Ctrl + I)");
 
             AnalysesVBar.AddLabel("Analyses");
             _deleteSelectedButton = AnalysesVBar.AddButton("Delete Selected", DeleteSelected_Click, "Delete selected analysis from project. (Ctrl + D)");
             AnalysesVBar.AddLabel("Open After Finishing");
-            _checkAllButton = AnalysesVBar.AddButton("Check All", OpenAllOnFinish_Click, "Check all analyses to be opened after finishing this step. (Ctrl + H)");
+            _checkAllButton = AnalysesVBar.AddButton("Check All Analyses", OpenAllOnFinish_Click, "Check all analyses to be opened after finishing this step. (Ctrl + H)");
             _checkNoneButton = AnalysesVBar.AddButton("Check None", OpenNoneOnFinish_Click, "Uncheck all analyses from being opened after finishing this step. (Ctrl + Shift + H)");
 
             ////contextMenu.ShowImageMargin = true;

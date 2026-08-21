@@ -236,6 +236,7 @@
     <Content Include="POD Rounded.ico" />
     <Content Include="POD.ico" />
     <Content Include="PROF Icon.ico" />
+    <None Include="Resources\colorfilter_preview.png" />
     <Content Include="ThemeVS2012\Resources\Dockindicator_PaneDiamond_Hotspot.png" />
     <Content Include="ThemeVS2012\Resources\DockIndicator_PaneDiamond_HotspotIndex.png" />
     <Content Include="ThemeVS2012\Resources\MaskArrowBottom.png" />

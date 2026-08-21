@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PODRatedNumericUpDown));
-            ((System.ComponentModel.ISupportInitialize)(this.ValueNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,14 +42,14 @@
             this.RatingImages.Images.SetKeyName(4, "05Bad.png");
             this.RatingImages.Images.SetKeyName(5, "06Worst.png");
             this.RatingImages.Images.SetKeyName(6, "07Undefined.png");
+            this.RatingImages.Images.SetKeyName(7, "08Hidden.png");
             // 
             // PODRatedNumericUpDown
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "PODRatedNumericUpDown";
-            ((System.ComponentModel.ISupportInitialize)(this.ValueNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).EndInit();
+            this.Size = new System.Drawing.Size(63, 24);
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

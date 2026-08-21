@@ -68,8 +68,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             //_viewButton = new PODBooleanButton("Show Residuals", "Show Fits", false, "Show fit of data or residuals of the fit. (Ctrl + T)", StepToolTip);
             //AddLeftButton(_viewButton, View_Click);
 
-            _modelButton = new PODBooleanButton("Overlay Models", "Separate Models", false, "Overlay model results for easier comparison. (Ctrl + M)", StepToolTip);
-            AddLeftButton(_modelButton, Model_Click);
+            //_modelButton = new PODBooleanButton("Overlay Models", "Separate Models", false, "Overlay model results for easier comparison. (Ctrl + M)", StepToolTip);
+            //AddLeftButton(_modelButton, Model_Click);
 
             prevButton.Enabled = false;
 

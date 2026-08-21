@@ -63,13 +63,14 @@
             this.ActionIcons.Images.SetKeyName(21, "Delete Row.png");
             this.ActionIcons.Images.SetKeyName(22, "Insert Row.png");
             this.ActionIcons.Images.SetKeyName(23, "Cycle Transforms.png");
-            this.ActionIcons.Images.SetKeyName(24, "Select All.png");
+            this.ActionIcons.Images.SetKeyName(24, "Select All Responses.png");
             this.ActionIcons.Images.SetKeyName(25, "Select None.png");
             this.ActionIcons.Images.SetKeyName(26, "Invert Selection.png");
             this.ActionIcons.Images.SetKeyName(27, "Create Analysis.png");
             this.ActionIcons.Images.SetKeyName(28, "Delete Selected.png");
-            this.ActionIcons.Images.SetKeyName(29, "Check All.png");
+            this.ActionIcons.Images.SetKeyName(29, "Check All Analyses.png");
             this.ActionIcons.Images.SetKeyName(30, "Check None.png");
+            this.ActionIcons.Images.SetKeyName(31, "Show QQ Plot.png");
             // 
             // flowLayoutPanel1
             // 

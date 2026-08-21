@@ -916,7 +916,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             -2147483648});
             this.aicTestOut.Name = "aicTestOut";
             this.aicTestOut.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            this.aicTestOut.Rating = POD.TestRating.Undefined;
+            this.aicTestOut.Rating = POD.TestRating.Hidden;
             this.aicTestOut.ReadOnly = true;
             this.aicTestOut.Size = new System.Drawing.Size(158, 24);
             this.aicTestOut.TabIndex = 16;

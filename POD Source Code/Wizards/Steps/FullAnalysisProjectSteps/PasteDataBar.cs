@@ -120,7 +120,7 @@ namespace POD.Wizards.Steps.FullAnalysisProjectSteps
 
             StepToolTip = new PODToolTip();
             
-            _pasteButton = new PODButton("Paste", "Paste data from clipBoard. (Ctrl + V)", StepToolTip);
+            _pasteButton = new PODButton("Paste From Clipboard", "Paste data from clipBoard. (Ctrl + V)", StepToolTip);
             AddLeftButton(_pasteButton, PasteButton_Click);
 
             _newButton = new PODButton("New Source", "Add new data source to project. (Ctrl + G)", StepToolTip);

@@ -693,17 +693,17 @@ namespace POD.Controls
 
                         if (_colorMap.Count > 0)
                         {
-                            var color = _colorMap[Series[seriesIndex].Name];
+                            var color = ColorManager.TransformColor(_colorMap[Series[seriesIndex].Name]);
                             var point = Series[seriesIndex].Points[seriesPtIndex];
                             if(!point.IsEmpty)
-                                point.Color = color;
+                                point.Color = ColorManager.TransformColor(color);
                         }
                         break;
                     case Flag.OutBounds:
                         {
                             var point = Series[seriesIndex].Points[seriesPtIndex];
                             if (!point.IsEmpty)
-                                Series[seriesIndex].Points[seriesPtIndex].Color = Color.Gray;
+                                Series[seriesIndex].Points[seriesPtIndex].Color = ColorManager.TransformColor(Color.Gray);
                         }
                         break;
                     default:

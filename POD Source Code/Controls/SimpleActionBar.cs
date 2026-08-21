@@ -88,7 +88,7 @@ namespace POD.Controls
                 button.Image = ActionIcons.Images[key];
             else
                 button.Image = ActionIcons.Images[0];
-            button.ImageAlign = ContentAlignment.MiddleCenter;
+            button.ImageAlign = ContentAlignment.TopCenter;
             button.TextAlign = ContentAlignment.BottomCenter;
             button.TextImageRelation = TextImageRelation.ImageAboveText;
         }

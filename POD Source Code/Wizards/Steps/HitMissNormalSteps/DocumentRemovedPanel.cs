@@ -130,6 +130,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             {
                 Analysis.WriteToExcel(writer, false, table);
                 writer.SaveToFile(name);
+                FileExplorerUtility.OpenFolderAndHighlightFile(name);
             }
         }
 
