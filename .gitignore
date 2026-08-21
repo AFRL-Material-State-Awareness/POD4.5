@@ -1,29 +1,30 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/.vs
-/POD Source Code/UpgradeLog5.htm
+/.vs/
+/POD Source Code/.vs/
+/POD Source Code/RCode/RBackend/HitMiss/.vs/
+/POD Source Code/removedFromRLibrary
 /lfs/objects/0e/08/0e08ce50da715b63a63e7a0a22ead7031381f82bed58ecf76e5cdac6b6a9540f
 /hooks/pre-push
 /hooks/post-merge
 /hooks/post-commit
 /hooks/post-checkout
+
 /POD Source Code/PODv4Point5Installer/Release
 /POD Source Code/PODv4Point5Installer/Debug
-POD Source Code/UpgradeLog.htm
-POD Source Code/UpgradeLog2.htm
-POD Source Code/UpgradeLog3.htm
-POD Source Code/UpgradeLog4.htm
 /POD Source Code/PODv4Point5Installer/*Install*
 /POD Source Code/PODv4Point5Installer/*.zip
+/POD Source Code/*.md
+/POD Source Code/*.htm
+/POD Source Code/*.pod
+/*.md
+!README.md
+/POD Source Code/*.txt
+!/POD Source Code/VERSION.txt
 *.csv
-POD Source Code/gemini.md
-/POD Source Code/boxcox.dm
-/POD Source Code/TODO.txt
-POD Source Code/next_time.txt
-/POD Source Code/branch_diff.txt
-git_history.log
+~*.*
+*.log
 # NuGet Packages
 *.nupkg
 packages/
