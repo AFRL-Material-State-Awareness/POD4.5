@@ -32,6 +32,7 @@ namespace Data
         private string _analysisName;
         private string _worksheetName;
         private bool _partOfProject;
+
         public ExcelWriterControl(IExcelExport myWriter, string myAnalysisName, string myWorksheetName, bool myPartOfProject)
         {
             _excelWriter = myWriter;
@@ -39,6 +40,7 @@ namespace Data
             _worksheetName = myWorksheetName;
             _partOfProject = myPartOfProject;
         }
+
         public void WriteResidualsToExcel(IAnalysisData data, DataTable residualCensoredTable)
         {
             List<string> uncensoredNames = null;
@@ -85,9 +87,9 @@ namespace Data
             data.ChangeTableColumnNames(data.ResidualUncensoredTable, oldNames);
 
             if (data.DataType == AnalysisDataTypeEnum.AHat)
-                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 3, rowIndex - 1, 5);
+                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 3, rowIndex - 1, 5, $"Residuals");
             else
-                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 2, rowIndex - 1, 4);
+                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 2, rowIndex - 1, 4, $"Residuals");
 
             colIndex = 1;
             rowIndex++;
@@ -104,7 +106,7 @@ namespace Data
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
-        
+
         public void WritePODToExcel(IAnalysisData data, int podEndIndex)
         {
             //var podNames = new List<string>(new string[] { "a","ln(a)", "POD(a)", "95 confidence bound" });
@@ -128,7 +130,7 @@ namespace Data
             _excelWriter.WriteTableToExcel(data.PodCurveTable, ref rowIndex, ref colIndex);
 
             podEndIndex = rowIndex - 1;
-            _excelWriter.InsertChartIntoWorksheet(3, 1, podEndIndex, 3);
+            _excelWriter.InsertChartIntoWorksheet(3, 1, podEndIndex, 3, $"POD Curve");
 
             //restore back to source code names
             data.ChangeTableColumnNames(data.PodCurveTable, oldNames);
@@ -138,6 +140,7 @@ namespace Data
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
+
         public void WriteIterationsToExcel(IAnalysisData data, DataTable iterationsTable)
         {
             var iterationNames = new List<string>(new string[] { "trial index", "iteration index", "mu", "sigma", "fnorm", "damping" });
@@ -167,6 +170,7 @@ namespace Data
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
+
         public void WritePODThresholdToExcel(IAnalysisData data, DataTable thresholdTable)
         {
             var thresholdNames = new List<string>(new string[] { "Threshold", "a90", "a90_95", "a50", });
@@ -188,7 +192,7 @@ namespace Data
             _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex++, colIndex + 2);
             _excelWriter.WriteTableToExcel(thresholdTable, ref rowIndex, ref colIndex);
 
-            _excelWriter.InsertChartIntoWorksheet(3, 1, rowIndex - 1, 3);
+            _excelWriter.InsertChartIntoWorksheet(3, 1, rowIndex - 1, 3, $"POD Threshold");
 
             //restore back to source code names
             data.ChangeTableColumnNames(thresholdTable, oldNames);
@@ -198,6 +202,7 @@ namespace Data
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
+
         public void WriteRemovedPointsToExcel(IAnalysisData data, DataTable podCurveTableAll, DataTable thresholdPlotTable, DataTable thresholdPlotTableAll)
         {
             DataTable removedPoints = data.GenerateRemovedPointsTable();
@@ -234,8 +239,6 @@ namespace Data
 
             rowIndex++;
 
-
-
             if (data.DataType == AnalysisDataTypeEnum.AHat && removedPoints.Rows.Count > 0)
                 rowIndex = 24;
 
@@ -252,7 +255,6 @@ namespace Data
 
             if (data.DataType == AnalysisDataTypeEnum.AHat && removedPoints.Rows.Count > 0)
             {
-
                 _excelWriter.SetCellValue(rowIndex, colIndex, "POD AND THRESHOLD CURVES WITH NO POINTS REMOVED:");
                 _excelWriter.Workbook.MergeWorksheetCells(rowIndex++, colIndex, rowIndex++, colIndex + 3);
 
@@ -267,7 +269,7 @@ namespace Data
                 var startRow = rowIndex;
                 _excelWriter.WriteTableToExcel(podCurveTableAll, ref rowIndex, ref colIndex, true);
 
-                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, PODChartLocations.Compare1);
+                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, "POD Curve (All Points)", PODChartLocations.Compare1);
 
                 //restore back to source code names
                 data.ChangeTableColumnNames(podCurveTableAll, oldNames);
@@ -286,7 +288,7 @@ namespace Data
                 startRow = rowIndex;
                 _excelWriter.WriteTableToExcel(thresholdPlotTableAll, ref rowIndex, ref colIndex, true);
 
-                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, PODChartLocations.Compare2);
+                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, "Threshold Curve (All Points)", PODChartLocations.Compare2);
 
                 //restore back to source code names
                 data.ChangeTableColumnNames(thresholdPlotTableAll, oldNames);
@@ -297,21 +299,22 @@ namespace Data
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
+
         private void WriteAnalysisName(IExcelExport myWriter, string myAnalysisName)
         {
             myWriter.SetCellValue(1, 2, myAnalysisName);
         }
+
         private void WriteTableOfContentsLink(IExcelExport myWriter, string _worksheetName, bool myPartOfProject, int rowIndex, int colIndex)
         {
             if (myPartOfProject)
             {
                 //myWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex + 1, rowIndex, colIndex + 2);
                 myWriter.InsertReturnToTableOfContents(rowIndex, colIndex, _worksheetName);
-
             }
         }
-
     }
+
     public interface IExcelWriterControl
     {
         void WriteResidualsToExcel(IAnalysisData data, DataTable residualCensoredTable);

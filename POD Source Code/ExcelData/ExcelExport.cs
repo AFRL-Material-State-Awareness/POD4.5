@@ -58,7 +58,7 @@ namespace POD.ExcelData
         public string AskUserToSave(string myDefaultFileName, out bool shouldSave)
         {
             SaveFileDialog dialog = new SaveFileDialog();
-            
+
             dialog.Filter = "Excel File (*.xlsx)|*.xlsx";
             dialog.FileName = myDefaultFileName;
 
@@ -114,7 +114,7 @@ namespace POD.ExcelData
                 //or does not exist (has already been processed)
                 return true;
             }
-            
+
 
             //file is not locked
             return false;
@@ -159,7 +159,7 @@ namespace POD.ExcelData
                 _workbook.SaveAs(myFileName);
                 _workbook = new SLDocument();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
@@ -170,12 +170,18 @@ namespace POD.ExcelData
             _workbook.DeleteWorksheet("Sheet1");
         }
 
-        public void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, PODChartLocations location = PODChartLocations.Default)
+        public void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default)
         {
             SLCreateChartOptions options = new SLCreateChartOptions();
             SLChart chart = _workbook.CreateChart(startRow, startCol, endRow, endCol, options);
 
             CreateScatterChartForWorksheet(startRow, startCol, endRow, endCol, ref chart, location);
+
+            if (!string.IsNullOrWhiteSpace(chartTitle))
+            {
+                chart.ShowChartTitle(false);
+                chart.Title.SetTitle(chartTitle);
+            }
 
             var currentSheet = _workbook.GetCurrentWorksheetName();
 
@@ -186,9 +192,9 @@ namespace POD.ExcelData
             _workbook.SelectWorksheet(currentSheet);
         }
 
-        public void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, PODChartLocations location = PODChartLocations.Default)
+        public void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default)
         {
-            InsertChartIntoWorksheet(_workbook.GetCurrentWorksheetName(), startRow, startCol, endRow, endCol, location);
+            InsertChartIntoWorksheet(_workbook.GetCurrentWorksheetName(), startRow, startCol, endRow, endCol, chartTitle, location);
         }
 
         private void CreateScatterChartForWorksheet(int startRow, int startCol, int endRow, int endCol, ref SLChart chart, PODChartLocations location = PODChartLocations.Default)
@@ -213,16 +219,16 @@ namespace POD.ExcelData
                 bottom = 22.5;
             }
 
-            if(location == PODChartLocations.Compare1)
+            if (location == PODChartLocations.Compare1)
             {
-                
+
                 left = 0.5;
-                right = 2.9;
+                right = 3.9;
             }
-            else if(location == PODChartLocations.Compare2)
+            else if (location == PODChartLocations.Compare2)
             {
-                left = 3.0;
-                right = 6.1;
+                left = 4.0;
+                right = 6.3;
             }
             else if (location == PODChartLocations.Compare3)
             {
@@ -236,15 +242,21 @@ namespace POD.ExcelData
             }
 
             chart.SetChartType(SLScatterChartType.ScatterWithSmoothLines);
-            chart.SetChartPosition(top, left, bottom, right);            
+            chart.SetChartPosition(top, left, bottom, right);
         }
 
-        public void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol)
+        public void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "")
         {
             SLCreateChartOptions options = new SLCreateChartOptions();
             SLChart chart = _workbook.CreateChart(startRow, startCol, endRow, endCol, options);
 
             CreateScatterChartForWorksheet(startRow, startCol, endRow, endCol, ref chart);
+
+            if (!string.IsNullOrWhiteSpace(chartTitle))
+            {
+                chart.ShowChartTitle(false);
+                chart.Title.SetTitle(chartTitle);
+            }
 
             var dataOptions = chart.GetDataSeriesOptions(1);
 
@@ -288,10 +300,10 @@ namespace POD.ExcelData
                     var colName = col.ColumnName;
 
                     //get rid of markers that only there to make sure column names are different
-                    if(colName.StartsWith("{{") && colName.EndsWith("}}"))
+                    if (colName.StartsWith("{{") && colName.EndsWith("}}"))
                     {
-                        colName = colName.TrimStart(new char[] {'{'});
-                        colName = colName.TrimEnd(new char[] {'}'});
+                        colName = colName.TrimStart(new char[] { '{' });
+                        colName = colName.TrimEnd(new char[] { '}' });
                     }
 
                     Workbook.SetCellValue(rowIndex++, colIndex, colName);
@@ -329,7 +341,7 @@ namespace POD.ExcelData
                     lastColumnIndex--;
                 }
 
-                if(lastColumnIndex >= 0)
+                if (lastColumnIndex >= 0)
                     Workbook.AutoFitColumn(myColIndex, lastColumnIndex);
 
                 //put reference at one cell over from bottom right corner of the table
@@ -342,10 +354,10 @@ namespace POD.ExcelData
         {
             int index = Convert.ToInt32(myAnalysisIndex) + 1;
 
-            Workbook.InsertHyperlink(myRowIndex, myColIndex, 
-                                     SLHyperlinkTypeValues.InternalDocumentLink, 
-                                     $"'Analysis Table of Contents'!A{index}", 
-                                     "Analysis Name", 
+            Workbook.InsertHyperlink(myRowIndex, myColIndex,
+                                     SLHyperlinkTypeValues.InternalDocumentLink,
+                                     $"'Analysis Table of Contents'!A{index}",
+                                     "Analysis Name",
                                      "Return to Analysis Table of Contents.");
 
             //RightJustifyCell(myRowIndex, myColIndex);
@@ -369,7 +381,7 @@ namespace POD.ExcelData
             Workbook.SetCellStyle(row, column, style);
         }
 
-        public void MergeCells(int rowStart,int columnStart, int rowEnd,int columnEnd)
+        public void MergeCells(int rowStart, int columnStart, int rowEnd, int columnEnd)
         {
             Workbook.MergeWorksheetCells(rowStart, columnStart, rowEnd, columnEnd);
         }
@@ -389,9 +401,9 @@ namespace POD.ExcelData
         void SaveToFileWithDefaultName(string myDefaultFileName);
         void SaveToFile(string myFileName);
         void RemoveDefaultSheet();
-        void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, PODChartLocations location = PODChartLocations.Default);
-        void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, PODChartLocations location = PODChartLocations.Default);
-        void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol);
+        void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default);
+        void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default);
+        void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "");
         void SetCellValue(int rowIndex, int colIndex, string myValue);
         void SetCellValue(int rowIndex, int colIndex, double myValue);
         void SetCellValue(int rowIndex, int colIndex, DateTime myValue);

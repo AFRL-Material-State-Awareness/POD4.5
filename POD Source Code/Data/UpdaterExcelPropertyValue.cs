@@ -29,11 +29,13 @@ namespace Data
     /// </summary>
     public class UpdaterExcelPropertyValue : IUpdaterExcelPropertyValue
     {
-        IGetExtendedPropertyControl _getExtendPropControl;
+        private readonly IGetExtendedPropertyControl _getExtendPropControl;
+
         public UpdaterExcelPropertyValue(IGetExtendedPropertyControl getExtendPropControl = null)
         {
             _getExtendPropControl = getExtendPropControl ?? new GetExtendedPropertyControl();
         }
+
         public double GetUpdatedValue(string myExtColProperty, double currentValue, DataColumn column)
         {
             double newValue;
@@ -46,43 +48,42 @@ namespace Data
             else if (myExtColProperty == ExtColProperty.Thresh)
                 prevString = ExtColProperty.ThreshPrev;
 
-            if (prevString == "")
+            if (string.IsNullOrEmpty(prevString))
             {
-                throw new Exception($"ExtColProprty: {myExtColProperty} is not valid.");
+                throw new Exception($"ExtColProperty: {myExtColProperty} is not valid.");
             }
 
             double prevValue = 0.0;
             double newTableValue = 0.0;
 
-
-            if (!Double.TryParse(_getExtendPropControl.GetExtendedProperty(column, prevString), out prevValue))
+            if (!double.TryParse(_getExtendPropControl.GetExtendedProperty(column, prevString), out prevValue))
                 prevValue = 0.0;
 
-            if (!Double.TryParse(_getExtendPropControl.GetExtendedProperty(column, myExtColProperty), out newTableValue))
+            if (!double.TryParse(_getExtendPropControl.GetExtendedProperty(column, myExtColProperty), out newTableValue))
                 newTableValue = 0.0;
 
             if (currentValue == prevValue)
                 newValue = newTableValue;
             else
                 newValue = currentValue;
+
             return newValue;
         }
+
         public double GetNewValue(string myExtColProperty, DataColumn column)
         {
             double newValue;
             double newTableValue = 0.0;
 
-
-            if (!Double.TryParse(column.ExtendedProperties[myExtColProperty]?.ToString(), out newTableValue))
+            if (!double.TryParse(column.ExtendedProperties[myExtColProperty]?.ToString(), out newTableValue))
                 newTableValue = 0.0;
 
             newValue = newTableValue;
 
             return newValue;
         }
-
-
     }
+
     public class GetExtendedPropertyControl : IGetExtendedPropertyControl
     {
         public string GetExtendedProperty(DataColumn column, string colType)
@@ -96,7 +97,9 @@ namespace Data
             }
 
             if (column.ExtendedProperties.ContainsKey(colType))
+            {
                 value = column.ExtendedProperties[colType].ToString();
+            }
             else
             {
                 value = ExtColProperty.GetDefaultValue(colType);
@@ -106,14 +109,15 @@ namespace Data
             return value;
         }
     }
+
     public interface IUpdaterExcelPropertyValue
     {
         double GetUpdatedValue(string myExtColProperty, double currentValue, DataColumn column);
         double GetNewValue(string myExtColProperty, DataColumn column);
     }
+
     public interface IGetExtendedPropertyControl
     {
         string GetExtendedProperty(DataColumn column, string colType);
     }
-
 }
