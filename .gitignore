@@ -2,10 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/POD4.5OCtober2022/v16/.suo
-/.vs/POD4.5OCtober2022/v16/Browse.VC.db
-/.vs/ProjectSettings.json
-/.vs/slnx.sqlite
+/.vs
 /POD Source Code/UpgradeLog5.htm
 /lfs/objects/0e/08/0e08ce50da715b63a63e7a0a22ead7031381f82bed58ecf76e5cdac6b6a9540f
 /hooks/pre-push
@@ -38,8 +35,10 @@ App_Data/packages/
 *.userosscache
 *.sln.docstates
 
+# OVERRIDE: Include everything in this folder
+!POD4.5DependencyLicenses/
+!POD4.5DependencyLicenses/**
+
 # Build outputs
-[Bin]
-[Obj]
 bin/
 obj/
