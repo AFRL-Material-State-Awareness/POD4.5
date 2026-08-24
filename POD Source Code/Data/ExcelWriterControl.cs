@@ -50,6 +50,7 @@ namespace Data
                 uncensoredNames = new List<string>(new string[] { "a", "ahat", data.FlawTransFormLabel, data.ResponseTransformLabel, "fit", "diff" });
             else
                 uncensoredNames = new List<string>(new string[] { "a", data.FlawTransFormLabel, "hitrate", "fit", "diff" });
+
             var censoredNames = new List<string>(new string[] { "a", "ahat", data.FlawTransFormLabel, data.ResponseTransformLabel, "fit", "diff" });
             var oldNames = new List<string>();
 
@@ -86,30 +87,35 @@ namespace Data
             //restore back to source code names
             data.ChangeTableColumnNames(data.ResidualUncensoredTable, oldNames);
 
+            string flawAxisTitle = $"{data.AvailableFlawNames[0]} ({data.AvailableFlawUnits[0]})";
+            string responseAxisTitle = $"Residual ({data.AvailableResponseUnits[0]})";
+
             if (data.DataType == AnalysisDataTypeEnum.AHat)
-                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 3, rowIndex - 1, 5, $"Residuals");
+                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 3, rowIndex - 1, 5, "Residuals", flawAxisTitle, responseAxisTitle);
             else
-                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 2, rowIndex - 1, 4, $"Residuals");
+                _excelWriter.InsertResidualChartIntoWorksheet(rowIndexChartStart, 2, rowIndex - 1, 4, "Residuals", flawAxisTitle, responseAxisTitle);
 
             colIndex = 1;
             rowIndex++;
 
-            //change to excel appropriate names
-            oldNames = data.ChangeTableColumnNames(residualCensoredTable, censoredNames);
+            if (residualCensoredTable != null)
+            {
+                //change to excel appropriate names
+                oldNames = data.ChangeTableColumnNames(residualCensoredTable, censoredNames);
 
-            _excelWriter.SetCellValue(rowIndex, colIndex, "CENSORED RESIDUAL DATA:");
-            _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex++, colIndex + 2);
-            _excelWriter.WriteTableToExcel(residualCensoredTable, ref rowIndex, ref colIndex);
+                _excelWriter.SetCellValue(rowIndex, colIndex, "CENSORED RESIDUAL DATA:");
+                _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex++, colIndex + 2);
+                _excelWriter.WriteTableToExcel(residualCensoredTable, ref rowIndex, ref colIndex);
 
-            //change to excel appropriate names
-            oldNames = data.ChangeTableColumnNames(residualCensoredTable, oldNames);
+                //restore back to source code names
+                data.ChangeTableColumnNames(residualCensoredTable, oldNames);
+            }
 
             WriteAnalysisName(_excelWriter, _analysisName);
         }
 
         public void WritePODToExcel(IAnalysisData data, int podEndIndex)
         {
-            //var podNames = new List<string>(new string[] { "a","ln(a)", "POD(a)", "95 confidence bound" });
             var podNames = new List<string>(new string[] { "a", "POD(a)", "95 confidence bound" });
             var oldNames = new List<string>();
 
@@ -130,7 +136,9 @@ namespace Data
             _excelWriter.WriteTableToExcel(data.PodCurveTable, ref rowIndex, ref colIndex);
 
             podEndIndex = rowIndex - 1;
-            _excelWriter.InsertChartIntoWorksheet(3, 1, podEndIndex, 3, $"POD Curve");
+
+            string flawAxisTitle = $"{data.AvailableFlawNames[0]} ({data.AvailableFlawUnits[0]})";
+            _excelWriter.InsertChartIntoWorksheet(3, 1, podEndIndex, 3, "POD Curve", PODChartLocations.Default, flawAxisTitle, "Probability of Detection (POD)");
 
             //restore back to source code names
             data.ChangeTableColumnNames(data.PodCurveTable, oldNames);
@@ -171,6 +179,87 @@ namespace Data
             WriteAnalysisName(_excelWriter, _analysisName);
         }
 
+        public void WriteQQPlotToExcel(IAnalysisData data, DataTable qqPlotTable)
+        {
+            string sheetName = $"{_worksheetName} QQ Plot";
+            _excelWriter.Workbook.AddWorksheet(sheetName);
+
+            int rowIndex = 1;
+            int colIndex = 1;
+
+            _excelWriter.SetCellValue(rowIndex, colIndex, "Analysis Name");
+            WriteTableOfContentsLink(_excelWriter, _worksheetName, _partOfProject, 1, 1);
+            rowIndex++;
+
+            // 1. Create a strict export table to guarantee exact columns and clean headers
+            DataTable exportTable = new DataTable();
+            exportTable.Columns.Add("Theoretical Quantiles", typeof(double));
+            exportTable.Columns.Add("Sample Quantiles", typeof(double));
+            exportTable.Columns.Add("Reference Line", typeof(double));
+            exportTable.Columns.Add("Lower 95% Bound", typeof(double));
+            exportTable.Columns.Add("Upper 95% Bound", typeof(double));
+
+            // 2. Safely map the raw R data to our clean table
+            foreach (DataRow row in qqPlotTable.Rows)
+            {
+                DataRow newRow = exportTable.NewRow();
+                newRow[0] = row["theoretical_x"];
+                newRow[1] = row["sample_y"];
+                newRow[2] = row["reference_line"];
+                newRow[3] = row["lower_ci_95"];
+                newRow[4] = row["upper_ci_95"];
+                exportTable.Rows.Add(newRow);
+            }
+
+            _excelWriter.SetCellValue(rowIndex, colIndex, "QQ PLOT DATA:");
+            _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex++, colIndex + 4);
+
+            int startRow = rowIndex;
+            _excelWriter.WriteTableToExcel(exportTable, ref rowIndex, ref colIndex);
+
+            // 3. Pass the explicit sheetName to the chart builder
+            _excelWriter.InsertQQPlotChartIntoWorksheet(sheetName, startRow, 1, rowIndex - 1, 5, "Normal Q-Q Plot", "Theoretical (Gaussian) Quantiles", "Sample (Residual) Quantiles");
+
+            WriteAnalysisName(_excelWriter, _analysisName);
+        }
+
+        public void WriteNormalityToExcel(IAnalysisData data, DataTable normalityTable, DataTable normalCurveTable)
+        {
+            string sheetName = $"{_worksheetName} Normality";
+            _excelWriter.Workbook.AddWorksheet(sheetName);
+
+            int rowIndex = 1;
+            int colIndex = 1;
+
+            _excelWriter.SetCellValue(rowIndex, colIndex, "Analysis Name");
+            WriteTableOfContentsLink(_excelWriter, _worksheetName, _partOfProject, 1, 1);
+            rowIndex++;
+
+            _excelWriter.SetCellValue(rowIndex, colIndex, "NORMALITY DATA:");
+            _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex, colIndex + 1);
+
+            _excelWriter.SetCellValue(rowIndex, colIndex + 3, "NORMAL CURVE DATA:");
+            _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex + 3, rowIndex++, colIndex + 4);
+
+            int startRow = rowIndex;
+
+            int histCol = 1;
+            int histRow = startRow;
+            _excelWriter.WriteTableToExcel(normalityTable, ref histRow, ref histCol);
+
+            int curveCol = 4;
+            int curveRow = startRow;
+            if (normalCurveTable.Columns.Count > 1) { normalCurveTable.Columns.RemoveAt(0); }
+            _excelWriter.WriteTableToExcel(normalCurveTable, ref curveRow, ref curveCol);
+
+            string unitStr = (data.AvailableResponseUnits != null && data.AvailableResponseUnits.Count > 0) ? data.AvailableResponseUnits[0] : "units";
+
+            // Pass explicit sheetName
+            _excelWriter.InsertNormalityChartIntoWorksheet(sheetName, startRow, 1, histRow - 1, 2, "Normality", $"Residual ({unitStr})", "Frequency");
+
+            WriteAnalysisName(_excelWriter, _analysisName);
+        }
+
         public void WritePODThresholdToExcel(IAnalysisData data, DataTable thresholdTable)
         {
             var thresholdNames = new List<string>(new string[] { "Threshold", "a90", "a90_95", "a50", });
@@ -192,7 +281,8 @@ namespace Data
             _excelWriter.Workbook.MergeWorksheetCells(rowIndex, colIndex, rowIndex++, colIndex + 2);
             _excelWriter.WriteTableToExcel(thresholdTable, ref rowIndex, ref colIndex);
 
-            _excelWriter.InsertChartIntoWorksheet(3, 1, rowIndex - 1, 3, $"POD Threshold");
+            string flawAxisTitle = $"{data.AvailableFlawNames[0]} ({data.AvailableFlawUnits[0]})";
+            _excelWriter.InsertChartIntoWorksheet(3, 1, rowIndex - 1, 3, "POD Threshold", PODChartLocations.Default, flawAxisTitle, "Probability of Detection (POD)");
 
             //restore back to source code names
             data.ChangeTableColumnNames(thresholdTable, oldNames);
@@ -269,7 +359,9 @@ namespace Data
                 var startRow = rowIndex;
                 _excelWriter.WriteTableToExcel(podCurveTableAll, ref rowIndex, ref colIndex, true);
 
-                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, "POD Curve (All Points)", PODChartLocations.Compare1);
+                string flawAxisTitle = $"{data.AvailableFlawNames[0]} ({data.AvailableFlawUnits[0]})";
+
+                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, "POD Curve (All Points)", PODChartLocations.Compare1, flawAxisTitle, "Probability of Detection (POD)");
 
                 //restore back to source code names
                 data.ChangeTableColumnNames(podCurveTableAll, oldNames);
@@ -288,7 +380,7 @@ namespace Data
                 startRow = rowIndex;
                 _excelWriter.WriteTableToExcel(thresholdPlotTableAll, ref rowIndex, ref colIndex, true);
 
-                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, "Threshold Curve (All Points)", PODChartLocations.Compare2);
+                _excelWriter.InsertChartIntoWorksheet(startRow, 1, rowIndex - 1, 3, "Threshold Curve (All Points)", PODChartLocations.Compare2, flawAxisTitle, "Probability of Detection (POD)");
 
                 //restore back to source code names
                 data.ChangeTableColumnNames(thresholdPlotTableAll, oldNames);
@@ -317,6 +409,8 @@ namespace Data
 
     public interface IExcelWriterControl
     {
+        void WriteNormalityToExcel(IAnalysisData data, DataTable normalityTable, DataTable normalCurveTable);
+        void WriteQQPlotToExcel(IAnalysisData data, DataTable qqPlotTable);
         void WriteResidualsToExcel(IAnalysisData data, DataTable residualCensoredTable);
         void WritePODToExcel(IAnalysisData data, int podEndIndex);
         void WriteIterationsToExcel(IAnalysisData data, DataTable iterationsTable);

@@ -170,18 +170,36 @@ namespace POD.ExcelData
             _workbook.DeleteWorksheet("Sheet1");
         }
 
-        public void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default)
+        private void SetChartTitles(ref SLChart chart, string chartTitle, string xAxisTitle, string yAxisTitle)
+        {
+            if (!string.IsNullOrWhiteSpace(chartTitle))
+            {
+                chart.ShowChartTitle(false);
+                chart.Title.SetTitle(chartTitle);
+            }
+
+            if (!string.IsNullOrWhiteSpace(xAxisTitle))
+            {
+                chart.PrimaryTextAxis.ShowTitle = true;
+                chart.PrimaryTextAxis.Title.SetTitle(xAxisTitle);
+            }
+
+            if (!string.IsNullOrWhiteSpace(yAxisTitle))
+            {
+                chart.PrimaryValueAxis.ShowTitle = true;
+                chart.PrimaryValueAxis.Title.SetTitle(yAxisTitle);
+            }
+        }
+
+        public void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", 
+                                             PODChartLocations location = PODChartLocations.Default, string xAxisTitle = "", string yAxisTitle = "")
         {
             SLCreateChartOptions options = new SLCreateChartOptions();
             SLChart chart = _workbook.CreateChart(startRow, startCol, endRow, endCol, options);
 
             CreateScatterChartForWorksheet(startRow, startCol, endRow, endCol, ref chart, location);
 
-            if (!string.IsNullOrWhiteSpace(chartTitle))
-            {
-                chart.ShowChartTitle(false);
-                chart.Title.SetTitle(chartTitle);
-            }
+            SetChartTitles(ref chart, chartTitle, xAxisTitle, yAxisTitle);
 
             var currentSheet = _workbook.GetCurrentWorksheetName();
 
@@ -192,9 +210,9 @@ namespace POD.ExcelData
             _workbook.SelectWorksheet(currentSheet);
         }
 
-        public void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default)
+        public void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default, string xAxisTitle = "", string yAxisTitle = "")
         {
-            InsertChartIntoWorksheet(_workbook.GetCurrentWorksheetName(), startRow, startCol, endRow, endCol, chartTitle, location);
+            InsertChartIntoWorksheet(_workbook.GetCurrentWorksheetName(), startRow, startCol, endRow, endCol, chartTitle, location, xAxisTitle, yAxisTitle);
         }
 
         private void CreateScatterChartForWorksheet(int startRow, int startCol, int endRow, int endCol, ref SLChart chart, PODChartLocations location = PODChartLocations.Default)
@@ -245,18 +263,14 @@ namespace POD.ExcelData
             chart.SetChartPosition(top, left, bottom, right);
         }
 
-        public void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "")
+        public void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", string xAxisTitle = "", string yAxisTitle = "")
         {
             SLCreateChartOptions options = new SLCreateChartOptions();
             SLChart chart = _workbook.CreateChart(startRow, startCol, endRow, endCol, options);
 
             CreateScatterChartForWorksheet(startRow, startCol, endRow, endCol, ref chart);
 
-            if (!string.IsNullOrWhiteSpace(chartTitle))
-            {
-                chart.ShowChartTitle(false);
-                chart.Title.SetTitle(chartTitle);
-            }
+            SetChartTitles(ref chart, chartTitle, xAxisTitle, yAxisTitle);
 
             var dataOptions = chart.GetDataSeriesOptions(1);
 
@@ -267,6 +281,78 @@ namespace POD.ExcelData
             chart.SetDataSeriesOptions(1, dataOptions);
 
             Workbook.InsertChart(chart);
+        }
+
+        public void InsertNormalityChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", string xAxisTitle = "", string yAxisTitle = "")
+        {
+            SLCreateChartOptions options = new SLCreateChartOptions();
+            SLChart chart = _workbook.CreateChart(sheetName, startRow, startCol, endRow, endCol, options);
+
+            chart.SetChartPosition(3.0, 7.0, 35.0, 18.0);
+
+            SetChartTitles(ref chart, chartTitle, xAxisTitle, yAxisTitle);
+
+            SLBarChartOptions barOptions = new SLBarChartOptions();
+            barOptions.GapWidth = 50;
+
+            chart.SetChartType(SLColumnChartType.ClusteredColumn, barOptions);
+
+            // --- NEW: Hide the X-Axis numbers and tick marks ---
+            chart.PrimaryTextAxis.TickLabelPosition = DocumentFormat.OpenXml.Drawing.Charts.TickLabelPositionValues.None;
+            chart.PrimaryTextAxis.MajorTickMark = DocumentFormat.OpenXml.Drawing.Charts.TickMarkValues.None;
+            chart.PrimaryTextAxis.MinorTickMark = DocumentFormat.OpenXml.Drawing.Charts.TickMarkValues.None;
+            // ---------------------------------------------------
+
+            var currentSheet = _workbook.GetCurrentWorksheetName();
+            _workbook.SelectWorksheet(sheetName);
+            Workbook.InsertChart(chart);
+            _workbook.SelectWorksheet(currentSheet);
+        }
+
+        public void InsertQQPlotChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", string xAxisTitle = "", string yAxisTitle = "")
+        {
+            SLCreateChartOptions options = new SLCreateChartOptions();
+            SLChart chart = _workbook.CreateChart(sheetName, startRow, startCol, endRow, endCol, options);
+
+            chart.SetChartPosition(3.0, 7.0, 35.0, 18.0);
+
+            SetChartTitles(ref chart, chartTitle, xAxisTitle, yAxisTitle);
+
+            chart.SetChartType(SLScatterChartType.ScatterWithStraightLines);
+
+            // Series 1: Sample Quantiles
+            var s1 = chart.GetDataSeriesOptions(1);
+            s1.Line.SetNoLine();
+            s1.Marker.Symbol = DocumentFormat.OpenXml.Drawing.Charts.MarkerStyleValues.Circle;
+            s1.Marker.Size = 4; // Explicitly set marker size to 4
+            chart.SetDataSeriesOptions(1, s1);
+
+            // Series 2: Reference Line
+            var s2 = chart.GetDataSeriesOptions(2);
+            s2.Marker.Symbol = DocumentFormat.OpenXml.Drawing.Charts.MarkerStyleValues.None;
+            s2.Line.SetSolidLine(System.Drawing.Color.DarkOrange, 0);
+            chart.SetDataSeriesOptions(2, s2);
+
+            // Series 3: Lower 95% Bound
+            var s3 = chart.GetDataSeriesOptions(3);
+            s3.Marker.Symbol = DocumentFormat.OpenXml.Drawing.Charts.MarkerStyleValues.None;
+            s3.Line.SetSolidLine(System.Drawing.Color.DarkGray, 0);
+            s3.Line.DashType = DocumentFormat.OpenXml.Drawing.PresetLineDashValues.Dash;
+            s3.Line.Width = 1.5m; // Explicitly set line width (uses decimal)
+            chart.SetDataSeriesOptions(3, s3);
+
+            // Series 4: Upper 95% Bound
+            var s4 = chart.GetDataSeriesOptions(4);
+            s4.Marker.Symbol = DocumentFormat.OpenXml.Drawing.Charts.MarkerStyleValues.None;
+            s4.Line.SetSolidLine(System.Drawing.Color.DarkGray, 0);
+            s4.Line.DashType = DocumentFormat.OpenXml.Drawing.PresetLineDashValues.Dash;
+            s4.Line.Width = 1.5m; // Explicitly set line width (uses decimal)
+            chart.SetDataSeriesOptions(4, s4);
+
+            var currentSheet = _workbook.GetCurrentWorksheetName();
+            _workbook.SelectWorksheet(sheetName);
+            Workbook.InsertChart(chart);
+            _workbook.SelectWorksheet(currentSheet);
         }
 
         public void SetCellValue(int rowIndex, int colIndex, string myValue)
@@ -401,9 +487,11 @@ namespace POD.ExcelData
         void SaveToFileWithDefaultName(string myDefaultFileName);
         void SaveToFile(string myFileName);
         void RemoveDefaultSheet();
-        void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default);
-        void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default);
-        void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "");
+        void InsertChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default, string xAxisTitle = "", string yAxisTitle = "");
+        void InsertChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", PODChartLocations location = PODChartLocations.Default, string xAxisTitle = "", string yAxisTitle = "");
+        void InsertResidualChartIntoWorksheet(int startRow, int startCol, int endRow, int endCol, string chartTitle = "", string xAxisTitle = "", string yAxisTitle = "");
+        void InsertNormalityChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", string xAxisTitle = "", string yAxisTitle = "");
+        void InsertQQPlotChartIntoWorksheet(string sheetName, int startRow, int startCol, int endRow, int endCol, string chartTitle = "", string xAxisTitle = "", string yAxisTitle = "");
         void SetCellValue(int rowIndex, int colIndex, string myValue);
         void SetCellValue(int rowIndex, int colIndex, double myValue);
         void SetCellValue(int rowIndex, int colIndex, DateTime myValue);

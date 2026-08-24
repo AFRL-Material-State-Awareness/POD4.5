@@ -1682,9 +1682,23 @@ namespace POD.Data
             excelWriteControl.WriteResidualsToExcel(this, _residualCensoredTable);
             excelWriteControl.WritePODToExcel(this, _podEndIndex);
             if (_dataType == AnalysisDataTypeEnum.HitMiss)
+            {
                 excelWriteControl.WriteIterationsToExcel(this, _iterationsTable);
+            }
             else
+            {
                 excelWriteControl.WritePODThresholdToExcel(this, _thresholdPlotTable);
+
+                if (_normalityTable != null && _normalityCurveTable != null)
+                {
+                    excelWriteControl.WriteNormalityToExcel(this, _normalityTable, _normalityCurveTable);
+                }
+
+                if (QQTable != null) // Or _qqTable depending on your field naming
+                {
+                    excelWriteControl.WriteQQPlotToExcel(this, QQTable);
+                }
+            }
             excelWriteControl.WriteRemovedPointsToExcel(this, _podCurveTable_All,
                 _thresholdPlotTable, _thresholdPlotTable_All);
 
