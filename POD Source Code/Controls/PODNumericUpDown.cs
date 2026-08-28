@@ -61,18 +61,17 @@ namespace POD.Controls
             }
         }
 
+       public static string FormatOutput(double value)
+       {
+           return Math.Round(value, 3) == 0.0 ? value.ToString("0.000###") : value.ToString("0.000");
+       }
+
        protected override void UpdateEditText()
        {
-           decimal absValue = Math.Abs(Math.Truncate(Value) - Value);
-
-           if (absValue < .00001m)
-               this.Text = Value.ToString("F6");
-           else if (absValue < .0001m)
-               this.Text = Value.ToString("F5");
-           else if (absValue < .001m)
-               this.Text = Value.ToString("F4");             
-           else            
-                base.UpdateEditText();
+           if (ReadOnly)
+               this.Text = FormatOutput((double)Value);
+           else
+               this.Text = Value.ToString("0.000###");
         }
 
 

@@ -204,7 +204,7 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                         {
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
                             chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _analysis.InHitMissModel, _colors, xColumnIndex, yColumnIndex);
-                            chart.SetCornerText($"R² = {chartRSquared:0.###}\nAIC = {chartAic:0.#}");
+                            chart.SetCornerText($"R² = {PODNumericUpDown.FormatOutput(chartRSquared)}\nAIC = {PODNumericUpDown.FormatOutput(chartAic)}");
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
                         });

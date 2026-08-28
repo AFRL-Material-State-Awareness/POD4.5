@@ -415,7 +415,7 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
 
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
                             chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _colors, xColumnIndex, yColumnIndex);
-                            chart.SetCornerText($"Norm = {normalityP:G3}\nVari = {equalVarianceP:G3}\nWhole = {lackOfFitP:G3}");
+                            chart.SetCornerText($"Norm = {PODNumericUpDown.FormatOutput(normalityP)}\nVari = {PODNumericUpDown.FormatOutput(equalVarianceP)}\nWhole = {PODNumericUpDown.FormatOutput(lackOfFitP)}");
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
 
