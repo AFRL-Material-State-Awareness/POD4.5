@@ -405,12 +405,17 @@ namespace POD.Wizards.Steps.AHatVsANormalSteps
                             MessageBox.Show($"RunOnlyFitAnalysis: {exp.Message}");
                         }
 
+                        var normalityP = _analysis.OutTestNormality_p;
+                        var equalVarianceP = _analysis.OutTestEqualVariance_p;
+                        var lackOfFitP = _analysis.OutTestLackOfFit_p;
+
                         this.Invoke((MethodInvoker)delegate()
                         {
                             //Debug.WriteLine($"{_analysis.Name} Background_StartAnalysis start chart update [BUSY:{worker.IsBusy}]");
 
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
                             chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _colors, xColumnIndex, yColumnIndex);
+                            chart.SetCornerText($"Norm = {normalityP:G3}\nVari = {equalVarianceP:G3}\nWhole = {lackOfFitP:G3}");
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
 

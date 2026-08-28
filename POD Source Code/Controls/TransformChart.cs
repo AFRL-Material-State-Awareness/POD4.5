@@ -71,9 +71,9 @@ namespace POD.Controls
         {
             _cornerBox = new PolygonAnnotation();
             _cornerBox.Name = "CornerMetricsBox";
-            _cornerBox.BackColor = Color.White;
-            _cornerBox.ForeColor = Color.Black;
-            _cornerBox.LineColor = Color.Black;
+            _cornerBox.BackColor = ColorManager.TransformColor(Color.White);
+            _cornerBox.ForeColor = ColorManager.TransformColor(Color.Black);
+            _cornerBox.LineColor = ColorManager.TransformColor(Color.Black);
             _cornerBox.LineWidth = 1;
             _cornerBox.GraphicsPath.AddRectangle(new Rectangle(0, 0, 100, 100));
             _cornerBox.Alignment = ContentAlignment.TopLeft;
@@ -84,7 +84,7 @@ namespace POD.Controls
             _cornerAnnotation = new TextAnnotation();
             _cornerAnnotation.Name = "CornerMetrics";
             _cornerAnnotation.Alignment = ContentAlignment.TopLeft;
-            _cornerAnnotation.ForeColor = Color.Black;
+            _cornerAnnotation.ForeColor = ColorManager.TransformColor(Color.Black);
             _cornerAnnotation.Font = new Font("Microsoft Sans Serif", 9.5f);
             _cornerAnnotation.AllowMoving = false;
             _cornerAnnotation.AllowSelecting = false;
@@ -118,7 +118,7 @@ namespace POD.Controls
             if (_cornerBox == null)
                 return;
 
-            _cornerBox.LineColor = isBest ? Color.Green : Color.Black;
+            _cornerBox.LineColor = ColorManager.TransformColor(isBest ? Color.Green : Color.Black);
             _cornerBox.LineWidth = isBest ? 2 : 1;
             Invalidate();
         }
@@ -161,8 +161,9 @@ namespace POD.Controls
 
                 _cornerBox.X = _cornerAnnotation.X;
                 _cornerBox.Y = _cornerAnnotation.Y;
-                _cornerBox.Width = _cornerAnnotation.Width * 0.90;
-                _cornerBox.Height = _cornerAnnotation.Height * 0.90;
+                const double bottomTrimPixels = 4.0;
+                _cornerBox.Width = _cornerAnnotation.Width;
+                _cornerBox.Height = _cornerAnnotation.Height - (bottomTrimPixels * 100.0 / Height);
             }
             catch
             {

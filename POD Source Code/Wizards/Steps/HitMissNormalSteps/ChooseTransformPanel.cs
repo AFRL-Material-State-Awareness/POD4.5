@@ -226,8 +226,19 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
                 this.Invoke((MethodInvoker)delegate ()
                 {
+                    const string aicSuffix = "\nLowest AIC value";
+
                     foreach (var pair in aicByChart)
-                        pair.Key.SetCornerHighlight(pair.Key == bestChart);
+                    {
+                        var chart = pair.Key;
+                        var baseTip = StepToolTip.GetToolTip(chart) ?? "";
+                        if (baseTip.EndsWith(aicSuffix))
+                            baseTip = baseTip.Substring(0, baseTip.Length - aicSuffix.Length);
+
+                        bool isBest = chart == bestChart;
+                        StepToolTip.SetToolTip(chart, isBest ? baseTip + aicSuffix : baseTip);
+                        chart.SetCornerHighlight(isBest);
+                    }
                 });
             }
 
