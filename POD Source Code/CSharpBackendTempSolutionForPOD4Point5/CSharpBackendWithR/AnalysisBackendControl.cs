@@ -221,6 +221,8 @@ namespace CSharpBackendWithR
         {
             this.newHMAnalysisObject.LogitFitTable = this.newHitMissControl.GetLogitFitTableForUI();
             this.newHMAnalysisObject.ResidualTable = this.newHitMissControl.GetResidualFitTableForUI();
+            this.newHMAnalysisObject.GoodnessOfFit = this.newHitMissControl.GetGoodnessOfFit();
+            this.newHMAnalysisObject.AicValue = this.newHitMissControl.GetAIC();
             //store the original dataframe in the HM analysis object
             this.newHMAnalysisObject.HitMissDataOrig = this.newHitMissControl.GetOrigHitMissDF();
             //set the separated flag to warn user if necessary

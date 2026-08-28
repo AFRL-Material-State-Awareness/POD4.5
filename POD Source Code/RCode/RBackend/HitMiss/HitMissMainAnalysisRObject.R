@@ -224,6 +224,8 @@ HMAnalysis <- setRefClass("HMAnalysis",
                             #executes when generating sigmoid curves in the transform panel
                             executeFitAnalysisOnly=function(){
                               regressionResults<-determineRegressionType()
+                              setGoodnessOfFit(1 - (regressionResults$deviance / regressionResults$null.deviance))
+                              setAIC(AIC(regressionResults))
                               residualTableTemp<-data.frame(
                                 x=hitMissDF$x,
                                 transformFlaw=integer(nrow(hitMissDF)),

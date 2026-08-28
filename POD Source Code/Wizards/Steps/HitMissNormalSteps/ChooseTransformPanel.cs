@@ -163,6 +163,8 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
 
             REngineObject.REngineRunning = true;
 
+            var aicByChart = new List<KeyValuePair<TransformChart, double>>();
+
             foreach (var xTrans in AllXTransforms)
             {
                 yAxisIndex = 0;
@@ -194,10 +196,15 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                             MessageBox.Show(eProblem.ToString());
                         }
 
+                        var chartRSquared = _analysis.OutTestLackOfFit;
+                        var chartAic = _analysis.OutTestAIC;
+                        aicByChart.Add(new KeyValuePair<TransformChart, double>(_charts[yAxisIndex * xRowCount + xAxisIndex], chartAic));
+
                         this.Invoke((MethodInvoker)delegate ()
                         {
                             var chart = _charts[yAxisIndex * xRowCount + xAxisIndex];
                             chart.FillFromAnalysis(_analysis.Data, _analysis.Transformer, _analysis.InHitMissModel, _colors, xColumnIndex, yColumnIndex);
+                            chart.SetCornerText($"R² = {chartRSquared:0.###}\nAIC = {chartAic:0.#}");
                             UpdateChartsWithCurrentView(chart);
                             chart.Update();
                         });
@@ -207,6 +214,21 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
                 }
 
                 xAxisIndex++;
+            }
+
+            var validAic = aicByChart
+                .Where(pair => !double.IsNaN(pair.Value) && !double.IsInfinity(pair.Value) && pair.Value != 0.0)
+                .ToList();
+
+            if (validAic.Count > 0)
+            {
+                var bestChart = validAic.OrderBy(pair => pair.Value).First().Key;
+
+                this.Invoke((MethodInvoker)delegate ()
+                {
+                    foreach (var pair in aicByChart)
+                        pair.Key.SetCornerHighlight(pair.Key == bestChart);
+                });
             }
 
             if (Analysis.SeparatedFlag)

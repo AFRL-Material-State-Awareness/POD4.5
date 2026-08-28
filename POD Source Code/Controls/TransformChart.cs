@@ -42,6 +42,8 @@ namespace POD.Controls
         private HitMissRegressionType hitmissModel;
         private string _originalTitle;
         private bool _compareModels = false;
+        private TextAnnotation _cornerAnnotation;
+        private PolygonAnnotation _cornerBox;
 
         public string OriginalYAxisTitle
         {
@@ -60,6 +62,111 @@ namespace POD.Controls
 
             PrePaint += LineChartPrePaint;
             PostPaint += LineChartPostPaint;
+
+            SetupCornerAnnotation();
+            PostPaint += PositionCornerAnnotation;
+        }
+
+        private void SetupCornerAnnotation()
+        {
+            _cornerBox = new PolygonAnnotation();
+            _cornerBox.Name = "CornerMetricsBox";
+            _cornerBox.BackColor = Color.White;
+            _cornerBox.ForeColor = Color.Black;
+            _cornerBox.LineColor = Color.Black;
+            _cornerBox.LineWidth = 1;
+            _cornerBox.GraphicsPath.AddRectangle(new Rectangle(0, 0, 100, 100));
+            _cornerBox.Alignment = ContentAlignment.TopLeft;
+            _cornerBox.AllowMoving = false;
+            _cornerBox.AllowSelecting = false;
+            _cornerBox.AllowResizing = false;
+
+            _cornerAnnotation = new TextAnnotation();
+            _cornerAnnotation.Name = "CornerMetrics";
+            _cornerAnnotation.Alignment = ContentAlignment.TopLeft;
+            _cornerAnnotation.ForeColor = Color.Black;
+            _cornerAnnotation.Font = new Font("Microsoft Sans Serif", 9.5f);
+            _cornerAnnotation.AllowMoving = false;
+            _cornerAnnotation.AllowSelecting = false;
+            _cornerAnnotation.AllowResizing = false;
+            _cornerAnnotation.Text = "";
+
+            Annotations.Add(_cornerBox);
+            Annotations.Add(_cornerAnnotation);
+        }
+
+        /// <summary>
+        /// Sets a short read-only string shown in the bottom-right corner of the chart
+        /// (e.g. "R² = 0.987\nAIC = 123.4" on the choose transform charts). Pass "" to clear.
+        /// Generalized for all choose transform charts (Hit/Miss and aHat vs a).
+        /// </summary>
+        public void SetCornerText(string text)
+        {
+            if (_cornerAnnotation == null)
+                SetupCornerAnnotation();
+
+            _cornerAnnotation.Text = text ?? "";
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Highlights the corner box outline green when this chart has the best (lowest) AIC,
+        /// otherwise leaves it a black outline. Generalized for all choose transform charts.
+        /// </summary>
+        public void SetCornerHighlight(bool isBest)
+        {
+            if (_cornerBox == null)
+                return;
+
+            _cornerBox.LineColor = isBest ? Color.Green : Color.Black;
+            _cornerBox.LineWidth = isBest ? 2 : 1;
+            Invalidate();
+        }
+
+        private void PositionCornerAnnotation(object sender, ChartPaintEventArgs e)
+        {
+            if (_cornerAnnotation == null || string.IsNullOrEmpty(_cornerAnnotation.Text) || ChartAreas.Count == 0)
+                return;
+
+            if (Width <= 100 || Height <= 100)
+                return;
+
+            var area = ChartAreas[0];
+
+            if (_cornerAnnotation.AxisX == null)
+            {
+                _cornerAnnotation.AxisX = area.AxisX;
+                _cornerAnnotation.AxisY = area.AxisY;
+                _cornerBox.AxisX = area.AxisX;
+                _cornerBox.AxisY = area.AxisY;
+            }
+
+            try
+            {
+                _cornerAnnotation.ResizeToContent();
+
+                double rightPercent = area.AxisX.ValueToPosition(area.AxisX.Maximum);
+                double bottomPercent = area.AxisY.ValueToPosition(area.AxisY.Minimum);
+
+                double leftPercent = rightPercent - _cornerAnnotation.Width - 1.5;
+                double topPercent = bottomPercent - _cornerAnnotation.Height - 0.5;
+
+                double newX = area.AxisX.PositionToValue(leftPercent);
+                double newY = area.AxisY.PositionToValue(topPercent);
+
+                if (_cornerAnnotation.X != newX)
+                    _cornerAnnotation.X = newX;
+                if (_cornerAnnotation.Y != newY)
+                    _cornerAnnotation.Y = newY;
+
+                _cornerBox.X = _cornerAnnotation.X;
+                _cornerBox.Y = _cornerAnnotation.Y;
+                _cornerBox.Width = _cornerAnnotation.Width * 0.90;
+                _cornerBox.Height = _cornerAnnotation.Height * 0.90;
+            }
+            catch
+            {
+            }
         }
 
         public override void SetupChart(string flawName, string flawUnit, List<string> responseNames, List<string> responseUnits)
