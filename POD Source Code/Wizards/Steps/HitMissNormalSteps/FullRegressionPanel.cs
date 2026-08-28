@@ -344,18 +344,54 @@ namespace POD.Wizards.Steps.HitMissNormalSteps
             aMinControl.TooltipForNumeric = Globals.SplitIntoLines("Flaw's minimum range.");
         }
 
+        /// <summary>
+        /// Steps through every flaw-transform / model combination shown on the choose transform
+        /// step (Linear/Log x Logistic/Firth) one press at a time: the transform flips each press
+        /// and the model advances when the transform wraps back to Linear. The two boxes are set
+        /// with their change handlers detached, then a single ForceUpdateAfterTransformChange runs
+        /// on the final combination - the same one-reload/one-run path as a manual dropdown change.
+        /// </summary>
         public void CycleTransforms()
         {
             try
             {
-                if (_xTransformBox.SelectedTransform == TransformTypeEnum.Linear) 
+                var nextTransform = _xTransformBox.SelectedTransform;
+                var nextModel = ModelBox.SelectedModel;
+
+                if (nextTransform == TransformTypeEnum.Linear)
                 {
-                    _xTransformBox.SelectedTransform = TransformTypeEnum.Log; 
+                    nextTransform = TransformTypeEnum.Log;
                 }
-                else if (_xTransformBox.SelectedTransform == TransformTypeEnum.Log ) 
+                else if (nextTransform == TransformTypeEnum.Log)
                 {
-                    _xTransformBox.SelectedTransform = TransformTypeEnum.Linear; 
+                    nextTransform = TransformTypeEnum.Linear;
+                    nextModel = nextModel == HitMissRegressionType.LogisticRegression
+                        ? HitMissRegressionType.FirthLogisticRegression
+                        : HitMissRegressionType.LogisticRegression;
                 }
+                else
+                {
+                    return;
+                }
+
+                _xTransformBox.SelectedIndexChanged -= XTransformBox_SelectedIndexChanged;
+                ModelBox.SelectedIndexChanged -= ModelBox_SelectedIndexChanged;
+
+                _xTransformBox.SelectedTransform = nextTransform;
+                ModelBox.SelectedModel = nextModel;
+
+                _xTransformBox.SelectedIndexChanged += XTransformBox_SelectedIndexChanged;
+                ModelBox.SelectedIndexChanged += ModelBox_SelectedIndexChanged;
+
+                Analysis.InFlawTransform = nextTransform;
+                Analysis.InHitMissModel = nextModel;
+
+                var x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMaxControl.Value));
+                mainChart.SetAMaxBoundary(x, false);
+                x = Convert.ToDouble(Analysis.TransformValueForXAxis(aMinControl.Value));
+                mainChart.SetAMinBoundary(x, false);
+
+                ForceUpdateAfterTransformChange();
             }
             catch (Exception exp)
             {

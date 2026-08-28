@@ -1119,7 +1119,7 @@ namespace POD.Controls
                 //MessageBox.Show(exp.Message, "Error While Drawing Chart");
                 e.Graphics.FillRectangle(Brushes.White, e.ClipRectangle);
                 e.Graphics.DrawString(exp.Message, DefaultFont, Brushes.DarkSlateGray, new PointF(10.0F, DefaultFont.Height + 5));
-                
+
 
                 RaiseHasFailedEvent(exp);
             }
@@ -1632,12 +1632,12 @@ namespace POD.Controls
                 ChartAreas[0].AxisX.Minimum = temp;
             }
 
-            if (ForceZeroXAxis && ChartAreas[0].AxisX.Minimum < 0.0)
+            if (ForceZeroXAxis && xAxisTransform != TransformTypeEnum.Log && ChartAreas[0].AxisX.Minimum < 0.0)
             {
                 ChartAreas[0].AxisX.Minimum = 0.0;
             }
 
-            if (ForceZeroYAxis && ChartAreas[0].AxisY.Minimum < 0.0)
+            if (ForceZeroYAxis && yAxisTransform != TransformTypeEnum.Log && ChartAreas[0].AxisY.Minimum < 0.0)
             {
                 ChartAreas[0].AxisY.Minimum = 0.0;
             }

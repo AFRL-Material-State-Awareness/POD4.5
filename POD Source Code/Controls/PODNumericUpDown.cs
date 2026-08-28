@@ -61,6 +61,10 @@ namespace POD.Controls
             }
         }
 
+       // Analysis outputs that could not be calculated arrive as this sentinel (a NaN result
+       // swapped to a finite, displayable/exportable value upstream). Read-only boxes show it as "N/A".
+       public const decimal NotCalculableSentinel = -9999999999m;
+
        public static string FormatOutput(double value)
        {
            return Math.Round(value, 3) == 0.0 ? value.ToString("0.000###") : value.ToString("0.000");
@@ -69,7 +73,7 @@ namespace POD.Controls
        protected override void UpdateEditText()
        {
            if (ReadOnly)
-               this.Text = FormatOutput((double)Value);
+               this.Text = Value == NotCalculableSentinel ? "N/A" : FormatOutput((double)Value);
            else
                this.Text = Value.ToString("0.000###");
         }

@@ -83,7 +83,7 @@ namespace POD.Controls
             ChartTitle = "Model Fit";
         }
 
-        public void FillChart(IAnalysisData myData, DataTable myTable,  string myFitX, string myFitY, 
+        public void FillChart(IAnalysisData myData, DataTable myTable,  string myFitX, string myFitY,
             string myHitRateX, string myHitRateY, double myYMin, double myYMax, double mu, double sigma, DataTable origData = null)
         {
             DataView origView = origData.DefaultView;
@@ -131,7 +131,7 @@ namespace POD.Controls
             AnalysisData.GetBufferedRange(this, xAxis, uncensoredMin, uncensoredMax, AxisKind.X);
             //AnalysisData.GetBufferedRange(yAxis, myYMin, myYMax);
 
-            
+
 
 
             //xAxis.Interval /= 2.0;
