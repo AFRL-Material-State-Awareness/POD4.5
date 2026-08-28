@@ -42,8 +42,10 @@ namespace POD.Controls
         private HitMissRegressionType hitmissModel;
         private string _originalTitle;
         private bool _compareModels = false;
-        private TextAnnotation _cornerAnnotation;
-        private PolygonAnnotation _cornerBox;
+        private string _cornerText = "";
+        private bool _cornerIsBest = false;
+        private readonly Font _cornerFont = new Font("Microsoft Sans Serif", 9.5f);
+        private readonly StringFormat _cornerFormat = StringFormat.GenericTypographic;
 
         public string OriginalYAxisTitle
         {
@@ -63,36 +65,7 @@ namespace POD.Controls
             PrePaint += LineChartPrePaint;
             PostPaint += LineChartPostPaint;
 
-            SetupCornerAnnotation();
-            PostPaint += PositionCornerAnnotation;
-        }
-
-        private void SetupCornerAnnotation()
-        {
-            _cornerBox = new PolygonAnnotation();
-            _cornerBox.Name = "CornerMetricsBox";
-            _cornerBox.BackColor = ColorManager.TransformColor(Color.White);
-            _cornerBox.ForeColor = ColorManager.TransformColor(Color.Black);
-            _cornerBox.LineColor = ColorManager.TransformColor(Color.Black);
-            _cornerBox.LineWidth = 1;
-            _cornerBox.GraphicsPath.AddRectangle(new Rectangle(0, 0, 100, 100));
-            _cornerBox.Alignment = ContentAlignment.TopLeft;
-            _cornerBox.AllowMoving = false;
-            _cornerBox.AllowSelecting = false;
-            _cornerBox.AllowResizing = false;
-
-            _cornerAnnotation = new TextAnnotation();
-            _cornerAnnotation.Name = "CornerMetrics";
-            _cornerAnnotation.Alignment = ContentAlignment.TopLeft;
-            _cornerAnnotation.ForeColor = ColorManager.TransformColor(Color.Black);
-            _cornerAnnotation.Font = new Font("Microsoft Sans Serif", 9.5f);
-            _cornerAnnotation.AllowMoving = false;
-            _cornerAnnotation.AllowSelecting = false;
-            _cornerAnnotation.AllowResizing = false;
-            _cornerAnnotation.Text = "";
-
-            Annotations.Add(_cornerBox);
-            Annotations.Add(_cornerAnnotation);
+            PostPaint += DrawCornerBox;
         }
 
         /// <summary>
@@ -102,10 +75,7 @@ namespace POD.Controls
         /// </summary>
         public void SetCornerText(string text)
         {
-            if (_cornerAnnotation == null)
-                SetupCornerAnnotation();
-
-            _cornerAnnotation.Text = text ?? "";
+            _cornerText = text ?? "";
             Invalidate();
         }
 
@@ -115,55 +85,53 @@ namespace POD.Controls
         /// </summary>
         public void SetCornerHighlight(bool isBest)
         {
-            if (_cornerBox == null)
-                return;
-
-            _cornerBox.LineColor = ColorManager.TransformColor(isBest ? Color.Green : Color.Black);
-            _cornerBox.LineWidth = isBest ? 2 : 1;
+            _cornerIsBest = isBest;
             Invalidate();
         }
 
-        private void PositionCornerAnnotation(object sender, ChartPaintEventArgs e)
+        /// <summary>
+        /// Draws the bottom-right corner metrics box directly in screen space so it tracks
+        /// the plotting area on every chart resize with no per-frame position bookkeeping.
+        /// </summary>
+        private void DrawCornerBox(object sender, ChartPaintEventArgs e)
         {
-            if (_cornerAnnotation == null || string.IsNullOrEmpty(_cornerAnnotation.Text) || ChartAreas.Count == 0)
+            if (_showResiduals || !(e.ChartElement is ChartArea) || string.IsNullOrEmpty(_cornerText) || ChartAreas.Count == 0)
                 return;
 
             if (Width <= 100 || Height <= 100)
                 return;
 
-            var area = ChartAreas[0];
-
-            if (_cornerAnnotation.AxisX == null)
-            {
-                _cornerAnnotation.AxisX = area.AxisX;
-                _cornerAnnotation.AxisY = area.AxisY;
-                _cornerBox.AxisX = area.AxisX;
-                _cornerBox.AxisY = area.AxisY;
-            }
-
             try
             {
-                _cornerAnnotation.ResizeToContent();
+                var area = ChartAreas[0];
+                var graphics = e.ChartGraphics.Graphics;
 
-                double rightPercent = area.AxisX.ValueToPosition(area.AxisX.Maximum);
-                double bottomPercent = area.AxisY.ValueToPosition(area.AxisY.Minimum);
+                const float edgeGap = 4f;
+                const float pad = 4f;
 
-                double leftPercent = rightPercent - _cornerAnnotation.Width - 1.5;
-                double topPercent = bottomPercent - _cornerAnnotation.Height - 0.5;
+                float plotRight = (float)area.AxisX.ValueToPixelPosition(area.AxisX.Maximum);
+                float plotBottom = (float)area.AxisY.ValueToPixelPosition(area.AxisY.Minimum);
 
-                double newX = area.AxisX.PositionToValue(leftPercent);
-                double newY = area.AxisY.PositionToValue(topPercent);
+                var state = graphics.Save();
+                graphics.SetClip(new RectangleF(0f, 0f, Width, Height));
 
-                if (_cornerAnnotation.X != newX)
-                    _cornerAnnotation.X = newX;
-                if (_cornerAnnotation.Y != newY)
-                    _cornerAnnotation.Y = newY;
+                SizeF textSize = graphics.MeasureString(_cornerText, _cornerFont, PointF.Empty, _cornerFormat);
+                float boxWidth = textSize.Width + (pad * 2f);
+                float boxHeight = textSize.Height + (pad * 2f);
 
-                _cornerBox.X = _cornerAnnotation.X;
-                _cornerBox.Y = _cornerAnnotation.Y;
-                const double bottomTrimPixels = 4.0;
-                _cornerBox.Width = _cornerAnnotation.Width;
-                _cornerBox.Height = _cornerAnnotation.Height - (bottomTrimPixels * 100.0 / Height);
+                float boxX = plotRight - edgeGap - boxWidth;
+                float boxY = plotBottom - edgeGap - boxHeight;
+
+                using (var fill = new SolidBrush(ColorManager.TransformColor(Color.White)))
+                using (var textBrush = new SolidBrush(ColorManager.TransformColor(Color.Black)))
+                using (var outline = new Pen(ColorManager.TransformColor(_cornerIsBest ? Color.Green : Color.Black), _cornerIsBest ? 2f : 1f))
+                {
+                    graphics.FillRectangle(fill, boxX, boxY, boxWidth, boxHeight);
+                    graphics.DrawRectangle(outline, boxX, boxY, boxWidth, boxHeight);
+                    graphics.DrawString(_cornerText, _cornerFont, textBrush, boxX + pad, boxY + pad, _cornerFormat);
+                }
+
+                graphics.Restore(state);
             }
             catch
             {
