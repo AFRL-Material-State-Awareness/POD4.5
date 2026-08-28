@@ -344,11 +344,7 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       linearModDF<-cbind(linearModDF, responsesAll)
                                       setLinearModel(linearModDF)
 
-                                      #don't perform linear tests if user is in transform panel
-                                      if(fullAnalysis){
-                                        # Run linear tests. If censored, this function creates a temporary lm object.
-                                        updateLinearTestsCensored(final_model)
-                                      }
+                                      updateLinearTestsCensored(final_model)
 
                                       ##create the residual dataframe
                                       ResidualDF=data.frame(
@@ -473,7 +469,11 @@ AHatAnalysis<-setRefClass("AHatAnalysis", fields = list(signalRespDF="data.frame
                                       nonConst=ncvTest(linearM)
                                       # Test for auto-correlation (ie, a pattern in the data due to "time," or in this case, order)
                                       # Data does not have auto-correlation. 
-                                      durbinWTest=durbinWatsonTest(linearM)
+                                      # NOT CURRENTLY USED - commented out, most likely for performance reasons
+                                      # (durbinWatsonTest bootstraps its p-value over many model refits). A constant
+                                      # zero is returned in its place so it can be reincorporated later without rework.
+                                      # durbinWTest=durbinWatsonTest(linearM)
+                                      durbinWTest=list(r=0, dw=0, p=0, alternative='')
                                       
                                       # Default fallback data frame to prevent downstream UI crashes
                                       lackOfFitTest<-data.frame(
